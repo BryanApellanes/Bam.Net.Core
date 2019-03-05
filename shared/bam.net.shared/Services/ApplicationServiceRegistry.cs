@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Services
 {
@@ -113,6 +114,7 @@ namespace Bam.Net.Services
             ApplicationServiceRegistry appRegistry = new ApplicationServiceRegistry();
             appRegistry.CombineWith(CoreClientServiceRegistryContainer.Current);
             appRegistry
+                .For<IDataSettingsResolver>().Use<DefaultDataDirectoryProvider>()
                 .For<IApplicationNameProvider>().Use<DefaultConfigurationApplicationNameProvider>()
                 .For<ProxyAssemblyGeneratorService>().Use<ProxyAssemblyGeneratorServiceProxy>()
                 .For<ApplicationServiceRegistry>().Use(appRegistry)

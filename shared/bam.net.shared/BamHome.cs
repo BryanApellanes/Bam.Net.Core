@@ -42,5 +42,18 @@ namespace Bam.Net
                 return new List<string>(PathSegments) { "content" }.ToArray();
             }
         }
+        
+        public static string DataPath
+        {
+            get { return Path.Combine(DataSegments); }
+        }
+
+        public static string[] DataSegments
+        {
+            get
+            {
+                return new List<string>(PathSegments) { "data"}.ToArray();
+            }
+        }
     }
 }
