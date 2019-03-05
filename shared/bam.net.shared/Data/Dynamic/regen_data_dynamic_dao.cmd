@@ -1,0 +1,1 @@
+﻿troo.exe /gsr /config:.\dynamic_type_data_gen_config.yaml

@@ -1,0 +1,20 @@
+﻿using Bam.Net.Data.Repositories;
+using Bam.Net.Services;
+
+namespace {{BaseNamespace}}.AppModules
+{
+    [AppModule]
+    public class {{Name}} : RepoData
+    {
+        public {{Name}}()
+        {
+        }
+
+{{#each Properties}}
+{{#if Key}}
+        [CompositeKey]
+{{/if}}
+        public {{Type}} {{Name}} { get; set; }
+{{/each}}
+    }
+}

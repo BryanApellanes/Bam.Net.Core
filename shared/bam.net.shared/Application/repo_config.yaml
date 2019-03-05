@@ -1,0 +1,5 @@
+﻿SchemaName: ManagedApplication
+WriteSourceTo: C:\bam\src\_gen\ManagedApplication
+TypeAssembly: C:\bam\toolkit\Windows\bam.net.core.dll
+FromNameSpace: Bam.Net.Application.Data
+ToNameSpace: Bam.Net.Appliction.Data.Dao

@@ -1,0 +1,35 @@
+	// start {{PropertyName}} -> {{Name}}
+	[Bam.Net.Data.ForeignKey(
+        Table="{{TableName}}",
+		Name="{{Name}}",
+		DbDataType="{{DbDataType}}",
+		MaxLength="{{MaxLength}}",
+		AllowNull={{AllowNull}},
+		ReferencedKey="{{ReferencedKey}}",
+		ReferencedTable="{{ReferencedTable}}",
+		Suffix="{{ReferenceNameSuffix}}")]
+	public {{NativeType}} {{PropertyName}}
+	{
+		get
+		{
+			return Get{{DataType}}Value("{{Name}}");
+		}
+		set
+		{
+			SetValue("{{Name}}", value);
+		}
+	}
+
+    {{ReferencedClass}} _{{CamelCaseReferencedClass}}Of{{PropertyName}};
+	public {{ReferencedClass}} {{ReferencedClass}}Of{{PropertyName}}
+	{
+		get
+		{
+			if(_{{CamelCaseReferencedClass}}Of{{PropertyName}} == null)
+			{
+				_{{CamelCaseReferencedClass}}Of{{PropertyName}} = {{Namespace}}.{{ReferencedClass}}.OneWhere(c => c.KeyColumn == this.{{PropertyName}}, this.Database);
+			}
+			return _{{CamelCaseReferencedClass}}Of{{PropertyName}};
+		}
+	}
+

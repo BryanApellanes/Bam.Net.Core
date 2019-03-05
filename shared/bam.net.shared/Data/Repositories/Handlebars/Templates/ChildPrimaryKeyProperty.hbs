@@ -1,0 +1,16 @@
+        {{PrimaryKeyType.Namespace}}.{{PrimaryKeyType.Name}} _{{PrimaryKeyTypeCamelCaseName}};
+		public override {{PrimaryKeyType.Namespace}}.{{Model.PrimaryKeyType.Name}} {{Model.ChildParentProperty.Name}}
+		{
+			get
+			{
+				if (_{{PrimaryKeyTypeCamelCaseName}} == null)
+				{
+					_{{PrimaryKeyTypeCamelCaseName}} = ({{PrimaryKeyType.Namespace}}.{{PrimaryKeyType.Name}})Repository.GetParentPropertyOfChild(this, typeof({{Model.PrimaryKeyType.Namespace}}.{{Model.PrimaryKeyType.Name}}));
+				}
+				return _{{PrimaryKeyTypeCamelCaseName}};
+			}
+			set
+			{
+				_{{PrimaryKeyTypeCamelCaseName}} = value;
+			}
+		}

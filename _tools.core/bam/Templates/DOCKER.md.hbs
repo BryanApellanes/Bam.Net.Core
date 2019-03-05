@@ -1,0 +1,14 @@
+﻿# Build
+docker build -t {{ProjectName}} . [-f path_to_Dockerfile]
+
+# Stop & Remove
+docker container stop {{ProjectName}}
+docker container rm {{ProjectName}}
+docker container stop {{ProjectName}}instance
+docker container rm {{ProjectName}}instance
+
+# Run
+docker run -d -p 8080:80 --name {{ProjectName}}instance {{ProjectName}}
+
+# Push
+docker push bamapps/images:{{ProjectName}}

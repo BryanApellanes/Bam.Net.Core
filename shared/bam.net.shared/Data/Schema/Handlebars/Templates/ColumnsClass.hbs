@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Bam.Net.Data;
+
+namespace {{Namespace}}
+{
+    public class {{Model.ClassName}}Columns: QueryFilter<{{Model.ClassName}}Columns>, IFilterToken
+    {
+        public {{Model.ClassName}}Columns() { }
+        public {{Model.ClassName}}Columns(string columnName)
+            : base(columnName)
+        { }
+		
+		public {{Model.ClassName}}Columns KeyColumn
+		{
+			get
+			{
+				return new {{Model.ClassName}}Columns("{{Model.Key.Name}}");
+			}
+		}	
+
+{{#each NonForeignKeyColumns}}
+{{> ColumnsProperty }}
+{{/each}}
+
+
+{{#each Model.ForeignKeys }}
+{{> ColumnsProperty }}
+{{/each}}
+
+		protected internal Type TableType
+		{
+			get
+			{
+				return typeof({{Model.ClassName}});
+			}
+		}
+
+		public string Operator { get; set; }
+
+        public override string ToString()
+        {
+            return base.ColumnName;
+        }
+	}
+}
