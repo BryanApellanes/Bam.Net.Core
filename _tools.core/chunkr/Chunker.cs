@@ -23,6 +23,5 @@ namespace Bam.Net.Server
                 return _serverLock.DoubleCheckLock(ref _server, () => new ChunkServer(new FileSystemChunkStorage()));
             }
         }
-
     }
 }

@@ -11,13 +11,13 @@ namespace Bam.Net.Web
 {
     public class BamTestPageModel: DataPageModel
     {
-        public BamTestPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel appModel, string[] testFileNames)
+        public BamTestPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel appModel, params string[] testFileNames)
             : base(hostingEnvironment, appModel, "json", "yaml", "txt", "js")
         {
             TestFileNames = new List<string>(testFileNames);
         }
 
-        public List<string> TestFileNames { get; private set; }
+        public List<string> TestFileNames { get; protected set; }
             
         public override ActionResult OnGet()
         {

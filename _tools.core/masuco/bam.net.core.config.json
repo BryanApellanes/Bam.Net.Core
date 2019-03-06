@@ -1,0 +1,4 @@
+{
+  "Source": ".\\path to fx version of bam.net.core",
+  "Destination": "\\path to the core only repo"
+}
