@@ -11,8 +11,11 @@
 
   <ItemGroup>
     <Compile Remove="Bam.Net\**" />
+    <Compile Remove="Templates\**" />
     <EmbeddedResource Remove="Bam.Net\**" />
+    <EmbeddedResource Remove="Templates\**" />
     <None Remove="Bam.Net\**" />
+    <None Remove="Templates\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,12 +57,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Authentication">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authentication\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.Authentication, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-      <HintPath>..\..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authentication\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNetCore.Mvc.RazorPages">
       <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.razorpages\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.RazorPages.dll</HintPath>
     </Reference>
@@ -70,7 +67,7 @@
 
   <ItemGroup>
     <Folder Include="Presentation\Html\Js\" />
-    <Folder Include="Templates\" />
+    <Folder Include="Web\" />
   </ItemGroup>
 
   <Import Project="..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />

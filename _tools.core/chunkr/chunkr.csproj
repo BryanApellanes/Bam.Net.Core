@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
+      <ProjectReference Include="..\..\..\..\BamFramework\Bam.Net\bam.net.core\bam.net.core.csproj" />
     </ItemGroup>
 
 </Project>
