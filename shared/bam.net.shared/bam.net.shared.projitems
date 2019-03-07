@@ -489,9 +489,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Components\IComponentResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Components\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Handlebars\HandlebarsEmbeddedResources.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Html\HtmlTag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Html\ParameterLayouts.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Html\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\IApplicationTemplateManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\IHasCompiledTemplates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\PageModel.cs" />

@@ -67,14 +67,14 @@ namespace Bam.Net.Configuration
             }
         }
 
-        public EventHandler CallingConfigService;
-        public EventHandler CalledConfigService;
+        public event EventHandler CallingConfigService;
+        public event EventHandler CalledConfigService;
 
-        public EventHandler RetrievingFromService;
-        public EventHandler RetrievedFromCache;
-        public EventHandler RetrievedFromService;
+        public event EventHandler RetrievingFromService;
+        public event EventHandler RetrievedFromCache;
+        public event EventHandler RetrievedFromService;
 
-        public EventHandler ConfigurationValueNotFound;
+        public event EventHandler ConfigurationValueNotFound;
 
         Dictionary<string, string> _config;
         private string FromService(string key)

@@ -4,9 +4,11 @@ using Bam.Net.ServiceProxy;
 using Bam.Net.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Presentation
 {
@@ -25,13 +27,36 @@ namespace Bam.Net.Presentation
             WebServiceRegistry = applicationServiceRegistry.Get<WebServiceRegistry>();
             ApplicationName = ApplicationServiceRegistry.Get<IApplicationNameProvider>().GetApplicationName();
             ApplicationServiceRegistry.SetInjectionProperties(this);
+            DataSettingsResolver = ApplicationServiceRegistry.Get<IDataSettingsResolver>();
+            ApplicationNameProvider = ApplicationServiceRegistry.Get<IApplicationNameProvider>();
         }
 
+        protected IDataSettingsResolver DataSettingsResolver { get; set; }
+        protected IApplicationNameProvider ApplicationNameProvider { get; set; }
+        
         public string ApplicationNameSpace { get; set; }
         public string ApplicationName { get; set; }
 
         public ILog Log { get; set; }
 
+        public DefaultDataDirectoryProvider DataDirectoryProvider
+        {
+            get
+            {
+                //DataSettingsResolver.Resolve()
+                throw new NotImplementedException();
+            }
+        }
+        
+        public DirectoryInfo DataDirectory
+        {
+            get
+            {
+                //return DataDirectoryProvider.Resolve()
+                throw new NotImplementedException();
+            }
+        }
+        
         public ApplicationServiceRegistry ApplicationServiceRegistry { get; set; }
         public WebServiceRegistry WebServiceRegistry { get; set; }
 

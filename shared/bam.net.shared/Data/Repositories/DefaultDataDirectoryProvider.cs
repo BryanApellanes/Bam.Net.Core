@@ -10,11 +10,12 @@ using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Net.Data.Repositories
 {
+    // TODO: rename this to DataDirectoryProvider
     public partial class DefaultDataDirectoryProvider : DatabaseProvider<SQLiteDatabase>, IDataDirectoryProvider
     {
         public DefaultDataDirectoryProvider()
         {
-            DataRootDirectory = "C:\\bam\\data";
+            DataRootDirectory = BamHome.DataPath;
             AppDataDirectory = "AppData";
             UsersDirectory = "Users";
             SysDataDirectory = "SysData";

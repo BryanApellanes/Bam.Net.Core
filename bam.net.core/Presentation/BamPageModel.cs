@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Bam.Net.Presentation
 {
-    public class BamPageModel: PageModel
+    public class BamPageModel: Microsoft.AspNetCore.Mvc.RazorPages.PageModel
     {
         public BamPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel applicationModel) : 
             this(hostingEnvironment, applicationModel, "json", "yaml", "xml", "csv", "txt")
