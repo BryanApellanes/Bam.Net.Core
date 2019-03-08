@@ -2876,19 +2876,24 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Adds the specified value if the specified key has not been added
+        /// Adds the specified value if the specified key has not been added, returns true if the key had not already been added, false if the value
+        /// is not added because the key already exists.
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="dictionary"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void AddMissing<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        /// <returns>true if the value was added because no value existed, false if a value with the same key is already in the dictionary.</returns>
+        public static bool AddMissing<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
             if (!dictionary.ContainsKey(key))
             {
                 dictionary.Add(key, value);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -3890,6 +3895,23 @@ namespace Bam.Net
             return result;
         }
 
+        public static IEnumerable<KeyValuePair<string, V>> ToKeyValuePairs<V>(this object instance, Func<object, V> valueMunger)
+        {
+            foreach (KeyValuePair kvp in ToKeyValuePairs(instance))
+            {
+                yield return new KeyValuePair<string, V>() {Key = kvp.Key, Value = valueMunger(kvp.Value)};
+            }
+        }
+        
+        public static IEnumerable<KeyValuePair> ToKeyValuePairs(this object instance)
+        {
+            Type type = instance.GetType();
+            foreach (PropertyInfo prop in type.GetProperties())
+            {
+                yield return new KeyValuePair() {Key = prop.Name, Value = prop.GetValue(instance)};
+            }
+        }
+        
         /// <summary>
         /// Intended to turn a dynamic object into a dictionary. For example,
         /// new { key1 = value1, key2 = value 2} becomes a dictionary with

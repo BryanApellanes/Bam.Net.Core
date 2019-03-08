@@ -18,7 +18,7 @@ namespace Bam.Net.Automation.Tests
         [UnitTest]
         public void ShouldRenderNested()
         {
-            string html = Tags.Div()
+            //string html = Tags.Div()
         }
     }
 }

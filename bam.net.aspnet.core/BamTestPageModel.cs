@@ -19,7 +19,7 @@ namespace Bam.Net.Web
 
         public List<string> TestFileNames { get; protected set; }
             
-        public override ActionResult OnGet()
+        public ActionResult OnGet()
         {
             if (Request.Query.ContainsKey("tests"))
             {
@@ -27,7 +27,8 @@ namespace Bam.Net.Web
                 string[] tests = testsQuery.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()).ToArray();
                 TestFileNames = new List<string>(tests);
             }
-            return base.OnGet();
+
+            return Page();
         }
     }
 }

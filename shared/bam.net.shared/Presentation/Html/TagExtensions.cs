@@ -6,7 +6,7 @@ namespace Bam.Net.Presentation.Html
 {
     public static class TagExtensions
     {
-        public static string Render(object element)
+        public static string RenderElement(object element)
         {
             Type type = element.GetType();
             string tagName = "div";
@@ -26,8 +26,8 @@ namespace Bam.Net.Presentation.Html
                     attributes.Add(prop.Name, prop.GetValue(element));
                 }
             }
-            // TODO: finish this
-            //return new Tag(tagName, );
+            
+            return new Tag(tagName, attributes).Render();
         }
     }
 }

@@ -40,11 +40,6 @@ namespace Bam.Net.Presentation
             }
         }
 
-        public virtual ActionResult OnGet()
-        {
-            return Page();
-        }
-
         protected void SetFileContents(Dictionary<string, string> container, string fileType)
         {
             container.Clear();

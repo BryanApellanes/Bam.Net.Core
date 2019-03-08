@@ -475,6 +475,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ICompiler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITemplateResourceRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KeyValuePair.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OSNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OSInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Components\InlineComponent.cs" />

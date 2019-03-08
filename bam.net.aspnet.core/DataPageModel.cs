@@ -30,30 +30,6 @@ namespace Bam.Net.Web
             JsonFiles = new Dictionary<string, string>();
             YamlFiles = new Dictionary<string, string>();
             SetFileContents();
-            SetFileContents(JsonFiles, "json");
-            SetFileContents(YamlFiles, "yaml");
-        }
-
-
-        public virtual ActionResult OnGet()
-        {
-            foreach (string extension in ExtensionsToLoad)
-            {
-                SetFileContents(Files, extension);
-            }
-            if (ExtensionsToLoad.Contains("json"))
-            {
-                SetFileContents(JsonFiles, "json");
-            }
-            if (ExtensionsToLoad.Contains("yaml"))
-            {
-                SetFileContents(YamlFiles, "yaml");
-            }
-            if (ExtensionsToLoad.Contains("csv"))
-            {
-                SetFileContents(CsvFiles, "csv");
-            }
-            return Page();
         }
 
         protected List<string> ExtensionsToLoad
@@ -89,7 +65,8 @@ namespace Bam.Net.Web
         private void SetFileContents()
         {
             SetFileContents(Files, "json");
-            SetFileContents(Files, "yaml");            
+            SetFileContents(Files, "yaml");
+            SetFileContents(Files, "csv");
         }
 
         private void SetFileContents(Dictionary<string, string> container, string fileType)

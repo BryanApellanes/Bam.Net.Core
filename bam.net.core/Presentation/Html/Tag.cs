@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Web;
+using Bam.Net;
 using Bam.Net.ServiceProxy;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Html;
@@ -18,16 +19,51 @@ namespace Bam.Net.Presentation.Html
 
     public partial class Tag
     {
-        public Tag(string tagName, object attributes = null, string content = null)
+        public Tag(string tagName, object attributes = null, object content = null) : this(tagName,
+            attributes?.ToDictionary(), content)
+        {
+        }
+
+        public Tag(string tagName, Dictionary<string, object> attributes = null, object content = null)
         {
             TagName = tagName;
-            Attributes = attributes;
-            Content = content;
+            Attributes = attributes ?? new Dictionary<string, object>();
+            Content = content?.ToString();
+            Styles = new Dictionary<string, object>();   
         }
+        
         public string TagName { get; set; }
-        protected object Attributes { get; set; }
+        public Dictionary<string, object> Attributes { get; private set; }
+        public Dictionary<string, object> Styles { get; private set; }
         protected string Content { get; set; }
 
+        public Tag AddAttributes(object attributes)
+        {
+            Args.ThrowIfNull(attributes, "attributes");
+            foreach (KeyValuePair kvp in attributes.ToKeyValuePairs())
+            {
+                AddAttribute(kvp.Key, kvp.Value);
+            }
+
+            return this;
+        }
+
+        public Tag AddAttribute(string name, object value)
+        {
+            Attributes.AddMissing(name, value);
+            return this;
+        }
+
+        public Tag SetAttribute(string name, object value)
+        {
+            if (!Attributes.AddMissing(name, value))
+            {
+                Attributes[name] = value;
+            }
+
+            return this;
+        }
+        
         public bool SelfClosing { get; set; }
 
         public static Tag Of(string tagName, object attributes = null, string content = null)
