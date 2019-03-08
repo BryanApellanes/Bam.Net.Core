@@ -13,12 +13,13 @@ namespace Bam.Net
         {
             get
             {
-                if(_current == OSNames.Invalid)
+                if (_current == OSNames.Invalid)
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         _current = OSNames.Windows;
-                    }else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         _current = OSNames.Linux;
                     }
@@ -27,6 +28,7 @@ namespace Bam.Net
                         _current = OSNames.OSX;
                     }
                 }
+
                 return _current;
             }
         }

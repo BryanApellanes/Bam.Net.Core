@@ -245,11 +245,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DaemonDeployer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DirectoryCopyWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\EmailWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automation\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\FileCopyWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\FileSystemFileCopyWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automation\Ftp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automation\FtpUploadWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IAppSettingsWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IDeployable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IfElseWorker.cs" />
@@ -343,7 +340,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\WorkerConf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\WorkState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\WorkStateEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automation\XmlTransformWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ZipFolderWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundThreadQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundThreadQueueEventArgs.cs" />
@@ -489,6 +485,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Components\IComponentResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Components\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Handlebars\HandlebarsEmbeddedResources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Html\TagExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Html\Tags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Html\ParameterLayouts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\IApplicationTemplateManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\IHasCompiledTemplates.cs" />
