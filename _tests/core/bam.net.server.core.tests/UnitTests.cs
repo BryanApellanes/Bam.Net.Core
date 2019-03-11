@@ -62,7 +62,7 @@ namespace Bam.Net.Server.Tests
 
         public void CleanUpTempDirectory()
         {
-            string tempDir = "C:\\temp";
+            string tempDir = "/bam/temp";
             if (Directory.Exists(tempDir))
             {
                 Directory.Delete(tempDir, true);
@@ -117,7 +117,7 @@ namespace Bam.Net.Server.Tests
         public void ShouldBeAbleToSetTheContentRoot()
         {
             BamServer server = new BamServer(BamConf.Load());//BamServerFactory.Default.Create();
-            string root = ".\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(4);
+            string root = "./{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(4);
             server.ContentRoot = root;
             FileInfo validate = new FileInfo(root);
             string valid = validate.FullName + Path.DirectorySeparatorChar;
@@ -129,7 +129,7 @@ namespace Bam.Net.Server.Tests
         public void SettingContentRootShouldSetRootForRequestHandlerContent()
         {
             BamServer server = new BamServer(BamConf.Load());//BamServerFactory.Default.Create();
-            server.ContentRoot = ".\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(4);
+            server.ContentRoot = "./{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(4);
             Expect.AreEqual(server.ContentRoot, server.ContentResponder.Root);
         }
 
@@ -137,7 +137,7 @@ namespace Bam.Net.Server.Tests
         public void SettingContentRootShouldNotAddMoreThanOneContentResponder()
         {
             BamServer server = new BamServer(BamConf.Load());
-            server.ContentRoot = "\\{0}"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(4);
+            server.ContentRoot = "/{0}"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(4);
             Expect.AreEqual(1, server.Responders.Count(r => r.GetType().Equals(typeof(ContentResponder))));
         }
 
@@ -153,7 +153,7 @@ namespace Bam.Net.Server.Tests
         public void StartShouldFireInitEvents()
         {
             string testAppName = MethodBase.GetCurrentMethod().Name;
-            DirectoryInfo dir = new DirectoryInfo("C:\\temp\\{0}_"._Format(testAppName).RandomLetters(4));
+            DirectoryInfo dir = new DirectoryInfo("/bam/temp/{0}_"._Format(testAppName).RandomLetters(4));
             CreateTestRootAndSetDefaultConfig(dir);
             BamServer server = CreateServer(dir.FullName);
             bool? ingCalled = false;
@@ -183,7 +183,7 @@ namespace Bam.Net.Server.Tests
         public void BamServerShouldHaveDaoRepsonder()
         {
             string testAppName = MethodBase.GetCurrentMethod().Name;
-            DirectoryInfo dir = new DirectoryInfo("C:\\temp\\{0}_"._Format(testAppName).RandomLetters(4));
+            DirectoryInfo dir = new DirectoryInfo("/bam/temp/{0}_"._Format(testAppName).RandomLetters(4));
             CreateTestRootAndSetDefaultConfig(dir);
             BamServer server = CreateServer(dir.FullName);
             Expect.AreEqual(1, server.Responders.Where(r => r.GetType().Equals(typeof(DaoResponder))).Count());
@@ -223,7 +223,7 @@ namespace Bam.Net.Server.Tests
         public void TemplateInitializationEventsShouldFireOnStart()
         {
             string testAppName = MethodBase.GetCurrentMethod().Name;
-            DirectoryInfo dir = new DirectoryInfo("C:\\temp\\{0}_"._Format(testAppName).RandomLetters(4));
+            DirectoryInfo dir = new DirectoryInfo("/bam/temp/{0}_"._Format(testAppName).RandomLetters(4));
             CreateTestRootAndSetDefaultConfig(dir);
             BamServer server = CreateServer(dir.FullName);
             bool? ingFired = false;
@@ -290,11 +290,11 @@ namespace Bam.Net.Server.Tests
         public void ContentRootShouldMatchConf()
         {
             BamConf conf = new BamConf();
-            DirectoryInfo root = new DirectoryInfo("C:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             conf.ContentRoot = root.FullName;
             ContentResponder content = new ContentResponder(conf, CreateLogger());
             DirectoryInfo check = new DirectoryInfo(content.Root); // don't compare strings because the content flips backslashes with forward slashes
-            Expect.AreEqual("{0}\\"._Format(root.FullName), check.FullName); // content.Root adds a trailing slash
+            Expect.AreEqual("{0}/"._Format(root.FullName), check.FullName); // content.Root adds a trailing slash
 
         }
 
@@ -302,12 +302,12 @@ namespace Bam.Net.Server.Tests
         public void AppContentInitializeShouldSetupFiles()
         {
             BamConf conf = new BamConf();
-            DirectoryInfo root = new DirectoryInfo("c:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             conf.ContentRoot = root.FullName;
             ContentResponder content = new ContentResponder(conf, CreateLogger());
             AppConf appConf = new AppConf("monkey");
             AppContentResponder appContent = new AppContentResponder(content, appConf);
-            // should create the folder <conf.ContentRoot>\\apps\\monkey
+            // should create the folder <conf.ContentRoot>/apps/monkey
             string appPath = Path.Combine(conf.ContentRoot, "apps", appConf.Name);
             if (Directory.Exists(appPath))
             {
@@ -321,7 +321,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void AppContentInitializeShouldCreateAppConfDotJson()
         {
-            DirectoryInfo root = new DirectoryInfo("c:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             BamConf conf = new BamConf()
             {
                 ContentRoot = root.FullName
@@ -392,7 +392,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void DustTemplateRendererOutputStreamShouldNotBeNull()
         {
-            DirectoryInfo root = new DirectoryInfo("c:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             ContentResponder content = GetTestContentResponder(root);
             CommonTemplateRenderer renderer = new CommonTemplateRenderer(content);
             Expect.IsNotNull(renderer.OutputStream);
@@ -401,7 +401,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void ShouldBeAbleToRenderDustTemplateForType()
         {
-            DirectoryInfo root = new DirectoryInfo("c:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             ContentResponder content = GetTestContentResponder(root);
             DirectoryInfo dustRoot = new DirectoryInfo(Path.Combine(content.Root, "common", "views"));
             CommonTemplateRenderer templateRenderer = new CommonTemplateRenderer(content);
@@ -436,7 +436,7 @@ namespace Bam.Net.Server.Tests
         public void ShouldBeAbleToRenderTemplateFromDirectory()
         {
             // create a test directory
-            DirectoryInfo root = new DirectoryInfo("c:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             // write test templates into it
             string source = "Hello {Name}";
             source.SafeWriteToFile(Path.Combine(root.FullName, "test.dust"));
@@ -449,7 +449,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void ShouldBeAbleToCompileDustDirectory()
         {
-            DirectoryInfo root = new DirectoryInfo("c:\\temp\\{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
+            DirectoryInfo root = new DirectoryInfo("/bam/temp/{0}_"._Format(MethodBase.GetCurrentMethod().Name).RandomLetters(5));
             ContentResponder content = GetTestContentResponder(root);
             CommonTemplateRenderer templateRenderer = new CommonTemplateRenderer(content);
             TestMonkey monkey = new TestMonkey();
@@ -779,7 +779,7 @@ namespace Bam.Net.Server.Tests
 
         private static DirectoryInfo CreateTestRootAndSetDefaultConfig(string testAppName)
         {
-            DirectoryInfo dir = new DirectoryInfo("C:\\temp\\{0}_"._Format(testAppName).RandomLetters(4));
+            DirectoryInfo dir = new DirectoryInfo("/bam/temp/{0}_"._Format(testAppName).RandomLetters(4));
             CreateTestRootAndSetDefaultConfig(dir);
             return dir;
         }
@@ -800,7 +800,7 @@ namespace Bam.Net.Server.Tests
             server.MainLogger = logger;
             if (string.IsNullOrEmpty(rootDir))
             {
-                rootDir = ".\\Test_".RandomLetters(5);
+                rootDir = "./Test_".RandomLetters(5);
             }
             server.ContentRoot = rootDir;
             server.DefaultHostPrefix.Port = RandomNumber.Between(8081, 65535);
@@ -822,11 +822,11 @@ namespace Bam.Net.Server.Tests
         {
             if (string.IsNullOrEmpty(directoryName))
             {
-                directoryName = ".\\".RandomLetters(6);
+                directoryName = "./".RandomLetters(6);
             }
-            else if (!directoryName.StartsWith(".\\"))
+            else if (!directoryName.StartsWith("./"))
             {
-                directoryName = Path.Combine(".\\", directoryName);
+                directoryName = Path.Combine("./", directoryName);
             }
             DirectoryInfo test = new DirectoryInfo(directoryName);
             if (!test.Exists)
@@ -911,7 +911,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void GetPagesShouldIncludeSubdirectories()
         {
-            DirectoryInfo root = new DirectoryInfo(".\\Test_{0}"._Format(MethodBase.GetCurrentMethod().Name));
+            DirectoryInfo root = new DirectoryInfo("./Test_{0}"._Format(MethodBase.GetCurrentMethod().Name));
             if (root.Exists)
             {
                 root.Delete(true);
@@ -972,7 +972,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void FileExtensionShouldBeBlank()
         {
-            string path = "banana\\republic";
+            string path = "banana/republic";
             Expect.AreEqual("republic", Path.GetFileName(path));
             Expect.IsTrue(string.IsNullOrEmpty(Path.GetExtension(path)));
         }
@@ -998,7 +998,7 @@ namespace Bam.Net.Server.Tests
         public void SettingLoggerShouldCauseServerToReinitializeIfItsRunning()
         {
             string testAppName = MethodBase.GetCurrentMethod().Name;
-            DirectoryInfo dir = new DirectoryInfo("C:\\temp\\{0}_"._Format(testAppName).RandomLetters(4));
+            DirectoryInfo dir = new DirectoryInfo("/bam/temp/{0}_"._Format(testAppName).RandomLetters(4));
             CreateTestRootAndSetDefaultConfig(dir);
             BamServer server = CreateServer(dir.FullName);
             bool? stopped = false;
@@ -1025,7 +1025,7 @@ namespace Bam.Net.Server.Tests
         public void ServerShouldLoadConfOnInitialize()
         {
             string testAppName = MethodBase.GetCurrentMethod().Name;
-            DirectoryInfo dir = new DirectoryInfo("C:\\temp\\{0}_"._Format(testAppName).RandomLetters(4));
+            DirectoryInfo dir = new DirectoryInfo("/bam/temp/{0}_"._Format(testAppName).RandomLetters(4));
             CreateTestRootAndSetDefaultConfig(dir);
             BamServer server = CreateServer(dir.FullName);
             bool? ingCalled = false;

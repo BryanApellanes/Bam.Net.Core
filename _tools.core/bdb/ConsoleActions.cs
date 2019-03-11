@@ -12,7 +12,7 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultContentRoot = "C:\\bam\\content";
+        static string defaultContentRoot = BamPaths.ContentPath;
         static BamDbServer trooServer;
 
         [ConsoleAction("startTrooServer", "Start the troo server")]

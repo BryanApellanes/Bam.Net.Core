@@ -16,6 +16,11 @@ namespace Bam.Net
             }
         }
 
+        public static string BamHome
+        {
+            get { return Path.Combine(PathSegments); }
+        }
+
         public static string ToolkitPath { get { return Path.Combine(ToolkitSegments); } }
 
         public static string[] ToolkitSegments

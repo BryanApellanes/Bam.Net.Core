@@ -12,10 +12,10 @@ namespace Bam.Net
     { 
         static Paths()
         {
-            Root = "C:\\bam";
+            Root = BamPaths.BamHome;
 
-            SystemDrive = "/b/drive"; // should be mapped to PubRoot (net use b: \\bam\public)
-            WindowsDrive = "B:\\drive";
+            SystemDrive = Path.Combine(Root, "public"); 
+            WindowsDrive = OSInfo.Current == OSNames.Windows ? "C:\\bam\\public" : SystemDrive;
         }
 
         static string _root;
@@ -29,7 +29,7 @@ namespace Bam.Net
             }
         }
 
-        static string _pubRoot = @"\\bam\public";
+        static string _pubRoot = @"//bam/public";
         public static string PubRoot
         {
             get
