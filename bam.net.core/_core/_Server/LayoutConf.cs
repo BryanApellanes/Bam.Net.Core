@@ -26,7 +26,21 @@ namespace Bam.Net.Server
             Includes commonIncludes = includesResolver.ResolveCommonIncludes(conf.BamConf.ContentRoot);
             Includes appIncludes = includesResolver.ResolveApplicationIncludes(conf.Name, conf.BamConf.ContentRoot);
             Includes combined = commonIncludes.Combine(appIncludes);
-            // finish this
+            StringBuilder styleSheetLinkTags = new StringBuilder();
+            foreach (string css in combined.Css)
+            {
+                styleSheetLinkTags.AppendLine(StyleSheetLinkTag.For(css).Render());
+            }
+
+            layoutModel.StyleSheetLinkTags = styleSheetLinkTags.ToString();
+
+            StringBuilder scriptLinkTags = new StringBuilder();
+            foreach (string script in combined.Scripts)
+            {
+                scriptLinkTags.Append(ScriptTag.For(script).Render());
+            }
+
+            layoutModel.ScriptTags = scriptLinkTags.ToString();
         }
     }
 }

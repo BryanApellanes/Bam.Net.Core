@@ -64,6 +64,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Presentation\Html\Attributes" />
     <Folder Include="Presentation\Html\Js\" />
   </ItemGroup>
 

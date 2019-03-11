@@ -10,7 +10,7 @@ namespace Bam.Net.Data.Schema.Handlebars
 {
     public class HandlebarsDaoCodeWriter : Loggable, IDaoCodeWriter
     {
-        public HandlebarsDaoCodeWriter(IDaoTargetStreamResolver daoTargetStreamResolver = null):this(new HandlebarsDirectory(".\\Templates"), new HandlebarsEmbeddedResources(Assembly.GetExecutingAssembly()), daoTargetStreamResolver)
+        public HandlebarsDaoCodeWriter(IDaoTargetStreamResolver daoTargetStreamResolver = null):this(new HandlebarsDirectory("./Templates"), new HandlebarsEmbeddedResources(Assembly.GetExecutingAssembly()), daoTargetStreamResolver)
         { }
 
         public HandlebarsDaoCodeWriter(HandlebarsDirectory handlebarsDirectory, HandlebarsEmbeddedResources handlebarsEmbeddedResources, IDaoTargetStreamResolver daoTargetStreamResolver = null)

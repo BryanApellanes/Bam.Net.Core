@@ -15,7 +15,7 @@ namespace Bam.Net.Data.Repositories
     {
         public DefaultDataDirectoryProvider()
         {
-            DataRootDirectory = BamHome.DataPath;
+            DataRootDirectory = BamPaths.DataPath;
             AppDataDirectory = "AppData";
             UsersDirectory = "Users";
             SysDataDirectory = "SysData";

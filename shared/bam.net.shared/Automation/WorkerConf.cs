@@ -174,7 +174,7 @@ namespace Bam.Net.Automation
 
         public virtual void Save()
         {
-            Save(".\\{0}_WorkerConf.json"._Format(this.Name));
+            Save("./{0}_WorkerConf.json"._Format(this.Name));
         }
 
         public void Save(string filePath)

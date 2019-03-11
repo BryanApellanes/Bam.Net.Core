@@ -870,6 +870,16 @@ namespace Bam.Net
             }
         }
 
+        public static void Write(this string text, TextWriter textWriter)
+        {
+            textWriter.Write(text);
+        }
+
+        public static string HtmlEncode(this string value)
+        {
+            return HttpUtility.HtmlEncode(value);
+        }
+        
         public static string XmlToHumanReadable(this string xml, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.Unicode;
@@ -2977,6 +2987,14 @@ namespace Bam.Net
         }
 
         /// <summary>
+        /// Splits the specified text at capital letters inserting a hyphen as a separator.
+        /// </summary>
+        public static string KabobCase(this string stringToKabobify)
+        {
+            return PascalSplit(stringToKabobify, "-");
+        }
+        
+        /// <summary>
         /// Splits the specified text at capital letters inserting the specified separator.
         /// </summary>
         /// <param name="stringToPascalSplit"></param>
@@ -3027,10 +3045,10 @@ namespace Bam.Net
                 return string.Empty;
             }
         }
-
+        
         /// <summary>
         /// Return an acronym for the specified string using the 
-        /// captial letters in the string
+        /// capital letters in the string
         /// </summary>
         /// <param name="stringToAcronymize"></param>
         /// <param name="alwaysUseFirst"></param>

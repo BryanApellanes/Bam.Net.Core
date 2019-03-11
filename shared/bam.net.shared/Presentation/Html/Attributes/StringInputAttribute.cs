@@ -14,7 +14,7 @@ namespace Bam.Net.Presentation.Html
     /// properties.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple=false)]
-    public abstract partial class StringInput: Attribute
+    public abstract partial class StringInputAttribute: Attribute
     {
         public virtual bool? BreakAfterLabel { get; set; }
         public virtual bool? AddValue { get; set; }

@@ -76,7 +76,7 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public virtual string GetText(FileInfo file)
         {
-            if (_cachedFiles.ContainsKey(file.FullName))
+            if (EnsureFileIsLoaded(file))
             {
                 return _cachedFiles[file.FullName].GetText();
             }
@@ -90,6 +90,7 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public virtual byte[] GetZippedText(FileInfo file)
         {
+            EnsureFileIsLoaded(file);
             return _cachedFiles[file.FullName].GetZippedText();
         }
 
@@ -97,12 +98,20 @@ namespace Bam.Net.Caching.File
         /// Ensures the file is loaded.
         /// </summary>
         /// <param name="file">The file.</param>
-        public void EnsureFileIsLoaded(FileInfo file)
+        public bool EnsureFileIsLoaded(FileInfo file)
         {
-            if (!_cachedFiles.ContainsKey(file.FullName) || HashChanged(file))
+            if (!_cachedFiles.ContainsKey(file.FullName))
+            {
+                Load(file);
+                return false;
+            }
+
+            if (HashChanged(file))
             {
                 Load(file);
             }
+            
+            return true;
         }
 
         /// <summary>
@@ -133,17 +142,17 @@ namespace Bam.Net.Caching.File
         /// Reloads the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public virtual void Reload(FileInfo file)
+        public virtual CachedFile Reload(FileInfo file)
         {
             _cachedFiles.TryRemove(file.FullName, out CachedFile value);
-            Load(file);
+            return Load(file);
         }
 
         /// <summary>
         /// Loads the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public virtual void Load(FileInfo file)
+        public virtual CachedFile Load(FileInfo file)
         {
             string fullName = file.FullName;
 
@@ -152,6 +161,8 @@ namespace Bam.Net.Caching.File
             {
                 _hashes[fullName] = cachedFile.ContentHash;
             }
+
+            return cachedFile;
         }      
     }
 }

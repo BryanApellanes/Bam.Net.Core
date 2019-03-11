@@ -13,14 +13,13 @@ namespace Bam.Net.Presentation.Html
     /// The base class used for rendering inputs for string object 
     /// properties.
     /// </summary>
-    public abstract partial class StringInput: Attribute
+    public abstract partial class StringInputAttribute: Attribute
     {        
-        public abstract TagBuilder CreateInput();
+        public abstract Tag CreateInput(object data = null);
 
-        protected TagBuilder CreateInput(string inputType)
+        protected Tag CreateInput(string inputType)
         {
-            return new TagBuilder("input")
-                .Type(inputType);
+            return Tags.Input(new {type = inputType});
         }
     }
 }

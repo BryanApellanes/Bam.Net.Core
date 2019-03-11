@@ -27,15 +27,15 @@ namespace Bam.Net.Server
             this.ContentRoot = rootToCheck;
         }
 
-        public bool Locate(string path, out string outPath, out string[] checkedPaths)
+        public bool Locate(string relativePath, out string outAbsolutePath, out string[] checkedPaths)
         {
-			if (!path.StartsWith(Path.DirectorySeparatorChar.ToString()))
+			if (!relativePath.StartsWith(Path.DirectorySeparatorChar.ToString()))
 			{
-				path = "{0}{1}"._Format(Path.DirectorySeparatorChar.ToString(), path);
+				relativePath = "{0}{1}"._Format(Path.DirectorySeparatorChar.ToString(), relativePath);
 			}
-            string ext = Path.GetExtension(path).ToLowerInvariant();
+            string ext = Path.GetExtension(relativePath).ToLowerInvariant();
             string foundPath = string.Empty;
-			string checkNext = Fs.CleanPath("~" + path);
+			string checkNext = Fs.CleanPath("~" + relativePath);
             Fs fs = ContentRoot;
             List<string> pathsChecked = new List<string>
             {
@@ -52,7 +52,7 @@ namespace Bam.Net.Server
                     {
                         List<string> segments = new List<string>();
                         segments.AddRange(dir.RelativePath.DelimitSplit("/", "\\"));
-                        segments.AddRange(path.DelimitSplit("/", "\\"));
+                        segments.AddRange(relativePath.DelimitSplit("/", "\\"));
                         string subPath = Path.Combine(segments.ToArray());
                         checkNext = Fs.CleanPath(subPath);
                         pathsChecked.Add(checkNext);
@@ -79,7 +79,7 @@ namespace Bam.Net.Server
             }
             
             checkedPaths = pathsChecked.ToArray();
-            outPath = foundPath;
+            outAbsolutePath = foundPath;
             return !string.IsNullOrEmpty(foundPath);
         }
 

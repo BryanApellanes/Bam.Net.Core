@@ -49,7 +49,7 @@ namespace Bam.Net
             {
                 DateTime now = DateTime.UtcNow;
                 DateTime local = now.ToLocalTime();
-                FileInfo logFile = new FileInfo(".\\Bam.Net.Resolver.log");
+                FileInfo logFile = new FileInfo("./Bam.Net.Resolver.log");
                 string line = $"[LocalTime({local.ToString()} ms {local.Millisecond}), UtcTime({now.ToString()} ms {now.Millisecond})]::Bam.Net.Resolver::{message}";
                 using (StreamWriter sw = new StreamWriter(logFile.FullName))
                 {

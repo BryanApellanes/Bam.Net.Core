@@ -24,8 +24,8 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultContentRoot = "C:\\bam\\content";
-        static string defaultGlooScriptsSrcPath = "C:\\bam\\sys\\gloo\\scripts";
+        static string defaultContentRoot = "/opt/bam/content";
+        static string defaultGlooScriptsSrcPath = "/opt/bam/sys/gloo/scripts";
 
         static BamRpcServer glooServer;
         
@@ -193,7 +193,7 @@ namespace Bam.Net.Application
 
         public static Assembly CompileTvgSource(string csglooDirectoryPath, string extension)
         {
-            string binPath = $"C:\\bam\\sys\\{extension}\\bin";
+            string binPath = $"/opt/bam/sys/{extension}/bin";//$"C:\\bam\\sys\\{extension}\\bin";
             DirectoryInfo csTvgSrcDirectory = new DirectoryInfo(csglooDirectoryPath.Or(defaultGlooScriptsSrcPath)).EnsureExists();
             DirectoryInfo csTvgBinDirectory = new DirectoryInfo(binPath).EnsureExists();
             FileInfo[] files = csTvgSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);

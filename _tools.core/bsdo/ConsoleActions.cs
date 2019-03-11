@@ -16,8 +16,8 @@ namespace Bam.Net
     [Serializable]
     public class ConsoleActions : CommandLineTestInterface
     {
-        static string _genDir = "C:\\bam\\src\\_gen\\Schema.org";
-        static string _tmpDir = "C:\\bam\\src\\_gen\\Schema.org.tmp";
+        static string _genDir = "/opt/bam/src/_gen/Schema.org";//"C:\\bam\\src\\_gen\\Schema.org";
+        static string _tmpDir = "/opt/bam/src/_gen/Schema.org.tmp";//"C:\\bam\\src\\_gen\\Schema.org.tmp";
 
         public static HashSet<string> FailedTypeNames { get; private set; }
         static HashSet<string> _writtenTypes;

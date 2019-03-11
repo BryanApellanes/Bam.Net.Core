@@ -82,7 +82,7 @@ namespace Bam.Net.Application
             string schemaName = genInfo.SchemaName;
             string fromNameSpace = genInfo.FromNameSpace;
             string toNameSpace = genInfo.ToNameSpace;
-            string defaultPath = $".\\{schemaName}_Generated";
+            string defaultPath = $"./{schemaName}_Generated";
             DirectoryInfo defaultDir = new DirectoryInfo(defaultPath);
             defaultPath = defaultDir.FullName;
             string writeTo = GetArgument("writeSrc", $"Please enter the path to write code to (default ({defaultPath}))").Or(defaultPath);
@@ -114,7 +114,7 @@ namespace Bam.Net.Application
                 OutLineFormat("File not found: {0}", ConsoleColor.Magenta, file.FullName);
                 Exit(1);
             }
-            string defaultPath = $".\\{file.Name}_Dto_Generated\\";
+            string defaultPath = $"./{file.Name}_Dto_Generated/";
             string sourcePath = GetArgument("writeSrc", $"Please enter the path to write source code to [{defaultPath}]").Or(defaultPath);
             bool keepSource = Confirm("Keep source files?");
             bool compile = Confirm("Generate assembly?");
@@ -149,7 +149,7 @@ namespace Bam.Net.Application
             GenerationSettings genInfo = GetProtoBufGenerationSettings();
             Type[] types = genInfo.Assembly.GetTypes().Where(t => !t.IsNested &&  !string.IsNullOrEmpty(t.Namespace) && t.Namespace.Equals(genInfo.FromNameSpace)).ToArray();
             T generator = GetGenerator<T>($"{genInfo.ToNameSpace}.dll", types);
-            string defaultPath = $".\\{genInfo.ToNameSpace}_Protobuf_Generated";
+            string defaultPath = $"./{genInfo.ToNameSpace}_Protobuf_Generated";
             string sourcePath = GetArgument("writeSrc", $"Please enter the path to write source code to [{defaultPath}]").Or(defaultPath);
             generator.WriteSource(sourcePath);
         }

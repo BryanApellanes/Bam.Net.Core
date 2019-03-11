@@ -33,7 +33,7 @@ namespace Bam.Net.Application
                 return _appDataLock.DoubleCheckLock(ref _appData, () => new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, AppDataFolderName)));
             }
         }
-
+        
         [ConsoleAction("config", "Write the default config file backing up the current file if it exists")]
         public void Config()
         {

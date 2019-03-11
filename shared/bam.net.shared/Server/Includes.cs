@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Bam.Net.Server
 {
@@ -11,8 +13,16 @@ namespace Bam.Net.Server
         {
             this._scripts = new HashSet<string>();
             this._css = new List<string>();
+            FoundCommonPaths = new HashSet<string>();
+            FoundAppPaths = new HashSet<string>();
         }
 
+        [JsonIgnore]
+        public HashSet<string> FoundCommonPaths { get; set; }
+        
+        [JsonIgnore]
+        public HashSet<string> FoundAppPaths { get; set; }
+        
         HashSet<string> _scripts;
         public string[] Scripts
         {
@@ -80,7 +90,7 @@ namespace Bam.Net.Server
 
             result.Css = css.ToArray();
             result.Scripts = scripts.ToArray();
-
+            
             return result;
         }
     }

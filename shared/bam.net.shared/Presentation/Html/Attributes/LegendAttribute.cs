@@ -12,9 +12,9 @@ namespace Bam.Net.Presentation.Html
 	/// Used to specify the legend to use
 	/// when building InputForms or MethodForms
 	/// </summary>
-    public class Legend: Attribute
+    public class LegendAttribute: Attribute
     {
-        public Legend()
+        public LegendAttribute()
         {
         }
 

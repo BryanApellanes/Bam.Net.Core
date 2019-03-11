@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Bam.Net.Presentation.Html
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public partial class Hidden: StringInput
+    public partial class PasswordAttribute: StringInputAttribute
     {
         public override bool? BreakAfterLabel
         {
@@ -28,24 +27,15 @@ namespace Bam.Net.Presentation.Html
         {
             get
             {
-                return true;
+                return false;
             }
-            set
-            {
-                // always true
-            }
+            set { }
         }
 
         public override bool? AddLabel
         {
-            get
-            {
-                return false;
-            }
-            set
-            {
-                // always false
-            }
+            get;
+            set;
         }
     }
 }

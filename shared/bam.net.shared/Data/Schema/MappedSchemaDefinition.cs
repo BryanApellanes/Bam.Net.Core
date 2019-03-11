@@ -12,7 +12,7 @@ namespace Bam.Net.Data.Schema
 {
     public class MappedSchemaDefinition
     {
-        public MappedSchemaDefinition() : this(".\\{0}.lzs.json"._Format(typeof(MappedSchemaDefinition).Name)) { }
+        public MappedSchemaDefinition() : this("./{0}.lzs.json"._Format(typeof(MappedSchemaDefinition).Name)) { }
         public MappedSchemaDefinition(string filePath)
         {
             this.SchemaNameMap = new SchemaNameMap();

@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Bam.Net.Presentation.Html
 {
-    public partial class TextArea : StringInput
+    public partial class TextAreaAttribute : StringInputAttribute
     {
-        public override TagBuilder CreateInput()
+        public override Tag CreateInput(object data = null)
         {
-            return new TagBuilder("textarea")
+            return Tags.Textarea()
                             .Attr("rows", this.Rows.ToString())
                             .Attr("cols", this.Cols.ToString())
                             .TextIf(Default != null, (string)Default);

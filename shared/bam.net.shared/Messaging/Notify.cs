@@ -25,7 +25,7 @@ namespace Bam.Net.Messaging
             {
                 return _credentialVaultSync.DoubleCheckLock(ref _credentialVault, () =>
                 {
-                    return Vault.Load(new FileInfo(".\\SysCreds.vault.sqlite"), CredentialVaultName, "".RandomLetters(16), Log.Default);
+                    return Vault.Load(new FileInfo("./SysCreds.vault.sqlite"), CredentialVaultName, "".RandomLetters(16), Log.Default);
                 });
             }
             set

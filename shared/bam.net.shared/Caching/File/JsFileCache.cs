@@ -112,24 +112,25 @@ namespace Bam.Net.Caching.File
         /// Reloads the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public override void Reload(FileInfo file)
+        public override CachedFile Reload(FileInfo file)
         {
             _minCache.Remove(file.FullName);
             _minText.Remove(file.FullName);
             _minTextBytes.Remove(file.FullName);
-            base.Reload(file);
+            return base.Reload(file);
         }
 
         /// <summary>
         /// Loads the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public override void Load(FileInfo file)
+        public override CachedFile Load(FileInfo file)
         {
-            base.Load(file);
-            _minCache.AddMissing(file.FullName, new MinifyResult(GetText(file)));
+            CachedFile cachedFile = base.Load(file);
+            _minCache.AddMissing(file.FullName, new MinifyResult(System.IO.File.ReadAllText(file.FullName)));
             _minText.AddMissing(file.FullName, _minCache[file.FullName].MinScript);
             _minTextBytes.AddMissing(file.FullName, _minText[file.FullName].GZip());
+            return cachedFile;
         }
     }
 }

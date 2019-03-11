@@ -2,6 +2,7 @@
 	Copyright © Bryan Apellanes 2015  
 */
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -25,8 +26,6 @@ namespace Bam.Net.Server
 {
     public partial class AppContentResponder : ContentResponder
     {
-        public const string CommonFolder = "common";
-
         public AppContentResponder(ContentResponder commonResponder, AppConf conf, DefaultDataDirectoryProvider dataSettings = null, ILogger logger = null)
             : base(commonResponder.BamConf, logger)
         {
@@ -40,11 +39,9 @@ namespace Bam.Net.Server
             AppConf = conf;
             AppRoot = AppConf.AppRoot;
             AppContentLocator = ContentLocator.Load(this);
-            Fs commonRoot = new Fs(new DirectoryInfo(Path.Combine(ServerRoot.Root, CommonFolder)));
             ContentHandlers = new Dictionary<string, ContentHandler>();
             AllRequestHandler = new ContentHandler($"{conf.Name}.AllRequestHandler", AppRoot) { CheckPaths = false };
             CustomHandlerMethods = new List<MethodInfo>();
-            CommonContentLocator = ContentLocator.Load(commonRoot);
             SetUploadHandler();
             SetBaseIgnorePrefixes();
             ContentHandlerScanTask = ScanForContentHandlers();
@@ -130,12 +127,6 @@ namespace Bam.Net.Server
         public DefaultDataDirectoryProvider DataSettings { get; }
 
         public ContentLocator AppContentLocator
-        {
-            get;
-            private set;
-        }
-
-        public ContentLocator CommonContentLocator
         {
             get;
             private set;
@@ -325,7 +316,6 @@ namespace Bam.Net.Server
                     }
                     else if (AppContentLocator.Locate(path, out string locatedPath, out checkedPaths))
                     {
-                        handled = true;
                         string foundExt = Path.GetExtension(locatedPath);
                         if (FileCachesByExtension.ContainsKey(foundExt))
                         {
@@ -344,11 +334,11 @@ namespace Bam.Net.Server
                         {
                             content = File.ReadAllBytes(locatedPath);
                         }
+                        handled = true;
                         Etags.SetLastModified(response, request.Url.ToString(), new FileInfo(locatedPath).LastWriteTime);
                     }
                     else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path) || (AppRoot.FileExists("~/pages{0}.html"._Format(path), out locatedPath)))
                     {
-
                         content = RenderLayout(response, path);
                         handled = true;
                     }
@@ -425,13 +415,13 @@ namespace Bam.Net.Server
             }
         }
 
-        Dictionary<string, LayoutModel> _layoutModelsByPath;
+        ConcurrentDictionary<string, LayoutModel> _layoutModelsByPath;
         object _layoutsByPathSync = new object();
-        protected internal Dictionary<string, LayoutModel> LayoutModelsByPath
+        protected internal ConcurrentDictionary<string, LayoutModel> LayoutModelsByPath
         {
             get
             {
-                return _layoutsByPathSync.DoubleCheckLock(ref _layoutModelsByPath, () => new Dictionary<string, LayoutModel>());
+                return _layoutsByPathSync.DoubleCheckLock(ref _layoutModelsByPath, () => new ConcurrentDictionary<string, LayoutModel>());
             }
         }
 

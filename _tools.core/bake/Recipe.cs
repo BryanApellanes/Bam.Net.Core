@@ -10,7 +10,7 @@ namespace Bam.Net.Application
         public Recipe()
         {
             ProjectRoot = "_tools.core";
-            OutputDirectory = Path.Combine(BamHome.ToolkitSegments);
+            OutputDirectory = Path.Combine(BamPaths.ToolkitSegments);
         }
         /// <summary>
         /// Gets or sets the root directory where the bam toolkit

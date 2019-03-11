@@ -22,8 +22,8 @@ namespace Bam.Net.Automation
         {
             public SftpConfig()
             {
-                RemoteRoot = "C:\\bam\\files\\in";
-                LocalRoot = "C:\\bam\\files\\out";
+                RemoteRoot = "/opt/bam/files/in";
+                LocalRoot = "/opt/bam/files/out";
             }
             
             public string UserName { get; set; }

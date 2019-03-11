@@ -34,6 +34,6 @@ namespace Bam.Net.Caching.File
         /// Loads the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        void Load(FileInfo file);
+        CachedFile Load(FileInfo file);
     }
 }

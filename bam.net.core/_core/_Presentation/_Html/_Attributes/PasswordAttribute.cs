@@ -9,13 +9,11 @@ using System.Text;
 
 namespace Bam.Net.Presentation.Html
 {
-    public partial class ReadOnly: StringInput
+    public partial class PasswordAttribute: StringInputAttribute
     {
-        public override TagBuilder CreateInput()
+        public override Tag CreateInput(object data = null)
         {
-            return new TagBuilder("span")
-                .Name(PropertyName)
-                .TextIf(Default != null, (string)Default);
+            return CreateInput("password").SetAttribute("name", PropertyName);
         }
     }
 }

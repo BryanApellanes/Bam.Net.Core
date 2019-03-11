@@ -6,45 +6,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace Bam.Net.Presentation.Html
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public partial class TextArea: StringInput
+    public partial class ReadOnlyAttribute: StringInputAttribute
     {
-        public TextArea()
-        {
-            this.Rows = 10;
-            this.Cols = 30;
-        }
-
-        public int Rows { get; set; }
-        public int Cols { get; set; }
-
-        public override bool? IsHidden
-        {
-            get;
-            set;
-        }
-
         public override bool? BreakAfterLabel
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-                // always true
-            }
-        }
-
-        public override bool? AddLabel
         {
             get;
             set;
         }
 
         public override bool? AddValue
+        {
+            get;
+            set;
+        }
+
+        public override bool? IsHidden
+        {
+            get
+            {
+                return false;
+            }
+            set
+            {
+                // always false
+            }
+        }
+
+        public override bool? AddLabel
         {
             get;
             set;

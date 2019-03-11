@@ -6,20 +6,13 @@ using System.Text;
 
 namespace Bam.Net
 {
-    public class BamHome
+    public class BamPaths
     {
         public static string[] PathSegments
         {
             get
             {
-                if(OSInfo.Current == OSNames.Windows)
-                {
-                    return new string[] { "C:", "bam" };
-                }
-                else
-                {
-                    return new string[] { "~/", ".bam" };
-                }
+                return new string[] { "/", "opt", "bam" };
             }
         }
 

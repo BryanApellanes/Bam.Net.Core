@@ -105,7 +105,7 @@ namespace Bam.Net.Data.Schema
                  
         public void Generate(SchemaDefinition schema)
         {
-            Generate(schema, ".\\");
+            Generate(schema, "./");
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Bam.Net.Data.Schema
         /// <param name="targetResolver">If specified, generated code will be 
         /// written to the stream returned by this function</param>
         /// <param name="root">The root file path to use if no target resolver is specified</param>
-        public void Generate(SchemaDefinition schema, Func<string, Stream> targetResolver = null, string root = ".\\", string partialsDir = null)
+        public void Generate(SchemaDefinition schema, Func<string, Stream> targetResolver = null, string root = "./", string partialsDir = null)
         {
             if (string.IsNullOrEmpty(Namespace))
             {

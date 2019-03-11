@@ -418,13 +418,13 @@ namespace Bam.Net.Data.Schema
             CurrentSchema.RemoveTable(tableName);
         }
 
-        public SchemaResult GenerateDao(FileInfo databaseDotJs, bool compile = false, bool keepSource = false, string genTo = ".\\tmp", string partialsDir = null)
+        public SchemaResult GenerateDao(FileInfo databaseDotJs, bool compile = false, bool keepSource = false, string genTo = "./tmp", string partialsDir = null)
         {
             string result = databaseDotJs.JsonFromJsLiteralFile("database");
             return GenerateDao(result, compile ? new DirectoryInfo(BinDir) : null, keepSource, genTo, partialsDir);
         }
 
-        public SchemaResult GenerateDao(FileInfo databaseDotJs, DirectoryInfo compileTo, bool keepSource = false, string genTo = ".\\tmp", string partialsDir = null)
+        public SchemaResult GenerateDao(FileInfo databaseDotJs, DirectoryInfo compileTo, bool keepSource = false, string genTo = "./tmp", string partialsDir = null)
         {
             string result = databaseDotJs.JsonFromJsLiteralFile("database");
 

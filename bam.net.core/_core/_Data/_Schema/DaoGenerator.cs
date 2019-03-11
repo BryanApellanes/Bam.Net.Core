@@ -15,7 +15,7 @@ namespace Bam.Net.Data.Schema
 
             Namespace = "DaoGenerated";
             TargetStreamResolver = targetStreamResolver ?? new DaoTargetStreamResolver();
-            DaoCodeWriter = codeWriter ?? new HandlebarsDaoCodeWriter(new HandlebarsDirectory(".\\Handlebars"), new HandlebarsEmbeddedResources(GetType().Assembly));
+            DaoCodeWriter = codeWriter ?? new HandlebarsDaoCodeWriter(new HandlebarsDirectory("./Handlebars"), new HandlebarsEmbeddedResources(GetType().Assembly));
         }
     }
 }

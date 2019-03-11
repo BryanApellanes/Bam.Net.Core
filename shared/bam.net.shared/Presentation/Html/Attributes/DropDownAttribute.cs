@@ -18,23 +18,23 @@ namespace Bam.Net.Presentation.Html
     /// for this to function properly.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public partial class DropDown : StringInput
+    public partial class DropDownAttribute : StringInputAttribute
     {
-        static DropDown()
+        static DropDownAttribute()
         {
             OptionLookup = new Dictionary<string, Dictionary<string, string>>();
         }
         
         string key;
-        public DropDown(string optionKey)
+        public DropDownAttribute(string optionKey)
         {
             this.key = optionKey;
         }
 
-        public DropDown(Type enumType)
+        public DropDownAttribute(Type enumType)
         {
             this.key = enumType.Name;
-            DropDown.SetOptions(this.key, enumType);
+            DropDownAttribute.SetOptions(this.key, enumType);
         }
 
         public Dictionary<string, string> Options
@@ -88,6 +88,11 @@ namespace Bam.Net.Presentation.Html
         {
             get;
             set;
+        }
+
+        public override Tag CreateInput(object data = null)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool? BreakAfterLabel

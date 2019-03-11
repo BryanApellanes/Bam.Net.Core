@@ -1,34 +1,32 @@
-﻿/*
-	Copyright © Bryan Apellanes 2015  
-*/
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Bam.Net.Html.Js;
 using Bam.Net.ServiceProxy;
 using System.ComponentModel;
 
 namespace Bam.Net.Presentation.Html
 {
+    // TODO: this class contains some horrendous copy and paste code that should be cleaned up 
+    // or replaced.
     /// <summary>
     /// Used to build input forms for specified 
-    /// types, methods and their parameters
+    /// types, methods and their parameters. 
     /// </summary>
-    public partial class InputFormBuilder
+    public partial class InputFormProvider
     {
         Type invocationType;
-        Dictionary<Type, CustomInputBuilder> customAttributeBuilders;
-        public InputFormBuilder()
+        Dictionary<Type, Func<Type, Tag>> customAttributeBuilders;
+        public InputFormProvider()
         {
             this.LabelCssClass = "label";
             this.LabelFormat = "{0}";
-            this.customAttributeBuilders = new Dictionary<Type, CustomInputBuilder>();
+            this.customAttributeBuilders = new Dictionary<Type, Func<Type, Tag>>();
             this.RecursionLimit = 5;
             this.AddLabels = true;
         }
 
-        public InputFormBuilder(Type invocationTarget)
+        public InputFormProvider(Type invocationTarget)
             : this()
         {
             this.invocationType = invocationTarget;
@@ -45,112 +43,78 @@ namespace Bam.Net.Presentation.Html
                 this.invocationType = value;
             }
         }
-
-        TagBuilderDelegate numberOrStringBuilder;
-        public TagBuilderDelegate NumberBuilder
+        
+        Func<ParameterInfo, Tag> _numberTagProvider;
+        public Func<ParameterInfo, Tag> NumberTagProvider
         {
             get
             {
-                if (numberOrStringBuilder == null)
+                if (_numberTagProvider == null)
                 {
-                    numberOrStringBuilder = (p) =>
-                    {
-                        TagBuilder c = CreateInput("number", p);
-                        return c;
-                    };
+                    _numberTagProvider = (p) => InputProvider.CreateInput(InputTypes.Number, p);
                 }
 
-                return numberOrStringBuilder;
+                return _numberTagProvider;
             }
             set
             {
-                numberOrStringBuilder = value;
+                _numberTagProvider = value;
             }
         }
 
-        TagBuilderDelegate stringBuilder;
-        public TagBuilderDelegate StringBuilder
+        Func<ParameterInfo, Tag> _textTagProvider;
+        public Func<ParameterInfo, Tag> TextTagProvider
         {
             get
             {
-                if (stringBuilder == null)
+                if (_textTagProvider == null)
                 {
-                    stringBuilder = (p) =>
-                    {
-                        TagBuilder c = CreateInput("text", p);
-                        return c;
-                    };
+                    _textTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Text, pi);
                 }
 
-                return stringBuilder;
+                return _textTagProvider;
             }
             set
             {
-                stringBuilder = value;
+                _textTagProvider = value;
             }
         }
 
-        TagBuilderDelegate dateTimeBuilder;
-        public TagBuilderDelegate DateTimeBuilder
+        Func<ParameterInfo, Tag> _dateTimeTagProvider;
+        public Func<ParameterInfo, Tag> DateTimeTagProvider
         {
             get
             {
-                if (dateTimeBuilder == null)
+                if (_dateTimeTagProvider == null)
                 {
-                    dateTimeBuilder = (name) =>
-                    {
-                        TagBuilder datepicker = CreateInput("text", name)
-                            .DataSet("plugin", "datepicker");
-
-                        return datepicker;
-                    };
+                    _dateTimeTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Text, pi)
+                        .DataSet("plugin", "datepicker");
                 }
-                return dateTimeBuilder;
+                
+                return _dateTimeTagProvider;
             }
             set
             {
-                dateTimeBuilder = value;
+                _dateTimeTagProvider = value;
             }
         }
 
-        TagBuilderDelegate boolBuilder;
-        public TagBuilderDelegate BooleanBuilder
+        Func<ParameterInfo, Tag> _booleanTagProvider;
+        public Func<ParameterInfo, Tag> BooleanTagProvider
         {
             get
             {
-                if (boolBuilder == null)
+                if (_booleanTagProvider == null)
                 {
-                    boolBuilder = (name) =>
-                    {
-                        return CreateInput("checkbox", name);
-                    };
+                    _booleanTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Checkbox, pi);
                 }
 
-                return boolBuilder;
+                return _booleanTagProvider;
             }
 
             set
             {
-                boolBuilder = value;
-            }
-        }
-
-        /// <summary>
-        /// Used to register the specified InputBuilder for the specified attribute T.
-        /// If a property is addorned with the specified Attribute T the registered 
-        /// InputBuilder will be used to build the input html for that property.
-        /// </summary> 
-        /// <typeparam name="T"></typeparam>
-        /// <param name="builder"></param>
-        public void RegisterAttributeBuilder<T>(CustomInputBuilder builder) where T : Attribute
-        {
-            if (!this.customAttributeBuilders.ContainsKey(typeof(T)))
-            {
-                this.customAttributeBuilders.Add(typeof(T), builder);
-            }
-            else
-            {
-                this.customAttributeBuilders[typeof(T)] = builder;
+                _booleanTagProvider = value;
             }
         }
 
@@ -193,40 +157,38 @@ namespace Bam.Net.Presentation.Html
             set;
         }
 
-        public TagBuilder MethodForm(string methodName, Dictionary<string, object> defaults)
+        public Tag MethodForm(string methodName, Dictionary<string, object> defaults)
         {
             int ignore = -1;
             return MethodForm(methodName, defaults, out ignore);
         }
 
 
-        public TagBuilder MethodForm(string methodName, Dictionary<string, object> defaults, out int paramCount)
+        public Tag MethodForm(string methodName, Dictionary<string, object> defaults, out int paramCount)
         {
             return MethodForm("fieldset", methodName, defaults, out paramCount);
         }
 
-        public TagBuilder MethodForm(string wrapperTagName, string methodName, Dictionary<string, object> defaults)
+        public Tag MethodForm(string wrapperTagName, string methodName, Dictionary<string, object> defaults)
         {
-            int ignore = -1;
-            return MethodForm(wrapperTagName, methodName, defaults, out ignore);
+            return MethodForm(wrapperTagName, methodName, defaults, out int ignore);
         }
 
-        public TagBuilder MethodForm(string wrapperTagName, string methodName, Dictionary<string, object> defaults, out int paramCount)
+        public Tag MethodForm(string wrapperTagName, string methodName, Dictionary<string, object> defaults, out int paramCount)
         {
             Args.ThrowIfNull(invocationType, "InvocationType");
             return MethodForm(invocationType, wrapperTagName, methodName, defaults, out paramCount);
         }
 
-        public TagBuilder MethodForm(Type type, string methodName)
-        {
-            int ignore = -1;
-            return MethodForm(type, "fieldset", methodName, null, out ignore);
-        }
+		public Tag MethodForm(Type type, string methodName)
+		{
+			return MethodForm(type, "fieldset", methodName, null, out int ignore);
+		}
 
-        public TagBuilder MethodForm(Type type, string wrapperTagName, string methodName, Dictionary<string, object> defaults, out int paramCount)
-        {
-            return MethodForm(type, wrapperTagName, methodName, defaults, false, out paramCount);
-        }
+		public Tag MethodForm(Type type, string wrapperTagName, string methodName, Dictionary<string, object> defaults, out int paramCount)
+		{
+			return MethodForm(type, wrapperTagName, methodName, defaults, false, out paramCount);
+		}
 
         /// <summary>
         /// Build a form to be used as parameters for the specified method
@@ -238,20 +200,20 @@ namespace Bam.Net.Presentation.Html
         /// <param name="registerProxy"></param>
         /// <param name="paramCount"></param>
         /// <returns></returns>
-        public TagBuilder MethodForm(Type type, string wrapperTagName, string methodName, Dictionary<string, object> defaults, bool registerProxy, out int paramCount)
+        public Tag MethodForm(Type type, string wrapperTagName, string methodName, Dictionary<string, object> defaults, bool registerProxy, out int paramCount)
         {
             Args.ThrowIfNull(type, "InvocationType");
-            if (registerProxy)
-            {
-                ServiceProxySystem.Register(type);
-            }
+			if(registerProxy)
+			{
+				ServiceProxySystem.Register(type);
+			}
 
             MethodInfo method = type.GetMethod(methodName);
             defaults = defaults ?? new Dictionary<string, object>();
 
             System.Reflection.ParameterInfo[] parameters = method.GetParameters();
             paramCount = parameters.Length;
-            TagBuilder form = new TagBuilder(wrapperTagName);
+            Tag form = Tag.Of(wrapperTagName);
 
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -259,15 +221,14 @@ namespace Bam.Net.Presentation.Html
                 object defaultValue = defaults.ContainsKey(parameter.Name) ? defaults[parameter.Name] : null;
                 string defaultString = defaultValue == null ? string.Empty : defaultValue.ToString();
 
-                TagBuilder label = new TagBuilder("label")
-                    .Html(string.Format(this.LabelFormat, parameter.Name.PascalSplit(" ")))
-                    .Css(this.LabelCssClass);
-
+                Tag label = Tag.Of("label", null, string.Format(this.LabelFormat, parameter.Name.PascalSplit(" ")))
+                    .AddClass(this.LabelCssClass);
+                
                 bool addLabel = this.AddLabels;
                 bool addValue = true;
                 bool wasObject = false;
                 bool handled = false;
-                TryBuildPrimitiveInput(parameter, defaultValue, ref addValue, ref handled, out TagBuilder toAdd, out Type paramType);
+                TryBuildPrimitiveInput(parameter, defaultValue, ref addValue, ref handled, out Tag toAdd, out Type paramType);
 
                 if (!handled)
                 {
@@ -284,38 +245,39 @@ namespace Bam.Net.Presentation.Html
 
                 if (addLabel)
                 {
-                    form.Child(label).BrIf(this.Layout == ParameterLayouts.BreakAfterLabels);
+                    form.Child(label).BreakIf(this.Layout == ParameterLayouts.BreakAfterLabels);
                 }
 
-                form.Child(toAdd).BrIf(
-                    this.Layout != ParameterLayouts.NoBreaks &&
+                form.Child(toAdd).BreakIf(
+                    this.Layout != ParameterLayouts.NoBreaks && 
                     i != parameters.Length - 1 &&
                     !wasObject);
             }
 
             return form.DataSet("method", methodName)
-                .FirstChildIf(wrapperTagName.Equals("fieldset"), new TagBuilder("legend")
+                .FirstChildIf(wrapperTagName.Equals("fieldset"), Tags.Legend()
                 .Text(GetLegend(method)));
         }
 
-        private string GetLegend(MethodInfo method)
-        {
-            if (method.HasCustomAttributeOfType<Legend>(out Legend legend))
-            {
-                return legend.Value;
-            }
-            else
-            {
-                return method.Name.PascalSplit(" ");
-            }
-        }
+		private string GetLegend(MethodInfo method)
+		{
+			LegendAttribute legendAttribute;
+			if(method.HasCustomAttributeOfType<LegendAttribute>(out legendAttribute))
+			{
+				return legendAttribute.Value;
+			}
+			else
+			{
+				return method.Name.PascalSplit(" ");
+			}
+		}
 
         private string GetLegend(Type type)
         {
-            Legend legend;
-            if (type.HasCustomAttributeOfType<Legend>(out legend))
+            LegendAttribute legendAttribute;
+            if (type.HasCustomAttributeOfType<LegendAttribute>(out legendAttribute))
             {
-                return legend.Value;
+                return legendAttribute.Value;
             }
             else
             {
@@ -323,7 +285,7 @@ namespace Bam.Net.Presentation.Html
             }
         }
 
-        private void TryBuildPrimitiveInput(System.Reflection.ParameterInfo parameter, object defaultValue, ref bool addValue, ref bool handled, out TagBuilder toAdd, out Type paramType)
+        private void TryBuildPrimitiveInput(System.Reflection.ParameterInfo parameter, object defaultValue, ref bool addValue, ref bool handled, out Tag toAdd, out Type paramType)
         {
             toAdd = null;
 
@@ -332,33 +294,33 @@ namespace Bam.Net.Presentation.Html
             // string - text 
             if (paramType == typeof(int) || paramType == typeof(long))
             {
-                toAdd = NumberBuilder(parameter.Name);
+                toAdd = NumberTagProvider(parameter);
                 handled = true;
             }
             else if (paramType == typeof(string))
             {
-                toAdd = StringBuilder(parameter.Name);
+                toAdd = TextTagProvider(parameter);
                 handled = true;
             }
             // DateTime - text with jQuery datepicker    
             else if (paramType == typeof(DateTime))
             {
                 addValue = defaultValue != null;
-                toAdd = DateTimeBuilder(parameter.Name)
+                toAdd = DateTimeTagProvider(parameter)
                     .ValueIf(addValue, ((DateTime)defaultValue).ToShortDateString());
 
                 handled = true;
             }// bool - checkbox
             else if (paramType == typeof(bool))
             {
-                toAdd = BooleanBuilder(parameter.Name)
+                toAdd = BooleanTagProvider(parameter)
                     .CheckedIf(defaultValue != null && (bool)defaultValue);
 
                 handled = true;
             }// enum - radio list
             else if (paramType.IsEnum)
             {
-                toAdd = RadioList.FromEnum(paramType, defaultValue);
+                toAdd = Tag.RadioList(paramType, defaultValue);
                 addValue = false;
 
                 handled = true;
@@ -366,18 +328,18 @@ namespace Bam.Net.Presentation.Html
 
         }
 
-        public TagBuilder FieldsetFor(Type paramType, object defaultValues, string name = null)
+        public Tag FieldsetFor(Type paramType, object defaultValues, string name = null)
         {
             return FieldsetFor(paramType, defaultValues, name, 0);
         }
 
-        /// <summary>
-        /// Get a form to input the properties of the specified instance
-        /// </summary>
-        /// <param name="param"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public TagBuilder FieldsetFor(object param, string name = null)
+		/// <summary>
+		/// Get a form to input the properties of the specified instance
+		/// </summary>
+		/// <param name="param"></param>
+		/// <param name="name"></param>
+		/// <returns></returns>
+        public Tag FieldsetFor(object param, string name = null)
         {
             if (param is Type)
             {
@@ -389,34 +351,31 @@ namespace Bam.Net.Presentation.Html
             }
         }
 
-        public TagBuilder FieldsetFor(Type paramType, object defaultValues, string name = null, int recursionThusFar = 0)
+        public Tag FieldsetFor(Type paramType, object defaultValues, string name = null, int recursionThusFar = 0)
         {
-            TagBuilder container = GetFieldset(name);
+            Tag container = GetFieldset(name);
 
             AppendInputsFor(paramType, defaultValues, container, recursionThusFar);
 
             return container;
         }
 
-        public TagBuilder FieldsetForDynamic(dynamic obj, string name = null, bool setValues = false, int recursionThusFar = 0)
+        public Tag FieldsetForDynamic(dynamic obj, string name = null, bool setValues = false, int recursionThusFar = 0)
         {
-            TagBuilder container = GetFieldset(name);
+            Tag container = GetFieldset(name);
 
             AppendInputsForDynamic(obj, container, setValues, 0);
             return container;
         }
 
-        private static TagBuilder GetFieldset(string name)
+        private static Tag GetFieldset(string name)
         {
             string legend = string.IsNullOrEmpty(name) ? "" : name.PascalSplit(" ");
-            TagBuilder container = new TagBuilder("fieldset")
-                                    .Attr("itemscope", "itemscope")
-                                    .Attr("itemtype", "http://schema.org/Thing")
-                                    .DataSet("type", "object")
-                                    .ChildIf(!string.IsNullOrEmpty(name),
-                                        new TagBuilder("legend")
-                                            .TextIf(!string.IsNullOrEmpty(name), legend)
-                                    );
+            Tag container = Tags.Fieldset()
+                .Attr("itemscope", "itemscope")
+                .Attr("itemtype", "http://schema.org/Thing")
+                .DataSet("type", "object")
+                .ChildIf(!string.IsNullOrEmpty(name), Tags.Legend().TextIf(!string.IsNullOrEmpty(name), legend));
             return container;
         }
 
@@ -454,18 +413,18 @@ namespace Bam.Net.Presentation.Html
             private set;
         }
 
-        internal protected void AppendInputsForDynamic(dynamic target, TagBuilder container, bool setValues, int recursionThusFar)
+        internal protected void AppendInputsForDynamic(dynamic target, Tag container, bool setValues, int recursionThusFar)
         {
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(target);
             string paramTypeName = target.Name;
 
             foreach (PropertyDescriptor property in properties)
-            {
+            {                
                 string labelText = string.Format(this.LabelFormat, property.Name.PascalSplit(" "));
                 string id = "{0}_{1}"._Format(paramTypeName, property.Name);
 
-                TagBuilder label = new TagBuilder("label")
-                    .Html(labelText)
+                Tag label = Tags.Label()
+                    .Text(labelText)
                     .Attr("for", id)
                     .Css(LabelCssClass);
 
@@ -492,39 +451,39 @@ namespace Bam.Net.Presentation.Html
                 bool wasObject = false;
                 bool typeAdded = false;
 
-                TagBuilder toAdd = null;
+                Tag toAdd = null;
 
                 if (propType == typeof(int) || propType == typeof(long))
                 {
-                    toAdd = NumberBuilder(property.Name);
+                    toAdd = InputProvider.CreateInput(InputTypes.Number, property.Name);
                 }
                 else if (propType == typeof(string))
                 {
-                    toAdd = StringBuilder(property.Name);
+                    toAdd = InputProvider.CreateInput(InputTypes.Text, property.Name);
                 }
                 else if (propType == typeof(DateTime))
                 {
-                    DateTime defaultDate = defaultValue == null ? DateTime.MinValue : (DateTime)defaultValue;
+                    DateTime defaultDate = (DateTime?) defaultValue ?? DateTime.MinValue;
                     addValue = defaultDate > DateTime.MinValue;
-                    toAdd = DateTimeBuilder(property.Name)
-                        .ValueIf(addValue, defaultDate.ToShortDateString());
+                    toAdd = InputProvider.CreateInput(InputTypes.Text, property.Name)
+                        .DataSet("plugin", "datepicker"); 
 
                     addValue = false;
                 }
                 else if (propType == typeof(bool))
                 {
 
-                    toAdd = BooleanBuilder(property.Name);
+                    toAdd = InputProvider.CreateInput(InputTypes.Checkbox, property.Name);
                     if (defaultValue != null)
                     {
-                        bool.TryParse(defaultValue.ToString(), out bool bVal);
+                        bool bVal;
+                        Boolean.TryParse(defaultValue.ToString(), out bVal);
                         toAdd.CheckedIf(defaultValue != null && bVal);
                     }
                 }
                 else if (propType.IsEnum)
                 {
-                    toAdd = RadioList.FromEnum(propType, defaultValue)
-                        .DataSet("type", "enum");
+                    toAdd = Tag.RadioList(propType, defaultValue).DataSet("type", "enum"); 
                     typeAdded = true;
                     addValue = false;
                     wasObject = true; // prevent new br
@@ -548,9 +507,9 @@ namespace Bam.Net.Presentation.Html
 
                     container
                         .ChildIf(addLabel, label)
-                        .BrIf(addLabel && breakAfterLabel)
-                        .Child(toAdd, toAdd.TagName.ToLowerInvariant().Equals("input") ? TagRenderMode.SelfClosing : TagRenderMode.Normal)
-                        .BrIf(!isHidden && !wasObject &&
+                        .BreakIf(addLabel && breakAfterLabel)
+                        .Child(toAdd)
+                        .BreakIf(!isHidden && !wasObject &&
                         (
                             this.Layout == ParameterLayouts.Default ||
                             this.Layout == ParameterLayouts.BreakAfterLabels
@@ -560,17 +519,18 @@ namespace Bam.Net.Presentation.Html
             }
         }
 
-        internal protected void AppendInputsFor(object defaultValues, TagBuilder container)
+        internal protected void AppendInputsFor(object defaultValues, Tag container)
         {
             AppendInputsFor(defaultValues.GetType(), defaultValues, container);
         }
 
-        internal protected void AppendInputsFor(Type paramType, object defaultValues, TagBuilder container)
+        internal protected void AppendInputsFor(Type paramType, object defaultValues, Tag container)
         {
             AppendInputsFor(paramType, defaultValues, container, 0);
         }
 
-        internal protected void AppendInputsFor(Type paramType, object defaultValues, TagBuilder container, int recursionThusFar)
+        // TODO: this code is horrendous; should be cleaned up or deleted
+        internal protected void AppendInputsFor(Type paramType, object defaultValues, Tag container, int recursionThusFar)
         {
             List<PropertyInfo> properties = new List<PropertyInfo>(paramType.GetProperties());
             properties.Sort((l, r) => l.MetadataToken.CompareTo(r.MetadataToken));
@@ -587,8 +547,8 @@ namespace Bam.Net.Presentation.Html
                 string labelText = labelAttr ?? string.Format(this.LabelFormat, property.Name.PascalSplit(" "));
                 string id = "{0}_{1}"._Format(paramTypeName, property.Name);
 
-                TagBuilder label = new TagBuilder("label")
-                    .Html(labelText)
+                Tag label = Tags.Label()
+                    .Text(labelText)
                     .Attr("for", id)
                     .Css(LabelCssClass);
 
@@ -616,50 +576,50 @@ namespace Bam.Net.Presentation.Html
                     propType = propType.GetGenericArguments()[0];
                 }
 
+                StringInputAttribute attr;
                 bool isHidden = false;
                 bool wasObject = false;
                 bool typeAdded = false;
 
-                TagBuilder toAdd = null;
+                Tag toAdd = null;
 
-                if (property.HasCustomAttributeOfType<StringInput>(true, out StringInput attr))
+                if (property.HasCustomAttributeOfType<StringInputAttribute>(true, out attr))
                 {
-                    attr.Default = attr.Default ?? defaultValue;
+                    attr.Default = attr.Default == null ? defaultValue : attr.Default;
                     attr.PropertyName = property.Name;
                     toAdd = attr.CreateInput().DataSetIf(propType.IsEnum, "type", "string");
                     typeAdded = propType.IsEnum;
-                    addLabel = attr.AddLabel ?? addLabel;
-                    isHidden = attr.IsHidden ?? isHidden;
-                    breakAfterLabel = attr.BreakAfterLabel ?? breakAfterLabel;
-                    addValue = attr.AddValue ?? addValue;
+                    addLabel = attr.AddLabel.HasValue ? attr.AddLabel.Value : addLabel;
+                    isHidden = attr.IsHidden.HasValue ? attr.IsHidden.Value : isHidden;
+                    breakAfterLabel = attr.BreakAfterLabel.HasValue ? attr.BreakAfterLabel.Value : breakAfterLabel;
+                    addValue = attr.AddValue.HasValue ? attr.AddValue.Value : addValue;
                 }
                 else if (propType == typeof(int) || propType == typeof(long))
                 {
-                    toAdd = NumberBuilder(property.Name);
+                    toAdd = InputProvider.CreateInput(InputTypes.Number, property.Name);
 
                 }
                 else if (propType == typeof(string))
                 {
-                    toAdd = StringBuilder(property.Name);
+                    toAdd = InputProvider.CreateInput(InputTypes.Text, property.Name);
                 }
                 else if (propType == typeof(DateTime))
                 {
                     DateTime defaultDate = defaultValue == null ? DateTime.MinValue : (DateTime)defaultValue;
                     addValue = defaultDate > DateTime.MinValue;
-                    toAdd = DateTimeBuilder(property.Name)
-                        .ValueIf(addValue, defaultDate.ToShortDateString());
-
+                    toAdd = InputProvider.CreateInput(InputTypes.Text, property.Name)
+                        .DataSet("plugin", "datepicker");
+                    
                     addValue = false;
                 }
                 else if (propType == typeof(bool))
                 {
-                    toAdd = BooleanBuilder(property.Name)
+                    toAdd = InputProvider.CreateInput(InputTypes.Checkbox, property.Name)
                         .CheckedIf(defaultValue != null && (bool)defaultValue);
                 }
                 else if (propType.IsEnum)
                 {
-                    toAdd = RadioList.FromEnum(propType, defaultValue)
-                        .DataSet("type", "enum");
+                    toAdd = Tag.RadioList(propType, defaultValue).DataSet("type", "enum");
                     typeAdded = true;
                     addValue = false;
                     wasObject = true; // prevent new br
@@ -682,11 +642,11 @@ namespace Bam.Net.Presentation.Html
                         .DataSetIf(isArray, "array", "true");
 
                     container
-                        .BrIf(labelAttr != null && labelAttr.PreBreak && addLabel)
+                        .BreakIf(labelAttr != null && labelAttr.PreBreak && addLabel)
                         .ChildIf(addLabel, label)
-                        .BrIf(addLabel && breakAfterLabel)
-                        .Child(toAdd, toAdd.TagName.ToLowerInvariant().Equals("input") ? TagRenderMode.SelfClosing : TagRenderMode.Normal)
-                        .BrIf(!isHidden && !wasObject &&
+                        .BreakIf(addLabel && breakAfterLabel)
+                        .Child(toAdd)
+                        .BreakIf(!isHidden && !wasObject &&
                         (
                             this.Layout == ParameterLayouts.Default ||
                             this.Layout == ParameterLayouts.BreakAfterLabels
@@ -715,14 +675,6 @@ namespace Bam.Net.Presentation.Html
                 defaultValue = defaultValues == null ? null : defaultsProperty.GetValue(defaultValues, null);
             }
             return defaultValue;
-        }
-
-
-        internal static TagBuilder CreateInput(string type, string name)
-        {
-            return new TagBuilder("input")
-                .Type(type)
-                .Name(name);
         }
     }
 }
