@@ -41,7 +41,7 @@ namespace Bam.Net.Server
             this.LoggerPaths = new string[] { "." };
             this.LoggerSearchPattern = "*Logging.dll";
             this.ServiceSearchPattern = "*Services.dll,*Proxyables.dll";
-            this.ServerEventListenerSearchPath = "c:\\bam\\content\\server-listeners,c:\\bam\\content\\server-listeners-temp";
+            this.ServerEventListenerSearchPath = "/bam/content/server-listeners,/bam/content/server-listeners-temp";
             this.ServerEventListenerAssemblySearchPattern = "*ServerListeners.dll,*ServerEventListeners.dll";
             this.MainLoggerName = "ConsoleLogger";
 

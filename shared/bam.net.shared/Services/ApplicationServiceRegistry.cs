@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Server;
+using Bam.Net.ServiceProxy;
 
 namespace Bam.Net.Services
 {
@@ -74,7 +75,7 @@ namespace Bam.Net.Services
                     {
                         ForEachAssemblyIn(directoryInfo, file => TryAddTypes(appSvcReg, file, (t) =>
                         {
-                            return t.HasCustomAttributeOfType(out AppServiceAttribute attr) && (attr?.ApplicationName?.Equals(applicationName)).Value;
+                            return t.HasCustomAttributeOfType(out AppProviderAttribute attr) && (attr?.ApplicationName?.Equals(applicationName)).Value;
                         }));
                     }));
                 }
@@ -115,11 +116,14 @@ namespace Bam.Net.Services
             ApplicationServiceRegistry appRegistry = new ApplicationServiceRegistry();
             appRegistry.CombineWith(CoreClientServiceRegistryContainer.Current);
             appRegistry
-                .For<IDataSettingsResolver>().Use<DefaultDataDirectoryProvider>()
+                .For<IDataDirectoryResolver>().Use<DefaultDataDirectoryProvider>()
                 .For<IApplicationNameProvider>().Use<DefaultConfigurationApplicationNameProvider>()
                 .For<IIncludesResolver>().Use<IncludesResolver>()
                 .For<ProxyAssemblyGeneratorService>().Use<ProxyAssemblyGeneratorServiceProxy>()
                 .For<ApplicationServiceRegistry>().Use(appRegistry)
+                .For<IViewModelProvider>().Use<DefaultViewModelProvider>()
+                .For<IPersistenceModelProvider>().Use<DefaultPersistenceModelProvider>()
+                .For<IExecutionRequestResolver>().Use<ExecutionRequestResolver>()
                 .For<ApplicationModel>().Use<ApplicationModel>();
 
             configure(appRegistry);
@@ -141,7 +145,7 @@ namespace Bam.Net.Services
 
         private static void TryAddTypes(ApplicationServiceRegistry appServiceRegistry, FileInfo file)
         {
-            TryAddTypes(appServiceRegistry, file, t => t.HasCustomAttributeOfType<AppServiceAttribute>());
+            TryAddTypes(appServiceRegistry, file, t => t.HasCustomAttributeOfType<AppProviderAttribute>());
         }
 
         private static void TryAddTypes(ApplicationServiceRegistry appServiceRegistry, FileInfo file, Func<Type, bool> predicate)

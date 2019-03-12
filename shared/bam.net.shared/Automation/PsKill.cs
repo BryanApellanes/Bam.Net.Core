@@ -11,7 +11,7 @@ namespace Bam.Net.Automation
     {
         static PsKill()
         {
-            Path = "C:\\bam\\tools\\PsKill.exe";
+            Path = "/bam/tools/PsKill.exe";
         }
 
         public static string Path { get; set; }

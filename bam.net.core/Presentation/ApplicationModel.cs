@@ -27,11 +27,11 @@ namespace Bam.Net.Presentation
             WebServiceRegistry = applicationServiceRegistry.Get<WebServiceRegistry>();
             ApplicationName = ApplicationServiceRegistry.Get<IApplicationNameProvider>().GetApplicationName();
             ApplicationServiceRegistry.SetInjectionProperties(this);
-            DataSettingsResolver = ApplicationServiceRegistry.Get<IDataSettingsResolver>();
+            DataDirectoryResolver = ApplicationServiceRegistry.Get<IDataDirectoryResolver>();
             ApplicationNameProvider = ApplicationServiceRegistry.Get<IApplicationNameProvider>();
         }
 
-        protected IDataSettingsResolver DataSettingsResolver { get; set; }
+        protected IDataDirectoryResolver DataDirectoryResolver { get; set; }
         protected IApplicationNameProvider ApplicationNameProvider { get; set; }
         
         public string ApplicationNameSpace { get; set; }

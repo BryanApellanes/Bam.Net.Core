@@ -12,7 +12,7 @@ namespace Bam.Net.Services.Clients
         {
             CoreHostName = "core.bamapps.net";
             CorePort = 80;
-            ContentRoot = "C:\\bam\\content";
+            ContentRoot = "/bam/content";
         }
         public string CoreHostName { get; set; }
         public int CorePort { get; set; }

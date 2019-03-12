@@ -858,7 +858,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\AppHandlebarsRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\CommonHandlebarsRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\Secure\SecureSessionDatabase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AppServiceAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppProviderAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\ProxyCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyMethodModel.cs" />
@@ -1216,7 +1216,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IAsyncRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ICrudProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ICrudResponseProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IDataSettingsResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IDataDirectoryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IExtendedCrudProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IGeneratesDaoAssembly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IHashedObjectReader.cs" />

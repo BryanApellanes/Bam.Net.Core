@@ -7,7 +7,7 @@ namespace Bam.Net.Services
     /// <summary>
     /// Used to addorn a class that is used as an application service.
     /// </summary>
-    public class AppServiceAttribute: Attribute
+    public class AppProviderAttribute: Attribute
     {
         /// <summary>
         /// Gets or sets the name of the application the addorned class 

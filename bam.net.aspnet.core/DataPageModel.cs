@@ -17,7 +17,7 @@ namespace Bam.Net.Web
         public const string AppDataFolder = "AppData";
 
         public DataPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel serviceRegistry) : 
-            this(hostingEnvironment, serviceRegistry, "json", "yaml")
+            this(hostingEnvironment, serviceRegistry, "json", "yaml", "csv")
         {
         }
 
@@ -29,6 +29,7 @@ namespace Bam.Net.Web
             Files = new Dictionary<string, string>();
             JsonFiles = new Dictionary<string, string>();
             YamlFiles = new Dictionary<string, string>();
+            CsvFiles = new Dictionary<string, string>();
             SetFileContents();
         }
 
@@ -64,15 +65,15 @@ namespace Bam.Net.Web
                 
         private void SetFileContents()
         {
-            SetFileContents(Files, "json");
-            SetFileContents(Files, "yaml");
-            SetFileContents(Files, "csv");
+            SetFileContents(JsonFiles, "json");
+            SetFileContents(YamlFiles, "yaml");
+            SetFileContents(CsvFiles, "csv");
         }
 
         private void SetFileContents(Dictionary<string, string> container, string fileType)
         {
             container.Clear();
-            DirectoryInfo dataDir = new DirectoryInfo(Path.Combine(HostingEnvironment.ContentRootPath, AppDataFolder));
+            DirectoryInfo dataDir = new DirectoryInfo(Path.Combine(HostingEnvironment.ContentRootPath, AppDataFolder, fileType));
             if (dataDir.Exists)
             {
                 foreach (FileInfo file in dataDir.GetFiles($"*.{fileType}"))
@@ -91,6 +92,11 @@ namespace Bam.Net.Web
                         container.Add(fileName, content);
                     }
                 }
+            }
+
+            foreach (string key in container.Keys)
+            {
+                Files.AddMissing(key, container[key]);
             }
         }
     }

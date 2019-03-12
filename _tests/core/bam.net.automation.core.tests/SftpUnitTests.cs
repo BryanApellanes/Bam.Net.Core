@@ -37,7 +37,7 @@ namespace Bam.Net.Automation.Tests
         [IntegrationTest]
         public void ShouldUpload()
         {
-            string testPath = "C:\\bam\\data\\tmp";
+            string testPath = "/bam/data/tmp";
             
             Sftp ssh = Sftp
                 .Server("192.168.0.81")

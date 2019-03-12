@@ -12,7 +12,7 @@ namespace Bam.Net.Automation.Testing
     {
         static ReportGenerator()
         {
-            Path = "C:\\bam\\tools\\ReportGenerator\\ReportGenerator.exe";
+            Path = "/bam/tools/ReportGenerator/ReportGenerator.exe";
         }
 
         public static string Path { get; set; }

@@ -7,15 +7,15 @@ using Bam.Net.ServiceProxy;
 
 namespace Bam.Net.Data.Repositories
 {
-    public class DefaultDatabaseProviderRepositoryResolver : RepositoryResolver, IDataSettingsResolver
+    public class DefaultDatabaseProviderRepositoryResolver : RepositoryResolver, IDataDirectoryResolver
     {
         public override IRepository GetRepository(IHttpContext context)
         {
-            DefaultDataDirectoryProvider dataSettings = Resolve(context);
+            DefaultDataDirectoryProvider dataSettings = ResolveDataDirectoryProvider(context);
             return dataSettings.GetSysRepository();
         }
 
-        public DefaultDataDirectoryProvider Resolve(IHttpContext context)
+        public DefaultDataDirectoryProvider ResolveDataDirectoryProvider(IHttpContext context)
         {
             return new DefaultDataDirectoryProvider(ProcessModeResolver.Resolve(context.Request.Url));
         }

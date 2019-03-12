@@ -13,7 +13,7 @@ namespace Bam.Net.Tests
         [UnitTest]
         public void ClassWithSingletonAttributeTest()
         {
-            Expect.IsTrue(typeof(TestClass).HasCustomAttributeOfType<AppServiceAttribute>(), "didn't have AppModuleAttribute");
+            Expect.IsTrue(typeof(TestClass).HasCustomAttributeOfType<AppProviderAttribute>(), "didn't have AppModuleAttribute");
         }
     }
 }
