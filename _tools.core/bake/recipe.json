@@ -26,5 +26,5 @@
     "C:\\bam\\src\\BamFramework\\Bam.Net\\_tools.core\\btest\\btest.csproj",
     "C:\\bam\\src\\BamFramework\\Bam.Net\\_tools.core\\laotze\\laotze.csproj"
   ],
-  "OutputDirectory": "C:\\bam\\build\\toolkit"
+  "OutputDirectory": "/bam/build/toolkit"
 }

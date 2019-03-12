@@ -119,16 +119,16 @@ namespace Bam.Net.CoreServices
             assSvcRepo.Database = dataSettings.GetSysDatabaseFor(assSvcRepo);
             assSvcRepo.EnsureDaoAssemblyAndSchema();
 
-            ConfigurationService configSvc = new ConfigurationService(coreRepo, conf, userDatabasesPath);
+            ConfigurationProvider configSvc = new ConfigurationProvider(coreRepo, conf, userDatabasesPath);
             CompositeRepository compositeRepo = new CompositeRepository(coreRepo);
             SystemLoggerService loggerSvc = new SystemLoggerService(conf);
             dbProvider.SetDatabases(loggerSvc);
             loggerSvc.SetLogger();
 
             ServiceRegistry reg = (ServiceRegistry)(new ServiceRegistry())
-                .ForCtor<ConfigurationService>("databaseRoot").Use(userDatabasesPath)
-                .ForCtor<ConfigurationService>("conf").Use(conf)
-                .ForCtor<ConfigurationService>("coreRepo").Use(coreRepo)
+                .ForCtor<ConfigurationProvider>("databaseRoot").Use(userDatabasesPath)
+                .ForCtor<ConfigurationProvider>("conf").Use(conf)
+                .ForCtor<ConfigurationProvider>("coreRepo").Use(coreRepo)
                 .For<ILogger>().Use(Log.Default)
                 .For<IRepository>().Use(coreRepo)
                 .For<DaoRepository>().Use(coreRepo)
@@ -149,7 +149,7 @@ namespace Bam.Net.CoreServices
                 .For<IApiKeyResolver>().Use<ApplicationRegistrationService>()
                 .For<ISmtpSettingsProvider>().Use(userMgr)
                 .For<UserRegistryService>().Use<UserRegistryService>()
-                .For<ConfigurationService>().Use(configSvc)
+                .For<ConfigurationProvider>().Use(configSvc)
                 .For<IStorableTypesProvider>().Use<NamespaceRepositoryStorableTypesProvider>()
                 .For<FileService>().Use<FileService>()
                 .For<IFileService>().Use<FileService>()

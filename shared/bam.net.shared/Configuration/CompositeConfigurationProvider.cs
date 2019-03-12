@@ -6,19 +6,19 @@ using System.Text;
 
 namespace Bam.Net.Configuration
 {
-    public class CompositeConfigurationService : Loggable, IConfigurationService
+    public class CompositeConfigurationProvider : Loggable, IConfigurationProvider
     {
-        public CompositeConfigurationService()
+        public CompositeConfigurationProvider()
         {
-            ConfigurationServices = new HashSet<IConfigurationService>
+            ConfigurationServices = new HashSet<IConfigurationProvider>
             {
-                new EnvironmentConfigurationService(),
-                new DefaultConfigurationService(),
+                new EnvironmentConfigurationProvider(),
+                new DefaultConfigurationProvider(),
                 new ApplicationConfigurationProvider(CoreClient.Heart)
             };
         }
 
-        public HashSet<IConfigurationService> ConfigurationServices
+        public HashSet<IConfigurationProvider> ConfigurationServices
         {
             get;
         }
@@ -27,8 +27,8 @@ namespace Bam.Net.Configuration
         public Dictionary<string, string> GetApplicationConfiguration(string applicationName, string configurationName = "")
         {
             Dictionary<string, string> config = new Dictionary<string, string>();
-            IConfigurationService current = null;
-            foreach(IConfigurationService configService in ConfigurationServices)
+            IConfigurationProvider current = null;
+            foreach(IConfigurationProvider configService in ConfigurationServices)
             {
                 Dictionary<string, string> currentConfig = configService.GetApplicationConfiguration(applicationName, configurationName);
                 foreach(string key in currentConfig.Keys)
@@ -45,7 +45,7 @@ namespace Bam.Net.Configuration
 
         public void SetApplicationConfiguration(string applicationName, Dictionary<string, string> configuration, string configurationName)
         {
-            foreach(IConfigurationService configService in ConfigurationServices)
+            foreach(IConfigurationProvider configService in ConfigurationServices)
             {
                 configService.SetApplicationConfiguration(applicationName, configuration, configurationName);
             }

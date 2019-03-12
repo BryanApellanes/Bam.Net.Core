@@ -35,7 +35,7 @@ namespace Bam.Net.Services.Clients
         private void SetDownloadedServiceProxies()
         {
             ApplicationRegistrationService = new ApplicationRegistrationServiceProxy();
-            ConfigurationService = new ConfigurationServiceProxy();
+            ConfigurationProvider = new ConfigurationProviderProxy();
             DiagnosticService = new DiagnosticServiceProxy();
             LoggerService = new SystemLoggerServiceProxy();
             UserRegistryService = new UserRegistryServiceProxy();

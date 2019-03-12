@@ -54,7 +54,7 @@ The /addPage:[path/to/newPage] switch adds the files that constitute a new page.
 - wwwroot/bam.js/configs/[path/to/newPage]/webpack.config.js
 
 ## /addModel:[modelName],[type1:propertyName1],[type2:propertyName2]...
-The /addModel switch adds a model definition to AppModels/Definitions and re-generate all models from the current set of definitions.  Existing model source files are overwritten.
+The /addModel switch adds a model definition to AppModels/Definitions and re-generates all models from the current set of definitions.  Existing model source files are overwritten.
 
 ## /webpack
 Use WebPack to pack each bam.js page found in wwwroot/bam.js/pages using corresponding configs found in wwwroot/bam.js/configs.

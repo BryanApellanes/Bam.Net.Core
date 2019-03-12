@@ -45,38 +45,9 @@ namespace Bam.Net.Application
         }
 
         [ConsoleAction("init", "Add BamFramework to the current csproj")]
-        public void Init()
+        public void Initialize()
         {
-            // find the first csproj file by looking first in the current directory then going up
-            // using the parent of the csproj as the root
-            // - clone bam.js into wwwroot/bam.js
-            // - write Startup.cs (backing up existing)
-            // - write sample modules
-            BamSettings settings = GetSettings();
-            DirectoryInfo projectParent = FindProjectParent(out FileInfo csprojFile);
-            if (csprojFile == null)
-            {
-                OutLine("Can't find csproj file", ConsoleColor.Magenta);
-
-                Thread.Sleep(3000);
-                Exit(1);
-            }
-            DirectoryInfo wwwroot = new DirectoryInfo(Path.Combine(projectParent.FullName, "wwwroot"));
-            if (!wwwroot.Exists)
-            {
-                Warn("{0} doesn't exist, creating...", wwwroot.FullName);
-                wwwroot.Create();
-            }
-            string bamJsPath = Path.Combine(wwwroot.FullName, "bam.js");
-            if (!Directory.Exists(bamJsPath))
-            {
-                OutLineFormat("Cloning bam.js to {0}", ConsoleColor.Yellow, bamJsPath);
-                ProcessStartInfo cloneCommand = settings.GitPath.ToStartInfo("clone https://github.com/BryanApellanes/bam.js.git wwwroot/bam.js");
-                cloneCommand.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
-            }
-
-            WriteStartupCs(csprojFile);
-            WriteBaseAppModules(csprojFile);
+            Init.AspNetRazorInit();
         }
 
         [ConsoleAction("import", "Import data files from AppData (csv, json and yaml)")]
@@ -493,49 +464,10 @@ namespace Bam.Net.Application
             }
             return model;
         }
-        
-        private void WriteBaseAppModules(FileInfo csprojFile)
-        {
-            DirectoryInfo projectParent = csprojFile.Directory;
-            DirectoryInfo appModules = new DirectoryInfo(Path.Combine(projectParent.FullName, "AppModules"));
-            HandlebarsDirectory handlebarsDirectory = GetHandlebarsDirectory();
-            string appName = Path.GetFileNameWithoutExtension(csprojFile.Name);
-
-            AppModuleModel model = new AppModuleModel { BaseNamespace = appName, AppModuleName = appName };
-            foreach(string moduleType in new string[] { "AppModule", "ScopedAppModule", "SingletonAppModule", "TransientAppModule" })
-            {
-                string moduleContent = handlebarsDirectory.Render($"{moduleType}.cs", model);
-                if (string.IsNullOrEmpty(moduleContent))
-                {
-                    OutLineFormat("{0}: Template for {1} is empty", handlebarsDirectory.Directory.FullName, moduleType);
-                }
-                string filePath = Path.Combine(appModules.FullName, $"{appName}{moduleType}.cs");
-                if (!File.Exists(filePath))
-                {
-                    moduleContent.SafeWriteToFile(filePath, true);
-                    OutLineFormat("Wrote file {0}...", ConsoleColor.Green, filePath);
-                }
-            }            
-        }
-
-        private void WriteStartupCs(FileInfo csprojFile)
-        {
-            DirectoryInfo projectParent = csprojFile.Directory;
-            FileInfo startupCs = new FileInfo(Path.Combine(projectParent.FullName, "Startup.cs"));
-            if (startupCs.Exists)
-            {
-                string moveTo = startupCs.FullName.GetNextFileName();
-                File.Move(startupCs.FullName, moveTo);
-                OutLineFormat("Moved existing Startup.cs file to {0}", ConsoleColor.Yellow, moveTo);
-            }
-
-            HandlebarsDirectory handlebarsDirectory = GetHandlebarsDirectory();
-            handlebarsDirectory.Render("Startup.cs", new { BaseNamespace = Path.GetFileNameWithoutExtension(csprojFile.Name) }).SafeWriteToFile(startupCs.FullName, true);
-        }
 
         static HandlebarsDirectory _handlebarsDirectory;
         static object _handlebarsLock = new object();
-        private static HandlebarsDirectory GetHandlebarsDirectory()
+        public static HandlebarsDirectory GetHandlebarsDirectory()
         {
             return _handlebarsLock.DoubleCheckLock(ref _handlebarsDirectory, () =>
             {
@@ -550,7 +482,7 @@ namespace Bam.Net.Application
             return csprojFile;
         }
 
-        private DirectoryInfo FindProjectParent(out FileInfo csprojFile)
+        public static DirectoryInfo FindProjectParent(out FileInfo csprojFile)
         {
             string startDir = Environment.CurrentDirectory;
             DirectoryInfo startDirInfo = new DirectoryInfo(startDir);
@@ -637,7 +569,7 @@ namespace Bam.Net.Application
             return dataModel;
         }
         
-        private static BamSettings GetSettings()
+        public static BamSettings GetSettings()
         {
             BamSettings settings = BamSettings.Load();
             if (!settings.IsValid(msg => OutLine(msg, ConsoleColor.Red)))

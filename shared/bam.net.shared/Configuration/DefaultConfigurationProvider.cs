@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Configuration
 {
-    public class DefaultConfigurationService : IConfigurationService
+    public class DefaultConfigurationProvider : IConfigurationProvider
     {
         public Dictionary<string, string> GetApplicationConfiguration(string applicationName, string configurationName = "")
         {
@@ -23,12 +23,12 @@ namespace Bam.Net.Configuration
         }
 
         static object _serviceLock = new object();
-        static DefaultConfigurationService _service;
-        public static DefaultConfigurationService Instance
+        static DefaultConfigurationProvider _provider;
+        public static DefaultConfigurationProvider Instance
         {
             get
             {
-                return _serviceLock.DoubleCheckLock(ref _service, () => new DefaultConfigurationService());
+                return _serviceLock.DoubleCheckLock(ref _provider, () => new DefaultConfigurationProvider());
             }
         }
 

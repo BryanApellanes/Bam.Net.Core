@@ -12,6 +12,7 @@ using System.Reflection;
 using Bam.Net;
 using Bam.Net.Server.Renderers;
 using Bam.Net.Logging;
+using Bam.Net.Presentation;
 using Bam.Net.ServiceProxy;
 
 namespace Bam.Net.Server.Meta

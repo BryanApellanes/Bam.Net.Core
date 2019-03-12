@@ -37,7 +37,6 @@ namespace Bam.Net.Server
             this.MaxThreads = 50;
             this.GenerateDao = true;
             this.DaoConfigs = new DaoConf[] { };
-            this.InitializeTemplates = true;
             this.DaoSearchPattern = "*Dao.dll";
             this.LoggerPaths = new string[] { "." };
             this.LoggerSearchPattern = "*Logging.dll";
@@ -104,12 +103,6 @@ namespace Bam.Net.Server
         /// that contain services that should be loaded
         /// </summary>
         public string ServiceSearchPattern
-        {
-            get;
-            set;
-        }
-
-        public bool InitializeTemplates
         {
             get;
             set;

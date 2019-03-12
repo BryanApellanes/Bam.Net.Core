@@ -16,11 +16,11 @@ namespace Bam.Net.Services.Clients
 {
     public class ApplicationContext
     {
-        public ApplicationContext(CoreClient coreClient, IOrganizationNameProvider organizationNameProvider, IApplicationNameProvider applicationNameProvider, IConfigurationService configurationService, IDatabaseProvider databaseProvider, IDataDirectoryProvider dataDirectoryProvider, ILoggerProvider loggerProvider)
+        public ApplicationContext(CoreClient coreClient, IOrganizationNameProvider organizationNameProvider, IApplicationNameProvider applicationNameProvider, IConfigurationProvider configurationProvider, IDatabaseProvider databaseProvider, IDataDirectoryProvider dataDirectoryProvider, ILoggerProvider loggerProvider)
         {
             CoreClient = coreClient;
             OrganizationNameProvider = organizationNameProvider;
-            ConfigurationService = configurationService;
+            ConfigurationProvider = configurationProvider;
             DataDirectoryProvider = dataDirectoryProvider;
             DatabaseProvider = databaseProvider;
             ApplicationNameProvider = applicationNameProvider;
@@ -30,7 +30,7 @@ namespace Bam.Net.Services.Clients
 
         protected ApplicationContext(string coreHostName, int corePort = 80)
             : this(new CoreClient(DefaultConfigurationOrganizationNameProvider.Instance.GetOrganizationName(), DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName(), coreHostName, corePort, DefaultConfigurationLoggerProvider.Instance.GetLogger()),
-                  DefaultConfigurationOrganizationNameProvider.Instance, DefaultConfigurationApplicationNameProvider.Instance, DefaultConfigurationService.Instance, DefaultDataDirectoryProvider.Instance, DefaultDataDirectoryProvider.Instance, DefaultConfigurationLoggerProvider.Instance)
+                  DefaultConfigurationOrganizationNameProvider.Instance, DefaultConfigurationApplicationNameProvider.Instance, DefaultConfigurationProvider.Instance, DefaultDataDirectoryProvider.Instance, DefaultDataDirectoryProvider.Instance, DefaultConfigurationLoggerProvider.Instance)
         {               
         }
 
@@ -38,7 +38,7 @@ namespace Bam.Net.Services.Clients
         {
             IOrganizationNameProvider organizationNameProvider = serviceRegistry.Get<IOrganizationNameProvider>();
             IApplicationNameProvider applicationNameProvider = serviceRegistry.Get<IApplicationNameProvider>();
-            IConfigurationService configurationService = serviceRegistry.Get<IConfigurationService>();
+            IConfigurationProvider configurationProvider = serviceRegistry.Get<IConfigurationProvider>();
             IDatabaseProvider databaseProvider = serviceRegistry.Get<IDatabaseProvider>();
             IDataDirectoryProvider dataDirectoryProvider = serviceRegistry.Get<IDataDirectoryProvider>();
             ILoggerProvider loggerProvider = serviceRegistry.Get<ILoggerProvider>();
@@ -48,7 +48,7 @@ namespace Bam.Net.Services.Clients
                 coreHostName,
                 corePort,
                 loggerProvider.GetLogger());
-            return new ApplicationContext(client, organizationNameProvider, applicationNameProvider, configurationService, databaseProvider, dataDirectoryProvider, loggerProvider);
+            return new ApplicationContext(client, organizationNameProvider, applicationNameProvider, configurationProvider, databaseProvider, dataDirectoryProvider, loggerProvider);
         }
 
         public CoreClient CoreClient
@@ -58,7 +58,7 @@ namespace Bam.Net.Services.Clients
 
         public IOrganizationNameProvider OrganizationNameProvider { get; set; }
         public IApplicationNameProvider ApplicationNameProvider { get; set; }
-        public IConfigurationService ConfigurationService { get; set; }
+        public IConfigurationProvider ConfigurationProvider { get; set; }
         public IDataDirectoryProvider DataDirectoryProvider { get; set; }
         public IDatabaseProvider DatabaseProvider { get; set; }
         public ILoggerProvider LoggerProvider { get; set; }
@@ -86,7 +86,7 @@ namespace Bam.Net.Services.Clients
                 OrganizationName = OrganizationNameProvider.GetOrganizationName(),
                 ApplicationName = ApplicationNameProvider.GetApplicationName(),
                 Paths = SystemPaths.Get(DataDirectoryProvider),
-                Configuration = ConfigurationService.GetApplicationConfiguration(ApplicationNameProvider.GetApplicationName())
+                Configuration = ConfigurationProvider.GetApplicationConfiguration(ApplicationNameProvider.GetApplicationName())
             };
         }
     }

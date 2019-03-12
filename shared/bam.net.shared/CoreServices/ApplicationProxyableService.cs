@@ -211,7 +211,7 @@ namespace Bam.Net.CoreServices
         {
             if (ServerApplicationName.Equals(ApplicationRegistration.Data.Application.Unknown.Name))
             {
-                throw new InvalidOperationException("Application is unkown");
+                throw new InvalidOperationException("Application is unknown");
             }
             Bam.Net.CoreServices.ApplicationRegistration.Data.Application app = ApplicationRegistrationRepository.OneApplicationWhere(c => c.Name == ServerApplicationName);
             if (app == null)
@@ -225,7 +225,7 @@ namespace Bam.Net.CoreServices
         {
             if (ClientApplicationName.Equals(ApplicationRegistration.Data.Application.Unknown.Name))
             {
-                throw new InvalidOperationException("Application is unkown");
+                throw new InvalidOperationException("Application is unknown");
             }
             Bam.Net.CoreServices.ApplicationRegistration.Data.Application app = ApplicationRegistrationRepository.OneApplicationWhere(c => c.Name == ClientApplicationName);
             if(app == null)

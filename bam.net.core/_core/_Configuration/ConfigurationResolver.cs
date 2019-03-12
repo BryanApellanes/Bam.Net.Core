@@ -14,7 +14,7 @@ namespace Bam.Net.Configuration
         public ConfigurationResolver(ILogger logger = null)
         {
             DefaultConfiguration = ConfigurationManager.AppSettings;
-            ConfigurationService = new DefaultConfigurationService();
+            ConfigurationProvider = new DefaultConfigurationProvider();
         }
 
         public ConfigurationResolver(IConfiguration configuration, ILogger logger = null)
@@ -31,7 +31,7 @@ namespace Bam.Net.Configuration
         public ILogger Logger { get; set; }
 
         [Inject]
-        public IConfigurationService ConfigurationService { get; set; }
+        public IConfigurationProvider ConfigurationProvider { get; set; }
 
         public string this[string key, bool callConfigService = false]
         {
@@ -89,10 +89,10 @@ namespace Bam.Net.Configuration
                     return value;
                 }
             }
-            if (ConfigurationService != null && !string.IsNullOrEmpty(ApplicationName))
+            if (ConfigurationProvider != null && !string.IsNullOrEmpty(ApplicationName))
             {
                 FireEvent(RetrievingFromService, new ConfigurationEventArgs { Key = key });
-                _config = ConfigurationService.GetApplicationConfiguration(ApplicationName);
+                _config = ConfigurationProvider.GetApplicationConfiguration(ApplicationName);
                 if(_config != null && _config.ContainsKey(key))
                 {
                     string value = _config[key];

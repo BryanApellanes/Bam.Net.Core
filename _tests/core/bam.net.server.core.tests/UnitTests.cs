@@ -528,21 +528,16 @@ namespace Bam.Net.Server.Tests
             BamConf conf = new BamConf()
             {
                 GenerateDao = true,
-                InitializeTemplates = true
             };
             server.GenerateDao = false;
-            server.InitializeTemplates = false;
 
             Expect.IsFalse(server.GenerateDao);
-            Expect.IsFalse(server.InitializeTemplates);
 
             Expect.IsTrue(conf.GenerateDao);
-            Expect.IsTrue(conf.InitializeTemplates);
 
             server.SetConf(conf);
 
             Expect.IsTrue(server.GenerateDao);
-            Expect.IsTrue(server.InitializeTemplates);
         }
 
         [UnitTest]

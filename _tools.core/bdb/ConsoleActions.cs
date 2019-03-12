@@ -18,7 +18,7 @@ namespace Bam.Net.Application
         [ConsoleAction("startTrooServer", "Start the troo server")]
         public void StartConsole()
         {
-            StartTrooServer(GetLogger(), GetRepository());
+            StartBamDbServer(GetLogger(), GetRepository());
             Pause("Troo is running");
         }
 
@@ -36,7 +36,7 @@ namespace Bam.Net.Application
             }
         }
 
-        public static void StartTrooServer(ConsoleLogger logger, IRepository repo)
+        public static void StartBamDbServer(ConsoleLogger logger, IRepository repo)
         {
             BamConf conf = BamConf.Load(DefaultConfiguration.GetAppSetting(contentRootConfigKey).Or(defaultContentRoot));
             trooServer = new BamDbServer(conf, logger, repo)

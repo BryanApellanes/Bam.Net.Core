@@ -3,7 +3,7 @@ using Bam.Net.Configuration;
 
 namespace Bam.Net.CoreServices
 {
-    public interface ICoreConfigurationService: IConfigurationService
+    public interface ICoreConfigurationProvider: IConfigurationProvider
     {
         Dictionary<string, string> GetApplicationConfiguration(string applicationName = null, string configurationName = null);
         Dictionary<string, string> GetCommonConfiguration();

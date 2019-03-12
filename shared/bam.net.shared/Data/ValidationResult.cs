@@ -195,7 +195,7 @@ namespace Bam.Net.Data
                     EncryptedTokenValidationStatus tokenStatus = ApiEncryptionValidation.ValidateEncryptedToken(context, input.Value);
                     switch (tokenStatus)
                     {
-                        case EncryptedTokenValidationStatus.Unkown:
+                        case EncryptedTokenValidationStatus.Unknown:
                             failures.Add(ServiceProxy.ValidationFailures.UnknownTokenValidationResult);
                             messages.Add("ApiEncryptionValidation.ValidateToken failed");
                             break;

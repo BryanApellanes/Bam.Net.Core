@@ -13,11 +13,11 @@ namespace Bam.Net.CoreServices
     [Proxy("configSvc")]
     [ServiceProxySecure.ApiKeyRequired]
     [ServiceSubdomain("config")]
-    public class ConfigurationService : ApplicationProxyableService, ICoreConfigurationService
+    public class ConfigurationProvider : ApplicationProxyableService, ICoreConfigurationProvider
     {
         public const string CommonConfigName = "Common";
-        protected ConfigurationService() { }
-        public ConfigurationService(ApplicationRegistrationRepository coreRepo, AppConf conf, string databaseRoot)
+        protected ConfigurationProvider() { }
+        public ConfigurationProvider(ApplicationRegistrationRepository coreRepo, AppConf conf, string databaseRoot)
         {
             AppConf = conf;
             DatabaseRoot = databaseRoot;
@@ -27,7 +27,7 @@ namespace Bam.Net.CoreServices
         [Exclude]
         public override object Clone()
         {
-            ConfigurationService clone = new ConfigurationService(ApplicationRegistrationRepository, AppConf, DatabaseRoot);
+            ConfigurationProvider clone = new ConfigurationProvider(ApplicationRegistrationRepository, AppConf, DatabaseRoot);
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;

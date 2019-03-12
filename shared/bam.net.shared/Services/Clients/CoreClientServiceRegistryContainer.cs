@@ -84,7 +84,7 @@ namespace Bam.Net.Services.Clients
                 .For<ApplicationLogDatabase>().Use(logDb)
                 .For<ILogger>().Use<ApplicationLogger>()
                 .For<ILog>().Use<ApplicationLogger>()
-                .For<IConfigurationService>().Use<ApplicationConfigurationProvider>()
+                .For<IConfigurationProvider>().Use<ApplicationConfigurationProvider>()
                 .For<IDataDirectoryProvider>().Use(DefaultDataDirectoryProvider.Current)
                 .For<IUserManager>().Use(coreClient.UserRegistryService);
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bam.Net.Configuration
 {
-    public class EnvironmentConfigurationService : IConfigurationService
+    public class EnvironmentConfigurationProvider : IConfigurationProvider
     {
         public Dictionary<string, string> GetApplicationConfiguration(string applicationName, string configurationName = "")
         {

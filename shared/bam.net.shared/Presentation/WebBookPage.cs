@@ -7,9 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Presentation
 {    
-    [Obsolete("This class is obsolete; use Bam.Net.Presentation.WebBookPage instead.")]
     public class WebBookPage
     {
         public WebBookPage()
@@ -19,6 +18,8 @@ namespace Bam.Net.Server.Meta
         public string Name { get; set; }
         public string Layout { get; set; }
 
+        public object ViewModel { get; set; }
+        
         public override bool Equals(object obj)
         {
             if (obj is WebBookPage page)

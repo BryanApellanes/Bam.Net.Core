@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Server;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Presentation
 {
     public class WebBookEventArgs: EventArgs
     {
