@@ -35,7 +35,7 @@ namespace Bam.Net.CoreServices
 
         public Task BackupTask { get; protected set; }
 
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataProvider DataSettings { get; set; }
         public DaoRepository SourceRepository { get; }
         public Database SourceDatabase { get { return SourceRepository?.Database; } }
         public CachingRepository ReadRepository { get;  }

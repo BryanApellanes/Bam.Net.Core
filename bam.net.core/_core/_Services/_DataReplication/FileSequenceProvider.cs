@@ -23,7 +23,7 @@ namespace Bam.Net.Services.DataReplication
         public FileSequenceProvider(ulong start, ILogger logger = null)
         {
             Logger = logger ?? Log.Default;
-            SystemPaths paths = SystemPaths.Get(DefaultDataDirectoryProvider.Current);
+            SystemPaths paths = SystemPaths.Get(DefaultDataProvider.Current);
 
             File = new FileInfo(Path.Combine(paths.Data.AppFiles, $"{nameof(FileSequenceProvider)}.txt"));
             _current = start;

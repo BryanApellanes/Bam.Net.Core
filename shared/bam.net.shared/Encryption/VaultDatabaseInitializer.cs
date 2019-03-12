@@ -38,7 +38,7 @@ namespace Bam.Net.Encryption
         {
             try
             {
-                DataPaths paths = DataPaths.Get(DefaultDataDirectoryProvider.Instance);
+                DataPaths paths = DataPaths.Get(DefaultDataProvider.Instance);
                 string appDbDir = VaultFile == null ? paths.AppDatabase : VaultFile.Directory.FullName;
                 string fileName = VaultFile == null ? DbFileName : VaultFile.Name;
                 return new DatabaseInitializationResult(VaultDatabase.FromFile(Path.Combine(appDbDir, fileName))) { Success = true };

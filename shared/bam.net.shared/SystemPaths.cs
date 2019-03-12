@@ -30,7 +30,7 @@ namespace Bam.Net
             Tools = Paths.Tools;
         }
 
-        public static SystemPaths Get(IDataDirectoryProvider dataProvider)
+        public static SystemPaths Get(IDataProvider dataProvider)
         {
             return new SystemPaths()
             {
@@ -42,7 +42,7 @@ namespace Bam.Net
         {
             get
             {
-                return Get(DefaultDataDirectoryProvider.Current);
+                return Get(DefaultDataProvider.Current);
             }
         }
 

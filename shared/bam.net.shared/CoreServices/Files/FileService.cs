@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices
     public class FileService : ApplicationProxyableService, IFileService
     {
         protected FileService() { }
-        public FileService(IRepository repository, DefaultDataDirectoryProvider dataSettings = null, ILogger logger = null)
+        public FileService(IRepository repository, DefaultDataProvider dataSettings = null, ILogger logger = null)
         {
             Repository = repository;
             Repository.AddTypes(new Type[]
@@ -32,7 +32,7 @@ namespace Bam.Net.CoreServices
                 typeof(ChunkDataDescriptor),
                 typeof(ChunkData)
             });
-            DataSettings = dataSettings ?? DefaultDataDirectoryProvider.Instance;
+            DataSettings = dataSettings ?? DefaultDataProvider.Instance;
             Logger = logger ?? Log.Default;
             FileSystemChunkStorage = new FileSystemChunkStorage(DataSettings, Logger);
             RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DataSettings, Logger);
@@ -291,7 +291,7 @@ namespace Bam.Net.CoreServices
             return GetFileChunks(fileHash, fromIndex, ChunkDataBatchSize);
         }
 
-        protected DefaultDataDirectoryProvider DataSettings { get; }
+        protected DefaultDataProvider DataSettings { get; }
 
         private static void HandleExistingFile(string localPath, bool overwrite)
         {

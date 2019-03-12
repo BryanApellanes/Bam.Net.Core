@@ -12,11 +12,11 @@ namespace Bam.Net.Services
 {
     public class FileManager
     {
-        public FileManager(IDataDirectoryProvider dataSettings, IFileService fileService)
+        public FileManager(IDataProvider dataSettings, IFileService fileService)
         {
             FileService = fileService;
         }
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataProvider DataSettings { get; set; }
         protected IFileService FileService { get; set; }
         public void StoreFiles(DirectoryInfo directory)
         {

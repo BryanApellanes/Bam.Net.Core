@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Data.Repositories
 {
-    public interface IDataDirectoryResolver
+    public interface IDataProviderResolver
     {
-        // TODO: rename this to ResolveDataDirectoryProvider
-        DefaultDataDirectoryProvider ResolveDataDirectoryProvider(IHttpContext context);
+        IDataProvider ResolveDataProvider(IHttpContext context);
     }
 }

@@ -17,7 +17,7 @@ namespace Bam.Net.Services
 
         public DatabaseKeyValueStore(Database db = null, ILogger logger = null)
         {
-            SystemPaths = SystemPaths.Get(DefaultDataDirectoryProvider.Current);
+            SystemPaths = SystemPaths.Get(DefaultDataProvider.Current);
             Logger = logger ?? Log.Default;
             Database = db ?? SQLiteDatabase.FromFile(Path.Combine(SystemPaths.Data.UserData, DatabaseName));
         }
@@ -31,14 +31,14 @@ namespace Bam.Net.Services
 
         public static DatabaseKeyValueStore ForApplication(ILogger logger = null)
         {
-            SystemPaths paths = SystemPaths.Get(DefaultDataDirectoryProvider.Current);
+            SystemPaths paths = SystemPaths.Get(DefaultDataProvider.Current);
             string dbPath = Path.Combine(paths.Data.AppData, DatabaseName);
             return new DatabaseKeyValueStore(SQLiteDatabase.FromFile(dbPath), logger);
         }
 
         public static DatabaseKeyValueStore ForUser(string userName, ILogger logger = null)
         {
-            SystemPaths paths = SystemPaths.Get(DefaultDataDirectoryProvider.Current);
+            SystemPaths paths = SystemPaths.Get(DefaultDataProvider.Current);
             string dbPath = Path.Combine(paths.Data.UserData, userName, DatabaseName);
             return new DatabaseKeyValueStore(SQLiteDatabase.FromFile(dbPath), logger);
         }

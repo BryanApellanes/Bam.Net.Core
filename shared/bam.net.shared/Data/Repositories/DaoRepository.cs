@@ -28,7 +28,7 @@ namespace Bam.Net.Data.Repositories
         public DaoRepository()
         {
             CtorInit();
-            Database = DefaultDataDirectoryProvider.Current.GetSysDatabaseFor(this);
+            Database = DefaultDataProvider.Current.GetSysDatabaseFor(this);
             Logger = Log.Default;
         }
         /// <summary>
@@ -39,7 +39,7 @@ namespace Bam.Net.Data.Repositories
         public DaoRepository(ITypeTableNameProvider tableNameProvider, Func<SchemaDefinition, TypeSchema, string> schemaTempPathProvider)
         {
             CtorInit(tableNameProvider, schemaTempPathProvider);
-            Database = DefaultDataDirectoryProvider.Current.GetSysDatabaseFor(this);
+            Database = DefaultDataProvider.Current.GetSysDatabaseFor(this);
             Logger = Log.Default;
         }
 

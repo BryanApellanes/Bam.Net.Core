@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Data
 {
-    public interface IDataDirectoryProvider
+    public interface IDataProvider
     {
         DirectoryInfo GetAppDataDirectory(IApplicationNameProvider applicationNameProvider);
         DirectoryInfo GetAppUsersDirectory(IApplicationNameProvider applicationNameProvider);
@@ -16,6 +17,8 @@ namespace Bam.Net.Data
         DirectoryInfo GetSysAssemblyDirectory();
         DirectoryInfo GetChunksDirectory();
         DirectoryInfo GetFilesDirectory();
+
+        IRepository GetSysRepository();
 
         DirectoryInfo GetWorkspaceDirectory(Type type);
 

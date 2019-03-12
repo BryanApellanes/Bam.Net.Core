@@ -26,10 +26,10 @@ namespace Bam.Net.Data.Dynamic
     /// </summary>
     public partial class DynamicTypeManager: Loggable
     {
-        public DynamicTypeManager() : this(new DynamicTypeDataRepository(), DefaultDataDirectoryProvider.Current)
+        public DynamicTypeManager() : this(new DynamicTypeDataRepository(), DefaultDataProvider.Current)
         { }
 
-        public DynamicTypeManager(DynamicTypeDataRepository descriptorRepository, IDataDirectoryProvider settings, ICompiler compiler = null)
+        public DynamicTypeManager(DynamicTypeDataRepository descriptorRepository, IDataProvider settings, ICompiler compiler = null)
         {
             DataSettings = settings;
             Compiler = compiler ?? new RoslynCompiler();
@@ -41,7 +41,7 @@ namespace Bam.Net.Data.Dynamic
         }
 
         public ICompiler Compiler { get; set; }
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataProvider DataSettings { get; set; }
         public DynamicTypeNameResolver DynamicTypeNameResolver { get; set; }
         public DynamicTypeDataRepository DynamicTypeDataRepository { get; set; }
         

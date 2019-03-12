@@ -41,12 +41,12 @@ namespace Bam.Net.CoreServices
             ServiceRegistryRepository repo, 
             DaoRepository daoRepo, 
             AppConf appConf,
-            DefaultDataDirectoryProvider dataSettings = null) : base(daoRepo, appConf)
+            DefaultDataProvider dataSettings = null) : base(daoRepo, appConf)
         {
             FileService = fileservice;
             ServiceRegistryRepository = repo;
             AssemblyService = assemblyService;
-            DataSettings = dataSettings ?? DefaultDataDirectoryProvider.Current;
+            DataSettings = dataSettings ?? DefaultDataProvider.Current;
             AssemblySearchPattern = DefaultConfiguration.GetAppSetting("AssemblySearchPattern", "*.dll");
             _scanResults = new Dictionary<Type, List<ServiceRegistryContainerRegistrationResult>>();            
         }
@@ -54,11 +54,11 @@ namespace Bam.Net.CoreServices
         [Local]
         public static ServiceRegistryService GetLocalServiceRegistryService(string assemblySearchPattern = "*Services.dll", ILogger logger = null)
         {
-            return GetLocalServiceRegistryService(DefaultDataDirectoryProvider.Current, DefaultConfigurationApplicationNameProvider.Instance, assemblySearchPattern, logger);
+            return GetLocalServiceRegistryService(DefaultDataProvider.Current, DefaultConfigurationApplicationNameProvider.Instance, assemblySearchPattern, logger);
         }
 
         [Local]
-        public static ServiceRegistryService GetLocalServiceRegistryService(DefaultDataDirectoryProvider dataSettings, IApplicationNameProvider appNameProvider, string assemblySearchPattern, ILogger logger = null)
+        public static ServiceRegistryService GetLocalServiceRegistryService(DefaultDataProvider dataSettings, IApplicationNameProvider appNameProvider, string assemblySearchPattern, ILogger logger = null)
         {
             logger = logger ?? Log.Default;
             DaoRepository repo = dataSettings.GetSysDaoRepository(logger, nameof(FileService));
@@ -66,7 +66,7 @@ namespace Bam.Net.CoreServices
             AssemblyServiceRepository assRepo = new AssemblyServiceRepository();
             assRepo.Database = dataSettings.GetSysDatabaseFor(assRepo);
             assRepo.EnsureDaoAssemblyAndSchema();
-            AssemblyService assemblyService = new AssemblyService(DefaultDataDirectoryProvider.Current, fileService, assRepo, appNameProvider);
+            AssemblyService assemblyService = new AssemblyService(DefaultDataProvider.Current, fileService, assRepo, appNameProvider);
             ServiceRegistryRepository serviceRegistryRepo = new ServiceRegistryRepository();
             serviceRegistryRepo.Database = dataSettings.GetSysDatabaseFor(serviceRegistryRepo);
             serviceRegistryRepo.EnsureDaoAssemblyAndSchema();
@@ -146,7 +146,7 @@ namespace Bam.Net.CoreServices
         /// </summary>
         public string AssemblySearchPattern { get; set; }
         public IFileService FileService { get; set; }
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataProvider DataSettings { get; set; }
         public ServiceRegistryRepository ServiceRegistryRepository { get; set; }
 
         public IAssemblyService AssemblyService { get; set; }

@@ -9,7 +9,7 @@ using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Net.Data.Repositories
 {
-    public partial class DefaultDataDirectoryProvider
+    public partial class DefaultDataProvider
     {
         public IRepository GetSysRepository()
         {

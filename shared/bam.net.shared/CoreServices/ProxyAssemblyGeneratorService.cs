@@ -22,9 +22,9 @@ namespace Bam.Net.CoreServices
         protected ProxyAssemblyGeneratorService() { }
 
         Dictionary<string, Assembly> _assemblies;
-        public ProxyAssemblyGeneratorService(IDataDirectoryProvider dataDirectoryProvider, ILogger logger)
+        public ProxyAssemblyGeneratorService(IDataProvider dataProvider, ILogger logger)
         {
-            DataDirectoryProvider = dataDirectoryProvider;
+            DataProvider = dataProvider;
             Logger = logger;
             _assemblies = new Dictionary<string, Assembly>();
             ProxyFactory = new ProxyFactory(SystemPaths.Current.Generated, logger, CoreServiceRegistryContainer.GetServiceRegistry());
@@ -42,7 +42,7 @@ namespace Bam.Net.CoreServices
             }
         }
 
-        public IDataDirectoryProvider DataDirectoryProvider { get; set; }
+        public IDataProvider DataProvider { get; set; }
         public ProxyFactory ProxyFactory { get; set; }
         public ProxyAssemblyGenerator ProxyAssemblyGenerator { get; set; }
 
@@ -81,7 +81,7 @@ namespace Bam.Net.CoreServices
 
         public override object Clone()
         {
-            ProxyAssemblyGeneratorService clone = new ProxyAssemblyGeneratorService(DataDirectoryProvider, Logger);
+            ProxyAssemblyGeneratorService clone = new ProxyAssemblyGeneratorService(DataProvider, Logger);
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;

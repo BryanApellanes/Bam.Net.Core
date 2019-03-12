@@ -20,7 +20,7 @@ namespace Bam.Net.CoreServices
     [Proxy("assemblySvc")]
     public class AssemblyService : ApplicationProxyableService, IAssemblyService
     {
-        public AssemblyService(IDataDirectoryProvider dataSettings, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
+        public AssemblyService(IDataProvider dataSettings, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
         {
             DataSettings = dataSettings;
             FileService = fileService;
@@ -39,7 +39,7 @@ namespace Bam.Net.CoreServices
         public event EventHandler CurrentRuntimePersisted;
         public event EventHandler ExceptionPersistingCurrentRuntime;
         public event EventHandler RuntimeRestored;
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataProvider DataSettings { get; set; }
         public string AssemblyDirectory
         {
             get

@@ -20,10 +20,10 @@ namespace Bam.Net.Data.Dynamic
     /// </summary>
     public class DynamicDataManager: Loggable
     {
-        public DynamicDataManager() : this(new DynamicTypeDataRepository(), DefaultDataDirectoryProvider.Current, new DynamicTypeManager())
+        public DynamicDataManager() : this(new DynamicTypeDataRepository(), DefaultDataProvider.Current, new DynamicTypeManager())
         { }
 
-        public DynamicDataManager(DynamicTypeDataRepository descriptorRepository, IDataDirectoryProvider settings, DynamicTypeManager dynamicTypeManager)
+        public DynamicDataManager(DynamicTypeDataRepository descriptorRepository, IDataProvider settings, DynamicTypeManager dynamicTypeManager)
         {
             DynamicTypeDataRepository = descriptorRepository;
             DataSettings = settings;
@@ -67,7 +67,7 @@ namespace Bam.Net.Data.Dynamic
         }
 
         protected DynamicTypeManager DynamicTypeManager { get; set; }
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataProvider DataSettings { get; set; }
         public DynamicTypeNameResolver DynamicTypeNameResolver { get; set; }
         public DynamicTypeDataRepository DynamicTypeDataRepository { get; set; }
         public DirectoryInfo CsvDirectory { get; set; }
@@ -313,7 +313,7 @@ namespace Bam.Net.Data.Dynamic
             SaveDataInstance(rootHash, parentHash, typeName, valueDictionary);
         }
 
-        private void EnsureDataDirectories(IDataDirectoryProvider settings)
+        private void EnsureDataDirectories(IDataProvider settings)
         {
             CsvDirectory = settings.GetRootDataDirectory(nameof(DynamicTypeManager), "csv");
             if (!CsvDirectory.Exists)
