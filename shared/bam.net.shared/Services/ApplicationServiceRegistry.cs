@@ -116,7 +116,7 @@ namespace Bam.Net.Services
             ApplicationServiceRegistry appRegistry = new ApplicationServiceRegistry();
             appRegistry.CombineWith(CoreClientServiceRegistryContainer.Current);
             appRegistry
-                .For<IDataProviderResolver>().Use<DefaultDataProvider>()
+                .For<IDataProviderResolver>().Use<DefaultDataProviderRepositoryResolver>()
                 .For<IApplicationNameProvider>().Use<DefaultConfigurationApplicationNameProvider>()
                 .For<IIncludesResolver>().Use<IncludesResolver>()
                 .For<ProxyAssemblyGeneratorService>().Use<ProxyAssemblyGeneratorServiceProxy>()
