@@ -1,7 +1,6 @@
 # Brpc
 
-Using Brpc you can create and expose a web service by creating a class
-and serving that class with brpc.exe.
+Use Brpc to expose a class definition as a web service.
 
 # TL;DR
 Serve services:	
@@ -12,10 +11,11 @@ or
 
 brpc /registries:[commaSeparatedListOfRegistryNames] /AssemblySearchPattern:[searchPattern]
 
-
+ddd
 ### Web Service Class
-```c#
+```C#
 // Echo.cs
+[Proxy]
 public class Echo
 {
 	public string Test(string value)

@@ -1,6 +1,6 @@
-﻿# Bam.exe
+﻿# bake.exe
 
-Bam.exe is a tool used to manage BamFramework features and functionality.  In addition to bam apps, it works with asp.net core razor page applications.
+bake.exe is used to build and test the BamFramework and toolkit.
 
 ## Windows
 dotnet publish -c Release -r win10-x64 [-o <outputpath>]

@@ -1,0 +1,8 @@
+ArgumentPrefix: /
+Environment: Development
+GitPath: C:\Program Files\Git\cmd\git.exe
+DotNetPath: C:\Program Files\dotnet\dotnet.exe
+NpxPath: C:\Program Files\nodejs\npx.cmd
+NodePath: C:\Program Files\nodejs\node.exe
+NpmPath: C:\Program Files\nodejs\npm.cmd
+DockerPath: C:\Program Files\Docker\Docker\Resources\bin\docker.exe
