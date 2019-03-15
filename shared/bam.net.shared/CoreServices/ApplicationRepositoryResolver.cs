@@ -15,9 +15,9 @@ namespace Bam.Net.CoreServices
     public class ApplicationRepositoryResolver : RepositoryResolver
     {
         ConcurrentDictionary<string, IRepository> _repositoriesByAppName;
-        public ApplicationRepositoryResolver(DefaultDataProvider settings = null, ILogger logger = null)
+        public ApplicationRepositoryResolver(DefaultDatabaseDirectoryProvider settings = null, ILogger logger = null)
         {
-            DataSettings = settings ?? DefaultDataProvider.Current;
+            DatabaseDirectorySettings = settings ?? DefaultDatabaseDirectoryProvider.Current;
             Logger = logger ?? Log.Default;
             _repositoriesByAppName = new ConcurrentDictionary<string, IRepository>();
             GetRepositoryFunc = GetDaoRepository;
@@ -53,7 +53,7 @@ namespace Bam.Net.CoreServices
         {
             IRequest request = context.Request;
             Uri url = new Uri(request.RawUrl);
-            DirectoryInfo dbDirectory = new DirectoryInfo(Path.Combine(DataSettings.GetSysDatabaseDirectory().FullName, url.Host));
+            DirectoryInfo dbDirectory = new DirectoryInfo(Path.Combine(DatabaseDirectorySettings.GetSysDatabaseDirectory().FullName, url.Host));
             if (!dbDirectory.Exists)
             {
                 dbDirectory.Create();

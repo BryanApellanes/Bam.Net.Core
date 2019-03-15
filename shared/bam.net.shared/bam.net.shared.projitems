@@ -437,6 +437,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicTypeNameResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\IDynamicTypeNameResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\PropertyDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IRepositoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlConnectionStringResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlCredentials.cs" />
@@ -1082,7 +1083,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\IDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IDatabaseInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IDatabaseProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\IDataProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IDataDirectoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IDataTypeTranslator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IDbConnectionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IDeleteable.cs" />
@@ -1201,8 +1202,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseRepository.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDataProviderRepositoryResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDataProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDatabaseProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDataTypeBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultRepoDataHydrator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultRepositoryResolver.cs" />
@@ -1216,7 +1216,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IAsyncRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ICrudProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ICrudResponseProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IDataProviderResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IExtendedCrudProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IGeneratesDaoAssembly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IHashedObjectReader.cs" />
@@ -1235,7 +1234,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IReflectionCrudProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IRepoDataHydrator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IRepository.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IRepositoryPathProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IRepositoryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IStorableTypesProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ITypeTableNameProvider.cs" />

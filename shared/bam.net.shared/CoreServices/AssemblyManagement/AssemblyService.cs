@@ -20,9 +20,9 @@ namespace Bam.Net.CoreServices
     [Proxy("assemblySvc")]
     public class AssemblyService : ApplicationProxyableService, IAssemblyService
     {
-        public AssemblyService(IDataProvider dataSettings, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
+        public AssemblyService(IDataDirectoryProvider dataDirectorySettings, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
         {
-            DataSettings = dataSettings;
+            DataDirectorySettings = dataDirectorySettings;
             FileService = fileService;
             AssemblyManagementRepository = repo;
             ApplicationNameProvider = appNameProvider;
@@ -31,7 +31,7 @@ namespace Bam.Net.CoreServices
 
         public override object Clone()
         {
-            AssemblyService result = new AssemblyService(DataSettings, FileService, AssemblyManagementRepository, ApplicationNameProvider);
+            AssemblyService result = new AssemblyService(DataDirectorySettings, FileService, AssemblyManagementRepository, ApplicationNameProvider);
             result.CopyProperties(this);
             result.CopyEventHandlers(this);
             return result;
@@ -39,12 +39,12 @@ namespace Bam.Net.CoreServices
         public event EventHandler CurrentRuntimePersisted;
         public event EventHandler ExceptionPersistingCurrentRuntime;
         public event EventHandler RuntimeRestored;
-        public IDataProvider DataSettings { get; set; }
+        public IDataDirectoryProvider DataDirectorySettings { get; set; }
         public string AssemblyDirectory
         {
             get
             {
-                return DataSettings.GetSysAssemblyDirectory().FullName;
+                return DataDirectorySettings.GetSysAssemblyDirectory().FullName;
             }
         }
         public IFileService FileService { get; set; }

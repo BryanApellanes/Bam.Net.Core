@@ -29,7 +29,7 @@ namespace Bam.Net.Application
 
         static BamRpcServer glooServer;
         
-        [ConsoleAction("startGlooServer", "Start the gloo server")]
+        [ConsoleAction("startBamRpcServer", "Start the bam rpc server")]
         public void StartGlooServerAndPause()
         {
             ConsoleLogger logger = GetLogger();
@@ -37,7 +37,7 @@ namespace Bam.Net.Application
             Pause("Gloo is running");
         }
 
-        [ConsoleAction("killGlooServer", "Kill the gloo server")]
+        [ConsoleAction("killBamRpcServer", "Kill the bam rpc server")]
         public void StopGlooServer()
         {
             if (glooServer != null)
@@ -84,7 +84,7 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("registries", "Start the gloo server serving the registries of the specified names")]
+        [ConsoleAction("registries", "Start the bam rpc server serving the registries of the specified names")]
         public void ServeRegistries()
         {
             ConsoleLogger logger = GetLogger();
@@ -102,14 +102,14 @@ namespace Bam.Net.Application
         [ConsoleAction("createRegistry", "Menu driven Service Registry creation")]
         public void CreateRegistry()
         {
-            DefaultDataProvider dataSettings = DefaultDataProvider.Instance;
+            DefaultDatabaseDirectoryProvider databaseDirectorySettings = DefaultDatabaseDirectoryProvider.Instance;
             IApplicationNameProvider appNameProvider = DefaultConfigurationApplicationNameProvider.Instance;
-            ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(dataSettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), GetLogger());
+            ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(databaseDirectorySettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), GetLogger());
 
             List<dynamic> types = new List<dynamic>();
             string assemblyPath = "\r\n";
-            DirectoryInfo sysData = DefaultDataProvider.Current.GetSysDataDirectory(nameof(ServiceRegistry).Pluralize());
-            ServiceRegistryRepository repo = DefaultDataProvider.Current.GetSysDaoRepository<ServiceRegistryRepository>();
+            DirectoryInfo sysData = DefaultDatabaseDirectoryProvider.Current.GetSysDataDirectory(nameof(ServiceRegistry).Pluralize());
+            ServiceRegistryRepository repo = DefaultDatabaseDirectoryProvider.Current.GetSysDaoRepository<ServiceRegistryRepository>();
             ServiceRegistryDescriptor registry = new ServiceRegistryDescriptor();
             while (!assemblyPath.Equals(string.Empty))
             {
@@ -228,9 +228,9 @@ namespace Bam.Net.Application
         private static void ServeRegistries(ILogger logger, string registries)
         {
             string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot} ");
-            DefaultDataProvider dataSettings = DefaultDataProvider.Current;
+            DefaultDatabaseDirectoryProvider databaseDirectorySettings = DefaultDatabaseDirectoryProvider.Current;
             IApplicationNameProvider appNameProvider = DefaultConfigurationApplicationNameProvider.Instance;
-            ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(dataSettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), logger);
+            ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(databaseDirectorySettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), logger);
 
             string[] requestedRegistries = registries.DelimitSplit(",");
             HashSet<Type> serviceTypes = new HashSet<Type>();

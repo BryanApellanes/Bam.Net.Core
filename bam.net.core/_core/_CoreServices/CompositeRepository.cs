@@ -20,13 +20,13 @@ namespace Bam.Net.CoreServices
     /// </summary>
     public partial class CompositeRepository : AsyncRepository, IHasTypeSchemaTempPathProvider
     {
-        public CompositeRepository(DaoRepository sourceRepository, DefaultDataProvider dataSettings = null)
+        public CompositeRepository(DaoRepository sourceRepository, DefaultDatabaseDirectoryProvider databaseDirectorySettings = null)
         {
-            DataSettings = dataSettings ?? DefaultDataProvider.Current;
+            DataDirectorySettings = databaseDirectorySettings ?? DefaultDatabaseDirectoryProvider.Current;
             SourceRepository = sourceRepository;
             ReadRepository = new CachingRepository(sourceRepository);
             WriteRepositories = new HashSet<IRepository>();
-            WorkspacePath = DataSettings.GetWorkspaceDirectory(this.GetType()).FullName;
+            WorkspacePath = DataDirectorySettings.GetWorkspaceDirectory(this.GetType()).FullName;
             BackupRepository = ServiceRegistry.Default.Get<IRepository>();
             TypeSchemaTempPathProvider = (sd, ts) => Path.Combine(WorkspacePath, sd.Name, ts.Hash);
 

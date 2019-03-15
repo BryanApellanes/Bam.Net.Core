@@ -21,12 +21,12 @@ namespace Bam.Net.CoreServices
 
         public DataSettingsSmtpSettingsProvider()
         {
-            DataSettings = DefaultDataProvider.Current;
+            DatabaseDirectorySettings = DefaultDatabaseDirectoryProvider.Current;
         }
 
-        public DataSettingsSmtpSettingsProvider(SmtpSettings smtpSettings, DefaultDataProvider dataSettings = null)
+        public DataSettingsSmtpSettingsProvider(SmtpSettings smtpSettings, DefaultDatabaseDirectoryProvider databaseDirectorySettings = null)
         {
-            DataSettings = dataSettings ?? DefaultDataProvider.Current;
+            DatabaseDirectorySettings = databaseDirectorySettings ?? DefaultDatabaseDirectoryProvider.Current;
             SmtpSettings = smtpSettings;
             SmtpSettings.Save(SmtpSettingsVault);            
         }
@@ -47,7 +47,7 @@ namespace Bam.Net.CoreServices
 
         public static string DefaultSender { get; set; }
 
-        public DefaultDataProvider DataSettings { get; set; }
+        public DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; set; }
 
         SmtpSettings _smtpSettings;
         public SmtpSettings SmtpSettings
@@ -67,7 +67,7 @@ namespace Bam.Net.CoreServices
         {
             get
             {
-                return DataSettings.GetSysDatabasePathFor(typeof(SmtpSettings), "CoreServices");                
+                return DatabaseDirectorySettings.GetSysDatabasePathFor(typeof(SmtpSettings), "CoreServices");                
             }
             set
             {

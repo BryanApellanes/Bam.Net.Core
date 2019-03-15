@@ -21,20 +21,20 @@ namespace Bam.Net.Automation
         public Worker(string name, JobManagerService svc = null)
         {
             Name = name ?? System.Guid.NewGuid().ToString();
-            JobConductorService = svc;
+            JobManagerService = svc;
         }
 
-        JobManagerService _jobConductorService;
-        object _jobConductorLock = new object();
-        public JobManagerService JobConductorService
+        JobManagerService _jobManagerService;
+        object _jobManagerLock = new object();
+        public JobManagerService JobManagerService
         {
             get
             {
-                return _jobConductorLock.DoubleCheckLock(ref _jobConductorService, () => new JobManagerService());
+                return _jobManagerLock.DoubleCheckLock(ref _jobManagerService, () => new JobManagerService());
             }
             set
             {
-                _jobConductorService = value;
+                _jobManagerService = value;
             }
         }
 

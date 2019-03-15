@@ -93,8 +93,8 @@ namespace Bam.Net.CoreServices
 
         public static ServiceRegistry Create()
         {
-            DefaultDataProvider dataSettings = DefaultDataProvider.Current;
-            string databasesPath = dataSettings.GetSysDatabaseDirectory().FullName;
+            DefaultDatabaseDirectoryProvider databaseDirectorySettings = DefaultDatabaseDirectoryProvider.Current;
+            string databasesPath = databaseDirectorySettings.GetSysDatabaseDirectory().FullName;
             string userDatabasesPath = Path.Combine(databasesPath, "UserDbs");
 
             AppConf conf = new AppConf(BamConf.Load(ServiceConfig.ContentRoot), ServiceConfig.ProcessName.Or(RegistryName));
@@ -110,13 +110,13 @@ namespace Bam.Net.CoreServices
             roleResolver.Database = userMgr.Database;
 
             ServiceRegistryRepository serviceRegistryRepo = new ServiceRegistryRepository();
-            serviceRegistryRepo.Database = dataSettings.GetSysDatabaseFor(serviceRegistryRepo);
+            serviceRegistryRepo.Database = databaseDirectorySettings.GetSysDatabaseFor(serviceRegistryRepo);
             serviceRegistryRepo.EnsureDaoAssemblyAndSchema();
 
             DaoRoleProvider daoRoleProvider = new DaoRoleProvider(userMgr.Database);
             RoleService coreRoleService = new RoleService(daoRoleProvider, conf);
             AssemblyServiceRepository assSvcRepo = new AssemblyServiceRepository();
-            assSvcRepo.Database = dataSettings.GetSysDatabaseFor(assSvcRepo);
+            assSvcRepo.Database = databaseDirectorySettings.GetSysDatabaseFor(assSvcRepo);
             assSvcRepo.EnsureDaoAssemblyAndSchema();
 
             ConfigurationProvider configSvc = new ConfigurationProvider(coreRepo, conf, userDatabasesPath);
@@ -160,8 +160,8 @@ namespace Bam.Net.CoreServices
                 .For<OAuthService>().Use<OAuthService>()
                 .For<ILog>().Use(loggerSvc)
                 .For<SystemLoggerService>().Use(loggerSvc)
-                .For<IDataProvider>().Use(DefaultDataProvider.Current)
-                .For<DefaultDataProvider>().Use(DefaultDataProvider.Current)
+                .For<IDataDirectoryProvider>().Use(DefaultDatabaseDirectoryProvider.Current)
+                .For<DefaultDatabaseDirectoryProvider>().Use(DefaultDatabaseDirectoryProvider.Current)
                 .For<IApplicationNameResolver>().Use<ClientApplicationNameResolver>()
                 .For<ClientApplicationNameResolver>().Use<ClientApplicationNameResolver>()
                 .For<SmtpSettingsProvider>().Use(DataSettingsSmtpSettingsProvider.Default)

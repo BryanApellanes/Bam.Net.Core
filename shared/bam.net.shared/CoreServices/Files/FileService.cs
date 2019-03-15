@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices
     public class FileService : ApplicationProxyableService, IFileService
     {
         protected FileService() { }
-        public FileService(IRepository repository, DefaultDataProvider dataSettings = null, ILogger logger = null)
+        public FileService(IRepository repository, DefaultDatabaseDirectoryProvider databaseDirectorySettings = null, ILogger logger = null)
         {
             Repository = repository;
             Repository.AddTypes(new Type[]
@@ -32,17 +32,17 @@ namespace Bam.Net.CoreServices
                 typeof(ChunkDataDescriptor),
                 typeof(ChunkData)
             });
-            DataSettings = dataSettings ?? DefaultDataProvider.Instance;
+            DatabaseDirectorySettings = databaseDirectorySettings ?? DefaultDatabaseDirectoryProvider.Instance;
             Logger = logger ?? Log.Default;
-            FileSystemChunkStorage = new FileSystemChunkStorage(DataSettings, Logger);
-            RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DataSettings, Logger);
+            FileSystemChunkStorage = new FileSystemChunkStorage(DatabaseDirectorySettings, Logger);
+            RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DatabaseDirectorySettings, Logger);
             ChunkStorage = new CompositeChunkStorage();
             ChunkStorage.AddStorage(FileSystemChunkStorage);
             ChunkStorage.AddStorage(RepositoryChunkStorage);
 
             ChunkDataBatchSize = 10;
             ChunkLength = 256000;
-            ChunkDirectory = DataSettings.GetChunksDirectory().FullName;
+            ChunkDirectory = DatabaseDirectorySettings.GetChunksDirectory().FullName;
             SetChunkDataDescriptorRetriever();
         }
 
@@ -291,7 +291,7 @@ namespace Bam.Net.CoreServices
             return GetFileChunks(fileHash, fromIndex, ChunkDataBatchSize);
         }
 
-        protected DefaultDataProvider DataSettings { get; }
+        protected DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; }
 
         private static void HandleExistingFile(string localPath, bool overwrite)
         {

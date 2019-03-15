@@ -11,7 +11,6 @@ or
 
 brpc /registries:[commaSeparatedListOfRegistryNames] /AssemblySearchPattern:[searchPattern]
 
-ddd
 ### Web Service Class
 ```C#
 // Echo.cs

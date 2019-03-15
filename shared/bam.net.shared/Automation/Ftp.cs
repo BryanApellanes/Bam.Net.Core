@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
-//using System.Net.FtpClient;
 
 namespace Bam.Net.Automation
 {

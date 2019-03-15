@@ -23,7 +23,7 @@ namespace Bam.Net.Services.Clients
 
         public FileInfo Save()
         {
-            SystemPaths paths = SystemPaths.Get(DefaultDataProvider.Current);
+            SystemPaths paths = SystemPaths.Get(DefaultDatabaseDirectoryProvider.Current);
             return Save(paths.Generated);
         }
 

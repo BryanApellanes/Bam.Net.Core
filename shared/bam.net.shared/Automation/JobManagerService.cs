@@ -33,16 +33,16 @@ namespace Bam.Net.Automation
         AutoResetEvent _enqueueSignal;
         AutoResetEvent _runCompleteSignal;
         Thread _runnerThread;
-        protected internal JobManagerService() : this(DefaultConfigurationApplicationNameProvider.Instance, DefaultDataProvider.Current)
+        protected internal JobManagerService() : this(DefaultConfigurationApplicationNameProvider.Instance, DefaultDatabaseDirectoryProvider.Current)
         {
         }
 
-        public JobManagerService(IApplicationNameProvider appNameProvider, DefaultDataProvider dataSettings, ProfigurationSet profiguration = null)
+        public JobManagerService(IApplicationNameProvider appNameProvider, DefaultDatabaseDirectoryProvider databaseDirectorySettings, ProfigurationSet profiguration = null)
         {
             TypeResolver = new TypeResolver();
-            DataSettings = dataSettings;
+            DatabaseDirectorySettings = databaseDirectorySettings;
             ApplicationNameProvider = appNameProvider;
-            JobsDirectory = dataSettings.GetAppDataDirectory(appNameProvider, "Jobs").FullName;
+            JobsDirectory = databaseDirectorySettings.GetAppDataDirectory(appNameProvider, "Jobs").FullName;
             ProfigurationSet = profiguration ?? new ProfigurationSet(System.IO.Path.Combine(JobsDirectory, "ProfigurationSet"));
             MaxConcurrentJobs = 3;
             _enqueueSignal = new AutoResetEvent(false);
@@ -51,13 +51,13 @@ namespace Bam.Net.Automation
 
         public override object Clone()
         {
-            JobManagerService clone = new JobManagerService(ApplicationNameProvider, DataSettings);
+            JobManagerService clone = new JobManagerService(ApplicationNameProvider, DatabaseDirectorySettings);
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;
         }
 
-        public DefaultDataProvider DataSettings { get; }        
+        public DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; }        
         public IWorkerTypeProvider WorkerTypeProvider { get; }
         public ITypeResolver TypeResolver { get; set; }
         public int MaxConcurrentJobs

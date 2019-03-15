@@ -27,16 +27,16 @@ namespace Bam.Net.CoreServices
 
         protected ApplicationRegistrationService() { }
 
-        public ApplicationRegistrationService(DefaultDataProvider dataSettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
+        public ApplicationRegistrationService(DefaultDatabaseDirectoryProvider databaseDirectorySettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
         {
             ApplicationRegistrationRepository = coreRepo;
             ApplicationRegistrationRepository.WarningsAsErrors = false;
-            dataSettings.SetDatabases(this);
-            CompositeRepository = new CompositeRepository(ApplicationRegistrationRepository, dataSettings);
+            databaseDirectorySettings.SetDatabases(this);
+            CompositeRepository = new CompositeRepository(ApplicationRegistrationRepository, databaseDirectorySettings);
             _cacheManager = new CacheManager(100000000);
             _apiKeyResolver = new ApiKeyResolver(this, this);
             AppConf = conf;
-            DataSettings = dataSettings;
+            DatabaseDirectorySettings = databaseDirectorySettings;
             Logger = logger;
             HashAlgorithm = HashAlgorithms.SHA256;         
         }
@@ -206,7 +206,7 @@ namespace Bam.Net.CoreServices
         [Exclude]
         public override object Clone()
         {
-            ApplicationRegistrationService result = new ApplicationRegistrationService(DataSettings, AppConf, ApplicationRegistrationRepository, Logger);
+            ApplicationRegistrationService result = new ApplicationRegistrationService(DatabaseDirectorySettings, AppConf, ApplicationRegistrationRepository, Logger);
             result.CopyProperties(this);
             result.CopyEventHandlers(this);
             return result;
@@ -338,7 +338,7 @@ namespace Bam.Net.CoreServices
             }
         }
 
-        protected DefaultDataProvider DataSettings { get; set; }
+        protected DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; set; }
 
         protected internal ApiKeyInfo GenerateApiKeyInfo(CoreServices.ApplicationRegistration.Data.Application app)
         {

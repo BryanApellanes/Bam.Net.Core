@@ -19,7 +19,7 @@ namespace Bam.Net.Services
         public FileSystemKeyValueStore(ILogger logger = null)
         {
             _loadedFiles = new HashSet<string>();
-            LocalStorage = new DirectoryInfo(Path.Combine(DefaultDataProvider.Current.GetAppFilesDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName, DirectoryName));
+            LocalStorage = new DirectoryInfo(Path.Combine(DefaultDatabaseDirectoryProvider.Current.GetAppFilesDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName, DirectoryName));
             FileCache = new TextFileCache();
             Logger = logger;
         }
