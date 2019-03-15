@@ -2,24 +2,43 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using Bam.Net.Logging;
 
 namespace Bam.Net
 {
     public class HandlebarsTemplateRenderer : ITemplateRenderer
     {
-        public HandlebarsTemplateRenderer(HandlebarsDirectory handlebarsDirectory, HandlebarsEmbeddedResources handlebarsEmbeddedResources)
+        public HandlebarsTemplateRenderer(HandlebarsEmbeddedResources handlebarsEmbeddedResources, HandlebarsDirectory handlebarsDirectory)
+            : this(handlebarsEmbeddedResources, new HandlebarsDirectory[] {handlebarsDirectory})
         {
-            HandlebarsDirectory = handlebarsDirectory;
+        }
+        
+        public HandlebarsTemplateRenderer(HandlebarsEmbeddedResources handlebarsEmbeddedResources, params HandlebarsDirectory[] handlebarsDirectories)
+        {
+            HandlebarsDirectories = new HashSet<HandlebarsDirectory>();
             HandlebarsEmbeddedResources = handlebarsEmbeddedResources;
-
-            HandlebarsDirectory.Reload();
+            
             HandlebarsEmbeddedResources.Reload();
+            
+            foreach (HandlebarsDirectory handlebarsDirectory in handlebarsDirectories)
+            {
+                handlebarsDirectory.Reload();
+                HandlebarsDirectories.Add(handlebarsDirectory);
+            }
         }
 
-        public HandlebarsDirectory HandlebarsDirectory { get; set; }
+        public ILogger Logger { get; set; }
+        
+        public HashSet<HandlebarsDirectory> HandlebarsDirectories { get; set; }
         public HandlebarsEmbeddedResources HandlebarsEmbeddedResources { get; set; }
 
+        public void AddDirectory(DirectoryInfo directoryInfo)
+        {
+            HandlebarsDirectories.Add(new HandlebarsDirectory(directoryInfo, Logger));
+        }
+        
         public void Render(object toRender, Stream output)
         {
             Args.ThrowIfNull(toRender, "toRender");
@@ -28,15 +47,10 @@ namespace Bam.Net
 
         public void Render(string templateName, object renderModel, Stream output)
         {
-            HandlebarsDirectory = HandlebarsDirectory ?? Handlebars.HandlebarsDirectory;
-            HandlebarsEmbeddedResources = HandlebarsEmbeddedResources ?? Handlebars.HandlebarsEmbeddedResources;
-            Args.ThrowIfNull(HandlebarsDirectory, "HandlebarsDirectory");
-            Args.ThrowIfNull(HandlebarsEmbeddedResources, "HandlebarsEmbeddedResources");
-            
-            if ((HandlebarsDirectory?.Templates?.ContainsKey(templateName)) == true)
-            {
-                string code = HandlebarsDirectory.Render(templateName, renderModel);
-
+            HandlebarsDirectory handlebarsDirectory = GetHandlebarsDirectory(templateName);
+            if (handlebarsDirectory != null)
+            { 
+                string code = handlebarsDirectory.Render(templateName, renderModel);
                 code.WriteToStream(output);
             }
             else if ((HandlebarsEmbeddedResources?.Templates?.ContainsKey(templateName)) == true)
@@ -48,6 +62,17 @@ namespace Bam.Net
             {
                 Args.Throw<InvalidOperationException>("Specified template {0} not found", templateName);
             }
+        }
+
+        private HandlebarsDirectory GetHandlebarsDirectory(string templateName)
+        {
+            HandlebarsDirectory toUse = HandlebarsDirectories.FirstOrDefault(h => h.HasTemplate(templateName));
+            if (HandlebarsDirectories.Count(h => h.HasTemplate(templateName)) > 1)
+            {
+                (Logger ?? Log.Default).Info("Multiple templates named {0} were found, using {1}", templateName, Path.Combine(toUse.Directory.FullName, templateName));
+            }
+
+            return toUse;
         }
     }
 }
