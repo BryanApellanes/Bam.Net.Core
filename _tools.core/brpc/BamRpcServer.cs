@@ -63,10 +63,10 @@ namespace Bam.Net.Application
         }
         protected ServiceProxyResponder RegisterServiceTypes()
         {
-            BamRpcResponder gloo = Responder;
-            ServiceProxyResponder responder = gloo.ServiceProxyResponder;
+            BamRpcResponder rpc = Responder;
+            ServiceProxyResponder responder = rpc.ServiceProxyResponder;
             AddCommonServices(responder);
-            gloo.RpcResponder.Executors = responder.CommonServiceProvider;
+            rpc.RpcResponder.Executors = responder.CommonServiceProvider;
             return responder;
         }
 

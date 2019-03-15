@@ -50,7 +50,7 @@ namespace Bam.Net.Application
         {
             if (!TryRespond(context))
             {
-                SendResponse(context, 404, new { BamServer = "Gloo Server" } );
+                SendResponse(context, 404, new { BamServer = "Bam Rpc Server" } );
             }
             context.Response.Close();
             return true;
@@ -72,7 +72,7 @@ namespace Bam.Net.Application
             catch (Exception ex)
             {
                 responder = null;
-                Logger.AddEntry("Gloo: exception occurred trying to respond, {0}", ex, ex.Message);
+                Logger.AddEntry("Bam Rpc: exception occurred trying to respond, {0}", ex, ex.Message);
                 return false;
             }
         }
