@@ -38,6 +38,14 @@ namespace Bam.Net
         {
             HandlebarsDirectories.Add(new HandlebarsDirectory(directoryInfo, Logger));
         }
+
+        public string Render(string templateName, object data)
+        {
+            MemoryStream ms = new MemoryStream();
+            Render(templateName, data, ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms.ReadToEnd();
+        }
         
         public void Render(object toRender, Stream output)
         {

@@ -13,7 +13,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
     {
         public HandlebarsSchemaRepositoryGenerator(GenerationConfig config, ILogger logger = null) : base(SchemaRepositoryGeneratorSettings.FromConfig(config), logger)
         {
-            TemplateRenderer = new HandlebarsTemplateRenderer(new Presentation.Handlebars.HandlebarsDirectory(config.TemplatePath), new Presentation.Handlebars.HandlebarsEmbeddedResources(typeof(SchemaRepositoryGenerator).Assembly));
+            TemplateRenderer = new HandlebarsTemplateRenderer(new Presentation.Handlebars.HandlebarsEmbeddedResources(typeof(SchemaRepositoryGenerator).Assembly), new Presentation.Handlebars.HandlebarsDirectory(config.TemplatePath));
 
             Configure(config);
             Bam.Net.Handlebars.HandlebarsDirectory = new Presentation.Handlebars.HandlebarsDirectory(config.TemplatePath);

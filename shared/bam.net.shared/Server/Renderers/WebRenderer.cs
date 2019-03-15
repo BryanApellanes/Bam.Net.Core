@@ -72,5 +72,12 @@ namespace Bam.Net.Server.Renderers
         }
 
         public virtual void EnsureDefaultTemplate(Type type) { }
+        
+        
+        public string Render(string templateName, object data)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

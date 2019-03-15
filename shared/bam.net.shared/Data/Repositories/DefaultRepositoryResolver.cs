@@ -10,6 +10,10 @@ namespace Bam.Net.Data.Repositories
 {
     public class DefaultRepositoryResolver : RepositoryResolver
     {
+        public DefaultRepositoryResolver() : this(new DaoRepository())
+        {
+        }
+
         public DefaultRepositoryResolver(IRepository repository)
         {
             Repository = repository;

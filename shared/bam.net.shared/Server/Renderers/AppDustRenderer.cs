@@ -41,6 +41,11 @@ namespace Bam.Net.Server.Renderers
             }
         }
 
+        public string Render(string templateName, object data)
+        {
+            throw new NotImplementedException();
+        }
+        
         string _combinedCompiledTemplates;
         object _combinedCompiledTemplatesLock = new object();
         /// <summary>

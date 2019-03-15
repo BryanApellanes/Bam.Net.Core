@@ -36,6 +36,11 @@ namespace Bam.Net.Presentation.Handlebars
         
         public Dictionary<string, Func<object, string>> Templates { get; private set; }
 
+        public bool HasTemplate(string templateName)
+        {
+            return Templates.ContainsKey(templateName);
+        }
+        
         public HandlebarsDirectory CombineWith(params HandlebarsDirectory[] dirs)
         {
             Reload();
@@ -101,6 +106,7 @@ namespace Bam.Net.Presentation.Handlebars
             }
             return string.Empty;
         }
+        
         DirectoryInfo _directory;
         public DirectoryInfo Directory
         {
@@ -113,6 +119,7 @@ namespace Bam.Net.Presentation.Handlebars
                 SetDirectory(value);
             }
         }
+        
         public void AddPartialsDirectory(string partialsDirectory)
         {
             if(PartialsDirectories == null)
@@ -128,6 +135,7 @@ namespace Bam.Net.Presentation.Handlebars
             }
             Reload();
         }
+        
         public string FileExtension { get; set; }
         public HashSet<DirectoryInfo> PartialsDirectories { get; set; }
         object _reloadLock = new object();
