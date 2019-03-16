@@ -411,6 +411,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ProcessOutputEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompilationException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\CompositeConfigurationProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Configurable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationConflictEventArgs.cs" />

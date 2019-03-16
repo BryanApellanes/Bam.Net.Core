@@ -12,7 +12,12 @@ namespace Bam.Net
         {
             get
             {
-                return new string[] { "/", "opt", "bam" };
+                if (OSInfo.Current == OSNames.Windows)
+                {
+                    return new string[] {"C:", "bam"};
+                }
+
+                return new string[] {"/", "opt", "bam"};
             }
         }
 
@@ -25,20 +30,34 @@ namespace Bam.Net
 
         public static string[] ToolkitSegments
         {
-            get
-            {
-                return new List<string>(PathSegments) { "toolkit" }.ToArray();
-            }
+            get { return new List<string>(PathSegments) {"toolkit"}.ToArray(); }
         }
 
         public static string ContentPath { get { return Path.Combine(ContentSegments); } }
 
         public static string[] ContentSegments
         {
-            get
-            {
-                return new List<string>(PathSegments) { "content" }.ToArray();
-            }
+            get { return new List<string>(PathSegments) {"content"}.ToArray(); }
+        }
+
+        public static string RpcScriptsSrcPath
+        {
+            get { return Path.Combine(RpcScriptsSrcSegments); }
+        }
+        
+        public static string[] RpcScriptsSrcSegments
+        {
+            get { return new List<string>(PathSegments) {"sys", "rpc", "scripts"}.ToArray(); }
+        }
+        
+        public static string ConfPath
+        {
+            get { return Path.Combine(ConfSegments); }
+        }
+
+        public static string[] ConfSegments
+        {
+            get { return new List<string>(PathSegments) {"conf"}.ToArray(); }
         }
         
         public static string DataPath
@@ -48,10 +67,7 @@ namespace Bam.Net
 
         public static string[] DataSegments
         {
-            get
-            {
-                return new List<string>(PathSegments) { "data"}.ToArray();
-            }
+            get { return new List<string>(PathSegments) {"data"}.ToArray(); }
         }
     }
 }

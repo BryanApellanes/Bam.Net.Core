@@ -161,11 +161,7 @@ namespace Bam.Net.Configuration
             string returnValue = _appSettings[key];
             if (string.IsNullOrEmpty(returnValue))
             {
-                returnValue = defaultValue;
-            }
-            if (string.IsNullOrEmpty(returnValue))
-            {
-                returnValue = ConfigurationResolver.Current[key];
+                returnValue = ConfigurationResolver.Current[key, defaultValue];
             }
             return returnValue;
         }

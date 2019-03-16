@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <None Remove="heart.ico" />
+    <None Update="bhrt.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +30,57 @@
     <None Update="www-svcinfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\bhrt.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bhrt.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bhrt.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bhrt.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bhrt.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bhrt.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bhrt.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bhrt.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bhrt.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bhrt.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bhrt.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bhrt.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bhrt.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bhrt.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bhrt.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bhrt.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bhrt.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bhrt.dll.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bhrt.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bhrt.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bhrt.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bhrt.pdb" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bhrt.dll" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bhrt.pdb" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bhrt.dll" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bhrt.pdb" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bhrt.dll" />
   </ItemGroup>
 
 </Project>

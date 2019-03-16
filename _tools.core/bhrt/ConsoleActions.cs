@@ -13,6 +13,7 @@ using Bam.Net.Configuration;
 using Bam.Net.ServiceProxy;
 using Bam.Net.Logging;
 using System.Reflection;
+using System.Security.Permissions;
 using Bam.Net.Services;
 using Bam.Net.CoreServices;
 using System.Threading;
@@ -42,7 +43,8 @@ namespace Bam.Net.Application
         [ConsoleAction("startHeartServer", "Start the Heart server")]
         public static void StartServerAndPause()
         {
-            ServiceRegistry serviceRegistry = StartServer();
+            ServiceRegistry serviceRegistry = StartServer(out HostPrefix[] hostPrefixes);
+            hostPrefixes.Each(h => OutLine(h.ToString(), ConsoleColor.Cyan));
             Pause($"Heart server is serving service registry {serviceRegistry.Name}");
         }
 
@@ -75,13 +77,14 @@ namespace Bam.Net.Application
             throw new NotImplementedException("This service needs to be updated to deploy to a kubernetes cluster");
         }
 
-        internal static ServiceRegistry StartServer()
+        internal static ServiceRegistry StartServer(out HostPrefix[] hostPrefixes)
         {
             HostPrefix[] prefixes = GetConfiguredHostPrefixes();
             ILogger logger = GetLogger();
             Log.Default = logger;
             ServiceRegistry serviceRegistry = CoreServiceRegistryContainer.Create();
             server = serviceRegistry.Serve(prefixes, logger);
+            hostPrefixes = prefixes;
             return serviceRegistry;
         }
 

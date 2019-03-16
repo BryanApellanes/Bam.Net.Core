@@ -48,8 +48,24 @@ namespace Bam.Net
         public static void ProcessMode(ProcessModes mode)
         {
             Set(BAM_PROCESS_MODE, mode.ToString());
-        } 
+        }
 
+        /// <summary>
+        /// Gets the bam environment variable for the specified name.  The environment
+        /// variable name is prefixed by BAM_. 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetBamVariable(string name)
+        {
+            return Get($"BAM_{name}");
+        }
+
+        public static void SetBamVariable(string name, string value)
+        {
+            Set($"BAM_{name}", value);
+        }
+        
         private static void Set(string name, string value)
         {
             Environment.SetEnvironmentVariable(name, value);

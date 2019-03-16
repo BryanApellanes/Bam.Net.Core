@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using Lucene.Net.Analysis.Hunspell;
 
 namespace Bam.Net.Configuration
 {
@@ -15,6 +18,7 @@ namespace Bam.Net.Configuration
         {
             DefaultConfiguration = ConfigurationManager.AppSettings;
             ConfigurationProvider = new DefaultConfigurationProvider();
+            AppSettings = Config.Read();
         }
 
         public ConfigurationResolver(IConfiguration configuration, ILogger logger = null)
@@ -22,7 +26,10 @@ namespace Bam.Net.Configuration
             Logger = logger ?? Log.Default;
             NetCoreConfiguration = configuration;
             DefaultConfiguration = ConfigurationManager.AppSettings;
+            AppSettings = Config.Read();
         }
+        
+        public Dictionary<string, string> AppSettings { get; set; }
 
         public IConfiguration NetCoreConfiguration { get; set; }
         public NameValueCollection DefaultConfiguration { get; set; }
@@ -33,7 +40,7 @@ namespace Bam.Net.Configuration
         [Inject]
         public IConfigurationProvider ConfigurationProvider { get; set; }
 
-        public string this[string key, bool callConfigService = false]
+        public string this[string key, string defaultValue = null, bool callConfigService = false]
         {
             get
             {
@@ -42,6 +49,20 @@ namespace Bam.Net.Configuration
                 {
                     value = DefaultConfiguration[key];
                 }
+
+                if (string.IsNullOrEmpty(value) && AppSettings.ContainsKey(key))
+                {
+                    value = AppSettings[key];
+                }
+                if (string.IsNullOrEmpty(value))
+                {
+                    value = BamEnvironmentVariables.GetBamVariable(key);
+                }
+
+                if (!string.IsNullOrEmpty(defaultValue))
+                {
+                    value = defaultValue;
+                }
                 if(string.IsNullOrEmpty(value) && callConfigService)
                 {
                     value = FromService(key);
@@ -49,6 +70,11 @@ namespace Bam.Net.Configuration
                 if (string.IsNullOrEmpty(value))
                 {
                     FireEvent(ConfigurationValueNotFound, new ConfigurationEventArgs { Key = key });
+                }
+                if (!string.IsNullOrEmpty(value))
+                {
+                    AppSettings.AddMissing(key, value);
+                    Config.Write(AppSettings);
                 }
                 return value;
             }       

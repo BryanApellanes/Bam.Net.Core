@@ -20,7 +20,7 @@ namespace Bam.Net.Logging
             {
                 if (_debug == null)
                 {
-                    _debug = DefaultConfiguration.GetAppSetting("Debug", "true").IsAffirmative();
+                    _debug = DefaultConfiguration.GetAppSetting("Debug", "false").IsAffirmative();
                 }
                 return _debug.Value;
             }
@@ -37,7 +37,7 @@ namespace Bam.Net.Logging
             {
                 if (_trace == null)
                 {
-                    _trace = DefaultConfiguration.GetAppSetting("Trace", "true").IsAffirmative();
+                    _trace = DefaultConfiguration.GetAppSetting("Trace", "false").IsAffirmative();
                 }
                 return _trace.Value;
             }

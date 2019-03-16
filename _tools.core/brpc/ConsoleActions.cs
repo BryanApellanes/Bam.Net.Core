@@ -24,13 +24,13 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultContentRoot = "/opt/bam/content";
-        static string defaultGlooScriptsSrcPath = "/opt/bam/sys/gloo/scripts";
+        static string defaultContentRoot = BamPaths.ContentPath;
+        static string defaultRpcScriptsSrcPath = BamPaths.RpcScriptsSrcPath;
 
         static BamRpcServer glooServer;
         
         [ConsoleAction("startBamRpcServer", "Start the bam rpc server")]
-        public void StartGlooServerAndPause()
+        public void StartBamRpcServerAndPause()
         {
             ConsoleLogger logger = GetLogger();
             StartGlooServer(logger);
@@ -38,7 +38,7 @@ namespace Bam.Net.Application
         }
 
         [ConsoleAction("killBamRpcServer", "Kill the bam rpc server")]
-        public void StopGlooServer()
+        public void StopBamRpcServer()
         {
             if (glooServer != null)
             {
@@ -57,7 +57,7 @@ namespace Bam.Net.Application
             try
             {
                 string serviceClassName = GetArgument("serve", "Enter the name of the class to serve ");
-                string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot} ");                
+                string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot}) ");                
                 Type serviceType = GetServiceType(serviceClassName, out Assembly assembly);
                 if(serviceType == null)
                 {
@@ -180,7 +180,7 @@ namespace Bam.Net.Application
         [ConsoleAction("csgloo", "Start the gloo server serving the compiled results of the specified csgloo files")]
         public void ServeCsGloo()
         {
-            string csglooDirectoryPath = GetArgument("CsGlooSrc", $"Enter the path to the CsGloo source directory (default: {defaultGlooScriptsSrcPath})");
+            string csglooDirectoryPath = GetArgument("CsGlooSrc", $"Enter the path to the CsGloo source directory (default: {defaultRpcScriptsSrcPath})");
             Assembly csglooAssembly = CompileTvgSource(csglooDirectoryPath, "csgloo");
 
             string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot} ");
@@ -194,7 +194,7 @@ namespace Bam.Net.Application
         public static Assembly CompileTvgSource(string csglooDirectoryPath, string extension)
         {
             string binPath = $"/opt/bam/sys/{extension}/bin";//$"C:\\bam\\sys\\{extension}\\bin";
-            DirectoryInfo csTvgSrcDirectory = new DirectoryInfo(csglooDirectoryPath.Or(defaultGlooScriptsSrcPath)).EnsureExists();
+            DirectoryInfo csTvgSrcDirectory = new DirectoryInfo(csglooDirectoryPath.Or(defaultRpcScriptsSrcPath)).EnsureExists();
             DirectoryInfo csTvgBinDirectory = new DirectoryInfo(binPath).EnsureExists();
             FileInfo[] files = csTvgSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
             StringBuilder src = new StringBuilder();
@@ -227,7 +227,7 @@ namespace Bam.Net.Application
 
         private static void ServeRegistries(ILogger logger, string registries)
         {
-            string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot} ");
+            string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot}) ");
             DefaultDatabaseDirectoryProvider databaseDirectorySettings = DefaultDatabaseDirectoryProvider.Current;
             IApplicationNameProvider appNameProvider = DefaultConfigurationApplicationNameProvider.Instance;
             ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(databaseDirectorySettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), logger);
