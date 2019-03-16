@@ -54,6 +54,11 @@ namespace Bam.Net.Server.Renderers
             }
         }
 
+        public string Render(string templateName, object data)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void SetHandlebarsDirectories()
         {
             if(ContentResponder != null)
