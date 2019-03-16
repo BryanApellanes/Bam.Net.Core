@@ -19,17 +19,17 @@ namespace Bam.Net.CoreServices
     {
         public FileSystemChunkStorage()
         {
-            DatabaseDirectorySettings = DefaultDatabaseDirectoryProvider.Current;
+            DataProvider = DefaultDataProvider.Current;
             Logger = Log.Default;
         }
 
-        public FileSystemChunkStorage(DefaultDatabaseDirectoryProvider databaseDirectorySettings, ILogger logger = null)
+        public FileSystemChunkStorage(DefaultDataProvider dataProvider, ILogger logger = null)
         {
-            DatabaseDirectorySettings = databaseDirectorySettings;
+            DataProvider = dataProvider;
             Logger = logger;
         }
 
-        public IDataDirectoryProvider DatabaseDirectorySettings { get; set; }
+        public IDataDirectoryProvider DataProvider { get; set; }
         public ILogger Logger { get; set; }
         public void SetChunk(IChunk chunk)
         {
@@ -90,7 +90,7 @@ namespace Bam.Net.CoreServices
 
         private string GetChunkDirectoryPath(string hash)
         {
-            DirectoryInfo chunksDir = DatabaseDirectorySettings.GetChunksDirectory();
+            DirectoryInfo chunksDir = DataProvider.GetChunksDirectory();
             return Path.Combine(chunksDir.FullName, Path.Combine(hash.SplitByLength(2).ToArray()));
         }        
     }

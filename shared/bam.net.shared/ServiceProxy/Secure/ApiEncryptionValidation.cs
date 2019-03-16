@@ -29,22 +29,22 @@ namespace Bam.Net.ServiceProxy.Secure
         public static void SetEncryptedValidationToken(NameValueCollection headers, string postString, string publicKey)
         {
             EncryptedValidationToken token = CreateEncryptedValidationToken(postString, publicKey);
-            headers[CustomHeaders.Nonce] = token.NonceCipher;
-            headers[CustomHeaders.ValidationToken] = token.HashCipher;
+            headers[Headers.Nonce] = token.NonceCipher;
+            headers[Headers.ValidationToken] = token.HashCipher;
         }
         
         public static EncryptedValidationToken ReadEncryptedValidationToken(NameValueCollection headers)
         {
             EncryptedValidationToken result = new EncryptedValidationToken
             {
-                NonceCipher = headers[CustomHeaders.Nonce],
-                HashCipher = headers[CustomHeaders.ValidationToken]
+                NonceCipher = headers[Headers.Nonce],
+                HashCipher = headers[Headers.ValidationToken]
             };
-            Args.ThrowIfNull(result.NonceCipher, CustomHeaders.Nonce);
+            Args.ThrowIfNull(result.NonceCipher, Headers.Nonce);
             Args.ThrowIf<EncryptionValidationTokenNotFoundException>(
                 result.HashCipher == null || string.IsNullOrEmpty(result.HashCipher),  
                 "Header was not found: {0}",
-                CustomHeaders.ValidationToken);
+                Headers.ValidationToken);
             return result;
         }
 
@@ -75,7 +75,7 @@ namespace Bam.Net.ServiceProxy.Secure
         {
             NameValueCollection headers = context.Request.Headers;
             
-            string paddingValue = headers[CustomHeaders.Padding] ?? string.Empty;
+            string paddingValue = headers[Headers.Padding] ?? string.Empty;
             bool usePadding = paddingValue.ToLowerInvariant().Equals("true");
             
             return ValidateEncryptedToken(headers, post, usePadding);

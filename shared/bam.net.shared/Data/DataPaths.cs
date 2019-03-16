@@ -9,19 +9,20 @@ namespace Bam.Net.Data
 {
     public class DataPaths
     {
-        public static DataPaths Get(IDataDirectoryProvider dataDirectoryProvider)
+        public static DataPaths Get(IDataDirectoryProvider dataDirectoryProvider, IApplicationNameProvider applicationNameProvider = null)
         {
+            applicationNameProvider = applicationNameProvider ?? DefaultConfigurationApplicationNameProvider.Instance;
             return new DataPaths
             {
                 DataRoot = dataDirectoryProvider.GetRootDataDirectory().FullName,
                 SysData = dataDirectoryProvider.GetSysDataDirectory().FullName,
 
-                AppData = dataDirectoryProvider.GetAppDataDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName,
-                UserData = dataDirectoryProvider.GetAppUsersDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName,
-                AppDatabase = dataDirectoryProvider.GetAppDatabaseDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName,
-                AppRepository = dataDirectoryProvider.GetAppRepositoryDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName,
-                AppFiles = dataDirectoryProvider.GetAppFilesDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName,
-                AppEmailTemplates = dataDirectoryProvider.GetAppEmailTemplatesDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName
+                AppData = dataDirectoryProvider.GetAppDataDirectory(applicationNameProvider).FullName,
+                UserData = dataDirectoryProvider.GetAppUsersDirectory(applicationNameProvider).FullName,
+                AppDatabase = dataDirectoryProvider.GetAppDatabaseDirectory(applicationNameProvider).FullName,
+                AppRepository = dataDirectoryProvider.GetAppRepositoryDirectory(applicationNameProvider).FullName,
+                AppFiles = dataDirectoryProvider.GetAppFilesDirectory(applicationNameProvider).FullName,
+                AppEmailTemplates = dataDirectoryProvider.GetAppEmailTemplatesDirectory(applicationNameProvider).FullName
             };
         }
 

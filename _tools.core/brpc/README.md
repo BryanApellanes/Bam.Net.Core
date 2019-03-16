@@ -57,3 +57,28 @@ with the src attribute set to the JavaScript proxies path:
 <script src="/ServiceProxy/JSProxies"></script>
 ```
 
+## Service Registries
+Some class models are very complex and require dependency injection to function properly.  To support these scenarios you can define a ServiceRegistry container and serve types from it.
+
+To define a ServiceRegistry container do the following:
+
+- Define a class adorned with the ServiceRegistryContainer attribute
+- Define a static method in the class adorned with the ServiceRegistryLoader attribute making sure to specify a registry name.
+
+```
+[ServiceRegistryContainer]
+public class YourClassName
+{
+    [ServiceRegistryLoader("YourRegistryName")]
+    public static ServiceRegistry YourMethodName()
+    {
+        // ... build service registry
+    }
+}
+```
+
+To serve your registry do the following:
+
+```
+brpc /serve:YourRegistryName
+```

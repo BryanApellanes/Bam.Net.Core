@@ -47,7 +47,7 @@ namespace Bam.Net
         
         public static string[] RpcScriptsSrcSegments
         {
-            get { return new List<string>(PathSegments) {"sys", "rpc", "scripts"}.ToArray(); }
+            get { return new List<string>(PathSegments) {"rpc", "scripts"}.ToArray(); }
         }
         
         public static string ConfPath

@@ -46,14 +46,14 @@ namespace Bam.Net.Application
 
         private static ServiceRegistry GetServiceRegistry(CoreClient coreClient)
         {
-            SQLiteDatabase loggerDb = DefaultDatabaseDirectoryProvider.Current.GetSysDatabase($"{Name}_DaoLogger2");
+            SQLiteDatabase loggerDb = DefaultDataProvider.Current.GetSysDatabase($"{Name}_DaoLogger2");
             ILogger logger = new DaoLogger2(loggerDb);
 
             return (ServiceRegistry)(new ServiceRegistry())
                 .For<IUserManager>().Use(coreClient.UserRegistryService)
-                .For<DefaultDatabaseDirectoryProvider>().Use(DefaultDatabaseDirectoryProvider.Current)
+                .For<DefaultDataProvider>().Use(DefaultDataProvider.Current)
                 .For<ILogger>().Use(logger)
-                .For<IDatabaseProvider>().Use<DefaultDatabaseDirectoryProvider>();                
+                .For<IDatabaseProvider>().Use<DefaultDataProvider>();                
         }
     }
 }

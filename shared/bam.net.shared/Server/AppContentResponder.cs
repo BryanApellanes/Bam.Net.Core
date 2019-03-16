@@ -26,14 +26,14 @@ namespace Bam.Net.Server
 {
     public partial class AppContentResponder : ContentResponder
     {
-        public AppContentResponder(ContentResponder commonResponder, AppConf conf, DefaultDatabaseDirectoryProvider databaseDirectorySettings = null, ILogger logger = null)
+        public AppContentResponder(ContentResponder commonResponder, AppConf conf, DefaultDataProvider dataSettings = null, ILogger logger = null)
             : base(commonResponder.BamConf, logger)
         {
             if (conf.BamConf == null)
             {
                 conf.BamConf = commonResponder.BamConf;
             }
-            DatabaseDirectorySettings = databaseDirectorySettings ?? DefaultDatabaseDirectoryProvider.Current;
+            DataSettings = dataSettings ?? DefaultDataProvider.Current;
             ContentResponder = commonResponder;
             ServerRoot = commonResponder.ServerRoot;
             AppConf = conf;
@@ -60,7 +60,7 @@ namespace Bam.Net.Server
                 {
                     string[] assemblySearchPatterns = DefaultConfiguration.GetAppSetting("AssemblySearchPattern", "*ContentHandlers.dll").DelimitSplit(",", true);
                     DirectoryInfo entryDir = Assembly.GetEntryAssembly().GetFileInfo().Directory;
-                    DirectoryInfo sysAssemblies = DatabaseDirectorySettings.GetSysAssemblyDirectory();
+                    DirectoryInfo sysAssemblies = DataSettings.GetSysAssemblyDirectory();
                     List<FileInfo> files = new List<FileInfo>();
                     foreach(string assemblySearchPattern in assemblySearchPatterns)
                     {
@@ -124,7 +124,7 @@ namespace Bam.Net.Server
             }
         }
 
-        public DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; }
+        public DefaultDataProvider DataSettings { get; }
 
         public ContentLocator AppContentLocator
         {

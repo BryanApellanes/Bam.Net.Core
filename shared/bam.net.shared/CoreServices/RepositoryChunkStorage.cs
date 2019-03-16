@@ -21,19 +21,19 @@ namespace Bam.Net.CoreServices
         {
         }
 
-        public RepositoryChunkStorage(DefaultDatabaseDirectoryProvider databaseDirectorySettings, ILogger logger = null)
+        public RepositoryChunkStorage(DefaultDataProvider dataProvider, ILogger logger = null)
         {
-            DatabaseDirectorySettings = databaseDirectorySettings;
+            DataProvider = dataProvider;
             Repository = new DaoRepository();
             Repository.AddType<ChunkData>();
         }
 
-        public RepositoryChunkStorage(IRepository repository, DefaultDatabaseDirectoryProvider databaseDirectorySettings, ILogger logger = null):this(databaseDirectorySettings, logger)
+        public RepositoryChunkStorage(IRepository repository, DefaultDataProvider dataSettings, ILogger logger = null):this(dataSettings, logger)
         {
             Repository = repository;
         }
 
-        public DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; set; }
+        public DefaultDataProvider DataProvider { get; set; }
         public IRepository Repository { get; set; }
 
         public IChunk GetChunk(string hash)

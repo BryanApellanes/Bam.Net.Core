@@ -42,7 +42,7 @@ namespace Bam.Net
         {
             get
             {
-                return Get(DefaultDatabaseDirectoryProvider.Current);
+                return Get(DefaultDataProvider.Current);
             }
         }
 

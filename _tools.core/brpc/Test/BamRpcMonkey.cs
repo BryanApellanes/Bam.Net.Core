@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Application
 {
-    public class GlooMonkey
+    public class BamRpcMonkey
     {
-        public GlooMonkey() { }
-        public GlooMonkey(string name)
+        public BamRpcMonkey() { }
+        public BamRpcMonkey(string name)
         {
             Name = name;
             Birthday = DateTime.UtcNow.Subtract(TimeSpan.FromDays(365 * RandomNumber.Between(10, 150)));

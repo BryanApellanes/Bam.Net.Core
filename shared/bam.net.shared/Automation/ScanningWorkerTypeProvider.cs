@@ -33,7 +33,7 @@ namespace Bam.Net.Automation
                     return Task.Run(() =>
                     {
                         DirectoryInfo entryDir = Assembly.GetEntryAssembly().GetFileInfo().Directory;
-                        DirectoryInfo sysAssemblies = DefaultDatabaseDirectoryProvider.Current.GetSysAssemblyDirectory();
+                        DirectoryInfo sysAssemblies = DefaultDataProvider.Current.GetSysAssemblyDirectory();
                         DirectoryInfo[] dirs = new DirectoryInfo[] { entryDir, sysAssemblies };
                         HashSet<Type> types = new HashSet<Type>();
                         foreach (DirectoryInfo dir in dirs)

@@ -27,16 +27,16 @@ namespace Bam.Net.CoreServices
 
         protected ApplicationRegistrationService() { }
 
-        public ApplicationRegistrationService(DefaultDatabaseDirectoryProvider databaseDirectorySettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
+        public ApplicationRegistrationService(DefaultDataProvider dataSettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
         {
             ApplicationRegistrationRepository = coreRepo;
             ApplicationRegistrationRepository.WarningsAsErrors = false;
-            databaseDirectorySettings.SetDatabases(this);
-            CompositeRepository = new CompositeRepository(ApplicationRegistrationRepository, databaseDirectorySettings);
+            dataSettings.SetDatabases(this);
+            CompositeRepository = new CompositeRepository(ApplicationRegistrationRepository, dataSettings);
             _cacheManager = new CacheManager(100000000);
             _apiKeyResolver = new ApiKeyResolver(this, this);
             AppConf = conf;
-            DatabaseDirectorySettings = databaseDirectorySettings;
+            DataSettings = dataSettings;
             Logger = logger;
             HashAlgorithm = HashAlgorithms.SHA256;         
         }
@@ -206,7 +206,7 @@ namespace Bam.Net.CoreServices
         [Exclude]
         public override object Clone()
         {
-            ApplicationRegistrationService result = new ApplicationRegistrationService(DatabaseDirectorySettings, AppConf, ApplicationRegistrationRepository, Logger);
+            ApplicationRegistrationService result = new ApplicationRegistrationService(DataSettings, AppConf, ApplicationRegistrationRepository, Logger);
             result.CopyProperties(this);
             result.CopyEventHandlers(this);
             return result;
@@ -264,7 +264,7 @@ namespace Bam.Net.CoreServices
             string methodName = request.MethodName;
             string stringToHash = ApiParameters.GetStringToHash(className, methodName, request.JsonParams);
 
-            string token = request.Context.Request.Headers[CustomHeaders.KeyToken];
+            string token = request.Context.Request.Headers[Headers.KeyToken];
             bool result = false;
             if (!string.IsNullOrEmpty(token))
             {
@@ -338,7 +338,7 @@ namespace Bam.Net.CoreServices
             }
         }
 
-        protected DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; set; }
+        protected DefaultDataProvider DataSettings { get; set; }
 
         protected internal ApiKeyInfo GenerateApiKeyInfo(CoreServices.ApplicationRegistration.Data.Application app)
         {

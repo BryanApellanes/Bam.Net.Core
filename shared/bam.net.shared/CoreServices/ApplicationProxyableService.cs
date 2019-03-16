@@ -69,7 +69,7 @@ namespace Bam.Net.CoreServices
         {
             get
             {
-                string modeString = HttpContext?.Request?.Headers[CustomHeaders.ProcessMode];
+                string modeString = HttpContext?.Request?.Headers[Headers.ProcessMode];
                 if (!string.IsNullOrEmpty(modeString))
                 {
                     return modeString.ToEnum<ProcessModes>();

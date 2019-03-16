@@ -20,6 +20,8 @@ using Bam.Net.Configuration;
 using Bam.Net.Logging;
 using Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository;
 using Bam.Net.Data;
+using CsQuery.ExtensionMethods.Internal;
+using Lucene.Net.Support;
 
 namespace Bam.Net.CoreServices
 {
@@ -41,12 +43,12 @@ namespace Bam.Net.CoreServices
             ServiceRegistryRepository repo, 
             DaoRepository daoRepo, 
             AppConf appConf,
-            DefaultDatabaseDirectoryProvider databaseDirectorySettings = null) : base(daoRepo, appConf)
+            DefaultDataProvider dataSettings = null) : base(daoRepo, appConf)
         {
             FileService = fileservice;
             ServiceRegistryRepository = repo;
             AssemblyService = assemblyService;
-            DataDirectorySettings = databaseDirectorySettings ?? DefaultDatabaseDirectoryProvider.Current;
+            DataDirectorySettings = dataSettings ?? DefaultDataProvider.Current;
             AssemblySearchPattern = DefaultConfiguration.GetAppSetting("AssemblySearchPattern", "*.dll");
             _scanResults = new Dictionary<Type, List<ServiceRegistryContainerRegistrationResult>>();            
         }
@@ -54,27 +56,27 @@ namespace Bam.Net.CoreServices
         [Local]
         public static ServiceRegistryService GetLocalServiceRegistryService(string assemblySearchPattern = "*Services.dll", ILogger logger = null)
         {
-            return GetLocalServiceRegistryService(DefaultDatabaseDirectoryProvider.Current, DefaultConfigurationApplicationNameProvider.Instance, assemblySearchPattern, logger);
+            return GetLocalServiceRegistryService(DefaultDataProvider.Current, DefaultConfigurationApplicationNameProvider.Instance, assemblySearchPattern, logger);
         }
 
         [Local]
-        public static ServiceRegistryService GetLocalServiceRegistryService(DefaultDatabaseDirectoryProvider databaseDirectoryProvider, IApplicationNameProvider appNameProvider, string assemblySearchPattern, ILogger logger = null)
+        public static ServiceRegistryService GetLocalServiceRegistryService(DefaultDataProvider dataProvider, IApplicationNameProvider appNameProvider, string assemblySearchPattern, ILogger logger = null)
         {
             logger = logger ?? Log.Default;
-            DaoRepository repo = databaseDirectoryProvider.GetSysDaoRepository(logger, nameof(FileService));
+            DaoRepository repo = dataProvider.GetSysDaoRepository(logger, nameof(FileService));
             FileService fileService = new FileService(repo);
             AssemblyServiceRepository assRepo = new AssemblyServiceRepository();
-            assRepo.Database = databaseDirectoryProvider.GetSysDatabaseFor(assRepo);
+            assRepo.Database = dataProvider.GetSysDatabaseFor(assRepo);
             assRepo.EnsureDaoAssemblyAndSchema();
-            AssemblyService assemblyService = new AssemblyService(DefaultDatabaseDirectoryProvider.Current, fileService, assRepo, appNameProvider);
+            AssemblyService assemblyService = new AssemblyService(DefaultDataProvider.Current, fileService, assRepo, appNameProvider);
             ServiceRegistryRepository serviceRegistryRepo = new ServiceRegistryRepository();
-            serviceRegistryRepo.Database = databaseDirectoryProvider.GetSysDatabaseFor(serviceRegistryRepo);
+            serviceRegistryRepo.Database = dataProvider.GetSysDatabaseFor(serviceRegistryRepo);
             serviceRegistryRepo.EnsureDaoAssemblyAndSchema();
             ServiceRegistryService serviceRegistryService = new ServiceRegistryService(
                 fileService,
                 assemblyService,
                 serviceRegistryRepo,
-                databaseDirectoryProvider.GetSysDaoRepository(logger),
+                dataProvider.GetSysDaoRepository(logger),
                 new AppConf { Name = appNameProvider.GetApplicationName() }
             )
             {
@@ -92,11 +94,34 @@ namespace Bam.Net.CoreServices
                     DirectoryInfo entryDir = Assembly.GetEntryAssembly().GetFileInfo().Directory;
                     DirectoryInfo sysAssemblies = DataDirectorySettings.GetSysAssemblyDirectory();
                     DirectoryInfo[] dirs = new DirectoryInfo[] { entryDir, sysAssemblies };
+                    DirectoryInfo[] appServiceDirs = AppPaths.GetServicesDirectories(() =>
+                    {
+                        // Gets the configured service directories from the bam config (bam/conf/{appname}/{appname}.yaml)
+                        string commaSeparatedServiceDirectoryPaths = Config.Current["ServiceDirectories", Path.Combine(AppPaths.Services)];
+                        string[] serviceDirectoryPaths = commaSeparatedServiceDirectoryPaths.DelimitSplit(",");
+                        List<DirectoryInfo> serviceDirs = new List<DirectoryInfo>();
+                        foreach (string serviceDirectoryPath in serviceDirectoryPaths)
+                        {
+                            if (Directory.Exists(serviceDirectoryPath))
+                            {
+                                serviceDirs.Add(new DirectoryInfo(serviceDirectoryPath));
+                            }
+                            else
+                            {
+                                Logger.Warning("Configured service directory does not exist: {0}", serviceDirectoryPath);
+                            }
+                        }
+
+                        return serviceDirs.ToArray();
+                    });
+                    List<DirectoryInfo> scanForServices = new List<DirectoryInfo>();
+                    scanForServices.AddRange(dirs);
+                    scanForServices.AddRange(appServiceDirs);
                     string[] searchPatterns = AssemblySearchPattern.DelimitSplit(",", true);
                     List<FileInfo> files = searchPatterns.SelectMany(searchPattern =>
                     {
                         List<FileInfo> tmp = new List<FileInfo>();
-                        foreach (DirectoryInfo dir in dirs)
+                        foreach (DirectoryInfo dir in scanForServices)
                         {
                             if (dir.Exists)
                             {

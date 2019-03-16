@@ -355,7 +355,7 @@ namespace laotze
 
         private static SchemaDefinition ExtractSchema(string connectionName, string filePath)
         {
-            ISchemaExtractor extractor = Incubator.Default.Get<ISchemaExtractor>(new SQLiteSchemaExtractor(DefaultDatabaseDirectoryProvider.Current.GetSysDatabase(connectionName)));
+            ISchemaExtractor extractor = Incubator.Default.Get<ISchemaExtractor>(new SQLiteSchemaExtractor(DefaultDataProvider.Current.GetSysDatabase(connectionName)));
             SchemaDefinition schema = extractor.Extract();
             schema.Save(filePath);
             return schema;

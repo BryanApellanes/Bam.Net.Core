@@ -214,6 +214,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\GenerationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\PageRenderModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\RenderableModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolve.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\AssemblyReference.cs" />
@@ -412,6 +413,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompilationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfigChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\CompositeConfigurationProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Configurable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigurationConflictEventArgs.cs" />
@@ -502,6 +504,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\WebBook.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\WebBookEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\WebBookPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessApplicationNameProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompiler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeSettings.cs" />
@@ -1203,7 +1206,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseRepository.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDatabaseProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDataProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDataTypeBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultRepoDataHydrator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultRepositoryResolver.cs" />

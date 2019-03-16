@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices
     public class FileService : ApplicationProxyableService, IFileService
     {
         protected FileService() { }
-        public FileService(IRepository repository, DefaultDatabaseDirectoryProvider databaseDirectorySettings = null, ILogger logger = null)
+        public FileService(IRepository repository, DefaultDataProvider dataProvider = null, ILogger logger = null)
         {
             Repository = repository;
             Repository.AddTypes(new Type[]
@@ -32,17 +32,17 @@ namespace Bam.Net.CoreServices
                 typeof(ChunkDataDescriptor),
                 typeof(ChunkData)
             });
-            DatabaseDirectorySettings = databaseDirectorySettings ?? DefaultDatabaseDirectoryProvider.Instance;
+            DataProvider = dataProvider ?? DefaultDataProvider.Instance;
             Logger = logger ?? Log.Default;
-            FileSystemChunkStorage = new FileSystemChunkStorage(DatabaseDirectorySettings, Logger);
-            RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DatabaseDirectorySettings, Logger);
+            FileSystemChunkStorage = new FileSystemChunkStorage(DataProvider, Logger);
+            RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DataProvider, Logger);
             ChunkStorage = new CompositeChunkStorage();
             ChunkStorage.AddStorage(FileSystemChunkStorage);
             ChunkStorage.AddStorage(RepositoryChunkStorage);
 
             ChunkDataBatchSize = 10;
             ChunkLength = 256000;
-            ChunkDirectory = DatabaseDirectorySettings.GetChunksDirectory().FullName;
+            ChunkDirectory = DataProvider.GetChunksDirectory().FullName;
             SetChunkDataDescriptorRetriever();
         }
 
@@ -291,7 +291,7 @@ namespace Bam.Net.CoreServices
             return GetFileChunks(fileHash, fromIndex, ChunkDataBatchSize);
         }
 
-        protected DefaultDatabaseDirectoryProvider DatabaseDirectorySettings { get; }
+        protected DefaultDataProvider DataProvider { get; }
 
         private static void HandleExistingFile(string localPath, bool overwrite)
         {

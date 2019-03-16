@@ -16,7 +16,7 @@ namespace Bam.Net.Application
             FromNameSpace = "Bam.Net.Application.Data";
             ToNameSpace = "Bam.Net.Appliction.Data.Dao";
             UseInheritanceSchema = false;
-            WriteSourceTo = Path.Combine(DefaultDatabaseDirectoryProvider.Current.GetAppDataDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName, "_gen", ToNameSpace);
+            WriteSourceTo = Path.Combine(DefaultDataProvider.Current.GetAppDataDirectory(DefaultConfigurationApplicationNameProvider.Instance).FullName, "_gen", ToNameSpace);
         }
 
         public Assembly Assembly { get; set; }

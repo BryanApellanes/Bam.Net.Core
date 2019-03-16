@@ -95,11 +95,11 @@ namespace Bam.Net.ServiceProxy.Tests
 
             Cookie cookie = new Cookie(SecureSession.CookieName, session.Identifier, "", "blah.cxm");            
             request.CookieContainer.Add(cookie);
-            request.Headers[CustomHeaders.SecureSession] = session.Identifier;
+            request.Headers[Headers.SecureSession] = session.Identifier;
         
             Expect.IsNotNull(request.Headers);
-            Expect.IsNotNull(request.Headers[CustomHeaders.Nonce]);
-            Expect.IsNotNull(request.Headers[CustomHeaders.ValidationToken]);
+            Expect.IsNotNull(request.Headers[Headers.Nonce]);
+            Expect.IsNotNull(request.Headers[Headers.ValidationToken]);
 
             Expect.AreEqual(EncryptedTokenValidationStatus.Success, ApiEncryptionValidation.ValidateEncryptedToken(request.Headers, postString));
         }
