@@ -8,7 +8,23 @@ namespace Bam.Net
 {
     public class BamPaths
     {
-        public static string[] PathSegments
+        public static string BamHome
+        {
+            get { return Path.Combine(BamHomeSegments); }
+        }
+
+        /// <summary>
+        /// The root of the bam installation, the same as BamHome
+        /// </summary>
+        public static string Root
+        {
+            get { return BamHome; }
+        }
+        
+        /// <summary>
+        /// The path segments for BamHome
+        /// </summary>
+        public static string[] BamHomeSegments
         {
             get
             {
@@ -21,23 +37,23 @@ namespace Bam.Net
             }
         }
 
-        public static string BamHome
+        public static string PublicPath
         {
-            get { return Path.Combine(PathSegments); }
+            get { return Path.Combine(BamHome, "public"); }
         }
-
+        
         public static string ToolkitPath { get { return Path.Combine(ToolkitSegments); } }
 
         public static string[] ToolkitSegments
         {
-            get { return new List<string>(PathSegments) {"toolkit"}.ToArray(); }
+            get { return new List<string>(BamHomeSegments) {"toolkit"}.ToArray(); }
         }
 
         public static string ContentPath { get { return Path.Combine(ContentSegments); } }
 
         public static string[] ContentSegments
         {
-            get { return new List<string>(PathSegments) {"content"}.ToArray(); }
+            get { return new List<string>(BamHomeSegments) {"content"}.ToArray(); }
         }
 
         public static string RpcScriptsSrcPath
@@ -47,7 +63,7 @@ namespace Bam.Net
         
         public static string[] RpcScriptsSrcSegments
         {
-            get { return new List<string>(PathSegments) {"rpc", "scripts"}.ToArray(); }
+            get { return new List<string>(BamHomeSegments) {"rpc", "scripts"}.ToArray(); }
         }
         
         public static string ConfPath
@@ -57,7 +73,7 @@ namespace Bam.Net
 
         public static string[] ConfSegments
         {
-            get { return new List<string>(PathSegments) {"conf"}.ToArray(); }
+            get { return new List<string>(BamHomeSegments) {"conf"}.ToArray(); }
         }
         
         public static string DataPath
@@ -67,7 +83,7 @@ namespace Bam.Net
 
         public static string[] DataSegments
         {
-            get { return new List<string>(PathSegments) {"data"}.ToArray(); }
+            get { return new List<string>(BamHomeSegments) {"data"}.ToArray(); }
         }
     }
 }

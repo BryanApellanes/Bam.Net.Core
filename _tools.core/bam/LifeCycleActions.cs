@@ -37,7 +37,7 @@ namespace Bam.Net.Application
         [ConsoleAction("config", "Write the default config file backing up the current file if it exists")]
         public void Config()
         {
-            BamSettings settings = BamSettings.Load(true);
+            BamSettings settings = BamSettings.Load();
             if(!settings.IsValid(msgs => OutLine(msgs, ConsoleColor.Magenta)))
             {
                 settings.Save(bak => OutLineFormat("Backed up existing file: {0}", ConsoleColor.DarkYellow, bak));

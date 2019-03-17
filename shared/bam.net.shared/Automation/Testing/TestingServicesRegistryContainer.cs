@@ -67,7 +67,7 @@ namespace Bam.Net.Automation.Testing
                 .For<SystemLoggerService>().Use(loggerSvc)
                 .For<SystemLogReaderService>().Use<SystemLogReaderService>()
                 .For<TestReportService>().Use<TestReportService>()
-                .For<SmtpSettingsProvider>().Use(DataSettingsSmtpSettingsProvider.Default)
+                .For<SmtpSettingsProvider>().Use(DataProviderSmtpSettingsProvider.Default)
                 .For<NotificationService>().Use<NotificationService>();
         }
     }

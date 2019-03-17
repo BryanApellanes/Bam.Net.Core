@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Security.Permissions;
 using Bam.Net.Data;
 using Bam.Net.Logging;
+using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Server;
 using Bam.Net.Services;
 using Lucene.Net.Analysis.Hunspell;
@@ -47,6 +48,12 @@ namespace Bam.Net
         protected FileSystemWatcher ConfigChangeWatcher { get; set; }
         public event EventHandler ConfigChanged;
         public FileInfo File { get; set; }
+
+        public Workspace Workspace
+        {
+            get { return Workspace.Current; }
+        }
+
         public Dictionary<string, string> AppSettings { get; set; }
 
         public string this[string key, string defaultValue = null]
@@ -81,7 +88,7 @@ namespace Bam.Net
 
         public static Dictionary<string, string> Read(out FileInfo configFile)
         {
-            configFile = GetConfigFile();
+            configFile = GetFile();
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
         
@@ -91,7 +98,7 @@ namespace Bam.Net
             {
                 BamEnvironmentVariables.SetBamVariable(key, appSettings[key]);
             }
-            FileInfo configFile = GetConfigFile();
+            FileInfo configFile = GetFile();
             if (configFile.Exists)
             {
                 Dictionary<string, string> existing = configFile.FullName.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
@@ -106,30 +113,70 @@ namespace Bam.Net
         public static Config Set(IApplicationNameProvider applicationNameProvider)
         {
             Args.ThrowIfNull(applicationNameProvider, "applicationNameProvider");
-            FileInfo configFile = GetConfigFile(applicationNameProvider);
+            FileInfo configFile = GetFile(applicationNameProvider);
             Config config = new Config
             {
-                AppSettings = configFile.FromYamlFile<Dictionary<string, string>>()
+                AppSettings = configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>()
             };
             Current = config;
             return config;
         }
+
+        /// <summary>
+        /// Load an instance of T from bam configs, creating the config file if necessary.
+        /// </summary>
+        /// <param name="applicationNameProvider"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T Load<T>(IApplicationNameProvider applicationNameProvider = null) where T : class, new()
+        {
+            DirectoryInfo processDir = GetDirectory(applicationNameProvider);
+            string fileName = $"{typeof(T).Namespace}.{typeof(Type).Name}.config.yaml";
+            FileInfo file = new FileInfo(Path.Combine(processDir.FullName, fileName));
+            if (!file.Exists)
+            {
+                (new T()).ToYamlFile(file);
+            }
+            return file.FromYamlFile<T>();
+        }
         
-        public static FileInfo GetConfigFile(IApplicationNameProvider applicationNameProvider = null)
+        public static Dictionary<string, string> AppSettingsFor<T>(IApplicationNameProvider applicationNameProvider = null)
+        {
+            string fileName = $"{typeof(T).Namespace}.{typeof(Type).Name}.appsettings.yaml";
+            FileInfo file = new FileInfo(Path.Combine(GetDirectory(applicationNameProvider).FullName, fileName));
+            if (file.Exists)
+            {
+                return file.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
+            }
+            return new Dictionary<string, string>();
+        }
+        
+        /// <summary>
+        /// Gets the configuration directory for the specified application name provider
+        /// </summary>
+        /// <param name="applicationNameProvider"></param>
+        /// <returns></returns>
+        public static DirectoryInfo GetDirectory(IApplicationNameProvider applicationNameProvider = null)
+        {
+            DirectoryInfo configDir = GetFile().Directory;
+            string typeConfigs = applicationNameProvider == null
+                ? Bam.Net.CoreServices.ApplicationRegistration.Data.Application.Unknown.Name
+                : applicationNameProvider.GetApplicationName();
+            
+            return new DirectoryInfo(Path.Combine(configDir.FullName, typeConfigs));
+        }
+        
+        public static FileInfo GetFile(IApplicationNameProvider applicationNameProvider = null)
         {
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
             string configName = Path.GetFileNameWithoutExtension(assemblyFile);
             string path = applicationNameProvider != null
-                ? Path.Combine(BamPaths.ConfPath, configName, $"{applicationNameProvider.GetApplicationName()}.yaml")
-                : Path.Combine(BamPaths.ConfPath, configName, $"{configName}.yaml"); 
+                ? Path.Combine(BamPaths.ConfPath, configName, $"{applicationNameProvider.GetApplicationName()}.appsettings.yaml")
+                : Path.Combine(BamPaths.ConfPath, configName, $"{configName}.appsettings.yaml"); 
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
             {
-                if (!configFile.Directory.Exists)
-                {
-                    configFile.Directory.Create();
-                }
-                configFile.Create();
+                System.IO.File.Create(configFile.FullName).Dispose();
             }
             return configFile;
         }

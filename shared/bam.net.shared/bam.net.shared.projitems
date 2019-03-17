@@ -483,6 +483,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITemplateResourceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyValuePair.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\MessageEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OSNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OSInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Components\InlineComponent.cs" />
@@ -729,7 +730,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\CoreServiceRegistryContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\CoreServiceResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Credentials\CredentialManagementService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\DataSettingsSmtpSettingsProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\DataProviderSmtpSettingsProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\DefaultConfigurationServiceUrlProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Defaults.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\DiagnosableSettings.cs" />
@@ -2554,6 +2555,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Web\QueryStringParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Web\UserAgents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\WindowsServiceInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Workspace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)YamlExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\Data\ArrayBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\Data\YamlData.cs" />

@@ -82,15 +82,10 @@ namespace Bam.Net
             return true;
         }
 
-        public static BamSettings Load(bool createIfMissing)
+        public static BamSettings Load(string path = null)
         {
-            return Load(null, createIfMissing);
-        }
-
-        public static BamSettings Load(string path = null, bool createIfMissing = false)
-        {
-            path = path ?? Path.Combine(".", $"bam-{OSInfo.Current.ToString()}.yaml");
-            if (!File.Exists(path) && createIfMissing)
+            path = path ?? Path.Combine(Config.GetDirectory(ProcessApplicationNameProvider.Current).FullName, $"bam-{OSInfo.Current.ToString()}.yaml");
+            if (!File.Exists(path))
             {
                 BamSettings settings = new BamSettings
                 {

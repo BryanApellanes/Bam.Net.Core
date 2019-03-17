@@ -70,7 +70,7 @@ namespace Bam.Net.Application
                 Exit(1);
             }
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
-            BamSettings settings = BamSettings.Load(true);
+            BamSettings settings = BamSettings.Load();
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo($"publish {projectFile} -c Release -r {RuntimeNames[OSInfo.Current]} -o {recipe.OutputDirectory}");

@@ -7,6 +7,7 @@ using Bam.Net.Data.Repositories;
 
 namespace Bam.Net
 {
+    // TODO: derive an AppPaths instance that represents all relevant path information for a running application.  AppPaths appPaths = AppPaths.ForApplication(IApplicationNameProvider appNameProvider)
     public class AppPaths
     {
         static AppPaths()

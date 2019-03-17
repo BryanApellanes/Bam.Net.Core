@@ -2738,10 +2738,7 @@ namespace Bam.Net
             
             lock (FileLock.Named(filePath))
             {
-                using (StreamReader sr = new StreamReader(filePath))
-                {
-                    return sr.ReadToEnd();
-                }
+                return File.ReadAllText(filePath);
             }
         }
 

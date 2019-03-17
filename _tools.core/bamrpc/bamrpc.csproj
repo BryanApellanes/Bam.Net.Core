@@ -3,14 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <ApplicationIcon>brpc.ico</ApplicationIcon>
+    <RootNamespace>brpc</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="daemon.ico" />
+    <None Remove="brpc.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="daemon.ico" />
+    <Content Include="brpc.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,13 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DaemonService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="DaemonProcesses.json">
+    <None Update="Test\GlooTestScript.csgloo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

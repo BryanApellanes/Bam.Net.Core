@@ -24,5 +24,10 @@ namespace Bam.Net.Logging
         {
             logger.AddEntry(Format, FormatArgs);
         }
+
+        public virtual void Log(ILogger logger, LogEventType eventType)
+        {
+            logger.AddEntry(Format, eventType, FormatArgs);
+        }
     }
 }

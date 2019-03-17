@@ -164,7 +164,7 @@ namespace Bam.Net.CoreServices
                 .For<DefaultDataProvider>().Use(DefaultDataProvider.Current)
                 .For<IApplicationNameResolver>().Use<ClientApplicationNameResolver>()
                 .For<ClientApplicationNameResolver>().Use<ClientApplicationNameResolver>()
-                .For<SmtpSettingsProvider>().Use(DataSettingsSmtpSettingsProvider.Default)
+                .For<SmtpSettingsProvider>().Use(DataProviderSmtpSettingsProvider.Default)
                 .For<NotificationService>().Use<NotificationService>()
                 .For<ILogReader>().Use<SystemLogReaderService>()
                 .For<SystemLogReaderService>().Use<SystemLogReaderService>()

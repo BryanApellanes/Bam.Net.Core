@@ -1,1 +1,0 @@
-﻿btest.exe /TestsWithCoverage /type:Unit /testReportHost:int.bamapps.net /testReportPort:80 /tag:test-tag-123 /search:.\%1
