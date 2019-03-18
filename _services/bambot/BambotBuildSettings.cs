@@ -1,3 +1,5 @@
+using Bam.Net.Automation;
+
 namespace Bam.Net.Application
 {
     public class BambotBuildSettings

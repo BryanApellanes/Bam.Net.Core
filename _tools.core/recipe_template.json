@@ -30,7 +30,7 @@
     "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\laotze\\laotze.csproj",
     "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\masuco\\masuco.csproj"
   ],
-  "OutputDirectory": "C:\\bam\\toolkit\\Windows",
+  "OutputDirectory": "C:\\bam\\toolkit",
   "BuildConfig": "Debug",
   "OsName": "Windows"
 }

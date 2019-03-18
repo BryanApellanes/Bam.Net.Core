@@ -1,4 +1,4 @@
-namespace Bam.Net.Application
+namespace Bam.Net.Automation
 {
     public enum BuildConfig
     {

@@ -176,6 +176,10 @@ namespace Bam.Net
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
             {
+                if (!configFile.Directory.Exists)
+                {
+                    configFile.Directory.Create();
+                }
                 System.IO.File.Create(configFile.FullName).Dispose();
             }
             return configFile;
