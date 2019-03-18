@@ -25,7 +25,7 @@ namespace Bam.Net.CoreServices.Tests
             {
                 Url = "test"
             };
-            SQLiteDatabase db = new SQLiteDatabase(DefaultDataProvider.Current.AppDataDirectory, nameof(CanSaveWebHookSubscriberDao));
+            SQLiteDatabase db = new SQLiteDatabase(DataProvider.Current.AppDataDirectory, nameof(CanSaveWebHookSubscriberDao));
             db.TryEnsureSchema<WebHooks.Data.Dao.WebHookSubscriber>();
             dao.Save(db);
             Expect.IsGreaterThan(dao.IdValue.Value, 0);

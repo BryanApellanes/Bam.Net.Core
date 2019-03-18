@@ -45,7 +45,7 @@ namespace Bam.Net
         {
             get
             {
-                return DataPaths.Get(DefaultDataProvider.Current, ProcessApplicationNameProvider.Current).AppData;
+                return DataPaths.Get(DataProvider.Current, ProcessApplicationNameProvider.Current).AppData;
             }
         }
 

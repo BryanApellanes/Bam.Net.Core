@@ -11,9 +11,9 @@ using Bam.Net.UserAccounts.Data;
 namespace Bam.Net.Data.Repositories
 {
     // TODO: rename this to DefaultDataProvider 
-    public partial class DefaultDataProvider : DatabaseProvider<SQLiteDatabase>, IDataDirectoryProvider, IRepositoryProvider
+    public partial class DataProvider : DatabaseProvider<SQLiteDatabase>, IDataDirectoryProvider, IRepositoryProvider
     {
-        public DefaultDataProvider()
+        public DataProvider()
         {
             DataRootDirectory = BamPaths.DataPath;
             AppDataDirectory = "AppData";
@@ -30,7 +30,7 @@ namespace Bam.Net.Data.Repositories
             Logger = Log.Default;            
         }
 
-        public DefaultDataProvider(ProcessMode processMode, ILogger logger = null):this()
+        public DataProvider(ProcessMode processMode, ILogger logger = null):this()
         {
             ProcessMode = processMode;
             Logger = logger ?? Log.Default;
@@ -53,7 +53,7 @@ namespace Bam.Net.Data.Repositories
 
         public static DataPaths GetDataPaths(ProcessMode mode)
         {
-            return DataPaths.Get(new DefaultDataProvider(mode));
+            return DataPaths.Get(new DataProvider(mode));
         }
 
         public ProcessMode ProcessMode { get; set; }
@@ -70,7 +70,7 @@ namespace Bam.Net.Data.Repositories
         public string EmailTemplatesDirectory { get; set; }
         public string AssemblyDirectory { get; set; }
 
-        static DefaultDataProvider _default;
+        static DataProvider _default;
         static object _defaultLock = new object();
         /// <summary>
         /// Gets the default instance.
@@ -78,15 +78,15 @@ namespace Bam.Net.Data.Repositories
         /// <value>
         /// The instance.
         /// </value>
-        public static DefaultDataProvider Instance
+        public static DataProvider Instance
         {
             get
             {
-                return _defaultLock.DoubleCheckLock(ref _default, () => new DefaultDataProvider());
+                return _defaultLock.DoubleCheckLock(ref _default, () => new DataProvider());
             }
         }
 
-        static DefaultDataProvider _fromConfig;
+        static DataProvider _fromConfig;
         static object _fromConfigLock = new object();
         /// <summary>
         /// Gets the current instance configured for the current ProcessMode.
@@ -94,11 +94,11 @@ namespace Bam.Net.Data.Repositories
         /// <value>
         /// The current.
         /// </value>
-        public static DefaultDataProvider Current
+        public static DataProvider Current
         {
             get
             {
-                return _fromConfigLock.DoubleCheckLock(ref _fromConfig, () => new DefaultDataProvider(ProcessMode.Current));
+                return _fromConfigLock.DoubleCheckLock(ref _fromConfig, () => new DataProvider(ProcessMode.Current));
             }
         }
 

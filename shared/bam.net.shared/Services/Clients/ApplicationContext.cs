@@ -30,7 +30,7 @@ namespace Bam.Net.Services.Clients
 
         protected ApplicationContext(string coreHostName, int corePort = 80)
             : this(new CoreClient(DefaultConfigurationOrganizationNameProvider.Instance.GetOrganizationName(), DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName(), coreHostName, corePort, DefaultConfigurationLoggerProvider.Instance.GetLogger()),
-                  DefaultConfigurationOrganizationNameProvider.Instance, DefaultConfigurationApplicationNameProvider.Instance, DefaultConfigurationProvider.Instance, DefaultDataProvider.Instance, DefaultDataProvider.Instance, DefaultConfigurationLoggerProvider.Instance)
+                  DefaultConfigurationOrganizationNameProvider.Instance, DefaultConfigurationApplicationNameProvider.Instance, DefaultConfigurationProvider.Instance, DataProvider.Instance, DataProvider.Instance, DefaultConfigurationLoggerProvider.Instance)
         {               
         }
 

@@ -23,7 +23,7 @@ namespace Bam.Net.Services.Clients
             CoreClient = new CoreClient();
             ServiceRegistry registry = CoreServiceRegistryContainer.Instance;
             UserManager userMgr = registry.Get<UserManager>();
-            DefaultDataProvider.Current.Init(userMgr);
+            DataProvider.Current.Init(userMgr);
             _userManager = userMgr;
         }
 

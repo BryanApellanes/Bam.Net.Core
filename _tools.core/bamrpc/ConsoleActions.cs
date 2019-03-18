@@ -102,14 +102,14 @@ namespace Bam.Net.Application
         [ConsoleAction("createRegistry", "Menu driven Service Registry creation")]
         public void CreateRegistry()
         {
-            DefaultDataProvider dataSettings = DefaultDataProvider.Instance;
+            DataProvider dataProvider = DataProvider.Instance;
             IApplicationNameProvider appNameProvider = DefaultConfigurationApplicationNameProvider.Instance;
-            ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(dataSettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), GetLogger());
+            ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(dataProvider, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), GetLogger());
 
             List<dynamic> types = new List<dynamic>();
             string assemblyPath = "\r\n";
-            DirectoryInfo sysData = DefaultDataProvider.Current.GetSysDataDirectory(nameof(ServiceRegistry).Pluralize());
-            ServiceRegistryRepository repo = DefaultDataProvider.Current.GetSysDaoRepository<ServiceRegistryRepository>();
+            DirectoryInfo sysData = DataProvider.Current.GetSysDataDirectory(nameof(ServiceRegistry).Pluralize());
+            ServiceRegistryRepository repo = DataProvider.Current.GetSysDaoRepository<ServiceRegistryRepository>();
             ServiceRegistryDescriptor registry = new ServiceRegistryDescriptor();
             while (!assemblyPath.Equals(string.Empty))
             {
@@ -228,7 +228,7 @@ namespace Bam.Net.Application
         private static void ServeRegistries(ILogger logger, string registries)
         {
             string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot}) ");
-            DefaultDataProvider dataSettings = DefaultDataProvider.Current;
+            DataProvider dataSettings = DataProvider.Current;
             IApplicationNameProvider appNameProvider = DefaultConfigurationApplicationNameProvider.Instance;
             ServiceRegistryService serviceRegistryService = ServiceRegistryService.GetLocalServiceRegistryService(dataSettings, appNameProvider, GetArgument("AssemblySearchPattern", "Please specify the AssemblySearchPattern to use"), logger);
 
