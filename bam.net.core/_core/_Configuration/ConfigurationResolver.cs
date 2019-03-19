@@ -54,19 +54,22 @@ namespace Bam.Net.Configuration
                 {
                     value = AppSettings[key];
                 }
+                
                 if (string.IsNullOrEmpty(value))
                 {
                     value = BamEnvironmentVariables.GetBamVariable(key);
                 }
 
-                if (!string.IsNullOrEmpty(defaultValue))
+                if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(defaultValue))
                 {
                     value = defaultValue;
                 }
+                
                 if(string.IsNullOrEmpty(value) && callConfigService)
                 {
                     value = FromService(key);
                 }
+                
                 if (string.IsNullOrEmpty(value))
                 {
                     FireEvent(ConfigurationValueNotFound, new ConfigurationEventArgs { Key = key });

@@ -261,8 +261,8 @@ namespace Bam.Net.Automation
 
         /// <summary>
         /// Returns true if a job with the specified name
-        /// exists under the current JobConductor.  Determined
-        /// by looking in the current JobConductor's JobsDirectory.
+        /// exists under the current JobManager.  Determined
+        /// by looking in the current JobManager's JobsDirectory.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

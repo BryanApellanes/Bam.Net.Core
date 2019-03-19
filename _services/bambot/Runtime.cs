@@ -6,6 +6,10 @@ namespace Bam.Net.Application
         {
             if (obj is Runtime rt)
             {
+                if (string.IsNullOrEmpty(rt.Name))
+                {
+                    return string.IsNullOrEmpty(Name);
+                }
                 return rt.Name.Equals(Name);
             }
 

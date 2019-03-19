@@ -22,6 +22,8 @@ namespace Bam.Net
             AddSwitches(typeof(LifeCycleActions));
             AddValidArgument("config", "The path to a config file to use");
             AddValidArgument("schemaName", false, addAcronym: true, description: "The name to use for the generated schema");
+            
+            AddValidArgument("menu", false, addAcronym: true, description:"The path to an assembly containing ConsoleAction methods");
         }
 
         #region do not modify
@@ -36,7 +38,8 @@ namespace Bam.Net
             {
                 Pause("paused..."); // for debugging
             }
-            if (ExecuteSwitches(Arguments, typeof(LifeCycleActions), false, logger))
+            if (ExecuteSwitches(Arguments, typeof(LifeCycleActions), false, logger) ||
+                ExecuteSwitches(Arguments, typeof(ExternalMenu), false, logger))
             {
                 logger.BlockUntilEventQueueIsEmpty();                
             }

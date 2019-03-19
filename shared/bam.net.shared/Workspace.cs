@@ -10,7 +10,7 @@ namespace Bam.Net
         public IApplicationNameProvider ApplicationNameProvider { get; set; }
         public DirectoryInfo Root { get; set; }
         
-        public DirectoryInfo Directory(params string[] pathSegments)
+        public DirectoryInfo CreateDirectory(params string[] pathSegments)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(Path(pathSegments));
             if (!directoryInfo.Exists)
@@ -21,7 +21,7 @@ namespace Bam.Net
             return directoryInfo;
         }
         
-        public FileInfo File(params string[] pathSegments)
+        public FileInfo CreateFile(params string[] pathSegments)
         {
             FileInfo file = new FileInfo(Path(pathSegments));
             if (!file.Exists)
@@ -32,6 +32,16 @@ namespace Bam.Net
             return file;
         }
 
+        public DirectoryInfo Directory(params string[] pathSegments)
+        {
+            return new DirectoryInfo(Path(pathSegments));
+        }
+        
+        public FileInfo File(params string[] pathSegments)
+        {
+            return new FileInfo(Path(pathSegments));
+        }
+        
         public string Path(params string[] pathSegments)
         {
             List<string> fileSegments = new List<string>();
@@ -44,7 +54,7 @@ namespace Bam.Net
         {
             Args.ThrowIfNull(instance, "instance");
             Type type = instance.GetType();
-            FileInfo file = File($"{type.Namespace}", $"{type.Name}.yaml");
+            FileInfo file = CreateFile($"{type.Namespace}", $"{type.Name}.yaml");
             instance.ToYamlFile(file);
             return file;
         }
@@ -52,16 +62,31 @@ namespace Bam.Net
         public T Load<T>()
         {
             Type type = typeof(T);
-            FileInfo file = File($"{type.Namespace}", $"{type.Name}.yaml");
+            FileInfo file = CreateFile($"{type.Namespace}", $"{type.Name}.yaml");
             return file.FromYamlFile<T>();
         }
         
         public static Workspace Current
         {
-            get { return Get(); }
+            get { return ForApplication(); }
+        }
+
+        public static Workspace ForClass<T>(IApplicationNameProvider applicationNameProvider = null)
+        {
+            return ForClass(typeof(T), applicationNameProvider);
         }
         
-        public static Workspace Get(IApplicationNameProvider applicationNameProvider = null)
+        public static Workspace ForClass(Type type, IApplicationNameProvider applicationNameProvider = null)
+        {
+            applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            Workspace applicationWorkspace = ForApplication(applicationNameProvider);
+            string directoryPath =
+                System.IO.Path.Combine(applicationWorkspace.Root.FullName, ProcessMode.Current.Mode.ToString(), $"{type.Namespace}.{type.Name}");
+            return new Workspace()
+                {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
+        }
+        
+        public static Workspace ForApplication(IApplicationNameProvider applicationNameProvider = null)
         {
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             string directoryPath = System.IO.Path.Combine(BamPaths.BamHome, "apps", applicationNameProvider.GetApplicationName());

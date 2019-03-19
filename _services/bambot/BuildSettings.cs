@@ -2,9 +2,9 @@ using Bam.Net.Automation;
 
 namespace Bam.Net.Application
 {
-    public class BambotBuildSettings
+    public class BuildSettings
     {
-        public BambotBuildSettings()
+        public BuildSettings()
         {
             RepoPath = $"https://github.com/BryanApellanes/Bam.Net.Core.git";
             BranchName = "master";
@@ -12,13 +12,13 @@ namespace Bam.Net.Application
             Runtime = Runtime.Windows;
             
             BuildRunner = "bake";
-            BuildArguments = "/toolkit:./recipe.json";
+            BuildArguments = "/all:./_tools.core/";
 
             TestRunner = "bamtest";
             TestArguments = "see bamtest for more information";
         }
 
-        public BambotBuildSettings(string repoName) : this()
+        public BuildSettings(string repoName) : this()
         {
             RepoName = repoName ?? "Bam.Net.Core";
             RepoPath = $"https://github.com/BryanApellanes/{RepoName}.git";
@@ -33,7 +33,12 @@ namespace Bam.Net.Application
         public string BuildRunner { get; set; }
         public string BuildArguments { get; set; }
         
+        public int BuildSuccessExitCode { get; set; }
+        
         public string TestRunner { get; set; }
         public string TestArguments { get; set; }
+        public int TestSuccessExitCode { get; set; }
+        
+        public string BuildOutputRoot { get; set; }
     }
 }
