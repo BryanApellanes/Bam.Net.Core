@@ -15,9 +15,9 @@ namespace Bam.Net.CoreServices
     public class ApplicationRepositoryResolver : RepositoryResolver
     {
         ConcurrentDictionary<string, IRepository> _repositoriesByAppName;
-        public ApplicationRepositoryResolver(DefaultDataProvider dataProvider = null, ILogger logger = null)
+        public ApplicationRepositoryResolver(DataProvider dataProvider = null, ILogger logger = null)
         {
-            DataProvider = dataProvider ?? DefaultDataProvider.Current;
+            DataProvider = dataProvider ?? DataProvider.Current;
             Logger = logger ?? Log.Default;
             _repositoriesByAppName = new ConcurrentDictionary<string, IRepository>();
             GetRepositoryFunc = GetDaoRepository;

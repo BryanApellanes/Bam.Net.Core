@@ -50,7 +50,7 @@ namespace Bam.Net.CoreServices.OAuth
         public static string GetSettingsPath(IApplicationNameProvider appNameProvider)
         {
             string appName = appNameProvider.GetApplicationName();
-            string filePath = Path.Combine(DefaultDataProvider.Current.AppDataDirectory, appName, $"{nameof(SupportedOAuthProviders)}.json");
+            string filePath = Path.Combine(DataProvider.Current.AppDataDirectory, appName, $"{nameof(SupportedOAuthProviders)}.json");
             return filePath;
         }
 

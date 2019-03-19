@@ -26,14 +26,14 @@ namespace Bam.Net.Server
 {
     public partial class AppContentResponder : ContentResponder
     {
-        public AppContentResponder(ContentResponder commonResponder, AppConf conf, DefaultDataProvider dataSettings = null, ILogger logger = null)
+        public AppContentResponder(ContentResponder commonResponder, AppConf conf, DataProvider dataSettings = null, ILogger logger = null)
             : base(commonResponder.BamConf, logger)
         {
             if (conf.BamConf == null)
             {
                 conf.BamConf = commonResponder.BamConf;
             }
-            DataSettings = dataSettings ?? DefaultDataProvider.Current;
+            DataSettings = dataSettings ?? DataProvider.Current;
             ContentResponder = commonResponder;
             ServerRoot = commonResponder.ServerRoot;
             AppConf = conf;
@@ -124,7 +124,7 @@ namespace Bam.Net.Server
             }
         }
 
-        public DefaultDataProvider DataSettings { get; }
+        public DataProvider DataSettings { get; }
 
         public ContentLocator AppContentLocator
         {

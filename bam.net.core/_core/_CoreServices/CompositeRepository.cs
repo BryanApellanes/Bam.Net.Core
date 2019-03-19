@@ -20,9 +20,9 @@ namespace Bam.Net.CoreServices
     /// </summary>
     public partial class CompositeRepository : AsyncRepository, IHasTypeSchemaTempPathProvider
     {
-        public CompositeRepository(DaoRepository sourceRepository, DefaultDataProvider dataProvider = null)
+        public CompositeRepository(DaoRepository sourceRepository, DataProvider dataProvider = null)
         {
-            DataDirectoryProvider = dataProvider ?? DefaultDataProvider.Current;
+            DataDirectoryProvider = dataProvider ?? DataProvider.Current;
             SourceRepository = sourceRepository;
             ReadRepository = new CachingRepository(sourceRepository);
             WriteRepositories = new HashSet<IRepository>();

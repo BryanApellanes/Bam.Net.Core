@@ -39,7 +39,7 @@ namespace Bam.Net.Presentation
 
         public ILog Log { get; set; }
 
-        public DefaultDataProvider DataProvider
+        public DataProvider DataProvider
         {
             get
             {

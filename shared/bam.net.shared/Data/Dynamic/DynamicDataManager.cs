@@ -20,7 +20,7 @@ namespace Bam.Net.Data.Dynamic
     /// </summary>
     public class DynamicDataManager: Loggable
     {
-        public DynamicDataManager() : this(new DynamicTypeDataRepository(), DefaultDataProvider.Current, new DynamicTypeManager())
+        public DynamicDataManager() : this(new DynamicTypeDataRepository(), DataProvider.Current, new DynamicTypeManager())
         { }
 
         public DynamicDataManager(DynamicTypeDataRepository descriptorRepository, IDataDirectoryProvider directorySettings, DynamicTypeManager dynamicTypeManager)

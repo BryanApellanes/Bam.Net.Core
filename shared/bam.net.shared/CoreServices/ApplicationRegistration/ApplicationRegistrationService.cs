@@ -27,7 +27,7 @@ namespace Bam.Net.CoreServices
 
         protected ApplicationRegistrationService() { }
 
-        public ApplicationRegistrationService(DefaultDataProvider dataSettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
+        public ApplicationRegistrationService(DataProvider dataSettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
         {
             ApplicationRegistrationRepository = coreRepo;
             ApplicationRegistrationRepository.WarningsAsErrors = false;
@@ -338,7 +338,7 @@ namespace Bam.Net.CoreServices
             }
         }
 
-        protected DefaultDataProvider DataSettings { get; set; }
+        protected DataProvider DataSettings { get; set; }
 
         protected internal ApiKeyInfo GenerateApiKeyInfo(CoreServices.ApplicationRegistration.Data.Application app)
         {

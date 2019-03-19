@@ -34,7 +34,7 @@ namespace Bam.Net.Services
         public static ServiceRegistry Create()
         {
             AppConf conf = new AppConf(BamConf.Load(ServiceConfig.ContentRoot), ServiceConfig.ProcessName.Or(RegistryName));
-            DaoRepository repo = new DaoRepository(DefaultDataProvider.Current.GetSysDatabase(nameof(CatalogRepository)), Log.Default);
+            DaoRepository repo = new DaoRepository(DataProvider.Current.GetSysDatabase(nameof(CatalogRepository)), Log.Default);
             repo.AddNamespace(typeof(CatalogItem));
             CatalogRepository catalogRepo = new CatalogRepository(repo, Log.Default);
             ServiceRegistry coreReg = CoreServiceRegistryContainer.Create();
@@ -46,8 +46,8 @@ namespace Bam.Net.Services
                 .For<DaoRepository>().Use(repo)
                 .For<ICatalogService>().Use<CatalogService>()
                 .For<CatalogService>().Use<CatalogService>()
-                .For<SystemPaths>().Use(DefaultDataProvider.GetPaths())
-                .For<IDataDirectoryProvider>().Use(DefaultDataProvider.Current);
+                .For<SystemPaths>().Use(DataProvider.GetPaths())
+                .For<IDataDirectoryProvider>().Use(DataProvider.Current);
 
             
             reg.CombineWith(coreReg);

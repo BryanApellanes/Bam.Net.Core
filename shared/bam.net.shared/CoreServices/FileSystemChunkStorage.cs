@@ -19,11 +19,11 @@ namespace Bam.Net.CoreServices
     {
         public FileSystemChunkStorage()
         {
-            DataProvider = DefaultDataProvider.Current;
+            DataProvider = Data.Repositories.DataProvider.Current;
             Logger = Log.Default;
         }
 
-        public FileSystemChunkStorage(DefaultDataProvider dataProvider, ILogger logger = null)
+        public FileSystemChunkStorage(DataProvider dataProvider, ILogger logger = null)
         {
             DataProvider = dataProvider;
             Logger = logger;

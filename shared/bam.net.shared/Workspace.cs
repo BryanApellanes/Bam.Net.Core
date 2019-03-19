@@ -65,10 +65,12 @@ namespace Bam.Net
             FileInfo file = CreateFile($"{type.Namespace}", $"{type.Name}.yaml");
             return file.FromYamlFile<T>();
         }
-        
+
+        static Workspace _current;
+        static object _currentLock = new object();
         public static Workspace Current
         {
-            get { return ForApplication(); }
+            get { return _currentLock.DoubleCheckLock(ref _current, () => ForApplication()); }
         }
 
         public static Workspace ForClass<T>(IApplicationNameProvider applicationNameProvider = null)
