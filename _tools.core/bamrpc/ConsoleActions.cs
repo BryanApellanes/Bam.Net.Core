@@ -51,7 +51,7 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("serve", "Start the gloo server serving a specific service class")]
+        [ConsoleAction("serve", "Start the BamRpc server serving a specific service class")]
         public void Serve()
         {
             try
