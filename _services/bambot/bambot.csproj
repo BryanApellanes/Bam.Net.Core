@@ -2,11 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <RootNamespace>Bam.Net.Application</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
     </ItemGroup>
-
+    
+    
 </Project>
