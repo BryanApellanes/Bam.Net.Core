@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Bam.Net.Configuration;
 
 namespace Bam.Net.Logging
@@ -129,9 +130,12 @@ namespace Bam.Net.Logging
             {
                 if(DebugOut)
                 {
-                    string message = string.Format(messageSignature, args);
-                    Console.WriteLine($"DEBUG: {message}");
-                    System.Diagnostics.Debug.WriteLine(message);
+                    Task.Run(() =>
+                    {
+                        Workspace.Current.WriteLine($"DEBUG: {messageSignature}", args);
+                        string message = string.Format(messageSignature, args);
+                        System.Diagnostics.Debug.WriteLine(message);
+                    });
                 }
             }
         }
@@ -179,9 +183,12 @@ namespace Bam.Net.Logging
             {
                 if(TraceOut)
                 {
-                    string message = string.Format(messageSignature, args);
-                    Console.WriteLine($"TRACE: {message}");
-                    System.Diagnostics.Trace.WriteLine(message);
+                    Task.Run(() =>
+                    {
+                        Workspace.Current.WriteLine($"TRACE: {messageSignature}", args);
+                        string message = string.Format(messageSignature, args);
+                        System.Diagnostics.Trace.WriteLine(message);
+                    });
                 }
             }
         }

@@ -49,6 +49,15 @@ namespace Bam.Net
             fileSegments.AddRange(pathSegments);
             return System.IO.Path.Combine(fileSegments.ToArray());
         }
+
+        public void WriteLine(string format, params object[] args)
+        {
+            Console.WriteLine(format, args);
+            string message = $"{string.Format(format, args)}\r\n";
+            FileInfo file = new FileInfo(Path("Console"));
+            // TODO: check file size and create a new one if its too big
+            message.SafeAppendToFile(file.FullName);
+        }
         
         public FileInfo Save(object instance)
         {
