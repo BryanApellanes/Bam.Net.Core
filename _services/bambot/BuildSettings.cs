@@ -7,6 +7,7 @@ namespace Bam.Net.Application
         public BuildSettings()
         {
             RepoPath = $"https://github.com/BryanApellanes/Bam.Net.Core.git";
+            RepoName = "Bam.Net.Core";
             BranchName = "master";
             Config = BuildConfig.Release;
             Runtime = Runtime.Windows;

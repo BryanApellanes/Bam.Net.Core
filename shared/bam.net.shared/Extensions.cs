@@ -21,9 +21,12 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using Bam.Net.Configuration;
+using Bam.Net.Data;
 using Bam.Net.Logging;
+using Lucene.Net.Analysis.Hunspell;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace Bam.Net
 {
@@ -999,6 +1002,27 @@ namespace Bam.Net
             }
         }
 
+        public static Dictionary<string, string> ToDictionary(this string input, string keyValueSeparator,
+            string elementSeparator)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            string[] elements = input.DelimitSplit(elementSeparator);
+            elements.Each(e =>
+            {
+                string[] keyValue = e.DelimitSplit(keyValueSeparator);
+                Args.ThrowIf<ArgumentException>(keyValue.Length == 0 || keyValue.Length > 2, "Unrecognized key value format: {0}", keyValue);
+                if (keyValue.Length == 2)
+                {
+                    result.Add(keyValue[0], keyValue[1]);
+                }
+                else
+                {
+                    result.Add(keyValue[0], string.Empty);
+                }
+            });
+            return result;
+        }
+        
         /// <summary>
         /// Parses key value pairs from the string.
         /// </summary>

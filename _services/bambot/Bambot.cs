@@ -14,7 +14,6 @@ namespace Bam.Net.Application
             Builds = Workspace.CreateDirectory("builds");
             Repos = Workspace.CreateDirectory("repos");
             Tools = Workspace.CreateDirectory("tools");
-            Bake = Workspace.File("tools", "bake.exe");
         }
 
         public Workspace Workspace
@@ -26,13 +25,43 @@ namespace Bam.Net.Application
         }
         
         public BamSettings BamSettings { get; set; }
-        public FileInfo Bake { get; set; }
         public BuildSettings BuildSettings { get; set; }
-
         public DirectoryInfo Builds { get; set; }
         public DirectoryInfo Repos { get; set; }
         public DirectoryInfo Tools { get; set; }
 
+        public bool TryGetBuildRunner(out FileInfo fileInfo)
+        {
+            try
+            {
+                fileInfo = GetBuildRunner();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                fileInfo = null;
+                Log.Error("Failed to get build runner: {0}", ex, ex.Message);
+                return false;
+            }
+        }
+        
+        public FileInfo GetBuildRunner()
+        {
+            Args.ThrowIf(string.IsNullOrEmpty(BuildSettings.BuildRunner), "BuildSettings.BuildRunner not specified");
+            
+            FileInfo buildRunner = new FileInfo(Path.Combine(Tools.FullName, BuildSettings.BuildRunner));
+            if (!buildRunner.Exists)
+            {
+                buildRunner = new FileInfo(OSInfo.GetPath(BuildSettings.BuildRunner));
+                if (!buildRunner.Exists)
+                {
+                    Args.Throw<InvalidOperationException>("Unable to locate specified build runner: {0}", BuildSettings.BuildRunner);
+                }
+            }
+
+            return buildRunner;
+        }
+        
         public BambotActionResult Clone(Action<string> output, Action<string> error = null)
         {
             return Clone(BuildSettings, output, error);

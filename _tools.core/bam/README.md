@@ -72,3 +72,9 @@ docker push bamapps/images:{{app-name}}
 
 ## /clean
 Clears all dynamic types and namespaces from the dynamic type manager.
+
+# Other Options
+
+/menu
+
+/switch

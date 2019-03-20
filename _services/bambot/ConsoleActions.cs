@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
@@ -19,10 +20,10 @@ namespace Bam.Net.Application
         public void Build()
         {
             Bambot bambot = new Bambot();
-            if (!bambot.Bake.Exists)
+            if (!bambot.TryGetBuildRunner(out FileInfo buildRunner))
             {
-                OutLineFormat("Bake doesn't exist in workspace tools {0}", bambot.Bake.FullName);
-                return;
+                OutLineFormat("Failed to get build runner");
+                Exit(1);
             }
 
             string buildSettingsPath = GetArgument("build").Or("./bambot.yaml");
