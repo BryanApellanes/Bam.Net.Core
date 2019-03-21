@@ -9,7 +9,7 @@ namespace Bam.Net.Application
     [Serializable]
     public class ConsoleActions : CommandLineTestInterface
     {
-        [ConsoleAction("init", "Write the default BuildSettings.yaml file")]
+        [ConsoleAction("init", "Write the default bambot.yaml file")]
         public void Init()
         {
             BuildSettings settings = new BuildSettings();
@@ -26,7 +26,7 @@ namespace Bam.Net.Application
                 Exit(1);
             }
 
-            string buildSettingsPath = GetArgument("build").Or("./bambot.yaml");
+            string buildSettingsPath = GetArgument("build", "Please enter the path to the build settings file to use").Or("./bambot.yaml");
             BuildSettings buildSettings = buildSettingsPath.FromYamlFile<BuildSettings>();
             bambot.Build(buildSettings, output => OutLine(output, ConsoleColor.DarkCyan),
                 error => OutLine(error, ConsoleColor.DarkMagenta));

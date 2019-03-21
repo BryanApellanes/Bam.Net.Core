@@ -15,19 +15,19 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         [ConsoleAction("discover", "Read a specified directory and discover csproj files in the child directories therein.")]
-        public void Discover()
+        public bool Discover()
         {
             string directoryPath = GetArgument("discover", "Please enter the path to the root of the projects folder");
             if (string.IsNullOrEmpty(directoryPath))
             {
                 OutLine("Directory not specified", ConsoleColor.Yellow);
-                return;
+                return false;
             }
             DirectoryInfo rootDir = new DirectoryInfo(directoryPath);
             if (!rootDir.Exists)
             {
                 OutLineFormat("Specified directory does not exist: {0}", ConsoleColor.Yellow, directoryPath);
-                return;
+                return false;
             }
             
             List<string> projectNames = new List<string>();
@@ -58,6 +58,7 @@ namespace Bam.Net.Application
             OutLine(json, ConsoleColor.Cyan);
             OutLineFormat("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
             Thread.Sleep(300);
+            return true;
         }
 
         [ConsoleAction("toolkit", "Bake the BamToolkit")]
@@ -94,27 +95,31 @@ namespace Bam.Net.Application
             {
                 Arguments["discover"] = GetArgument("all");
             }
-            Discover();
-            Recipe discovered = "./recipe.json".FromJsonFile<Recipe>();
-            Recipe toUse = discovered;
-            if (Arguments.Contains("recipe"))
-            {
-                Recipe specified = Arguments["recipe"].FromJsonFile<Recipe>();
-                specified.ProjectRoot = discovered.ProjectRoot;
-                specified.ProjectNames = discovered.ProjectNames;
-                specified.ProjectFilePaths = discovered.ProjectFilePaths;
-                toUse = specified;
-            }
-            
-            if (Arguments.Contains("output"))
-            {
-                toUse.OutputDirectory = GetArgument("output");
-            }
 
-            string tempRecipe = $"./temp_recipe_{6.RandomLetters()}.json";
-            toUse.ToJsonFile(tempRecipe);
-            Arguments["toolkit"] = new FileInfo(tempRecipe).FullName;
-            BuildToolkit();
+            if (Discover())
+            {
+                string recipeFile = Arguments.Contains("recipe") ? Arguments["recipe"] : "./recipe.json";
+                Recipe discovered = recipeFile.FromJsonFile<Recipe>();
+                Recipe toUse = discovered;
+                if (Arguments.Contains("recipe"))
+                {
+                    Recipe specified = Arguments["recipe"].FromJsonFile<Recipe>();
+                    specified.ProjectRoot = discovered.ProjectRoot;
+                    specified.ProjectNames = discovered.ProjectNames;
+                    specified.ProjectFilePaths = discovered.ProjectFilePaths;
+                    toUse = specified;
+                }
+            
+                if (Arguments.Contains("output"))
+                {
+                    toUse.OutputDirectory = GetArgument("output");
+                }
+
+                string tempRecipe = $"./temp_recipe_{6.RandomLetters()}.json";
+                toUse.ToJsonFile(tempRecipe);
+                Arguments["toolkit"] = new FileInfo(tempRecipe).FullName;
+                BuildToolkit();
+            }
         }
         
         static Dictionary<OSNames, string> RuntimeNames

@@ -325,6 +325,25 @@ namespace Bam.Net.CommandLine
             Environment.Exit(0);
         }
 
+        public static void Restart()
+        {
+            Process current = Process.GetCurrentProcess();
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = current.MainModule.FileName
+            };
+            StringBuilder arguments = new StringBuilder();
+            Environment.GetCommandLineArgs().Rest(1, arg =>
+            {
+                arguments.Append(arg);
+                arguments.Append(" ");
+            });
+            startInfo.Arguments = arguments.ToString();
+            Process.Start(startInfo);
+            Environment.Exit(0);
+        }
+        
+        
         public static bool ConfirmFormat(string format, params object[] args)
         {
             return Confirm(string.Format(format, args));

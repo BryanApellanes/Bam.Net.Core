@@ -4,27 +4,29 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Bam.Net;
 using Bam.Net.CommandLine;
 using Bam.Net.Data;
 using Bam.Net.Logging;
 using Bam.Net.Testing;
+using Bam.Shell;
 
-namespace Bam.Net.Application
+namespace Bam.Shell
 {
     [Serializable]
     public class External: CommandLineTestInterface
     {
-        [ConsoleAction("menu", "Display console menu for the specified assembly file")]
+        [ArgZero("menu")]
         public void ConsoleMenu()
         {
             string assemblyPath =
-                GetArgument("menu", "Please enter the path to the assembly to show a console menu for");
+                GetArgument("assembly", "Please enter the path to the assembly to show a console menu for");
             
             FileInfo assemblyFile = new FileInfo(assemblyPath);
             ShowMenu(Assembly.LoadFile(assemblyFile.FullName), new ConsoleMenu[]{}, assemblyPath);
         }
 
-        [ConsoleAction("switch", "Execute command line switches from a class in a specified assembly.  Switches are specified in the form /switch:[name1]-[value1],[name2]-[value2]")]
+        [ArgZero("run")]
         public void CommandLineSwitch()
         {
             string assemblyPath = GetArgument("assembly",
@@ -51,26 +53,8 @@ namespace Bam.Net.Application
                 }
             }
 
-            string switchesArg = GetArgument("switch");
-            Dictionary<string, string> switches = switchesArg.ToDictionary("-", ",");
-            List<string> args = new List<string>();
-            List<string> argNames = new List<string>();
-            foreach (string key in switches.Keys)
-            {
-                if (!string.IsNullOrEmpty(switches[key]))
-                {
-                    args.Add($"/{key}:{switches[key]}");
-                }
-                else
-                {
-                    args.Add($"/{key}");
-                }
-                argNames.Add(key);
-            }
-            ParsedArguments arguments = new ParsedArguments(args.ToArray(), ArgumentInfo.FromStringArray(argNames.ToArray(), true));
             ConsoleLogger logger = new ConsoleLogger {AddDetails = false};
-            Arguments = arguments;
-            ExecuteSwitches(arguments, targetType, false, logger);
+            ExecuteSwitches(Arguments, targetType, false, logger);
         }
     }
 }

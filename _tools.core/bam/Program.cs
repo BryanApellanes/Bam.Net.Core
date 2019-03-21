@@ -2,14 +2,17 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
+using Bam.Shell;
 
 namespace Bam.Net
 {
     [Serializable]
-    class Program : CommandLineTestInterface
+    class Program : ArgZero
     {
         static void Main(string[] args)
         {
+            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bam.exe");
+            ExecuteArgZero(args);
             AddArguments();
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             DefaultMethod = typeof(Program).GetMethod("Start");

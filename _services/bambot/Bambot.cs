@@ -16,11 +16,17 @@ namespace Bam.Net.Application
             Tools = Workspace.CreateDirectory("tools");
         }
 
+        Workspace _workspace;
         public Workspace Workspace
         {
             get
             {
-                return Workspace.ForClass(this.GetType());
+                if (_workspace == null)
+                {
+                    _workspace = Workspace.ForClass(this.GetType());
+                }
+
+                return _workspace;
             }
         }
         
@@ -72,7 +78,7 @@ namespace Bam.Net.Application
             settings = (settings ?? BuildSettings) ?? new BuildSettings();
             Info("Clone:: Using BambotBuildConfig:\r\n\r\n{0}", settings.ToYaml());
             ProcessOutput processOutput =
-                BamSettings.GitPath.Start($"clone {settings.RepoPath} {Workspace.CreateDirectory(settings.RepoName).FullName}", output,
+                BamSettings.GitPath.Start($"clone {settings.RepoPath} {GetRepoDirectory(settings.RepoName).FullName}", output,
                     error);
             return new BambotActionResult()
             {
@@ -81,6 +87,11 @@ namespace Bam.Net.Application
             };
         }
 
+        private DirectoryInfo GetRepoDirectory(string repoName)
+        {
+            return new DirectoryInfo(Path.Combine(Repos.FullName, repoName));
+        }
+        
         /// <summary>
         /// Gets the latest code by checking if the repo has already been cloned locally then cloning it if it hasn't
         /// and checking out the target branch.  Will do "git pull" in all cases.
@@ -92,77 +103,94 @@ namespace Bam.Net.Application
         public BambotActionResult GetLatest(BuildSettings settings = null, Action<string> output = null,
             Action<string> error = null)
         {
-            settings = (settings ?? BuildSettings) ?? new BuildSettings();
-            Info("GetLatest:: Using BambotBuildConfig:\r\n\r\n{0}", settings.ToYaml());
-            DirectoryInfo repo = Workspace.CreateDirectory(settings.RepoName);
-            if (!repo.Exists)
-            {
-                BambotActionResult actionResult = Clone(settings, output, error);
-                if (!actionResult.Success)
-                {
-                    ProcessOutput processOutput = actionResult.Data.Cast<ProcessOutput>();
-                    output(processOutput.StandardOutput);
-                    output(processOutput.StandardError);
-                    return actionResult;
-                }
-            }
-
             string startDirectory = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = repo.FullName;
-            ProcessOutput checkoutOutput = BamSettings.GitPath.Start($"checkout -f {settings.BranchName}", output, error);
-            if (checkoutOutput.ExitCode > 0)
+            try
             {
+                settings = (settings ?? BuildSettings) ?? new BuildSettings();
+                Info("GetLatest:: Using BambotBuildConfig:\r\n\r\n{0}", settings.ToYaml());
+                DirectoryInfo repo = GetRepoDirectory(settings.RepoName);
+                if (!repo.Exists || !Directory.Exists(Path.Combine(repo.FullName, ".git")))
+                {
+                    BambotActionResult actionResult = Clone(settings, output, error);
+                    if (!actionResult.Success)
+                    {
+                        ProcessOutput processOutput = actionResult.Data.Cast<ProcessOutput>();
+                        output(processOutput.StandardOutput);
+                        output(processOutput.StandardError);
+                        return actionResult;
+                    }
+                }
+
+                Environment.CurrentDirectory = repo.FullName;
+                ProcessOutput checkoutOutput = BamSettings.GitPath.Start($"checkout -f {settings.BranchName}", output, error);
+                if (checkoutOutput.ExitCode > 0)
+                {
+                    return new BambotActionResult()
+                    {
+                        Success = checkoutOutput.ExitCode == 0,
+                        Data = checkoutOutput
+                    };
+                }
+
+                ProcessOutput pullOutput = BamSettings.GitPath.Start("pull", output, error);
+                Environment.CurrentDirectory = startDirectory;
                 return new BambotActionResult()
                 {
-                    Success = checkoutOutput.ExitCode == 0,
-                    Data = checkoutOutput
+                    Success = pullOutput.ExitCode == 0,
+                    Data = pullOutput
                 };
             }
-
-            ProcessOutput pullOutput = BamSettings.GitPath.Start("pull", output, error);
-            Environment.CurrentDirectory = startDirectory;
-            return new BambotActionResult()
+            finally
             {
-                Success = pullOutput.ExitCode == 0,
-                Data = pullOutput
-            };
+                Environment.CurrentDirectory = startDirectory;
+            }
         }
 
         public BambotActionResult Build(BuildSettings settings = null, Action<string> output = null,
             Action<string> error = null)
         {
-            BambotActionResult getLatest = GetLatest(settings, output, error);
-            if (!getLatest.Success)
+            string startDirectory = Environment.CurrentDirectory;
+            try
             {
-                return getLatest;
-            }
-
-            ProcessOutput buildOutput = settings.BuildRunner.Start(settings.BuildArguments, output, error);
-            if (buildOutput.ExitCode != settings.BuildSuccessExitCode)
-            {
-                return new BambotActionResult()
+                BambotActionResult getLatest = GetLatest(settings, output, error);
+                if (!getLatest.Success)
                 {
-                    Success = false,
-                    Message = $"Build exited with code {buildOutput.ExitCode}"
-                };
-            }
+                    return getLatest;
+                }
 
-            ProcessOutput testOutput = settings.TestRunner.Start(settings.TestArguments, output, error);
-            if (testOutput.ExitCode != settings.TestSuccessExitCode)
-            {
-                return new BambotActionResult()
+                Environment.CurrentDirectory = GetRepoDirectory(settings.RepoName).FullName;
+                ProcessOutput buildOutput = GetBuildRunner().FullName.Start(settings.BuildArguments, output, error);
+                if (buildOutput.ExitCode != settings.BuildSuccessExitCode)
                 {
-                    Success = false,
-                    Message = $"Test exited with code {testOutput.ExitCode}"
-                };
-            }
+                    return new BambotActionResult()
+                    {
+                        Success = false,
+                        Message = $"Build exited with code {buildOutput.ExitCode}"
+                    };
+                }
+
+                ProcessOutput testOutput = settings.TestRunner.Start(settings.TestArguments, output, error);
+                if (testOutput.ExitCode != settings.TestSuccessExitCode)
+                {
+                    return new BambotActionResult()
+                    {
+                        Success = false,
+                        Message = $"Test exited with code {testOutput.ExitCode}"
+                    };
+                }
             
             
-            return new BambotActionResult()
+                return new BambotActionResult()
+                {
+                    Success = true,
+                    Message = "Build and test completed successfully"
+                };
+
+            }
+            finally
             {
-                Success = true,
-                Message = "Build and test completed successfully"
-            };
+                Environment.CurrentDirectory = startDirectory;
+            }
         }
     }
 }
