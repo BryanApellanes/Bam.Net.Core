@@ -24,9 +24,8 @@ namespace Bam.Net
 
         public static void AddArguments()
         {
-            Jobs.Register();
-            AddSwitches(typeof(LifeCycleActions));
-            AddSwitches(typeof(External));
+            AddSwitches(typeof(Bam.Shell.LifeCycleProvider));
+            AddSwitches(typeof(ExternalProvider));
             AddValidArgument("config", "The path to a config file to use");
             AddValidArgument("schemaName", false, addAcronym: true, description: "The name to use for the generated schema");
             
@@ -46,8 +45,8 @@ namespace Bam.Net
             {
                 Pause("paused..."); // for debugging
             }
-            if (ExecuteSwitches(Arguments, typeof(LifeCycleActions), false, logger) ||
-                ExecuteSwitches(Arguments, typeof(External), false, logger))
+            if (ExecuteSwitches(Arguments, typeof(Bam.Shell.LifeCycleProvider), false, logger) ||
+                ExecuteSwitches(Arguments, typeof(ExternalProvider), false, logger))
             {
                 logger.BlockUntilEventQueueIsEmpty();                
             }

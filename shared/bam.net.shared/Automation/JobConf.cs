@@ -75,6 +75,14 @@ namespace Bam.Net.Automation
             }
         }
 
+        public IEnumerable<string> ListWorkers()
+        {
+            foreach (string workerFile in WorkerFiles)
+            {
+                yield return WorkerConf.Load(workerFile).Name;
+            }
+        }
+
         DirectoryInfo _jobDirectory;
         /// <summary>
         /// The root of the Job

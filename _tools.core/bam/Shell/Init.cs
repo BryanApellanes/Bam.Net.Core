@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Bam.Net;
+using Bam.Net.Application;
 using Bam.Net.CommandLine;
 using Bam.Net.Configuration;
 using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Testing;
 
-namespace Bam.Net.Application
+namespace Bam.Shell
 {
     public class Init : CommandLineTestInterface
     {
@@ -102,8 +104,8 @@ namespace Bam.Net.Application
             // - clone bam.js into wwwroot/bam.js
             // - write Startup.cs (backing up existing)
             // - write sample modules
-            BamSettings settings = LifeCycleActions.GetSettings();
-            DirectoryInfo projectParent = LifeCycleActions.FindProjectParent(out FileInfo csprojFile);
+            BamSettings settings = ShellProvider.GetSettings();
+            DirectoryInfo projectParent = ShellProvider.FindProjectParent(out FileInfo csprojFile);
             if (csprojFile == null)
             {
                 OutLine("Can't find csproj file", ConsoleColor.Magenta);
@@ -136,7 +138,7 @@ namespace Bam.Net.Application
         {
             DirectoryInfo projectParent = csprojFile.Directory;
             DirectoryInfo appModules = new DirectoryInfo(Path.Combine(projectParent.FullName, "AppModules"));
-            HandlebarsDirectory handlebarsDirectory = LifeCycleActions.GetHandlebarsDirectory();
+            HandlebarsDirectory handlebarsDirectory = ShellProvider.GetHandlebarsDirectory();
             string appName = Path.GetFileNameWithoutExtension(csprojFile.Name);
 
             AppModuleModel model = new AppModuleModel { BaseNamespace = appName, AppModuleName = appName };
@@ -167,7 +169,7 @@ namespace Bam.Net.Application
                 OutLineFormat("Moved existing Startup.cs file to {0}", ConsoleColor.Yellow, moveTo);
             }
 
-            HandlebarsDirectory handlebarsDirectory = LifeCycleActions.GetHandlebarsDirectory();
+            HandlebarsDirectory handlebarsDirectory = ShellProvider.GetHandlebarsDirectory();
             handlebarsDirectory.Render("Startup.cs", new { BaseNamespace = Path.GetFileNameWithoutExtension(csprojFile.Name) }).SafeWriteToFile(startupCs.FullName, true);
         }
     }

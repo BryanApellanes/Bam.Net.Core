@@ -19,6 +19,7 @@ namespace Bam.Net.Data.Repositories
             Type = type;
             PropertyColumns = GetColumns();
         }
+
         [JsonIgnore]
         [Exclude]
         public Type Type { get; set; }

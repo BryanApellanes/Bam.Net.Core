@@ -67,6 +67,7 @@ namespace Bam.Net.Automation
             {
                 Assembly assembly = Assembly.LoadFrom(file.FullName);
                 return assembly.GetTypes()
+                    .Where(type => type != typeof(IWorker))
                     .Where(type => type.IsSubclassOf(typeof(Worker)) || typeof(IWorker).IsAssignableFrom(type))
                     .ToArray();
             }

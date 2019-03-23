@@ -22,6 +22,7 @@ using System.Web;
 using System.Xml;
 using Bam.Net.Configuration;
 using Bam.Net.Data;
+using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Lucene.Net.Analysis.Hunspell;
 using Newtonsoft.Json;
@@ -955,6 +956,16 @@ namespace Bam.Net
             }
         }
 
+        public static bool ExtendsType<T>(this Type type)
+        {
+            if (type == typeof(T))
+            {
+                return false;
+            }
+            TypeInheritanceDescriptor descriptor = new TypeInheritanceDescriptor(type);
+            return descriptor.Extends(typeof(T));
+        }
+        
         /// <summary>
         /// Execute the specified Func this 
         /// many times

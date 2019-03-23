@@ -4,8 +4,11 @@ using System.Reflection;
 using Bam.Net;
 using Bam.Net.CommandLine;
 using Bam.Net.Data.Dynamic;
+using Bam.Net.Data.Repositories;
 using Bam.Net.Testing;
 using CsQuery.ExtensionMethods;
+using Lucene.Net.Analysis.Hunspell;
+using Lucene.Net.Analysis.Standard;
 
 namespace Bam.Shell
 {
@@ -41,9 +44,20 @@ namespace Bam.Shell
         public static void Scan()
         {
             Assembly current = Assembly.GetExecutingAssembly();
-            current.GetTypes().ForEach(t =>
+            current.GetTypes().ForEach(type =>
             {
-                t.GetMethods().ForEach(m =>
+                if (type.ExtendsType<ShellProvider>())
+                {
+                    if (!type.Name.EndsWith("Provider"))
+                    {
+                        OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'", ConsoleColor.Yellow);
+                    }
+                    type.Construct<ShellProvider>().RegisterArguments();
+                    string providerName = type.Name.Truncate("Provider".Length);
+                    ProviderTypes.AddMissing(providerName, type);
+                }
+                
+                type.GetMethods().ForEach(m =>
                 {
                     if (m.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute arg))
                     {
@@ -53,6 +67,13 @@ namespace Bam.Shell
             });
         }
 
+        private static Dictionary<string, Type> _providerTypes;
+        static object _providerTypesLock = new object();
+        public static Dictionary<string, Type> ProviderTypes
+        {
+            get { return _providerTypesLock.DoubleCheckLock(ref _providerTypes, () => new Dictionary<string, Type>()); }
+        }
+        
         /// <summary>
         /// Execute any ArgZero arguments specified on the command line then exit.  Has no effect if no relevant arguments
         /// are detected.
@@ -65,6 +86,7 @@ namespace Bam.Shell
             }
             
             Scan();
+            ArgZeroDelegator.Register(arguments);
             if (Targets.ContainsKey(arguments[0]))
             {
                 List<string> targetArguments = new List<string>();

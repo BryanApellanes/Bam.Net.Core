@@ -19,6 +19,9 @@ using Bam.Net.Services;
 using Bam.Net.Automation;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Data.Dynamic;
+using Lucene.Net.Analysis.Hunspell;
+using ILogger = NLog.ILogger;
+using Path = System.IO.Path;
 
 namespace Bam.Net.Automation
 {
@@ -37,8 +40,9 @@ namespace Bam.Net.Automation
         {
         }
 
-        public JobManagerService(IApplicationNameProvider appNameProvider, DataProvider dataProvider, ProfigurationSet profiguration = null)
+        public JobManagerService(IApplicationNameProvider appNameProvider, DataProvider dataProvider, Bam.Net.Logging.ILogger logger = null, ProfigurationSet profiguration = null)
         {
+            WorkerTypeProvider = new ScanningWorkerTypeProvider(logger ?? Log.Default);
             TypeResolver = new TypeResolver();
             DataProvider = dataProvider;
             ApplicationNameProvider = appNameProvider;
@@ -75,8 +79,6 @@ namespace Bam.Net.Automation
                 return _runningLock.DoubleCheckLock(ref _running, () => new List<Job>());
             }
         }
-
-
 
         ProfigurationSet _profigurationSet;
         object _profigurationSetLock = new object();
@@ -211,18 +213,27 @@ namespace Bam.Net.Automation
             jobConf.JobDirectory = GetJobDirectoryPath(jobConf.Name);
             jobConf.Save();
         }
+
+        public void RemoveJob(string jobName)
+        {
+            DirectoryInfo jobDirectory = new DirectoryInfo(GetJobDirectoryPath(jobName));
+            if (jobDirectory.Exists)
+            {
+                jobDirectory.Delete(true);
+            }
+        }
         
         /// <summary>
         /// Get a JobConf with the specified name creating it if necessary.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public virtual JobConf GetJob(string name)
+        public virtual JobConf GetJob(string name, bool create = true)
         {
-            return GetJobConf(name);
+            return GetJobConf(name, create);
         }
 
-        protected internal JobConf GetJobConf(string name)
+        protected internal JobConf GetJobConf(string name, bool create = true)
         {
             if (JobExists(name))
             {
@@ -232,10 +243,12 @@ namespace Bam.Net.Automation
                 };
                 return JobConf.Load(conf.GetFilePath());
             }
-            else
+            else if(create)
             {
                 return CreateJobConf(name);
             }
+
+            return null;
         }
 
         protected internal JobConf CreateJobConf(string name, bool overwrite = false)
@@ -283,6 +296,11 @@ namespace Bam.Net.Automation
             return System.IO.Directory.Exists(jobDirectoryPath);
         }
 
+        public void StartJob(string jobName)
+        {
+            EnqueueJob(jobName);
+        }
+        
         /// <summary>
         /// Enqueue a job to be run next (typically instant if no other
         /// jobs are running).
