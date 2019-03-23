@@ -17,17 +17,24 @@ namespace Bam.Shell
     public class External: CommandLineTestInterface
     {
         [ArgZero("menu")]
-        public void ConsoleMenu()
+        public void Menu()
         {
             string assemblyPath =
                 GetArgument("assembly", "Please enter the path to the assembly to show a console menu for");
             
             FileInfo assemblyFile = new FileInfo(assemblyPath);
             ShowMenu(Assembly.LoadFile(assemblyFile.FullName), new ConsoleMenu[]{}, assemblyPath);
+            Exit(0);
         }
 
+        [ArgZero("new")]
+        public void New()
+        {
+            
+        }
+        
         [ArgZero("run")]
-        public void CommandLineSwitch()
+        public void Run()
         {
             string assemblyPath = GetArgument("assembly",
                 "Please specify the path to the assembly containing cli switches to execute");

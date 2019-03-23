@@ -11,10 +11,12 @@ namespace Bam.Net
     {
         static void Main(string[] args)
         {
-            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bam.exe");
-            ExecuteArgZero(args);
             AddArguments();
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
+            
+            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bam.exe");
+            ExecuteArgZero(args);
+            
             DefaultMethod = typeof(Program).GetMethod("Start");
 
             Initialize(args);
@@ -22,6 +24,7 @@ namespace Bam.Net
 
         public static void AddArguments()
         {
+            Jobs.Register();
             AddSwitches(typeof(LifeCycleActions));
             AddSwitches(typeof(External));
             AddValidArgument("config", "The path to a config file to use");

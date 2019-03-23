@@ -59,8 +59,22 @@ namespace Bam.Net.Automation
 
         protected Type[] ScanForWorkerTypes(FileInfo file)
         {
-            Assembly assembly = Assembly.LoadFrom(file.FullName);
-            return assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Worker)) || typeof(IWorker).IsAssignableFrom(type)).ToArray();
+            if (file == null)
+            {
+                return new Type[] { };
+            }
+            try
+            {
+                Assembly assembly = Assembly.LoadFrom(file.FullName);
+                return assembly.GetTypes()
+                    .Where(type => type.IsSubclassOf(typeof(Worker)) || typeof(IWorker).IsAssignableFrom(type))
+                    .ToArray();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error scanning file for worker types {0}: {1}", ex, file.FullName, ex.Message);
+                return new Type[] { };
+            }
         }
     }
 }

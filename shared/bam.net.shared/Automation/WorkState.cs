@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Automation
 {
+    /// <summary>
+    /// Used to communicate the state of the currently running job.  Gets passed
+    /// from worker to worker during job execution.  A new instance may be instantiated
+    /// by each worker so one should not rely on the beginning WorkState to be the same
+    /// at the end.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class WorkState<T>: WorkState
     {
         public WorkState(IWorker worker, T data)
@@ -29,6 +36,12 @@ namespace Bam.Net.Automation
         }
     }
 
+    /// <summary>
+    /// Used to communicate the state of the currently running job.  Gets passed
+    /// from worker to worker during job execution.  A new instance may be instantiated
+    /// by each worker so one should not rely on the beginning WorkState to be the same
+    /// at the end.
+    /// </summary>
     public class WorkState
     {
         public WorkState(IWorker worker, string message = "")

@@ -1,6 +1,7 @@
-using Bam.Net.Automation;
 
-namespace Bam.Net.Application
+using Bam.Net.Application;
+
+namespace Bam.Net.Automation
 {
     public class BuildSettings
     {
@@ -14,9 +15,6 @@ namespace Bam.Net.Application
             
             BuildRunner = "bake";
             BuildArguments = "/all:./_tools.core/";
-
-            TestRunner = "bamtest";
-            TestArguments = "see bamtest for more information";
         }
 
         public BuildSettings(string repoName) : this()
@@ -35,10 +33,6 @@ namespace Bam.Net.Application
         public string BuildArguments { get; set; }
         
         public int BuildSuccessExitCode { get; set; }
-        
-        public string TestRunner { get; set; }
-        public string TestArguments { get; set; }
-        public int TestSuccessExitCode { get; set; }
         
         public string BuildOutputRoot { get; set; }
     }

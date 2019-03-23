@@ -142,19 +142,46 @@ namespace Bam.Net.Logging
 
         public event EventHandler Message;
 
+        /// <summary>
+        /// Fire the Message event with the specified information message
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
         public void Info(string messageFormat, params string[] messageArgs)
         {
             EventMessage(LogEventType.Information, messageFormat, messageArgs);
         }
         
+        /// <summary>
+        /// Fire the Message event with the specified warning message
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
         public void Warn(string messageFormat, params string[] messageArgs)
         {
             EventMessage(LogEventType.Warning, messageFormat, messageArgs);
         }
         
+        /// <summary>
+        /// Fire the Message event with the specified error message.
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
         public void Error(string messageFormat, params string[] messageArgs)
         {
             EventMessage(LogEventType.Error, messageFormat, messageArgs);
+        }
+
+        /// <summary>
+        /// Output the to the console and fire the Message
+        /// event with  the specified information message.
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
+        public void Console(string messageFormat, params string[] messageArgs)
+        {
+            System.Console.WriteLine(messageFormat, messageArgs);
+            Info(messageFormat, messageArgs);
         }
         
         [Exclude]

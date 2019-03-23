@@ -142,7 +142,7 @@ namespace Bam.Net.Server
             {
                 foreach (var e in ae.InnerExceptions)
                 {
-                    Console.WriteLine(e.Message);                    
+                    System.Console.WriteLine(e.Message);                    
                 }
             }
 

@@ -206,6 +206,12 @@ namespace Bam.Net.Automation
             return jobDirectories.Select(jd => jd.Name).ToArray();
         }
 
+        public void SaveJob(JobConf jobConf)
+        {
+            jobConf.JobDirectory = GetJobDirectoryPath(jobConf.Name);
+            jobConf.Save();
+        }
+        
         /// <summary>
         /// Get a JobConf with the specified name creating it if necessary.
         /// </summary>

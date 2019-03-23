@@ -18,6 +18,7 @@ using System.Diagnostics;
 
 namespace Bam.Net.Application
 {
+    // TODO: move this to Shell and change ConsoleActions to ArgZero
     [Serializable]
     public class LifeCycleActions : CommandLineTestInterface
     {

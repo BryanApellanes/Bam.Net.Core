@@ -244,6 +244,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BamInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BamProject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\CsFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DaemonDeployer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DirectoryCopyWorker.cs" />
@@ -271,6 +274,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsExec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Deployable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsKill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningWorkerTypeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Sftp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SourceControl\Extensions.cs" />

@@ -1,14 +1,16 @@
 using System;
 using System.IO;
+using Bam.Net.Automation;
 using Bam.Net.CommandLine;
 using Bam.Net.Logging;
 
-namespace Bam.Net.Application
+namespace Bam.Net.Automation
 {
-    public class Bambot: Loggable
+    public class BuildWorker: Worker
     {
-        public Bambot()
+        public BuildWorker()
         {
+            RequiredProperties = new string[] { };
             BamSettings = BamSettings.Load();
             BuildSettings = Config.Load<BuildSettings>();
             Builds = Workspace.CreateDirectory("builds");
@@ -68,19 +70,19 @@ namespace Bam.Net.Application
             return buildRunner;
         }
         
-        public BambotActionResult Clone(Action<string> output, Action<string> error = null)
+        public BuildResult Clone(Action<string> output, Action<string> error = null)
         {
             return Clone(BuildSettings, output, error);
         }
         
-        public BambotActionResult Clone(BuildSettings settings = null, Action<string> output = null, Action<string> error= null)
+        public BuildResult Clone(BuildSettings settings = null, Action<string> output = null, Action<string> error= null)
         {
             settings = (settings ?? BuildSettings) ?? new BuildSettings();
             Info("Clone:: Using BambotBuildConfig:\r\n\r\n{0}", settings.ToYaml());
             ProcessOutput processOutput =
                 BamSettings.GitPath.Start($"clone {settings.RepoPath} {GetRepoDirectory(settings.RepoName).FullName}", output,
                     error);
-            return new BambotActionResult()
+            return new BuildResult()
             {
                 Success = processOutput.ExitCode == 0,
                 Data = processOutput
@@ -100,7 +102,7 @@ namespace Bam.Net.Application
         /// <param name="output"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        public BambotActionResult GetLatest(BuildSettings settings = null, Action<string> output = null,
+        public BuildResult GetLatest(BuildSettings settings = null, Action<string> output = null,
             Action<string> error = null)
         {
             string startDirectory = Environment.CurrentDirectory;
@@ -111,7 +113,7 @@ namespace Bam.Net.Application
                 DirectoryInfo repo = GetRepoDirectory(settings.RepoName);
                 if (!repo.Exists || !Directory.Exists(Path.Combine(repo.FullName, ".git")))
                 {
-                    BambotActionResult actionResult = Clone(settings, output, error);
+                    BuildResult actionResult = Clone(settings, output, error);
                     if (!actionResult.Success)
                     {
                         ProcessOutput processOutput = actionResult.Data.Cast<ProcessOutput>();
@@ -125,7 +127,7 @@ namespace Bam.Net.Application
                 ProcessOutput checkoutOutput = BamSettings.GitPath.Start($"checkout -f {settings.BranchName}", output, error);
                 if (checkoutOutput.ExitCode > 0)
                 {
-                    return new BambotActionResult()
+                    return new BuildResult()
                     {
                         Success = checkoutOutput.ExitCode == 0,
                         Data = checkoutOutput
@@ -134,7 +136,7 @@ namespace Bam.Net.Application
 
                 ProcessOutput pullOutput = BamSettings.GitPath.Start("pull", output, error);
                 Environment.CurrentDirectory = startDirectory;
-                return new BambotActionResult()
+                return new BuildResult()
                 {
                     Success = pullOutput.ExitCode == 0,
                     Data = pullOutput
@@ -146,41 +148,31 @@ namespace Bam.Net.Application
             }
         }
 
-        public BambotActionResult Build(BuildSettings settings = null, Action<string> output = null,
+        public BuildResult Build(BuildSettings settings = null, Action<string> output = null,
             Action<string> error = null)
         {
             string startDirectory = Environment.CurrentDirectory;
             try
             {
-                BambotActionResult getLatest = GetLatest(settings, output, error);
+                BuildResult getLatest = GetLatest(settings, output, error);
                 if (!getLatest.Success)
                 {
                     return getLatest;
                 }
 
+                settings = (settings ?? BuildSettings) ?? new BuildSettings();
                 Environment.CurrentDirectory = GetRepoDirectory(settings.RepoName).FullName;
                 ProcessOutput buildOutput = GetBuildRunner().FullName.Start(settings.BuildArguments, output, error);
                 if (buildOutput.ExitCode != settings.BuildSuccessExitCode)
                 {
-                    return new BambotActionResult()
+                    return new BuildResult()
                     {
                         Success = false,
                         Message = $"Build exited with code {buildOutput.ExitCode}"
                     };
                 }
-
-                ProcessOutput testOutput = settings.TestRunner.Start(settings.TestArguments, output, error);
-                if (testOutput.ExitCode != settings.TestSuccessExitCode)
-                {
-                    return new BambotActionResult()
-                    {
-                        Success = false,
-                        Message = $"Test exited with code {testOutput.ExitCode}"
-                    };
-                }
             
-            
-                return new BambotActionResult()
+                return new BuildResult()
                 {
                     Success = true,
                     Message = "Build and test completed successfully"
@@ -191,6 +183,28 @@ namespace Bam.Net.Application
             {
                 Environment.CurrentDirectory = startDirectory;
             }
+        }
+
+        protected override WorkState Do(WorkState currentWorkState)
+        {
+            if (currentWorkState != null)
+            {
+                if (currentWorkState.Status == Status.Failed)
+                {
+                    Warn("Current workstate status is Failed.  Exiting");
+                    return currentWorkState;
+                }
+            }
+
+            Build(GetBuildSettings(), o => Console(o), e => Console(e));
+            return new WorkState(this, "Build completed");
+        }
+
+        public override string[] RequiredProperties { get; }
+
+        public virtual BuildSettings GetBuildSettings()
+        {
+            return new BuildSettings();
         }
     }
 }
