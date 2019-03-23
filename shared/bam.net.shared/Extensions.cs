@@ -272,6 +272,11 @@ namespace Bam.Net
                 value.Equals("bye", StringComparison.InvariantCultureIgnoreCase);
         }
 
+        public static FileInfo GetNextFile(this FileInfo file)
+        {
+            return new FileInfo(GetNextFileName(file.FullName));
+        }
+
         /// <summary>
         /// If the specified file exists, a new path with 
         /// an underscore and a number appended will be 

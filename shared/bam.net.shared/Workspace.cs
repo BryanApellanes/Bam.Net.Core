@@ -55,7 +55,10 @@ namespace Bam.Net
             Console.WriteLine(format, args);
             string message = $"{string.Format(format, args)}\r\n";
             FileInfo file = new FileInfo(Path("Console"));
-            // TODO: check file size and create a new one if its too big
+            if (file.Length >= 1048576)
+            {
+                file = file.GetNextFile();
+            }
             message.SafeAppendToFile(file.FullName);
         }
         

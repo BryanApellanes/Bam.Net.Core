@@ -159,20 +159,23 @@ namespace Bam.Net
         public static DirectoryInfo GetDirectory(IApplicationNameProvider applicationNameProvider = null)
         {
             DirectoryInfo configDir = GetFile().Directory;
-            string typeConfigs = applicationNameProvider == null
-                ? Bam.Net.CoreServices.ApplicationRegistration.Data.Application.Unknown.Name
-                : applicationNameProvider.GetApplicationName();
+            applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            string typeConfigsFolderName = applicationNameProvider.GetApplicationName();
+            if (string.IsNullOrEmpty(typeConfigsFolderName))
+            {
+                typeConfigsFolderName = Bam.Net.CoreServices.ApplicationRegistration.Data.Application.Unknown.Name;
+            }
             
-            return new DirectoryInfo(Path.Combine(configDir.FullName, typeConfigs));
+            return new DirectoryInfo(Path.Combine(configDir.FullName, typeConfigsFolderName));
         }
         
         public static FileInfo GetFile(IApplicationNameProvider applicationNameProvider = null)
         {
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
-            string configName = Path.GetFileNameWithoutExtension(assemblyFile);
+            string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
             string path = applicationNameProvider != null
-                ? Path.Combine(BamPaths.ConfPath, configName, $"{applicationNameProvider.GetApplicationName()}.appsettings.yaml")
-                : Path.Combine(BamPaths.ConfPath, configName, $"{configName}.appsettings.yaml"); 
+                ? Path.Combine(BamPaths.ConfPath, assemblyName, $"{applicationNameProvider.GetApplicationName()}.appsettings.yaml")
+                : Path.Combine(BamPaths.ConfPath, assemblyName, $"{assemblyName}.appsettings.yaml"); 
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
             {
