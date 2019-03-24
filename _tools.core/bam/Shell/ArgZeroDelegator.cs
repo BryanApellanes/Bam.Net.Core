@@ -77,6 +77,15 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
 
+        [ArgZero("edit")]
+        public void Edit()
+        {
+            string typeName = GetTypeName();
+            ShellProvider provider = GetType(typeName).Construct<ShellProvider>();
+            provider?.Edit(o => OutLine(o), e => OutLine(e));
+            Exit(provider != null ? 0 : 1);
+        }
+
         public Type GetType(string typeName)
         {
             if (!ArgZero.ProviderTypes.ContainsKey(typeName))

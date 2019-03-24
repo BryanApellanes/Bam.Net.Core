@@ -5,6 +5,7 @@ using System.Reflection;
 using Bam.Net;
 using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Testing;
+using Bam.Shell.Jobs;
 
 namespace Bam.Shell
 {
@@ -16,6 +17,11 @@ namespace Bam.Shell
         public abstract void Set(Action<string> output = null, Action<string> error = null);
         public abstract void Remove(Action<string> output = null, Action<string> error = null);
         public abstract void Run(Action<string> output = null, Action<string> error = null);
+
+        public virtual void Edit(Action<string> output = null, Action<string> error = null)
+        {
+            OutLineFormat("Edit is not implemented for the current shell provider: {0}", GetType().FullName);
+        }
         
         static HandlebarsDirectory _handlebarsDirectory;
         static object _handlebarsLock = new object();
@@ -28,10 +34,92 @@ namespace Bam.Shell
             });
         }
 
+        string _providerType;
+        public string ProviderType
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_providerType))
+                {
+                    Type type = this.GetType();
+                    if (type.Name.EndsWith("Provider"))
+                    {
+                        _providerType = type.Name.Truncate("Provider".Length);
+                    }
+                    else
+                    {
+                        _providerType = type.Name;
+                    }
+                }
+
+                return _providerType;
+            }
+        }
+        
         public virtual void RegisterArguments()
         {
+            AddValidArgument("name", $"The name of the {ProviderType} to work with");
+            AddValidArgument("format", "The desired output format: json | yaml");
+        }
+        
+        protected virtual ProviderArguments GetProviderArguments()
+        {
+            string targetName = Arguments.Contains("name")
+                ? Arguments["name"]
+                : (
+                    Arguments.Contains($"{ProviderType.ToLowerInvariant()}Name")
+                        ? Arguments[$"{ProviderType.ToLowerInvariant()}Name"]
+                        : (
+                            GetTypeNameArgument(ProviderType.ToLowerInvariant(), $"Please enter the name of the {ProviderType.ToLowerInvariant()}") 
+                            ??
+                            GetArgument($"Please enter the name of the {ProviderType.ToLowerInvariant()}")
+                          )
+                  );
+            
+            return new ProviderArguments()
+            {
+                ProviderType = ProviderType,
+                ProviderContextTarget = targetName,
+            };
         }
 
+        public string Serialize(object data)
+        {
+            return data.Serialize(GetFormat());
+        }
+        
+        protected SerializationFormat GetFormat()
+        {
+            if (Arguments.Contains("format"))
+            {
+                SerializationFormat format = Arguments["format"].ToEnum<SerializationFormat>();
+                if (format != SerializationFormat.Json && format != SerializationFormat.Yaml)
+                {
+                    format = SerializationFormat.Yaml;
+                }
+
+                return format;
+            }
+
+            return SerializationFormat.Yaml;
+        }
+        
+        
+        protected string GetTypeNameArgument(string type, string prompt = null)
+        {
+            if (Arguments.Contains(type))
+            {
+                return Arguments[type];
+            }
+
+            if (Arguments.Contains($"{type}Name"))
+            {
+                return Arguments[$"{type}Name"];
+            }
+
+            return Prompt(prompt ?? $"Please enter the {type} name");
+        } 
+        
         public static DirectoryInfo FindProjectParent(out FileInfo csprojFile)
         {
             string startDir = Environment.CurrentDirectory;

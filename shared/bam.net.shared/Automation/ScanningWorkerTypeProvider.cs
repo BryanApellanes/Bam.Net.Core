@@ -16,7 +16,9 @@ namespace Bam.Net.Automation
         {
             Logger = logger ?? Log.Default;
         }
+        
         public ILogger Logger { get; set; }
+        
         public Type[] GetWorkerTypes()
         {
             return TypeScan.Result;
@@ -57,7 +59,7 @@ namespace Bam.Net.Automation
             }
         }
 
-        protected Type[] ScanForWorkerTypes(FileInfo file)
+        protected virtual Type[] ScanForWorkerTypes(FileInfo file)
         {
             if (file == null)
             {
@@ -66,9 +68,10 @@ namespace Bam.Net.Automation
             try
             {
                 Assembly assembly = Assembly.LoadFrom(file.FullName);
-                return assembly.GetTypes()
-                    .Where(type => type != typeof(IWorker))
+                Type[] types = assembly.GetTypes();
+                return types
                     .Where(type => type.IsSubclassOf(typeof(Worker)) || typeof(IWorker).IsAssignableFrom(type))
+                    .Where(type => type != typeof(IWorker) && !type.IsAbstract)
                     .ToArray();
             }
             catch (Exception ex)

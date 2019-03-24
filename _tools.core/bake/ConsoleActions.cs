@@ -83,9 +83,13 @@ namespace Bam.Net.Application
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
                 OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, recipe.OutputDirectory);
             }
-            FileInfo file = new FileInfo(Path.Combine(".", $"bamtoolkit-{recipe.OsName.ToString()}.zip"));
-            ZipFile.CreateFromDirectory(recipe.OutputDirectory, file.FullName);
-            OutLineFormat("Created {0}", ConsoleColor.DarkGreen, file.FullName);
+            FileInfo toolkitZipFile = new FileInfo(Path.Combine(recipe.OutputDirectory, $"bamtoolkit-{recipe.OsName.ToString()}.zip"));
+            if (toolkitZipFile.Exists)
+            {
+                toolkitZipFile.Delete();
+            }
+            ZipFile.CreateFromDirectory(recipe.OutputDirectory, toolkitZipFile.FullName);
+            OutLineFormat("Created {0}", ConsoleColor.DarkGreen, toolkitZipFile.FullName);
         }
 
         [ConsoleAction("all", "Discover tools projects and build")]

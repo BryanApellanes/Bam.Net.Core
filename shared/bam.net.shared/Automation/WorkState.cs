@@ -13,7 +13,7 @@ namespace Bam.Net.Automation
     /// Used to communicate the state of the currently running job.  Gets passed
     /// from worker to worker during job execution.  A new instance may be instantiated
     /// by each worker so one should not rely on the beginning WorkState to be the same
-    /// at the end.
+    /// as the end.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class WorkState<T>: WorkState
@@ -44,6 +44,10 @@ namespace Bam.Net.Automation
     /// </summary>
     public class WorkState
     {
+        internal WorkState()
+        {
+        }
+
         public WorkState(IWorker worker, string message = "")
         {
             Args.ThrowIfNull(worker, "worker");

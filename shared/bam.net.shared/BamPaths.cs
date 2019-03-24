@@ -37,6 +37,11 @@ namespace Bam.Net
             }
         }
 
+        public static string Build
+        {
+            get { return Path.Combine(BamHome, "build"); }
+        }
+        
         public static string PublicPath
         {
             get { return Path.Combine(BamHome, "public"); }

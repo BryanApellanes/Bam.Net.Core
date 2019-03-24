@@ -180,8 +180,16 @@ namespace Bam.Net.Logging
         /// <param name="messageArgs"></param>
         public void Console(string messageFormat, params string[] messageArgs)
         {
-            System.Console.WriteLine(messageFormat, messageArgs);
-            Info(messageFormat, messageArgs);
+            if (messageArgs.Length > 0)
+            {
+                System.Console.WriteLine(messageFormat, messageArgs);
+                Info(messageFormat, messageArgs);
+            }
+            else
+            {
+                System.Console.WriteLine(messageFormat);
+                Info(messageFormat);
+            }
         }
         
         [Exclude]

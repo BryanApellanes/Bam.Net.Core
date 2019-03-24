@@ -14,7 +14,7 @@ namespace Bam.Net.Automation
             Runtime = Runtime.Windows;
             
             BuildRunner = "bake";
-            BuildArguments = "/all:./_tools.core/";
+            BuildArguments = $"/all:./_tools.core/ /toolkit:{BamPaths.Build}/";
         }
 
         public BuildSettings(string repoName) : this()

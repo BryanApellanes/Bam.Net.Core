@@ -1152,6 +1152,11 @@ File Version: {1}
             _blocker.WaitOne();
         }
 
+        protected static void Unblock()
+        {
+            _blocker.Set();
+        }
+        
         protected internal static object[] GetParameters(MethodInfo method)
         {
             return GetParameters(method, false);

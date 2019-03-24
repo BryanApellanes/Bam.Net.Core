@@ -130,6 +130,17 @@ namespace Bam.Net.Automation
             });
             conf.Save(path);
         }
+
+        /// <summary>
+        /// Tells the worker to begin working.  This method is used primarily to
+        /// test the execution of a worker in isolation.  Use Job.Run() to execute a full job.
+        /// </summary>
+        /// <returns></returns>
+        public WorkState Do()
+        {
+            return Do(new InitialWorkState(this));
+        }
+        
         
         protected abstract WorkState Do(WorkState currentWorkState);
 

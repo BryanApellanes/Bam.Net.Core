@@ -1679,6 +1679,16 @@ namespace Bam.Net
             }
         }
 
+        public static string Serialize(this object obj, SerializationFormat format = SerializationFormat.Yaml)
+        {
+            MemoryStream output = new MemoryStream();
+            Serialize(obj, format, output);
+            using (StreamReader reader = new StreamReader(output))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
         public static void Serialize(this object obj, SerializationFormat format, Stream output)
         {
             SerializeActions[format](output, obj);

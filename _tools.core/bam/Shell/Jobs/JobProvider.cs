@@ -25,7 +25,19 @@ namespace Bam.Shell.Jobs
 
         public override void RegisterArguments()
         {
-            AddValidArgument("jobName", "The name of a job to work with");
+            base.RegisterArguments();
+        }
+        protected override ProviderArguments GetProviderArguments()
+        {
+            return GetProviderArguments(false);
+        }
+        
+        protected ProviderArguments GetProviderArguments(bool full = false)
+        {
+            ProviderArguments baseArgs = base.GetProviderArguments();
+            JobProviderArguments providerArguments = baseArgs.CopyAs<JobProviderArguments>();
+            providerArguments.JobName = providerArguments.ProviderContextTarget;
+            return providerArguments;
         }
 
         public override void List(Action<string> output = null, Action<string> error = null)
@@ -52,7 +64,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                string jobName = GetArgument("jobName", "Please enter the name of the job to create");
+                string jobName = GetArgument("job", "Please enter the name of the job to create");
                 JobConf jobConf = JobManagerService.GetJob(jobName);
                 
                 string[] workerTypes = JobManagerService.GetWorkerTypes();
@@ -75,7 +87,8 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                string jobName = GetArgument("name", "Please enter the name of the job to show");
+                JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
+                string jobName = arguments.JobName;
 
                 JobConf jobConf = JobManagerService.GetJob(jobName);
                 OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
@@ -98,9 +111,9 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                string jobName = GetArgument("jobName", "Please enter the name of the job to remove");
-                JobManagerService.RemoveJob(jobName);
-                OutLineFormat("Job {0} was deleted", ConsoleColor.Yellow, jobName);
+                JobProviderArguments providerArguments = GetProviderArguments() as JobProviderArguments;
+                JobManagerService.RemoveJob(providerArguments.JobName);
+                OutLineFormat("Job {0} was deleted", ConsoleColor.Yellow, providerArguments.JobName);
             }
             catch (Exception ex)
             {
@@ -115,9 +128,21 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                string jobName = GetArgument("jobName", "Please enter the name of the job to run");
-                JobManagerService.StartJob(jobName);
-                OutLineFormat("Job {0} was queued to start", ConsoleColor.DarkGreen, jobName);
+                JobProviderArguments providerArguments = GetProviderArguments() as JobProviderArguments;
+                bool? jobFinished = false;
+                JobManagerService.JobFinished += (sender, args) =>
+                    {
+                        jobFinished =
+                            (args.Cast<WorkStateEventArgs>())?.WorkState?.JobName?.Equals(providerArguments.JobName);
+                        if (jobFinished.Value)
+                        {
+                            OutLineFormat("Job {0} finished", providerArguments.JobName);
+                            Unblock();
+                        }
+                    };
+                JobManagerService.StartJob(providerArguments.JobName);
+                OutLineFormat("Job {0} was queued to start", ConsoleColor.DarkGreen, providerArguments.JobName);
+                Block();
             }
             catch (Exception ex)
             {

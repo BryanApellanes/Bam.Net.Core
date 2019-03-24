@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using Bam.Net.Yaml;
+using Newtonsoft.Json;
 
 namespace Bam.Net.Automation
 {
@@ -109,6 +110,9 @@ namespace Bam.Net.Automation
             return result;
         }
 
+        [JsonIgnore]
+        public string LoadedFrom { get; set; }
+        
         public static WorkerConf Load(string filePath)
         {
             string ext = Path.GetExtension(filePath).ToLowerInvariant();
@@ -117,7 +121,9 @@ namespace Bam.Net.Automation
                 ext = ".json";
             }
 
-            return _deserializers[ext](filePath);
+            WorkerConf workerConf = _deserializers[ext](filePath);
+            workerConf.LoadedFrom = filePath;
+            return workerConf;
         }
 
         public void SetProperties(Dictionary<string, string> propertiesToSet)

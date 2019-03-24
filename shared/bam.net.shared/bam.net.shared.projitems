@@ -256,6 +256,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IAppSettingsWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IDeployable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IfElseWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\InitialWorkState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IWorkerTypeProvider.cs" />

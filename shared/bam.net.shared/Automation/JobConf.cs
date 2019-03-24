@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Bam.Net.CoreServices;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Automation
 {
@@ -37,10 +38,17 @@ namespace Bam.Net.Automation
         public string Name { get; set; }
 
         /// <summary>
-        /// Represents the "Order" that will be assigned to the next
+        /// Represents the "Order" that is assigned to the next
         /// worker added
         /// </summary>
         protected int CurrentIndex { get; set; }
+
+        Dictionary<string, WorkerConf> _workerConfs;
+        object _workerConfLock = new object();
+        public Dictionary<string, WorkerConf> WorkerConfs
+        {
+            get { return _workerConfLock.DoubleCheckLock(ref _workerConfs, LoadWorkerConfs); }
+        }
 
         List<string> _workerExtensions;
         /// <summary>
@@ -74,8 +82,8 @@ namespace Bam.Net.Automation
                 }
             }
         }
-
-        public IEnumerable<string> ListWorkers()
+        
+        public IEnumerable<string> ListWorkerNames()
         {
             foreach (string workerFile in WorkerFiles)
             {
@@ -83,6 +91,24 @@ namespace Bam.Net.Automation
             }
         }
 
+        public WorkerConf GetWorkerConf(string workerName, bool reload = false)
+        {
+            if (reload)
+            {
+                lock (_workerConfLock)
+                {
+                    _workerConfs = null;
+                }
+            }
+
+            if (WorkerConfs.ContainsKey(workerName))
+            {
+                return WorkerConfs[workerName];
+            }
+
+            return null;
+        }
+        
         DirectoryInfo _jobDirectory;
         /// <summary>
         /// The root of the Job
@@ -110,7 +136,7 @@ namespace Bam.Net.Automation
         {
             return new Job(this);
         }
-
+        
         object _addLock = new object();
         public void AddWorker(Type workerType, string name, bool overwrite = false)
         {
@@ -133,15 +159,26 @@ namespace Bam.Net.Automation
             }
         }
 
-        public void SaveWorker(Worker worker)
+        public string Save()
         {
-            lock (_addLock)
-            {
-                string path = GetWorkerPath(worker.Name);
-                worker.SaveConf(path);
-            }
+            EnsureJobDirectory();
+
+            string path = GetFilePath();
+            this.ToJsonFile(path);
+            return path;
         }
 
+        public bool RemoveWorker(string name)
+        {
+            if (WorkerExists(name, out string workerFilePath))
+            {
+                File.Delete(workerFilePath);
+                return true;
+            }
+
+            return false;
+        }
+        
         protected bool WorkerExists(Worker worker)
         {
             return WorkerExists(worker.Name);
@@ -206,6 +243,7 @@ namespace Bam.Net.Automation
         {
             return (T)GetWorker(typeof(T), workerName);
         }
+        
         protected internal object GetWorker(Type workerType, string workerName)
         {
             Args.ThrowIfNull(workerType, "workerType");
@@ -235,15 +273,6 @@ namespace Bam.Net.Automation
             }
         }
 
-        public string Save()
-        {
-            EnsureJobDirectory();
-
-            string path = GetFilePath();
-            this.ToJsonFile(path);
-            return path;
-        }
-
         /// <summary>
         /// Returns the save to path for the current
         /// JobConf.  In the form {JobDirectory}\\{Name}.job
@@ -253,6 +282,25 @@ namespace Bam.Net.Automation
         {
             string path = Path.Combine(_jobDirectory.FullName, "{0}.job"._Format(Name));
             return path;
+        }
+        
+        private Dictionary<string, WorkerConf> LoadWorkerConfs()
+        {
+            Dictionary<string, WorkerConf> result = new Dictionary<string, WorkerConf>();
+            foreach (string workerFile in WorkerFiles)
+            {
+                try
+                {
+                    WorkerConf conf = WorkerConf.Load(workerFile);
+                    result.Add(conf.Name, conf);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Error loading worker file {0}: {1}", workerFile, ex.Message);
+                }
+            }
+
+            return result;
         }
     }
 }
