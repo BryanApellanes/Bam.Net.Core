@@ -61,11 +61,11 @@ namespace Bam.Net.Application
             return true;
         }
 
-        [ConsoleAction("toolkit", "Bake the BamToolkit")]
+        [ConsoleAction("recipe", "bake the specified recipe")]
         public void BuildToolkit()
         {
             // build each csproj with dotnet publish
-            string recipePath = GetArgument("toolkit", "Please enter the path to the recipe file to use");
+            string recipePath = GetArgument("recipe", "Please enter the path to the recipe file to use");
             if (!File.Exists(recipePath))
             {
                 OutLineFormat("Specified file does not exist: {0}", ConsoleColor.Yellow, recipePath);
@@ -83,13 +83,6 @@ namespace Bam.Net.Application
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
                 OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, recipe.OutputDirectory);
             }
-            FileInfo toolkitZipFile = new FileInfo(Path.Combine(recipe.OutputDirectory, $"bamtoolkit-{recipe.OsName.ToString()}.zip"));
-            if (toolkitZipFile.Exists)
-            {
-                toolkitZipFile.Delete();
-            }
-            ZipFile.CreateFromDirectory(recipe.OutputDirectory, toolkitZipFile.FullName);
-            OutLineFormat("Created {0}", ConsoleColor.DarkGreen, toolkitZipFile.FullName);
         }
 
         [ConsoleAction("all", "Discover tools projects and build")]
@@ -121,7 +114,7 @@ namespace Bam.Net.Application
 
                 string tempRecipe = $"./temp_recipe_{6.RandomLetters()}.json";
                 toUse.ToJsonFile(tempRecipe);
-                Arguments["toolkit"] = new FileInfo(tempRecipe).FullName;
+                Arguments["recipe"] = new FileInfo(tempRecipe).FullName;
                 BuildToolkit();
             }
         }

@@ -14,7 +14,7 @@ namespace Bam.Net.Automation
             Runtime = Runtime.Windows;
             
             BuildRunner = "bake";
-            BuildArguments = $"/all:./_tools.core/ /toolkit:{BamPaths.Build}/";
+            BuildArguments = $"/all:./_tools.core/";
         }
 
         public BuildSettings(string repoName) : this()
@@ -34,6 +34,6 @@ namespace Bam.Net.Automation
         
         public int BuildSuccessExitCode { get; set; }
         
-        public string BuildOutputRoot { get; set; }
+        public string BuildOutput { get; set; }
     }
 }

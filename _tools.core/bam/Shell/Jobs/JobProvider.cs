@@ -64,7 +64,8 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                string jobName = GetArgument("job", "Please enter the name of the job to create");
+                JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
+                string jobName = arguments.JobName;
                 JobConf jobConf = JobManagerService.GetJob(jobName);
                 
                 string[] workerTypes = JobManagerService.GetWorkerTypes();
@@ -129,8 +130,10 @@ namespace Bam.Shell.Jobs
             try
             {
                 JobProviderArguments providerArguments = GetProviderArguments() as JobProviderArguments;
-                bool? jobFinished = false;
-                JobManagerService.JobFinished += (sender, args) =>
+                if (JobManagerService.JobExists(providerArguments.JobName))
+                {
+                    bool? jobFinished = false;
+                    JobManagerService.JobFinished += (sender, args) =>
                     {
                         jobFinished =
                             (args.Cast<WorkStateEventArgs>())?.WorkState?.JobName?.Equals(providerArguments.JobName);
@@ -140,9 +143,14 @@ namespace Bam.Shell.Jobs
                             Unblock();
                         }
                     };
-                JobManagerService.StartJob(providerArguments.JobName);
-                OutLineFormat("Job {0} was queued to start", ConsoleColor.DarkGreen, providerArguments.JobName);
-                Block();
+                    JobManagerService.StartJob(providerArguments.JobName);
+                    OutLineFormat("Job {0} was queued to start", ConsoleColor.DarkGreen, providerArguments.JobName);
+                    Block();
+                }
+                else
+                {
+                    OutLineFormat("Specified job {0} does not exist", ConsoleColor.Magenta, providerArguments.JobName);
+                }
             }
             catch (Exception ex)
             {

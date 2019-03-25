@@ -61,28 +61,36 @@ namespace Bam.Net.Automation
             {
                 lock (_addLock)
                 {
-                    List<string> results = new List<string>();
-                    _jobDirectory.Refresh();
+                    List<string> workerFilePaths = ReloadWorkers();
 
-                    if (_jobDirectory.Exists)
-                    {
-                        FileInfo[] files = _jobDirectory.GetFiles();
-
-                        files.Each(file =>
-                        {
-                            string ext = Path.GetExtension(file.FullName).ToLowerInvariant();
-                            if (_workerExtensions.Contains(ext))
-                            {
-                                results.Add(file.FullName);
-                            }
-                        });
-                    }
-
-                    return results.ToArray();
+                    return workerFilePaths.ToArray();
                 }
             }
         }
-        
+
+        public List<string> ReloadWorkers()
+        {
+            List<string> results = new List<string>();
+            _jobDirectory.Refresh();
+
+            if (_jobDirectory.Exists)
+            {
+                FileInfo[] files = _jobDirectory.GetFiles();
+
+                files.Each(file =>
+                {
+                    string ext = Path.GetExtension(file.FullName).ToLowerInvariant();
+                    if (_workerExtensions.Contains(ext))
+                    {
+                        results.Add(file.FullName);
+                    }
+                });
+            }
+
+            _workerConfs = null; // forces reload on next reference to WorkerConfs
+            return results;
+        }
+
         public IEnumerable<string> ListWorkerNames()
         {
             foreach (string workerFile in WorkerFiles)

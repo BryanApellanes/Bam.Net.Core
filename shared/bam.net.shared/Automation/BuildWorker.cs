@@ -162,7 +162,7 @@ namespace Bam.Net.Automation
 
                 settings = (settings ?? BuildSettings) ?? new BuildSettings();
                 Environment.CurrentDirectory = GetRepoDirectory(settings.RepoName).FullName;
-                ProcessOutput buildOutput = GetBuildRunner().FullName.Start(settings.BuildArguments, output, error);
+                ProcessOutput buildOutput = GetBuildRunner().FullName.Start($"{settings.BuildArguments} /output:{settings.BuildOutput}", output, error);
                 if (buildOutput.ExitCode != settings.BuildSuccessExitCode)
                 {
                     return new BuildResult()
@@ -204,7 +204,10 @@ namespace Bam.Net.Automation
 
         public virtual BuildSettings GetBuildSettings()
         {
-            return new BuildSettings();
+            return new BuildSettings()
+            {
+                BuildOutput = Builds.FullName
+            };
         }
     }
 }

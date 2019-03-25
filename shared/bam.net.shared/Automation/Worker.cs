@@ -106,12 +106,12 @@ namespace Bam.Net.Automation
         public void Configure(WorkerConf conf)
         {
             Type workerType = this.GetType();
-            conf.Properties.Each(kvp =>
+            conf.Properties.Keys.Each(key =>
             {
-                PropertyInfo property = workerType.GetProperty(kvp.Key);
+                PropertyInfo property = workerType.GetProperty(key);
                 if (property != null && property.CanWrite)
                 {
-                    property.SetValue(this, kvp.Value);
+                    property.SetValue(this, conf.Properties[key]);
                 }
             });
         }

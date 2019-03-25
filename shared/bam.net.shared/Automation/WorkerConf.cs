@@ -51,7 +51,7 @@ namespace Bam.Net.Automation
 
         public WorkerConf()
         {
-            this._properties = new List<KeyValuePair>();
+            this._properties = new Dictionary<string, string>();
         }
 
         public WorkerConf(Worker worker)
@@ -128,12 +128,7 @@ namespace Bam.Net.Automation
 
         public void SetProperties(Dictionary<string, string> propertiesToSet)
         {
-            List<KeyValuePair> properties = new List<KeyValuePair>();
-            propertiesToSet.Keys.Each(propName =>
-            {
-                properties.Add(new KeyValuePair(propName, propertiesToSet[propName]));
-            });
-            this.Properties = properties.ToArray();
+            Properties = propertiesToSet;
         }
 
         public void AddProperties(Dictionary<string, string> propertiesToAdd)
@@ -146,36 +141,29 @@ namespace Bam.Net.Automation
 
         public void SetProperty(string name, string value)
         {
-            KeyValuePair prop = Properties.Where(kvp => kvp.Key.Equals(name)).FirstOrDefault();
-            if (prop == null)
+            if (Properties.ContainsKey(name))
             {
-                prop = new KeyValuePair(name, value);
+                Properties[name] = value;
             }
+            
+            Properties.AddMissing(name, value);
         }
 
         public void AddProperty(string name, string value)
         {
-            KeyValuePair existing = Properties.Where(kvp => kvp.Key.Equals(name)).FirstOrDefault();
-            if (existing != null)
+            if (_properties.ContainsKey(name))
             {
                 throw new InvalidOperationException("Specified property is already set, use 'SetProperty' to change the value");
             }
 
-            _properties.Add(new KeyValuePair(name, value));
+            _properties.Add(name, value);
         }
 
-        List<KeyValuePair> _properties;
-        public KeyValuePair[] Properties
+        Dictionary<string, string> _properties;
+        public Dictionary<string, string> Properties
         {
-            get
-            {
-                return _properties.ToArray();
-            }
-            set
-            {
-                _properties = new List<KeyValuePair>();
-                _properties.AddRange(value);
-            }
+            get { return _properties; }
+            set { _properties = value; }
         }
 
         public virtual void Save()

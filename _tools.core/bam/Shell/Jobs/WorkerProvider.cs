@@ -38,12 +38,12 @@ namespace Bam.Shell.Jobs
 
         protected override ProviderArguments GetProviderArguments()
         {
-            return GetProviderArguments(false);
+            return GetProviderArguments(true, false);
         }
         
-        protected ProviderArguments GetProviderArguments(bool getJobName = false)
+        protected ProviderArguments GetProviderArguments(bool callBase = true, bool getJobName = false)
         {
-            ProviderArguments baseArgs = base.GetProviderArguments();
+            ProviderArguments baseArgs = callBase ? base.GetProviderArguments(): new JobProviderArguments();
             JobProviderArguments providerArguments = baseArgs.CopyAs<JobProviderArguments>();
             providerArguments.WorkerName = providerArguments.ProviderContextTarget;
             if (getJobName)
@@ -112,17 +112,31 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                JobProviderArguments providerArguments = GetProviderArguments(true) as JobProviderArguments;
+                JobProviderArguments providerArguments = GetProviderArguments(false, true) as JobProviderArguments;
                 JobConf jobConf = GetJobConf(providerArguments.JobName);
-                WorkerConf workerConf = jobConf.GetWorkerConf(providerArguments.WorkerName);
-                if (workerConf == null)
+                if (!string.IsNullOrEmpty(providerArguments.WorkerName))
                 {
-                    OutLineFormat("Specified worker {0} was not a part of the specified job {1}", providerArguments.WorkerName, providerArguments.JobName);
-                    Exit(1);
+                    WorkerConf workerConf = jobConf.GetWorkerConf(providerArguments.WorkerName);
+                    if (workerConf == null)
+                    {
+                        OutLineFormat("Specified worker {0} was not a part of the specified job {1}", providerArguments.WorkerName, providerArguments.JobName);
+                        Exit(1);
+                    }
+                    string serialized = Serialize(workerConf);
+                    OutLineFormat("***\r\n{0}\r\n***", ConsoleColor.Blue, serialized);
                 }
-
-                string serialized = Serialize(workerConf);
-                OutLineFormat("***\r\n{0}\r\n***", ConsoleColor.Blue, serialized);
+                else
+                {
+                    jobConf.ReloadWorkers();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    foreach (string key in jobConf.WorkerConfs.Keys)
+                    {
+                        stringBuilder.AppendLine(key);
+                        stringBuilder.AppendLine(Serialize(jobConf.WorkerConfs[key]));
+                    }
+                    OutLineFormat("***\r\n{0}\r\n***", stringBuilder.ToString());
+                }
+                
                 Exit(0);
             }
             catch (Exception ex)
@@ -182,9 +196,14 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                JobProviderArguments providerArguments = GetProviderArguments(true) as JobProviderArguments;
+                JobProviderArguments providerArguments = GetProviderArguments(true, true) as JobProviderArguments;
                 JobConf jobConf = GetJobConf(providerArguments.JobName);
-                WorkerConf workerConf = jobConf.GetWorkerConf(providerArguments.WorkerName);
+                WorkerConf workerConf = jobConf.GetWorkerConf(providerArguments.WorkerName, true);
+                if (workerConf == null)
+                {
+                    OutLineFormat("specified worker was not found: {0}", providerArguments.WorkerName);
+                }
+
                 ProcessOutput processOutput = ShellSettings.Current.Editor.Start(workerConf.LoadedFrom);
                 Exit(0);
             }
