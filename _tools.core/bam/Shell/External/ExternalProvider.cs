@@ -14,7 +14,7 @@ using Bam.Shell;
 namespace Bam.Shell
 {
     [Serializable]
-    public class ExternalProvider: ShellProvider
+    public class ExternalProvider: CommandLineTestInterface
     {
         [ArgZero("menu")]
         public void Menu()
@@ -25,36 +25,6 @@ namespace Bam.Shell
             FileInfo assemblyFile = new FileInfo(assemblyPath);
             ShowMenu(Assembly.LoadFile(assemblyFile.FullName), new ConsoleMenu[]{}, assemblyPath);
             Exit(0);
-        }
-
-        public override void List(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Add(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Show(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Set(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Remove(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Run(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
         }
     }
 }

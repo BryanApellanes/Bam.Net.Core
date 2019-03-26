@@ -15,24 +15,24 @@ namespace Bam.Net.Application
         static string defaultContentRoot = BamPaths.ContentPath;
         static BamDbServer trooServer;
 
-        [ConsoleAction("startTrooServer", "Start the troo server")]
+        [ConsoleAction("startBamDbServer", "Start the BamDb server")]
         public void StartConsole()
         {
             StartBamDbServer(GetLogger(), GetRepository());
-            Pause("Troo is running");
+            Pause("BamDb is running");
         }
 
-        [ConsoleAction("killTrooServer", "Kill the troo server")]
+        [ConsoleAction("killBamDbServer", "Kill the BamDb server")]
         public void StopConsole()
         {
             if (trooServer != null)
             {
                 trooServer.Stop();
-                Pause("Troo stopped");
+                Pause("BamDb stopped");
             }
             else
             {
-                OutLine("Troo server not running");
+                OutLine("BamDb server not running");
             }
         }
 
@@ -51,6 +51,7 @@ namespace Bam.Net.Application
         {
             return new DaoRepository();
         }
+        
         private static ConsoleLogger GetLogger()
         {
             ConsoleLogger logger = new ConsoleLogger();

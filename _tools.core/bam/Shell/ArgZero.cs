@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Bam.Net;
 using Bam.Net.CommandLine;
 using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Repositories;
+using Bam.Net.Logging;
 using Bam.Net.Testing;
 using CsQuery.ExtensionMethods;
 using Lucene.Net.Analysis.Hunspell;
 using Lucene.Net.Analysis.Standard;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace Bam.Shell
 {
@@ -39,11 +42,17 @@ namespace Bam.Shell
         }
 
         /// <summary>
-        /// Scan the current assembly for ArgZero methods.
+        /// Scan for ArgZero methods.
         /// </summary>
         public static void Scan()
         {
+            
+            
+            
+            
             Assembly current = Assembly.GetExecutingAssembly();
+            
+            
             current.GetTypes().ForEach(type =>
             {
                 if (type.ExtendsType<ShellProvider>())
@@ -66,7 +75,7 @@ namespace Bam.Shell
                 });
             });
         }
-
+        
         private static Dictionary<string, Type> _providerTypes;
         static object _providerTypesLock = new object();
         public static Dictionary<string, Type> ProviderTypes
@@ -86,7 +95,7 @@ namespace Bam.Shell
             }
             
             Scan();
-            ArgZeroDelegator.Register(arguments);
+            ShellProviderDelegator.Register(arguments);
             if (Targets.ContainsKey(arguments[0]))
             {
                 List<string> targetArguments = new List<string>();
@@ -117,6 +126,46 @@ namespace Bam.Shell
                     OutLineFormat("Exception executing ArgZero: {0}", ConsoleColor.Magenta, ex.Message);
                 }
                 Exit(0);
+            }
+        }
+        
+        private static IEnumerable<Assembly> FindAssemblies()
+        {
+            Config config = Config.Current;
+            string arg0DirPath = Path.Combine(Workspace.Current.Directory("arg0").FullName);
+            string argZeroAssemblyFolders = config.AppSettings["ArgZeroAssemblyFolders"].Or($".,{arg0DirPath}");
+            string argZeroScanPattern = config.AppSettings["ArgZeroScanPattern"].Or("*-arg0.dll");
+
+            string[] assemlbyFolderPaths = argZeroAssemblyFolders.DelimitSplit(",");
+            foreach (string assemblyFolderPath in assemlbyFolderPaths)
+            {
+                foreach (Assembly assembly in FindAssemblies(new DirectoryInfo(assemblyFolderPath), argZeroScanPattern))
+                {
+                    yield return assembly;
+                }
+            }
+        }
+        
+        private static IEnumerable<Assembly> FindAssemblies(DirectoryInfo directoryInfo, string searchPattern)
+        {
+            FileInfo[] fileInfos = directoryInfo.GetFiles(searchPattern);
+            foreach (FileInfo fileInfo in fileInfos)
+            {
+                Assembly next = null;
+                try
+                {
+                    next = Assembly.LoadFile(fileInfo.FullName);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Error finding assemblies in directory {0}: {1}", directoryInfo.FullName, ex.Message);
+                    continue;
+                }
+
+                if (next != null)
+                {
+                    yield return next;   
+                }
             }
         }
     }

@@ -2,11 +2,28 @@ using System;
 using System.Collections.Generic;
 using Bam.Net;
 using Bam.Net.Testing;
+using Bam.Shell;
 
-namespace Bam.Shell
+namespace bam.Shell
 {
-    public class ArgZeroDelegator : CommandLineTestInterface
+    public class ArgZeroDelegator<T> : ArgZeroDelegator
+    {
+        public virtual T Construct()
+        {
+            string typeName = GetTypeName();
+            Type type = GetType(typeName);
+            if (type != null)
+            {
+                return type.Construct<T>();
+            }
+
+            return default(T);
+        }
+    }
+    
+    public class ArgZeroDelegator: CommandLineTestInterface
     {   
+        public static string[] Arguments { get; set; }
         public static void Register(string[] args)
         {
             Arguments = args;
@@ -20,72 +37,7 @@ namespace Bam.Shell
                 }
             }
         }
-
-        public static string[] Arguments { get; set; }
         
-        [ArgZero("list")]
-        public void List()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName)?.Construct<ShellProvider>();
-            provider?.List(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-        
-        [ArgZero("add")]
-        public void Add()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName)?.Construct<ShellProvider>();
-            provider?.Add(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-
-        [ArgZero("show")]
-        public void Show()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName)?.Construct<ShellProvider>();
-            provider?.Show(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-
-        [ArgZero("set")]
-        public void Set()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName)?.Construct<ShellProvider>();
-            provider?.Set(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-
-        [ArgZero("remove")]
-        public void Remove()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName)?.Construct<ShellProvider>();
-            provider?.Remove(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-        
-        [ArgZero("run")]
-        public void Run()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName)?.Construct<ShellProvider>();
-            provider?.Run(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-
-        [ArgZero("edit")]
-        public void Edit()
-        {
-            string typeName = GetTypeName();
-            ShellProvider provider = GetType(typeName).Construct<ShellProvider>();
-            provider?.Edit(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0 : 1);
-        }
-
         public Type GetType(string typeName)
         {
             if (!ArgZero.ProviderTypes.ContainsKey(typeName))
@@ -101,7 +53,7 @@ namespace Bam.Shell
             return null;
         }
         
-        private string GetTypeName()
+        protected string GetTypeName()
         {
             if (Arguments.Length >= 2)
             {

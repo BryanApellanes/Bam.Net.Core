@@ -1,4 +1,4 @@
-﻿# Bdb
+﻿# Bamdb
 
 Bam Database (bdb.exe) is a high level data access component which provides a client gateway to multiple data persistence layers including various RDBM systems such as Microsoft Sql, MySql, Postgres and SQLite as well as no sql solutions such as mongo and its own internal data repository system.  It is also used to generate data access objects, data transfer objects and repositories from plain CLR classes.
 
