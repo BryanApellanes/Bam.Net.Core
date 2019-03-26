@@ -253,7 +253,7 @@ namespace Bam.Net.Automation.Tests
             protected override WorkState Do(WorkState currentWorkState)
             {
                 ValueToCheck = true;
-                return new WorkState(this, "success") { PreviousWorkState = currentWorkState };
+                return new WorkState(this) { PreviousWorkState = currentWorkState };
             }
 
             public override string[] RequiredProperties

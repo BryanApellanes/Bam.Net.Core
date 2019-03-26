@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CsQuery.ExtensionMethods;
 
 namespace Bam.Net
 {
@@ -14,12 +15,36 @@ namespace Bam.Net
     {
         public RoslynCompiler()
         {
+            _referenceAssemblies = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
             ReferenceAssemblies = DefaultReferenceAssemblies;
         }
 
-        public Assembly[] ReferenceAssemblies { get; set; }
+        HashSet<Assembly> _referenceAssemblies;
+        public Assembly[] ReferenceAssemblies
+        {
+            get { return _referenceAssemblies.ToArray(); }
+            set
+            {
+                _referenceAssemblies.Clear();
+                value.ForEach(a => _referenceAssemblies.Add(a));
+            }
+        }
+
         public OutputKind OutputKind { get; set; }
+
+        public RoslynCompiler AddAssemblyReference(string path)
+        {
+            _referenceAssemblies.Add(Assembly.LoadFile(path));
+            return this;
+        }
+        
+        public RoslynCompiler AddAssemblyReference(FileInfo assemblyFile)
+        {
+            _referenceAssemblies.Add(Assembly.Load(assemblyFile.FullName));
+            return this;
+        }
+        
         public Assembly Compile(DirectoryInfo directoryInfo, string assemblyFileName)
         {
             return Compile(directoryInfo.GetFiles("*.cs").ToArray(), assemblyFileName);
@@ -50,7 +75,7 @@ namespace Bam.Net
                 EmitResult compileResult = compilation.Emit(stream);
                 if (!compileResult.Success)
                 {
-                    throw new RoslynCompilationException(compilation.GetDiagnostics());
+                    throw new RoslynCompilationException(compileResult.Diagnostics);
                 }
                 return stream.GetBuffer();
             }

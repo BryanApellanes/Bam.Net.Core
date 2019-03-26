@@ -10,6 +10,7 @@ namespace Bam.Net.Automation
         string Name { get; set; }
         int StepNumber { get; set; }
         bool Busy { get; set; }
+        Status Status { get; set; }
         WorkState<T> State<T>(WorkState<T> state);
         WorkState Do(Job job);        
     }

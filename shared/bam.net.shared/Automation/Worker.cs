@@ -42,6 +42,7 @@ namespace Bam.Net.Automation
         public string Name { get; set; }
         public bool Busy { get; set; }
 
+        public Status Status { get; set; }
         /// <summary>
         /// Used by the job to sort this worker into its proper
         /// place in order relative to other workers
@@ -53,7 +54,6 @@ namespace Bam.Net.Automation
         }
 
         object _state;
-
         public WorkState State(WorkState state = null)
         {
             if (state != null)

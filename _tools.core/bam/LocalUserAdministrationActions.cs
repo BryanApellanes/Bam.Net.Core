@@ -19,6 +19,7 @@ using Bam.Net.Testing.Integration;
 
 namespace Bam.Net.Application
 {
+    // TODO: convert this to a ShellProvider
     /// <summary>
     /// User administrative actions
     /// </summary>

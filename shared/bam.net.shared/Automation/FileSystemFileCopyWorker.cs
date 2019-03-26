@@ -28,7 +28,11 @@ namespace Bam.Net.Automation
 
             File.Copy(src.FullName, dst.FullName);
 
-            return new WorkState(this, "File {0} copied successfully to {1}"._Format(src.FullName, dst.FullName)) { PreviousWorkState = currentWorkState };
+            return new WorkState(this)
+            {
+                PreviousWorkState = currentWorkState,
+                Message = "File {0} copied successfully to {1}"._Format(src.FullName, dst.FullName)
+            };
         }
 
         private void ThrowIfFileNotFound(string jobName, FileInfo src)

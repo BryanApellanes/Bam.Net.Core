@@ -44,11 +44,6 @@ namespace Bam.Shell.Pages
             throw new NotImplementedException();
         }
 
-        public override void Set(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Remove(Action<string> output = null, Action<string> error = null)
         {
             throw new NotImplementedException();
@@ -115,8 +110,7 @@ namespace Bam.Shell.Pages
             }
         }
         
-        [ArgZero("pack", "WebPack each bam.js page found in wwwroot/bam.js/pages using corresponding configs found in wwwroot/bam.js/configs")]
-        public void WebPack()
+        public override void Pack(Action<string> output = null, Action<string> error = null)
         {
             // find the first csproj file by looking first in the current directory then going up
             // using the parent of the csproj as the root
@@ -154,8 +148,8 @@ namespace Bam.Shell.Pages
                 OutLineFormat("Packing {0}", ConsoleColor.Green, configPath);
 
                 ProcessStartInfo webPackCommand = settings.NpxPath.ToCmdStartInfo($"webpack --config {configPath}");
-                ProcessOutput output = webPackCommand.Run();
-                OutLine(output.StandardOutput, ConsoleColor.DarkGreen);
+                ProcessOutput packOutput = webPackCommand.Run();
+                OutLine(packOutput.StandardOutput, ConsoleColor.DarkGreen);
             }
             if(webpackConfigs.Length == 0)
             {

@@ -1,0 +1,27 @@
+using System;
+
+namespace Bam.Net.Dynamic
+{
+    public class WorkerPropertyResolver
+    {
+        public WorkerPropertyResolver(WorkState workState, Job job)
+        {
+            WorkState = workState;
+            Job = job;
+        }
+
+        public WorkState WorkState { get; set; }
+
+        public Job Job { get; set; }
+
+        public {{PropertyType}} Resolve()
+        {
+            return Resolve({{PropertyResolverLambda}});
+        }
+
+        public {{PropertyType}} Resolve(Func<WorkState, Job> propertyResolver)
+        {
+            return propertyResolver(WorkState, Job);
+        }
+    }
+}

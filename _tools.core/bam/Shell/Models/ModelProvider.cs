@@ -39,11 +39,6 @@ namespace Bam.Shell.Models
             throw new NotImplementedException();
         }
 
-        public override void Set(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Remove(Action<string> output = null, Action<string> error = null)
         {
             throw new NotImplementedException();

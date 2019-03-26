@@ -14,13 +14,17 @@ namespace Bam.Shell
         public abstract void List(Action<string> output = null, Action<string> error = null);
         public abstract void Add(Action<string> output = null, Action<string> error = null);
         public abstract void Show(Action<string> output = null, Action<string> error = null);
-        public abstract void Set(Action<string> output = null, Action<string> error = null);
         public abstract void Remove(Action<string> output = null, Action<string> error = null);
         public abstract void Run(Action<string> output = null, Action<string> error = null);
 
         public virtual void Edit(Action<string> output = null, Action<string> error = null)
         {
-            OutLineFormat("Edit is not implemented for the current shell provider: {0}", GetType().FullName);
+            error($"Edit is not implemented for the current shell provider: {GetType().FullName}");
+        }
+
+        public virtual void Pack(Action<string> output = null, Action<string> error = null)
+        {
+            error($"Pack is not implemented for the current shell provider: {GetType().FullName}");
         }
         
         static HandlebarsDirectory _handlebarsDirectory;

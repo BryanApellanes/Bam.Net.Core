@@ -89,7 +89,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                JobProviderArguments providerArguments = GetProviderArguments(true) as JobProviderArguments;
+                JobProviderArguments providerArguments = GetProviderArguments(true, true) as JobProviderArguments;
                 string workerName = providerArguments.WorkerName;
                 string jobName = providerArguments.JobName;
                 
@@ -144,11 +144,6 @@ namespace Bam.Shell.Jobs
                 OutLineFormat("error showing worker: {0}", ConsoleColor.Magenta, ex.Message);
                 Exit(1);
             }
-        }
-
-        public override void Set(Action<string> output = null, Action<string> error = null)
-        {
-            OutLine("WorkerProvider does not implement the Set method as it is not well defined what this would entail.  Feel free to submit a pull request with your suggested implementation: https://github.com/BryanApellanes/Bam.Net.Core/pulls");
         }
 
         public override void Remove(Action<string> output = null, Action<string> error = null)

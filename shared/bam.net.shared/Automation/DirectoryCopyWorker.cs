@@ -32,9 +32,10 @@ namespace Bam.Net.Automation
 
             src.Copy(dst);
 
-            return new WorkState(this, $"Directory {src.FullName} copied successfully to {dst.FullName}")
+            return new WorkState(this)
             {
-                PreviousWorkState = currentWorkState
+                PreviousWorkState = currentWorkState,
+                Message = $"Directory {src.FullName} copied successfully to {dst.FullName}"
             };
         }
 

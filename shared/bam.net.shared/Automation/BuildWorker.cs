@@ -10,7 +10,7 @@ namespace Bam.Net.Automation
     {
         public BuildWorker()
         {
-            RequiredProperties = new string[] { };
+            RequiredProperties = new string[] { "BuildOutput" };
             BamSettings = BamSettings.Load();
             BuildSettings = Config.Load<BuildSettings>();
             Builds = Workspace.CreateDirectory("builds");
@@ -34,10 +34,32 @@ namespace Bam.Net.Automation
         
         public BamSettings BamSettings { get; set; }
         public BuildSettings BuildSettings { get; set; }
-        public DirectoryInfo Builds { get; set; }
+
+        DirectoryInfo _builds;
+        public DirectoryInfo Builds
+        {
+            get { return _builds; }
+            set
+            {
+                _builds = value;
+                _buildOutput = _builds.FullName;
+            }
+        }
+        
         public DirectoryInfo Repos { get; set; }
         public DirectoryInfo Tools { get; set; }
 
+        string _buildOutput;
+        public string BuildOutput
+        {
+            get { return _buildOutput; }
+            set
+            {
+                _buildOutput = value; 
+                _builds = new DirectoryInfo(_buildOutput);
+            }
+        }
+        
         public bool TryGetBuildRunner(out FileInfo fileInfo)
         {
             try
@@ -189,7 +211,7 @@ namespace Bam.Net.Automation
         {
             if (currentWorkState != null)
             {
-                if (currentWorkState.Status == Status.Failed)
+                if (currentWorkState.Status == Status.Failed && !currentWorkState.ContinueOnFailure)
                 {
                     Warn("Current workstate status is Failed.  Exiting");
                     return currentWorkState;
@@ -197,7 +219,7 @@ namespace Bam.Net.Automation
             }
 
             Build(GetBuildSettings(), o => Console(o), e => Console(e));
-            return new WorkState(this, "Build completed");
+            return new WorkState(this);
         }
 
         public override string[] RequiredProperties { get; }
@@ -206,7 +228,7 @@ namespace Bam.Net.Automation
         {
             return new BuildSettings()
             {
-                BuildOutput = Builds.FullName
+                BuildOutput = BuildOutput
             };
         }
     }

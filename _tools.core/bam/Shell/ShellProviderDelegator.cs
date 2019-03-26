@@ -32,14 +32,6 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
 
-        [ArgZero("set")]
-        public void Set()
-        {
-            ShellProvider provider = Construct();
-            provider?.Set(o => OutLine(o), e => OutLine(e));
-            Exit(provider != null ? 0: 1);
-        }
-
         [ArgZero("remove")]
         public void Remove()
         {
@@ -56,6 +48,14 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
 
+        [ArgZero("pack")]
+        public void Pack()
+        {
+            ShellProvider provider = Construct();
+            provider?.Pack(o => OutLine(o), e => OutLine(e));
+            Exit(provider != null ? 0: 1);
+        }
+        
         [ArgZero("edit")]
         public void Edit()
         {

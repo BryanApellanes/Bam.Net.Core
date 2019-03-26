@@ -46,9 +46,10 @@ namespace Bam.Net.Automation
     {
         internal WorkState()
         {
+            JobProperties = new Dictionary<string, string>();
         }
 
-        public WorkState(IWorker worker, string message = "")
+        public WorkState(IWorker worker):this()
         {
             Args.ThrowIfNull(worker, "worker");
 
@@ -69,8 +70,9 @@ namespace Bam.Net.Automation
             string message = ex.GetInnerException().Message;
             this.Message = !string.IsNullOrEmpty(ex.StackTrace) ? string.Format("{0}:\r\n\r\n{1}", message, ex.StackTrace) : message;
         }
-
+        
         public WorkState PreviousWorkState { get; set; }
+        public Dictionary<string, string> JobProperties { get; set; }
         public int StepNumber { get; set; }
         public string JobName { get; set; }
         public string WorkerName { get; set; }
@@ -78,6 +80,8 @@ namespace Bam.Net.Automation
 
         public string WorkTypeName { get; set; }
 
+        public bool ContinueOnFailure { get; set; }
+        
         Status _success;
         public Status Status
         {
