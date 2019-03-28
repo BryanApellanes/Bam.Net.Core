@@ -246,7 +246,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\FullBuildWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ConsoleOutputWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\CsFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DaemonDeployer.cs" />
@@ -254,6 +254,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\EmailWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\FileCopyWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\FileSystemFileCopyWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\GitCloneWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IAppSettingsWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IDeployable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IfElseWorker.cs" />

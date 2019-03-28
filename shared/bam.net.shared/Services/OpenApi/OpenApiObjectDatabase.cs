@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Bam.Net.Services.OpenApi
 {
     public class OpenApiObjectDatabase: SQLiteDatabase
     {
-        public OpenApiObjectDatabase(): base(".\\OpenApi", "OpenApi")
+        public OpenApiObjectDatabase(): base(Path.Combine(BamPaths.DataPath, "OpenApi"), "OpenApi")
         {
         }
     }

@@ -21,8 +21,8 @@ namespace Bam.Net.Application
         [ConsoleAction("build", "Build the BamFramework")]
         public void Build()
         {
-            BuildWorker buildWorker = new BuildWorker();
-            if (!buildWorker.TryGetBuildRunner(out FileInfo buildRunner))
+            FullBuildWorker fullBuildWorker = new FullBuildWorker();
+            if (!fullBuildWorker.TryGetBuildRunner(out FileInfo buildRunner))
             {
                 OutLineFormat("Failed to get build runner");
                 Exit(1);
@@ -30,7 +30,7 @@ namespace Bam.Net.Application
 
             string buildSettingsPath = GetArgument("build", "Please enter the path to the build settings file to use").Or("./bambot.yaml");
             BuildSettings buildSettings = buildSettingsPath.FromYamlFile<BuildSettings>();
-            buildWorker.Build(buildSettings, output => OutLine(output, ConsoleColor.DarkCyan),
+            fullBuildWorker.Build(buildSettings, output => OutLine(output, ConsoleColor.DarkCyan),
                 error => OutLine(error, ConsoleColor.DarkMagenta));
         }
 

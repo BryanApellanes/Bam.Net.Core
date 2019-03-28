@@ -6,9 +6,9 @@ using Bam.Net.Logging;
 
 namespace Bam.Net.Automation
 {
-    public class BuildWorker: Worker
+    public class FullBuildWorker: Worker
     {
-        public BuildWorker()
+        public FullBuildWorker()
         {
             RequiredProperties = new string[] { "BuildOutput" };
             BamSettings = BamSettings.Load();
