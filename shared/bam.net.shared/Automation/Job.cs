@@ -237,14 +237,16 @@ namespace Bam.Net.Automation
 
             while (WorkQueue.Count > 0)
             {
-                IWorker work = WorkQueue.Dequeue();
+                IWorker worker = WorkQueue.Dequeue();
                 
-                CurrentWorkState = new WorkState(work) { PreviousWorkState = CurrentWorkState, JobProperties = CurrentWorkState.JobProperties };
-
+                CurrentWorkState = new WorkState(worker) { PreviousWorkState = CurrentWorkState, JobData = CurrentWorkState.JobData };
+                worker.WorkState(CurrentWorkState);
+                worker.SetPropertiesFromWorkState(CurrentWorkState);
+                
                 OnWorkerStarting();
-
-                WorkState worksWorkState = work.Do(this);
-                worksWorkState.JobProperties = CurrentWorkState.JobProperties;
+                
+                WorkState worksWorkState = worker.Do(this);
+                worksWorkState.JobData = CurrentWorkState.JobData;
                 CurrentWorkState = worksWorkState;
                 
                 OnWorkerFinished();
@@ -257,6 +259,6 @@ namespace Bam.Net.Automation
             }
 
             OnJobFinished();
-        }
+        }       
     }
 }

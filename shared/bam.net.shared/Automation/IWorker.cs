@@ -11,7 +11,8 @@ namespace Bam.Net.Automation
         int StepNumber { get; set; }
         bool Busy { get; set; }
         Status Status { get; set; }
-        WorkState<T> State<T>(WorkState<T> state);
+        WorkState SetPropertiesFromWorkState(WorkState state);
+        WorkState WorkState(WorkState state);
         WorkState Do(Job job);        
     }
 }

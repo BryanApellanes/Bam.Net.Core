@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Automation
 {
@@ -42,11 +43,11 @@ namespace Bam.Net.Automation
     /// by each worker so one should not rely on the beginning WorkState to be the same
     /// at the end.
     /// </summary>
-    public class WorkState
+    public class WorkState : Loggable
     {
         internal WorkState()
         {
-            JobProperties = new Dictionary<string, string>();
+            JobData = new Dictionary<string, object>();
         }
 
         public WorkState(IWorker worker):this()
@@ -72,7 +73,7 @@ namespace Bam.Net.Automation
         }
         
         public WorkState PreviousWorkState { get; set; }
-        public Dictionary<string, string> JobProperties { get; set; }
+        public Dictionary<string, object> JobData { get; set; }
         public int StepNumber { get; set; }
         public string JobName { get; set; }
         public string WorkerName { get; set; }
@@ -81,6 +82,39 @@ namespace Bam.Net.Automation
         public string WorkTypeName { get; set; }
 
         public bool ContinueOnFailure { get; set; }
+
+        [Verbosity(VerbosityLevel.Information)]
+        public event EventHandler Notify;
+
+        internal void Starting()
+        {
+            Status = Status.Starting;
+            FireEvent(Notify, this, new WorkStateEventArgs(this));
+        }
+
+        internal void Finished()
+        {
+            Status = Status.Finished;
+            FireEvent(Notify, this, new WorkStateEventArgs(this));
+        }
+
+        internal void Failed()
+        {
+            Status = Status.Failed;
+            FireEvent(Notify, this, new WorkStateEventArgs(this));
+        }
+
+        internal void Succeeded()
+        {
+            Status = Status.Succeeded;
+            FireEvent(Notify, this, new WorkStateEventArgs(this));
+        }
+
+        internal void Suspended()
+        {
+            Status = Status.Suspended;
+            FireEvent(Notify, this, new WorkStateEventArgs(this));
+        }
         
         Status _success;
         public Status Status
@@ -95,6 +129,22 @@ namespace Bam.Net.Automation
             }
         }
 
+        public object this[string jobProperty]
+        {
+            get => JobData[jobProperty];
+            set
+            {
+                if (JobData.ContainsKey(jobProperty))
+                {
+                    JobData[jobProperty] = value;
+                }
+                else
+                {
+                    JobData.Add(jobProperty, value);
+                }
+            }
+        }
+        
         public virtual bool HasValue { get { return false; } }
     }
 }

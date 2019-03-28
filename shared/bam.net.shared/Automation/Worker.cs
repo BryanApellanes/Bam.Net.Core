@@ -53,12 +53,18 @@ namespace Bam.Net.Automation
             set;
         }
 
-        object _state;
-        public WorkState State(WorkState state = null)
+        public WorkState WorkState(string jobProperty, object jobValue)
+        {
+            _state[jobProperty] = jobValue;
+            return _state;
+        }
+        
+        WorkState _state;
+        public WorkState WorkState(WorkState state = null)
         {
             if (state != null)
             {
-                _state = state;
+                CopyState(state);
             }
 
             return (WorkState)_state;
@@ -70,11 +76,11 @@ namespace Bam.Net.Automation
         /// <typeparam name="T"></typeparam>
         /// <param name="state"></param>
         /// <returns></returns>
-        public WorkState<T> State<T>(WorkState<T> state = null)
+        public WorkState<T> WorkState<T>(WorkState<T> state = null)
         {
             if (state != null)
             {
-                _state = state;
+                CopyState(state);
             }
 
             return (WorkState<T>)_state;
@@ -119,14 +125,16 @@ namespace Bam.Net.Automation
         public void SaveConf(string path)
         {
             Type workerType = this.GetType();
-            PropertyInfo[] properties = workerType.GetProperties().Where(pi => pi.PropertyType == typeof(string) && !pi.Name.Equals("Name")).ToArray();
+            PropertyInfo[] properties = workerType.GetProperties()
+                .Where(pi => (pi.PropertyType == typeof(string) || pi.PropertyType.IsArray || pi.PropertyType == typeof(object)) && !pi.Name.Equals("Name"))
+                .ToArray();
             WorkerConf conf = new WorkerConf(this)
             {
                 StepNumber = StepNumber
             };
             properties.Each(prop =>
             {
-                conf.AddProperty(prop.Name, (string)prop.GetValue(this));
+                conf.AddProperty(prop.Name, prop.GetValue(this)?.ToJson());
             });
             conf.Save(path);
         }
@@ -140,8 +148,27 @@ namespace Bam.Net.Automation
         {
             return Do(new InitialWorkState(this));
         }
-        
-        
+
+        public WorkState SetPropertiesFromWorkState(WorkState workState = null)
+        {
+            workState = workState ?? _state;
+            Type type = GetType();
+            foreach (PropertyInfo property in type.GetProperties())
+            {
+                string key = $"{Name}.{property.Name}";
+                if (workState.JobData.ContainsKey(key))
+                {
+                    object data = workState.JobData[key];
+                    if (property.PropertyType.IsInstanceOfType(data))
+                    {
+                        property.SetValue(this, workState.JobData[key]);
+                    }
+                }
+            }
+
+            return workState;
+        }
+
         protected abstract WorkState Do(WorkState currentWorkState);
 
         public abstract string[] RequiredProperties { get;  }
@@ -156,6 +183,26 @@ namespace Bam.Net.Automation
         {
             this.CopyProperties(configuration);
             this.CheckRequiredProperties();
+        }
+        
+        private void CopyState(WorkState state)
+        {
+            if (state == null)
+            {
+                return;
+            }
+
+            if (_state == null)
+            {
+                _state = state;
+                return;
+            }
+
+            Dictionary<string, object> properties = _state?.JobData ?? new Dictionary<string, object>();
+            state.JobData.Keys.Each(k => properties.Set(k, state.JobData[k]));
+            _state.CopyProperties(state);
+            _state.CopyEventHandlers(state);
+            _state.JobData = properties;
         }
     }
 }

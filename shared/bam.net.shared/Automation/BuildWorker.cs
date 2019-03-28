@@ -194,12 +194,15 @@ namespace Bam.Net.Automation
                     };
                 }
             
-                return new BuildResult()
+                BuildResult result = new BuildResult()
                 {
                     Success = true,
                     Message = "Build and test completed successfully"
                 };
 
+                WorkState($"{Name}_Output", settings.BuildOutput);
+                WorkState($"{Name}_BuildResult", result);
+                return result;
             }
             finally
             {

@@ -247,6 +247,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\ConsoleOutputWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\CsFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DaemonDeployer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\DirectoryCopyWorker.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\IWorkerTypeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Job.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\JobConf.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\JobExecutionContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\JobManagerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\KeyValuePair.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\MSBuild\FileCopyBehavior.cs" />
@@ -277,6 +279,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsKill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningWorkerTypeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\SetJobDataWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Sftp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SourceControl\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SourceControl\Git.cs" />
@@ -2938,6 +2941,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Application\repo_config.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\Automation.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\ln.node.js" />
+    <Content Include="$(MSBuildThisFileDirectory)Automation\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\AES.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA1.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />
