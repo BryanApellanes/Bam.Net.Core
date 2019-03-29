@@ -239,16 +239,19 @@ namespace Bam.Net.Automation
             {
                 IWorker worker = WorkQueue.Dequeue();
                 
-                CurrentWorkState = new WorkState(worker) { PreviousWorkState = CurrentWorkState, JobData = CurrentWorkState.JobData };
+                CurrentWorkState = new WorkState(worker) { PreviousWorkState = CurrentWorkState, JobData = CurrentWorkState.JobData, StepNumber = worker.StepNumber};
                 worker.WorkState(CurrentWorkState);
                 worker.SetPropertiesFromWorkState(CurrentWorkState);
                 
                 OnWorkerStarting();
-                
+
+                worker.Busy = true;
                 WorkState worksWorkState = worker.Do(this);
+                worksWorkState[$"{worker.Name}_Result"] = worksWorkState;
                 worksWorkState.JobData = CurrentWorkState.JobData;
                 CurrentWorkState = worksWorkState;
                 
+                worker.Busy = false;
                 OnWorkerFinished();
 
                 if (CurrentWorkState.Status == Status.Failed)

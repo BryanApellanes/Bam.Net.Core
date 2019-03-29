@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
+using System.Xml.Serialization;
 using Bam.Net.Yaml;
 using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Automation
 {
@@ -26,10 +28,13 @@ namespace Bam.Net.Automation
             {
                 return path.SafeReadFile().FromYaml<WorkerConf>();
             };
+            _deserializers[".yml"] = _deserializers[".yaml"];
+            
             _deserializers[".json"] = (path) =>
             {
                 return path.SafeReadFile().FromJson<WorkerConf>();
             };
+            
             _deserializers[".xml"] = (path) =>
             {
                 return path.SafeReadFile().FromXml<WorkerConf>();
@@ -39,10 +44,13 @@ namespace Bam.Net.Automation
             {
                 conf.ToYamlFile(path);
             };
+            _serializers[".yml"] = _serializers[".yaml"];
+            
             _serializers[".json"] = (path, conf) =>
             {
                 conf.ToJsonFile(path);
             };
+            
             _serializers[".xml"] = (path, conf) =>
             {
                 conf.ToXmlFile(path);
@@ -96,7 +104,7 @@ namespace Bam.Net.Automation
         {
             if (WorkerType == null)
             {
-                throw new InvalidOperationException("Specified WorkerTypeName ({0}) was not found"._Format(WorkerTypeName));
+                throw new InvalidOperationException($"Specified WorkerTypeName ({WorkerTypeName}) was not found");
             }
 
             Worker result = WorkerType.Construct<Worker>();
@@ -110,6 +118,8 @@ namespace Bam.Net.Automation
             return result;
         }
 
+        [XmlIgnore]
+        [YamlIgnore]
         [JsonIgnore]
         public string LoadedFrom { get; set; }
         
@@ -118,7 +128,7 @@ namespace Bam.Net.Automation
             string ext = Path.GetExtension(filePath).ToLowerInvariant();
             if (!_deserializers.ContainsKey(ext))
             {
-                ext = ".json";
+                ext = ".yaml";
             }
 
             WorkerConf workerConf = _deserializers[ext](filePath);
@@ -168,7 +178,7 @@ namespace Bam.Net.Automation
 
         public virtual void Save()
         {
-            Save("./{0}_WorkerConf.json"._Format(this.Name));
+            Save($"./{Name}_WorkerConf.json");
         }
 
         public void Save(string filePath)
@@ -176,7 +186,7 @@ namespace Bam.Net.Automation
             string ext = Path.GetExtension(filePath).ToLowerInvariant();
             if (!_serializers.ContainsKey(ext))
             {
-                ext = ".json";
+                ext = ".yaml";
             }
 
             _serializers[ext](filePath, this);

@@ -28,10 +28,7 @@ namespace Bam.Net.Automation
         public string CommandName { get; set; }
         public string Arguments { get; set; }
 
-        public override string[] RequiredProperties
-        {
-            get { return new string[] { "Name", "CommandLine" }; }
-        }
+        public override string[] RequiredProperties => new string[] { "Name", "CommandLine" };
 
         protected override WorkState Do(WorkState currentWorkState)
         {
@@ -40,7 +37,7 @@ namespace Bam.Net.Automation
             ProcessOutput output = CommandName.Start(Arguments);
             WorkState<ProcessOutput> result = new WorkState<ProcessOutput>(this, output)
             {
-                Message = string.Format("'{0} {1}' exited with code {2}", CommandName, Arguments, output.ExitCode),
+                Message = $"'{CommandName} {Arguments}' exited with code {output.ExitCode}",
                 PreviousWorkState = currentWorkState
             };
             return result;

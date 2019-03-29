@@ -1,16 +1,28 @@
+using System;
+using System.IO;
+
 namespace Bam.Net.Automation
 {
-    public class GitCloneWorker : ProcessWorker
+    public class GitCloneWorker : GitWorker
     {
-        public GitCloneWorker()
+        public GitCloneWorker() : base()
         {
-            BamSettings = BamSettings.Load();
-            BuildSettings = Config.Load<BuildSettings>();
-            CommandName = BamSettings.GitPath;
-            
         }
         
-        public BamSettings BamSettings { get; set; }
-        public BuildSettings BuildSettings { get; set; }
+        protected override WorkState Do(WorkState currentWorkState)
+        {
+            string repoDirectory = GetRepoDirectory(BuildSettings.RepoName);
+            if (!Directory.Exists(repoDirectory) || !Directory.Exists(Path.Combine(repoDirectory, ".git")))
+            {
+                Arguments = $"clone {BuildSettings.RepoPath} {repoDirectory}";
+                base.Do(currentWorkState);
+            }
+            else
+            {
+                Info("Repository already exists: {0}", repoDirectory);
+            }
+
+            return currentWorkState;
+        }
     }
 }

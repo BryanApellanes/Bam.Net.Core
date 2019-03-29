@@ -204,7 +204,7 @@ namespace Bam.Net.Automation
             string tmpPath = path;
             _workerExtensions.Each(ext =>
             {
-                tmpPath = Path.Combine(_jobDirectory.FullName, "{0}{1}"._Format(workerName, ext));
+                tmpPath = Path.Combine(_jobDirectory.FullName, $"{workerName}{ext}");
                 if (File.Exists(tmpPath))
                 {
                     result = true;
@@ -222,7 +222,7 @@ namespace Bam.Net.Automation
 
         protected internal string GetWorkerPath(string workerName)
         {
-            return Path.Combine(_jobDirectory.FullName, "{0}.json"._Format(workerName));
+            return Path.Combine(_jobDirectory.FullName, $"{workerName}.yaml");
         }
 
         protected string ValidateWorkerName(string workerName, bool overwrite)
@@ -230,7 +230,7 @@ namespace Bam.Net.Automation
             string path = GetWorkerPath(workerName);
             if (File.Exists(path) && !overwrite)
             {
-                throw new InvalidOperationException("Worker with the specified name ({0}) already exists in this job configuration"._Format(workerName));
+                throw new InvalidOperationException($"Worker with the specified name ({workerName}) already exists in this job configuration");
             }
             else if (File.Exists(path) && overwrite)
             {
@@ -288,7 +288,7 @@ namespace Bam.Net.Automation
         /// <returns></returns>
         protected internal string GetFilePath()
         {
-            string path = Path.Combine(_jobDirectory.FullName, "{0}.job"._Format(Name));
+            string path = Path.Combine(_jobDirectory.FullName, $"{Name}.job");
             return path;
         }
         

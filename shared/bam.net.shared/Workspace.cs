@@ -85,12 +85,12 @@ namespace Bam.Net
             get { return _currentLock.DoubleCheckLock(ref _current, () => ForApplication()); }
         }
 
-        public static Workspace ForClass<T>(IApplicationNameProvider applicationNameProvider = null)
+        public static Workspace ForType<T>(IApplicationNameProvider applicationNameProvider = null)
         {
-            return ForClass(typeof(T), applicationNameProvider);
+            return ForType(typeof(T), applicationNameProvider);
         }
         
-        public static Workspace ForClass(Type type, IApplicationNameProvider applicationNameProvider = null)
+        public static Workspace ForType(Type type, IApplicationNameProvider applicationNameProvider = null)
         {
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             Workspace applicationWorkspace = ForApplication(applicationNameProvider);

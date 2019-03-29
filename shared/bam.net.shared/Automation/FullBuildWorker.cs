@@ -6,6 +6,7 @@ using Bam.Net.Logging;
 
 namespace Bam.Net.Automation
 {
+    [Obsolete] // TODO: Delete this
     public class FullBuildWorker: Worker
     {
         public FullBuildWorker()
@@ -25,7 +26,7 @@ namespace Bam.Net.Automation
             {
                 if (_workspace == null)
                 {
-                    _workspace = Workspace.ForClass(this.GetType());
+                    _workspace = Workspace.ForType(this.GetType());
                 }
 
                 return _workspace;
@@ -200,7 +201,7 @@ namespace Bam.Net.Automation
                     Message = "Build and test completed successfully"
                 };
 
-                WorkState($"{Name}_Output", settings.BuildOutput);
+                WorkState($"{Name}_BuildOutput", settings.BuildOutput);
                 WorkState($"{Name}_BuildResult", result);
                 return result;
             }

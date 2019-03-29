@@ -71,7 +71,7 @@ namespace Bam.Net.Automation
             string message = ex.GetInnerException().Message;
             this.Message = !string.IsNullOrEmpty(ex.StackTrace) ? string.Format("{0}:\r\n\r\n{1}", message, ex.StackTrace) : message;
         }
-        
+
         public WorkState PreviousWorkState { get; set; }
         public Dictionary<string, object> JobData { get; set; }
         public int StepNumber { get; set; }
