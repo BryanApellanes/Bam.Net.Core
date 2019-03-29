@@ -11,7 +11,7 @@ using Bam.Net.Logging;
 using Bam.Net.Testing;
 using Bam.Shell;
 
-namespace Bam.Shell
+namespace Bam.Net.Application
 {
     [Serializable]
     public class ExternalProvider: CommandLineTestInterface

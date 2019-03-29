@@ -55,6 +55,17 @@ namespace Bam.Net.CoreServices
             return AssemblyManagementRepository.AssemblyDescriptorsWhere(ad => ad.AssemblyFullName == assemblyFulName).ToList();
         }
 
+        public string ResolveBase64Assembly(AssemblyRequest request)
+        {
+            Assembly assembly = ResolveAssembly(request.AssemblyFullName);
+            if (assembly != null)
+            {
+                return File.ReadAllBytes(assembly.GetFileInfo().FullName).ToBase64();
+            }
+
+            return string.Empty;
+        }
+        
         [Local]
         public Assembly ResolveAssembly(string assemblyName, string assemblyDirectory = null)
         {

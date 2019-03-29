@@ -76,7 +76,7 @@ namespace Bam.Shell
                         : (
                             GetTypeNameArgument(ProviderType.ToLowerInvariant(), $"Please enter the name of the {ProviderType.ToLowerInvariant()}") 
                             ??
-                            GetArgument($"Please enter the name of the {ProviderType.ToLowerInvariant()}")
+                            GetArgument(ProviderType.ToLowerInvariant(),$"Please enter the name of the {ProviderType.ToLowerInvariant()}")
                           )
                   );
             

@@ -216,6 +216,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\RenderableModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolutionStrategy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolve.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\AssemblyReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\AutomationServiceRegistryContainer.cs" />
@@ -444,6 +445,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IHasRequiredProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InvalidIHasRequiredPropertiesImplementationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\RequiredPropertiesNotSetException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\AssemblyRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResultEventArgs.cs" />
@@ -2019,7 +2021,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreClientInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreLoggerClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreProxyableService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreSystemClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\IHasCoreClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\ViewServicesRegistryContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\WebHookClient.cs" />

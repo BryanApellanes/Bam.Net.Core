@@ -6,7 +6,7 @@ using Bam.Net.Application;
 using Bam.Net.CommandLine;
 using Bam.Net.Presentation.Handlebars;
 
-namespace Bam.Shell.Pages
+namespace Bam.Shell.Apps
 {
     public class PageProvider : ShellProvider
     {

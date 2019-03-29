@@ -1,6 +1,6 @@
 using Bam.Net.Testing;
 
-namespace bam.Shell.CodeGen
+namespace Bam.Shell.CodeGen
 {
     public class CodeGenProvider : CommandLineTestInterface
     {

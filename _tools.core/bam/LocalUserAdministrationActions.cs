@@ -46,7 +46,7 @@ namespace Bam.Net.Application
         /// <summary>
         /// Create a user in the local user database.
         /// </summary>
-        [ConsoleAction("localListUsers", "LOCAL: create a user account")]
+        [ConsoleAction("localCreateUser", "LOCAL: create a user account")]
         public void CreateLocalUser()
         {
             Database userDatabase = ServiceTools.GetUserDatabase();

@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using Bam.Net.CoreServices;
 
 namespace Bam.Net
 {
     public static class Resolver
     {
-        public static void Register()
+        static Resolver()
         {
-            AssemblyResolver = AssemblyResolver ?? ((rea) =>
-            {
-                WriteLog($"Couldn't resolve assembly: {rea.Name}\r\nRequesting assembly: {rea.RequestingAssembly?.FullName}\r\nRequesting assembly path: {rea.RequestingAssembly?.GetFilePath()}");
-                return null;
-            });
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 WriteLog($"Resolving assembly {args.Name}");
@@ -25,13 +21,73 @@ namespace Bam.Net
             };
         }
         
-        public static byte[] ResolveAssembly(ResolveEventArgs rea)
+        public static void Register()
+        {
+            AssemblyResolver = AssemblyResolver ?? ((rea) =>
+            {
+                WriteLog($"Couldn't resolve assembly: {rea.Name}\r\nRequesting assembly: {rea.RequestingAssembly?.FullName}\r\nRequesting assembly path: {rea.RequestingAssembly?.GetFilePath()}");
+                return null;
+            });
+        }
+
+        public static void Register(AssemblyResolutionStrategy strategy)
+        {
+            switch (strategy)
+            {
+                case AssemblyResolutionStrategy.Local:
+                    Register();
+                    break;
+                case AssemblyResolutionStrategy.Heart:
+                    Register();
+                    // TODO: use CoreClient to call assemblyservice 
+                    break;
+            }
+            // TODO: finish this
+            // Resolver.AssemblyResolver
+            //
+            // resolve assembly passes the assembly.fullname
+            // use that to ask the AssemblyService.AssemblyManagementRepository for the 
+            // AssemblyDescriptor by fullname
+            // then AssemblyService.ResolveAssembly by assemblyDescriptor.Name
+            // read the assembly bytes and send them in response Resolver.AssemblyResolver
+        }
+
+        private static void RegisterHeart()
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void RegisterPartners()
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void RegisterRecursive()
+        {
+            throw new NotImplementedException();
+        }
+        
+        private static byte[] ResolveAssembly(ResolveEventArgs rea)
         {
             return AssemblyResolver(rea);
         }
         
-        public static Func<ResolveEventArgs, byte[]> AssemblyResolver { get; set; }
+        private static Func<ResolveEventArgs, byte[]> AssemblyResolver { get; set; }
 
+        private static byte[] ResolveAssembly(string assemblyName, params IAssemblyResolver[] resolvers)
+        {
+            foreach (IAssemblyResolver resolver in resolvers)
+            {
+                Assembly assembly = resolver.ResolveAssembly(assemblyName);
+                if (assembly != null)
+                {
+                    return File.ReadAllBytes(assembly.GetFileInfo().FullName);
+                }
+            }
+
+            return null;
+        }
+        
         private static void WriteTrace(string message, Exception ex, bool writeLog = true)
         {
             Trace.WriteLine(ex.Message);
