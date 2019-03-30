@@ -136,8 +136,13 @@ namespace Bam.Net.Automation
         public static JobConf Load(string path)
         {
             JobConf conf = path.FromJsonFile<JobConf>();
-            conf.CurrentIndex = conf.WorkerFiles.Length;
-            return conf;
+            if (conf != null)
+            {
+                conf.CurrentIndex = conf.WorkerFiles.Length;
+                return conf;
+            }
+
+            return null;
         }
 
         public Job CreateJob()
@@ -164,6 +169,7 @@ namespace Bam.Net.Automation
                 ++CurrentIndex;
 
                 worker.SaveConf(path);
+                Save();
             }
         }
 

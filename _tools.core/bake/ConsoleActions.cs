@@ -77,11 +77,20 @@ namespace Bam.Net.Application
                 recipe.OutputDirectory = GetArgument("output");
             }
             BamSettings settings = BamSettings.Load();
+            string outputDirectory = recipe.OutputDirectory;
+            if (outputDirectory.StartsWith("C:"))
+            {
+                outputDirectory = outputDirectory.TruncateFront(2);
+            }
+
+            outputDirectory.Replace("\\", "/");
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
-                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo($"publish {projectFile} -c {recipe.BuildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {recipe.OutputDirectory}");
+                string dotNetArgs =
+                    $"publish {projectFile} -c {recipe.BuildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectory}";
+                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
-                OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, recipe.OutputDirectory);
+                OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, outputDirectory);
             }
         }
 

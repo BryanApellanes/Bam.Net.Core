@@ -18,6 +18,8 @@ namespace Bam.Net.Automation
             Repos = Workspace.CreateDirectory("repos");
         }
         
+        public string OutputDirectory { get; set; }
+        
         public Func<string, string> GetRepoDirectory { get; set; }
         
         Workspace _workspace;
@@ -52,7 +54,7 @@ namespace Bam.Net.Automation
         
         public DirectoryInfo Repos { get; set; }
         
-        public FileInfo GetBuildRunner()
+        public virtual FileInfo GetBuildRunner()
         {
             Args.ThrowIf(string.IsNullOrEmpty(BuildSettings.BuildRunner), "BuildSettings.BuildRunner not specified");
             
@@ -75,7 +77,7 @@ namespace Bam.Net.Automation
             try
             {
                 ProcessOutput buildOutput = GetBuildRunner().FullName
-                    .Start($"{BuildSettings.BuildArguments} /output:{BuildSettings.BuildOutput}", o => Info(o),
+                    .Start($"{BuildSettings.BuildArguments} /output:{OutputDirectory}", o => Info(o),
                         e => Warn(e));
 
                 currentWorkState.Status = buildOutput.ExitCode == 0 ? Status.Succeeded : Status.Failed;
@@ -88,6 +90,9 @@ namespace Bam.Net.Automation
             return currentWorkState;
         }
 
-        public override string[] RequiredProperties { get; }
+        public override string[] RequiredProperties
+        {
+            get { return new string[] {"OutputDirectory"}; }
+        }
     }
 }

@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection;
 using Bam.Net;
 using Bam.Net.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Xml.Serialization;
+using YamlDotNet.Serialization;
+using EventInfo = System.Reflection.EventInfo;
 
 namespace Bam.Net.Logging
 {
@@ -40,6 +42,8 @@ namespace Bam.Net.Logging
         /// An array of all the ILoggers that have
         /// been subscribed to this Loggable
         /// </summary>
+        [XmlIgnore]
+        [YamlIgnore]
         [JsonIgnore]
         public virtual ILogger[] Subscribers
         {

@@ -6,7 +6,6 @@ using Bam.Net.Logging;
 
 namespace Bam.Net.Automation
 {
-    [Obsolete] // TODO: Delete this
     public class FullBuildWorker: Worker
     {
         public FullBuildWorker()
@@ -101,7 +100,7 @@ namespace Bam.Net.Automation
         public BuildResult Clone(BuildSettings settings = null, Action<string> output = null, Action<string> error= null)
         {
             settings = (settings ?? BuildSettings) ?? new BuildSettings();
-            Info("Clone:: Using BambotBuildConfig:\r\n\r\n{0}", settings.ToYaml());
+            Info("Clone:: Using BuildConfig:\r\n\r\n{0}", settings.ToYaml());
             ProcessOutput processOutput =
                 BamSettings.GitPath.Start($"clone {settings.RepoPath} {GetRepoDirectory(settings.RepoName).FullName}", output,
                     error);
@@ -132,7 +131,7 @@ namespace Bam.Net.Automation
             try
             {
                 settings = (settings ?? BuildSettings) ?? new BuildSettings();
-                Info("GetLatest:: Using BambotBuildConfig:\r\n\r\n{0}", settings.ToYaml());
+                Info("GetLatest:: Using BuildConfig:\r\n\r\n{0}", settings.ToYaml());
                 DirectoryInfo repo = GetRepoDirectory(settings.RepoName);
                 if (!repo.Exists || !Directory.Exists(Path.Combine(repo.FullName, ".git")))
                 {

@@ -89,6 +89,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
+                PrintMessage();
                 JobProviderArguments providerArguments = GetProviderArguments(true, true) as JobProviderArguments;
                 string workerName = providerArguments.WorkerName;
                 string jobName = providerArguments.JobName;
@@ -197,6 +198,7 @@ namespace Bam.Shell.Jobs
                 if (workerConf == null)
                 {
                     OutLineFormat("specified worker was not found: {0}", providerArguments.WorkerName);
+                    Exit(1);
                 }
 
                 ProcessOutput processOutput = ShellSettings.Current.Editor.Start(workerConf.LoadedFrom);
@@ -219,6 +221,11 @@ namespace Bam.Shell.Jobs
             }
 
             return jobConf;
+        }
+        
+        private void PrintMessage()
+        {
+            OutLineFormat("Jobs directory: {0}", ConsoleColor.Yellow, JobManagerService.JobsDirectory);
         }
     }
 }

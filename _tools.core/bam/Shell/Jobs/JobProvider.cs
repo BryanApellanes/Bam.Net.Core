@@ -44,6 +44,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
+                PrintMessage();
                 StringBuilder jobs = new StringBuilder();
                 foreach (string jobName in JobManagerService.ListJobNames())
                 {
@@ -64,6 +65,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
+                PrintMessage();
                 JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
                 string jobName = arguments.JobName;
                 JobConf jobConf = JobManagerService.GetJob(jobName);
@@ -88,6 +90,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
+                PrintMessage();
                 JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
                 string jobName = arguments.JobName;
 
@@ -105,7 +108,7 @@ namespace Bam.Shell.Jobs
 
         public override void Pack(Action<string> output = null, Action<string> error = null)
         {
-            OutLineFormat("Set is not implemented for the JobProvider", ConsoleColor.Yellow);
+            OutLineFormat("Pack is not implemented for the JobProvider", ConsoleColor.Yellow);
         }
 
         public override void Remove(Action<string> output = null, Action<string> error = null)
@@ -129,15 +132,15 @@ namespace Bam.Shell.Jobs
         {
             try
             {
+                PrintMessage();
                 JobProviderArguments providerArguments = GetProviderArguments() as JobProviderArguments;
                 if (JobManagerService.JobExists(providerArguments.JobName))
                 {
                     bool? jobFinished = false;
                     JobManagerService.JobFinished += (sender, args) =>
                     {
-                        jobFinished =
-                            (args.Cast<WorkStateEventArgs>())?.WorkState?.JobName?.Equals(providerArguments.JobName);
-                        if (jobFinished.Value)
+                        jobFinished = (args.Cast<WorkStateEventArgs>())?.WorkState?.JobName?.Equals(providerArguments.JobName);
+                        if (jobFinished != null && jobFinished.Value == true)
                         {
                             OutLineFormat("Job {0} finished", providerArguments.JobName);
                             Unblock();
@@ -158,6 +161,11 @@ namespace Bam.Shell.Jobs
                 Exit(1);
             }
             Exit(0);
+        }
+
+        private void PrintMessage()
+        {
+            OutLineFormat("Jobs directory: {0}", ConsoleColor.Yellow, JobManagerService.JobsDirectory);
         }
     }
 }

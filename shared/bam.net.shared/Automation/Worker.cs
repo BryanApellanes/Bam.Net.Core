@@ -134,7 +134,7 @@ namespace Bam.Net.Automation
             };
             properties.Each(prop =>
             {
-                conf.AddProperty(prop.Name, prop.GetValue(this)?.ToJson());
+                conf.AddProperty(prop.Name, prop.GetValue(this)?.ToString());
             });
             conf.Save(path);
         }

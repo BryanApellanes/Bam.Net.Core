@@ -2,6 +2,7 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
+using Bam.Net.Logging;
 using Bam.Shell;
 
 namespace Bam.Net
@@ -11,6 +12,8 @@ namespace Bam.Net
     {
         static void Main(string[] args)
         {
+            Log.Default = Workspace.Current.CreateLogger<TextFileLogger>();
+           
             AddArguments();
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             
