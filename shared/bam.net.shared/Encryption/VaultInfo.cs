@@ -30,7 +30,7 @@ namespace Bam.Net.Encryption
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VaultInfo"/> class using the default
-        /// application name form the config file or "UNKOWN".
+        /// application name form the config file or "UNKNOWN".
         /// </summary>
         public VaultInfo() : this(DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName())
         {

@@ -20,9 +20,9 @@ namespace Bam.Net.CoreServices
     [Proxy("assemblySvc")]
     public class AssemblyService : ApplicationProxyableService, IAssemblyService
     {
-        public AssemblyService(IDataDirectoryProvider dataSettings, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
+        public AssemblyService(IDataDirectoryProvider dataDirectoryProvider, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
         {
-            DataSettings = dataSettings;
+            DataDirectoryProvider = dataDirectoryProvider;
             FileService = fileService;
             AssemblyManagementRepository = repo;
             ApplicationNameProvider = appNameProvider;
@@ -31,7 +31,7 @@ namespace Bam.Net.CoreServices
 
         public override object Clone()
         {
-            AssemblyService result = new AssemblyService(DataSettings, FileService, AssemblyManagementRepository, ApplicationNameProvider);
+            AssemblyService result = new AssemblyService(DataDirectoryProvider, FileService, AssemblyManagementRepository, ApplicationNameProvider);
             result.CopyProperties(this);
             result.CopyEventHandlers(this);
             return result;
@@ -39,12 +39,12 @@ namespace Bam.Net.CoreServices
         public event EventHandler CurrentRuntimePersisted;
         public event EventHandler ExceptionPersistingCurrentRuntime;
         public event EventHandler RuntimeRestored;
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataDirectoryProvider DataDirectoryProvider { get; set; }
         public string AssemblyDirectory
         {
             get
             {
-                return DataSettings.GetSysAssemblyDirectory().FullName;
+                return DataDirectoryProvider.GetSysAssemblyDirectory().FullName;
             }
         }
         public IFileService FileService { get; set; }
@@ -55,6 +55,17 @@ namespace Bam.Net.CoreServices
             return AssemblyManagementRepository.AssemblyDescriptorsWhere(ad => ad.AssemblyFullName == assemblyFulName).ToList();
         }
 
+        public string ResolveBase64Assembly(AssemblyRequest request)
+        {
+            Assembly assembly = ResolveAssembly(request.AssemblyFullName);
+            if (assembly != null)
+            {
+                return File.ReadAllBytes(assembly.GetFileInfo().FullName).ToBase64();
+            }
+
+            return string.Empty;
+        }
+        
         [Local]
         public Assembly ResolveAssembly(string assemblyName, string assemblyDirectory = null)
         {

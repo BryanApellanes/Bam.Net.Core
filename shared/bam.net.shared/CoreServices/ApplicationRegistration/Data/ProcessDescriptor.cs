@@ -92,6 +92,20 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
             return result;
         }
 
+        static string _localIdentifier;
+        public static string LocalIdentifier
+        {
+            get
+            {
+                if (_localIdentifier == null)
+                {
+                    _localIdentifier = Current.Hash;
+                }
+
+                return _localIdentifier;
+            }
+        }
+        
         public override string ToString()
         {
             return $"{MachineName}~{ProcessId}~{FilePath}~::{CommandLine}";

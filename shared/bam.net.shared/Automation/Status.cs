@@ -11,9 +11,11 @@ namespace Bam.Net.Automation
 {
     public enum Status
     {
-        Invalid,
+        Unknown,
+        Starting,
         Succeeded,
         Failed,
-        Suspended
+        Suspended,
+        Finished,
     }
 }

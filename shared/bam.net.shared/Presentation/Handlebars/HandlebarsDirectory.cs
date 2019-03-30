@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Presentation.Handlebars
 {
@@ -15,18 +16,31 @@ namespace Bam.Net.Presentation.Handlebars
             return dir.Directory;
         }
 
-        public HandlebarsDirectory(DirectoryInfo directory)
+        public HandlebarsDirectory(DirectoryInfo directory, ILogger logger = null)
         {
+            Args.ThrowIfNull(directory, "directory");
             FileExtension = "hbs";
             Directory = directory;
+            Logger = logger ?? Log.Default;
+            if (!directory.Exists)
+            {
+                Logger.Warning("Handlebars directory does not exist: {0}", _directory.FullName);
+            }
         }
 
-        public HandlebarsDirectory(string directoryPath): this(new DirectoryInfo(directoryPath))
+        public HandlebarsDirectory(string directoryPath, ILogger logger = null): this(new DirectoryInfo(directoryPath), logger)
         {
         }
 
+        public ILogger Logger { get; }
+        
         public Dictionary<string, Func<object, string>> Templates { get; private set; }
 
+        public bool HasTemplate(string templateName)
+        {
+            return Templates.ContainsKey(templateName);
+        }
+        
         public HandlebarsDirectory CombineWith(params HandlebarsDirectory[] dirs)
         {
             Reload();
@@ -92,6 +106,7 @@ namespace Bam.Net.Presentation.Handlebars
             }
             return string.Empty;
         }
+        
         DirectoryInfo _directory;
         public DirectoryInfo Directory
         {
@@ -104,6 +119,7 @@ namespace Bam.Net.Presentation.Handlebars
                 SetDirectory(value);
             }
         }
+        
         public void AddPartialsDirectory(string partialsDirectory)
         {
             if(PartialsDirectories == null)
@@ -119,6 +135,7 @@ namespace Bam.Net.Presentation.Handlebars
             }
             Reload();
         }
+        
         public string FileExtension { get; set; }
         public HashSet<DirectoryInfo> PartialsDirectories { get; set; }
         object _reloadLock = new object();

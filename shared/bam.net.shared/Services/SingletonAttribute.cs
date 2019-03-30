@@ -9,7 +9,7 @@ namespace Bam.Net.Services
     /// Use AppModuleAttribute if registration in the ApplicationServiceRegistry is all that is required by your application.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class SingletonAttribute: AppServiceAttribute
+    public class SingletonAttribute: AppProviderAttribute
     {
     }
 }

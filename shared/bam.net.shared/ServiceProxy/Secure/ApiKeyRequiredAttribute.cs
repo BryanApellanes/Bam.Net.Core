@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace Bam.Net.ServiceProxy.Secure
 {
     /// <summary>
-    /// Attribute used to addorn classes or methods that require
-    /// authentication or authorization.  Implicity requires
+    /// Attribute used to adorn classes or methods that require
+    /// authentication or authorization.  Implicitly requires
     /// application level encryption.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]

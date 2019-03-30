@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Bam.Net.CoreServices;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Automation
 {
@@ -37,10 +38,17 @@ namespace Bam.Net.Automation
         public string Name { get; set; }
 
         /// <summary>
-        /// Represents the "Order" that will be assigned to the next
+        /// Represents the "Order" that is assigned to the next
         /// worker added
         /// </summary>
         protected int CurrentIndex { get; set; }
+
+        Dictionary<string, WorkerConf> _workerConfs;
+        object _workerConfLock = new object();
+        public Dictionary<string, WorkerConf> WorkerConfs
+        {
+            get { return _workerConfLock.DoubleCheckLock(ref _workerConfs, LoadWorkerConfs); }
+        }
 
         List<string> _workerExtensions;
         /// <summary>
@@ -53,28 +61,62 @@ namespace Bam.Net.Automation
             {
                 lock (_addLock)
                 {
-                    List<string> results = new List<string>();
-                    _jobDirectory.Refresh();
+                    List<string> workerFilePaths = ReloadWorkers();
 
-                    if (_jobDirectory.Exists)
-                    {
-                        FileInfo[] files = _jobDirectory.GetFiles();
-
-                        files.Each(file =>
-                        {
-                            string ext = Path.GetExtension(file.FullName).ToLowerInvariant();
-                            if (_workerExtensions.Contains(ext))
-                            {
-                                results.Add(file.FullName);
-                            }
-                        });
-                    }
-
-                    return results.ToArray();
+                    return workerFilePaths.ToArray();
                 }
             }
         }
 
+        public List<string> ReloadWorkers()
+        {
+            List<string> results = new List<string>();
+            _jobDirectory.Refresh();
+
+            if (_jobDirectory.Exists)
+            {
+                FileInfo[] files = _jobDirectory.GetFiles();
+
+                files.Each(file =>
+                {
+                    string ext = Path.GetExtension(file.FullName).ToLowerInvariant();
+                    if (_workerExtensions.Contains(ext))
+                    {
+                        results.Add(file.FullName);
+                    }
+                });
+            }
+
+            _workerConfs = null; // forces reload on next reference to WorkerConfs
+            return results;
+        }
+
+        public IEnumerable<string> ListWorkerNames()
+        {
+            foreach (string workerFile in WorkerFiles)
+            {
+                yield return WorkerConf.Load(workerFile).Name;
+            }
+        }
+
+        public WorkerConf GetWorkerConf(string workerName, bool reload = false)
+        {
+            if (reload)
+            {
+                lock (_workerConfLock)
+                {
+                    _workerConfs = null;
+                }
+            }
+
+            if (WorkerConfs.ContainsKey(workerName))
+            {
+                return WorkerConfs[workerName];
+            }
+
+            return null;
+        }
+        
         DirectoryInfo _jobDirectory;
         /// <summary>
         /// The root of the Job
@@ -94,15 +136,20 @@ namespace Bam.Net.Automation
         public static JobConf Load(string path)
         {
             JobConf conf = path.FromJsonFile<JobConf>();
-            conf.CurrentIndex = conf.WorkerFiles.Length;
-            return conf;
+            if (conf != null)
+            {
+                conf.CurrentIndex = conf.WorkerFiles.Length;
+                return conf;
+            }
+
+            return null;
         }
 
         public Job CreateJob()
         {
             return new Job(this);
         }
-
+        
         object _addLock = new object();
         public void AddWorker(Type workerType, string name, bool overwrite = false)
         {
@@ -122,18 +169,30 @@ namespace Bam.Net.Automation
                 ++CurrentIndex;
 
                 worker.SaveConf(path);
+                Save();
             }
         }
 
-        public void SaveWorker(Worker worker)
+        public string Save()
         {
-            lock (_addLock)
-            {
-                string path = GetWorkerPath(worker.Name);
-                worker.SaveConf(path);
-            }
+            EnsureJobDirectory();
+
+            string path = GetFilePath();
+            this.ToJsonFile(path);
+            return path;
         }
 
+        public bool RemoveWorker(string name)
+        {
+            if (WorkerExists(name, out string workerFilePath))
+            {
+                File.Delete(workerFilePath);
+                return true;
+            }
+
+            return false;
+        }
+        
         protected bool WorkerExists(Worker worker)
         {
             return WorkerExists(worker.Name);
@@ -151,7 +210,7 @@ namespace Bam.Net.Automation
             string tmpPath = path;
             _workerExtensions.Each(ext =>
             {
-                tmpPath = Path.Combine(_jobDirectory.FullName, "{0}{1}"._Format(workerName, ext));
+                tmpPath = Path.Combine(_jobDirectory.FullName, $"{workerName}{ext}");
                 if (File.Exists(tmpPath))
                 {
                     result = true;
@@ -169,7 +228,7 @@ namespace Bam.Net.Automation
 
         protected internal string GetWorkerPath(string workerName)
         {
-            return Path.Combine(_jobDirectory.FullName, "{0}.json"._Format(workerName));
+            return Path.Combine(_jobDirectory.FullName, $"{workerName}.yaml");
         }
 
         protected string ValidateWorkerName(string workerName, bool overwrite)
@@ -177,7 +236,7 @@ namespace Bam.Net.Automation
             string path = GetWorkerPath(workerName);
             if (File.Exists(path) && !overwrite)
             {
-                throw new InvalidOperationException("Worker with the specified name ({0}) already exists in this job configuration"._Format(workerName));
+                throw new InvalidOperationException($"Worker with the specified name ({workerName}) already exists in this job configuration");
             }
             else if (File.Exists(path) && overwrite)
             {
@@ -198,6 +257,7 @@ namespace Bam.Net.Automation
         {
             return (T)GetWorker(typeof(T), workerName);
         }
+        
         protected internal object GetWorker(Type workerType, string workerName)
         {
             Args.ThrowIfNull(workerType, "workerType");
@@ -227,15 +287,6 @@ namespace Bam.Net.Automation
             }
         }
 
-        public string Save()
-        {
-            EnsureJobDirectory();
-
-            string path = GetFilePath();
-            this.ToJsonFile(path);
-            return path;
-        }
-
         /// <summary>
         /// Returns the save to path for the current
         /// JobConf.  In the form {JobDirectory}\\{Name}.job
@@ -243,8 +294,27 @@ namespace Bam.Net.Automation
         /// <returns></returns>
         protected internal string GetFilePath()
         {
-            string path = Path.Combine(_jobDirectory.FullName, "{0}.job"._Format(Name));
+            string path = Path.Combine(_jobDirectory.FullName, $"{Name}.job");
             return path;
+        }
+        
+        private Dictionary<string, WorkerConf> LoadWorkerConfs()
+        {
+            Dictionary<string, WorkerConf> result = new Dictionary<string, WorkerConf>();
+            foreach (string workerFile in WorkerFiles)
+            {
+                try
+                {
+                    WorkerConf conf = WorkerConf.Load(workerFile);
+                    result.Add(conf.Name, conf);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Error loading worker file {0}: {1}", workerFile, ex.Message);
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -332,7 +332,7 @@ namespace Bam.Net.Presentation.Html
 
         public static TagBuilder DropDown(this Type enumType, string selected = null, object htmlAttributes = null)
         {
-            return Bam.Net.Presentation.Html.DropDown.DictionaryFromEnum(enumType).DropDown(selected, htmlAttributes);
+            return Bam.Net.Presentation.Html.DropDownAttribute.DictionaryFromEnum(enumType).DropDown(selected, htmlAttributes);
         }
 
         /// <summary>

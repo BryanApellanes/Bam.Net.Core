@@ -17,7 +17,12 @@ namespace Bam.Net.Automation.NodeScripts
         {
             get
             {
-                return _pathLock.DoubleCheckLock(ref _path, () => DefaultConfiguration.GetAppSetting("NodePath", "C:\\Program Files\\nodejs\\node.exe"));
+                if (OSInfo.Current == OSNames.Windows)
+                {
+                    return _pathLock.DoubleCheckLock(ref _path, () => DefaultConfiguration.GetAppSetting("NodePath", "C:\\Program Files\\nodejs\\node.exe"));
+                }
+                
+                return _pathLock.DoubleCheckLock(ref _path, () => DefaultConfiguration.GetAppSetting("NodePath", "/usr/local/nodejs/bin/node"));
             }
         }
 

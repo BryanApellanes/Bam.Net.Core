@@ -4,8 +4,10 @@ using Bam.Net.Messaging;
 using Bam.Net.Testing;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 

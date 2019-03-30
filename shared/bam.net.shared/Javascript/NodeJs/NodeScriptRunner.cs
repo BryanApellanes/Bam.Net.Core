@@ -15,7 +15,7 @@ namespace Bam.Net.Javascript.NodeJs
 	{
         public NodeScriptRunner()
         {
-            this.NodePath = @"C:\Program Files\nodejs\node.exe";
+            this.NodePath = OSInfo.Current == OSNames.Windows ? @"C:\Program Files\nodejs\node.exe": "/usr/local/bin/node";
         }
 
         public string NodePath { get; set; }

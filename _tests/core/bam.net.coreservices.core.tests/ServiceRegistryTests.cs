@@ -145,8 +145,8 @@ namespace Bam.Net.CoreServices.Tests
         public void CanGetIDataProvider()
         {
             ServiceRegistry registry = CoreServiceRegistryContainer.Create();
-            IDataDirectoryProvider provider = registry.Get<IDataDirectoryProvider>();
-            Expect.IsNotNull(provider);
+            IDataDirectoryProvider directoryProvider = registry.Get<IDataDirectoryProvider>();
+            Expect.IsNotNull(directoryProvider);
         }
 
         [UnitTest]

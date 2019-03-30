@@ -220,20 +220,41 @@ namespace Bam.Net
         /// <returns></returns>
         public static bool HasCustomAttributeOfType<T>(this MemberInfo memberInfo, bool inherit, out T attribute, bool concreteAttribute) where T : Attribute
         {
-            attribute = null;
             if (memberInfo == null)
             {
+                attribute = null;
                 return false;
             }
             object[] customAttributes = memberInfo.GetCustomAttributes(typeof(T), inherit);
             
+            return ContainsCustomAttributeOfType(customAttributes, out attribute, concreteAttribute);
+        }
+
+        public static bool HasCustomAttributeOfType<T>(this ParameterInfo parameterInfo, out T attribute,
+            bool concreteAttribute = false) where T : Attribute
+        {
+            if (parameterInfo == null)
+            {
+                attribute = null;
+                return false;
+            }
+
+            return ContainsCustomAttributeOfType(parameterInfo.GetCustomAttributes().ToArray(), out attribute,
+                concreteAttribute);
+        }
+
+        private static bool ContainsCustomAttributeOfType<T>(object[] customAttributes, out T attribute,
+            bool concreteAttribute)
+            where T : Attribute
+        {
+            attribute = null;
             if (concreteAttribute)
             {
                 foreach (object foundAttribute in customAttributes)
                 {
                     if (foundAttribute.GetType() == typeof(T))
                     {
-                        attribute = (T)foundAttribute;
+                        attribute = (T) foundAttribute;
                         break;
                     }
                 }
@@ -251,7 +272,7 @@ namespace Bam.Net
             {
                 if (customAttributes.Length > 0)
                 {
-                    attribute = (T)customAttributes[0];
+                    attribute = (T) customAttributes[0];
                 }
 
                 return customAttributes.Length > 0;

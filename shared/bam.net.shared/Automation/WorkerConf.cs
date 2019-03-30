@@ -8,7 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
+using System.Xml.Serialization;
 using Bam.Net.Yaml;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Automation
 {
@@ -25,10 +28,13 @@ namespace Bam.Net.Automation
             {
                 return path.SafeReadFile().FromYaml<WorkerConf>();
             };
+            _deserializers[".yml"] = _deserializers[".yaml"];
+            
             _deserializers[".json"] = (path) =>
             {
                 return path.SafeReadFile().FromJson<WorkerConf>();
             };
+            
             _deserializers[".xml"] = (path) =>
             {
                 return path.SafeReadFile().FromXml<WorkerConf>();
@@ -38,10 +44,13 @@ namespace Bam.Net.Automation
             {
                 conf.ToYamlFile(path);
             };
+            _serializers[".yml"] = _serializers[".yaml"];
+            
             _serializers[".json"] = (path, conf) =>
             {
                 conf.ToJsonFile(path);
             };
+            
             _serializers[".xml"] = (path, conf) =>
             {
                 conf.ToXmlFile(path);
@@ -50,7 +59,7 @@ namespace Bam.Net.Automation
 
         public WorkerConf()
         {
-            this._properties = new List<KeyValuePair>();
+            this._properties = new Dictionary<string, string>();
         }
 
         public WorkerConf(Worker worker)
@@ -95,7 +104,7 @@ namespace Bam.Net.Automation
         {
             if (WorkerType == null)
             {
-                throw new InvalidOperationException("Specified WorkerTypeName ({0}) was not found"._Format(WorkerTypeName));
+                throw new InvalidOperationException($"Specified WorkerTypeName ({WorkerTypeName}) was not found");
             }
 
             Worker result = WorkerType.Construct<Worker>();
@@ -109,25 +118,27 @@ namespace Bam.Net.Automation
             return result;
         }
 
+        [XmlIgnore]
+        [YamlIgnore]
+        [JsonIgnore]
+        public string LoadedFrom { get; set; }
+        
         public static WorkerConf Load(string filePath)
         {
             string ext = Path.GetExtension(filePath).ToLowerInvariant();
             if (!_deserializers.ContainsKey(ext))
             {
-                ext = ".json";
+                ext = ".yaml";
             }
 
-            return _deserializers[ext](filePath);
+            WorkerConf workerConf = _deserializers[ext](filePath);
+            workerConf.LoadedFrom = filePath;
+            return workerConf;
         }
 
         public void SetProperties(Dictionary<string, string> propertiesToSet)
         {
-            List<KeyValuePair> properties = new List<KeyValuePair>();
-            propertiesToSet.Keys.Each(propName =>
-            {
-                properties.Add(new KeyValuePair(propName, propertiesToSet[propName]));
-            });
-            this.Properties = properties.ToArray();
+            Properties = propertiesToSet;
         }
 
         public void AddProperties(Dictionary<string, string> propertiesToAdd)
@@ -140,41 +151,34 @@ namespace Bam.Net.Automation
 
         public void SetProperty(string name, string value)
         {
-            KeyValuePair prop = Properties.Where(kvp => kvp.Key.Equals(name)).FirstOrDefault();
-            if (prop == null)
+            if (Properties.ContainsKey(name))
             {
-                prop = new KeyValuePair(name, value);
+                Properties[name] = value;
             }
+            
+            Properties.AddMissing(name, value);
         }
 
         public void AddProperty(string name, string value)
         {
-            KeyValuePair existing = Properties.Where(kvp => kvp.Key.Equals(name)).FirstOrDefault();
-            if (existing != null)
+            if (_properties.ContainsKey(name))
             {
                 throw new InvalidOperationException("Specified property is already set, use 'SetProperty' to change the value");
             }
 
-            _properties.Add(new KeyValuePair(name, value));
+            _properties.Add(name, value);
         }
 
-        List<KeyValuePair> _properties;
-        public KeyValuePair[] Properties
+        Dictionary<string, string> _properties;
+        public Dictionary<string, string> Properties
         {
-            get
-            {
-                return _properties.ToArray();
-            }
-            set
-            {
-                _properties = new List<KeyValuePair>();
-                _properties.AddRange(value);
-            }
+            get { return _properties; }
+            set { _properties = value; }
         }
 
         public virtual void Save()
         {
-            Save(".\\{0}_WorkerConf.json"._Format(this.Name));
+            Save($"./{Name}_WorkerConf.json");
         }
 
         public void Save(string filePath)
@@ -182,7 +186,7 @@ namespace Bam.Net.Automation
             string ext = Path.GetExtension(filePath).ToLowerInvariant();
             if (!_serializers.ContainsKey(ext))
             {
-                ext = ".json";
+                ext = ".yaml";
             }
 
             _serializers[ext](filePath, this);

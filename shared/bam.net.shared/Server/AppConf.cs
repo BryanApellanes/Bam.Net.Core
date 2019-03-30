@@ -41,7 +41,7 @@ namespace Bam.Net.Server
 			DefaultLayout = DefaultLayoutConst;
 			DefaultPage = DefaultPageConst;
 			ServiceSearchPattern = new string[] { "*Services.dll", "*Proxyables.dll" };
-            ProcessMode = "Dev";
+            ProcessMode = ProcessModes.Dev.ToString();
             Name = ApplicationNameProvider.Default.GetApplicationName();
         }
 
@@ -197,7 +197,6 @@ namespace Bam.Net.Server
 			}
 		}
 
-        public bool CompileTemplates { get; set; }
         public bool GenerateDao { get; set; }
 
         public bool CheckDaoHashes { get; set; }
@@ -205,8 +204,6 @@ namespace Bam.Net.Server
 		public bool RenderLayoutBody { get; set; }
 
 		public string[] ServiceSearchPattern { get; set; }
-
-        public bool ExtractBaseApp { get; set; }
 
         List<string> _serviceTypeNames;
         public string[] ServiceTypeNames

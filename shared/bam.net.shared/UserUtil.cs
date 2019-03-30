@@ -55,6 +55,11 @@ namespace Bam.Net
         /// <returns>User as string</returns>
         public static string GetCurrentWindowsUser(bool includeDomain)
         {
+            if (OSInfo.Current != OSNames.Windows)
+            {
+                return string.Empty;
+            }
+            
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
             if (includeDomain)
             {

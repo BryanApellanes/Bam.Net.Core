@@ -12,14 +12,14 @@ namespace Bam.Net.Presentation.Components
     {
         public ComponentRenderer()
         {
-            InputFormBuilder = new InputFormBuilder();
+            InputFormProviderBuilder = new InputFormProvider();
         }
 
-        public InputFormBuilder InputFormBuilder { get; set; }
+        public InputFormProvider InputFormProviderBuilder { get; set; }
 
         protected override void Write(HtmlRenderer renderer, T obj)
         {
-            renderer.Write(InputFormBuilder.FieldsetFor(obj).Render());
+            renderer.Write(InputFormProviderBuilder.FieldsetFor(obj).Render());
         }
     }
 }

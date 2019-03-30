@@ -12,11 +12,11 @@ namespace Bam.Net.Services
 {
     public class FileManager
     {
-        public FileManager(IDataDirectoryProvider dataSettings, IFileService fileService)
+        public FileManager(IDataDirectoryProvider dataDirectorySettings, IFileService fileService)
         {
             FileService = fileService;
         }
-        public IDataDirectoryProvider DataSettings { get; set; }
+        public IDataDirectoryProvider DataDirectorySettings { get; set; }
         protected IFileService FileService { get; set; }
         public void StoreFiles(DirectoryInfo directory)
         {
@@ -35,7 +35,7 @@ namespace Bam.Net.Services
 
         public FileInfo RestoreFile(string fileNameOrHash)
         {
-            return FileService.WriteFileDataToDirectory(fileNameOrHash, DataSettings.GetFilesDirectory().FullName);
+            return FileService.WriteFileDataToDirectory(fileNameOrHash, DataDirectorySettings.GetFilesDirectory().FullName);
         }
     }
 }

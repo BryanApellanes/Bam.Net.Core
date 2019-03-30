@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection;
 using Bam.Net;
 using Bam.Net.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Xml.Serialization;
+using YamlDotNet.Serialization;
+using EventInfo = System.Reflection.EventInfo;
 
 namespace Bam.Net.Logging
 {
@@ -40,6 +42,8 @@ namespace Bam.Net.Logging
         /// An array of all the ILoggers that have
         /// been subscribed to this Loggable
         /// </summary>
+        [XmlIgnore]
+        [YamlIgnore]
         [JsonIgnore]
         public virtual ILogger[] Subscribers
         {
@@ -104,25 +108,33 @@ namespace Bam.Net.Logging
                             {
                                 eventInfo.AddEventHandler(this, (EventHandler)((s, a) =>
                                 {
-                                    string senderMessage = string.Empty;
-                                    string argsMessage = string.Empty;
-                                    if (verbosity != null)
+                                    if (a is MessageEventArgs messageEventArgs)
                                     {
-                                        verbosity.TryGetSenderMessage(s, out senderMessage);
-                                        verbosity.TryGetEventArgsMessage(a, out argsMessage);
-                                    }
-
-                                    if (!string.IsNullOrEmpty(senderMessage))
-                                    {
-                                        logger.AddEntry(senderMessage, (int)logEventType);
-                                    }
-                                    else if (!string.IsNullOrEmpty(argsMessage))
-                                    {
-                                        logger.AddEntry(argsMessage, (int)logEventType);
+                                        LogMessage msg = messageEventArgs.LogMessage;
+                                        msg?.Log(logger, messageEventArgs.LogEventType);
                                     }
                                     else
                                     {
-                                        logger.AddEntry("Event {0} raised on type {1}::{2}", (int)logEventType, logEventType.ToString(), currentType.Name, eventInfo.Name);
+                                        string senderMessage = string.Empty;
+                                        string argsMessage = string.Empty;
+                                        if (verbosity != null)
+                                        {
+                                            verbosity.TryGetSenderMessage(s, out senderMessage);
+                                            verbosity.TryGetEventArgsMessage(a, out argsMessage);
+                                        }
+
+                                        if (!string.IsNullOrEmpty(senderMessage))
+                                        {
+                                            logger.AddEntry(senderMessage, (int)logEventType);
+                                        }
+                                        else if (!string.IsNullOrEmpty(argsMessage))
+                                        {
+                                            logger.AddEntry(argsMessage, (int)logEventType);
+                                        }
+                                        else
+                                        {
+                                            logger.AddEntry("Event {0} raised on type {1}::{2}", (int)logEventType, logEventType.ToString(), currentType.Name, eventInfo.Name);
+                                        }
                                     }
                                 }));
                             }
@@ -132,6 +144,64 @@ namespace Bam.Net.Logging
             }
         }
 
+        public event EventHandler Message;
+
+        /// <summary>
+        /// Fire the Message event with the specified information message
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
+        public void Info(string messageFormat, params string[] messageArgs)
+        {
+            EventMessage(LogEventType.Information, messageFormat, messageArgs);
+        }
+        
+        /// <summary>
+        /// Fire the Message event with the specified warning message
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
+        public void Warn(string messageFormat, params string[] messageArgs)
+        {
+            EventMessage(LogEventType.Warning, messageFormat, messageArgs);
+        }
+        
+        /// <summary>
+        /// Fire the Message event with the specified error message.
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
+        public void Error(string messageFormat, params string[] messageArgs)
+        {
+            EventMessage(LogEventType.Error, messageFormat, messageArgs);
+        }
+
+        /// <summary>
+        /// Output the to the console and fire the Message
+        /// event with  the specified information message.
+        /// </summary>
+        /// <param name="messageFormat"></param>
+        /// <param name="messageArgs"></param>
+        public void Console(string messageFormat, params string[] messageArgs)
+        {
+            if (messageArgs.Length > 0)
+            {
+                System.Console.WriteLine(messageFormat, messageArgs);
+                Info(messageFormat, messageArgs);
+            }
+            else
+            {
+                System.Console.WriteLine(messageFormat);
+                Info(messageFormat);
+            }
+        }
+        
+        [Exclude]
+        public void EventMessage(LogEventType eventType, string format, params string[] args)
+        {
+            FireEvent(Message, new MessageEventArgs() {LogEventType = eventType, LogMessage = new LogMessage(format, args)});
+        }
+        
         /// <summary>
         /// Returns true if the specified logger is 
         /// subscribed to the current Loggable

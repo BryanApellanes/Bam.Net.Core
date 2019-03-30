@@ -17,7 +17,7 @@ namespace Bam.Net.Automation.Tests
         public void JobsDirectoryShouldBeInAppDataFolder()
         {
             JobManagerService jobConductor = new JobManagerService();
-            string expected = DefaultDataDirectoryProvider.Current.GetAppDataDirectory(DefaultConfigurationApplicationNameProvider.Instance, "Jobs").FullName;
+            string expected = DataProvider.Current.GetAppDataDirectory(DefaultConfigurationApplicationNameProvider.Instance, "Jobs").FullName;
             Expect.AreEqual(expected, jobConductor.JobsDirectory);
         }
 
@@ -253,7 +253,7 @@ namespace Bam.Net.Automation.Tests
             protected override WorkState Do(WorkState currentWorkState)
             {
                 ValueToCheck = true;
-                return new WorkState(this, "success") { PreviousWorkState = currentWorkState };
+                return new WorkState(this) { PreviousWorkState = currentWorkState };
             }
 
             public override string[] RequiredProperties

@@ -28,10 +28,10 @@ namespace Bam.Net.CoreServices
         public NotificationService(IUserManager userManager, SmtpSettingsProvider smtpSettingsProvider, ILogger logger)
         {
             UserManager = userManager;
-            SmtpSettingsProvider = smtpSettingsProvider ?? DataSettingsSmtpSettingsProvider.Default;
+            SmtpSettingsProvider = smtpSettingsProvider ?? DataProviderSmtpSettingsProvider.Default;
             Logger = logger ?? Log.Default;
-            string emailTemplatesDirectory = DefaultDataDirectoryProvider.Current.GetSysEmailTemplatesDirectory().FullName;
-            NotificationTemplateDirectory = new DirectoryInfo(Path.Combine(DefaultDataDirectoryProvider.Current.GetRootDataDirectory().FullName, "NotificationTemplates"));
+            string emailTemplatesDirectory = DataProvider.Current.GetSysEmailTemplatesDirectory().FullName;
+            NotificationTemplateDirectory = new DirectoryInfo(Path.Combine(DataProvider.Current.GetRootDataDirectory().FullName, "NotificationTemplates"));
             Templates = new HandlebarsDirectory(NotificationTemplateDirectory);
             Tld = "com";
             Templates.Reload();
@@ -40,7 +40,7 @@ namespace Bam.Net.CoreServices
         [Local]
         public static void SetDefaultSmtpSettings(SmtpSettings settings)
         {
-            DataSettingsSmtpSettingsProvider.SetDefaultSmtpSettings(settings);
+            DataProviderSmtpSettingsProvider.SetDefaultSmtpSettings(settings);
         }
         
         public SmtpSettingsProvider SmtpSettingsProvider { get; set; }
@@ -153,7 +153,7 @@ namespace Bam.Net.CoreServices
         {
             try
             {    
-                from = from ?? DataSettingsSmtpSettingsProvider.DefaultSender ?? $"no-reply@{ApplicationName}.{Tld}";
+                from = from ?? DataProviderSmtpSettingsProvider.DefaultSender ?? $"no-reply@{ApplicationName}.{Tld}";
                 fromDisplayName = fromDisplayName ?? from;
                 Email email = SmtpSettingsProvider
                     .CreateEmail(from, fromDisplayName)

@@ -20,6 +20,7 @@ using Org.BouncyCastle.Security;
 using System.IO;
 using System.Reflection;
 using System.Collections;
+using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao;
 using Bam.Net.Web;
 
 namespace Bam.Net.ServiceProxy
@@ -331,7 +332,8 @@ namespace Bam.Net.ServiceProxy
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(methodUrl);
             request.CookieContainer = Cookies ?? new CookieContainer();
             request.UserAgent = UserAgent;
-            request.Headers.Add(CustomHeaders.ProcessMode, ProcessMode.Current.Mode.ToString());
+            request.Headers.Add(Web.Headers.ProcessMode, ProcessMode.Current.Mode.ToString());
+            request.Headers.Add(Web.Headers.ProcessSrc, Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor.LocalIdentifier);
             Headers.AllKeys.Where(k=> !k.Equals("User-Agent")).Each(key =>
             {                
                 request.Headers.Add(key, Headers[key]);

@@ -7,30 +7,30 @@ is shown below.
 
 ```javascript
 var database = {
-	nameSpace: “The.Namespace.That.Generated.Objects.Will.Be.Placed.In”,
-	schemaName: “UsedAsTheConnectionStringNameInTheConfig”,
+	nameSpace: "The.Namespace.That.Generated.Objects.Will.Be.Placed.In",
+	schemaName: "UsedAsTheConnectionStringNameInTheConfig",
 	xrefs: [ // An array of arrays; 
 		// each entry defines a many to many relationship between the table 					
 		// names specified
-		[“LeftTable”, “RightTable”]
+		["LeftTable", "RightTable"]
 	],
 	tables: [
 		{
-			name: “TheNameOfTheTable”,
+			name: "TheNameOfTheTable",
 			fks: [ 	// An array of foreign key definitions where the key is 
 				// the column name and the value is the name of the table 
 				// that the foreign key references
-				{ ColumnName1: “ReferencedTable1” },
-				{ ColumnName2: “ReferencedTable2” }
+				{ ColumnName1: "ReferencedTable1" },
+				{ ColumnName2: "ReferencedTable2" }
 			],
 			cols: [ 	// An array of column definitions
-				{ ColumnName: “DataType”, Null: false || true } // 
+				{ ColumnName: "DataType", Null: false || true } // 
 			]
 		},
 		{
-			name: “TableOne”,
+			name: "TableOne",
 			cols: [ 	
-				{ Name: “String”, Null: false },
+				{ Name: "String", Null: false },
 				{ Description: "String", Null: true }
 			]
 		},

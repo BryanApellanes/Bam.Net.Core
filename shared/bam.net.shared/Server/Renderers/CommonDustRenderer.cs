@@ -148,5 +148,11 @@ namespace Bam.Net.Server.Renderers
             byte[] data = Encoding.UTF8.GetBytes(result);
             output.Write(data, 0, data.Length);
         }
+		
+        public string Render(string templateName, object data)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

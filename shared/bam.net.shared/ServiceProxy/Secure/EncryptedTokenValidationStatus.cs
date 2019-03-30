@@ -11,7 +11,7 @@ namespace Bam.Net.ServiceProxy.Secure
 {
     public enum EncryptedTokenValidationStatus
     {
-        Unkown,
+        Unknown,
         HashFailed,
         NonceFailed,
         Success

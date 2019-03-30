@@ -18,7 +18,7 @@ namespace Bam.Net.ServiceProxy.Secure
         public SecureSessionDatabase() : this(DefaultConfigurationApplicationNameProvider.Instance)
         { }
 
-        public SecureSessionDatabase(IApplicationNameProvider applicationNameProvider) : this(DefaultDataDirectoryProvider.Current.GetAppDatabase(applicationNameProvider, Dao.ConnectionName(typeof(SecureSession))))
+        public SecureSessionDatabase(IApplicationNameProvider applicationNameProvider) : this(DataProvider.Current.GetAppDatabase(applicationNameProvider, Dao.ConnectionName(typeof(SecureSession))))
         { }
 
         public SecureSessionDatabase(Database actual)

@@ -7,36 +7,29 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Threading;
+using Bam.Net.CoreServices;
 
 namespace Bam.Net.Application
 {
     [Serializable]
     public class ConsoleActions : CommandLineTestInterface
     {
-        [ConsoleAction("toolkit", "Bake the BamToolkit")]
-        public void BuildToolkit()
+        [ConsoleAction("discover", "Read a specified directory and discover csproj files in the child directories therein.")]
+        public bool Discover()
         {
-            // build each csproj with dotnet publish
-            string recipePath = GetArgument("recipe", "Please enter the path to the recipe file to use");
-            Recipe recipe = recipePath.FromJsonFile<Recipe>();
-            BamSettings settings = BamSettings.Load(true);
-            foreach (string projectFile in recipe.ProjectFilePaths)
+            string directoryPath = GetArgument("discover", "Please enter the path to the root of the projects folder");
+            if (string.IsNullOrEmpty(directoryPath))
             {
-                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo($"publish {projectFile} -c Release -r {RuntimeNames[OSInfo.Current]} -o {recipe.OutputDirectory}");
-                startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
-                OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, recipe.OutputDirectory);
+                OutLine("Directory not specified", ConsoleColor.Yellow);
+                return false;
             }
-            FileInfo file = new FileInfo(Path.Combine(".", "bamtk.zip"));
-            ZipFile.CreateFromDirectory(recipe.OutputDirectory, file.FullName);
-            OutLineFormat("Created {0}", ConsoleColor.DarkGreen, file.FullName);
-        }
-
-        [ConsoleAction("discover", "Read a specified recipe file and discover csproj files")]
-        public void Discover()
-        {
-            string recipePath = GetArgument("recipe", "Please enter the path to the recipe file to use");
-            Recipe recipe = recipePath.FromJsonFile<Recipe>();
-            DirectoryInfo rootDir = new DirectoryInfo(recipe.ProjectRoot);
+            DirectoryInfo rootDir = new DirectoryInfo(directoryPath);
+            if (!rootDir.Exists)
+            {
+                OutLineFormat("Specified directory does not exist: {0}", ConsoleColor.Yellow, directoryPath);
+                return false;
+            }
+            
             List<string> projectNames = new List<string>();
             List<string> projectFilePaths = new List<string>();
             foreach (DirectoryInfo projectDir in rootDir.GetDirectories())
@@ -50,14 +43,91 @@ namespace Bam.Net.Application
                 projectNames.Add(projectDir.Name);
                 projectFilePaths.Add(projectPath);
             }
-            recipe.ProjectNames = projectNames.ToArray();
-            recipe.ProjectFilePaths = projectFilePaths.ToArray();
+
+            Recipe recipe = new Recipe
+            {
+                ProjectRoot = directoryPath,
+                ProjectNames = projectNames.ToArray(),
+                ProjectFilePaths = projectFilePaths.ToArray()
+            };
+            
             string json = recipe.ToJson(true);
-            json.SafeWriteToFile(recipePath, true);
+            string recipeFile = Arguments.Contains("recipe") ? Arguments["recipe"] : "./recipe.json";
+            FileInfo file = new FileInfo(recipeFile);
+            json.SafeWriteToFile(file.FullName, true);
             OutLine(json, ConsoleColor.Cyan);
+            OutLineFormat("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
             Thread.Sleep(300);
+            return true;
         }
 
+        [ConsoleAction("recipe", "bake the specified recipe")]
+        public void BuildToolkit()
+        {
+            // build each csproj with dotnet publish
+            string recipePath = GetArgument("recipe", "Please enter the path to the recipe file to use");
+            if (!File.Exists(recipePath))
+            {
+                OutLineFormat("Specified file does not exist: {0}", ConsoleColor.Yellow, recipePath);
+                Exit(1);
+            }
+            Recipe recipe = recipePath.FromJsonFile<Recipe>();
+            if (Arguments.Contains("output"))
+            {
+                recipe.OutputDirectory = GetArgument("output");
+            }
+            BamSettings settings = BamSettings.Load();
+            string outputDirectory = recipe.OutputDirectory;
+            if (outputDirectory.StartsWith("C:"))
+            {
+                outputDirectory = outputDirectory.TruncateFront(2);
+            }
+
+            outputDirectory.Replace("\\", "/");
+            foreach (string projectFile in recipe.ProjectFilePaths)
+            {
+                string dotNetArgs =
+                    $"publish {projectFile} -c {recipe.BuildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectory}";
+                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
+                startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
+                OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, outputDirectory);
+            }
+        }
+
+        [ConsoleAction("all", "Discover tools projects and build")]
+        public void DiscoverAndBuild()
+        {
+            if (!Arguments.Contains("discover"))
+            {
+                Arguments["discover"] = GetArgument("all");
+            }
+
+            if (Discover())
+            {
+                string recipeFile = Arguments.Contains("recipe") ? Arguments["recipe"] : "./recipe.json";
+                Recipe discovered = recipeFile.FromJsonFile<Recipe>();
+                Recipe toUse = discovered;
+                if (Arguments.Contains("recipe"))
+                {
+                    Recipe specified = Arguments["recipe"].FromJsonFile<Recipe>();
+                    specified.ProjectRoot = discovered.ProjectRoot;
+                    specified.ProjectNames = discovered.ProjectNames;
+                    specified.ProjectFilePaths = discovered.ProjectFilePaths;
+                    toUse = specified;
+                }
+            
+                if (Arguments.Contains("output"))
+                {
+                    toUse.OutputDirectory = GetArgument("output");
+                }
+
+                string tempRecipe = $"./temp_recipe_{6.RandomLetters()}.json";
+                toUse.ToJsonFile(tempRecipe);
+                Arguments["recipe"] = new FileInfo(tempRecipe).FullName;
+                BuildToolkit();
+            }
+        }
+        
         static Dictionary<OSNames, string> RuntimeNames
         {
             get

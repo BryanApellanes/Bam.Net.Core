@@ -1,6 +1,6 @@
 ﻿# Bam.exe
 
-Bam command line utility.
+Bam.exe is a tool used to manage BamFramework features and functionality.  In addition to bam apps, it works with asp.net core razor page applications.
 
 ## Windows
 dotnet publish -c Release -r win10-x64 [-o <outputpath>]

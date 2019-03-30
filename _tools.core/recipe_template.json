@@ -1,0 +1,36 @@
+{
+  "ProjectRoot": "./",
+  "ProjectNames": [
+    "bake",
+    "bam",
+    "bamd",
+    "bamdb",
+    "bamheart",
+    "bamrpc",
+    "bamsdo",
+    "bamtest",
+    "bamweb",
+    "breve",
+    "chunkr",
+    "laotze",
+    "masuco"
+  ],
+  "ProjectFilePaths": [
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bake\\bake.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bam\\bam.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamd\\bamd.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamdb\\bamdb.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamheart\\bamheart.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamrpc\\bamrpc.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamsdo\\bamsdo.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamtest\\bamtest.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamweb\\bamweb.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\breve\\breve.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\chunkr\\chunkr.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\laotze\\laotze.csproj",
+    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\masuco\\masuco.csproj"
+  ],
+  "OutputDirectory": "C:\\bam\\toolkit",
+  "BuildConfig": "Debug",
+  "OsName": "Windows"
+}

@@ -31,8 +31,10 @@ namespace Bam.Net.Server
     /// </summary>
     public partial class ContentResponder : Responder, IInitialize<ContentResponder>
     {
+        public const string CommonFolder = "common";
+        
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultRoot = BamHome.ContentPath;
+        static string defaultRoot = BamPaths.ContentPath;
         public const string IncludeFileName = "include.js";
         public const string LayoutFileExtension = ".layout";
         public const string HostAppMapFile = "hostAppMaps.json";
@@ -40,12 +42,15 @@ namespace Bam.Net.Server
         public ContentResponder(BamConf conf, ILogger logger, ITemplateManager commonTemplateManager = null)
             : base(conf, logger)
         {
+            Fs commonRoot = new Fs(new DirectoryInfo(Path.Combine(ServerRoot.Root, CommonFolder)));
+            
             ContentRoot = conf?.ContentRoot ?? DefaultConfiguration.GetAppSetting(contentRootConfigKey, defaultRoot);
             ServerRoot = new Fs(ContentRoot);
             TemplateDirectoryNames = new List<string>(new string[] { "views", "templates" });
             CommonTemplateManager = commonTemplateManager;
             FileCachesByExtension = new Dictionary<string, FileCache>();
-            HostAppMappings = new Dictionary<string, HostAppMap>();            
+            HostAppMappings = new Dictionary<string, HostAppMap>();     
+            CommonContentLocator = ContentLocator.Load(commonRoot);
             InitializeFileExtensions();
             InitializeCaches();
         }
@@ -55,6 +60,12 @@ namespace Bam.Net.Server
 
         public string ContentRoot { get; set; }
 
+        public ContentLocator CommonContentLocator
+        {
+            get;
+            private set;
+        }
+        
         public AppMetaInitializer AppMetaInitializer { get; set; }
         public List<string> TemplateDirectoryNames { get; set; }
         public List<string> FileExtensions { get; set; }
@@ -384,24 +395,31 @@ namespace Bam.Net.Server
                 SecureSession.Init(context);
 
                 bool handled = false;
-                string path = request.Url.AbsolutePath;
-                string commonPath = Path.Combine("/common", path.TruncateFront(1));
+                string relativePathFromUrl = request.Url.AbsolutePath;
+                string commonPath = Path.Combine("/common", relativePathFromUrl.TruncateFront(1));
 
                 byte[] content = new byte[] { };
                 string appName = ResolveApplicationName(context);
-                string[] checkedPaths = new string[] { };
+                List<string> allCheckedPaths = new List<string>();
                 if (AppContentResponders.ContainsKey(appName))
                 {
-                    handled = AppContentResponders[appName].TryRespond(context, out checkedPaths);
+                    handled = AppContentResponders[appName].TryRespond(context, out string[] checkedPaths);
+                    allCheckedPaths.AddRange(checkedPaths);
                 }
 
-                if (!handled && !ShouldIgnore(path))
+                if (!handled && !ShouldIgnore(relativePathFromUrl))
                 {
-                    bool exists;
-                    exists = ServerRoot.FileExists(path, out string absoluteFileSystemPath);
+                    bool exists = CommonContentLocator.Locate(relativePathFromUrl, out string absoluteFileSystemPath, out string[] checkedPaths);
+                    allCheckedPaths.AddRange(checkedPaths);
+                    if (!exists)
+                    {
+                        exists = ServerRoot.FileExists(relativePathFromUrl, out absoluteFileSystemPath);
+                        allCheckedPaths.Add(absoluteFileSystemPath);
+                    }
                     if (!exists)
                     {
                         exists = ServerRoot.FileExists(commonPath, out absoluteFileSystemPath);
+                        allCheckedPaths.Add(absoluteFileSystemPath);
                     }
 
                     if (exists)
@@ -426,14 +444,14 @@ namespace Bam.Net.Server
 
                     if (handled)
                     {
-                        SetContentType(response, path);
+                        SetContentType(response, relativePathFromUrl);
                         Etags.Set(response, request.Url.ToString(), content);
                         WriteResponse(response, content);
                         OnResponded(context);
                     }
                     else
                     {
-                        LogContentNotFound(path, appName, checkedPaths);
+                        LogContentNotFound(relativePathFromUrl, appName, allCheckedPaths.ToArray());
                         OnNotResponded(context);
                     }
                 }
@@ -451,7 +469,7 @@ namespace Bam.Net.Server
                 return false;
             }
         }
-
+        
         private string ResolveApplicationName(IHttpContext context)
         {
             if (HostAppMappings.ContainsKey(context.Request.Url.Host))

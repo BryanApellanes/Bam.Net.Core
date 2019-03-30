@@ -67,7 +67,7 @@ namespace Bam.Net.CoreServices.Tests
             ctx.Request = Substitute.For<IRequest>();
             ctx.Request.Headers.Returns(new NameValueCollection
             {
-                { CustomHeaders.ApplicationName, "CoreServicesTests" }
+                { Headers.ApplicationName, "CoreServicesTests" }
             });
             ctx.Request.Cookies.Returns(new System.Net.CookieCollection());
             ctx.Response = Substitute.For<IResponse>();

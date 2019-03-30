@@ -93,7 +93,7 @@ namespace Bam.Net.CoreServices
 
         public static ServiceRegistry Create()
         {
-            DefaultDataDirectoryProvider dataSettings = DefaultDataDirectoryProvider.Current;
+            DataProvider dataSettings = DataProvider.Current;
             string databasesPath = dataSettings.GetSysDatabaseDirectory().FullName;
             string userDatabasesPath = Path.Combine(databasesPath, "UserDbs");
 
@@ -119,16 +119,16 @@ namespace Bam.Net.CoreServices
             assSvcRepo.Database = dataSettings.GetSysDatabaseFor(assSvcRepo);
             assSvcRepo.EnsureDaoAssemblyAndSchema();
 
-            ConfigurationService configSvc = new ConfigurationService(coreRepo, conf, userDatabasesPath);
+            ConfigurationProvider configSvc = new ConfigurationProvider(coreRepo, conf, userDatabasesPath);
             CompositeRepository compositeRepo = new CompositeRepository(coreRepo);
             SystemLoggerService loggerSvc = new SystemLoggerService(conf);
             dbProvider.SetDatabases(loggerSvc);
             loggerSvc.SetLogger();
 
             ServiceRegistry reg = (ServiceRegistry)(new ServiceRegistry())
-                .ForCtor<ConfigurationService>("databaseRoot").Use(userDatabasesPath)
-                .ForCtor<ConfigurationService>("conf").Use(conf)
-                .ForCtor<ConfigurationService>("coreRepo").Use(coreRepo)
+                .ForCtor<ConfigurationProvider>("databaseRoot").Use(userDatabasesPath)
+                .ForCtor<ConfigurationProvider>("conf").Use(conf)
+                .ForCtor<ConfigurationProvider>("coreRepo").Use(coreRepo)
                 .For<ILogger>().Use(Log.Default)
                 .For<IRepository>().Use(coreRepo)
                 .For<DaoRepository>().Use(coreRepo)
@@ -149,7 +149,7 @@ namespace Bam.Net.CoreServices
                 .For<IApiKeyResolver>().Use<ApplicationRegistrationService>()
                 .For<ISmtpSettingsProvider>().Use(userMgr)
                 .For<UserRegistryService>().Use<UserRegistryService>()
-                .For<ConfigurationService>().Use(configSvc)
+                .For<ConfigurationProvider>().Use(configSvc)
                 .For<IStorableTypesProvider>().Use<NamespaceRepositoryStorableTypesProvider>()
                 .For<FileService>().Use<FileService>()
                 .For<IFileService>().Use<FileService>()
@@ -160,11 +160,11 @@ namespace Bam.Net.CoreServices
                 .For<OAuthService>().Use<OAuthService>()
                 .For<ILog>().Use(loggerSvc)
                 .For<SystemLoggerService>().Use(loggerSvc)
-                .For<IDataDirectoryProvider>().Use(DefaultDataDirectoryProvider.Current)
-                .For<DefaultDataDirectoryProvider>().Use(DefaultDataDirectoryProvider.Current)
+                .For<IDataDirectoryProvider>().Use(DataProvider.Current)
+                .For<DataProvider>().Use(DataProvider.Current)
                 .For<IApplicationNameResolver>().Use<ClientApplicationNameResolver>()
                 .For<ClientApplicationNameResolver>().Use<ClientApplicationNameResolver>()
-                .For<SmtpSettingsProvider>().Use(DataSettingsSmtpSettingsProvider.Default)
+                .For<SmtpSettingsProvider>().Use(DataProviderSmtpSettingsProvider.Default)
                 .For<NotificationService>().Use<NotificationService>()
                 .For<ILogReader>().Use<SystemLogReaderService>()
                 .For<SystemLogReaderService>().Use<SystemLogReaderService>()

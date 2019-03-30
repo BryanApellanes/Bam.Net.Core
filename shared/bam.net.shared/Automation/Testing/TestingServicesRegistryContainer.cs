@@ -47,9 +47,9 @@ namespace Bam.Net.Automation.Testing
 
         private static ServiceRegistry GetServiceRegistry(CoreClient coreClient)
         {
-            SQLiteDatabase loggerDb = DefaultDataDirectoryProvider.Current.GetSysDatabase("TestServicesRegistry_DaoLogger2");
+            SQLiteDatabase loggerDb = DataProvider.Current.GetSysDatabase("TestServicesRegistry_DaoLogger2");
             ILogger logger = new DaoLogger2(loggerDb);
-            IDatabaseProvider dbProvider = DefaultDataDirectoryProvider.Current;
+            IDatabaseProvider dbProvider = DataProvider.Current;
             coreClient.UserRegistryService.DatabaseProvider = dbProvider;
             coreClient.UserRegistryService.ApplicationNameProvider = new DefaultConfigurationApplicationNameProvider();
             AppConf conf = new AppConf(BamConf.Load(ServiceConfig.ContentRoot), ServiceConfig.ProcessName.Or(RegistryName));
@@ -60,14 +60,14 @@ namespace Bam.Net.Automation.Testing
             return (ServiceRegistry)(new ServiceRegistry())
                 .For<IDatabaseProvider>().Use(dbProvider)
                 .For<IUserManager>().Use(coreClient.UserRegistryService)
-                .For<DefaultDataDirectoryProvider>().Use(DefaultDataDirectoryProvider.Current)
+                .For<DataProvider>().Use(DataProvider.Current)
                 .For<ILogger>().Use(logger)
                 .For<IDaoLogger>().Use(logger)
                 .For<AppConf>().Use(conf)
                 .For<SystemLoggerService>().Use(loggerSvc)
                 .For<SystemLogReaderService>().Use<SystemLogReaderService>()
                 .For<TestReportService>().Use<TestReportService>()
-                .For<SmtpSettingsProvider>().Use(DataSettingsSmtpSettingsProvider.Default)
+                .For<SmtpSettingsProvider>().Use(DataProviderSmtpSettingsProvider.Default)
                 .For<NotificationService>().Use<NotificationService>();
         }
     }

@@ -46,5 +46,10 @@ namespace Bam.Net.Data.Repositories
 
             return builder.ToString();
         }
+
+        public bool Extends(Type type)
+        {
+            return Chain.FirstOrDefault(tt => tt.Type == type) != null;
+        }
     }
 }

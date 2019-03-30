@@ -151,11 +151,11 @@ namespace Bam.Net.Automation
         {
             get
             {
-                return JobConductorService.SecureGet("{0}_{1}"._Format(typeof(EmailWorker).Name, Name));
+                return JobManagerService.SecureGet("{0}_{1}"._Format(typeof(EmailWorker).Name, Name));
             }
             set
             {
-                JobConductorService.SecureSet("{0}_{1}"._Format(typeof(EmailWorker).Name, Name), value);
+                JobManagerService.SecureSet("{0}_{1}"._Format(typeof(EmailWorker).Name, Name), value);
             }
         }
 

@@ -16,7 +16,9 @@ namespace Bam.Net.Automation
         {
             Logger = logger ?? Log.Default;
         }
+        
         public ILogger Logger { get; set; }
+        
         public Type[] GetWorkerTypes()
         {
             return TypeScan.Result;
@@ -33,7 +35,7 @@ namespace Bam.Net.Automation
                     return Task.Run(() =>
                     {
                         DirectoryInfo entryDir = Assembly.GetEntryAssembly().GetFileInfo().Directory;
-                        DirectoryInfo sysAssemblies = DefaultDataDirectoryProvider.Current.GetSysAssemblyDirectory();
+                        DirectoryInfo sysAssemblies = DataProvider.Current.GetSysAssemblyDirectory();
                         DirectoryInfo[] dirs = new DirectoryInfo[] { entryDir, sysAssemblies };
                         HashSet<Type> types = new HashSet<Type>();
                         foreach (DirectoryInfo dir in dirs)
@@ -57,10 +59,26 @@ namespace Bam.Net.Automation
             }
         }
 
-        protected Type[] ScanForWorkerTypes(FileInfo file)
+        protected virtual Type[] ScanForWorkerTypes(FileInfo file)
         {
-            Assembly assembly = Assembly.LoadFrom(file.FullName);
-            return assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Worker)) || typeof(IWorker).IsAssignableFrom(type)).ToArray();
+            if (file == null)
+            {
+                return new Type[] { };
+            }
+            try
+            {
+                Assembly assembly = Assembly.LoadFrom(file.FullName);
+                Type[] types = assembly.GetTypes();
+                return types
+                    .Where(type => type.IsSubclassOf(typeof(Worker)) || typeof(IWorker).IsAssignableFrom(type))
+                    .Where(type => type != typeof(IWorker) && !type.IsAbstract)
+                    .ToArray();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error scanning file for worker types {0}: {1}", ex, file.FullName, ex.Message);
+                return new Type[] { };
+            }
         }
     }
 }

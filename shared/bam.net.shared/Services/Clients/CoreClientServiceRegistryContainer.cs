@@ -71,7 +71,7 @@ namespace Bam.Net.Services.Clients
 
         private static ServiceRegistry GetServiceRegistry(CoreClient coreClient)        
         {
-            string contentRoot = DefaultConfiguration.GetAppSetting("ContentRoot", "c:\\bam\\content");
+            string contentRoot = DefaultConfiguration.GetAppSetting("ContentRoot", "/bam/content");
             string organization = DefaultConfiguration.GetAppSetting("Organization", "PUBLIC");
             string applicationName = DefaultConfiguration.GetAppSetting("ApplicationName", "UNKNOWN");
             string databasesPath = Path.Combine(contentRoot, "Databases");
@@ -84,8 +84,8 @@ namespace Bam.Net.Services.Clients
                 .For<ApplicationLogDatabase>().Use(logDb)
                 .For<ILogger>().Use<ApplicationLogger>()
                 .For<ILog>().Use<ApplicationLogger>()
-                .For<IConfigurationService>().Use<ApplicationConfigurationProvider>()
-                .For<IDataDirectoryProvider>().Use(DefaultDataDirectoryProvider.Current)
+                .For<IConfigurationProvider>().Use<ApplicationConfigurationProvider>()
+                .For<IDataDirectoryProvider>().Use(DataProvider.Current)
                 .For<IUserManager>().Use(coreClient.UserRegistryService);
         }
     }

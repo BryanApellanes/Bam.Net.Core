@@ -22,12 +22,12 @@ namespace Bam.Net.Server
         {
             if(toBeTemplated == null)
             {
-                return TemplateNameAttribute.DefaultTemplateName;
+                return TemplateAttribute.DefaultTemplateName;
             }
             Type type = toBeTemplated.GetType();
-            if(type.HasCustomAttributeOfType(out TemplateNameAttribute attr))
+            if(type.HasCustomAttributeOfType(out TemplateAttribute attr))
             {
-                return attr.TemplateName;
+                return attr.Name;
             }
             if(toBeTemplated.HasProperty("View", out PropertyInfo prop))
             {

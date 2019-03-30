@@ -8,17 +8,19 @@ using System.Threading.Tasks;
 
 namespace Bam.Net
 {
+    [Obsolete("Use of this class should be migrated to BamPaths")]
     public static class Paths
     { 
         static Paths()
         {
-            Root = "C:\\bam";
+            Root = BamPaths.BamHome;
 
-            SystemDrive = "/b/drive"; // should be mapped to PubRoot (net use b: \\bam\public)
-            WindowsDrive = "B:\\drive";
+            SystemDrive = Path.Combine(Root, "public"); 
+            WindowsDrive = OSInfo.Current == OSNames.Windows ? "/bam/public" : SystemDrive;
         }
 
         static string _root;
+        [Obsolete("Use BamPaths.BamHome instead")]
         public static string Root
         {
             get { return _root; }
@@ -29,7 +31,9 @@ namespace Bam.Net
             }
         }
 
-        static string _pubRoot = @"\\bam\public";
+        static string _pubRoot = @"//bam/public";
+        
+        [Obsolete("Use BamPaths.Public instead")]
         public static string PubRoot
         {
             get
@@ -67,7 +71,69 @@ namespace Bam.Net
             get { return RuntimeSettings.AppDataFolder; }
             set { RuntimeSettings.AppDataFolder = value; }
         }
+        
+        public static string BamHome
+        {
+            get { return Path.Combine(BamHomeSegments); }
+        }
 
+        public static string[] BamHomeSegments
+        {
+            get
+            {
+                if (OSInfo.Current == OSNames.Windows)
+                {
+                    return new string[] {"C:", "bam"};
+                }
+
+                return new string[] {"/", "opt", "bam"};
+            }
+        }
+
+        public static string ToolkitPath { get { return Path.Combine(ToolkitSegments); } }
+
+        public static string[] ToolkitSegments
+        {
+            get { return new List<string>(BamHomeSegments) {"toolkit"}.ToArray(); }
+        }
+
+        public static string ContentPath { get { return Path.Combine(ContentSegments); } }
+
+        public static string[] ContentSegments
+        {
+            get { return new List<string>(BamHomeSegments) {"content"}.ToArray(); }
+        }
+
+        public static string RpcScriptsSrcPath
+        {
+            get { return Path.Combine(RpcScriptsSrcSegments); }
+        }
+        
+        public static string[] RpcScriptsSrcSegments
+        {
+            get { return new List<string>(BamHomeSegments) {"rpc", "scripts"}.ToArray(); }
+        }
+        
+        public static string ConfPath
+        {
+            get { return Path.Combine(ConfSegments); }
+        }
+
+        public static string[] ConfSegments
+        {
+            get { return new List<string>(BamHomeSegments) {"conf"}.ToArray(); }
+        }
+        
+        public static string DataPath
+        {
+            get { return Path.Combine(DataSegments); }
+        }
+
+        public static string[] DataSegments
+        {
+            get { return new List<string>(BamHomeSegments) {"data"}.ToArray(); }
+        }
+        
         private static void SetPaths()
         {
             Apps = Path.Combine(Root, "apps");

@@ -37,12 +37,11 @@ namespace Bam.Net.Server
             this.MaxThreads = 50;
             this.GenerateDao = true;
             this.DaoConfigs = new DaoConf[] { };
-            this.InitializeTemplates = true;
             this.DaoSearchPattern = "*Dao.dll";
             this.LoggerPaths = new string[] { "." };
             this.LoggerSearchPattern = "*Logging.dll";
             this.ServiceSearchPattern = "*Services.dll,*Proxyables.dll";
-            this.ServerEventListenerSearchPath = "c:\\bam\\content\\server-listeners,c:\\bam\\content\\server-listeners-temp";
+            this.ServerEventListenerSearchPath = "/bam/content/server-listeners,/bam/content/server-listeners-temp";
             this.ServerEventListenerAssemblySearchPattern = "*ServerListeners.dll,*ServerEventListeners.dll";
             this.MainLoggerName = "ConsoleLogger";
 
@@ -104,12 +103,6 @@ namespace Bam.Net.Server
         /// that contain services that should be loaded
         /// </summary>
         public string ServiceSearchPattern
-        {
-            get;
-            set;
-        }
-
-        public bool InitializeTemplates
         {
             get;
             set;

@@ -36,6 +36,11 @@ namespace Bam.Net
                 return FromString(fromConfig);
             }
         }
+
+        public static ProcessMode FromEnvironment
+        {
+            get { return new ProcessMode {Mode = BamEnvironmentVariables.ProcessMode()}; }
+        }
         
         public static ProcessMode Current
         {

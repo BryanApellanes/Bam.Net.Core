@@ -17,7 +17,7 @@ namespace Bam.Net.Server
         {
             get
             {
-                return DefaultConfiguration.GetAppSetting("ContentRoot").Or("C:\\bam");
+                return DefaultConfiguration.GetAppSetting("ContentRoot").Or(BamPaths.ContentPath);
             }
         }
 

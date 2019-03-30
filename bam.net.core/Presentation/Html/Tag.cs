@@ -7,647 +7,397 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Web;
+using Bam.Net;
 using Bam.Net.ServiceProxy;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Html;
 using System.IO;
 using System.Text.Encodings.Web;
+using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Presentation.Html
 {
-    public partial class Tag : HtmlString
+
+    public partial class Tag
     {
-        TagBuilder _html;
-        public Tag(string tagName, object attributes = null) : base(tagName)
+        public Tag(string tagName) : this(tagName, new Dictionary<string, object>(), null)
         {
-            _html = new TagBuilder(tagName);
-            Attrs(attributes);
         }
 
-        public static implicit operator string(Tag e)
+        public Tag(string tagName, Func<Tag> content) : this(tagName, content().Render())
         {
-            return e.ToString();
+        }
+        
+        public Tag(string tagName, string content) : this(tagName, null, content)
+        {
         }
 
-        public static Tag Of(string name, object attributes = null)
+        public Tag(string tagName, object attributes = null, object content = null) : this(tagName,
+            attributes?.ToDictionary(), content)
         {
-            return new Tag(name, attributes);
         }
 
-        protected TagBuilder TagBuilder
+        public Tag(string tagName, Dictionary<string, object> attributes = null, object content = null)
         {
-            get
+            TagName = tagName;
+            Attributes = attributes ?? new Dictionary<string, object>();
+            Styles = new Dictionary<string, object>();
+            Classes = new HashSet<string>();
+            Content = content?.ToString();
+        }
+        
+        public Tag(string tagName, params Func<Tag>[] contents)
+        {
+            TagName = tagName;
+            Attributes = new Dictionary<string, object>();
+            Styles = new Dictionary<string, object>();
+            Classes = new HashSet<string>();
+            StringBuilder contentBuilder = new StringBuilder();
+            foreach (Func<Tag> content in contents)
             {
-                return _html;
-            }
-        }
-
-        public override string ToString()
-        {
-            using(StringWriter sw = new StringWriter())
-            {
-                TagBuilder.WriteTo(sw, HtmlEncoder.Default);
-                return sw.ToString();
-            }
-        }
-
-        public static IEnumerable<HtmlString> ForEach<T>(T[] vals, Func<T, HtmlString> func)
-        {
-            foreach(T val in vals)
-            {
-                yield return func(val);
-            }
-        }
-
-        /// <summary>
-        /// Sets the html result of the specified Func to the html of the
-        /// current tag
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="vals"></param>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public Tag Each<T>(T[] vals, Func<T, HtmlString> func)
-        {
-            if (vals == null)
-            {
-                return this;
+                contentBuilder.Append(content().Render());
             }
 
-            StringBuilder result = new StringBuilder(_html.InnerHtml.ToString());
-            foreach (T val in vals)
+            Content = contentBuilder.ToString();
+        }
+
+        public Tag(string tagName, params Tag[] contents)
+        {
+            TagName = tagName;
+            Attributes = new Dictionary<string, object>();
+            Styles = new Dictionary<string, object>();
+            Classes = new HashSet<string>();
+            StringBuilder contentBuilder = new StringBuilder();
+            foreach (Tag tag in contents)
             {
-                result.AppendLine(func(val).ToString());
+                contentBuilder.Append(tag.Render());
             }
 
-            return Html(result.ToString());
+            Content = contentBuilder.ToString();
         }
 
-        public Tag AttrFormat(string name, string valueFormat, params object[] values)
+        public Tag FirstChild(Tag tag)
         {
-            return Attr(name, string.Format(valueFormat, values));
+            return BeforeContent(tag.Render());
         }
 
-        public Tag Attr(string name, string value)
+        public Tag BeforeContent(string content)
         {
-            _html.Attr(name, value);
+            Content = content + Content;
             return this;
         }
-
-        public Tag AttrIf(bool condition, string name, string value)
+        
+        public Tag AddChildren(params Func<Tag>[] children)
         {
-            _html.AttrIf(condition, name, value);
-            return this;
+            return AddChildren(children.Select(f => f()).ToArray());
         }
 
-        public Tag Attrs(object attributes)
+        public Tag AddChildren(params Tag[] children)
         {
-            if (attributes != null)
+            StringBuilder childBuilder =  new StringBuilder();
+            childBuilder.Append(Content);
+            foreach(Tag tag in children)
             {
-                Type attrType = attributes.GetType();
-                PropertyInfo[] props = attrType.GetProperties();
-                foreach (PropertyInfo prop in props)
-                {
-                    object val = prop.GetValue(attributes, null);
-                    _html.AttrIf(val != null, prop.Name, (string)val);
-                }
+                childBuilder.Append(tag.Render());
             }
 
+            Content = childBuilder.ToString();
             return this;
         }
-
-        public Tag Attrs(Dictionary<string, string> attrs)
+        
+        public static Tag For(Type type)
         {
-            foreach (string key in attrs.Keys)
+            return new TypeTag(type);
+        }
+
+        public static Tag RadioList(Type enumType, object selected, string id = null)
+        {
+            if (string.IsNullOrEmpty(id))
             {
-                _html.AttrIf(!string.IsNullOrWhiteSpace(attrs[key]), key, attrs[key]);
+                id = 6.RandomLetters();
             }
 
-            return this;
+            FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
+            Tag list = Tags.Ul(new {id}).Css("list-style", "none");
+            List<Tag> items = new List<Tag>();
+            bool first = true;
+            foreach (FieldInfo field in fields)
+            {
+                object enumValue = field.GetRawConstantValue();
+                string enumString = field.Name.PascalSplit(" ");
+                string radioId = new StringBuilder(field.Name).Append("_".RandomString(4)).ToString();
+
+                bool selectedCondition = selected != null ? field.Name.Equals(selected.ToString()) : first;
+                items.Add(Tags.Li(() => Tags.Input(new {type = "radio", name = enumType.Name, value = enumValue.ToString()})
+                    .SetAttribute("data-text", field.Name)
+                    .CheckedIf(selectedCondition))
+                );
+            }
+
+            list.AddChildren(items.ToArray());
+            return list;
         }
+        
+        public string TagName { get; set; }
+        public Dictionary<string, object> Attributes { get; private set; }
+        public Dictionary<string, object> Styles { get; private set; }
+        public HashSet<string> Classes { get; set; }
+        protected internal string Content { get; set; }
 
         public Tag Id(string id)
         {
-            _html.Id(id);
+            SetAttribute("id", id);
+            return this;
+        }
+        
+        public Tag SetStyles(object styles)
+        {
+            return SetStyles(styles.ToDictionary());
+        }
+
+        public Tag SetStyles(Dictionary<string, object> styles)
+        {
+            Styles = styles;
             return this;
         }
 
-        public string Id()
+        public Tag Css(string className)
         {
-            return _html.Id();
+            return AddClass(className);
         }
-
-        public Tag DropDown(Dictionary<string, string> options, string selected = null)
+        
+        public Tag Css(string key, object value)
         {
-            _html.DropDown(options, selected);
-            return this;
+            return AddStyle(key, value);
         }
-
-        public Tag Radio(bool chked, object attributes = null)
-        {
-            Tag radio = new Tag("input", attributes).Type("radio");
-            if (chked)
-            {
-                radio.Attrs(new { Checked = "checked" });
-            }
-
-            return SubTag(radio);
-        }
-
-        public Tag CheckBox(bool chked, object attributes = null)
-        {
-            Tag checkBox = new Tag("input", attributes).Type("checkbox");
-            if (chked)
-            {
-                checkBox.Attrs(new { Checked = "checked" });
-            }
-            return SubTag(checkBox);
-        }
-
-        public Tag TextArea(string value = null, int rows = 10, int cols = 40, object attributes = null)
-        {
-            Tag textArea = new Tag("textarea", new { rows = rows.ToString(), cols = cols.ToString() });
-            textArea.Attrs(attributes);
-            return SubTag(textArea);
-        }
-
-        public Tag TextBox(string value = null, object attributes = null)
-        {
-            Tag textBox = new Tag("input", attributes).Type("text").Value(value);
-            return SubTag(textBox);
-        }
-
-        public Tag Input(string type, object attributes = null)
-        {
-            return SubTag(new Tag("input", attributes).Type(type));
-        }
-
-        public Tag Name(string name)
-        {
-            return Attrs(new { name = name });
-        }
-
-        public Tag Value(string value)
-        {
-            return Attrs(new { value = value });
-        }
-
-        public Tag Type(string type)
-        {
-            return Attrs(new { type = type });
-        }
-
-        public Tag ChildIf(bool condition, Tag tag)
-        {
-            if (condition)
-            {
-                Child(tag);
-            }
-
-            return this;
-        }
+        
         /// <summary>
-        /// Same as SubTag.  Adds a subtag to the current Tag
+        /// Adds the specified style if it has not already been added.
         /// </summary>
-        /// <param name="tagName"></param>
-        /// <param name="text"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public Tag Child(string tagName, string text)
+        public Tag AddStyle(string key, object value)
         {
-            return SubTag(tagName, text);
+            Styles.AddMissing(key, value);
+            return this;
+        }
+        
+        public Tag AddStyles(object styles)
+        {
+            return AddStyles(styles.ToDictionary());
         }
 
         /// <summary>
-        /// Same as Child.  Adds a subtag to the current
-        /// Tag
+        /// Adds the specified styles if they have not already been set.
         /// </summary>
-        /// <param name="tagName"></param>
-        /// <param name="text"></param>
+        /// <param name="styles"></param>
         /// <returns></returns>
-        public Tag SubTag(string tagName, string text)
+        public Tag AddStyles(Dictionary<string, object> styles)
         {
-            _html.Child(new TagBuilder(tagName).Text(text));
-            return this;
-        }
-
-        public Tag Child(Tag tag)
-        {
-            return SubTag(tag);
-        }
-
-        public Tag SubTag(Tag tag)
-        {
-            _html.Child(tag.TagBuilder);
-            return this;
-        }
-
-        public Tag Class(string className)
-        {
-            return Css(className);
-        }
-
-        public Tag CssIf(bool condition, string classOrStyle, string value = null)
-        {
-            if (condition)
+            foreach (string key in styles.Keys)
             {
-                Css(classOrStyle, value);
+                Styles.AddMissing(key, styles[key]);
             }
 
             return this;
         }
 
-        public Tag Css(string classOrStyle, string value = null)
+        public Tag AddClass(string className)
         {
-            _html.Css(classOrStyle, value);
-            return this;
+            return AddClasses(className);
         }
 
-        public Tag Text(string text)
+        public Tag AddClasses(params string[] classNames)
         {
-            _html.Text(text);
-            return this;
-        }
-
-        public Tag Text(HtmlString text)
-        {
-            return Text(text.ToString());
-        }
-
-        public Tag Html(HtmlString html)
-        {
-            return Html(html.ToString());
-        }
-
-        public Tag Html(Tag tag)
-        {
-            return Html(tag.TagBuilder);
-        }
-
-        public Tag Html(TagBuilder tagBuilder)
-        {
-            _html.Child(tagBuilder);
-            return this;
-        }
-
-        public Tag Html(string html)
-        {
-            _html.Html(html);
-            return this;
-        }
-
-        public Tag DataClick(string dataClick)
-        {
-            _html.AttrIf(!string.IsNullOrWhiteSpace(dataClick), "data-click", dataClick);
-            return this;
-        }
-
-        public Tag Data(string name, string value)
-        {
-            _html.AttrIf(!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(value), string.Format("data-{0}", name), value);
-            return this;
-        }
-
-        /// <summary>
-        /// Adds an onabort attribute with the specified value
-        /// </summary>
-        /// <param name="abort">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Abort(string abort)
-        {
-            return this.On("abort", abort);
-        }
-
-        /// <summary>
-        /// Short for Blur
-        /// </summary>
-        /// <param name="blur"></param>
-        /// <returns></returns>
-        public Tag B(string blur)
-        {
-            return Blur(blur);
-        }
-
-        /// <summary>
-        /// Adds an onblur attribute with the specified value
-        /// </summary>
-        /// <param name="blur">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Blur(string blur)
-        {
-            return this.On("blur", blur);
-        }
-
-        /// <summary>
-        /// Short for Change
-        /// </summary>
-        /// <param name="change"></param>
-        /// <returns></returns>
-        public Tag Ch(string change)
-        {
-            return Change(change);
-        }
-        /// <summary>
-        /// Adds an onchange attribute with the specified value
-        /// </summary>
-        /// <param name="change">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Change(string change)
-        {
-            return this.On("change", change);
-        }
-
-        /// <summary>
-        /// Short for Click
-        /// </summary>
-        /// <param name="click"></param>
-        /// <returns></returns>
-        public Tag Cl(string click)
-        {
-            return Click(click);
-        }
-
-        /// <summary>
-        /// Adds an onclick attribute with the specified value
-        /// </summary>
-        /// <param name="click">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Click(string click)
-        {
-            return this.On("click", click);
-        }
-
-        /// <summary>
-        /// Short for DblClick
-        /// </summary>
-        /// <param name="dblclick"></param>
-        /// <returns></returns>
-        public Tag Dc(string dblclick)
-        {
-            return DblClick(dblclick);
-        }
-        /// <summary>
-        /// Adds an ondblclick attribute with the specified value
-        /// </summary>
-        /// <param name="dblclick">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag DblClick(string dblclick)
-        {
-            return this.On("dblclick", dblclick);
-        }
-        /// <summary>
-        /// Adds an onerror attribute with the specified value
-        /// </summary>
-        /// <param name="error">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Error(string error)
-        {
-            return this.On("error", error);
-        }
-
-        /// <summary>
-        /// Short for Focus
-        /// </summary>
-        /// <param name="focus"></param>
-        /// <returns></returns>
-        public Tag F(string focus)
-        {
-            return Focus(focus);
-        }
-
-        /// <summary>
-        /// Adds an onfocus attribute with the specified value
-        /// </summary>
-        /// <param name="focus">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Focus(string focus)
-        {
-            return this.On("focus", focus);
-        }
-
-        /// <summary>
-        /// Short for Keydown
-        /// </summary>
-        /// <param name="keydown"></param>
-        /// <returns></returns>
-        public Tag Kd(string keydown)
-        {
-            return Keydown(keydown);
-        }
-        /// <summary>
-        /// Adds an onkeydown attribute with the specified value
-        /// </summary>
-        /// <param name="keydown">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Keydown(string keydown)
-        {
-            return this.On("keydown", keydown);
-        }
-
-        public Tag Kp(string keypress)
-        {
-            return Keypress(keypress);
-        }
-
-        /// <summary>
-        /// Adds an onkeypress attribute with the specified value
-        /// </summary>
-        /// <param name="keypress">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Keypress(string keypress)
-        {
-            return this.On("keypress", keypress);
-        }
-
-        /// <summary>
-        /// Short for keyup
-        /// </summary>
-        /// <param name="keyup"></param>
-        /// <returns></returns>
-        public Tag Ku(string keyup)
-        {
-            return Keyup(keyup);
-        }
-        /// <summary>
-        /// Adds an onkeyup attribute with the specified value
-        /// </summary>
-        /// <param name="keyup">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Keyup(string keyup)
-        {
-            return this.On("keyup", keyup);
-        }
-
-        /// <summary>
-        /// Short for Load
-        /// </summary>
-        /// <param name="load"></param>
-        /// <returns></returns>
-        public Tag L(string load)
-        {
-            return Load(load);
-        }
-        /// <summary>
-        /// Adds an onload attribute with the specified value
-        /// </summary>
-        /// <param name="load">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Load(string load)
-        {
-            return this.On("load", load);
-        }
-
-        public Tag Md(string mousedown)
-        {
-            return Mousedown(mousedown);
-        }
-
-        /// <summary>
-        /// Adds an onmousedown attribute with the specified value
-        /// </summary>
-        /// <param name="mousedown">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Mousedown(string mousedown)
-        {
-            return this.On("mousedown", mousedown);
-        }
-
-        public Tag Mm(string mousemove)
-        {
-            return Mousemove(mousemove);
-        }
-
-        /// <summary>
-        /// Adds an onmousemove attribute with the specified value
-        /// </summary>
-        /// <param name="mousemove">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Mousemove(string mousemove)
-        {
-            return this.On("mousemove", mousemove);
-        }
-
-        /// <summary>
-        /// Short for Mouseout
-        /// </summary>
-        /// <param name="mouseout"></param>
-        /// <returns></returns>
-        public Tag Mout(string mouseout)
-        {
-            return Mouseout(mouseout);
-        }
-        /// <summary>
-        /// Adds an onmouseout attribute with the specified value
-        /// </summary>
-        /// <param name="mouseout">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Mouseout(string mouseout)
-        {
-            return this.On("mouseout", mouseout);
-        }
-
-        /// <summary>
-        /// Short for Mouseover
-        /// </summary>
-        /// <param name="mouseover"></param>
-        /// <returns></returns>
-        public Tag Mo(string mouseover)
-        {
-            return Mouseover(mouseover);
-        }
-
-        /// <summary>
-        /// Adds an onmouseover attribute with the specified value
-        /// </summary>
-        /// <param name="mouseover">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Mouseover(string mouseover)
-        {
-            return this.On("mouseover", mouseover);
-        }
-
-        /// <summary>
-        /// Short for mouseup
-        /// </summary>
-        /// <param name="mouseUp"></param>
-        /// <returns></returns>
-        public Tag Mu(string mouseUp)
-        {
-            return Mouseup(mouseUp);
-        }
-
-        /// <summary>
-        /// Adds an onmouseup attribute with the specified value
-        /// </summary>
-        /// <param name="mouseup">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Mouseup(string mouseup)
-        {
-            return this.On("mouseup", mouseup);
-        }
-        /// <summary>
-        /// Adds an onreset attribute with the specified value
-        /// </summary>
-        /// <param name="reset">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Reset(string reset)
-        {
-            return this.On("reset", reset);
-        }
-        /// <summary>
-        /// Adds an onresize attribute with the specified value
-        /// </summary>
-        /// <param name="resize">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Resize(string resize)
-        {
-            return this.On("resize", resize);
-        }
-
-        /// <summary>
-        /// Short for Unload
-        /// </summary>
-        /// <param name="unload"></param>
-        /// <returns></returns>
-        public Tag U(string unload)
-        {
-            return Unload(unload);
-        }
-        /// <summary>
-        /// Adds an onunload attribute with the specified value
-        /// </summary>
-        /// <param name="unload">The value</param>
-        /// <returns>The Tag</returns>
-        public Tag Unload(string unload)
-        {
-            return this.On("unload", unload);
-        }
-
-        /// <summary>
-        /// Wraps the current tag in a tag of the specified type and returns
-        /// the wrapper tag
-        /// </summary>
-        /// <param name="tagName"></param>
-        /// <returns></returns>
-        public Tag Wrap(string tagName)
-        {
-            return new Tag(tagName).Html(this);
-        }
-
-        static internal List<string> events = new List<string>(new string[] { "abort", "blur", "change", "click",
-                                   "dblclick", "error", "focus", "keydown",
-                                   "keypress", "keyup", "load", "mousedown",
-                                   "mousemove", "mouseout", "mouseover", "mouseup",
-                                   "reset", "resize", "select", "submit", "unload"});
-
-        public Tag On(string eventName, string value)
-        {
-            if (!events.Contains(eventName))
+            foreach (string className in classNames)
             {
-                throw Args.Exception<InvalidOperationException>("The specified eventName is invalid: {0}", eventName);
+                Classes.Add(className);
             }
 
-            _html.AttrIf(!string.IsNullOrWhiteSpace(value), string.Format("on{0}", eventName), value);
             return this;
+        }
+        
+        public string InnerText
+        {
+            get { return Content.HtmlEncode(); }
+        }
+
+        public string InnerHtml
+        {
+            get { return Content; }
+        }
+        
+        public Tag AddAttributes(object attributes)
+        {
+            Args.ThrowIfNull(attributes, "attributes");
+            foreach (KeyValuePair kvp in attributes.ToKeyValuePairs())
+            {
+                AddAttribute(kvp.Key, kvp.Value);
+            }
+
+            return this;
+        }
+
+        public Tag AddAttribute(string name, object value)
+        {
+            Attributes.AddMissing(name, value);
+            return this;
+        }
+        
+        public Tag SetAttribute(string name, object value)
+        {
+            if (!Attributes.AddMissing(name, value))
+            {
+                Attributes[name] = value;
+            }
+
+            return this;
+        }
+        
+        public bool SelfClosing { get; set; }
+
+        public static Tag Of(string tagName, object attributes = null, string content = null)
+        {
+            return new Tag(tagName, attributes, content);
+        }
+
+        public Tag DataSet(string dataName, object value)
+        {
+            return SetAttribute($"data-{dataName}", value);
+        }
+        
+        public virtual string Render(bool indented = false)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(RenderStartOpenTag());
+            stringBuilder.Append(RenderTagAttributes());
+
+            if (Content != null)
+            {
+                stringBuilder.Append(RenderEndOfTag());
+                stringBuilder.Append(Content);
+                stringBuilder.Append(RenderEndTag());
+            }
+            else
+            {
+                if (SelfClosing)
+                {
+                    stringBuilder.Append(RenderEndOfSelfClosingTag());
+                }
+                else
+                {
+                    stringBuilder.Append(RenderEndOfTag());
+                    stringBuilder.Append(RenderEndTag());
+                }
+            }
+
+            return indented ? stringBuilder.ToString().XmlToHumanReadable() : stringBuilder.ToString();
+        }
+
+        protected string RenderTagAttributes()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            if (Attributes != null && Attributes.Count > 0)
+            {
+                stringBuilder.Append(RenderAttributes());
+            }
+
+            if (Styles != null && Styles.Count > 0)
+            {
+                stringBuilder.Append(RenderStyles());
+            }
+
+            if (Classes != null && Classes.Count > 0)
+            {
+                stringBuilder.Append(RenderClasses());
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        protected string RenderStartTag()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(RenderStartOpenTag());
+            stringBuilder.Append(RenderTagAttributes());
+            stringBuilder.Append(RenderEndOfTag());
+            return stringBuilder.ToString();
+        }
+        
+        private string RenderStartOpenTag()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append($"<{TagName}");
+            
+            return stringBuilder.ToString();
+        }
+
+        private string RenderEndTag()
+        {
+            return $"</{TagName}>";
+        }
+
+        private string RenderEndOfSelfClosingTag()
+        {
+            return "/>";
+        }
+
+        private string RenderEndOfTag()
+        {
+            return ">";
+        }
+
+        private string RenderAttributes()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(" ");
+            string[] keys = Attributes.Keys.ToArray();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                string key = keys[i];
+                stringBuilder.Append($"{key}=\"{Attributes[key]}\"");
+                if (i != keys.Length - 1)
+                {
+                    stringBuilder.Append(" ");
+                }
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private string RenderStyles()
+        {
+            if (Styles.Count > 0)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(" style=\"");
+                string[] keys = Styles.Keys.ToArray();
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    string key = keys[i];
+                    stringBuilder.Append($"{key}: {Styles[key].ToString()}");
+                    if (i != keys.Length - 1)
+                    {
+                        stringBuilder.Append("; ");
+                    }
+                }
+
+                stringBuilder.Append(";\"");
+                return stringBuilder.ToString();
+            }
+
+            return string.Empty;
+        }
+
+        private string RenderClasses()
+        {
+            if (Classes != null && Classes.Count > 0)
+            {
+                return $" class=\"{string.Join(" ", Classes.ToArray())}\"";
+            }
+
+            return string.Empty;
         }
     }
 }

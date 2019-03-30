@@ -18,10 +18,10 @@ namespace Bam.Net.UserAccounts
     {
         public UserManagerConfig()
         {
-            EmailTemplateDirectoryPath = ".\\EmailTemplates";
+            EmailTemplateDirectoryPath = Path.Combine(AppPaths.Data, "EmailTemplates");
             EmailComposerType = typeof(NamedFormatEmailComposer).AssemblyQualifiedName;
             ApplicationNameResolverType = typeof(DefaultConfigurationApplicationNameProvider).AssemblyQualifiedName;
-            SmtpSettingsVaultPath = ".\\SmtpSettings.vault.sqlite";
+            SmtpSettingsVaultPath = Path.Combine(AppPaths.Data, "SmtpSettings.vault.sqlite");
             ApplicationName = DefaultConfiguration.DefaultApplicationName;
         }
 

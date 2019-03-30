@@ -18,27 +18,26 @@ namespace Bam.Net.Automation
     {
         public ProcessWorker() : base() { }
         public ProcessWorker(string name) : base(name) { }
-        public ProcessWorker(string name, string commandLine)
+        public ProcessWorker(string name, string commandName, string arguments)
             : base(name)
         {
-            this.CommandLine = commandLine;
+            CommandName = commandName;
+            Arguments = arguments;
         }
 
-        public string CommandLine { get; set; }
+        public string CommandName { get; set; }
+        public string Arguments { get; set; }
 
-        public override string[] RequiredProperties
-        {
-            get { return new string[] { "Name", "CommandLine" }; }
-        }
+        public override string[] RequiredProperties => new string[] { "Name", "CommandLine" };
 
         protected override WorkState Do(WorkState currentWorkState)
         {
-            Args.ThrowIfNullOrEmpty(CommandLine, "CommandLine");
+            Args.ThrowIfNullOrEmpty(CommandName, "CommandName");
 
-            ProcessOutput output = CommandLine.Run();
+            ProcessOutput output = CommandName.Start(Arguments);
             WorkState<ProcessOutput> result = new WorkState<ProcessOutput>(this, output)
             {
-                Message = string.Format("{0} exited with code {1}", CommandLine, output.ExitCode),
+                Message = $"'{CommandName} {Arguments}' exited with code {output.ExitCode}",
                 PreviousWorkState = currentWorkState
             };
             return result;

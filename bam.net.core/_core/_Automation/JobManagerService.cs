@@ -34,7 +34,7 @@ namespace Bam.Net.Automation
             {
                 if (_jobsDirectory == null)
                 {
-                    _jobsDirectory = new DirectoryInfo("{0}\\Jobs"._Format(RuntimeSettings.AppDataFolder));
+                    _jobsDirectory = new DirectoryInfo(System.IO.Path.Combine(Workspace.ForApplication().Root.FullName, "Jobs"));
                 }
 
                 return _jobsDirectory.FullName;

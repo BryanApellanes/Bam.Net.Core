@@ -119,7 +119,7 @@ namespace Bam.Net.Encryption.Tests
         }
 
         [UnitTest]
-        public void CredentialManagerReturnsNullForUnkownUser()
+        public void CredentialManagerReturnsNullForUnknownUser()
         {
             CredentialManager mgr = new CredentialManager(GetTestCredentialVault());
             CredentialInfo info1 = new CredentialInfo

@@ -8,7 +8,7 @@ namespace Bam.Net.Configuration
 {
     public class StaticApplicationNameProvider : IApplicationNameProvider
     {
-        public const string DefaultApplicationName = "UNKOWN-APPLICATION";
+        public const string DefaultApplicationName = "UNKNOWN_APPLICATION";
         public StaticApplicationNameProvider() : this(DefaultApplicationName) { }
         public StaticApplicationNameProvider(string applicationName)
         {

@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices
     public class FileService : ApplicationProxyableService, IFileService
     {
         protected FileService() { }
-        public FileService(IRepository repository, DefaultDataDirectoryProvider dataSettings = null, ILogger logger = null)
+        public FileService(IRepository repository, DataProvider dataProvider = null, ILogger logger = null)
         {
             Repository = repository;
             Repository.AddTypes(new Type[]
@@ -32,17 +32,17 @@ namespace Bam.Net.CoreServices
                 typeof(ChunkDataDescriptor),
                 typeof(ChunkData)
             });
-            DataSettings = dataSettings ?? DefaultDataDirectoryProvider.Instance;
+            DataProvider = dataProvider ?? Data.Repositories.DataProvider.Instance;
             Logger = logger ?? Log.Default;
-            FileSystemChunkStorage = new FileSystemChunkStorage(DataSettings, Logger);
-            RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DataSettings, Logger);
+            FileSystemChunkStorage = new FileSystemChunkStorage(DataProvider, Logger);
+            RepositoryChunkStorage = new RepositoryChunkStorage(Repository, DataProvider, Logger);
             ChunkStorage = new CompositeChunkStorage();
             ChunkStorage.AddStorage(FileSystemChunkStorage);
             ChunkStorage.AddStorage(RepositoryChunkStorage);
 
             ChunkDataBatchSize = 10;
             ChunkLength = 256000;
-            ChunkDirectory = DataSettings.GetChunksDirectory().FullName;
+            ChunkDirectory = DataProvider.GetChunksDirectory().FullName;
             SetChunkDataDescriptorRetriever();
         }
 
@@ -291,7 +291,7 @@ namespace Bam.Net.CoreServices
             return GetFileChunks(fileHash, fromIndex, ChunkDataBatchSize);
         }
 
-        protected DefaultDataDirectoryProvider DataSettings { get; }
+        protected DataProvider DataProvider { get; }
 
         private static void HandleExistingFile(string localPath, bool overwrite)
         {

@@ -534,7 +534,6 @@ namespace Bam.Net.Server
         public ProxyAlias[] ProxyAliases { get; set; }
         public bool GenerateDao { get; set; }
         public bool UseCache { get; set; }
-        public bool InitializeTemplates { get; set; }
         public bool InitializeWebBooks { get; set; }
         public string DaoSearchPattern { get; set; }
         public string ServiceSearchPattern { get; set; }
@@ -1231,10 +1230,6 @@ namespace Bam.Net.Server
         private void HandlePostInitialization(BamServer server)
         {
             PostInitializationHandler = new PostServerInitializationHandler();
-            if (server.InitializeTemplates)
-            {
-                PostInitializationHandler.InitializationHandlers.Add(new DustTemplateInitializer(this));
-            }
 
             PostInitializationHandler.HandleInitialization(this);
 

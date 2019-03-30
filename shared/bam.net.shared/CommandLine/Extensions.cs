@@ -204,6 +204,20 @@ namespace Bam.Net.CommandLine
             return Run(info, output, timeOut);
         }
 
+        /// <summary>
+        /// Start the specified command in a separate process blocking until it exits.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="arguments"></param>
+        /// <param name="standardOut"></param>
+        /// <param name="errorOut"></param>
+        /// <returns></returns>
+        public static ProcessOutput Start(this string filePath, string arguments = null, Action<string> standardOut = null, Action<string> errorOut =null)
+        {
+            ProcessStartInfo startInfo = filePath.ToStartInfo(arguments);
+            return startInfo.Run(standardOut, errorOut);
+        }
+        
         public static ProcessStartInfo ToStartInfo(this string filePath, string arguments = null)
         {
             return ToStartInfo(filePath, new DirectoryInfo("."), arguments);

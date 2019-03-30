@@ -27,7 +27,7 @@ namespace Bam.Net.CoreServices.Tests
 
             settings.Password = PasswordPrompt("Please enter the smtp password", ConsoleColor.Yellow);
 
-            DataSettingsSmtpSettingsProvider provider = new DataSettingsSmtpSettingsProvider(settings);
+            DataProviderSmtpSettingsProvider provider = new DataProviderSmtpSettingsProvider(settings);
             Email email = provider.CreateEmail();
             email
                 .Subject("SmtpSettings test")

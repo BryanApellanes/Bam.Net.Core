@@ -229,7 +229,7 @@ namespace Bam.Net.Automation
                 if (addToQueue)
                 {
                     IWorker work = this[workerName];
-                    CurrentWorkState = new WorkState(work, "queueing worker");
+                    CurrentWorkState = new WorkState(work);
                     WorkQueue.Enqueue(work);
                     OnWorkerQueued();
                 }
@@ -237,14 +237,21 @@ namespace Bam.Net.Automation
 
             while (WorkQueue.Count > 0)
             {
-                IWorker work = WorkQueue.Dequeue();
-
-                CurrentWorkState = new WorkState(work, string.Format("starting work {0}", work.Name)) { PreviousWorkState = CurrentWorkState };
-
+                IWorker worker = WorkQueue.Dequeue();
+                
+                CurrentWorkState = new WorkState(worker) { PreviousWorkState = CurrentWorkState, JobData = CurrentWorkState.JobData, StepNumber = worker.StepNumber};
+                worker.WorkState(CurrentWorkState);
+                worker.SetPropertiesFromWorkState(CurrentWorkState);
+                
                 OnWorkerStarting();
 
-                CurrentWorkState = work.Do(this);
-
+                worker.Busy = true;
+                WorkState worksWorkState = worker.Do(this);
+                worksWorkState[$"{worker.Name}_Result"] = worksWorkState;
+                worksWorkState.JobData = CurrentWorkState.JobData;
+                CurrentWorkState = worksWorkState;
+                
+                worker.Busy = false;
                 OnWorkerFinished();
 
                 if (CurrentWorkState.Status == Status.Failed)
@@ -255,6 +262,6 @@ namespace Bam.Net.Automation
             }
 
             OnJobFinished();
-        }
+        }       
     }
 }

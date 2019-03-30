@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using Lucene.Net.Analysis.Hunspell;
 
 namespace Bam.Net.Configuration
 {
@@ -14,7 +17,8 @@ namespace Bam.Net.Configuration
         public ConfigurationResolver(ILogger logger = null)
         {
             DefaultConfiguration = ConfigurationManager.AppSettings;
-            ConfigurationService = new DefaultConfigurationService();
+            ConfigurationProvider = new DefaultConfigurationProvider();
+            AppSettings = Config.Read();
         }
 
         public ConfigurationResolver(IConfiguration configuration, ILogger logger = null)
@@ -22,7 +26,10 @@ namespace Bam.Net.Configuration
             Logger = logger ?? Log.Default;
             NetCoreConfiguration = configuration;
             DefaultConfiguration = ConfigurationManager.AppSettings;
+            AppSettings = Config.Read();
         }
+        
+        public Dictionary<string, string> AppSettings { get; set; }
 
         public IConfiguration NetCoreConfiguration { get; set; }
         public NameValueCollection DefaultConfiguration { get; set; }
@@ -31,9 +38,9 @@ namespace Bam.Net.Configuration
         public ILogger Logger { get; set; }
 
         [Inject]
-        public IConfigurationService ConfigurationService { get; set; }
+        public IConfigurationProvider ConfigurationProvider { get; set; }
 
-        public string this[string key, bool callConfigService = false]
+        public string this[string key, string defaultValue = null, bool callConfigService = false]
         {
             get
             {
@@ -42,13 +49,35 @@ namespace Bam.Net.Configuration
                 {
                     value = DefaultConfiguration[key];
                 }
+
+                if (string.IsNullOrEmpty(value) && AppSettings.ContainsKey(key))
+                {
+                    value = AppSettings[key];
+                }
+                
+                if (string.IsNullOrEmpty(value))
+                {
+                    value = BamEnvironmentVariables.GetBamVariable(key);
+                }
+
+                if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(defaultValue))
+                {
+                    value = defaultValue;
+                }
+                
                 if(string.IsNullOrEmpty(value) && callConfigService)
                 {
                     value = FromService(key);
                 }
+                
                 if (string.IsNullOrEmpty(value))
                 {
                     FireEvent(ConfigurationValueNotFound, new ConfigurationEventArgs { Key = key });
+                }
+                if (!string.IsNullOrEmpty(value))
+                {
+                    AppSettings.AddMissing(key, value);
+                    Config.Write(AppSettings);
                 }
                 return value;
             }       
@@ -89,10 +118,10 @@ namespace Bam.Net.Configuration
                     return value;
                 }
             }
-            if (ConfigurationService != null && !string.IsNullOrEmpty(ApplicationName))
+            if (ConfigurationProvider != null && !string.IsNullOrEmpty(ApplicationName))
             {
                 FireEvent(RetrievingFromService, new ConfigurationEventArgs { Key = key });
-                _config = ConfigurationService.GetApplicationConfiguration(ApplicationName);
+                _config = ConfigurationProvider.GetApplicationConfiguration(ApplicationName);
                 if(_config != null && _config.ContainsKey(key))
                 {
                     string value = _config[key];

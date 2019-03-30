@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Bam.Net.Data.Repositories;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Data
 {

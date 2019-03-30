@@ -28,7 +28,7 @@ namespace Bam.Net.Translation
         {
             get
             {
-                return _defaultLock.DoubleCheckLock(ref _defaultTranslationDb, () => new SQLiteDatabase(".\\", "Language"));
+                return _defaultLock.DoubleCheckLock(ref _defaultTranslationDb, () => new SQLiteDatabase("./", "Language"));
             }
             set
             {

@@ -23,7 +23,7 @@ namespace Bam.Net.Server.Tests
             int port = RandomNumber.Between(8081, 65535);
             string testKey = 16.RandomLetters();
             string testValue = 500.RandomLetters();
-            Database sessionDb = DefaultDataDirectoryProvider.Current.GetAppDatabase($"{nameof(KeyValueStoreServer)}_Sessions");
+            Database sessionDb = DataProvider.Current.GetAppDatabase($"{nameof(KeyValueStoreServer)}_Sessions");
             sessionDb.TryEnsureSchema<SecureSession>();
             Db.For<SecureSession>(sessionDb);
             ConsoleLogger logger = new ConsoleLogger { AddDetails = false };

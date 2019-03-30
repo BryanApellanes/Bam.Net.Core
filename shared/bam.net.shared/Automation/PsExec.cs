@@ -11,7 +11,7 @@ namespace Bam.Net.Automation
     {
         static PsExec()
         {
-            Path = "C:\\bam\\tools\\PsExec.exe";
+            Path = "/bam/tools/PsExec.exe";
         }
 
         public static string Path { get; set; }

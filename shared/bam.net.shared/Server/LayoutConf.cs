@@ -18,7 +18,7 @@ namespace Bam.Net.Server
     public partial class LayoutConf
     {
         static string ContentRootKey = "ContentRoot";
-        static string DefaultContentRoot = "C:\\bam\\content";
+        static string DefaultContentRoot = BamPaths.ContentPath;
         /// <summary>
         /// Required for deserialization
         /// </summary>

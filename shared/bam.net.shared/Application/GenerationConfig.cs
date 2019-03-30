@@ -13,7 +13,7 @@ namespace Bam.Net.Application
         public GenerationConfig()
         {
             CheckForIds = true;
-            TemplatePath = Path.Combine(".", "Templates");
+            TemplatePath = Path.Combine(AppPaths.Data, "Templates");
         }
 
         public string TemplatePath { get; set; }

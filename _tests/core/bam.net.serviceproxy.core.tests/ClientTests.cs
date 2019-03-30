@@ -109,7 +109,7 @@ namespace Bam.Net.ServiceProxy.Tests
             ApiKeyResolver resolver = new ApiKeyResolver(keyProvider, new TestApplicationNameProvider(testName));
             resolver.SetKeyToken(nvc, data);
 
-            Expect.IsNotNullOrEmpty(nvc[CustomHeaders.KeyToken], "Key token was not set");
+            Expect.IsNotNullOrEmpty(nvc[Headers.KeyToken], "Key token was not set");
 			ClearApps();
         }
 
@@ -126,7 +126,7 @@ namespace Bam.Net.ServiceProxy.Tests
 
             resolver.SetKeyToken(nvc, data);
 
-            string token = nvc[CustomHeaders.KeyToken];
+            string token = nvc[Headers.KeyToken];
             bool isValid = resolver.IsValidKeyToken(data, token);
             Expect.IsTrue(isValid, "token was not valid");
 			ClearApps();

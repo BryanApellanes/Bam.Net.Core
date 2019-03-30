@@ -31,7 +31,7 @@ namespace Bam.Net.CoreServices.Tests
         {
             string appName = $"{nameof(CanSetAndGetCommonAppConfig)}_TestAppName";
             string configurationName = $"{nameof(CanSetAndGetCommonAppConfig)}_TestConfigName";
-            ConfigurationService configSvc = GetTestCoreConfigurationService(appName);
+            ConfigurationProvider configSvc = GetTestCoreConfigurationService(appName);
 
             configSvc.SetApplicationConfiguration(new Dictionary<string, string>
             {
@@ -56,7 +56,7 @@ namespace Bam.Net.CoreServices.Tests
         {
             string machineName = $"{nameof(CanSetAndGetCommonMachineConfig)}_TestMachineName";
             string configurationName = $"{nameof(CanSetAndGetCommonMachineConfig)}_TestConfigName";
-            ConfigurationService configSvc = GetTestCoreConfigurationService(machineName);
+            ConfigurationProvider configSvc = GetTestCoreConfigurationService(machineName);
 
             configSvc.SetMachineConfiguration(machineName, new Dictionary<string, string>
             {
@@ -81,7 +81,7 @@ namespace Bam.Net.CoreServices.Tests
         {
             string appName = $"{nameof(CanSetAndGetCommonConfiguration)}_TestAppName";
             string configurationName = $"{nameof(CanSetAndGetCommonConfiguration)}_TestConfigName";
-            ConfigurationService configSvc = GetTestCoreConfigurationService(nameof(CanSetAndGetCommonConfiguration));
+            ConfigurationProvider configSvc = GetTestCoreConfigurationService(nameof(CanSetAndGetCommonConfiguration));
 
             configSvc.SetCommonConfiguration(new Dictionary<string, string>
             {
@@ -103,7 +103,7 @@ namespace Bam.Net.CoreServices.Tests
             string configurationName = $"{nameof(ApplicationSettingOverridesMachine)}_TestConfigName";
             string expectedValue = "ApplicationValue";
             string machineName = Machine.Current.Name;
-            ConfigurationService configSvc = GetTestCoreConfigurationService(appName);
+            ConfigurationProvider configSvc = GetTestCoreConfigurationService(appName);
             configSvc.SetMachineConfiguration(machineName, new Dictionary<string, string>
             {
                 {"key1", "MachineValue" }
@@ -124,7 +124,7 @@ namespace Bam.Net.CoreServices.Tests
         {
             string appName = $"{nameof(ConfigurationAggregatesCommonMachineAndApplication)}_TestAppName";
             string machineName = $"{nameof(ConfigurationAggregatesCommonMachineAndApplication)}_TestMachineName";
-            ConfigurationService configSvc = GetTestCoreConfigurationService(appName);
+            ConfigurationProvider configSvc = GetTestCoreConfigurationService(appName);
             configSvc.SetCommonConfiguration(new Dictionary<string, string>
             {
                 {"CommonKey1", "CommonValue1" },
@@ -182,7 +182,7 @@ namespace Bam.Net.CoreServices.Tests
             Expect.AreEqual("ApplicationValue2", config["ApplicationKey2"]);
         }
 
-        private ConfigurationService GetTestCoreConfigurationService(string testName)
+        private ConfigurationProvider GetTestCoreConfigurationService(string testName)
         {
             string appName = $"{testName}_TestAppName";
             string userDbPath = $".\\{testName}_Test";
@@ -194,7 +194,7 @@ namespace Bam.Net.CoreServices.Tests
             userDb.TryEnsureSchema<UserAccounts.Data.User>();
             Db.For<UserAccounts.Data.User>(userDb);
 
-            ConfigurationService configSvc = new ConfigurationService(coreRepo, new Server.AppConf(), userDbPath);
+            ConfigurationProvider configSvc = new ConfigurationProvider(coreRepo, new Server.AppConf(), userDbPath);
             configSvc.DaoRepository = coreRepo;
             IApplicationNameProvider appNameProvider = Substitute.For<IApplicationNameProvider>();
             appNameProvider.GetApplicationName().Returns(appName);
@@ -211,7 +211,7 @@ namespace Bam.Net.CoreServices.Tests
             ctx.Request = Substitute.For<IRequest>();
             NameValueCollection headers = new NameValueCollection
             {
-                [CustomHeaders.ApplicationName] = testName
+                [Headers.ApplicationName] = testName
             };
             ctx.Request.Headers.Returns(headers);
             ctx.Request.Cookies.Returns(new System.Net.CookieCollection());

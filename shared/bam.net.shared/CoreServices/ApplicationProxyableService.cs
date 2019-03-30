@@ -69,7 +69,7 @@ namespace Bam.Net.CoreServices
         {
             get
             {
-                string modeString = HttpContext?.Request?.Headers[CustomHeaders.ProcessMode];
+                string modeString = HttpContext?.Request?.Headers[Headers.ProcessMode];
                 if (!string.IsNullOrEmpty(modeString))
                 {
                     return modeString.ToEnum<ProcessModes>();
@@ -211,7 +211,7 @@ namespace Bam.Net.CoreServices
         {
             if (ServerApplicationName.Equals(ApplicationRegistration.Data.Application.Unknown.Name))
             {
-                throw new InvalidOperationException("Application is unkown");
+                throw new InvalidOperationException("Application is unknown");
             }
             Bam.Net.CoreServices.ApplicationRegistration.Data.Application app = ApplicationRegistrationRepository.OneApplicationWhere(c => c.Name == ServerApplicationName);
             if (app == null)
@@ -225,7 +225,7 @@ namespace Bam.Net.CoreServices
         {
             if (ClientApplicationName.Equals(ApplicationRegistration.Data.Application.Unknown.Name))
             {
-                throw new InvalidOperationException("Application is unkown");
+                throw new InvalidOperationException("Application is unknown");
             }
             Bam.Net.CoreServices.ApplicationRegistration.Data.Application app = ApplicationRegistrationRepository.OneApplicationWhere(c => c.Name == ClientApplicationName);
             if(app == null)

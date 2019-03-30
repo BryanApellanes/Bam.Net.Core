@@ -129,6 +129,7 @@ namespace Bam.Net.CommandLine
 
                 return null;
             }
+            set { parsedArguments[name] = value; }
         }
 
         public string[] Keys

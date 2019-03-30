@@ -14,7 +14,7 @@ namespace Bam.Net.Application
     {
         public DaemonProcess()
         {
-            WorkingDirectory = ".\\";
+            WorkingDirectory = "./";
             StandardOutSoFar = string.Empty;
             StandardErrorSoFar = string.Empty;
             StandardOut += (o, a) =>

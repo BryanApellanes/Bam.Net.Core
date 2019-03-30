@@ -159,7 +159,7 @@ namespace Bam.Net.Services.Clients
         {
             Args.ThrowIfNull(request, "request");
             string stringToHash = ApiParameters.GetStringToHash(request);
-            string token = request.Context.Request.Headers[CustomHeaders.KeyToken];
+            string token = request.Context.Request.Headers[Headers.KeyToken];
             bool result = false;
             if (!string.IsNullOrEmpty(token))
             {
@@ -187,7 +187,7 @@ namespace Bam.Net.Services.Clients
         /// <param name="stringToHash"></param>
         public void SetKeyToken(NameValueCollection headers, string stringToHash)
         {
-            headers[CustomHeaders.KeyToken] = CreateKeyToken(stringToHash);
+            headers[Headers.KeyToken] = CreateKeyToken(stringToHash);
         }
         #endregion
         [Verbosity(VerbosityLevel.Warning, SenderMessageFormat = "ApiKeyFile {ApiKeyFilePath} was not found")]
@@ -484,7 +484,7 @@ namespace Bam.Net.Services.Clients
         protected internal RoleService RoleService { get; set; }
         protected internal OAuthService OAuthService { get; set; }
         protected internal ApplicationRegistrationService ApplicationRegistrationService { get; set; } // TODO: rename this to ApplicationRegistrationService and test
-        protected internal ConfigurationService ConfigurationService { get; set; }
+        protected internal ConfigurationProvider ConfigurationProvider { get; set; }
         protected internal SystemLoggerService LoggerService { get; set; }
         protected internal DiagnosticService DiagnosticService { get; set; }
         protected internal ServiceRegistryService ServiceRegistryService { get; set; }
@@ -501,7 +501,7 @@ namespace Bam.Net.Services.Clients
             {
                 yield return UserRegistryService;
                 yield return ApplicationRegistrationService;                
-                yield return ConfigurationService;
+                yield return ConfigurationProvider;
                 yield return LoggerService;
                 yield return RoleService;
                 yield return DiagnosticService;
@@ -519,7 +519,7 @@ namespace Bam.Net.Services.Clients
             {
                 yield return typeof(UserRegistryService);
                 yield return typeof(ApplicationRegistrationService);
-                yield return typeof(ConfigurationService);
+                yield return typeof(ConfigurationProvider);
                 yield return typeof(SystemLoggerService);
                 yield return typeof(RoleService);
                 yield return typeof(DiagnosticService);
@@ -547,7 +547,7 @@ namespace Bam.Net.Services.Clients
             ApplicationName = applicationName;
             HostName = hostName;
             Port = port;
-            WorkspaceDirectory = workingDirectory ?? DefaultDataDirectoryProvider.Current.GetWorkspaceDirectory(typeof(CoreClient)).FullName;
+            WorkspaceDirectory = workingDirectory ?? DataProvider.Current.GetWorkspaceDirectory(typeof(CoreClient)).FullName;
             HashAlgorithm = HashAlgorithms.SHA256;
             Logger = logger ?? Log.Default;
             ProxyFactory = new ProxyFactory(WorkspaceDirectory, Logger);
@@ -576,7 +576,7 @@ namespace Bam.Net.Services.Clients
         private void SetLocalServiceProxies()
         {
             ApplicationRegistrationService = ProxyFactory.GetProxy<ApplicationRegistrationService>();
-            ConfigurationService = ProxyFactory.GetProxy<ConfigurationService>();
+            ConfigurationProvider = ProxyFactory.GetProxy<ConfigurationProvider>();
             DiagnosticService = ProxyFactory.GetProxy<DiagnosticService>();
             LoggerService = ProxyFactory.GetProxy<SystemLoggerService>();
             UserRegistryService = ProxyFactory.GetProxy<UserRegistryService>();
@@ -631,7 +631,7 @@ namespace Bam.Net.Services.Clients
         private void SetProperty(string propertyName)
         {
             ApplicationRegistrationService.Property(propertyName, this);
-            ConfigurationService.Property(propertyName, this);
+            ConfigurationProvider.Property(propertyName, this);
             DiagnosticService.Property(propertyName, this);
             LoggerService.Property(propertyName, this);
             UserRegistryService.Property(propertyName, this);

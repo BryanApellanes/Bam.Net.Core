@@ -70,7 +70,7 @@ namespace Bam.Net
         public static T FromYamlFile<T>(this FileInfo fileInfo)
         {
             Deserializer deserializer = new Deserializer();
-            return deserializer.Deserialize<T>(fileInfo.ReadAllText());
+            return deserializer.Deserialize<T>(fileInfo.FullName.SafeReadFile());
         }
 
         public static object FromYaml(this string yaml, Type type)

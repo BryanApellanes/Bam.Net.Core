@@ -19,6 +19,7 @@ using Bam.Net.Testing.Integration;
 
 namespace Bam.Net.Application
 {
+    // TODO: convert this to a ShellProvider
     /// <summary>
     /// User administrative actions
     /// </summary>
@@ -45,7 +46,7 @@ namespace Bam.Net.Application
         /// <summary>
         /// Create a user in the local user database.
         /// </summary>
-        [ConsoleAction("localListUsers", "LOCAL: create a user account")]
+        [ConsoleAction("localCreateUser", "LOCAL: create a user account")]
         public void CreateLocalUser()
         {
             Database userDatabase = ServiceTools.GetUserDatabase();

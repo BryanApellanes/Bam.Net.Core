@@ -21,9 +21,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using Bam.Net.Configuration;
+using Bam.Net.Data;
+using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
+using Lucene.Net.Analysis.Hunspell;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace Bam.Net
 {
@@ -267,6 +271,11 @@ namespace Bam.Net
                 value.Equals("quit", StringComparison.InvariantCultureIgnoreCase) ||
                 value.Equals("exit", StringComparison.InvariantCultureIgnoreCase) ||
                 value.Equals("bye", StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static FileInfo GetNextFile(this FileInfo file)
+        {
+            return new FileInfo(GetNextFileName(file.FullName));
         }
 
         /// <summary>
@@ -870,6 +879,16 @@ namespace Bam.Net
             }
         }
 
+        public static void Write(this string text, TextWriter textWriter)
+        {
+            textWriter.Write(text);
+        }
+
+        public static string HtmlEncode(this string value)
+        {
+            return HttpUtility.HtmlEncode(value);
+        }
+        
         public static string XmlToHumanReadable(this string xml, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.Unicode;
@@ -937,6 +956,16 @@ namespace Bam.Net
             }
         }
 
+        public static bool ExtendsType<T>(this Type type)
+        {
+            if (type == typeof(T))
+            {
+                return false;
+            }
+            TypeInheritanceDescriptor descriptor = new TypeInheritanceDescriptor(type);
+            return descriptor.Extends(typeof(T));
+        }
+        
         /// <summary>
         /// Execute the specified Func this 
         /// many times
@@ -989,6 +1018,27 @@ namespace Bam.Net
             }
         }
 
+        public static Dictionary<string, string> ToDictionary(this string input, string keyValueSeparator,
+            string elementSeparator)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            string[] elements = input.DelimitSplit(elementSeparator);
+            elements.Each(e =>
+            {
+                string[] keyValue = e.DelimitSplit(keyValueSeparator);
+                Args.ThrowIf<ArgumentException>(keyValue.Length == 0 || keyValue.Length > 2, "Unrecognized key value format: {0}", keyValue);
+                if (keyValue.Length == 2)
+                {
+                    result.Add(keyValue[0], keyValue[1]);
+                }
+                else
+                {
+                    result.Add(keyValue[0], string.Empty);
+                }
+            });
+            return result;
+        }
+        
         /// <summary>
         /// Parses key value pairs from the string.
         /// </summary>
@@ -1626,6 +1676,16 @@ namespace Bam.Net
                 {
                     sw.Write(reader.ReadToEnd());
                 }
+            }
+        }
+
+        public static string Serialize(this object obj, SerializationFormat format = SerializationFormat.Yaml)
+        {
+            MemoryStream output = new MemoryStream();
+            Serialize(obj, format, output);
+            using (StreamReader reader = new StreamReader(output))
+            {
+                return reader.ReadToEnd();
             }
         }
 
@@ -2728,10 +2788,7 @@ namespace Bam.Net
             
             lock (FileLock.Named(filePath))
             {
-                using (StreamReader sr = new StreamReader(filePath))
-                {
-                    return sr.ReadToEnd();
-                }
+                return File.ReadAllText(filePath);
             }
         }
 
@@ -2876,19 +2933,24 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Adds the specified value if the specified key has not been added
+        /// Adds the specified value if the specified key has not been added, returns true if the key had not already been added, false if the value
+        /// is not added because the key already exists.
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="dictionary"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void AddMissing<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        /// <returns>true if the value was added because no value existed, false if a value with the same key is already in the dictionary.</returns>
+        public static bool AddMissing<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
             if (!dictionary.ContainsKey(key))
             {
                 dictionary.Add(key, value);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -2972,6 +3034,14 @@ namespace Bam.Net
         }
 
         /// <summary>
+        /// Splits the specified text at capital letters inserting a hyphen as a separator.
+        /// </summary>
+        public static string KabobCase(this string stringToKabobify)
+        {
+            return PascalSplit(stringToKabobify, "-");
+        }
+        
+        /// <summary>
         /// Splits the specified text at capital letters inserting the specified separator.
         /// </summary>
         /// <param name="stringToPascalSplit"></param>
@@ -3022,10 +3092,10 @@ namespace Bam.Net
                 return string.Empty;
             }
         }
-
+        
         /// <summary>
         /// Return an acronym for the specified string using the 
-        /// captial letters in the string
+        /// capital letters in the string
         /// </summary>
         /// <param name="stringToAcronymize"></param>
         /// <param name="alwaysUseFirst"></param>
@@ -3265,10 +3335,7 @@ namespace Bam.Net
         /// <returns>string</returns>
         public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder, string delimiter)
         {
-            // TODO: change this implementation to use string.Join(delimiter, values.Select(v=> toDelimiteder(v)).ToArray());
-            List<string> values = new List<string>();
-            objectsToStringify.Each(v => values.Add(toDelimiteder(v)));
-            return string.Join(delimiter, values.ToArray());
+            return string.Join(delimiter, objectsToStringify.Select(v=> toDelimiteder(v)).ToArray());
         }
 
         public static string[] SemiColonSplit(this string semicolonSeparatedValues)
@@ -3893,6 +3960,23 @@ namespace Bam.Net
             return result;
         }
 
+        public static IEnumerable<KeyValuePair<string, V>> ToKeyValuePairs<V>(this object instance, Func<object, V> valueMunger)
+        {
+            foreach (KeyValuePair kvp in ToKeyValuePairs(instance))
+            {
+                yield return new KeyValuePair<string, V>() {Key = kvp.Key, Value = valueMunger(kvp.Value)};
+            }
+        }
+        
+        public static IEnumerable<KeyValuePair> ToKeyValuePairs(this object instance)
+        {
+            Type type = instance.GetType();
+            foreach (PropertyInfo prop in type.GetProperties())
+            {
+                yield return new KeyValuePair() {Key = prop.Name, Value = prop.GetValue(instance)};
+            }
+        }
+        
         /// <summary>
         /// Intended to turn a dynamic object into a dictionary. For example,
         /// new { key1 = value1, key2 = value 2} becomes a dictionary with

@@ -24,7 +24,7 @@ namespace Bam.Net
 
 		public GeneratedAssemblyInfo()
 		{
-			Root = ".\\";
+			Root = "./";
 		}
 
 		public GeneratedAssemblyInfo(string infoFileName)
