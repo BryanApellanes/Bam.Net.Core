@@ -202,6 +202,7 @@ namespace Bam.Shell.Jobs
                 }
 
                 ProcessOutput processOutput = ShellSettings.Current.Editor.Start(workerConf.LoadedFrom);
+                jobConf.Save();
                 Exit(0);
             }
             catch (Exception ex)

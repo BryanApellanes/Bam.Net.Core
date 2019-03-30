@@ -3,13 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Bam.Net.Logging;
+using Markdig.Helpers;
 
 namespace Bam.Net
 {
     public class HandlebarsTemplateRenderer : ITemplateRenderer
     {
+        public HandlebarsTemplateRenderer(string directoryPath = ".") : this(
+            new HandlebarsEmbeddedResources(typeof(HandlebarsTemplateRenderer).Assembly),
+            new HandlebarsDirectory(directoryPath))
+        {
+        }
+        
         public HandlebarsTemplateRenderer(HandlebarsEmbeddedResources handlebarsEmbeddedResources, HandlebarsDirectory handlebarsDirectory)
             : this(handlebarsEmbeddedResources, new HandlebarsDirectory[] {handlebarsDirectory})
         {
@@ -42,9 +50,16 @@ namespace Bam.Net
         public string Render(string templateName, object data)
         {
             MemoryStream ms = new MemoryStream();
-            Render(templateName, data, ms);
-            ms.Seek(0, SeekOrigin.Begin);
-            return ms.ReadToEnd();
+            try
+            {
+                Render(templateName, data, ms, false);
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms.ReadToEnd();
+            }
+            finally
+            {
+                ms.Dispose();
+            }
         }
         
         public void Render(object toRender, Stream output)
@@ -55,16 +70,21 @@ namespace Bam.Net
 
         public void Render(string templateName, object renderModel, Stream output)
         {
+            Render(templateName, renderModel, output);
+        }
+        
+        public void Render(string templateName, object renderModel, Stream output, bool dispose = true)
+        {
             HandlebarsDirectory handlebarsDirectory = GetHandlebarsDirectory(templateName);
             if (handlebarsDirectory != null)
             { 
                 string code = handlebarsDirectory.Render(templateName, renderModel);
-                code.WriteToStream(output);
+                code.WriteToStream(output, dispose);
             }
             else if ((HandlebarsEmbeddedResources?.Templates?.ContainsKey(templateName)) == true)
             {
                 string code = HandlebarsEmbeddedResources.Render(templateName, renderModel);
-                code.WriteToStream(output);
+                code.WriteToStream(output, dispose);
             }
             else
             {

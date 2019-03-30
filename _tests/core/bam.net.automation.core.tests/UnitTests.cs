@@ -12,12 +12,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Bam.Net.Automation.Scripting;
 
 namespace Bam.Net.Automation.Tests
 {
     [Serializable]
     public class UnitTests: CommandLineTestInterface
     {
+        [UnitTest]
+        public void CanCompileCustomScriptContext()
+        {
+            CSharpScriptContext ctx = new CSharpScriptContext();
+            ctx.Script = "System.Console.WriteLine(\"monkey\");";
+            ctx.Execute(
+                @"C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.2.0\ref\netcoreapp2.2\System.Runtime.dll",
+                typeof(Console).Assembly.GetFilePath());
+        }
+        
         [UnitTest]
         public void CanFindGitRepo()
         {

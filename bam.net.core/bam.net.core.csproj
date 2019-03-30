@@ -16,6 +16,8 @@
     <EmbeddedResource Remove="Templates\**" />
     <None Remove="Bam.Net\**" />
     <None Remove="Templates\**" />
+    <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
+    <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />
   </ItemGroup>
 
   <ItemGroup>

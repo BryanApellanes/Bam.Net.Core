@@ -248,6 +248,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BuildSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\BakeWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\FullBuildWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ConsoleOutputWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\CsFile.cs" />
@@ -283,6 +284,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsKill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningWorkerTypeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\CSharpScriptContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\CSharpScriptContextModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\IncludeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SetJobDataWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Sftp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SourceControl\Extensions.cs" />

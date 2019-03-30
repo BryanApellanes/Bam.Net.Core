@@ -47,20 +47,21 @@ namespace Bam.Net.Application
         }
         
         public string Name { get; private set; }
+        public OSNames OsName { get; private set; }
         
         public static Runtime Windows
         {
-            get { return new Runtime() {Name = "win10-x64"}; }
+            get { return new Runtime() {Name = "win10-x64", OsName = OSNames.Windows}; }
         }
 
         public static Runtime Linux
         {
-            get { return new Runtime() {Name = "ubuntu.16.10-x64"}; }
+            get { return new Runtime() {Name = "ubuntu.16.10-x64", OsName = OSNames.Linux}; }
         }
         
         public static Runtime Mac
         {
-            get { return new Runtime() {Name = "osx-x64"}; }
+            get { return new Runtime() {Name = "osx-x64", OsName = OSNames.OSX}; }
         }
     }
 }

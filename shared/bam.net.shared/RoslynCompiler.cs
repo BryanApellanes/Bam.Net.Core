@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 using CsQuery.ExtensionMethods;
 
@@ -15,6 +16,7 @@ namespace Bam.Net
     {
         public RoslynCompiler()
         {
+            _referencePaths = new HashSet<string>();
             _referenceAssemblies = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
             ReferenceAssemblies = DefaultReferenceAssemblies;
@@ -31,11 +33,17 @@ namespace Bam.Net
             }
         }
 
+        HashSet<string> _referencePaths;
+        public string[] ReferencePaths
+        {
+            get { return _referencePaths.ToArray(); }
+        }
+        
         public OutputKind OutputKind { get; set; }
 
         public RoslynCompiler AddAssemblyReference(string path)
         {
-            _referenceAssemblies.Add(Assembly.LoadFile(path));
+            _referencePaths.Add(path);
             return this;
         }
         
@@ -90,7 +98,6 @@ namespace Bam.Net
                 {
                     List<Assembly> defaultAssemblies = new List<Assembly>
                     {
-                        typeof(object).Assembly,
                         typeof(System.Dynamic.DynamicObject).Assembly,
                         typeof(System.Xml.XmlDocument).Assembly,
                         typeof(System.Data.DataTable).Assembly,
@@ -105,8 +112,10 @@ namespace Bam.Net
 
         private MetadataReference[] GetMetadataReferences()
         {
-            MetadataReference[] metaDataReferences = ReferenceAssemblies.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray();
-            return metaDataReferences;
+            List<MetadataReference> metadataReferences = new List<MetadataReference>();
+            metadataReferences.AddRange(ReferencePaths.Select(p => MetadataReference.CreateFromFile(p)));
+            metadataReferences.AddRange(ReferenceAssemblies.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());
+            return metadataReferences.ToArray();
         }
     }
 }

@@ -870,12 +870,15 @@ namespace Bam.Net
             writer.Write(string.Join(",", values.ToArray()));
         }
 
-        public static void WriteToStream(this string text, Stream writeTo)
+        public static void WriteToStream(this string text, Stream writeTo, bool dispose = true)
         {
-            using (StreamWriter sw = new StreamWriter(writeTo))
+            StreamWriter sw = new StreamWriter(writeTo);
+            sw.Write(text);
+            sw.Flush();
+
+            if (dispose)
             {
-                sw.Write(text);
-                sw.Flush();
+                sw.Dispose();
             }
         }
 

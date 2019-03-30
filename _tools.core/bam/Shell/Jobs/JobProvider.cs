@@ -94,8 +94,16 @@ namespace Bam.Shell.Jobs
                 JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
                 string jobName = arguments.JobName;
 
-                JobConf jobConf = JobManagerService.GetJob(jobName);
-                OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
+                if (JobManagerService.JobExists(jobName))
+                {
+                    JobConf jobConf = JobManagerService.GetJob(jobName);
+                    OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
+                }
+                else
+                {
+                    PrintMessage();
+                    OutLineFormat("Specified job does not exist: {0}", ConsoleColor.Yellow, jobName);
+                }
             }
             catch (Exception ex)
             {
@@ -116,8 +124,16 @@ namespace Bam.Shell.Jobs
             try
             {
                 JobProviderArguments providerArguments = GetProviderArguments() as JobProviderArguments;
-                JobManagerService.RemoveJob(providerArguments.JobName);
-                OutLineFormat("Job {0} was deleted", ConsoleColor.Yellow, providerArguments.JobName);
+                if(JobManagerService.JobExists(providerArguments.JobName))
+                {
+                    JobManagerService.RemoveJob(providerArguments.JobName);
+                    OutLineFormat("Job {0} was deleted", ConsoleColor.Yellow, providerArguments.JobName);
+                }
+                else
+                {
+                    PrintMessage();
+                    OutLineFormat("Specified job doesn't exist: {0}", providerArguments.JobName);
+                }
             }
             catch (Exception ex)
             {
@@ -142,7 +158,7 @@ namespace Bam.Shell.Jobs
                         jobFinished = (args.Cast<WorkStateEventArgs>())?.WorkState?.JobName?.Equals(providerArguments.JobName);
                         if (jobFinished != null && jobFinished.Value == true)
                         {
-                            OutLineFormat("Job {0} finished", providerArguments.JobName);
+                            OutLineFormat("Job {0} finished", ConsoleColor.Cyan, providerArguments.JobName);
                             Unblock();
                         }
                     };

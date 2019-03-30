@@ -227,7 +227,7 @@ namespace Bam.Net.Automation
         public string RepoPath { get; set; }
         public string BranchName { get; set; }
         public string Config { get; set; }
-        public string Runtime { get; set; }
+        public string OSName { get; set; }
         
         string _buildOutput;
         public string BuildOutput
@@ -249,7 +249,7 @@ namespace Bam.Net.Automation
             settings = settings ?? new BuildSettings();
             this.CopyProperties(settings);
             Config = settings.Config.ToString();
-            Runtime = settings.Runtime.Name;
+            OSName = settings.Runtime.OsName.ToString();
         }
         
         public virtual BuildSettings GetBuildSettings()
@@ -260,7 +260,7 @@ namespace Bam.Net.Automation
                 RepoPath = RepoPath,
                 BranchName = BranchName,
                 Config = Config.ToEnum<BuildConfig>(),
-                Runtime = Bam.Net.Application.Runtime.For(Runtime),
+                Runtime = Bam.Net.Application.Runtime.For(OSName),
                 BuildOutput = BuildOutput
             };
         }
