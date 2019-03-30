@@ -193,16 +193,13 @@ namespace Bam.Net.Automation
                         Message = $"Build exited with code {buildOutput.ExitCode}"
                     };
                 }
-            
-                BuildResult result = new BuildResult()
-                {
-                    Success = true,
-                    Message = "Build and test completed successfully"
-                };
 
                 WorkState($"{Name}_BuildOutput", settings.BuildOutput);
-                WorkState($"{Name}_BuildResult", result);
-                return result;
+                WorkState($"{Name}_BuildResult", buildOutput);
+                return new BuildResult()
+                {
+                    Success =  true
+                };
             }
             finally
             {
