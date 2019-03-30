@@ -176,7 +176,7 @@ namespace Bam.Net.Automation
         public string Save()
         {
             EnsureJobDirectory();
-
+            ReloadWorkers();
             string path = GetFilePath();
             this.ToJsonFile(path);
             return path;
@@ -187,6 +187,7 @@ namespace Bam.Net.Automation
             if (WorkerExists(name, out string workerFilePath))
             {
                 File.Delete(workerFilePath);
+                Save();
                 return true;
             }
 

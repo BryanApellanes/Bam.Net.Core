@@ -151,7 +151,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                JobProviderArguments providerArguments = GetProviderArguments(true) as JobProviderArguments;
+                JobProviderArguments providerArguments = GetProviderArguments(true, true) as JobProviderArguments;
                 JobConf jobConf = GetJobConf(providerArguments.JobName);
                 WorkerConf worker = jobConf.GetWorkerConf(providerArguments.WorkerName);
                 if (worker == null)

@@ -21,6 +21,31 @@ namespace Bam.Net.Application
             return Name;
         }
 
+        public static Runtime Current()
+        {
+            return For(OSInfo.Current);
+        }
+
+        public static Runtime For(string osName)
+        {
+            return For(osName.ToEnum<OSNames>());
+        }
+        
+        public static Runtime For(OSNames osNames)
+        {
+            switch (osNames)
+            {
+                case OSNames.Linux:
+                    return Linux;
+                case OSNames.OSX:
+                    return Mac;
+                case OSNames.Invalid:
+                case OSNames.Windows:
+                default:
+                    return Windows;
+            }
+        }
+        
         public string Name { get; private set; }
         
         public static Runtime Windows

@@ -116,6 +116,11 @@ namespace Bam.Net.Automation
             }
 
             JobConf jobConf = GetJob(jobName);
+            if (jobConf == null)
+            {
+                jobConf = CreateJobConf(jobName);
+            }
+            
             AddWorker(jobConf, type, workerName);
         }
 
@@ -251,13 +256,8 @@ namespace Bam.Net.Automation
             return null;
         }
 
-        protected internal JobConf CreateJobConf(string name, bool overwrite = false)
+        protected internal JobConf CreateJobConf(string name)
         {
-            if (JobExists(name))
-            {
-                throw new InvalidOperationException("The specified job {0} already exists, use GetJob to get the existing job"._Format(name));
-            }
-
             JobConf conf = new JobConf(name)
             {
                 JobDirectory = GetJobDirectoryPath(name)

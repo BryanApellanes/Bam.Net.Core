@@ -7,8 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Bam.Net.Configuration;
 using Bam.Net.Logging;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Automation
 {
@@ -134,7 +137,15 @@ namespace Bam.Net.Automation
             };
             properties.Each(prop =>
             {
-                conf.AddProperty(prop.Name, prop.GetValue(this)?.ToString());
+                if (!prop.HasCustomAttributeOfType<ExcludeAttribute>())
+                {
+                    object propVal = prop.GetValue(this);
+                    if (propVal != null && prop.PropertyType != typeof(string))
+                    {
+                        propVal = propVal.ToJson();
+                    }
+                    conf.AddProperty(prop.Name, propVal?.ToString());
+                }
             });
             conf.Save(path);
         }
@@ -171,6 +182,10 @@ namespace Bam.Net.Automation
 
         protected abstract WorkState Do(WorkState currentWorkState);
 
+        [XmlIgnore]
+        [YamlIgnore]
+        [JsonIgnore]
+        [Exclude]
         public abstract string[] RequiredProperties { get;  }
        
         public virtual void Configure(IConfigurer configurer)
