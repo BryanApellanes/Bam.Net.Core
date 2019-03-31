@@ -137,12 +137,22 @@ namespace Bam.Net.Data.Repositories
 
             return result;
         }
-
+        
         protected internal TypeSchema CreateTypeSchema(params Type[] types)
         {
             return CreateTypeSchema((IEnumerable<Type>)types);
         }
 
+        public TypeSchema CreateTypeSchema()
+        {
+            return CreateTypeSchema(Types);
+        }
+
+        public SchemaDefinition CreateSchema(string schemaName)
+        {
+            return CreateSchemaDefinition(Types, schemaName).SchemaDefinition;
+        }
+        
         /// <summary>
         /// Create a TypeSchema from the specified types
         /// </summary>

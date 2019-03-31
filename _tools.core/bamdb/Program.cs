@@ -1,14 +1,17 @@
 using Bam.Net.Logging;
 using Bam.Net.Testing;
 using System;
+using Bam.Net.Application.Shell;
+using Bam.Shell;
 
 namespace Bam.Net.Application
 {
     [Serializable]
-    class Program : CommandLineTestInterface
+    class Program : ArgZero
     {
         static void Main(string[] args)
         {
+            Log.Default = Workspace.Current.CreateLogger<TextFileLogger>();
             TryWritePid();
 
             DefaultMethod = typeof(Program).GetMethod(nameof(AfterInitialize));
@@ -18,6 +21,9 @@ namespace Bam.Net.Application
             AddConfigurationSwitches();
             ArgumentAdder.AddArguments(args);
 
+            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb.exe");
+            ExecuteArgZero<DbShellProvider>(args);
+            
             Initialize(args, (a) =>
             {
                 OutLineFormat("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);

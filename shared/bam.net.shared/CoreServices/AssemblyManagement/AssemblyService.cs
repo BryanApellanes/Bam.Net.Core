@@ -55,6 +55,12 @@ namespace Bam.Net.CoreServices
             return AssemblyManagementRepository.AssemblyDescriptorsWhere(ad => ad.AssemblyFullName == assemblyFulName).ToList();
         }
 
+        /// <summary>
+        /// Resolve the assembly described by the specified request.  Returns the base 64 encoded
+        /// assembly.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public string ResolveBase64Assembly(AssemblyRequest request)
         {
             Assembly assembly = ResolveAssembly(request.AssemblyFullName);
@@ -64,6 +70,14 @@ namespace Bam.Net.CoreServices
             }
 
             return string.Empty;
+        }
+
+        [Local]
+        public AssemblyDescriptor StoreAssembly(Assembly assemblyToStore)
+        {
+            AssemblyDescriptor descriptor = new AssemblyDescriptor(assemblyToStore);
+            StoreAssemblyFileChunks(descriptor);
+            return descriptor;
         }
         
         [Local]

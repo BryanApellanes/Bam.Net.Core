@@ -216,6 +216,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\RenderableModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolutionStrategy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolve.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\AssemblyReference.cs" />
@@ -458,6 +459,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicTypeNameResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\IDynamicTypeNameResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\PropertyDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQLTypeGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLType.hbs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IRepositoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlConnectionStringResolver.cs" />
@@ -495,6 +498,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\NonForeignKeyColumnModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\ReferencingForeignKeyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\XrefInfoModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\SQLite\SQLiteSchemaExtractor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Handlebars.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HandlebarsTemplateRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ICompiler.cs" />
@@ -883,6 +887,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\CommonHandlebarsRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\Secure\SecureSessionDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppProviderAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Automation\CommandRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\ProxyCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyMethodModel.cs" />
@@ -1340,7 +1345,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaNameMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaNameMapNameFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SQLiteSchemaExtractor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Table.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\TableNameToClassName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\TargetTableEventDelegate.cs" />

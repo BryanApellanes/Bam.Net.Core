@@ -44,24 +44,19 @@ namespace Bam.Shell
         /// <summary>
         /// Scan for ArgZero methods.
         /// </summary>
-        public static void Scan()
-        {
-            
-            
-            
-            
+        public static void Scan<T>() where T: IRegisterArguments
+        {   
             Assembly current = Assembly.GetExecutingAssembly();
-            
             
             current.GetTypes().ForEach(type =>
             {
-                if (type.ExtendsType<ShellProvider>())
+                if (type.ExtendsType<T>())
                 {
                     if (!type.Name.EndsWith("Provider"))
                     {
                         OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'", ConsoleColor.Yellow);
                     }
-                    type.Construct<ShellProvider>().RegisterArguments();
+                    type.Construct<T>().RegisterArguments();
                     string providerName = type.Name.Truncate("Provider".Length);
                     ProviderTypes.AddMissing(providerName, type);
                 }
@@ -87,14 +82,14 @@ namespace Bam.Shell
         /// Execute any ArgZero arguments specified on the command line then exit.  Has no effect if no relevant arguments
         /// are detected.
         /// </summary>
-        public static void ExecuteArgZero(string[] arguments)
+        public static void ExecuteArgZero<T>(string[] arguments) where T: IRegisterArguments
         {
             if (arguments.Length == 0)
             {
                 return;
             }
             
-            Scan();
+            Scan<T>();
             ShellProviderDelegator.Register(arguments);
             if (Targets.ContainsKey(arguments[0]))
             {

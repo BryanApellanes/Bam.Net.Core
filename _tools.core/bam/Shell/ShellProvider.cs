@@ -9,7 +9,7 @@ using Bam.Shell.Jobs;
 
 namespace Bam.Shell
 {
-    public abstract class ShellProvider : CommandLineTestInterface
+    public abstract class ShellProvider : CommandLineTestInterface, IRegisterArguments
     {
         public abstract void List(Action<string> output = null, Action<string> error = null);
         public abstract void Add(Action<string> output = null, Action<string> error = null);

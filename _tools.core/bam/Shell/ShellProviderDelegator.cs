@@ -12,7 +12,7 @@ namespace Bam.Shell
         public void List()
         {
             ShellProvider provider = Construct();
-            provider?.List(o => OutLine(o), e => OutLine(e));
+            provider?.List(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
         
@@ -20,7 +20,7 @@ namespace Bam.Shell
         public void Add()
         {
             ShellProvider provider = Construct();
-            provider?.Add(o => OutLine(o), e => OutLine(e));
+            provider?.Add(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
 
@@ -28,7 +28,7 @@ namespace Bam.Shell
         public void Show()
         {
             ShellProvider provider = Construct();
-            provider?.Show(o => OutLine(o), e => OutLine(e));
+            provider?.Show(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
 
@@ -36,7 +36,7 @@ namespace Bam.Shell
         public void Remove()
         {
             ShellProvider provider = Construct();
-            provider?.Remove(o => OutLine(o), e => OutLine(e));
+            provider?.Remove(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
         
@@ -44,7 +44,7 @@ namespace Bam.Shell
         public void Run()
         {
             ShellProvider provider = Construct();
-            provider?.Run(o => OutLine(o), e => OutLine(e));
+            provider?.Run(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
 
@@ -52,7 +52,7 @@ namespace Bam.Shell
         public void Pack()
         {
             ShellProvider provider = Construct();
-            provider?.Pack(o => OutLine(o), e => OutLine(e));
+            provider?.Pack(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
         
@@ -60,7 +60,7 @@ namespace Bam.Shell
         public void Edit()
         {
             ShellProvider provider = Construct();
-            provider?.Edit(o => OutLine(o), e => OutLine(e));
+            provider?.Edit(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
     }

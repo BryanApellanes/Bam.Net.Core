@@ -85,10 +85,10 @@ namespace Bam.Net.Services
         /// <summary>
         /// Invoke the specified method asynchronously and return the wrapped response.
         /// If the call succeeded without errors on the server the Task.Result.Result 
-        /// will be the result of the method call.  If validation failed the 
-        /// Task.Result.Result will be the ValidationResult containing additional information
+        /// is the result of the method call.  If validation failed the 
+        /// Task.Result.Result is the ValidationResult containing additional information
         /// about the validation failure(s).  If an exception occurred the Task.Result.Result
-        /// will be the message of the exception that occurred.
+        /// is the message of the exception that occurred.
         /// </summary>
         /// <param name="methodName"></param>
         /// <param name="arguments"></param>

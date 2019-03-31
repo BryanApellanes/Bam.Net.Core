@@ -24,7 +24,7 @@ namespace Bam.Net.Automation.Tests
         {
             CSharpScriptContext ctx = new CSharpScriptContext();
             ctx.Script = "System.Console.WriteLine(\"monkey\");";
-            ctx.Execute(
+            ctx.Execute(//typeof(Object).Assembly.GetFilePath(),
                 @"C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.2.0\ref\netcoreapp2.2\System.Runtime.dll",
                 typeof(Console).Assembly.GetFilePath());
         }

@@ -19,18 +19,6 @@ namespace Bam.Net.Data.Schema
     public partial class DaoGenerator
     {
         readonly List<Stream> _resultStreams = new List<Stream>();
-        //public DaoGenerator(IDaoCodeWriter codeWriter = null, IDaoTargetStreamResolver targetStreamResolver = null)
-        //{
-        //    DisposeOnComplete = true;
-        //    SubscribeToEvents();
-			
-        //    Namespace = "DaoGenerated";
-        //    TargetStreamResolver = targetStreamResolver ?? new DaoTargetStreamResolver();
-        //    DaoCodeWriter = codeWriter ?? new RazorParserDaoCodeWriter
-        //    {
-        //        DaoTargetStreamResolver = TargetStreamResolver
-        //    };
-        //}
 
         public DaoGenerator(string nameSpace)
             : this()

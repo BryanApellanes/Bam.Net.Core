@@ -4,7 +4,7 @@ using Bam.Net;
 using Bam.Net.Testing;
 using Bam.Shell;
 
-namespace bam.Shell
+namespace Bam.Shell
 {
     public class ArgZeroDelegator<T> : ArgZeroDelegator
     {
@@ -67,6 +67,16 @@ namespace bam.Shell
             }
 
             return string.Empty;
+        }
+
+        protected void StandardOut(string output)
+        {
+            OutLine(output, ConsoleColor.Cyan);
+        }
+
+        protected void StandardError(string output)
+        {
+            OutLine(output, ConsoleColor.DarkYellow); // would make this red or magenta but git outputs a bunch of useful non error stuff to error out
         }
     }
 }

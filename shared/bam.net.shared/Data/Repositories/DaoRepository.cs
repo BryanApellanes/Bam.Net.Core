@@ -15,9 +15,9 @@ using Bam.Net.Logging;
 namespace Bam.Net.Data.Repositories
 {
     /// <summary>
-    /// A repository that will generate an underlying Dao
+    /// A repository that generates an underlying Dao
     /// for the types added.  Any values returned by a 
-    /// call to Query will not be fully hydrated (child lists
+    /// call to Query are not fully hydrated (child lists
     /// won't be populated) as well as any child lists of child 
     /// list elements.  To ensure full hydration of
     /// the values call Retrieve(id) or Retrieve(uuid).    

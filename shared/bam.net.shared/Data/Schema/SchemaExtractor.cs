@@ -26,10 +26,7 @@ namespace Bam.Net.Data.Schema
             _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.TypeSuffix, (tableName, columnName, propertyName) => $"{columnName}{GetColumnDataType(tableName, columnName).ToString()}");
             _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.UnderscoreDelimit, (tableName, columnName, propertyName) => $"_{columnName}_");
             _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.Custom, (tableName, columnName, propertyName) => CustomNamingCollisionHandler(tableName, columnName, propertyName));
-            _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.Invalid, (tableName, columnName, propertyName) =>
-            {
-                throw new InvalidOperationException("Invalid SchemaExtractorNamingCollisionStrategy specified");
-            });
+            _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.Invalid, (tableName, columnName, propertyName) => throw new InvalidOperationException("Invalid SchemaExtractorNamingCollisionStrategy specified"));
             CustomNamingCollisionHandler = _namingCollisionHandlers[SchemaExtractorNamingCollisionStrategy.TrailingUnderscore];
             SchemaExtractorNamingCollisionStrategy = SchemaExtractorNamingCollisionStrategy.TrailingUnderscore;
         }

@@ -428,6 +428,7 @@ namespace Bam.Net.CommandLine
             }
         }
 
+        // TODO: obsolete this method
         private static void GetExeAndArguments(string command, out string exe, out string arguments)
         {
             exe = command;

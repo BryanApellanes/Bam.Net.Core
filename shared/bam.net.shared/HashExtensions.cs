@@ -97,6 +97,13 @@ namespace Bam.Net
             return ContentHash(new FileInfo(filePath), algorithm, encoding);
         }
 
+        /// <summary>
+        /// Hashes the specified file by reading its contents as a byte array and computing the hash using the specified algorithm
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="algorithm"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
         public static string ContentHash(this FileInfo file, HashAlgorithms algorithm, Encoding encoding = null)
         {
             if (encoding == null)

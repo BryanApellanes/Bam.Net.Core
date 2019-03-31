@@ -20,7 +20,7 @@ namespace Bam.Net.Data.Repositories
     /// Intended primarily to enable backup of
     /// Daos to an ObjectRepository
     /// </summary>
-    public partial class DaoToDtoGenerator : Loggable, IAssemblyGenerator, IWriteSource
+    public partial class DaoToDtoGenerator : Loggable, IAssemblyGenerator
     {
         public DaoToDtoGenerator() { }
 

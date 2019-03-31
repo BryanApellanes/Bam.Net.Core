@@ -17,7 +17,7 @@ namespace Bam.Net
             if (string.IsNullOrEmpty(name))
             {
                 string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
-                name = Path.GetFileNameWithoutExtension(assemblyFile);
+                name = Path.GetFileName(assemblyFile);
             }
             return name;
         }

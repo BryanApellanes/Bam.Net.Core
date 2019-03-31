@@ -28,7 +28,7 @@ namespace Bam.Net.Services.Tests
             CommandService svc = reg.Get<CommandService>();
             svc.HttpContext = context;
             svc.Logger = logger;
-            ServiceResponse<CommandInfo> cmd = svc.Start("dir");
+            ServiceResponse<CommandInfo> cmd = svc.Start(new CommandRequest() {Command = "dir"});
             OutLine(cmd.ToJson());
         }
     }
