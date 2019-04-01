@@ -767,7 +767,7 @@ namespace Bam.Net.Data
                 {
                     if (collection.HasProperty(nameof(AutoHydrateChildrenOnDelete))) // it might be an XrefDaoCollection which doesn't have that property
                     {
-                        collection.Property(nameof(AutoHydrateChildrenOnDelete), true);
+                        collection.Property(nameof(AutoHydrateChildrenOnDelete), true, false);
                         collection.Load(Database);
                     }
                 }
@@ -1311,7 +1311,6 @@ namespace Bam.Net.Data
                 ForceInsert = !value;
             }
         }
-
 
         bool _isNew;
         /// <summary>

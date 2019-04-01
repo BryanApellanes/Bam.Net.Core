@@ -461,6 +461,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\PropertyDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQLTypeGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQLTypeModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQueryResolver.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLType.hbs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IRepositoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\Extensions.cs" />

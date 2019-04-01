@@ -1,0 +1,30 @@
+namespace Bam.Net.Data.GraphQL.Templates
+{
+    using System;
+    using System.Collections.Generic;
+    using Bam.Net.Logging;
+    using GraphQL;
+    using GraphQL.Types;
+    
+    public class {{SchemaName}}GraphQueriesContext : ObjectGraphType
+    {
+        public {{SchemaName}}GraphQueriesContext()
+        {
+{{#each DataTypes}}
+            Field<{{TypeName}}Graph>(
+                name: "{{PluralTypeName}}",
+                arguments: new QueryArguments(
+                    new QueryArgument<string> { Name = "qi" },
+{{#each QueryArguments}}
+                    new QueryArgument<{{GraphType}}> { Name = "{{Name}}" }{{Separator}}    
+{{/each}}                    
+                ),
+                resolve: ctx =>
+                {
+                    
+                }
+            );
+{{/each}}
+        }
+    }
+}

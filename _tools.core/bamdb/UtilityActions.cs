@@ -132,6 +132,13 @@ namespace Bam.Net.Application
             }
         }
 
+        [ConsoleAction("generateGraphQLTypes",
+            "Generate CSharp code for types in a specified namespace of a specified assembly")]
+        public static void GenerateGraphQLTypes()
+        {
+            
+        }
+
         [ConsoleAction("generateProtoBufClasses", "Generate CSharp code for types in a specified namespace of a specified assembly")]
         public static void GenerateProtoBufClasses()
         {

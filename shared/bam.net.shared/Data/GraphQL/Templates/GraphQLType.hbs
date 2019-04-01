@@ -1,6 +1,12 @@
 namespace Bam.Net.Data.GraphQL.Templates
 {
-    public class {{TypeName}}Graph : ObjectGraphType<{{TypeName}}
+    using System;
+    using System.Collections.Generic;
+    using Bam.Net.Logging;
+    using GraphQL;
+    using GraphQL.Types;
+
+    public class {{TypeName}}Graph : ObjectGraphType<{{TypeName}}>
     {
         public {{TypeName}}Graph()
         {

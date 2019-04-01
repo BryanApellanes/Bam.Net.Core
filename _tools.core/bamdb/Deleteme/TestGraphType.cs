@@ -28,9 +28,9 @@ namespace Bam.Net.Data.GraphQL
         }
     }
 
-    public class GraphQueriesContext : ObjectGraphType
+    public class GraphQueriesContext : GraphQueryResolver
     {
-        public GraphQueriesContext()
+        public GraphQueriesContext() 
         {
             Field<MachineGraph>(
                 name: "machines", 
@@ -42,6 +42,8 @@ namespace Bam.Net.Data.GraphQL
                 resolve: ctx =>
                 {
                     Log.Info(ctx.PropertiesToString());
+                    // return Resolve(ctx); // should do this
+                    
                     // get all the arguments that were passed in
                     string id = ctx.GetArgument<string>("Id");
                     string uuid = ctx.GetArgument<string>("Uuid");
@@ -56,7 +58,8 @@ namespace Bam.Net.Data.GraphQL
                             new HostAddress(){HostName =  "TestHN2"}
                         }
                     };
-                });
+                }
+            );
         }
         
         [ConsoleAction]
