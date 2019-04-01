@@ -34,6 +34,7 @@ namespace Bam.Net
 
         public GeneratedAssemblyInfo GenerateAssembly()
         {
+            WriteSource();
             GeneratedAssemblyInfo result = new GeneratedAssemblyInfo(InfoFileName, GetAssembly());
             result.Save();
             return result;
@@ -50,7 +51,7 @@ namespace Bam.Net
        
         protected bool FilesHashed { get; set; }
 
-        Dictionary<string, Assembly> _generatedAssemblies;
+        static Dictionary<string, Assembly> _generatedAssemblies;
         protected virtual Assembly GetAssembly()
         {
             string sourceHash = HashSource(!FilesHashed);
@@ -63,7 +64,6 @@ namespace Bam.Net
             _generatedAssemblies.AddMissing(sourceHash, compiled);
             return compiled;
         }
-
 
         Dictionary<string, string> _sourceHashes;
         /// <summary>

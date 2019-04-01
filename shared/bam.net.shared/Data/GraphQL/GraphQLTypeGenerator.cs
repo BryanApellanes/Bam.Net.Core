@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Data.Schema;
 
@@ -10,7 +11,6 @@ namespace Bam.Net.Data.GraphQL
     {
         public GraphQLTypeGenerator()
         {
-            TypeSchemaGenerator = new TypeSchemaGenerator();
             Types = new HashSet<Type>();
         }
 
@@ -26,13 +26,9 @@ namespace Bam.Net.Data.GraphQL
             types.Each(type => AddType(type));
         }
         
-        public TypeSchemaGenerator TypeSchemaGenerator { get; set; }
-        
-        public SchemaDefinition SchemaDefinition { get; set; }
-        
         public override void WriteSource(string writeSourceDir)
         {
-            throw new System.NotImplementedException();
+            Parallel.ForEach(Types, type => { });
         }
 
         public override Assembly Compile()

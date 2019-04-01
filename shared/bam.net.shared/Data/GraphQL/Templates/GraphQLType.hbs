@@ -1,7 +1,12 @@
 namespace Bam.Net.Data.GraphQL.Templates
 {
-    public class GraphQLType_hbs
+    public class {{TypeName}}Graph : ObjectGraphType<{{TypeName}}
     {
-        
+        public {{TypeName}}Graph()
+        {
+{{#each Properties}}
+            Field("{{PropertyName}}", p => p.{{PropertyName}}, type: typeof({{PropertyGraphType}});    
+{{/each}}
+        }
     }
 }

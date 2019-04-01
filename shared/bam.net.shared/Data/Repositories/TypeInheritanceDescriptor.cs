@@ -16,7 +16,7 @@ namespace Bam.Net.Data.Repositories
             Chain = new List<TypeTable>();
             Chain.Add(new TypeTable(type));
             Type baseType = type.BaseType;
-            while(baseType != typeof(object))
+            while(baseType != typeof(object) && baseType != null)
             {
                 RootType = baseType;
                 Chain.Add(new TypeTable(baseType));
