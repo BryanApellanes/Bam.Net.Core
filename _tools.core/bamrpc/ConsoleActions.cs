@@ -33,7 +33,7 @@ namespace Bam.Net.Application
         public void StartBamRpcServerAndPause()
         {
             ConsoleLogger logger = GetLogger();
-            StartGlooServer(logger);
+            StartBamRpcServer(logger);
             Pause("Gloo is running");
         }
 
@@ -277,7 +277,7 @@ namespace Bam.Net.Application
             glooServer.Start();
         }
         
-        public static void StartGlooServer(ConsoleLogger logger)
+        public static void StartBamRpcServer(ConsoleLogger logger)
         {
             BamConf conf = BamConf.Load(DefaultConfiguration.GetAppSetting(contentRootConfigKey).Or(defaultContentRoot));
             glooServer = new BamRpcServer(conf, logger, GetArgument("verbose", "Log responses to the console?").IsAffirmative())

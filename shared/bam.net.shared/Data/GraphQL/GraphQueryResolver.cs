@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Bam.Net.Data.Repositories;
 using GraphQL.Types;
 

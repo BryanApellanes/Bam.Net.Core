@@ -27,6 +27,7 @@ namespace Bam.Shell.Jobs
         {
             base.RegisterArguments();
         }
+        
         protected override ProviderArguments GetProviderArguments()
         {
             return GetProviderArguments(false);

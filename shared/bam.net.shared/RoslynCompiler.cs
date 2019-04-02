@@ -53,12 +53,12 @@ namespace Bam.Net
             return this;
         }
         
-        public Assembly Compile(DirectoryInfo directoryInfo, string assemblyFileName)
+        public Assembly Compile(string assemblyFileName, DirectoryInfo directoryInfo)
         {
-            return Compile(directoryInfo.GetFiles("*.cs").ToArray(), assemblyFileName);
+            return Compile(assemblyFileName, directoryInfo.GetFiles("*.cs").ToArray());
         }
 
-        public Assembly Compile(FileInfo[] sourceFiles, string assemblyFileName)
+        public Assembly Compile(string assemblyFileName, params FileInfo[] sourceFiles)
         {
             return Assembly.Load(Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray()));
         }

@@ -8,18 +8,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Bam.Net\**" />
-    <Compile Remove="Templates\**" />
-    <EmbeddedResource Remove="Bam.Net\**" />
-    <EmbeddedResource Remove="Templates\**" />
-    <None Remove="Bam.Net\**" />
-    <None Remove="Templates\**" />
-    <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
-    <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="BoneSoft.CSS" Version="1.0.0" />
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
@@ -56,8 +45,6 @@
     <PackageReference Include="YamlDotNet" Version="5.3.0" />
     <PackageReference Include="YUICompressor.NET" Version="3.0.0" />
   </ItemGroup>
-
-
 
   <ItemGroup>
     <Folder Include="Presentation\Html\Attributes" />

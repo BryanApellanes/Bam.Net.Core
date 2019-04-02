@@ -20,7 +20,7 @@ namespace Bam.Net.Application
             ConsoleLogger logger = new ConsoleLogger();
             logger.StartLoggingThread();
 
-            GenerationConfig config = GetGenerationConfig(logger);
+            GenerationConfig config = GetGenerationConfig(o=> OutLineFormat(o, ConsoleColor.Cyan));
 
             string targetDir = config.WriteSourceTo;
             DaoGenerationServiceRegistry registry = DaoGenerationServiceRegistry.ForConfiguration(config, logger);
@@ -197,7 +197,7 @@ namespace Bam.Net.Application
             return result;
         }
 
-        private static GenerationConfig GetGenerationConfig(ConsoleLogger logger)
+        internal static GenerationConfig GetGenerationConfig(Action<string> output)
         {
             GenerationConfig config = new GenerationConfig();
             if (Arguments.Contains("config"))
@@ -208,7 +208,7 @@ namespace Bam.Net.Application
                     OutLineFormat("Config file not found: {0}", ConsoleColor.Magenta, configFile.FullName);
                     Exit(1);
                 }
-                logger.Info("using config: {0}", configFile.FullName);
+                output($"using config: {configFile.FullName}");
                 string ext = Path.GetExtension(configFile.FullName).ToLowerInvariant();
                 if (ext.Equals(".json"))
                 {
@@ -218,7 +218,7 @@ namespace Bam.Net.Application
                 {
                     config = configFile.FromYamlFile<GenerationConfig>();
                 }
-                logger.Info(config.ToJson(true));
+                output(config.ToJson(true));
             }
             else
             {

@@ -1,8 +1,9 @@
 using Bam.Net.Logging;
 using Bam.Net.Testing;
 using System;
-using Bam.Net.Application.Shell;
 using Bam.Shell;
+using Bam.Shell.CodeGen;
+using Bam.Shell.Data;
 
 namespace Bam.Net.Application
 {
@@ -23,6 +24,7 @@ namespace Bam.Net.Application
 
             BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb.exe");
             ExecuteArgZero<DbShellProvider>(args);
+            ExecuteArgZero<CodeGenProvider>(args);
             
             Initialize(args, (a) =>
             {

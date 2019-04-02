@@ -2,7 +2,7 @@ using System;
 using Bam.Net.Testing;
 using Bam.Shell;
 
-namespace Bam.Net.Application.Shell
+namespace Bam.Shell.Data
 {
     public abstract class DbShellProvider : CommandLineTestInterface, IRegisterArguments
     {

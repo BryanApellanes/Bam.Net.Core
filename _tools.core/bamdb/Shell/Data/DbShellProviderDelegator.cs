@@ -2,7 +2,7 @@ using System;
 using bam.Shell;
 using Bam.Shell;
 
-namespace Bam.Net.Application.Shell
+namespace Bam.Shell.Data
 {
     public class DbShellProviderDelegator : ArgZeroDelegator<DbShellProvider>
     {
