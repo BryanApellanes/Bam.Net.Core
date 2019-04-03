@@ -19,9 +19,13 @@ namespace Bam.Net.Data.GraphQL
             HandlebarsTemplateRenderer = new HandlebarsTemplateRenderer();
         }
 
+        protected HandlebarsTemplateRenderer HandlebarsTemplateRenderer { get; set; }
+        
+        /// <summary>
+        /// The name of the assembly to generate, if this values is null a random name is generated.
+        /// </summary>
         public string AssemblyName { get; set; }
         
-        protected HandlebarsTemplateRenderer HandlebarsTemplateRenderer { get; set; }
         public HashSet<Type> Types { get; private set; }
 
         public void AddType(Type type)

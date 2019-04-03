@@ -37,6 +37,7 @@ namespace Bam.Shell.Data
             provider?.Del(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
+        
         [ArgZero("find")]
         public void Find()
         {

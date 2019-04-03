@@ -13,6 +13,7 @@ using Bam.Net.Presentation.Handlebars;
 
 namespace Bam.Shell.Models
 {
+    // TODO: refactor this to follow established provider-delegator pattern
     public class ModelProvider : ShellProvider
     {
         public override void List(Action<string> output = null, Action<string> error = null)
@@ -56,7 +57,7 @@ namespace Bam.Shell.Models
             mgr.ProcessDataFiles(AppData);
         }
         
-        [ArgZero("gen", "src|bin|models|dbjs|repo|all: Generate a dynamic type assembly for json and yaml data")]
+        [ArgZero("gen-model", "src|bin|models|dbjs|repo|all: Generate a dynamic type assembly for json and yaml data")]
         public void Generate()
         {
             GenerationTargets target = Arguments["gen"].ToEnum<GenerationTargets>();

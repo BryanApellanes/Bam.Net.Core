@@ -34,15 +34,20 @@ namespace Bam.Net
 
         public GeneratedAssemblyInfo GenerateAssembly()
         {
-            WriteSource();
+            if (!_sourceWritten)
+            {
+                WriteSource();
+            }
             GeneratedAssemblyInfo result = new GeneratedAssemblyInfo(InfoFileName, GetAssembly());
             result.Save();
             return result;
         }
-        
+
+        bool _sourceWritten;
         public void WriteSource()
         {
             WriteSource(SourceDirectoryPath);
+            _sourceWritten = true;
         }
         
         public abstract void WriteSource(string writeSourceDir);

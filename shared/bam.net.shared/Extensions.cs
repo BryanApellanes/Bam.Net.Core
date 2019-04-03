@@ -88,7 +88,7 @@ namespace Bam.Net
                 });
             }
         }
-
+        
         static Dictionary<ExistingFileAction, Action<Stream, FileInfo>> _writeResourceActions;
         static object _writeResourceActionsLock = new object();
         public static Dictionary<ExistingFileAction, Action<Stream, FileInfo>> WriteResourceActions
@@ -119,6 +119,12 @@ namespace Bam.Net
             }
         }
         
+        /// <summary>
+        /// Deserialize the specified file using the file extension to determine the format.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T FromFile<T>(this FileInfo file)
         {
             return Deserialize<T>(file);

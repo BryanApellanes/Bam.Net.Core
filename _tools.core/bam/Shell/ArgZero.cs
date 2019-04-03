@@ -9,6 +9,7 @@ using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Testing;
 using CsQuery.ExtensionMethods;
+using GraphQL.Types;
 using Lucene.Net.Analysis.Hunspell;
 using Lucene.Net.Analysis.Standard;
 using Microsoft.CodeAnalysis.Operations;
@@ -37,18 +38,23 @@ namespace Bam.Shell
         {
             if (!Targets.AddMissing(arg, method))
             {
-                Args.Throw<InvalidOperationException>("The specified ArgZero is already registered: {0}", arg);
+                MethodInfo registered = Targets[arg];
+                string willUse = $"{registered.DeclaringType.Name}.{registered.Name}";
+                OutLineFormat("The specified ArgZero is already registered {0}, will use {1}", ConsoleColor.Yellow, arg, willUse);
             }
         }
 
+        public static void RegisterArgZeroProviders<T>() where T: IRegisterArguments
+        {
+            RegisterArgZeroProviders<T>(typeof(T).Assembly);
+        }
+        
         /// <summary>
         /// Scan for ArgZero methods.
         /// </summary>
-        public static void Scan<T>() where T: IRegisterArguments
+        public static void RegisterArgZeroProviders<T>(Assembly assembly) where T: IRegisterArguments
         {   
-            Assembly current = Assembly.GetExecutingAssembly();
-            
-            current.GetTypes().ForEach(type =>
+            assembly.GetTypes().ForEach(type =>
             {
                 if (type.ExtendsType<T>())
                 {
@@ -77,19 +83,20 @@ namespace Bam.Shell
         {
             get { return _providerTypesLock.DoubleCheckLock(ref _providerTypes, () => new Dictionary<string, Type>()); }
         }
-        
+
         /// <summary>
-        /// Execute any ArgZero arguments specified on the command line then exit.  Has no effect if no relevant arguments
+        /// Execute any ArgZero arguments specified on the command.  Has no effect if no relevant arguments
         /// are detected.
         /// </summary>
-        public static void ExecuteArgZero<T>(string[] arguments) where T: IRegisterArguments
+        public static void ExecuteArgZero(string[] arguments, Action onArgZeroExecuted = null)
         {
             if (arguments.Length == 0)
             {
                 return;
             }
+
+            onArgZeroExecuted = onArgZeroExecuted ?? (() => { });
             
-            Scan<T>();
             ShellProviderDelegator.Register(arguments);
             if (Targets.ContainsKey(arguments[0]))
             {
@@ -120,7 +127,8 @@ namespace Bam.Shell
                 {
                     OutLineFormat("Exception executing ArgZero: {0}", ConsoleColor.Magenta, ex.Message);
                 }
-                Exit(0);
+
+                onArgZeroExecuted();
             }
         }
         

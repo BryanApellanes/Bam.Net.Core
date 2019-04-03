@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Bam.Net.Data.GraphQL;
+using GraphQL.Language.AST;
 
 namespace Bam.Net.Application
 {
@@ -170,7 +172,7 @@ namespace Bam.Net.Application
             generator.AddTypes(types);
             return generator;
         }
-
+        
         private static GenerationSettings GetDaoGenerationSettings()
         {
             string fromNameSpace = GetArgument("fromNameSpace", "Please enter the namespace containing the types to generate daos for");
@@ -197,28 +199,42 @@ namespace Bam.Net.Application
             return result;
         }
 
+        internal static GraphQLGenerationConfig GetGraphQLGenerationConfig(Action<string> output)
+        {
+            GraphQLGenerationConfig config = new GraphQLGenerationConfig();
+            if (Arguments.Contains("config"))
+            {
+                config = DeserializeConfigArg<GraphQLGenerationConfig>(output);
+                if (config == null)
+                {
+                    Exit(1);
+                }
+            }
+            else
+            {
+                config.TypeAssembly = GetArgument("typeAssembly",
+                    "Please enter the path to the assembly containing types to generate GraphQL wrappers for");
+                config.FromNameSpace = GetArgument("fromNameSpace",
+                    "Please enter the namespace containing types to generate GraphQL wrappers for");
+                config.ToNameSpace =
+                    GetArgument("toNameSpace", "Please enter the namespace to write generated types to");
+                config.WriteSourceTo = GetArgument("writeSourceTo",
+                    "Please enter the path to the directory to write source files to");
+            }
+
+            return config;
+        }
+
         internal static GenerationConfig GetGenerationConfig(Action<string> output)
         {
             GenerationConfig config = new GenerationConfig();
             if (Arguments.Contains("config"))
             {
-                FileInfo configFile = new FileInfo(Arguments["config"]);
-                if (!configFile.Exists)
+                config = DeserializeConfigArg<GenerationConfig>(output);
+                if (config == null)
                 {
-                    OutLineFormat("Config file not found: {0}", ConsoleColor.Magenta, configFile.FullName);
                     Exit(1);
                 }
-                output($"using config: {configFile.FullName}");
-                string ext = Path.GetExtension(configFile.FullName).ToLowerInvariant();
-                if (ext.Equals(".json"))
-                {
-                    config = configFile.FromJsonFile<GenerationConfig>();
-                }
-                else if (ext.Equals(".yaml") || ext.Equals(".yml"))
-                {
-                    config = configFile.FromYamlFile<GenerationConfig>();
-                }
-                output(config.ToJson(true));
             }
             else
             {
@@ -229,6 +245,22 @@ namespace Bam.Net.Application
                 config.WriteSourceTo = GetArgument("writeSrc", "Please enter the directory to write source to");
             }
 
+            return config;
+        }
+        
+        private static T DeserializeConfigArg<T>(Action<string> output)
+        {
+            T config;
+            FileInfo configFile = new FileInfo(Arguments["config"]);
+            if (!configFile.Exists)
+            {
+                output($"Config file not found: {configFile.FullName}");
+                return default(T);
+            }
+
+            output($"using config: {configFile.FullName}");
+            config = configFile.FromFile<T>();
+            output(config.ToJson(true));
             return config;
         }
     }
