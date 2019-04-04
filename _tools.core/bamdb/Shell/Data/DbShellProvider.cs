@@ -12,8 +12,10 @@ namespace Bam.Shell.Data
         public abstract void Del(Action<string> output = null, Action<string> error = null);
         public abstract void Find(Action<string> output = null, Action<string> error = null);
         
-        public virtual void RegisterArguments()
+        public string[] RawArguments { get; private set; }
+        public virtual void RegisterArguments(string[] args)
         {
+            RawArguments = args;
         }
     }
 }

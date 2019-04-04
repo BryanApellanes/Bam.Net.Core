@@ -13,6 +13,31 @@ namespace Bam.Net
 {
     public static partial class RuntimeSettings
     {
+        static RuntimeSettings()
+        {
+            SystemDotRuntimePath = Path.Combine(SysHomeDir, "bin", "System.Runtime.dll");
+        }
+
+        public static RuntimeConfig GetConfig()
+        {
+            string fileName = "runtime-config.yaml";
+            FileInfo configFile = new FileInfo(Path.Combine(SysDir, fileName));
+            if (configFile.Exists)
+            {
+                return configFile.FromFile<RuntimeConfig>();
+            }
+
+            RuntimeConfig config = new RuntimeConfig
+            {
+                SystemDotRuntimePath = SystemDotRuntimePath,
+                SysHomeDir = SysHomeDir,
+                SysDir = SysDir,
+                ProcessHomeDir = ProcessHomeDir
+            };
+            config.ToYamlFile(configFile);
+            return config;
+        }
+        
         static string _appDataFolder;
         static object _appDataFolderLock = new object();
         
@@ -30,6 +55,12 @@ namespace Bam.Net
             }
         }
 
+        public static string SystemDotRuntimePath
+        {
+            get;
+            set;
+        }
+        
         public static string SysHomeDir
         {
             get

@@ -11,7 +11,7 @@ namespace Bam.Net.Data.GraphQL.Templates
         public {{TypeName}}Graph()
         {
 {{#each Properties}}
-            Field("{{PropertyName}}", p => p.{{PropertyName}}, type: typeof({{PropertyGraphType}});    
+            Field("{{PropertyName}}", p => p.{{PropertyName}}, type: typeof({{PropertyGraphType}}));    
 {{/each}}
         }
     }

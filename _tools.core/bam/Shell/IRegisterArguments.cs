@@ -2,6 +2,7 @@ namespace Bam.Shell
 {
     public interface IRegisterArguments
     {
-        void RegisterArguments();
+        string[] RawArguments { get; }
+        void RegisterArguments(string[] args);
     }
 }

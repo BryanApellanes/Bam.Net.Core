@@ -101,6 +101,8 @@ namespace Bam.Net
                         typeof(System.Dynamic.DynamicObject).Assembly,
                         typeof(System.Xml.XmlDocument).Assembly,
                         typeof(System.Data.DataTable).Assembly,
+                        RuntimeSettings
+                        Assembly.LoadFrom("./System.Runtime.dll"),
                         Assembly.GetExecutingAssembly()
                     };
                     _defaultReferenceAssemblies = defaultAssemblies.ToArray();

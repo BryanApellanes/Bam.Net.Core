@@ -14,7 +14,7 @@ namespace Bam.Shell.CodeGen
         public override void Gen(Action<string> output = null, Action<string> error = null)
         {
             GraphQLGenerationConfig config = UtilityActions.GetGraphQLGenerationConfig(o=> OutLineFormat(o, ConsoleColor.Blue));
-            Assembly assembly = Assembly.LoadFile(config.TypeAssembly);
+            Assembly assembly = Assembly.LoadFrom(config.TypeAssembly);
             if (assembly == null)
             {
                 OutLineFormat("The specified type assembly wasn't found: {0}", ConsoleColor.Magenta, config.TypeAssembly);
@@ -25,7 +25,7 @@ namespace Bam.Shell.CodeGen
             {
                 SourceDirectoryPath = config.WriteSourceTo
             };
-            generator.AddTypes(assembly.GetTypes().Where(type => type.Namespace.Equals(config.FromNameSpace)).ToArray());
+            generator.AddTypes(assembly.GetTypes().Where(type => RuntimeSettings.ClrTypeFilter(type) && type != null && type.Namespace != null && type.Namespace.Equals(config.FromNameSpace)).ToArray());
             Assembly generated = generator.GenerateAssembly();
             FileInfo file = new FileInfo(generated.Location);
             File.Copy(file.FullName, Path.Combine(".", file.Name));

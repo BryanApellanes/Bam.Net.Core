@@ -23,20 +23,7 @@ namespace Bam.Shell
     
     public class ArgZeroDelegator: CommandLineTestInterface
     {   
-        public static string[] Arguments { get; set; }
-        public static void Register(string[] args)
-        {
-            Arguments = args;
-            HashSet<string> exclude = new HashSet<string> {"External"};
-
-            foreach (string typeName in ArgZero.ProviderTypes.Keys)
-            {
-                if (!exclude.Contains(typeName))
-                {
-                    AddValidArgument(typeName, $"Add a new {typeName}");
-                }
-            }
-        }
+        public static string[] CommandLineArguments { get; set; }
         
         public Type GetType(string typeName)
         {
@@ -55,9 +42,9 @@ namespace Bam.Shell
         
         protected string GetTypeName()
         {
-            if (Arguments.Length >= 2)
+            if (CommandLineArguments.Length >= 2)
             {
-                string typeName = Arguments[1];
+                string typeName = CommandLineArguments[1];
                 if (typeName.EndsWith("s"))
                 {
                     typeName = typeName.Truncate(1);

@@ -23,15 +23,18 @@ namespace Bam.Shell.Jobs
             set { _jobManagerService = value; }
         }
 
-        public override void RegisterArguments()
+        public override void RegisterArguments(string[] args)
         {
-            base.RegisterArguments();
+            RawArguments = args;
+            base.RegisterArguments(args);
         }
         
         protected override ProviderArguments GetProviderArguments()
         {
             return GetProviderArguments(false);
         }
+        
+        public string[] RawArguments { get; private set; }
         
         protected ProviderArguments GetProviderArguments(bool full = false)
         {

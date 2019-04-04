@@ -7,8 +7,10 @@ namespace Bam.Shell.CodeGen
     {
         public abstract void Gen(Action<string> output = null, Action<string> error = null);
         
-        public virtual void RegisterArguments()
+        public string[] RawArguments { get; private set; }
+        public virtual void RegisterArguments(string[] args)
         {
+            RawArguments = args;
         }
     }
 }

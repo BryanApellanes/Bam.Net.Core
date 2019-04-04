@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Bam.Net;
 using Bam.Net.CommandLine;
@@ -44,37 +45,63 @@ namespace Bam.Shell
             }
         }
 
-        public static void RegisterArgZeroProviders<T>() where T: IRegisterArguments
+        public static void RegisterArgZeroProviders<T>(string[] args) where T: IRegisterArguments
         {
-            RegisterArgZeroProviders<T>(typeof(T).Assembly);
+            RegisterArgZeroProviders<T>(args, typeof(T).Assembly);
         }
         
         /// <summary>
         /// Scan for ArgZero methods.
         /// </summary>
-        public static void RegisterArgZeroProviders<T>(Assembly assembly) where T: IRegisterArguments
-        {   
-            assembly.GetTypes().ForEach(type =>
+        public static void RegisterArgZeroProviders<T>(string[] args, Assembly assembly) where T: IRegisterArguments
+        {
+            RegisterProviderTypes<T>(args, assembly);
+            RegisterDelegatorMethods(assembly);
+        }
+
+        static HashSet<Assembly> _regsiteredDelegatorAssemblies = new HashSet<Assembly>();
+        static object _registerLock = new object();
+        public static void RegisterDelegatorMethods(Assembly assembly)
+        {
+            lock (_registerLock)
             {
-                if (type.ExtendsType<T>())
+                if (_regsiteredDelegatorAssemblies.Contains(assembly))
                 {
-                    if (!type.Name.EndsWith("Provider"))
-                    {
-                        OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'", ConsoleColor.Yellow);
-                    }
-                    type.Construct<T>().RegisterArguments();
-                    string providerName = type.Name.Truncate("Provider".Length);
-                    ProviderTypes.AddMissing(providerName, type);
+                    return;
                 }
-                
-                type.GetMethods().ForEach(m =>
+
+                _regsiteredDelegatorAssemblies.Add(assembly);
+                foreach (Type type in assembly.GetTypes())
                 {
-                    if (m.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute arg))
+                    foreach (MethodInfo method in type.GetMethods())
                     {
-                        Register(arg.Argument, m);
+                        if (method.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute arg))
+                        {
+                            Register(arg.Argument, method);
+                        }
                     }
-                });
-            });
+                }
+            }
+        }
+        
+        public static void RegisterProviderTypes<T>(string[] args, Assembly assembly) where T : IRegisterArguments
+        {
+            foreach (Type type in assembly.GetTypes().Where(type => type.ExtendsType<T>()))
+            {
+                type.Construct<T>().RegisterArguments(args);
+                string name = type.Name;
+                if (!type.Name.EndsWith("Provider"))
+                {
+                    OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'",
+                        ConsoleColor.Yellow);
+                }
+                else
+                {
+                    name = name.Truncate("Provider".Length);
+                }
+
+                ProviderTypes.AddMissing(name, type);
+            }
         }
         
         private static Dictionary<string, Type> _providerTypes;
@@ -84,6 +111,11 @@ namespace Bam.Shell
             get { return _providerTypesLock.DoubleCheckLock(ref _providerTypes, () => new Dictionary<string, Type>()); }
         }
 
+        public static void ExecuteArgZero(string[] arguments)
+        {
+            ExecuteArgZero(arguments, () => Exit(0));
+        }
+        
         /// <summary>
         /// Execute any ArgZero arguments specified on the command.  Has no effect if no relevant arguments
         /// are detected.
@@ -97,7 +129,6 @@ namespace Bam.Shell
 
             onArgZeroExecuted = onArgZeroExecuted ?? (() => { });
             
-            ShellProviderDelegator.Register(arguments);
             if (Targets.ContainsKey(arguments[0]))
             {
                 List<string> targetArguments = new List<string>();
@@ -121,6 +152,7 @@ namespace Bam.Shell
 
                 try
                 {
+                    ArgZeroDelegator.CommandLineArguments = arguments;
                     method.Invoke(instance, null);
                 }
                 catch (Exception ex)

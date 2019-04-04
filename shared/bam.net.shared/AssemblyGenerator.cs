@@ -86,7 +86,7 @@ namespace Bam.Net
             DirectoryInfo sourceDirectory = new DirectoryInfo(SourceDirectoryPath);
             SortedSet<string> sortedFilePaths = new SortedSet<string>();
             sourceDirectory.GetFiles("*.cs").Each(fi => sortedFilePaths.Add(fi.FullName));
-            string currentHash = Seed.Hash(HashAlgorithm);
+            string currentHash = (Seed ?? "").Hash(HashAlgorithm);
             foreach (string filePath in sortedFilePaths)
             {
                 FileInfo file = new FileInfo(filePath);
@@ -100,7 +100,10 @@ namespace Bam.Net
         protected void HashFiles()
         {
             DirectoryInfo sourceDirectory = new DirectoryInfo(SourceDirectoryPath);
-            Parallel.ForEach(sourceDirectory.GetFiles("*.cs"), (fi) => { HashFile(fi.FullName); });
+            foreach (FileInfo file in sourceDirectory.GetFiles("*.cs"))
+            {
+                HashFile(file.FullName);
+            }
             FilesHashed = true;
         }
 

@@ -18,8 +18,8 @@ namespace Bam.Net
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             
             BamEnvironmentVariables.SetBamVariable("ApplicationName", "bam.exe");
-            RegisterArgZeroProviders<ShellProvider>();
-            ExecuteArgZero(args, () => Exit(0));
+            RegisterArgZeroProviders<ShellProvider>(args);
+            ExecuteArgZero(args);
             
             DefaultMethod = typeof(Program).GetMethod("Start");
 

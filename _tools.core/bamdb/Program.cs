@@ -23,9 +23,9 @@ namespace Bam.Net.Application
             ArgumentAdder.AddArguments(args);
 
             BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb.exe");
-            RegisterArgZeroProviders<DbShellProvider>();
-            RegisterArgZeroProviders<CodeGenProvider>();
-            ExecuteArgZero(args, ()=> Exit(0));
+            RegisterArgZeroProviders<DbShellProvider>(args);
+            RegisterArgZeroProviders<CodeGenProvider>(args);
+            ExecuteArgZero(args);
             
             Initialize(args, (a) =>
             {

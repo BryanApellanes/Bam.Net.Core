@@ -59,9 +59,10 @@ namespace Bam.Shell
                 return _providerType;
             }
         }
-        
-        public virtual void RegisterArguments()
+        public string[] RawArguments { get; private set; }
+        public virtual void RegisterArguments(string[] args)
         {
+            RawArguments = args;
             AddValidArgument("name", $"The name of the {ProviderType} to work with");
             AddValidArgument("format", "The desired output format: json | yaml");
         }

@@ -27,9 +27,12 @@ namespace Bam.Shell.Jobs
             set { _jobManagerService = value; }
         }
 
-        public override void RegisterArguments()
+        public string[] RawArguments { get; private set; }
+        
+        public override void RegisterArguments(string[] args)
         {
-            base.RegisterArguments();
+            RawArguments = args;
+            base.RegisterArguments(args);
             AddValidArgument("worker", "The name of the worker to work with");
             AddValidArgument("workerType", "When adding a worker, the type of the worker to add");
             
