@@ -12,6 +12,16 @@ namespace Bam.Net.Data.GraphQL
             get { return Type.Name; }
         }
 
+        public string FullyQualifiedTypeName
+        {
+            get { return $"{Type.Namespace}.{Type.Name}"; }
+        }
+        
+        public string UsingStatements
+        {
+            get { return $"using {Type.Namespace};\r\n"; }
+        }
+        
         public string PluralTypeName
         {
             get { return TypeName.Pluralize(); }

@@ -51,6 +51,16 @@ namespace Bam.Net.Data.GraphQL
         public override Assembly Compile()
         {
             RoslynCompiler compiler = new RoslynCompiler();
+            foreach (Type type in Types)
+            {
+                compiler.AddAssemblyReference(type.Assembly.Location);
+            }
+
+            RuntimeConfig config = RuntimeSettings.GetConfig();
+            compiler.AddAssemblyReference(config.SystemDotRuntimePath);
+            compiler.AddAssemblyReference(config.NetStandardPath);
+            compiler.AddAssemblyReference(typeof(GraphType).Assembly.Location);
+            
             return compiler.Compile(AssemblyName ?? 8.RandomLetters(), new DirectoryInfo(SourceDirectoryPath));
         }
 
@@ -69,7 +79,7 @@ namespace Bam.Net.Data.GraphQL
         
         internal static IEnumerable<PropertyInfo> GetProperties(Type type)
         {
-            return type.GetProperties().Where(p => !p.IsEnumerable() || p.PropertyType == typeof(string));
+            return type.GetProperties().Where(p => !p.GetGetMethod().IsStatic && (!p.IsEnumerable() || p.PropertyType == typeof(string)));
         }
 
         internal static IEnumerable<PropertyInfo> GetEnumerableProperties(Type type)

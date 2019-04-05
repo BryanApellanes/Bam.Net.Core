@@ -77,7 +77,10 @@ namespace Bam.Net
         public byte[] Compile(string assemblyName, Func<MetadataReference[]> getMetaDataReferences, params SyntaxTree[] syntaxTrees)
         {
             getMetaDataReferences = getMetaDataReferences ?? GetMetadataReferences;
-            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, syntaxTrees, getMetaDataReferences(), new CSharpCompilationOptions(this.OutputKind));
+            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
+                .WithOptions(new CSharpCompilationOptions(this.OutputKind))
+                .AddReferences(getMetaDataReferences())
+                .AddSyntaxTrees(syntaxTrees);//, getMetaDataReferences(), new CSharpCompilationOptions(this.OutputKind));
             using(MemoryStream stream = new MemoryStream())
             {
                 EmitResult compileResult = compilation.Emit(stream);
@@ -101,8 +104,6 @@ namespace Bam.Net
                         typeof(System.Dynamic.DynamicObject).Assembly,
                         typeof(System.Xml.XmlDocument).Assembly,
                         typeof(System.Data.DataTable).Assembly,
-                        RuntimeSettings
-                        Assembly.LoadFrom("./System.Runtime.dll"),
                         Assembly.GetExecutingAssembly()
                     };
                     _defaultReferenceAssemblies = defaultAssemblies.ToArray();
