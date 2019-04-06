@@ -21,11 +21,6 @@ namespace Bam.Net.Data.GraphQL
 
         protected HandlebarsTemplateRenderer HandlebarsTemplateRenderer { get; set; }
         
-        /// <summary>
-        /// The name of the assembly to generate, if this values is null a random name is generated.
-        /// </summary>
-        public string AssemblyName { get; set; }
-        
         public HashSet<Type> Types { get; private set; }
 
         public void AddType(Type type)
@@ -48,22 +43,21 @@ namespace Bam.Net.Data.GraphQL
             });
         }
 
-        public override Assembly Compile()
+        public override Assembly CompileAssembly(out byte[] bytes)
         {
             RoslynCompiler compiler = new RoslynCompiler();
             foreach (Type type in Types)
             {
                 compiler.AddAssemblyReference(type.Assembly.Location);
             }
-
-            RuntimeConfig config = RuntimeSettings.GetConfig();
-            compiler.AddAssemblyReference(config.SystemDotRuntimePath);
-            compiler.AddAssemblyReference(config.NetStandardPath);
-            compiler.AddAssemblyReference(typeof(GraphType).Assembly.Location);
             
-            return compiler.Compile(AssemblyName ?? 8.RandomLetters(), new DirectoryInfo(SourceDirectoryPath));
-        }
+            compiler.AddAssemblyReference(typeof(GraphType).Assembly.Location);
 
+            bytes =
+                compiler.Compile(AssemblyName ?? 8.RandomLetters(), new DirectoryInfo(SourceDirectoryPath));
+            return Assembly.Load(bytes);
+        }
+        
         internal static IEnumerable<PropertyModel> GetPropertyModels(Type type)
         {
             foreach (PropertyModel propertyModel in GetProperties(type).Select(p => new PropertyModel(p)))

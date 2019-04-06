@@ -18,7 +18,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
             lock (_generateLock)
             {
                 RoslynCompiler compiler = new RoslynCompiler();
-                Assembly assembly = compiler.Compile($"{WrapperNamespace}.Wrapper.dll", new System.IO.DirectoryInfo(WriteSourceTo));
+                Assembly assembly = compiler.CompileAssembly($"{WrapperNamespace}.Wrapper.dll", new System.IO.DirectoryInfo(WriteSourceTo));
                 GeneratedAssemblyInfo result = new GeneratedAssemblyInfo($"{WrapperNamespace}.Wrapper.dll", assembly);
                 result.Save();
                 return result;

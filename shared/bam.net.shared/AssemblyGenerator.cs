@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -16,7 +17,10 @@ namespace Bam.Net
             _fileHashes = new Dictionary<string, string>();
             HashAlgorithm = HashAlgorithms.SHA1;
         }
-        
+        /// <summary>
+        /// The name of the assembly to generate, if this values is null a random name is generated.
+        /// </summary>
+        public string AssemblyName { get; set; }
         public string SourceDirectoryPath { get; set; }
         
         /// <summary>
@@ -52,7 +56,7 @@ namespace Bam.Net
         
         public abstract void WriteSource(string writeSourceDir);
 
-        public abstract Assembly Compile();
+        public abstract Assembly CompileAssembly(out byte[] bytes);
        
         protected bool FilesHashed { get; set; }
 
@@ -65,7 +69,13 @@ namespace Bam.Net
                 return _generatedAssemblies[sourceHash];
             }
 
-            Assembly compiled = Compile();
+            Assembly compiled = CompileAssembly(out byte[] bytes);
+            RuntimeConfig config = RuntimeSettings.GetConfig();
+            string assemblyFile = Path.Combine(config.GenDir, AssemblyName);
+            
+            throw new NotImplementedException("finish this, make sure that the output directory exists");
+            
+            File.WriteAllBytes(assemblyFile, bytes);
             _generatedAssemblies.AddMissing(sourceHash, compiled);
             return compiled;
         }
@@ -100,11 +110,15 @@ namespace Bam.Net
         protected void HashFiles()
         {
             DirectoryInfo sourceDirectory = new DirectoryInfo(SourceDirectoryPath);
-            foreach (FileInfo file in sourceDirectory.GetFiles("*.cs"))
+            if (sourceDirectory.Exists)
             {
-                HashFile(file.FullName);
+                foreach (FileInfo file in sourceDirectory.GetFiles("*.cs"))
+                {
+                    HashFile(file.FullName);
+                }
+                
+                FilesHashed = true;
             }
-            FilesHashed = true;
         }
 
         private string HashFile(string filePath)

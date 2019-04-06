@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
+using Bam.Net.Logging;
 using CsQuery.ExtensionMethods;
 
 namespace Bam.Net
@@ -53,16 +54,27 @@ namespace Bam.Net
             return this;
         }
         
-        public Assembly Compile(string assemblyFileName, DirectoryInfo directoryInfo)
+        public Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo)
+        {
+            return CompileAssembly(assemblyFileName, directoryInfo.GetFiles("*.cs").ToArray());
+        }
+
+        public Assembly CompileAssembly(string assemblyFileName, params FileInfo[] sourceFiles)
+        {
+            return Assembly.Load(Compile(assemblyFileName, sourceFiles));
+        }
+
+        public byte[] Compile(string assemblyFileName, DirectoryInfo directoryInfo)
         {
             return Compile(assemblyFileName, directoryInfo.GetFiles("*.cs").ToArray());
         }
-
-        public Assembly Compile(string assemblyFileName, params FileInfo[] sourceFiles)
+        
+        public byte[] Compile(string assemblyFileName, params FileInfo[] sourceFiles)
         {
-            return Assembly.Load(Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray()));
+            return Compile(assemblyFileName,
+                sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray());
         }
-
+        
         public byte[] Compile(string assemblyName, string sourceCode)
         {
             SyntaxTree tree = SyntaxFactory.ParseSyntaxTree(sourceCode);
@@ -104,12 +116,37 @@ namespace Bam.Net
                         typeof(System.Dynamic.DynamicObject).Assembly,
                         typeof(System.Xml.XmlDocument).Assembly,
                         typeof(System.Data.DataTable).Assembly,
+                        typeof(object).Assembly,
                         Assembly.GetExecutingAssembly()
                     };
+                    AddCommonReferenceAssemblies(defaultAssemblies);
                     _defaultReferenceAssemblies = defaultAssemblies.ToArray();
                 }
-
+                
                 return _defaultReferenceAssemblies;
+            }
+        }
+
+        private static void AddCommonReferenceAssemblies(List<Assembly> defaultAssemblies)
+        {
+            RuntimeConfig config = RuntimeSettings.GetConfig();
+            DirectoryInfo commonAssemblies = new DirectoryInfo(config.ReferenceAssembliesDir);
+            if (commonAssemblies.Exists)
+            {
+                foreach (FileInfo file in commonAssemblies.GetFiles())
+                {
+                    if (file.HasExtension(".dll") || file.HasExtension(".exe"))
+                    {
+                        try
+                        {
+                            defaultAssemblies.Add(Assembly.LoadFile(file.FullName));
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warn("Exception loading reference assembly {0}: {1}", file.FullName, ex.Message);
+                        }
+                    }
+                }
             }
         }
 

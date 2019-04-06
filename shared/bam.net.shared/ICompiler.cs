@@ -10,8 +10,8 @@ namespace Bam.Net
     {
         Assembly[] ReferenceAssemblies { get; set; }
 
-        Assembly Compile(string assemblyFileName, DirectoryInfo directoryInfo);
-        Assembly Compile(string assemblyFileName, FileInfo[] files);
+        Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo);
+        Assembly CompileAssembly(string assemblyFileName, FileInfo[] files);
         byte[] Compile(string assemblyFileName, string sourceCode);        
     }
 }

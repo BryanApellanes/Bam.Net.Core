@@ -13,12 +13,6 @@ namespace Bam.Net
 {
     public static partial class RuntimeSettings
     {
-        static RuntimeSettings()
-        {
-            SystemDotRuntimePath = Path.Combine(SysHomeDir, "bin", "System.Runtime.dll");
-            NetStandardPath = Path.Combine(SysHomeDir, "bin", "netstandard.dll");
-        }
-
         public static RuntimeConfig GetConfig()
         {
             string fileName = "runtime-config.yaml";
@@ -30,8 +24,8 @@ namespace Bam.Net
 
             RuntimeConfig config = new RuntimeConfig
             {
-                SystemDotRuntimePath = SystemDotRuntimePath,
-                NetStandardPath = NetStandardPath,
+                ReferenceAssembliesDir = ReferenceAssembliesDir,
+                GenDir = GenDir,
                 SysHomeDir = SysHomeDir,
                 SysDir = SysDir,
                 ProcessHomeDir = ProcessHomeDir
@@ -57,16 +51,19 @@ namespace Bam.Net
             }
         }
 
-        public static string SystemDotRuntimePath
+        public static string ReferenceAssembliesDir
         {
-            get;
-            set;
+            get { return Path.Combine(BinDir, "ReferenceAssemblies"); }
         }
 
-        public static string NetStandardPath
+        public static string GenDir
         {
-            get;
-            set;
+            get { return Path.Combine(BinDir, "gen"); }
+        }
+        
+        public static string BinDir
+        {
+            get { return Path.Combine(SysHomeDir, "bin"); }
         }
         
         public static string SysHomeDir

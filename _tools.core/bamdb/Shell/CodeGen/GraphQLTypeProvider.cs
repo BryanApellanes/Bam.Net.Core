@@ -23,13 +23,14 @@ namespace Bam.Shell.CodeGen
 
             GraphQLTypeGenerator generator = new GraphQLTypeGenerator()
             {
-                SourceDirectoryPath = config.WriteSourceTo
+                SourceDirectoryPath = config.WriteSourceTo,
+                AssemblyName = config.ToNameSpace
             };
             generator.AddTypes(assembly.GetTypes().Where(type => RuntimeSettings.ClrTypeFilter(type) && type != null && type.Namespace != null && type.Namespace.Equals(config.FromNameSpace)).ToArray());
             Assembly generated = generator.GenerateAssembly();
-            FileInfo file = new FileInfo(generated.Location);
-            File.Copy(file.FullName, Path.Combine(".", file.Name));
-            OutLineFormat("Wrote file {0}", ConsoleColor.Blue, Path.Combine(".", file.Name));
+            FileInfo file = new FileInfo($"{generator.AssemblyName}.dll");
+            generated.ToBinaryFile(file.FullName);
+            OutLineFormat("Wrote file {0}", ConsoleColor.Blue, file.FullName);
         }
     }
 }

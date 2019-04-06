@@ -1,5 +1,5 @@
-SystemDotRuntimePath: C:\Users\bryan.THREEHEADZ\.bam\bin\System.Runtime.dll
-NetStandardPath: C:\Users\bryan.THREEHEADZ\.bam\bin\netstandard.dll
+ReferenceAssembliesDir: C:\Users\bryan.THREEHEADZ\.bam\bin\ReferenceAssemblies
+GenDir: C:\Users\bryan.THREEHEADZ\.bam\bin\gen
 SysHomeDir: C:\Users\bryan.THREEHEADZ\.bam
 SysDir: C:\bam\src\BamFrameworkCore\Bam.Net\_tools.core\bamdb\.bam
 ProcessHomeDir: C:\Users\bryan.THREEHEADZ

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using System.CodeDom.Compiler;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net
 {
@@ -76,6 +79,9 @@ namespace Bam.Net
 
 		Assembly _assembly;
 
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public Assembly Assembly
 		{
 			get
