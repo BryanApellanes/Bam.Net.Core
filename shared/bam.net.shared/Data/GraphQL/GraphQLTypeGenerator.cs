@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Data.Schema;
@@ -19,6 +20,19 @@ namespace Bam.Net.Data.GraphQL
             HandlebarsTemplateRenderer = new HandlebarsTemplateRenderer();
         }
 
+        public GraphQLTypeGenerator(GraphQLGenerationConfig config) : this()
+        {
+            Config = config;
+            SourceDirectoryPath = config.WriteSourceTo;
+            AssemblyName = config.ToNameSpace;
+            Assembly assembly = Assembly.LoadFrom(config.TypeAssembly);
+            AddTypes(assembly.GetTypes().Where(type =>
+                RuntimeSettings.ClrTypeFilter(type) && type != null && type.Namespace != null &&
+                type.Namespace.Equals(config.FromNameSpace)).ToArray());
+        }
+
+        public GraphQLGenerationConfig Config { get; set; }
+        
         protected HandlebarsTemplateRenderer HandlebarsTemplateRenderer { get; set; }
         
         public HashSet<Type> Types { get; private set; }
@@ -35,12 +49,23 @@ namespace Bam.Net.Data.GraphQL
         
         public override void WriteSource(string writeSourceDir)
         {
+            List<TypeModel> typeModels = new List<TypeModel>();
             Parallel.ForEach(Types, type =>
             {
-                string code = HandlebarsTemplateRenderer.Render("GraphQLType", new TypeModel {Type = type});
+                TypeModel typeModel = new TypeModel {Type = type, SchemaName = Config.SchemaName, ToNameSpace = Config.ToNameSpace};
+                typeModels.Add(typeModel);
+                string code = HandlebarsTemplateRenderer.Render("GraphQLType", typeModel);
                 string writeToFile = Path.Combine(writeSourceDir, $"{type.Name}Graph.cs");
                 code.SafeWriteToFile(writeToFile, true);
             });
+            SchemaModel schemaModel = new SchemaModel()
+            {
+                SchemaName = Config.SchemaName, DataTypes = typeModels.ToArray(),
+                UsingStatements = GetUsingStatements(typeModels.Select(t => t.Type)),
+                ToNameSpace = Config.ToNameSpace
+            };
+            string contextCode = HandlebarsTemplateRenderer.Render("GraphQLQueryContext", schemaModel);           
+            contextCode.SafeWriteToFile(Path.Combine(writeSourceDir, $"{Config.SchemaName}.cs"), true);
         }
 
         public override Assembly CompileAssembly(out byte[] bytes)
@@ -125,6 +150,19 @@ namespace Bam.Net.Data.GraphQL
 
                 yield return model;
             }
+        }
+
+        internal static string GetUsingStatements(IEnumerable<Type> types)
+        {
+            StringBuilder result = new StringBuilder();
+            HashSet<string> hashSet = new HashSet<string>();
+            types.Each(t => hashSet.Add(t.Namespace));
+            foreach (string ns in hashSet)
+            {
+                result.AppendLine($"using {ns};");
+            }
+
+            return result.ToString();
         }
     }
 }

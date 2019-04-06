@@ -2,6 +2,20 @@ namespace Bam.Net.Data.GraphQL
 {
     public class GraphQLGenerationConfig
     {
+        string _schemaName;
+
+        public string SchemaName
+        {
+            get
+            {
+                return _schemaName ?? $"{TypeAssembly}{FromNameSpace}{ToNameSpace}".Sha1();
+            }
+            set
+            {
+                _schemaName = value;
+            }
+        }
+
         /// <summary>
         /// The path to the assembly containing types to generate graphql types for.
         /// </summary>

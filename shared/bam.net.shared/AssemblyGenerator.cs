@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bam.Net.Logging;
 using Bam.Net.ServiceProxy;
-using CsQuery.ExtensionMethods;
 
 namespace Bam.Net
 {
-    public abstract class AssemblyGenerator : IAssemblyGenerator
+    public abstract class AssemblyGenerator : Loggable, IAssemblyGenerator
     {
         public AssemblyGenerator()
         {
-            _generatedAssemblies = new Dictionary<string, Assembly>();
+            _generatedAssemblies = new Dictionary<string, GeneratedAssemblyInfo>();
             _sourceHashes = new Dictionary<string, string>();
-            _fileHashes = new Dictionary<string, string>();
             HashAlgorithm = HashAlgorithms.SHA1;
         }
         /// <summary>
@@ -22,6 +21,11 @@ namespace Bam.Net
         /// </summary>
         public string AssemblyName { get; set; }
         public string SourceDirectoryPath { get; set; }
+
+        public string GeneratorType
+        {
+            get { return GetType().Name; }
+        }
         
         /// <summary>
         /// Metadata file holding GeneratedAssemblyInfo
@@ -38,11 +42,18 @@ namespace Bam.Net
 
         public GeneratedAssemblyInfo GenerateAssembly()
         {
+            return GenerateAssembly(out byte[] ignore);
+        }
+        
+        public GeneratedAssemblyInfo GenerateAssembly(out byte[] bytes)
+        {
             if (!_sourceWritten)
             {
                 WriteSource();
             }
-            GeneratedAssemblyInfo result = new GeneratedAssemblyInfo(InfoFileName, GetAssembly());
+
+            Assembly assembly = GetAssembly(out bytes);
+            GeneratedAssemblyInfo result = new GeneratedAssemblyInfo(InfoFileName, assembly, bytes);
             result.Save();
             return result;
         }
@@ -52,31 +63,42 @@ namespace Bam.Net
         {
             WriteSource(SourceDirectoryPath);
             _sourceWritten = true;
+            FireEvent(SourceWritten);
         }
-        
-        public abstract void WriteSource(string writeSourceDir);
 
+        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "SourceWritten({GeneratorType}):AssemblyName:{AssemblyName}\r\nSourceDirectoryPath:{SourceDirectoryPath}")]
+        public event EventHandler SourceWritten;
+        
+        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "AssemblyCompiled({GeneratorType}):AssemblyName:{AssemblyName}\r\nSourceDirectoryPath:{SourceDirectoryPath}")]
+        public event EventHandler AssemblyCompiled;
+        
+        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "AssemblySaved({GeneratorType}):AssemblyName:{AssemblyName}\r\nSourceDirectoryPath:{SourceDirectoryPath}")]
+        public event EventHandler AssemblySaved;
+
+        public abstract void WriteSource(string writeSourceDir);
+        
         public abstract Assembly CompileAssembly(out byte[] bytes);
        
         protected bool FilesHashed { get; set; }
 
-        static Dictionary<string, Assembly> _generatedAssemblies;
-        protected virtual Assembly GetAssembly()
+        static Dictionary<string, GeneratedAssemblyInfo> _generatedAssemblies;
+        protected virtual Assembly GetAssembly(out byte[] bytes)
         {
             string sourceHash = HashSource(!FilesHashed);
+            InfoFileName = sourceHash;
             if (_generatedAssemblies.ContainsKey(sourceHash))
             {
-                return _generatedAssemblies[sourceHash];
+                GeneratedAssemblyInfo result = _generatedAssemblies[sourceHash];
+                bytes = result.AssemblyBytes;
+                return result;
             }
 
-            Assembly compiled = CompileAssembly(out byte[] bytes);
-            RuntimeConfig config = RuntimeSettings.GetConfig();
-            string assemblyFile = Path.Combine(config.GenDir, AssemblyName);
-            
-            throw new NotImplementedException("finish this, make sure that the output directory exists");
-            
-            File.WriteAllBytes(assemblyFile, bytes);
-            _generatedAssemblies.AddMissing(sourceHash, compiled);
+            Assembly compiled = CompileAssembly(out bytes);
+            FireEvent(AssemblyCompiled);
+            SaveAssemblyFile(sourceHash, bytes);
+            FireEvent(AssemblySaved);
+
+            _generatedAssemblies.AddMissing(sourceHash, new GeneratedAssemblyInfo(InfoFileName, compiled, bytes));
             return compiled;
         }
 
@@ -107,17 +129,22 @@ namespace Bam.Net
         }
 
         Dictionary<string, string> _fileHashes;
+        object _hashFileLock = new object();
         protected void HashFiles()
         {
-            DirectoryInfo sourceDirectory = new DirectoryInfo(SourceDirectoryPath);
-            if (sourceDirectory.Exists)
+            lock (_hashFileLock)
             {
-                foreach (FileInfo file in sourceDirectory.GetFiles("*.cs"))
+                _fileHashes = new Dictionary<string, string>();
+                DirectoryInfo sourceDirectory = new DirectoryInfo(SourceDirectoryPath);
+                if (sourceDirectory.Exists)
                 {
-                    HashFile(file.FullName);
-                }
+                    foreach (FileInfo file in sourceDirectory.GetFiles("*.cs"))
+                    {
+                        HashFile(file.FullName);
+                    }
                 
-                FilesHashed = true;
+                    FilesHashed = true;
+                }
             }
         }
 
@@ -131,6 +158,23 @@ namespace Bam.Net
             string contentHash = new FileInfo(filePath).ContentHash(HashAlgorithm);
             _fileHashes.AddMissing(filePath, contentHash);
             return contentHash;
+        }
+        
+        private void SaveAssemblyFile(string sourceHash, byte[] bytes)
+        {
+            RuntimeConfig config = RuntimeSettings.GetConfig();
+            if (!Directory.Exists(config.GenDir))
+            {
+                Directory.CreateDirectory(config.GenDir);
+            }
+
+            if (string.IsNullOrEmpty(AssemblyName))
+            {
+                AssemblyName = sourceHash;
+            }
+
+            string assemblyFile = Path.Combine(config.GenDir, AssemblyName);
+            File.WriteAllBytes(assemblyFile, bytes);
         }
     }
 }

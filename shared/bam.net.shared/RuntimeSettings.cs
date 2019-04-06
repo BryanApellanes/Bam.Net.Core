@@ -16,7 +16,7 @@ namespace Bam.Net
         public static RuntimeConfig GetConfig()
         {
             string fileName = "runtime-config.yaml";
-            FileInfo configFile = new FileInfo(Path.Combine(SysDir, fileName));
+            FileInfo configFile = new FileInfo(Path.Combine(BamDir, fileName));
             if (configFile.Exists)
             {
                 return configFile.FromYamlFile<RuntimeConfig>();
@@ -26,8 +26,8 @@ namespace Bam.Net
             {
                 ReferenceAssembliesDir = ReferenceAssembliesDir,
                 GenDir = GenDir,
-                SysHomeDir = SysHomeDir,
-                SysDir = SysDir,
+                BamHomeDir = BamHomeDir,
+                BamDir = BamDir,
                 ProcessHomeDir = ProcessHomeDir
             };
             config.ToYamlFile(configFile);
@@ -63,10 +63,10 @@ namespace Bam.Net
         
         public static string BinDir
         {
-            get { return Path.Combine(SysHomeDir, "bin"); }
+            get { return Path.Combine(BamHomeDir, "bin"); }
         }
         
-        public static string SysHomeDir
+        public static string BamHomeDir
         {
             get
             {
@@ -74,7 +74,7 @@ namespace Bam.Net
             }
         }
 
-        public static string SysDir
+        public static string BamDir
         {
             get
             {

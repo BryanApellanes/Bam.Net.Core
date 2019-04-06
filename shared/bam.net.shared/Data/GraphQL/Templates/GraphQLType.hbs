@@ -5,7 +5,7 @@ using GraphQL;
 using GraphQL.Types;
 {{UsingStatements}}
 
-namespace Bam.Net.Data.GraphQL.Templates
+namespace {{ToNameSpace}}
 {
     public class {{TypeName}}Graph : ObjectGraphType<{{FullyQualifiedTypeName}}>
     {
@@ -14,6 +14,14 @@ namespace Bam.Net.Data.GraphQL.Templates
 {{#each Properties}}
             Field("{{PropertyName}}", p => p.{{PropertyName}}, type: typeof({{{PropertyGraphType}}}));    
 {{/each}}
+        }
+
+        public string SchemaName 
+        { 
+            get 
+            {
+                return "{{SchemaName}}";
+            }
         }
     }
 }

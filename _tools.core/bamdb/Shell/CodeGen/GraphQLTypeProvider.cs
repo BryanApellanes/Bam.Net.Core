@@ -21,15 +21,10 @@ namespace Bam.Shell.CodeGen
                 Exit(1);
             }
 
-            GraphQLTypeGenerator generator = new GraphQLTypeGenerator()
-            {
-                SourceDirectoryPath = config.WriteSourceTo,
-                AssemblyName = config.ToNameSpace
-            };
-            generator.AddTypes(assembly.GetTypes().Where(type => RuntimeSettings.ClrTypeFilter(type) && type != null && type.Namespace != null && type.Namespace.Equals(config.FromNameSpace)).ToArray());
-            Assembly generated = generator.GenerateAssembly();
+            GraphQLTypeGenerator generator = new GraphQLTypeGenerator(config);
+            Assembly generated = generator.GenerateAssembly(out byte[] bytes);
             FileInfo file = new FileInfo($"{generator.AssemblyName}.dll");
-            generated.ToBinaryFile(file.FullName);
+            File.WriteAllBytes(file.FullName, bytes);
             OutLineFormat("Wrote file {0}", ConsoleColor.Blue, file.FullName);
         }
     }

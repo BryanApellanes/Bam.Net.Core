@@ -7,6 +7,8 @@ namespace Bam.Net.Data.GraphQL
     {
         public Type Type { get; set; }
         
+        public string SchemaName { get; set; }
+        
         public string TypeName
         {
             get { return Type.Name; }
@@ -20,6 +22,12 @@ namespace Bam.Net.Data.GraphQL
         public string UsingStatements
         {
             get { return $"using {Type.Namespace};\r\n"; }
+        }
+
+        public string ToNameSpace
+        {
+            get;
+            set;
         }
         
         public string PluralTypeName

@@ -26,9 +26,15 @@ namespace Bam.Net.Logging
         public VerbosityLevel Value { get; set; }
 
 		/// <summary>
-		/// The "NamedFormat" message format to use when outputting messages
+		/// The "NamedFormat" message format to use when outputting messages.  The sender argument
+		/// to the registered event handler is used to resolve message variables.
 		/// </summary>
         public string SenderMessageFormat { get; set; }
+		
+		/// <summary>
+		/// The "NamedFormat" message to use when outputting messages.  The EventArgs argument
+		/// to the registered event handler is used to resolve message variables.
+		/// </summary>
         public string EventArgsMessageFormat { get; set; }
 
         public bool TryGetSenderMessage(object value, out string message)
