@@ -74,7 +74,7 @@ namespace Bam.Net.Application
             };
             logger.Info("Starting deployment");
 
-            throw new NotImplementedException("This service needs to be updated to deploy to a kubernetes cluster");
+            throw new NotImplementedException("This service needs to be updated to deploy to the bam ring cluster");
         }
 
         internal static ServiceRegistry StartServer(out HostPrefix[] hostPrefixes)

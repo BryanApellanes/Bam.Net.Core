@@ -61,6 +61,7 @@ namespace Bam.Net.Application
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
             Server.Subscribe(logger);
             Log.Default = logger;
+            LogResponses();
             Server.Start();
             BamConf conf = Server.GetCurrentConf();
             StringBuilder configurationMessage = new StringBuilder();
