@@ -288,6 +288,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\CSharpScriptContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\CSharpScriptContextModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\IncludeDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\ScriptWorkerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SetJobDataWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Sftp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\SourceControl\Extensions.cs" />
@@ -467,6 +468,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQueryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\PropertyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLType.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLQueryContext.hbs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IRepositoryProvider.cs" />

@@ -12,6 +12,7 @@ namespace Bam.Net
 
         Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo);
         Assembly CompileAssembly(string assemblyFileName, FileInfo[] files);
+        byte[] Compile(string assemblyFileName, params FileInfo[] sourceFiles);
         byte[] Compile(string assemblyFileName, string sourceCode);        
     }
 }

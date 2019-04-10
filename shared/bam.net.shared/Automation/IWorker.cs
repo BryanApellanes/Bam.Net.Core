@@ -12,6 +12,13 @@ namespace Bam.Net.Automation
         bool Busy { get; set; }
         Status Status { get; set; }
         WorkState SetPropertiesFromWorkState(WorkState state);
+        
+        /// <summary>
+        /// Sets properties for the current worker to the values that apply found in the
+        /// specified workstate.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         WorkState WorkState(WorkState state);
         WorkState Do(Job job);        
     }
