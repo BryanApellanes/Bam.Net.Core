@@ -204,7 +204,8 @@ namespace Bam.Net.CommandLine
         /// <summary>
         /// Try to write the current process id to a file either in the 
         /// same directory as the main executable or the user's temp 
-        /// directory if that fails.
+        /// directory if that fails.  Kills any existing process that
+        /// was invoked with the same command line if killOldProcess is true
         /// </summary>
         /// <param name="killOldProcess">Try to kill the old process if the pid file already exists</param>
         public static void TryWritePid(bool killOldProcess = false)

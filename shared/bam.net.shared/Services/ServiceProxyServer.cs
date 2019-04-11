@@ -13,6 +13,11 @@ namespace Bam.Net.Services
 {
     public class ServiceProxyServer : SimpleServer<ServiceProxyResponder>
     {
+        public ServiceProxyServer(ServiceRegistry serviceRegistry, ILogger logger = null) : this(serviceRegistry,
+            new ServiceProxyResponder(new BamConf(), logger), logger)
+        {
+        }
+
         public ServiceProxyServer(ServiceRegistry serviceRegistry, ServiceProxyResponder responder, ILogger logger) : base(responder, logger)
         {
             ServiceSubdomains = new HashSet<ServiceSubdomainAttribute>();
