@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 
 		public AssemblyDescriptorWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -48,8 +48,9 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 
 
 
-// Xref property: Left -> AssemblyDescriptor ; Right -> ProcessRuntimeDescriptor
+        // left xref
 
+// Left Xref property: Left -> AssemblyDescriptor ; Right -> ProcessRuntimeDescriptor
 		List<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor> _processRuntimeDescriptors;
 		public override List<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor> ProcessRuntimeDescriptors
 		{
@@ -57,8 +58,8 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 			{
 				if(_processRuntimeDescriptors == null || _processRuntimeDescriptors.Count == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptorProcessRuntimeDescriptor,  Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptorProcessRuntimeDescriptor, Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_processRuntimeDescriptors = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor>().ToList();
 					SetUpdatedXrefCollectionProperty("ProcessRuntimeDescriptors", this.GetType().GetProperty("ProcessRuntimeDescriptors"));					
 				}
@@ -70,8 +71,10 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 				_processRuntimeDescriptors = value;
 				SetUpdatedXrefCollectionProperty("ProcessRuntimeDescriptors", this.GetType().GetProperty("ProcessRuntimeDescriptors"));
 			}
-		}// Xref property: Left -> AssemblyDescriptor ; Right -> AssemblyReferenceDescriptor
+		}
+        // left xref
 
+// Left Xref property: Left -> AssemblyDescriptor ; Right -> AssemblyReferenceDescriptor
 		List<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor> _assemblyReferenceDescriptors;
 		public override List<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor> AssemblyReferenceDescriptors
 		{
@@ -79,8 +82,8 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 			{
 				if(_assemblyReferenceDescriptors == null || _assemblyReferenceDescriptors.Count == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptorAssemblyReferenceDescriptor,  Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptorAssemblyReferenceDescriptor, Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_assemblyReferenceDescriptors = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>().ToList();
 					SetUpdatedXrefCollectionProperty("AssemblyReferenceDescriptors", this.GetType().GetProperty("AssemblyReferenceDescriptors"));					
 				}
@@ -93,6 +96,8 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 				SetUpdatedXrefCollectionProperty("AssemblyReferenceDescriptors", this.GetType().GetProperty("AssemblyReferenceDescriptors"));
 			}
 		}
+
+
 	}
 	// -- generated
 }																								

@@ -30,7 +30,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
             WriteSourceTo = writeSourceDir;
             foreach (Type type in TypeSchema.Tables)
             {
-                WrapperModel model = new WrapperModel(type, TypeSchema, WrapperNamespace, DaoNamespace);
+                HandlebarsWrapperModel model = new HandlebarsWrapperModel(type, TypeSchema, WrapperNamespace, DaoNamespace);
                 string fileName = "{0}Wrapper.cs"._Format(type.Name.TrimNonLetters());
                 using (StreamWriter sw = new StreamWriter(Path.Combine(writeSourceDir, fileName)))
                 {

@@ -452,6 +452,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InvalidIHasRequiredPropertiesImplementationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\RequiredPropertiesNotSetException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\AssemblyRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResultEventArgs.cs" />
@@ -467,6 +473,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\TypeModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQueryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\PropertyModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsWrapperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />
