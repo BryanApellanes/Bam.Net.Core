@@ -20,6 +20,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 			}
 		}	
 
+				
         public AssemblyDescriptorColumns Id
         {
             get
@@ -69,7 +70,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
                 return new AssemblyDescriptorColumns("Created");
             }
         }
-
 
 
 		protected internal Type TableType

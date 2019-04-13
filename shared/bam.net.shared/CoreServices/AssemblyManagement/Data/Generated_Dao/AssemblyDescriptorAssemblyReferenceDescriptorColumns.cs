@@ -20,6 +20,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 			}
 		}	
 
+				
         public AssemblyDescriptorAssemblyReferenceDescriptorColumns Id
         {
             get
@@ -34,7 +35,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
                 return new AssemblyDescriptorAssemblyReferenceDescriptorColumns("Uuid");
             }
         }
-
 
         public AssemblyDescriptorAssemblyReferenceDescriptorColumns AssemblyDescriptorId
         {

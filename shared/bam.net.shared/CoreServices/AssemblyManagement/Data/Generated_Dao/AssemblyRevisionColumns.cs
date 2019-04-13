@@ -20,6 +20,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 			}
 		}	
 
+				
         public AssemblyRevisionColumns Id
         {
             get
@@ -62,6 +63,34 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
                 return new AssemblyRevisionColumns("Number");
             }
         }
+        public AssemblyRevisionColumns CreatedBy
+        {
+            get
+            {
+                return new AssemblyRevisionColumns("CreatedBy");
+            }
+        }
+        public AssemblyRevisionColumns ModifiedBy
+        {
+            get
+            {
+                return new AssemblyRevisionColumns("ModifiedBy");
+            }
+        }
+        public AssemblyRevisionColumns Modified
+        {
+            get
+            {
+                return new AssemblyRevisionColumns("Modified");
+            }
+        }
+        public AssemblyRevisionColumns Deleted
+        {
+            get
+            {
+                return new AssemblyRevisionColumns("Deleted");
+            }
+        }
         public AssemblyRevisionColumns Created
         {
             get
@@ -69,7 +98,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
                 return new AssemblyRevisionColumns("Created");
             }
         }
-
 
 
 		protected internal Type TableType

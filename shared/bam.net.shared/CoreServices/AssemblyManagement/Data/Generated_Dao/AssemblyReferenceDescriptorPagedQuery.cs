@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 {
     public class AssemblyReferenceDescriptorPagedQuery: PagedQuery<AssemblyReferenceDescriptorColumns, AssemblyReferenceDescriptor>
     { 
-		public AssemblyReferenceDescriptorPagedQuery(AssemblyReferenceDescriptorColumns orderByColumn,AssemblyReferenceDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public AssemblyReferenceDescriptorPagedQuery(AssemblyReferenceDescriptorColumns orderByColumn, AssemblyReferenceDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

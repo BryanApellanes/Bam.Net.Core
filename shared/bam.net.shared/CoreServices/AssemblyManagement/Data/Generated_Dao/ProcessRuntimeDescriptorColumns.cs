@@ -20,6 +20,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 			}
 		}	
 
+				
         public ProcessRuntimeDescriptorColumns Id
         {
             get
@@ -76,7 +77,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
                 return new ProcessRuntimeDescriptorColumns("Created");
             }
         }
-
 
 
 		protected internal Type TableType

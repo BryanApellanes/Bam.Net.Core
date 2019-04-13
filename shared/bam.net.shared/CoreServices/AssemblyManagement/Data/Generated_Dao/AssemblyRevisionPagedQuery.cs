@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 {
     public class AssemblyRevisionPagedQuery: PagedQuery<AssemblyRevisionColumns, AssemblyRevision>
     { 
-		public AssemblyRevisionPagedQuery(AssemblyRevisionColumns orderByColumn,AssemblyRevisionQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public AssemblyRevisionPagedQuery(AssemblyRevisionColumns orderByColumn, AssemblyRevisionQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

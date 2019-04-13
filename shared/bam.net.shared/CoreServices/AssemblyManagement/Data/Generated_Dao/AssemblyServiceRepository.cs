@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file was generated and should not be modified directly
 */
 using System;
@@ -23,23 +23,11 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		{
 			SchemaName = "AssemblyService";
 			BaseNamespace = "Bam.Net.CoreServices.AssemblyManagement.Data";			
-
-			
-			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>();
-			
-			
-			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>();
-			
-			
-			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();
-			
-			
-			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision>();
-			
-			
+﻿			
+			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>();﻿			
+			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision>();﻿			
+			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();﻿			
 			AddType<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor>();
-			
-
 			DaoAssembly = typeof(AssemblyServiceRepository).Assembly;
 		}
 
@@ -53,143 +41,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
             }
         }
 
-		
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyRequestWhere(WhereDelegate<AssemblyRequestColumns> where)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.SetOneWhere(where, Database);
-		}
-
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyRequestWhere(WhereDelegate<AssemblyRequestColumns> where, out Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest result)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.SetOneWhere(where, out Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest daoResult, Database);
-			result = daoResult.CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>();
-		}
-
-		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		/// <param name="where"></param>
-		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest GetOneAssemblyRequestWhere(WhereDelegate<AssemblyRequestColumns> where)
-		{
-			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>();
-			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
-		}
-
-		/// <summary>
-		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
-		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
-		/// single AssemblyRequest instance by its Id/Key value
-		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a AssemblyRequestColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between AssemblyRequestColumns and other values
-		/// </param>
-		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest OneAssemblyRequestWhere(WhereDelegate<AssemblyRequestColumns> where)
-        {
-            Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>();
-            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.OneWhere(where, Database)?.CopyAs(wrapperType, this);
-        }
-
-		/// <summary>
-		/// Execute a query and return the results. 
-		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequestColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequestColumns and other values
-		/// </param>
-		public IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest> AssemblyRequestsWhere(WhereDelegate<AssemblyRequestColumns> where, OrderBy<AssemblyRequestColumns> orderBy = null)
-        {
-            return Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>(Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Where(where, orderBy, Database));
-        }
-		
-		/// <summary>
-		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
-		/// specified number of values will be returned.
-		/// </summary>
-		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
-		/// number of values will be returned by the database.
-		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a AssemblyRequestColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between AssemblyRequestColumns and other values
-		/// </param>
-		public IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest> TopAssemblyRequestsWhere(int count, WhereDelegate<AssemblyRequestColumns> where)
-        {
-            return Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>(Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Top(count, where, Database));
-        }
-
-		/// <summary>
-		/// Return the count of AssemblyRequests
-		/// </summary>
-		public long CountAssemblyRequests()
-        {
-            return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Count(Database);
-        }
-
-		/// <summary>
-		/// Execute a query and return the number of results
-		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a AssemblyRequestColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between AssemblyRequestColumns and other values
-		/// </param>
-        public long CountAssemblyRequestsWhere(WhereDelegate<AssemblyRequestColumns> where)
-        {
-            return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Count(where, Database);
-        }
-        
-        public async Task BatchQueryAssemblyRequests(int batchSize, WhereDelegate<AssemblyRequestColumns> where, Action<IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>> batchProcessor)
-        {
-            await Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.BatchQuery(batchSize, where, (batch) =>
-            {
-				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>(batch));
-            }, Database);
-        }
-		
-        public async Task BatchAllAssemblyRequests(int batchSize, Action<IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>> batchProcessor)
-        {
-            await Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.BatchAll(batchSize, (batch) =>
-            {
-				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRequest>(batch));
-            }, Database);
-        }
-
-		
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyDescriptorWhere(WhereDelegate<AssemblyDescriptorColumns> where)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor.SetOneWhere(where, Database);
-		}
-
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyDescriptorWhere(WhereDelegate<AssemblyDescriptorColumns> where, out Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor result)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor.SetOneWhere(where, out Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor daoResult, Database);
-			result = daoResult.CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>();
-		}
-
+﻿		
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
 		/// one will be created; success will depend on the nullability
@@ -199,12 +51,13 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor GetOneAssemblyDescriptorWhere(WhereDelegate<AssemblyDescriptorColumns> where)
 		{
 			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>();
-			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor.GetOneWhere(where, Database).CopyAs(wrapperType, this);
 		}
 
 		/// <summary>
-		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
-		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
+		/// Execute a query that should return only one result.  If more
+		/// than one result is returned a MultipleEntriesFoundException will 
+		/// be thrown.  This method is most commonly used to retrieve a
 		/// single AssemblyDescriptor instance by its Id/Key value
 		/// </summary>
 		/// <param name="where">A WhereDelegate that recieves a AssemblyDescriptorColumns 
@@ -214,7 +67,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor OneAssemblyDescriptorWhere(WhereDelegate<AssemblyDescriptorColumns> where)
         {
             Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>();
-            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor.OneWhere(where, Database).CopyAs(wrapperType, this);
         }
 
 		/// <summary>
@@ -281,145 +134,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
             {
 				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>(batch));
             }, Database);
-        }
-
-		
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyReferenceDescriptorWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.SetOneWhere(where, Database);
-		}
-
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyReferenceDescriptorWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where, out Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor result)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.SetOneWhere(where, out Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor daoResult, Database);
-			result = daoResult.CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();
-		}
-
-		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		/// <param name="where"></param>
-		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor GetOneAssemblyReferenceDescriptorWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
-		{
-			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();
-			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
-		}
-
-		/// <summary>
-		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
-		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
-		/// single AssemblyReferenceDescriptor instance by its Id/Key value
-		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a AssemblyReferenceDescriptorColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between AssemblyReferenceDescriptorColumns and other values
-		/// </param>
-		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor OneAssemblyReferenceDescriptorWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
-        {
-            Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();
-            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.OneWhere(where, Database)?.CopyAs(wrapperType, this);
-        }
-
-		/// <summary>
-		/// Execute a query and return the results. 
-		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptorColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptorColumns and other values
-		/// </param>
-		public IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor> AssemblyReferenceDescriptorsWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where, OrderBy<AssemblyReferenceDescriptorColumns> orderBy = null)
-        {
-            return Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Where(where, orderBy, Database));
-        }
-		
-		/// <summary>
-		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
-		/// specified number of values will be returned.
-		/// </summary>
-		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
-		/// number of values will be returned by the database.
-		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a AssemblyReferenceDescriptorColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between AssemblyReferenceDescriptorColumns and other values
-		/// </param>
-		public IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor> TopAssemblyReferenceDescriptorsWhere(int count, WhereDelegate<AssemblyReferenceDescriptorColumns> where)
-        {
-            return Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Top(count, where, Database));
-        }
-
-		/// <summary>
-		/// Return the count of AssemblyReferenceDescriptors
-		/// </summary>
-		public long CountAssemblyReferenceDescriptors()
-        {
-            return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Count(Database);
-        }
-
-		/// <summary>
-		/// Execute a query and return the number of results
-		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a AssemblyReferenceDescriptorColumns 
-		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between AssemblyReferenceDescriptorColumns and other values
-		/// </param>
-        public long CountAssemblyReferenceDescriptorsWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
-        {
-            return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Count(where, Database);
-        }
-        
-        public async Task BatchQueryAssemblyReferenceDescriptors(int batchSize, WhereDelegate<AssemblyReferenceDescriptorColumns> where, Action<IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>> batchProcessor)
-        {
-            await Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.BatchQuery(batchSize, where, (batch) =>
-            {
-				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(batch));
-            }, Database);
-        }
-		
-        public async Task BatchAllAssemblyReferenceDescriptors(int batchSize, Action<IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>> batchProcessor)
-        {
-            await Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.BatchAll(batchSize, (batch) =>
-            {
-				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(batch));
-            }, Database);
-        }
-
-		
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyRevisionWhere(WhereDelegate<AssemblyRevisionColumns> where)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision.SetOneWhere(where, Database);
-		}
-
-		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
-		/// </summary>
-		public void SetOneAssemblyRevisionWhere(WhereDelegate<AssemblyRevisionColumns> where, out Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision result)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision.SetOneWhere(where, out Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision daoResult, Database);
-			result = daoResult.CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision>();
-		}
-
+        }﻿		
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
 		/// one will be created; success will depend on the nullability
@@ -429,12 +144,13 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision GetOneAssemblyRevisionWhere(WhereDelegate<AssemblyRevisionColumns> where)
 		{
 			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision>();
-			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision.GetOneWhere(where, Database).CopyAs(wrapperType, this);
 		}
 
 		/// <summary>
-		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
-		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
+		/// Execute a query that should return only one result.  If more
+		/// than one result is returned a MultipleEntriesFoundException will 
+		/// be thrown.  This method is most commonly used to retrieve a
 		/// single AssemblyRevision instance by its Id/Key value
 		/// </summary>
 		/// <param name="where">A WhereDelegate that recieves a AssemblyRevisionColumns 
@@ -444,7 +160,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision OneAssemblyRevisionWhere(WhereDelegate<AssemblyRevisionColumns> where)
         {
             Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision>();
-            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRevision.OneWhere(where, Database).CopyAs(wrapperType, this);
         }
 
 		/// <summary>
@@ -511,30 +227,100 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
             {
 				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision>(batch));
             }, Database);
+        }﻿		
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists 
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		/// <param name="where"></param>
+		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor GetOneAssemblyReferenceDescriptorWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
+		{
+			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();
+			return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.GetOneWhere(where, Database).CopyAs(wrapperType, this);
+		}
+
+		/// <summary>
+		/// Execute a query that should return only one result.  If more
+		/// than one result is returned a MultipleEntriesFoundException will 
+		/// be thrown.  This method is most commonly used to retrieve a
+		/// single AssemblyReferenceDescriptor instance by its Id/Key value
+		/// </summary>
+		/// <param name="where">A WhereDelegate that recieves a AssemblyReferenceDescriptorColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between AssemblyReferenceDescriptorColumns and other values
+		/// </param>
+		public Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor OneAssemblyReferenceDescriptorWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
+        {
+            Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>();
+            return (Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.OneWhere(where, Database).CopyAs(wrapperType, this);
         }
 
+		/// <summary>
+		/// Execute a query and return the results. 
+		/// </summary>
+		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptorColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptorColumns and other values
+		/// </param>
+		public IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor> AssemblyReferenceDescriptorsWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where, OrderBy<AssemblyReferenceDescriptorColumns> orderBy = null)
+        {
+            return Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Where(where, orderBy, Database));
+        }
 		
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
+		/// Execute a query and return the specified number
+		/// of values. This method will issue a sql TOP clause so only the 
+		/// specified number of values will be returned.
 		/// </summary>
-		public void SetOneProcessRuntimeDescriptorWhere(WhereDelegate<ProcessRuntimeDescriptorColumns> where)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor.SetOneWhere(where, Database);
-		}
+		/// <param name="count">The number of values to return.
+		/// This value is used in the sql query so no more than this 
+		/// number of values will be returned by the database.
+		/// </param>
+		/// <param name="where">A WhereDelegate that recieves a AssemblyReferenceDescriptorColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between AssemblyReferenceDescriptorColumns and other values
+		/// </param>
+		public IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor> TopAssemblyReferenceDescriptorsWhere(int count, WhereDelegate<AssemblyReferenceDescriptorColumns> where)
+        {
+            return Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Top(count, where, Database));
+        }
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
-		/// of the specified columns.
+		/// Return the count of AssemblyReferenceDescriptors
 		/// </summary>
-		public void SetOneProcessRuntimeDescriptorWhere(WhereDelegate<ProcessRuntimeDescriptorColumns> where, out Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor result)
-		{
-			Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor.SetOneWhere(where, out Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor daoResult, Database);
-			result = daoResult.CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor>();
-		}
+		public long CountAssemblyReferenceDescriptors()
+        {
+            return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Count(Database);
+        }
 
+		/// <summary>
+		/// Execute a query and return the number of results
+		/// </summary>
+		/// <param name="where">A WhereDelegate that recieves a AssemblyReferenceDescriptorColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between AssemblyReferenceDescriptorColumns and other values
+		/// </param>
+        public long CountAssemblyReferenceDescriptorsWhere(WhereDelegate<AssemblyReferenceDescriptorColumns> where)
+        {
+            return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.Count(where, Database);
+        }
+        
+        public async Task BatchQueryAssemblyReferenceDescriptors(int batchSize, WhereDelegate<AssemblyReferenceDescriptorColumns> where, Action<IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>> batchProcessor)
+        {
+            await Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.BatchQuery(batchSize, where, (batch) =>
+            {
+				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(batch));
+            }, Database);
+        }
+		
+        public async Task BatchAllAssemblyReferenceDescriptors(int batchSize, Action<IEnumerable<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>> batchProcessor)
+        {
+            await Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyReferenceDescriptor.BatchAll(batchSize, (batch) =>
+            {
+				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyReferenceDescriptor>(batch));
+            }, Database);
+        }﻿		
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
 		/// one will be created; success will depend on the nullability
@@ -544,12 +330,13 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		public Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor GetOneProcessRuntimeDescriptorWhere(WhereDelegate<ProcessRuntimeDescriptorColumns> where)
 		{
 			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor>();
-			return (Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+			return (Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor.GetOneWhere(where, Database).CopyAs(wrapperType, this);
 		}
 
 		/// <summary>
-		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
-		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
+		/// Execute a query that should return only one result.  If more
+		/// than one result is returned a MultipleEntriesFoundException will 
+		/// be thrown.  This method is most commonly used to retrieve a
 		/// single ProcessRuntimeDescriptor instance by its Id/Key value
 		/// </summary>
 		/// <param name="where">A WhereDelegate that recieves a ProcessRuntimeDescriptorColumns 
@@ -559,7 +346,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 		public Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor OneProcessRuntimeDescriptorWhere(WhereDelegate<ProcessRuntimeDescriptorColumns> where)
         {
             Type wrapperType = GetWrapperType<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor>();
-            return (Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+            return (Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor)Bam.Net.CoreServices.AssemblyManagement.Data.Dao.ProcessRuntimeDescriptor.OneWhere(where, Database).CopyAs(wrapperType, this);
         }
 
 		/// <summary>
@@ -627,7 +414,5 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 				batchProcessor(Wrap<Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor>(batch));
             }, Database);
         }
-
-
 	}
 }																								
