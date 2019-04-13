@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 			}
 		}	
 
-				
         public AssemblyDescriptorProcessRuntimeDescriptorColumns Id
         {
             get
@@ -35,6 +34,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
                 return new AssemblyDescriptorProcessRuntimeDescriptorColumns("Uuid");
             }
         }
+
 
         public AssemblyDescriptorProcessRuntimeDescriptorColumns AssemblyDescriptorId
         {

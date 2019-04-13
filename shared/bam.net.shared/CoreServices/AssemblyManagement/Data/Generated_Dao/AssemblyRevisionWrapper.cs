@@ -9,27 +9,27 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using Bam.Net.CoreServices.AssemblyManagement.Data;
-using Bam.Net.CoreServices.AssemblyManagement.Data.Dao;
+using ;
+using ;
 
-namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
+namespace 
 {
 	// generated
 	[Serializable]
-	public class AssemblyRevisionWrapper: Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyRevision, IHasUpdatedXrefCollectionProperties
+	public class : ., IHasUpdatedXrefCollectionProperties
 	{
-		public AssemblyRevisionWrapper()
+		public Wrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public AssemblyRevisionWrapper(DaoRepository repository) : this()
+		public Wrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -45,6 +45,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 				UpdatedXrefCollectionProperties[propertyName] = correspondingProperty;				
 			}
 		}
+
 
 
 

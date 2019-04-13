@@ -45,6 +45,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data
             });
             return repo.Save(this);
         }
+        
         /// <summary>
         /// Set the AssemblyReferenceDescriptors property by
         /// calling assembly.GetReferencedAssemblies()

@@ -76,6 +76,7 @@ namespace Bam.Net.Data
             return conn;
         }
         
+        [DebuggerStepThrough]
         public override void ReleaseConnection(DbConnection dbConnection)
         {
             try

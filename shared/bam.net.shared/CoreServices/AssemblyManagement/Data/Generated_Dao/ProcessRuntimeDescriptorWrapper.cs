@@ -9,27 +9,27 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using Bam.Net.CoreServices.AssemblyManagement.Data;
-using Bam.Net.CoreServices.AssemblyManagement.Data.Dao;
+using ;
+using ;
 
-namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
+namespace 
 {
 	// generated
 	[Serializable]
-	public class ProcessRuntimeDescriptorWrapper: Bam.Net.CoreServices.AssemblyManagement.Data.ProcessRuntimeDescriptor, IHasUpdatedXrefCollectionProperties
+	public class : ., IHasUpdatedXrefCollectionProperties
 	{
-		public ProcessRuntimeDescriptorWrapper()
+		public Wrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public ProcessRuntimeDescriptorWrapper(DaoRepository repository) : this()
+		public Wrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -49,28 +49,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 
 
 
-// Xref property: Left -> AssemblyDescriptor ; Right -> ProcessRuntimeDescriptor
 
-		Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor[] _assemblyDescriptors;
-		public override Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor[] AssemblyDescriptors
-		{
-			get
-			{
-				if(_assemblyDescriptors == null || _assemblyDescriptors.Length == 0)
-				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptorProcessRuntimeDescriptor, Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyDescriptor>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
-					_assemblyDescriptors = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.AssemblyManagement.Data.AssemblyDescriptor>().ToArray();
-					SetUpdatedXrefCollectionProperty("AssemblyDescriptors", this.GetType().GetProperty("AssemblyDescriptors"));					
-				}
-
-				return _assemblyDescriptors;
-			}
-			set
-			{
-				_assemblyDescriptors = value;
-				SetUpdatedXrefCollectionProperty("AssemblyDescriptors", this.GetType().GetProperty("AssemblyDescriptors"));
-			}
-		}	}
+	}
 	// -- generated
 }																								

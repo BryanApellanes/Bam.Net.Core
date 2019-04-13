@@ -203,6 +203,7 @@ namespace Bam.Net.Data.Repositories
 
 			return result;
 		}
+        
         public virtual IEnumerable SaveCollection(IEnumerable values)
         {
             foreach(object value in values)
@@ -210,6 +211,7 @@ namespace Bam.Net.Data.Repositories
                 yield return Save(value);
             }
         }
+        
         public virtual IEnumerable<T> SaveCollection<T>(IEnumerable<T> values) where T : class, new()
         {
             foreach(T value in values)
@@ -230,7 +232,6 @@ namespace Bam.Net.Data.Repositories
 		public abstract object Create(object toCreate);
         public abstract object Create(Type type, object toCreate);
         public abstract T Retrieve<T>(int id) where T : class, new();
-		
 		public abstract T Retrieve<T>(long id) where T : class, new();
         public abstract T Retrieve<T>(ulong id) where T : class, new();
         public abstract T Retrieve<T>(string uuid) where T : class, new();

@@ -70,10 +70,10 @@ namespace Bam.Net
 
         public void Render(string templateName, object renderModel, Stream output)
         {
-            Render(templateName, renderModel, output);
+            Render(templateName, renderModel, output, false);
         }
         
-        public void Render(string templateName, object renderModel, Stream output, bool dispose = true)
+        public void Render(string templateName, object renderModel, Stream output, bool dispose = false)
         {
             HandlebarsDirectory handlebarsDirectory = GetHandlebarsDirectory(templateName);
             if (handlebarsDirectory != null)

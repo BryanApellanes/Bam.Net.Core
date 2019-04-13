@@ -2895,7 +2895,9 @@
     <None Include="$(MSBuildThisFileDirectory)Automation\Testing\Data\regen_testing_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\regen_accesscontrol_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\regen_applicationregistration_dao.cmd" />
-    <None Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\regen_assemblymanagement_dao.cmd" />
+    <None Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\regen_assemblymanagement_dao.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="$(MSBuildThisFileDirectory)CoreServices\OAuth\regen_oauth_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\README.md" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\regen.cmd" />
