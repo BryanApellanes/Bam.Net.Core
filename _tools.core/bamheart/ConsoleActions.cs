@@ -90,10 +90,12 @@ namespace Bam.Net.Application
 
         public static HostPrefix[] GetConfiguredHostPrefixes()
         {
-            int port = int.Parse(DefaultConfiguration.GetAppSetting("Port", "80"));
-            bool ssl = DefaultConfiguration.GetAppSetting("Ssl").IsAffirmative();
+            Config config = Config.Current;
+            Log.Trace("ConfigPath: {0}", config.File.FullName);
+            int port = int.Parse(config["Port", "80"]);
+            bool ssl = config["Ssl"].IsAffirmative();
             List<HostPrefix> results = new List<HostPrefix>();
-            foreach(string hostName in DefaultConfiguration.GetAppSetting("HostNames").Or("localhost").DelimitSplit(",", true))
+            foreach(string hostName in config["HostNames"].Or("localhost").DelimitSplit(",", true))
             {
                 HostPrefix hostPrefix = new HostPrefix()
                 {

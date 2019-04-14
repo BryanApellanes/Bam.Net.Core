@@ -2902,9 +2902,7 @@
     <None Include="$(MSBuildThisFileDirectory)Automation\Testing\Data\regen_testing_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\regen_accesscontrol_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\regen_applicationregistration_dao.cmd" />
-    <None Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\regen_assemblymanagement_dao.cmd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\regen_assemblymanagement_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\OAuth\regen_oauth_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\README.md" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\regen.cmd" />
@@ -2974,6 +2972,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Automation\Automation.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\ln.node.js" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\README.md" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\ServiceRegistration\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\AES.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA1.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />

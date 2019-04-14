@@ -6,7 +6,9 @@ namespace Bam.Net
 {
     /// <summary>
     /// Gets the Application name from the environment variable BAM_ApplicationName
-    /// or the name of the entry assembly if it is not set.
+    /// or the name of the entry assembly if it is not set.  Will set the environment variable BAM_APPLICATION_NAME
+    /// to the name of the entry assembly if BAM_ApplicationName is not set or set to
+    /// a value prefixed by "UNKNOWN".
     /// </summary>
     public class ProcessApplicationNameProvider: IApplicationNameProvider
     {
@@ -14,10 +16,10 @@ namespace Bam.Net
         public string GetApplicationName()
         {
             string name = BamEnvironmentVariables.GetBamVariable("ApplicationName");
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) || name.StartsWith("UNKNOWN"))
             {
-                string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
-                name = Path.GetFileName(assemblyFile);
+                name = Config.GetHostServiceName();
+                BamEnvironmentVariables.SetApplicationName(name);
             }
             return name;
         }

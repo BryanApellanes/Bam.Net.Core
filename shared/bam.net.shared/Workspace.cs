@@ -56,7 +56,7 @@ namespace Bam.Net
             Console.WriteLine(format, args);
             string message = $"{string.Format(format, args)}\r\n";
             FileInfo file = new FileInfo(Path("Console"));
-            if (file.Length >= 1048576)
+            if (file.Exists && file.Length >= 1048576)
             {
                 file = file.GetNextFile();
             }
@@ -116,6 +116,7 @@ namespace Bam.Net
         public static Workspace ForApplication(IApplicationNameProvider applicationNameProvider = null)
         {
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            Log.Trace(typeof(Workspace), "Workspace using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
             string directoryPath = System.IO.Path.Combine(BamPaths.BamHome, "apps", applicationNameProvider.GetApplicationName());
             return new Workspace()
                 {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};

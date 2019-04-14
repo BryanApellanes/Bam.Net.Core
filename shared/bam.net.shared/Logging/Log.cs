@@ -21,7 +21,7 @@ namespace Bam.Net.Logging
             {
                 if (_debug == null)
                 {
-                    _debug = DefaultConfiguration.GetAppSetting("Debug", "false").IsAffirmative();
+                    _debug = Environment.GetCommandLineArgs().Count(arg => arg.Equals("/debug")) > 0;
                 }
                 return _debug.Value;
             }
@@ -38,7 +38,7 @@ namespace Bam.Net.Logging
             {
                 if (_trace == null)
                 {
-                    _trace = DefaultConfiguration.GetAppSetting("Trace", "false").IsAffirmative();
+                    _trace = Environment.GetCommandLineArgs().Count(arg => arg.Equals("/trace")) > 0;
                 }
                 return _trace.Value;
             }
@@ -94,34 +94,14 @@ namespace Bam.Net.Logging
             Default.AddEntry(messageSignature, ex, args?.Select(a => a.ToString())?.ToArray());
         }
 
-        public static void Debug(string messageSignature, params object[] args)
+        public static void Debug(Type caller, string messageSignature, params object[] args)
         {
-            DebugInfo(messageSignature, args);
-        }
-
-        public static void DebugInfo(string messageSignature, params object[] args)
-        {
-            if (DebugOut)
-            {
-                WriteDebug(messageSignature, args);
-            }
+            Debug($"{caller.Name}::{messageSignature}", args);
         }
         
-        public static void DebugWarn(string messageSignature, params object[] args)
+        public static void Debug(string messageSignature, params object[] args)
         {
-            if (DebugOut)
-            {
-                WriteDebug(messageSignature, args);                
-            }
-        }
-
-        public static void DebugError(string messageSignature, Exception ex, params object[] args)
-        {
-            if (DebugOut)
-            {
-                WriteDebug(messageSignature, args);
-                Error(messageSignature, ex, args);
-            }
+            WriteDebug(messageSignature, args);
         }
         
         private static void WriteDebug(string messageSignature, object[] args)
@@ -140,41 +120,19 @@ namespace Bam.Net.Logging
             }
         }
         
+        public static void Trace(Type caller, string messageSignature, params object[] args)
+        {
+            Trace($"{caller?.GetType()?.Name}::{messageSignature}", args);
+        }
+        
         public static void Trace(string messageSignature, params object[] args)
         {
-            TraceInfo(messageSignature, args);
+            WriteTrace(messageSignature, args);
         }
 
         public static void Trace(string messageSignature, Exception ex, params object[] args)
         {
-            TraceError(messageSignature, ex, args);
-        }
-
-        public static void TraceInfo(string messageSignature, params object[] args)
-        {
-            if (TraceOut)
-            {
-                WriteTrace(messageSignature, args);
-                Info(messageSignature, args);
-            }
-        }
-
-        public static void TraceWarn(string messageSignature, params object[] args)
-        {
-            if (TraceOut)
-            {
-                WriteTrace(messageSignature, args);
-                Warn(messageSignature, args);
-            }
-        }
-
-        private static void TraceError(string messageSignature, Exception ex, params object[] args)
-        {
-            if (TraceOut)
-            {
-                WriteTrace(messageSignature, args);
-                Error(messageSignature, ex, args);
-            }
+            WriteTrace($"{messageSignature}\r\n{ex.Message}\r\n{ex.StackTrace}", args);
         }
 
         private static void WriteTrace(string messageSignature, object[] args)

@@ -1,0 +1,11 @@
+namespace {{NameSpace}}
+{
+    public class {{ProviderTypeName}}ProviderDelegator : ArgZeroDelegator<{{ProviderTypeName}}Provider>
+    {
+    
+{{#each Methods}}
+{{> DelegatorMethod}}    
+{{/each}}
+    
+    } 
+}

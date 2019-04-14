@@ -14,7 +14,7 @@ namespace Bam.Net.Data.Repositories
     /// <seealso cref="Bam.Net.Data.Repositories.RepoData" />
     /// <seealso cref="Bam.Net.Data.Repositories.IHasKeyHash" />
     [Serializable]
-    public abstract class KeyHashRepoData : RepoData, IHasKeyHash
+    public abstract class KeyHashRepoData : RepoData, IHasKeyHash // TODO: rename this to CompositeKeyRepoData
     {
         public KeyHashRepoData()
         {

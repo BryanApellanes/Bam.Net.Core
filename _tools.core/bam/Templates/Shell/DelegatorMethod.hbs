@@ -1,0 +1,8 @@
+
+        [ArgZero("{{CamelCasedMethodName}}")]
+        public void {{MethodName}}()
+        {
+            {{ProviderTypeName}}Provider provider = Construct();
+            provider?.{{MethodName}}(StandardOut, StandardError);
+            Exit(provider != null ? 0 : 1);
+        }

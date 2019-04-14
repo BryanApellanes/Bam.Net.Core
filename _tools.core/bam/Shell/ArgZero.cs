@@ -127,6 +127,11 @@ namespace Bam.Shell
                 return;
             }
 
+            if (Environment.GetCommandLineArgs().Any(a => a.Equals("/pause")))
+            {
+                Pause("Press enter to continue");
+            }
+
             onArgZeroExecuted = onArgZeroExecuted ?? (() => { });
             
             if (Targets.ContainsKey(arguments[0]))

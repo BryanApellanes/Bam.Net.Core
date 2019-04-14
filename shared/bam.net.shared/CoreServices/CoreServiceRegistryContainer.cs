@@ -64,13 +64,13 @@ namespace Bam.Net.CoreServices
         public static Func<ServiceRegistry, ServiceRegistry> ConfigureDev { get; set; }
 
         /// <summary>
-        /// Gets or sets the configure test.  Used to further configure the service
+        /// Gets or sets the configure test function.  Used to further configure the service
         /// registry when in Test mode.
         /// </summary>
         public static Func<ServiceRegistry, ServiceRegistry> ConfigureTest { get; set; }
 
         /// <summary>
-        /// Gets or sets the configure test.  Used to further configure the service
+        /// Gets or sets the configure prod function.  Used to further configure the service
         /// registry when in Prod mode.
         /// </summary>
         public static Func<ServiceRegistry, ServiceRegistry> ConfigureProd { get; set; }

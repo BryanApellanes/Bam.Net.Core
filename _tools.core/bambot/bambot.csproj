@@ -50,6 +50,10 @@
       <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.pdb" />
       <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.dll" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Shell" />
+    </ItemGroup>
     
     
 </Project>

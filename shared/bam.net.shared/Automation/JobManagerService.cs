@@ -209,6 +209,10 @@ namespace Bam.Net.Automation
         public virtual string[] ListJobNames()
         {
             DirectoryInfo jobsDirectory = new DirectoryInfo(JobsDirectory);
+            if (!jobsDirectory.Exists)
+            {
+                return new string[] { };
+            }
             DirectoryInfo[] jobDirectories = jobsDirectory.GetDirectories();
             return jobDirectories.Select(jd => jd.Name).ToArray();
         }
@@ -414,7 +418,7 @@ namespace Bam.Net.Automation
                 }
                 catch (Exception ex)
                 {
-                    Log.TraceWarn("Exception running jobs: {0}", ex.Message);
+                    Log.Trace("Exception running jobs: {0}", ex.Message);
                 }
             }
         }
@@ -454,7 +458,7 @@ namespace Bam.Net.Automation
                     }
                     catch (Exception inner)
                     {
-                        Log.TraceWarn("Exception untracking running job: {0}", inner.Message);
+                        Log.Trace("Exception untracking running job: {0}", inner.Message);
                     }
                 }
             }

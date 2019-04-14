@@ -55,7 +55,7 @@ namespace Bam.Net
         }
 
         public Dictionary<string, string> AppSettings { get; set; }
-
+        
         public string this[string key, string defaultValue = null]
         {
             get
@@ -67,18 +67,29 @@ namespace Bam.Net
 
                 if (!string.IsNullOrEmpty(defaultValue))
                 {
-                    BamEnvironmentVariables.SetBamVariable(key, defaultValue);
+                    //BamEnvironmentVariables.SetBamVariable(key, defaultValue);
                     AppSettings.Add(key, defaultValue);
+                    Write(AppSettings);
                 }
 
                 return defaultValue;
             }
         }
 
+        static IApplicationNameProvider _applicationNameProvider;
         public static IApplicationNameProvider ApplicationNameProvider
         {
-            get;
-            set;
+            get
+            {
+                if (_applicationNameProvider == null)
+                {
+                    _applicationNameProvider = ProcessApplicationNameProvider.Current;
+                }
+
+                return _applicationNameProvider;
+            }
+            
+            set { _applicationNameProvider = value; }
         }
         
         public static Dictionary<string, string> Read()
@@ -92,11 +103,14 @@ namespace Bam.Net
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
         
-        public static void Write(Dictionary<string, string> appSettings)
+        public static void Write(Dictionary<string, string> appSettings, bool setBamEnvironmentVariables = true)
         {
-            foreach (string key in appSettings.Keys)
+            if (setBamEnvironmentVariables)
             {
-                BamEnvironmentVariables.SetBamVariable(key, appSettings[key]);
+                foreach (string key in appSettings.Keys)
+                {
+                    BamEnvironmentVariables.SetBamVariable(key, appSettings[key]);
+                }
             }
             FileInfo configFile = GetFile();
             if (configFile.Exists)
@@ -171,11 +185,15 @@ namespace Bam.Net
         
         public static FileInfo GetFile(IApplicationNameProvider applicationNameProvider = null)
         {
+            applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            Log.Trace("Config using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
+            string providedAppName = applicationNameProvider.GetApplicationName();
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
             string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
-            string path = applicationNameProvider != null
-                ? Path.Combine(BamPaths.ConfPath, assemblyName, $"{applicationNameProvider.GetApplicationName()}.appsettings.yaml")
+            string path = !providedAppName.StartsWith("UNKNOWN")
+                ? Path.Combine(BamPaths.ConfPath, assemblyName, $"{providedAppName}.appsettings.yaml")
                 : Path.Combine(BamPaths.ConfPath, assemblyName, $"{assemblyName}.appsettings.yaml"); 
+            Log.Trace("config file path = {0}", path);
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
             {
@@ -186,6 +204,16 @@ namespace Bam.Net
                 System.IO.File.Create(configFile.FullName).Dispose();
             }
             return configFile;
+        }
+        
+        /// <summary>
+        /// Get the name of the entry assembly without extension.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetHostServiceName()
+        {
+            string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
+            return Path.GetFileNameWithoutExtension(assemblyFile);
         }
     }
 }
