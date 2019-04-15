@@ -11,7 +11,7 @@ namespace Bam.Shell.ShellGeneration.Data
         /// <summary>
         /// The key of the ShellDescriptor this ShellWrapperAssembly was generated for.
         /// </summary>
-        public int ShellDescriptorKey { get; set; }
+        public ulong ShellDescriptorKey { get; set; }
         
         public string Base64Assembly { get; set; }
     }

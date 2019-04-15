@@ -49,6 +49,11 @@ namespace Bam.Net.Data.Repositories
             return $"{name}:{properties}";
         }
 
+        public ulong Key()
+        {
+            return GetULongKeyHash();
+        } 
+        
         public int GetIntKeyHash()
         {
             return KeyHashProvider.GetIntKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
