@@ -279,7 +279,7 @@ namespace Bam.Net.Data
             if (_hasCuid == null)
             {
                 _cuidProp = GetType().GetProperty("Cuid");
-                _hasCuid = _uuidProp != null;
+                _hasCuid = _cuidProp != null;
             }
 
             cuidProp = _cuidProp;
