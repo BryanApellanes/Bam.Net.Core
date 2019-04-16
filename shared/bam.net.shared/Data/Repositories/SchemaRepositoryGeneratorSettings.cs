@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Bam.Net.Presentation.Handlebars;
+using GraphQL;
 
 namespace Bam.Net.Data.Repositories
 {
@@ -25,11 +27,14 @@ namespace Bam.Net.Data.Repositories
 
         public static SchemaRepositoryGeneratorSettings FromConfig(GenerationConfig config)
         {
+            HandlebarsDirectory handlebarsDirectory = new HandlebarsDirectory(config.TemplatePath);
+            HandlebarsEmbeddedResources embeddedResources = new HandlebarsEmbeddedResources(typeof(SchemaRepositoryGenerator).Assembly);
             return new SchemaRepositoryGeneratorSettings
             (
-                new HandlebarsDaoCodeWriter(new Presentation.Handlebars.HandlebarsDirectory(config.TemplatePath), new Presentation.Handlebars.HandlebarsEmbeddedResources(typeof(SchemaRepositoryGenerator).Assembly)),
+                new HandlebarsDaoCodeWriter(handlebarsDirectory, embeddedResources),
                 new DaoTargetStreamResolver(),
-                new HandlebarsWrapperGenerator()
+                new HandlebarsWrapperGenerator
+                    {HandlebarsDirectory = handlebarsDirectory, HandlebarsEmbeddedResources = embeddedResources}
             )
             {
                 Config = config

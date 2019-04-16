@@ -44,30 +44,41 @@ namespace Bam.Templates.Shell.Models
             {
                 ConcreteClass = new ConcreteClassModel()
                 {
-                    BaseProviderTypeName = baseTypeName, 
+                    BaseTypeName = baseTypeName, 
                     ConcreteTypeName = concreteTypeName,
                     Methods = methodNames.Select(m => new ConcreteMethodModel {ConcreteMethodName = m}).ToArray()
                 },
                 ProviderBaseClass = new ProviderBaseClassModel()
                 {
-                    BaseProviderTypeName = baseTypeName,
+                    BaseTypeName = baseTypeName,
                     Methods = methodNames.Select(m => new ProviderBaseClassMethodModel {MethodName = m}).ToArray()
                 },
                 DelegatorClass = new DelegatorClassModel()
                 {
-                    BaseProviderTypeName = baseTypeName,
-                    DelegatorMethods = methodNames.Select(m => new DelegatorMethodModel {MethodName = m}).ToArray()
+                    BaseTypeName = baseTypeName,
+                    Methods = methodNames.Select(m => new DelegatorMethodModel {MethodName = m}).ToArray()
                 }
             };
         }
 
+        public void SetBaseTypeName(string baseTypeName)
+        {
+            ConcreteClass.BaseTypeName = baseTypeName;
+            ProviderBaseClass.BaseTypeName = baseTypeName;
+            DelegatorClass.BaseTypeName = baseTypeName;
+            foreach (DelegatorMethodModel method in DelegatorClass.Methods)
+            {
+                method.BaseTypeName = baseTypeName;
+            }
+        }
+        
         public void SetMethods(params string[] methodNames)
         {
             ConcreteClass.Methods =
                 methodNames.Select(m => new ConcreteMethodModel {ConcreteMethodName = m}).ToArray();
             ProviderBaseClass.Methods =
                 methodNames.Select(m => new ProviderBaseClassMethodModel {MethodName = m}).ToArray();
-            DelegatorClass.DelegatorMethods =
+            DelegatorClass.Methods =
                 methodNames.Select(m => new DelegatorMethodModel {MethodName = m}).ToArray();
         }
         

@@ -10,7 +10,7 @@ namespace Bam.Net.Data.Repositories
 {
     public partial class WrapperModel
     {
-        public string Render()
+        public virtual string Render()
         {
             return Bam.Net.Handlebars.Render("Wrapper", this);
         }

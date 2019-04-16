@@ -39,6 +39,8 @@ namespace Bam.Net.Data.Repositories
             _types = new HashSet<Type>();
             _additionalReferenceAssemblies = new HashSet<Assembly>();
             _additionalReferenceTypes = new HashSet<Type>();
+            
+            SetTempPathProvider();
         }
 
         /// <summary>
@@ -55,7 +57,7 @@ namespace Bam.Net.Data.Repositories
             _additionalReferenceAssemblies = new HashSet<Assembly>();
             _additionalReferenceTypes = new HashSet<Type>();
 
-            TypeSchemaTempPathProvider = (schemaDef, typeSchema) => System.IO.Path.Combine(RuntimeSettings.AppDataFolder, "DaoTemp_{0}"._Format(schemaDef.Name));
+            SetTempPathProvider();
             _types = new HashSet<Type>();
             if (logger != null)
             {
@@ -453,13 +455,13 @@ namespace Bam.Net.Data.Repositories
             return _typeSchemaGenerator.CreateSchemaDefinition(_types, schemaName);
         }
 
-        protected internal bool GenerateDaoAssembly(TypeSchema typeSchema, out CompilationException compilationEx)
+        protected internal virtual bool GenerateDaoAssembly(TypeSchema typeSchema, out CompilationException compilationEx)
         {
             try
             {
                 compilationEx = null;
                 SchemaDefinition schema = SchemaDefinitionCreateResult.SchemaDefinition;
-                string assemblyName = "{0}.dll"._Format(schema.Name);
+                string assemblyName = $"{schema.Name}.dll";
 
                 string writeSourceTo = TypeSchemaTempPathProvider(schema, typeSchema);
                 CompilerResults results = GenerateAndCompile(assemblyName, writeSourceTo);
@@ -487,11 +489,21 @@ namespace Bam.Net.Data.Repositories
                     Message = "{0}:\r\nStackTrace: {1}"._Format(Message, ex.StackTrace);
                 }
                 compilationEx = ex;
-                FireEvent(GenerateDaoAssemblyFailed, EventArgs.Empty);
+                FireGenerateDaoAssemblyFailed();
                 return false;
             }
         }
 
+        protected void FireGenerateDaoAssemblySucceeded(GenerateDaoAssemblyEventArgs args)
+        {
+            FireEvent(GenerateDaoAssemblySucceeded, args);
+        }
+        
+        protected void FireGenerateDaoAssemblyFailed()
+        {
+            FireEvent(GenerateDaoAssemblyFailed, EventArgs.Empty);
+        }
+        
         protected internal CompilerResults GenerateAndCompile(string assemblyNameToCreate, string writeSourceTo)
         {
             TryDeleteDaoTemp(writeSourceTo);
@@ -524,6 +536,14 @@ namespace Bam.Net.Data.Repositories
 
         protected internal CompilerResults Compile(string assemblyNameToCreate, string writeSourceTo)
         {
+            HashSet<string> references = GetReferenceAssemblies();
+            CompilerResults results = AdHocCSharpCompiler.CompileDirectories(new DirectoryInfo[] { new DirectoryInfo(writeSourceTo) }, assemblyNameToCreate, references.ToArray(), false);
+
+            return results;
+        }
+
+        protected HashSet<string> GetReferenceAssemblies()
+        {
             HashSet<string> references = new HashSet<string>(DaoGenerator.DefaultReferenceAssemblies.ToArray())
             {
                 typeof(JsonIgnoreAttribute).Assembly.GetFileInfo().FullName
@@ -535,6 +555,7 @@ namespace Bam.Net.Data.Repositories
                 {
                     references.Remove(assemblyInfo.Name); // removes System.Core.dll if it is later referenced by full path
                 }
+
                 references.Add(assemblyInfo.FullName);
             });
             SchemaDefinitionCreateResult.TypeSchema.Tables.Each(type =>
@@ -544,10 +565,9 @@ namespace Bam.Net.Data.Repositories
                 attrTypes.AttributeTypes.Each(attrType => references.Add(attrType.Assembly.GetFileInfo().FullName));
             });
             references.Add(typeof(DaoRepository).Assembly.GetFileInfo().FullName);
-            CompilerResults results = AdHocCSharpCompiler.CompileDirectories(new DirectoryInfo[] { new DirectoryInfo(writeSourceTo) }, assemblyNameToCreate, references.ToArray(), false);
-
-            return results;
+            return references;
         }
+
         private static DaoRepositorySchemaWarningEventArgs GetEventArgs(KeyColumn keyColumn)
         {
             string className = keyColumn.TableClassName;
@@ -613,5 +633,10 @@ namespace Bam.Net.Data.Repositories
             FireEvent(SchemaDifferenceDetected, new SchemaDifferenceEventArgs { GeneratedDaoAssemblyInfo = info, TypeSchema = typeSchema, DiffReport = diff });
         }
 
+        private void SetTempPathProvider()
+        {
+            TypeSchemaTempPathProvider = (schemaDef, typeSchema) =>
+                System.IO.Path.Combine(RuntimeSettings.AppDataFolder, "DaoTemp_{0}"._Format(schemaDef.Name));
+        }
     }
 }

@@ -9,6 +9,11 @@ namespace Bam.Net.Data.Repositories.Handlebars
 {
     public class HandlebarsWrapperGenerator : WrapperGenerator
     {
+        public HandlebarsWrapperGenerator()
+        {
+            HandlebarsDirectory = new HandlebarsDirectory("./Templates");
+            HandlebarsEmbeddedResources = new HandlebarsEmbeddedResources(this.GetType().Assembly);
+        }
         public HandlebarsDirectory HandlebarsDirectory { get; set; }
         public HandlebarsEmbeddedResources HandlebarsEmbeddedResources { get; set; }
 
@@ -31,6 +36,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
             foreach (Type type in TypeSchema.Tables)
             {
                 HandlebarsWrapperModel model = new HandlebarsWrapperModel(type, TypeSchema, WrapperNamespace, DaoNamespace);
+                model.Renderer = new HandlebarsTemplateRenderer(HandlebarsEmbeddedResources, HandlebarsDirectory);
                 string fileName = "{0}Wrapper.cs"._Format(type.Name.TrimNonLetters());
                 using (StreamWriter sw = new StreamWriter(Path.Combine(writeSourceDir, fileName)))
                 {

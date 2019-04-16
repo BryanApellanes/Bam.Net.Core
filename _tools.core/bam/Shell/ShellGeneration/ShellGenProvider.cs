@@ -65,29 +65,29 @@ namespace Bam.Shell.ShellGeneration
         {
             try
             {
-                ShellGenConfig shellGenConfig = GetConfig();
-                string baseTypeName = shellGenConfig.BaseProviderTypeName;
-                string concreteTypeName = shellGenConfig.ConcreteTypeName;
-                string nameSpace = shellGenConfig.DelegatorNamespace;
-                string writeTo = shellGenConfig.WriteTo;
+                HashSet<FileInfo> codeFiles = new HashSet<FileInfo>();
+                HandlebarsTemplateRenderer renderer = new HandlebarsTemplateRenderer(new HandlebarsEmbeddedResources(GetType().Assembly));
+                RoslynCompiler compiler = new RoslynCompiler();
+                ShellGenConfig config = GetConfig();
                 
                 Type baseType = null;
                 if (!Arguments.Contains("generateBaseType"))
                 {
-                    Message("Searching current AppDomain for specified base type ({0})", output, baseTypeName);
+                    Message("Searching current AppDomain for specified base type ({0})", output, config.BaseTypeName);
                     foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        baseType = FindType(assembly, baseTypeName);
+                        baseType = FindType(assembly, config.BaseTypeNamespace, config.BaseTypeName);
                         if (baseType != null)
                         {
-                            Message("Found base type ({0}) in assembly ({1})", output, baseTypeName, assembly.FullName);
+                            Message("Found base type ({0}) in assembly ({1})", output, config.BaseTypeName, assembly.FullName);
                             break;
                         }
                     }
                 }
                 
-                CommandLineDelegatedClassModel model = CommandLineDelegatedClassModel.Create(concreteTypeName, baseTypeName);
-                model.Namespace = nameSpace;
+                CommandLineDelegatedClassModel model = CommandLineDelegatedClassModel.Create(config.ConcreteTypeName, config.BaseTypeName);
+                model.Namespace = config.Namespace;
+                SetConcreteModelProperties(model.ConcreteClass, config);
                 
                 ShellDescriptor descriptor = new ShellDescriptor();
                 if (baseType != null)
@@ -100,30 +100,17 @@ namespace Bam.Shell.ShellGeneration
                     model.SetMethods(GetArgument("methodNames",
                             "Please enter the method names to define on the base type (comma separated).")
                         .DelimitSplit(","));
-                }
 
-                HashSet<FileInfo> codeFiles = new HashSet<FileInfo>();
-                HandlebarsTemplateRenderer renderer = new HandlebarsTemplateRenderer(new HandlebarsEmbeddedResources(GetType().Assembly));
-                if (baseType == null)
-                {
-                    FileInfo baseTypeCodeFile = new FileInfo(Path.Combine(writeTo, $"{baseType.Name}.cs"));
-                    string baseTypeCode = renderer.Render("ProviderBaseClassModel", model.ProviderBaseClass);
-                    baseTypeCode.SafeWriteToFile(baseTypeCodeFile.FullName, true);
-                    codeFiles.Add(baseTypeCodeFile);
+                    compiler.AddAssemblyReference(typeof(IRegisterArguments));
+                    EnsureBaseType(config.BaseTypeName, config.WriteTo, renderer, model, codeFiles);
                 }
+                model.SetBaseTypeName(config.BaseTypeName);
                 
-                FileInfo delegatorTypeCodeFile = new FileInfo(Path.Combine(writeTo, $"{model.DelegatorClass.BaseProviderTypeName}ProviderDelegator.cs"));
-                string delegatorCode = renderer.Render("Delegator", model.DelegatorClass);
-                delegatorCode.SafeWriteToFile(delegatorTypeCodeFile.FullName, true);
-                codeFiles.Add(delegatorTypeCodeFile);
-                
-                FileInfo concreteTypeCodeFile = new FileInfo(Path.Combine(writeTo, $"{concreteTypeName}.cs"));
-                string concreteTypeCode = renderer.Render("ConcreteClass", model.ConcreteClass);
-                concreteTypeCode.SafeWriteToFile(concreteTypeCodeFile.FullName, true);
-                codeFiles.Add(concreteTypeCodeFile);
-                
-                RoslynCompiler compiler = new RoslynCompiler();
-                byte[] delegatorAssembly = compiler.Compile(concreteTypeName, codeFiles.ToArray());
+                GenerateDelegator(config.WriteTo, model.DelegatorClass, renderer, codeFiles);
+
+                GenerateConcreteType(config.WriteTo, config.ConcreteTypeName, renderer, model.ConcreteClass, codeFiles);
+
+                byte[] delegatorAssembly = compiler.Compile(config.ConcreteTypeName, codeFiles.ToArray());
                 
                 descriptor = ShellGenerationRepository.Save(descriptor);
                 ShellWrapperAssembly wrapperAssembly = new ShellWrapperAssembly {ShellDescriptorKey = descriptor.Key(), Base64Assembly = delegatorAssembly.ToBase64()};
@@ -131,12 +118,11 @@ namespace Bam.Shell.ShellGeneration
             }
             catch (Exception ex)
             {
-                OutLineFormat("{0}", ConsoleColor.DarkRed, ex.Message);
                 error(ex.Message);
                 Exit(1);
             }
         }
-        
+
         public override void Show(Action<string> output = null, Action<string> error = null)
         {
             throw new NotImplementedException();
@@ -156,20 +142,20 @@ namespace Bam.Shell.ShellGeneration
         {
             return new ShellGenConfig()
             {
-                BaseProviderNamespace = GetArgument("baseNamespace", "Please enter the namespace the base type is in."),
-                BaseProviderTypeName = GetArgument("baseTypeName",
-                    "Please enter the namespace qualified name of the base type."),
+                BaseTypeNamespace = GetArgument("baseNamespace", "Please enter the namespace the base type is in (or where to write it if it doesn't exist)."),
+                BaseTypeName = GetArgument("baseTypeName",
+                    "Please enter the name of the base type."),
                 ConcreteTypeName = GetArgument("concreteTypeName", "Please enter the name of the concreteType"),
-                DelegatorNamespace = GetArgument("delegatorNamespace",
+                Namespace = GetArgument("delegatorNamespace",
                     "Please enter the namespace to write shell delegator code to."),
                 WriteTo = GetArgument("writeTo",
                     "Please enter the path to the directory to write source code to.")
             };
         }
         
-        private Type FindType(Assembly assembly, string namespaceQualifiedTypeName)
+        private Type FindType(Assembly assembly, string baseTypeNamespace, string baseTypeName)
         {
-            return assembly.GetTypes().FirstOrDefault(t => $"{t.Namespace}.{t.Name}".Equals(namespaceQualifiedTypeName));
+            return assembly.GetTypes().FirstOrDefault(t => $"{t.Namespace}.{t.Name}".Equals($"{baseTypeNamespace}.{baseTypeName}"));
         }
 
         private void Message(string messageFormat, Action<string> output, params string[] args)
@@ -177,5 +163,48 @@ namespace Bam.Shell.ShellGeneration
             string message = string.Format(messageFormat, args);
             output(message);
         }
+        
+        private static void SetDelegatorModelProperties(DelegatorClassModel model, ShellGenConfig config)
+        {
+            model.NameSpace = config.Namespace;
+            model.BaseTypeName = config.BaseTypeName;
+        }
+        
+        private static void SetConcreteModelProperties(ConcreteClassModel model, ShellGenConfig config)
+        {
+            model.NameSpace = config.Namespace;
+            model.ConcreteTypeName = config.ConcreteTypeName;
+            model.BaseTypeNamespace = config.BaseTypeNamespace;
+            model.BaseTypeName = config.BaseTypeName;
+        }
+        
+        private static void GenerateConcreteType(string writeTo, string concreteTypeName, HandlebarsTemplateRenderer renderer,
+            ConcreteClassModel model, HashSet<FileInfo> codeFiles)
+        {
+            FileInfo concreteTypeCodeFile = new FileInfo(Path.Combine(writeTo, $"{concreteTypeName}.cs"));
+            string concreteTypeCode = renderer.Render("ConcreteClass", model);
+            concreteTypeCode.SafeWriteToFile(concreteTypeCodeFile.FullName, true);
+            codeFiles.Add(concreteTypeCodeFile);
+        }
+
+        private static void GenerateDelegator(string writeTo, DelegatorClassModel model,
+            HandlebarsTemplateRenderer renderer, HashSet<FileInfo> codeFiles)
+        {
+            FileInfo delegatorTypeCodeFile =
+                new FileInfo(Path.Combine(writeTo, $"{model.BaseTypeName}Delegator.cs"));
+            string delegatorCode = renderer.Render("Delegator", model);
+            delegatorCode.SafeWriteToFile(delegatorTypeCodeFile.FullName, true);
+            codeFiles.Add(delegatorTypeCodeFile);
+        }
+
+        private static void EnsureBaseType(string baseTypeName, string writeTo, HandlebarsTemplateRenderer renderer,
+            CommandLineDelegatedClassModel model, HashSet<FileInfo> codeFiles)
+        {
+            FileInfo baseTypeCodeFile = new FileInfo(Path.Combine(writeTo, $"{baseTypeName}.cs"));
+            string baseTypeCode = renderer.Render("ProviderBaseClass", model.ProviderBaseClass);
+            baseTypeCode.SafeWriteToFile(baseTypeCodeFile.FullName, true);
+            codeFiles.Add(baseTypeCodeFile);
+        }
+
     }
 }

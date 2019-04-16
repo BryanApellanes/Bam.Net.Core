@@ -9,9 +9,8 @@ using Bam.Net.CommandLine;
 
 namespace {{NameSpace}}
 {
-    public class {{ConcreteTypeName}}Provider : {{ProviderTypeName}}Provider
+    public class {{ConcreteTypeName}} : {{BaseTypeNamespace}}.{{BaseTypeName}}
     {
-
 {{#each Methods}}
 {{> ConcreteMethod}}    
 {{/each}}

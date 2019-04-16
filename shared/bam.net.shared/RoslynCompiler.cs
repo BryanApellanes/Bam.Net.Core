@@ -42,6 +42,17 @@ namespace Bam.Net
         
         public OutputKind OutputKind { get; set; }
 
+        public RoslynCompiler AddAssemblyReference(Type type)
+        {
+            return AddAssemblyReference(type.Assembly);
+        }
+
+        public RoslynCompiler AddAssemblyReference(Assembly assembly)
+        {
+            _referenceAssemblies.Add(assembly);
+            return this;
+        }
+        
         public RoslynCompiler AddAssemblyReference(string path)
         {
             _referencePaths.Add(path);
