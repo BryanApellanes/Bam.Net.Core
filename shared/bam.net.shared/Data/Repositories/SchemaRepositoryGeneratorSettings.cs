@@ -33,7 +33,7 @@ namespace Bam.Net.Data.Repositories
             (
                 new HandlebarsDaoCodeWriter(handlebarsDirectory, embeddedResources),
                 new DaoTargetStreamResolver(),
-                new HandlebarsWrapperGenerator
+                new HandlebarsWrapperGenerator()
                     {HandlebarsDirectory = handlebarsDirectory, HandlebarsEmbeddedResources = embeddedResources}
             )
             {

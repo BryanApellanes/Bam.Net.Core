@@ -151,7 +151,7 @@ namespace Bam.Net.Data
 
         protected virtual void WriteCreateTable(Type daoType)
         {
-            ColumnAttribute[] columns = GetColumns(daoType);            
+            ColumnAttribute[] columns = GetColumns(daoType);           
             string columnDefinitions = GetColumnDefinitions(columns);
             WriteCreateTable(Dao.TableName(daoType), columnDefinitions);            
         }

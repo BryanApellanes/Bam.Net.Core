@@ -2,8 +2,12 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
+using Bam.Net.Data;
+using Bam.Net.Data.Repositories;
+using Bam.Net.Data.Repositories.Handlebars;
 using Bam.Net.Logging;
 using Bam.Shell;
+using Bam.Shell.ShellGeneration.Data;
 
 namespace Bam.Net
 {
@@ -34,6 +38,18 @@ namespace Bam.Net
             AddValidArgument("class", "When executing command line switches in an external assembly, the name of the class");
         }
 
+        [ConsoleAction]
+        public void TestDaoRepoHbGen()
+        {
+            Database db = DataProvider.Current.GetAppDatabaseFor(ProcessApplicationNameProvider.Current, this);
+            DaoRepository repo = new DaoRepository(db);
+            repo.BaseNamespace = typeof(ShellDescriptor).Namespace;
+            repo.RequireCuid = true;
+            repo.AddType<ShellDescriptor>();
+            ShellDescriptor d = new ShellDescriptor(){AssemblyName = "Ass", NameSpace = "Ns"};
+            repo.Save(d);
+        }
+        
         #region do not modify
         public static void Start()
         {

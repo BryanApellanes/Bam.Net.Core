@@ -3,10 +3,14 @@ using Bam.Net.Data.Schema.Handlebars;
 using Bam.Net.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Testing;
+using GraphQL;
+using Newtonsoft.Json;
 
 namespace Bam.Net.Data.Repositories.Handlebars
 {
@@ -15,7 +19,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
         public HandlebarsTypeDaoGenerator(TypeSchemaGenerator typeSchemaGenerator, ILogger logger = null) : base(new HandlebarsDaoCodeWriter(), new DaoTargetStreamResolver())
         {
             TypeSchemaGenerator = typeSchemaGenerator;
-            WrapperGenerator = new HandlebarsWrapperGenerator();
+            WrapperGenerator = new HandlebarsWrapperGenerator(WrapperNamespace, DaoNamespace);
         }
 
         protected internal override bool GenerateDaoAssembly(TypeSchema typeSchema, out CompilationException compilationEx)
@@ -59,6 +63,16 @@ namespace Bam.Net.Data.Repositories.Handlebars
                 FireGenerateDaoAssemblyFailed();
                 return false;
             }
+        }
+
+        protected override HashSet<string> GetDefaultReferenceAssemblies()
+        {
+            return new HashSet<string>()
+            {
+                typeof(JsonConvert).Assembly.GetFilePath(),
+                typeof(MarshalByValueComponent).Assembly.GetFilePath(),
+                typeof(System.Linq.Enumerable).Assembly.GetFilePath()
+            };
         }
 
         private byte[] Compile(string assemblyNameToCreate, string writeSourceTo)

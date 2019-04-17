@@ -117,7 +117,14 @@ namespace Bam.Net
 		{
 			if (_assembly == null)
 			{
-				_assembly = Assembly.LoadFrom(AssemblyFilePath);
+				if (AssemblyBytes != null)
+				{
+					_assembly = Assembly.Load(AssemblyBytes);
+				}
+				if (_assembly == null && !string.IsNullOrEmpty(AssemblyFilePath) && File.Exists(AssemblyFilePath))
+				{
+					_assembly = Assembly.LoadFrom(AssemblyFilePath);
+				}
 			}
 
 			return _assembly;

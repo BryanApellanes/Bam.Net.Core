@@ -11,9 +11,14 @@ namespace Bam.Net.Data.Repositories.Handlebars
     {
         public HandlebarsWrapperGenerator()
         {
+        }
+
+        public HandlebarsWrapperGenerator(string wrapperNamespace, string daoNamespace) : base(wrapperNamespace, daoNamespace)
+        {
             HandlebarsDirectory = new HandlebarsDirectory("./Templates");
             HandlebarsEmbeddedResources = new HandlebarsEmbeddedResources(this.GetType().Assembly);
         }
+
         public HandlebarsDirectory HandlebarsDirectory { get; set; }
         public HandlebarsEmbeddedResources HandlebarsEmbeddedResources { get; set; }
 

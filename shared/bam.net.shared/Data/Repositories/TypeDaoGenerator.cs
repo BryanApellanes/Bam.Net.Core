@@ -544,10 +544,7 @@ namespace Bam.Net.Data.Repositories
 
         protected HashSet<string> GetReferenceAssemblies()
         {
-            HashSet<string> references = new HashSet<string>(DaoGenerator.DefaultReferenceAssemblies.ToArray())
-            {
-                typeof(JsonIgnoreAttribute).Assembly.GetFileInfo().FullName
-            };
+            HashSet<string> references = GetDefaultReferenceAssemblies();
             _additionalReferenceAssemblies.Each(asm =>
             {
                 FileInfo assemblyInfo = asm.GetFileInfo();
@@ -565,6 +562,15 @@ namespace Bam.Net.Data.Repositories
                 attrTypes.AttributeTypes.Each(attrType => references.Add(attrType.Assembly.GetFileInfo().FullName));
             });
             references.Add(typeof(DaoRepository).Assembly.GetFileInfo().FullName);
+            return references;
+        }
+
+        protected virtual HashSet<string> GetDefaultReferenceAssemblies()
+        {
+            HashSet<string> references = new HashSet<string>(DaoGenerator.DefaultReferenceAssemblies.ToArray())
+            {
+                typeof(JsonIgnoreAttribute).Assembly.GetFileInfo().FullName
+            };
             return references;
         }
 

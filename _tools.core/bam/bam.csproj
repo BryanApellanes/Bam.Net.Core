@@ -117,4 +117,9 @@
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.dll" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
+  </ItemGroup>
+
+
 </Project>

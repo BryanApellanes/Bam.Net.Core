@@ -104,6 +104,7 @@ namespace Bam.Net
                 .WithOptions(new CSharpCompilationOptions(this.OutputKind))
                 .AddReferences(getMetaDataReferences())
                 .AddSyntaxTrees(syntaxTrees);
+            
             using(MemoryStream stream = new MemoryStream())
             {
                 EmitResult compileResult = compilation.Emit(stream);
