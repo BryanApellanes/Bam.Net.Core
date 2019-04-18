@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Data
 {
@@ -281,7 +282,22 @@ IF EXISTS (
 
         protected ColumnAttribute[] GetColumns(Type daoType)
         {
-            return Db.GetColumns(daoType);
+            Args.ThrowIfNull(daoType, "daoType");
+            
+            ColumnAttribute[] columns = Db.GetColumns(daoType);
+            if (columns.FirstOrDefault(c => c is KeyColumnAttribute) == null)
+            {
+                ColumnAttribute idColumn = columns.FirstOrDefault(c => c.Name.Equals("Id"));
+                if (idColumn == null)
+                {
+                    Log.Warn("Specified dao type ({0}) has no KeyColumn specified and no 'Id' property", daoType.FullName);
+                }
+                else
+                {
+                    columns = columns.Select(c => c == idColumn ? idColumn.CopyAs<KeyColumnAttribute>() : c).ToArray();
+                }
+            }
+            return columns;
         }
 
         protected ForeignKeyAttribute[] GetForeignKeys(Type daoType)

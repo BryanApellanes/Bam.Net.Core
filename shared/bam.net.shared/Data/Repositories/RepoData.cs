@@ -21,6 +21,7 @@ namespace Bam.Net.Data.Repositories
         /// may be different for the same instance in a different process.
         /// For universal identity use Uuid.
         /// </summary>
+        [Key]
 		public ulong Id { get; set; }
         
         private DateTime? _created;

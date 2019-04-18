@@ -2,6 +2,7 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
+using System.Linq;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Data.Repositories.Handlebars;
@@ -47,7 +48,19 @@ namespace Bam.Net
             repo.RequireCuid = true;
             repo.AddType<ShellDescriptor>();
             ShellDescriptor d = new ShellDescriptor(){AssemblyName = "Ass", NameSpace = "Ns"};
-            repo.Save(d);
+            d = repo.Save(d);
+
+            ShellDescriptor queried = repo.Query<ShellDescriptor>(c => c.Id == d.Id).FirstOrDefault();
+            Expect.IsNotNull(queried);
+            
+            Expect.AreEqual(d, queried);
+
+            ShellDescriptor retrieved = repo.Retrieve<ShellDescriptor>(d.Id);
+            Expect.IsNotNull(retrieved);
+            
+            Expect.AreEqual(d, retrieved);
+            
+            Pass("yay");
         }
         
         #region do not modify

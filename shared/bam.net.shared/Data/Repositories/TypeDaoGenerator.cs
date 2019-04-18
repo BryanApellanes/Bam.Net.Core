@@ -445,7 +445,7 @@ namespace Bam.Net.Data.Repositories
         }
 
         /// <summary>
-        /// Create a SchemaDefintionCreateResult for the types currently
+        /// Create a SchemaDefinitionCreateResult for the types currently
         /// added to the TypeDaoGenerator
         /// </summary>
         /// <param name="schemaName"></param>

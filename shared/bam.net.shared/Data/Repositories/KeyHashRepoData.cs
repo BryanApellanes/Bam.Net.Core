@@ -8,7 +8,7 @@ namespace Bam.Net.Data.Repositories
 {
     /// <summary>
     /// Extend this class to define a type that uses multiple properties to determine
-    /// persistence instance uniqueness.  Addorn key properties with the CompositeKey
+    /// persistence instance uniqueness.  Adorn key properties with the CompositeKey
     /// attribute.
     /// </summary>
     /// <seealso cref="Bam.Net.Data.Repositories.RepoData" />

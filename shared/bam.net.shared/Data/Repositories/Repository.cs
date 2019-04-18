@@ -99,7 +99,7 @@ namespace Bam.Net.Data.Repositories
 		public virtual void AddType(Type type)
 		{
 			_storableTypes.Add(type);
-            if(!_storableTypes.Contains(typeof(CompositeKeyMap)) && type.GetProperties().Where(pi=> pi.HasCustomAttributeOfType<CompositeKeyAttribute>()).Any())
+            if(!_storableTypes.Contains(typeof(CompositeKeyMap)) && type.GetProperties().Any(pi => CustomAttributeExtension.HasCustomAttributeOfType<CompositeKeyAttribute>(pi)))
             {
                 _storableTypes.Add(typeof(CompositeKeyMap));
             }
