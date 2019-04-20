@@ -26,7 +26,7 @@ namespace Bam.Net.Application
     {        
         static ServiceProxyServer server;
 
-        [ConsoleAction("killHeartServer", "Kill the Heart server")]
+        [ConsoleAction("K", "Kill the Heart server")]
         public static void StopServer()
         {
             if (server != null)
@@ -40,7 +40,7 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("startHeartServer", "Start the Heart server")]
+        [ConsoleAction("S", "Start the Heart server")]
         public static void StartServerAndPause()
         {
             ServiceRegistry serviceRegistry = StartServer(out HostPrefix[] hostPrefixes);
@@ -79,33 +79,14 @@ namespace Bam.Net.Application
 
         internal static ServiceRegistry StartServer(out HostPrefix[] hostPrefixes)
         {
-            HostPrefix[] prefixes = GetConfiguredHostPrefixes();
+            OutLineFormat("Config file: {0}", ConsoleColor.Yellow, Config.Current.File.FullName);
+            HostPrefix[] prefixes = HostPrefix.FromBamProcessConfig();
             ILogger logger = GetLogger();
             Log.Default = logger;
             ServiceRegistry serviceRegistry = CoreServiceRegistryContainer.Create();
             server = serviceRegistry.Serve(prefixes, logger);
             hostPrefixes = prefixes;
             return serviceRegistry;
-        }
-
-        public static HostPrefix[] GetConfiguredHostPrefixes()
-        {
-            Config config = Config.Current;
-            Log.Trace("ConfigPath: {0}", config.File.FullName);
-            int port = int.Parse(config["Port", "80"]);
-            bool ssl = config["Ssl"].IsAffirmative();
-            List<HostPrefix> results = new List<HostPrefix>();
-            foreach(string hostName in config["HostNames"].Or("localhost").DelimitSplit(",", true))
-            {
-                HostPrefix hostPrefix = new HostPrefix()
-                {
-                    HostName = hostName,
-                    Port = port,
-                    Ssl = ssl
-                };
-                results.Add(hostPrefix);
-            }
-            return results.ToArray();
         }
 
         private static ILogger GetLogger()

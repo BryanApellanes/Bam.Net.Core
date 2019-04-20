@@ -63,6 +63,18 @@ namespace Bam.Net.Server
             return hostAppMaps.Select(hm => new HostPrefix { HostName = hm.Host, Port = 80 }).ToArray();
         }
 
+        public static HostPrefix[] FromBamProcessConfig(string defaultHostName = "localhost", int defaultPort = 80)
+        {
+            int port = int.Parse(Config.Current["Port", defaultPort.ToString()]);
+            bool ssl = Config.Current["Ssl"].IsAffirmative();
+            List<HostPrefix> results = new List<HostPrefix>();
+            foreach (string hostName in Config.Current["HostNames"].Or(defaultHostName).DelimitSplit(",", true))
+            {
+                AddHostPrefix(hostName, port, ssl, results);
+            }
+            return results.ToArray();
+        }
+
         public static HostPrefix[] FromDefaultConfiguration(string defaultHostName = "localhost", int defaultPort = 80)
         {
             int port = int.Parse(DefaultConfiguration.GetAppSetting("Port", defaultPort.ToString()));
@@ -70,16 +82,21 @@ namespace Bam.Net.Server
             List<HostPrefix> results = new List<HostPrefix>();
             foreach (string hostName in DefaultConfiguration.GetAppSetting("HostNames").Or(defaultHostName).DelimitSplit(",", true))
             {
-                HostPrefix hostPrefix = new HostPrefix()
-                {
-                    HostName = hostName,
-                    Port = port,
-                    Ssl = ssl
-                };
-                results.Add(hostPrefix);
-                Trace.Write($"Default Config Hostname: {hostPrefix.ToString()}");
+                AddHostPrefix(hostName, port, ssl, results);
             }
             return results.ToArray();
+        }
+        
+        private static void AddHostPrefix(string hostName, int port, bool ssl, List<HostPrefix> results)
+        {
+            HostPrefix hostPrefix = new HostPrefix()
+            {
+                HostName = hostName,
+                Port = port,
+                Ssl = ssl
+            };
+            results.Add(hostPrefix);
+            Trace.Write($"Default Config Hostname: {hostPrefix.ToString()}");
         }
     }
 }

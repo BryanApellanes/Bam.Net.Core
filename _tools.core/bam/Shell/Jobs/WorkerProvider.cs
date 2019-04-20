@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using bam.Shell;
 using Bam.Net;
 using Bam.Net.Automation;
 using Bam.Net.CommandLine;

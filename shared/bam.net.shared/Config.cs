@@ -48,7 +48,7 @@ namespace Bam.Net
         protected FileSystemWatcher ConfigChangeWatcher { get; set; }
         public event EventHandler ConfigChanged;
         public FileInfo File { get; set; }
-
+        
         public Workspace Workspace
         {
             get { return Workspace.Current; }
@@ -67,7 +67,6 @@ namespace Bam.Net
 
                 if (!string.IsNullOrEmpty(defaultValue))
                 {
-                    //BamEnvironmentVariables.SetBamVariable(key, defaultValue);
                     AppSettings.Add(key, defaultValue);
                     Write(AppSettings);
                 }
