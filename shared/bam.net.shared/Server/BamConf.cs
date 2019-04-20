@@ -215,6 +215,12 @@ namespace Bam.Net.Server
             set;
         }
 
+        public override string ToString()
+        {
+            return $"BamWeb::{ContentRoot}";
+        }
+        
+
         Type[] _availableLoggers;
         object _availableLoggersLock = new object();
         protected internal Type[] AvailableLoggers

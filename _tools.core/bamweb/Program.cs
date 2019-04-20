@@ -31,6 +31,7 @@ namespace Bam.Net.Application
             IsolateMethodCalls = false;
 			Type type = typeof(Program);
             AddValidArgument("content", false, false, "The path to the content root directory");
+            AddValidArgument("verbose", true, false, "Log 200 and 404 responses");
 			AddSwitches(type);
 			DefaultMethod = type.GetMethod(nameof(Interactive));
             Initialize(args);
@@ -61,11 +62,15 @@ namespace Bam.Net.Application
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
             Server.Subscribe(logger);
             Log.Default = logger;
-            LogResponses();
+            if (Arguments.Contains("verbose"))
+            {
+                LogResponses();
+            }
             Server.Start();
             BamConf conf = Server.GetCurrentConf();
             StringBuilder configurationMessage = new StringBuilder();
-            configurationMessage.AppendLine("***");
+            configurationMessage.AppendLine();
+            configurationMessage.AppendLine(new string('*', 40));
             foreach(AppConf appConfig in conf.AppConfigs)
             {
                 configurationMessage.AppendLine(appConfig.Name);
@@ -77,24 +82,24 @@ namespace Bam.Net.Application
             }
             configurationMessage.AppendLine(new string('*', 40));
             logger.AddEntry(configurationMessage.ToString());
-			Pause("Default server started");
+			Pause("BamWeb server started");
         }
 
-        [ConsoleAction("K", "Stop (Kill) default server")]
+        [ConsoleAction("K", "Stop (Kill) BamWeb server")]
         public static void StopDefaultServer()
         {
             Server.Stop();
 			_server = null;
-			Pause("Default server stopped");
+			Pause("BamWeb server stopped");
         }
 
-        [ConsoleAction("R", "Restart default server")]
+        [ConsoleAction("R", "Restart BamWeb server")]
         public static void RestartDefaultServer()
         {
             Server.Stop();
             _server = null; // force reinitialization
             Server.Start();
-			Pause("Default server re-started");
+			Pause("BamWeb server re-started");
         }
 
         [ConsoleAction]
@@ -103,10 +108,21 @@ namespace Bam.Net.Application
             Server.Responded += (s, res, req) =>
             {
                 StringBuilder messageFormat = new StringBuilder();
-                messageFormat.Append("Responded: ClientIp={0}, Path={1}");
-                messageFormat.Append("\tUserAgent: {2}");
-                messageFormat.Append("\tUserLanguages: {3}");
-                Logger.Info(messageFormat.ToString(), req?.GetClientIp() ?? "[null]", req?.Url?.ToString() ?? "[null]", req?.UserAgent, string.Join(",", req?.UserLanguages));
+                messageFormat.AppendLine("Responded: ClientIp={0}, Path={1}");
+                messageFormat.AppendLine("***");
+                messageFormat.AppendLine("{2}");
+                messageFormat.AppendLine("***");
+                Logger.Info(messageFormat.ToString(), req?.GetClientIp() ?? "[null]", req?.Url?.ToString() ?? "[null]", req?.PropertiesToString());
+            };
+
+            Server.NotResponded += (s, req) =>
+            {
+                StringBuilder messageFormat = new StringBuilder();
+                messageFormat.AppendLine("DID NOT RESPOND: ClientIp={0}, Path={1}");
+                messageFormat.AppendLine("***");
+                messageFormat.AppendLine("{2}");
+                messageFormat.AppendLine("***");
+                Logger.Warning(messageFormat.ToString(), req?.GetClientIp() ?? "[null]", req?.Url?.ToString() ?? "[null]", req?.PropertiesToString());
             };
         }
     }

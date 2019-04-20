@@ -1,5 +1,11 @@
 # Bam Server
 
+#TL;DR
+
+```
+bamweb /S /content:c:/bam/content
+```
+
 The Bam Server hosts an HTTP server that serves content 
 from the directory specified in the config file by the key "ContentRoot".
 

@@ -71,5 +71,10 @@ namespace Bam.Net.Server
         {
             RegistrarCallerInstance.Register(ConnectionName);
         }
+
+        public override string ToString()
+        {
+            return $"DaoConf::{ConnectionName}::{RegistrarCaller}";
+        }
     }
 }

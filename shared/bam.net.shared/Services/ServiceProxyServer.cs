@@ -24,7 +24,7 @@ namespace Bam.Net.Services
             RegisterServices(serviceRegistry);            
         }
 
-        public void RegisterServices(ServiceRegistry serviceRegistry, bool requireApiKeyResover = false)
+        public void RegisterServices(ServiceRegistry serviceRegistry, bool requireApiKeyResolver = false)
         {
             ServiceRegistry = new WebServiceRegistry(serviceRegistry);
             Responder.ClearCommonServices();
@@ -37,7 +37,7 @@ namespace Bam.Net.Services
                     ServiceSubdomains.Add(attr);
                 }
             }
-            SetApiKeyResolver(serviceRegistry, requireApiKeyResover ? ApiKeyResolver.Default : null);
+            SetApiKeyResolver(serviceRegistry, requireApiKeyResolver ? ApiKeyResolver.Default : null);
         }
 
         public override void Start()
