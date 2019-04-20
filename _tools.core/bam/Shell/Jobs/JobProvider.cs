@@ -118,11 +118,6 @@ namespace Bam.Shell.Jobs
             Exit(0);
         }
 
-        public override void Pack(Action<string> output = null, Action<string> error = null)
-        {
-            OutLineFormat("Pack is not implemented for the JobProvider", ConsoleColor.Yellow);
-        }
-
         public override void Remove(Action<string> output = null, Action<string> error = null)
         {
             try

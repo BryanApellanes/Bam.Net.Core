@@ -7,7 +7,7 @@ using Bam.Shell;
 
 namespace Bam.Shell.Users
 {
-    public class RoleProvider: AccountShellProvider
+    public class RoleProvider: ShellProvider
     {
         public string[] RawArguments { get; private set; }
 

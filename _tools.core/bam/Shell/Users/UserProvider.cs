@@ -10,7 +10,7 @@ using Bam.Shell;
 
 namespace Bam.Shell.Users
 {
-    public class UserProvider : AccountShellProvider
+    public class UserProvider : ShellProvider
     {
         public string[] RawArguments { get; private set; }
 

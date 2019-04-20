@@ -1681,14 +1681,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)NamedThread.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Paths.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\ColorPalette.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\Dimensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\GraphicsManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\HexColor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\QuarterCircles.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\ResourceImages.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Presentation\Drawing\RoundedRectangle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Emoji.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Emoji_Generated\Category.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\Emoji_Generated\CategoryCollection.cs" />
@@ -2599,7 +2591,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\Data\ArrayBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\Data\YamlData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\Data\YamlDataDirectory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Yaml\PaletteExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\YamlDaoGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\YamlDeserializationFailure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Yaml\YamlEventArgs.cs" />

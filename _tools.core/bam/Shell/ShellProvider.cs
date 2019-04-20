@@ -3,9 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Bam.Net;
+using Bam.Net.Application;
+using Bam.Net.Data;
 using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Testing;
 using Bam.Shell.Jobs;
+using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Shell
 {
@@ -22,11 +25,6 @@ namespace Bam.Shell
             error($"Edit is not implemented for the current shell provider: {GetType().FullName}");
         }
 
-        public virtual void Pack(Action<string> output = null, Action<string> error = null)
-        {
-            error($"Pack is not implemented for the current shell provider: {GetType().FullName}");
-        }
-        
         static HandlebarsDirectory _handlebarsDirectory;
         static object _handlebarsLock = new object();
         public static HandlebarsDirectory GetHandlebarsDirectory()
@@ -197,6 +195,23 @@ namespace Bam.Shell
             {
                 file.Directory.Create();
             }
+        }
+        
+        protected Role GetRole()
+        {
+            string roleName = GetArgument("roleName", "Please enter the name of the role.");
+            return Role.FirstOneWhere(c => c.Name == roleName, GetUserDb());
+        }
+        
+        protected User GetUser()
+        {
+            string userName = GetArgument("userName", "Please enter the name of the user.");
+            return User.FirstOneWhere(c => c.UserName == userName, GetUserDb());
+        }
+
+        protected Database GetUserDb()
+        {
+            return ServiceTools.GetUserDatabase();
         }
     }
 }

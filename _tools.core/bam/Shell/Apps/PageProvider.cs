@@ -110,7 +110,7 @@ namespace Bam.Shell.Apps
             }
         }
         
-        public override void Pack(Action<string> output = null, Action<string> error = null)
+        public void Pack(Action<string> output = null, Action<string> error = null)
         {
             // find the first csproj file by looking first in the current directory then going up
             // using the parent of the csproj as the root

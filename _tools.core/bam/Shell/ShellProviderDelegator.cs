@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using bam.Shell;
+using Bam.Shell;
 using Bam.Net;
 using Bam.Net.Testing;
 
@@ -45,14 +45,6 @@ namespace Bam.Shell
         {
             ShellProvider provider = Construct();
             provider?.Run(StandardOut, StandardError);
-            Exit(provider != null ? 0: 1);
-        }
-
-        [ArgZero("pack")]
-        public void Pack()
-        {
-            ShellProvider provider = Construct();
-            provider?.Pack(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
         

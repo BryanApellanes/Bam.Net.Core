@@ -1,5 +1,5 @@
 using System;
-using bam.Shell;
+using Bam.Shell;
 using Bam.Shell;
 
 namespace Bam.Shell.Data
