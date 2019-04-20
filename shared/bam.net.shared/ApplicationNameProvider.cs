@@ -15,7 +15,7 @@ namespace Bam.Net
         {
             get
             {
-                return _defaultLock.DoubleCheckLock(ref _defaultApplicationNameProvider, () => DefaultConfigurationApplicationNameProvider.Instance);
+                return _defaultLock.DoubleCheckLock(ref _defaultApplicationNameProvider, () => ProcessApplicationNameProvider.Current);
             }
             set
             {
