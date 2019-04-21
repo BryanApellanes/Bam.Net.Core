@@ -110,7 +110,7 @@ namespace Bam.Net.Caching.File
 
             if (HashChanged(file))
             {
-                Load(file);
+                Reload(file);
             }
             
             return true;
