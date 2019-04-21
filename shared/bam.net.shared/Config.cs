@@ -39,6 +39,10 @@ namespace Bam.Net
 
         static Config _current;
         static object _currentLock = new object();
+        
+        /// <summary>
+        /// Config for the current process; may be overwritten.
+        /// </summary>
         public static Config Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => new Config()); }
@@ -72,6 +76,18 @@ namespace Bam.Net
                 }
 
                 return defaultValue;
+            }
+            set
+            {
+                if (AppSettings.ContainsKey(key))
+                {
+                    AppSettings[key] = value;
+                }
+                else
+                {
+                    AppSettings.Add(key, value);
+                }
+                Write(AppSettings);
             }
         }
 

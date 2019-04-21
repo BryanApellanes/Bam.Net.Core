@@ -965,6 +965,16 @@ namespace Bam.Net
             }
         }
 
+        public static bool ExtendsType(this Type type, Type extends)
+        {
+            if (type == extends)
+            {
+                return false;
+            }
+            TypeInheritanceDescriptor descriptor = new TypeInheritanceDescriptor(type);
+            return descriptor.Extends(extends);
+        }
+        
         public static bool ExtendsType<T>(this Type type)
         {
             if (type == typeof(T))
@@ -3662,8 +3672,12 @@ namespace Bam.Net
             {
                 if (destProp.IsCompatibleWith(sourceProp))
                 {
-                    object value = sourceProp.GetValue(source, null);
-                    destProp.SetValue(destination, value, null);
+                    ParameterInfo[] indexParameters = sourceProp.GetIndexParameters();
+                    if (indexParameters == null || indexParameters.Length == 0)
+                    {
+                        object value = sourceProp.GetValue(source, null);
+                        destProp.SetValue(destination, value, null);
+                    }
                 }
             }
         }

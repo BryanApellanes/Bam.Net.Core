@@ -475,7 +475,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\PropertyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsWrapperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CommandLineServiceInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLType.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLQueryContext.hbs" />

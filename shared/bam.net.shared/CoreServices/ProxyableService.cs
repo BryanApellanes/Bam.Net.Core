@@ -62,6 +62,12 @@ namespace Bam.Net.CoreServices
             RepositoryResolver = new DefaultRepositoryResolver(genericRepo);
         }
 
+        public T Proxy<T>(string hostName, int port) where T : ProxyableService
+        {
+            ProxyFactory proxyFactory = new ProxyFactory(AppConf.GetAppWorkspace().Directory("Proxies").FullName, Logger);
+            return proxyFactory.GetProxy<T>(hostName, port, Logger);
+        }
+        
         public IDatabaseProvider DatabaseProvider { get; set; }
         public IRepositoryResolver RepositoryResolver { get; set; }
         

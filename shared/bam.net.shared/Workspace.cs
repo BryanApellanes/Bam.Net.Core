@@ -51,6 +51,11 @@ namespace Bam.Net
             return System.IO.Path.Combine(fileSegments.ToArray());
         }
 
+        /// <summary>
+        /// Output to the console and write that output to the Workspace console log.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
         public void WriteLine(string format, params object[] args)
         {
             Console.WriteLine(format, args);
@@ -63,6 +68,11 @@ namespace Bam.Net
             message.SafeAppendToFile(file.FullName);
         }
         
+        /// <summary>
+        /// Save the specified object instance as a yaml file
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public FileInfo Save(object instance)
         {
             Args.ThrowIfNull(instance, "instance");
@@ -111,6 +121,11 @@ namespace Bam.Net
                 System.IO.Path.Combine(applicationWorkspace.Root.FullName, ProcessMode.Current.Mode.ToString(), $"{type.Namespace}.{type.Name}");
             return new Workspace()
                 {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
+        }
+
+        public static Workspace ForProcess()
+        {
+            return ForApplication(ProcessApplicationNameProvider.Current);
         }
         
         public static Workspace ForApplication(IApplicationNameProvider applicationNameProvider = null)

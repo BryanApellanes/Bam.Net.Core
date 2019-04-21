@@ -45,13 +45,16 @@ namespace Bam.Shell
             }
         }
 
+        /// <summary>
+        /// Register extenders of type T as ArgZero providers
+        /// </summary>
         public static void RegisterArgZeroProviders<T>(string[] args) where T: IRegisterArguments
         {
             RegisterArgZeroProviders<T>(args, typeof(T).Assembly);
         }
         
         /// <summary>
-        /// Scan for ArgZero methods.
+        /// Register extenders of type T as ArgZero providers
         /// </summary>
         public static void RegisterArgZeroProviders<T>(string[] args, Assembly assembly) where T: IRegisterArguments
         {
@@ -84,6 +87,32 @@ namespace Bam.Shell
             }
         }
         
+        public static void RegisterProviderTypes(Type type, string[] args, Assembly assembly)
+        {
+            foreach (Type extender in assembly.GetTypes().Where(t => t.ExtendsType(type)))
+            {
+                ((IRegisterArguments)extender.Construct()).RegisterArguments(args);
+                string name = extender.Name;
+                if (!extender.Name.EndsWith("Provider"))
+                {
+                    OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'",
+                        ConsoleColor.Yellow);
+                }
+                else
+                {
+                    name = name.Truncate("Provider".Length);
+                }
+
+                ProviderTypes.AddMissing(name, extender);
+            }
+        }
+        
+        /// <summary>
+        /// Register extenders of the specified type from the specified assembly as shell providers.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="assembly"></param>
+        /// <typeparam name="T"></typeparam>
         public static void RegisterProviderTypes<T>(string[] args, Assembly assembly) where T : IRegisterArguments
         {
             foreach (Type type in assembly.GetTypes().Where(type => type.ExtendsType<T>()))
@@ -149,6 +178,14 @@ namespace Bam.Shell
                 });
                 Arguments = new ParsedArguments(targetArguments.ToArray(), argumentInfos.ToArray());
                 MethodInfo method = Targets[arguments[0]];
+                if (method.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute argZeroAttribute))
+                {
+                    if (argZeroAttribute.BaseType != null)
+                    {
+                        RegisterProviderTypes(argZeroAttribute.BaseType, arguments, argZeroAttribute.BaseType.Assembly);
+                    }
+                }
+                
                 object instance = null;
                 if (!method.IsStatic)
                 {

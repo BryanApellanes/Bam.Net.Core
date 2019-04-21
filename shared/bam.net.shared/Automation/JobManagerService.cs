@@ -217,6 +217,36 @@ namespace Bam.Net.Automation
             return jobDirectories.Select(jd => jd.Name).ToArray();
         }
 
+        public JobConf MoveJob(string name, string newName)
+        {
+            JobConf copy = CopyJob(name, newName);
+            RemoveJob(name);
+            return copy;
+        }
+        
+        public JobConf CopyJob(string name, string copyName = null)
+        {
+            if (!JobExists(name))
+            {
+                throw new InvalidOperationException("Specified does not exist");
+            }
+            copyName = copyName ?? $"{name}-copy";
+            int num = 1;
+            while (JobExists(copyName))
+            {
+                copyName += num.ToString();
+            }
+            JobConf conf = GetJob(name);
+            JobConf copy = GetJob(copyName);
+            foreach (string workerName in conf.WorkerConfs.Keys)
+            {
+                WorkerConf workerConf = conf[workerName];
+                AddWorker(copy.Name, workerConf.WorkerTypeName, workerName);
+            }
+
+            return copy;
+        }
+        
         public void SaveJob(JobConf jobConf)
         {
             jobConf.JobDirectory = GetJobDirectoryPath(jobConf.Name);

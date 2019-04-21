@@ -27,6 +27,8 @@ namespace Bam.Shell.Jobs
         {
             RawArguments = args;
             base.RegisterArguments(args);
+            AddValidArgument("copyName", "The name of the job copy");
+            AddValidArgument("newName", "The name to rename the job to");
         }
         
         protected override ProviderArguments GetProviderArguments()
@@ -90,6 +92,49 @@ namespace Bam.Shell.Jobs
             Exit(0);
         }
 
+        public override void Copy(Action<string> output = null, Action<string> error = null)
+        {
+            try
+            {
+                PrintMessage();
+                JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
+                string jobName = arguments.JobName;
+                
+                JobConf copy = JobManagerService.CopyJob(jobName,
+                    GetArgument("copyName", "Please enter the name of the copy"));
+                OutLine(copy.ToYaml(), ConsoleColor.Cyan);
+                OutLineFormat("Copied job {0} to {1} in directory {2}", ConsoleColor.Cyan, jobName, copy.Name, copy.JobDirectory);
+            }
+            catch (Exception ex)
+            {
+                OutLineFormat("Exception copying job: {0}", ex.Message);
+                Exit(1);
+            }
+            Exit(0);
+        }
+
+        public override void Rename(Action<string> output = null, Action<string> error = null)
+        {
+            try
+            {
+                PrintMessage();
+                JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
+                string jobName = arguments.JobName;
+
+                JobConf jobConf = JobManagerService.MoveJob(jobName,
+                    GetArgument("newName", "Please enter the new name to give to the job"));
+
+                OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
+                OutLineFormat("Renamed job {0} to {1} in directory {2}", ConsoleColor.Cyan, jobName, jobConf.Name, jobConf.JobDirectory);
+            }
+            catch (Exception ex)
+            {
+                OutLineFormat("Exception renaming job: {0}", ex.Message);
+                Exit(1);
+            }
+            Exit(0);
+        }
+        
         public override void Show(Action<string> output = null, Action<string> error = null)
         {
             try

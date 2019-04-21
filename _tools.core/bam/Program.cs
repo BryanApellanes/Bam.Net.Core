@@ -8,6 +8,7 @@ using Bam.Net.Data.Repositories;
 using Bam.Net.Data.Repositories.Handlebars;
 using Bam.Net.Logging;
 using Bam.Shell;
+using Bam.Shell.Conf;
 using Bam.Shell.ShellGeneration.Data;
 
 namespace Bam.Net

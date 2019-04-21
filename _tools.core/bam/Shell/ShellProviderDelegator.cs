@@ -23,6 +23,22 @@ namespace Bam.Shell
             provider?.Add(StandardOut, StandardError);
             Exit(provider != null ? 0: 1);
         }
+        
+        [ArgZero("copy")]
+        public void Copy()
+        {
+            ShellProvider provider = Construct();
+            provider?.Copy(StandardOut, StandardError);
+            Exit(provider != null ? 0: 1);
+        }
+        
+        [ArgZero("rename")]
+        public void Rename()
+        {
+            ShellProvider provider = Construct();
+            provider?.Rename(StandardOut, StandardError);
+            Exit(provider != null ? 0: 1);
+        }
 
         [ArgZero("show")]
         public void Show()

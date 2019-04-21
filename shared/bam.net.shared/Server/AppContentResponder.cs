@@ -337,7 +337,7 @@ namespace Bam.Net.Server
                         handled = true;
                         Etags.SetLastModified(response, request.Url.ToString(), new FileInfo(locatedPath).LastWriteTime);
                     }
-                    else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path) || (AppRoot.FileExists("~/pages{0}.html"._Format(path), out locatedPath)))
+                    else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path) || (AppRoot.FileExists($"~/pages{path}.html", out locatedPath)))
                     {
                         content = RenderLayout(response, path);
                         handled = true;

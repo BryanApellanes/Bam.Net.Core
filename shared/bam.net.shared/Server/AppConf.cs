@@ -136,6 +136,16 @@ namespace Bam.Net.Server
             }
         }
 
+        public Workspace GetAppWorkspace()
+        {
+            return Workspace.ForApplication(new StaticApplicationNameProvider(Name));
+        }
+
+        public Workspace GetAppContentWorkspace()
+        {
+            return Workspace.ForApplication();
+        }
+        
         public bool IsProd => ProcessMode.Equals("Prod");
         public bool IsTest => ProcessMode.Equals("Test");
 

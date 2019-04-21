@@ -6,13 +6,14 @@ using Bam.Net;
 using Bam.Net.Application;
 using Bam.Net.Data;
 using Bam.Net.Presentation.Handlebars;
+using Bam.Net.Services;
 using Bam.Net.Testing;
 using Bam.Shell.Jobs;
 using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Shell
 {
-    public abstract class ShellProvider : CommandLineTestInterface, IRegisterArguments
+    public abstract class ShellProvider : CommandLineServiceInterface, IRegisterArguments
     {
         public abstract void List(Action<string> output = null, Action<string> error = null);
         public abstract void Add(Action<string> output = null, Action<string> error = null);
@@ -20,11 +21,26 @@ namespace Bam.Shell
         public abstract void Remove(Action<string> output = null, Action<string> error = null);
         public abstract void Run(Action<string> output = null, Action<string> error = null);
 
-        public virtual void Edit(Action<string> output = null, Action<string> error = null)
+        public virtual void Copy(Action<string> output = null, Action<string> error = null)
         {
-            error($"Edit is not implemented for the current shell provider: {GetType().FullName}");
+            NotImplemented("Copy", error);
         }
 
+        public virtual void Rename(Action<string> output = null, Action<string> error = null)
+        {
+            NotImplemented("Rename", error);
+        }
+        
+        public virtual void Edit(Action<string> output = null, Action<string> error = null)
+        {
+            NotImplemented("Edit", error);
+        }
+
+        private void NotImplemented(string actionName, Action<string> outputter)
+        {
+            outputter($"{actionName} is not implemented for the specified shell provider: {GetType().FullName}");
+        }
+        
         static HandlebarsDirectory _handlebarsDirectory;
         static object _handlebarsLock = new object();
         public static HandlebarsDirectory GetHandlebarsDirectory()

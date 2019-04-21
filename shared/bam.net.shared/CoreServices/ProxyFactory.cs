@@ -27,7 +27,7 @@ namespace Bam.Net.CoreServices
         { }
 
         /// <summary>
-        /// Instanciate a new ProxyFactory placing temporary code files
+        /// Instantiate a new ProxyFactory placing temporary code files
         /// in the specified workspaceDirectory 
         /// </summary>
         /// <param name="workspaceDirectory">The directory to write temp files to</param>
