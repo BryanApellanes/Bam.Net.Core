@@ -312,7 +312,7 @@ namespace Bam.Net.Server
 
         public override string ToString()
         {
-            return $"{DisplayName}::{string.Join(",", Bindings.Select(b => b.ToString()))}";
+            return $"{DisplayName}::{string.Join(" ", Bindings.Select(b => b.ToString()))}";
         }
 
         public ILogger GetLogger() // methods don't serialize

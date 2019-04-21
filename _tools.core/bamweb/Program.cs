@@ -57,7 +57,7 @@ namespace Bam.Net.Application
         }
 
         [ConsoleAction("S", "Start default server")]
-        public static void StartDefaultServer()
+        public static void StartServer()
         {
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
             Server.Subscribe(logger);
@@ -86,7 +86,7 @@ namespace Bam.Net.Application
         }
 
         [ConsoleAction("K", "Stop (Kill) BamWeb server")]
-        public static void StopDefaultServer()
+        public static void StopServer()
         {
             Server.Stop();
 			_server = null;
@@ -94,7 +94,7 @@ namespace Bam.Net.Application
         }
 
         [ConsoleAction("R", "Restart BamWeb server")]
-        public static void RestartDefaultServer()
+        public static void RestartServer()
         {
             Server.Stop();
             _server = null; // force reinitialization

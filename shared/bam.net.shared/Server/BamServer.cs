@@ -124,7 +124,7 @@ namespace Bam.Net.Server
         /// </summary>
         public event Action<BamServer, IResponder, IRequest> Responded;
         /// <summary>
-        /// The event that fires when a repsonse is not sent
+        /// The event that fires when a response is not sent
         /// </summary>
         public event Action<BamServer, IRequest> NotResponded;
         /// <summary>

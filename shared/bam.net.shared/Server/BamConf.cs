@@ -79,7 +79,7 @@ namespace Bam.Net.Server
         internal Fs AppFs(string appName)
         {
             Fs result = null;
-            AppConf conf = AppConfigs.Where(ac => ac.Name.Equals(appName) || ac.Name.Equals(appName.ToLowerInvariant())).FirstOrDefault();
+            AppConf conf = AppConfigs.FirstOrDefault(ac => ac.Name.Equals(appName) || ac.Name.Equals(appName.ToLowerInvariant()));
             if (conf != null)
             {
                 result = conf.AppRoot;
