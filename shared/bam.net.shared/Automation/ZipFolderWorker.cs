@@ -44,7 +44,7 @@ namespace Bam.Net.Automation
             ZipFile.CreateFromDirectory(dir.FullName, TargetPath);
             WorkState workstate = new WorkState(this)
             {
-                Message = "Sucessfully zipped file to {0}"._Format(SourceDirectory)
+                Message = $"Successfully zipped directory ({SourceDirectory}) to ({TargetPath})"
             };
             return workstate;
         }
