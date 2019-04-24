@@ -906,7 +906,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\AppHandlebarsRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\CommonHandlebarsRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\Secure\SecureSessionDatabase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AppProviderAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Automation\CommandRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\ProxyCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyFactory.cs" />

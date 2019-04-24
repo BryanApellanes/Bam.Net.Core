@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bam.Net.Configuration;
 using Bam.Net.Logging;
 using Bam.Net.Presentation.Handlebars;
 
@@ -33,6 +34,11 @@ namespace Bam.Net
             return file;
         }
 
+        /// <summary>
+        /// Get a directory for the specified path relative to the workspace
+        /// </summary>
+        /// <param name="pathSegments"></param>
+        /// <returns></returns>
         public DirectoryInfo Directory(params string[] pathSegments)
         {
             return new DirectoryInfo(Path(pathSegments));
@@ -132,9 +138,18 @@ namespace Bam.Net
         {
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             Log.Trace(typeof(Workspace), "Workspace using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
-            string directoryPath = System.IO.Path.Combine(BamPaths.BamHome, "apps", applicationNameProvider.GetApplicationName());
+            string directoryPath = System.IO.Path.Combine(BamPaths.Apps, applicationNameProvider.GetApplicationName());
             return new Workspace()
                 {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
-        } 
+        }
+
+        public static Workspace ForApplication(string applicationName)
+        {
+            return new Workspace()
+            {
+                ApplicationNameProvider = new StaticApplicationNameProvider(applicationName),
+                Root = new DirectoryInfo(System.IO.Path.Combine(BamPaths.Apps, applicationName))
+            };
+        }
     }
 }

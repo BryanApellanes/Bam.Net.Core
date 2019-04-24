@@ -61,7 +61,7 @@ namespace Bam.Net.Server
             {
                 if (_appServiceRegistry == null)
                 {
-                    _appServiceRegistry = ApplicationServiceRegistry.Discover();
+                    _appServiceRegistry = ApplicationServiceRegistry.Current;
                     _appServiceRegistry
                         .For<ContentResponder>().Use(ContentResponder)
                         .For<ITemplateNameResolver>().Use<ContentTemplateNameResolver>()
