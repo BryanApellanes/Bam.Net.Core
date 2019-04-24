@@ -24,17 +24,21 @@ namespace Bam.Net
         {
             AppSettings = Read(out FileInfo file);
             File = file;
-            ConfigChangeWatcher = File.OnChange((o, a) =>
+            if(ProcessMode.Current.Mode != ProcessModes.Prod)
             {
-                Config oldConfig = this.CopyAs<Config>();
-                AppSettings = Read();
-                Config newConfig = this;
-                ConfigChangedEventArgs args = new ConfigChangedEventArgs()
+                ConfigChangeWatcher = File.OnChange((o, a) =>
                 {
-                    OldConfig = oldConfig, NewConfig = newConfig
-                };
-                FireEvent(ConfigChanged, this, args);
-            });
+                    Config oldConfig = this.CopyAs<Config>();
+                    AppSettings = Read();
+                    Config newConfig = this;
+                    ConfigChangedEventArgs args = new ConfigChangedEventArgs()
+                    {
+                        OldConfig = oldConfig,
+                        NewConfig = newConfig
+                    };
+                    FireEvent(ConfigChanged, this, args);
+                });
+            }
         }
 
         static Config _current;
