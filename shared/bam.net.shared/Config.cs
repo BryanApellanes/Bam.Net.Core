@@ -19,16 +19,24 @@ namespace Bam.Net
         {
             ApplicationNameProvider = ProcessApplicationNameProvider.Current;
         }
-        
-        public Config()
+
+        public Config() : this(true)
+        {
+        }
+
+        private Config(bool subscribeToChanges)
         {
             AppSettings = Read(out FileInfo file);
             File = file;
-            if(ProcessMode.Current.Mode != ProcessModes.Prod)
+
+            if(subscribeToChanges)
             {
                 ConfigChangeWatcher = File.OnChange((o, a) =>
                 {
-                    Config oldConfig = this.CopyAs<Config>();
+                    Config oldConfig = new Config(false)
+                    {
+                        AppSettings = AppSettings
+                    };
                     AppSettings = Read();
                     Config newConfig = this;
                     ConfigChangedEventArgs args = new ConfigChangedEventArgs()
@@ -40,7 +48,7 @@ namespace Bam.Net
                 });
             }
         }
-
+        
         static Config _current;
         static object _currentLock = new object();
         
