@@ -1,14 +1,15 @@
-// Xref property: Left -> {{Left.Name}} ; Right -> {{Right.Name}}
-		{{LeftCollectionTypeName}} _{{CamelCasedLeftNamePluralized}};
-		public override {{LeftCollectionTypeName}} {{LeftCollectionProperty.Name}}
+
+// Right Xref property: Left -> {{Left.Name}} ; Right -> {{Right.Name}}
+		{{{LeftCollectionTypeName}}} _{{CamelCasedLeftNamePluralized}};
+		public override {{{LeftCollectionTypeName}}} {{LeftCollectionProperty.Name}}
 		{
 			get
 			{
-				if(_{{CamelCasedLeftNamePluralized}} == null || _{{CamelCasedLeftNamePluralized}}.@(Model.LeftLengthOrCount) == 0)
+				if(_{{CamelCasedLeftNamePluralized}} == null || _{{CamelCasedLeftNamePluralized}}.{{LeftLengthOrCount}} == 0)
 				{
-					var xref = new XrefDaoCollection<{{XrefTableName}}, @Model.DaoNamespace.{{Left.Name}}>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
-					_{{CamelCasedLeftNamePluralized}} = ((IEnumerable)xref).CopyAs<@(Model.Left.Namespace).{{Left.Name}}>().To{{LeftArrayOrList}}();
+					var xref = new XrefDaoCollection<{{XrefTableName}}, {{DaoNamespace}}.{{Left.Name}}>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
+					_{{CamelCasedLeftNamePluralized}} = ((IEnumerable)xref).CopyAs<{{Left.Namespace}}.{{Left.Name}}>().To{{LeftArrayOrList}}();
 					SetUpdatedXrefCollectionProperty("{{LeftDaoNamePluralized}}", this.GetType().GetProperty("{{LeftCollectionProperty.Name}}"));					
 				}
 

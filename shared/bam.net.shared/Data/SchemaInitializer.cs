@@ -49,6 +49,11 @@ namespace Bam.Net.Data
 
         protected internal string SchemaName { get; set; }
 
+        public override string ToString()
+        {
+            return $"SchemaInitializer::{SchemaContext}::{RegistrarCaller}";
+        }
+        
         public bool Initialize(ILogger logger, out Exception ex)
         {
             bool success = false;

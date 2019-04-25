@@ -8,13 +8,13 @@ namespace Bam.Net.Data.Repositories
 {
     /// <summary>
     /// Extend this class to define a type that uses multiple properties to determine
-    /// persistence instance uniqueness.  Addorn key properties with the CompositeKey
+    /// persistence instance uniqueness.  Adorn key properties with the CompositeKey
     /// attribute.
     /// </summary>
     /// <seealso cref="Bam.Net.Data.Repositories.RepoData" />
     /// <seealso cref="Bam.Net.Data.Repositories.IHasKeyHash" />
     [Serializable]
-    public abstract class KeyHashRepoData : RepoData, IHasKeyHash
+    public abstract class KeyHashRepoData : RepoData, IHasKeyHash // TODO: rename this to CompositeKeyRepoData
     {
         public KeyHashRepoData()
         {
@@ -49,6 +49,11 @@ namespace Bam.Net.Data.Repositories
             return $"{name}:{properties}";
         }
 
+        public ulong Key()
+        {
+            return GetULongKeyHash();
+        } 
+        
         public int GetIntKeyHash()
         {
             return KeyHashProvider.GetIntKeyHash(this, PropertyDelimiter, CompositeKeyProperties);

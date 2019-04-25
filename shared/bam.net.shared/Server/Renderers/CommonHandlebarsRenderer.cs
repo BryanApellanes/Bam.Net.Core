@@ -33,7 +33,7 @@ namespace Bam.Net.Server.Renderers
         {
             get
             {
-                return ContentResponder?.ApplicationServiceRegistry?.Get<ITemplateNameResolver>() ?? ApplicationServiceRegistry.Discovered?.Result?.Get<ITemplateNameResolver>();
+                return ContentResponder?.ApplicationServiceRegistry?.Get<ITemplateNameResolver>() ?? ApplicationServiceRegistry.Current?.Get<ITemplateNameResolver>();
             }
         }
 

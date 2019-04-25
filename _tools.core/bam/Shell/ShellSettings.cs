@@ -1,6 +1,6 @@
 using Bam.Net;
 
-namespace bam.Shell
+namespace Bam.Shell
 {
     public class ShellSettings
     {

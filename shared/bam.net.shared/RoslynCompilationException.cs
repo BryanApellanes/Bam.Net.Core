@@ -22,7 +22,7 @@ namespace Bam.Net
 
         internal static string GetMessage(Diagnostic diagnostic)
         {
-            return $"{diagnostic.Descriptor?.Title ?? "[no title]" }::{diagnostic.Descriptor?.Description ?? "[no description" }::";
+            return $"{diagnostic.Descriptor?.Title ?? "[no title]" }::{diagnostic.ToString() ?? "[no description]"}::";
         }
 
     }

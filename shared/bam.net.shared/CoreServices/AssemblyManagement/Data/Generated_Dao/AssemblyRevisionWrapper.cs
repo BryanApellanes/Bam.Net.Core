@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 
 		public AssemblyRevisionWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -45,6 +45,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Wrappers
 				UpdatedXrefCollectionProperties[propertyName] = correspondingProperty;				
 			}
 		}
+
 
 
 

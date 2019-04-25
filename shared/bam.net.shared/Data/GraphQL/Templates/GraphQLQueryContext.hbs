@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using Bam.Net.Logging;
+using Bam.Net.Data.GraphQL;
+using GraphQL;
+using GraphQL.Types;
+{{UsingStatements}}
+
+namespace {{ToNameSpace}}
+{    
+    public class {{SchemaName}}GraphQueriesContext : GraphQueryResolver
+    {
+        public {{SchemaName}}GraphQueriesContext()
+        {
+{{#DataTypes}}
+            Field<{{TypeName}}Graph>(
+                name: "{{PluralTypeName}}",
+                arguments: new QueryArguments(
+                    new QueryArgument<StringGraphType> { Name = "qi" },
+{{#QueryArguments}}
+                    new QueryArgument<{{GraphType}}> { Name = "{{Name}}" }{{Separator}}    
+{{/QueryArguments}}                    
+                ),
+                resolve: Resolve
+            );
+{{/DataTypes}}
+        }
+    }
+}

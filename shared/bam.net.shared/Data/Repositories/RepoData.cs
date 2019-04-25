@@ -14,9 +14,17 @@ namespace Bam.Net.Data.Repositories
     [Serializable]
 	public abstract class RepoData
 	{
+        /// <summary>
+        /// The identifier for the current instance.  This should be
+        /// considered a "local" id, meaning it identifies the instance
+        /// from the current repository of the current process.  This value
+        /// may be different for the same instance in a different process.
+        /// For universal identity use Uuid.
+        /// </summary>
+        [Key]
 		public ulong Id { get; set; }
+        
         private DateTime? _created;
-
         /// <summary>
         /// The time that the Created property
         /// was first referenced prior to persisting
@@ -34,7 +42,15 @@ namespace Bam.Net.Data.Repositories
             }
             set { _created = value; }
         }
+        
         string _uuid;
+        /// <summary>
+        /// The universally unique identifier.  While this value should be
+        /// universally unique, a very small possibility exists of collisions
+        /// when generating Uuids concurrently across multiple threads and/or
+        /// processes.  To confidently identify a unique data instance use a
+        /// combination of Uuid and/or Cuid.  See Cuid.
+        /// </summary>
         public string Uuid
         {
             get
@@ -50,7 +66,11 @@ namespace Bam.Net.Data.Repositories
                 _uuid = value;
             }
         }
+        
         string _cuid;
+        /// <summary>
+        /// The collision resistant unique identifier.
+        /// </summary>
         public string Cuid
         {
             get

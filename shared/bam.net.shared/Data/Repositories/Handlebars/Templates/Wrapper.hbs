@@ -9,21 +9,21 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using {{Model.TypeNamespace}};
-using {{Model.DaoNamespace}};
+using {{TypeNamespace}};
+using {{DaoNamespace}};
 
-namespace {{Model.WrapperNamespace}}
+namespace {{WrapperNamespace}}
 {
 	// generated
 	[Serializable]
-	public class {{Model.WrapperTypeName}}: {{Model.TypeNamespace}}.{{Model.BaseTypeName}}, IHasUpdatedXrefCollectionProperties
+	public class {{WrapperTypeName}}: {{TypeNamespace}}.{{{BaseTypeName}}}, IHasUpdatedXrefCollectionProperties
 	{
-		public {{Model.TypeName}}Wrapper()
+		public {{TypeName}}Wrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public {{Model.TypeName}}Wrapper(DaoRepository repository) : this()
+		public {{TypeName}}Wrapper(DaoRepository repository) : this()
 		{
 			this.DaoRepository = repository;
 		}
@@ -46,19 +46,21 @@ namespace {{Model.WrapperNamespace}}
 			}
 		}
 
-{{#each Model.ForeignKeys}}
+{{#each ForeignKeys}}
 {{> ForeignKeyProperty}}
 {{/each}}
 
-{{#each Model.ChildPrimaryKeys}}
+{{#each ChildPrimaryKeys}}
 {{> ChildPrimaryProperty}}
 {{/each}}
 
-{{#each Model.LeftXrefs}}
+{{#each LeftXrefs}}
+        // left xref
 {{> XrefLeftProperty}}
 {{/each}}
 
-{{#each Model.RightXrefs}}
+{{#each RightXrefs}}
+        // right xref
 {{> XrefRightProperty}}
 {{/each}}
 

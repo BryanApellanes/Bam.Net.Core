@@ -7,6 +7,7 @@ using Bam.Net.Data.Schema;
 using Bam.Net;
 using Newtonsoft.Json;
 using System.CodeDom.Compiler;
+using System.Reflection;
 
 namespace Bam.Net.Data.Repositories
 {
@@ -19,6 +20,12 @@ namespace Bam.Net.Data.Repositories
             TypeSchema = typeSchema;
             SchemaDefinition = schemaDefintion;
         }
+
+        public GeneratedDaoAssemblyInfo(string infoFileName, Assembly assembly, byte[] assemblyBytes = null) : base(
+            infoFileName, assembly, assemblyBytes)
+        {
+        }
+
         public GeneratedDaoAssemblyInfo(string infoFileName, CompilerResults results)
             : base(infoFileName, results)
         { }

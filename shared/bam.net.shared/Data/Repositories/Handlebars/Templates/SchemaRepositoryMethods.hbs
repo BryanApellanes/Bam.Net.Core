@@ -14,10 +14,10 @@
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
-		public void SetOne{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where, out {{Type.FullName}} result)
+		public void SetOne{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where, out {{{Type.FullName}}} result)
 		{
 			{{DaoNamespace}}.{{Type.Name}}.SetOneWhere(where, out {{DaoNamespace}}.{{Type.Name}} daoResult, Database);
-			result = daoResult.CopyAs<{{Type.FullName}}>();
+			result = daoResult.CopyAs<{{{Type.FullName}}}>();
 		}
 
 		/// <summary>
@@ -26,10 +26,10 @@
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
-		public {{Type.FullName}} GetOne{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where)
+		public {{{Type.FullName}}} GetOne{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where)
 		{
-			Type wrapperType = GetWrapperType<{{Type.FullName}}>();
-			return ({{Type.FullName}}){{DaoNamespace}}.{{Type.Name}}.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+			Type wrapperType = GetWrapperType<{{{Type.FullName}}}>();
+			return ({{{Type.FullName}}}){{DaoNamespace}}.{{Type.Name}}.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
 		}
 
 		/// <summary>
@@ -41,22 +41,22 @@
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between {{Type.Name}}Columns and other values
 		/// </param>
-		public {{Type.FullName}} One{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where)
+		public {{{Type.FullName}}} One{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where)
         {
-            Type wrapperType = GetWrapperType<{{Type.FullName}}>();
-            return ({{Type.FullName}}){{DaoNamespace}}.{{Type.Name}}.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+            Type wrapperType = GetWrapperType<{{{Type.FullName}}}>();
+            return ({{{Type.FullName}}}){{DaoNamespace}}.{{Type.Name}}.OneWhere(where, Database)?.CopyAs(wrapperType, this);
         }
 
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a {{Type.FullName}}Columns 
+		/// <param name="where">A WhereDelegate that recieves a {{{Type.FullName}}}Columns 
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between {{Type.FullName}}Columns and other values
+		/// between {{{Type.FullName}}}Columns and other values
 		/// </param>
-		public IEnumerable<{{Type.FullName}}> {{TypeNamePluralized}}Where(WhereDelegate<{{Type.Name}}Columns> where, OrderBy<{{Type.Name}}Columns> orderBy = null)
+		public IEnumerable<{{{Type.FullName}}}> {{TypeNamePluralized}}Where(WhereDelegate<{{Type.Name}}Columns> where, OrderBy<{{Type.Name}}Columns> orderBy = null)
         {
-            return Wrap<{{Type.FullName}}>({{DaoNamespace}}.{{Type.Name}}.Where(where, orderBy, Database));
+            return Wrap<{{{Type.FullName}}}>({{DaoNamespace}}.{{Type.Name}}.Where(where, orderBy, Database));
         }
 		
 		/// <summary>
@@ -72,9 +72,9 @@
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between {{Type.Name}}Columns and other values
 		/// </param>
-		public IEnumerable<{{Type.FullName}}> Top{{TypeNamePluralized}}Where(int count, WhereDelegate<{{Type.Name}}Columns> where)
+		public IEnumerable<{{{Type.FullName}}}> Top{{TypeNamePluralized}}Where(int count, WhereDelegate<{{Type.Name}}Columns> where)
         {
-            return Wrap<{{Type.FullName}}>({{DaoNamespace}}.{{Type.Name}}.Top(count, where, Database));
+            return Wrap<{{{Type.FullName}}}>({{DaoNamespace}}.{{Type.Name}}.Top(count, where, Database));
         }
 
 		/// <summary>
@@ -97,19 +97,19 @@
             return {{DaoNamespace}}.{{Type.Name}}.Count(where, Database);
         }
         
-        public async Task BatchQuery{{TypeNamePluralized}}(int batchSize, WhereDelegate<{{Type.Name}}Columns> where, Action<IEnumerable<{{Type.FullName}}>> batchProcessor)
+        public async Task BatchQuery{{TypeNamePluralized}}(int batchSize, WhereDelegate<{{Type.Name}}Columns> where, Action<IEnumerable<{{{Type.FullName}}}>> batchProcessor)
         {
             await {{DaoNamespace}}.{{Type.Name}}.BatchQuery(batchSize, where, (batch) =>
             {
-				batchProcessor(Wrap<{{Type.FullName}}>(batch));
+				batchProcessor(Wrap<{{{Type.FullName}}}>(batch));
             }, Database);
         }
 		
-        public async Task BatchAll{{TypeNamePluralized}}(int batchSize, Action<IEnumerable<{{Type.FullName}}>> batchProcessor)
+        public async Task BatchAll{{TypeNamePluralized}}(int batchSize, Action<IEnumerable<{{{Type.FullName}}}>> batchProcessor)
         {
             await {{DaoNamespace}}.{{Type.Name}}.BatchAll(batchSize, (batch) =>
             {
-				batchProcessor(Wrap<{{Type.FullName}}>(batch));
+				batchProcessor(Wrap<{{{Type.FullName}}}>(batch));
             }, Database);
         }
 

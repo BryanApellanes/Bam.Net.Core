@@ -33,7 +33,7 @@ namespace Bam.Net
                     return new string[] {"C:", "bam"};
                 }
 
-                return new string[] {"/", "opt", "bam"};
+                return new string[] {"/", "usr", "local", "bam"};
             }
         }
 
@@ -61,6 +61,16 @@ namespace Bam.Net
             get { return new List<string>(BamHomeSegments) {"content"}.ToArray(); }
         }
 
+        public static string Apps
+        {
+            get { return Path.Combine(AppsSegments); }
+        }
+        
+        public static string[] AppsSegments
+        {
+            get { return new List<string>(BamHomeSegments) {"apps"}.ToArray(); }
+        }
+        
         public static string RpcScriptsSrcPath
         {
             get { return Path.Combine(RpcScriptsSrcSegments); }

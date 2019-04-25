@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using Bam.Net.Logging;
+using GraphQL;
+using GraphQL.Types;
+{{UsingStatements}}
+
+namespace {{ToNameSpace}}
+{
+    public class {{TypeName}}Graph : ObjectGraphType<{{FullyQualifiedTypeName}}>
+    {
+        public {{TypeName}}Graph()
+        {
+{{#each Properties}}
+            Field("{{PropertyName}}", p => p.{{PropertyName}}, type: typeof({{{PropertyGraphType}}}));    
+{{/each}}
+        }
+
+        public string SchemaName 
+        { 
+            get 
+            {
+                return "{{SchemaName}}";
+            }
+        }
+    }
+}

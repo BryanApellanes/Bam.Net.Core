@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bam.Net.Configuration;
 using Bam.Net.Logging;
 using Bam.Net.Presentation.Handlebars;
 
@@ -33,6 +34,11 @@ namespace Bam.Net
             return file;
         }
 
+        /// <summary>
+        /// Get a directory for the specified path relative to the workspace
+        /// </summary>
+        /// <param name="pathSegments"></param>
+        /// <returns></returns>
         public DirectoryInfo Directory(params string[] pathSegments)
         {
             return new DirectoryInfo(Path(pathSegments));
@@ -51,18 +57,28 @@ namespace Bam.Net
             return System.IO.Path.Combine(fileSegments.ToArray());
         }
 
+        /// <summary>
+        /// Output to the console and write that output to the Workspace console log.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
         public void WriteLine(string format, params object[] args)
         {
             Console.WriteLine(format, args);
             string message = $"{string.Format(format, args)}\r\n";
             FileInfo file = new FileInfo(Path("Console"));
-            if (file.Length >= 1048576)
+            if (file.Exists && file.Length >= 1048576)
             {
                 file = file.GetNextFile();
             }
             message.SafeAppendToFile(file.FullName);
         }
         
+        /// <summary>
+        /// Save the specified object instance as a yaml file
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         public FileInfo Save(object instance)
         {
             Args.ThrowIfNull(instance, "instance");
@@ -112,13 +128,28 @@ namespace Bam.Net
             return new Workspace()
                 {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
         }
+
+        public static Workspace ForProcess()
+        {
+            return ForApplication(ProcessApplicationNameProvider.Current);
+        }
         
         public static Workspace ForApplication(IApplicationNameProvider applicationNameProvider = null)
         {
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
-            string directoryPath = System.IO.Path.Combine(BamPaths.BamHome, "apps", applicationNameProvider.GetApplicationName());
+            Log.Trace(typeof(Workspace), "Workspace using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
+            string directoryPath = System.IO.Path.Combine(BamPaths.Apps, applicationNameProvider.GetApplicationName());
             return new Workspace()
                 {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
-        } 
+        }
+
+        public static Workspace ForApplication(string applicationName)
+        {
+            return new Workspace()
+            {
+                ApplicationNameProvider = new StaticApplicationNameProvider(applicationName),
+                Root = new DirectoryInfo(System.IO.Path.Combine(BamPaths.Apps, applicationName))
+            };
+        }
     }
 }

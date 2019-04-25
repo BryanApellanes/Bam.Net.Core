@@ -56,6 +56,7 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public virtual byte[] GetZippedBytes(FileInfo file)
         {
+            EnsureFileIsLoaded(file);
             return _cachedFiles[file.FullName].GetZippedBytes();
         }
 
@@ -66,6 +67,7 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public virtual byte[] GetBytes(FileInfo file)
         {
+            EnsureFileIsLoaded(file);
             return _cachedFiles[file.FullName].GetBytes();
         }
 
@@ -108,7 +110,7 @@ namespace Bam.Net.Caching.File
 
             if (HashChanged(file))
             {
-                Load(file);
+                Reload(file);
             }
             
             return true;

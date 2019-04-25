@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 {
-	// schema = AssemblyService 
+	// schema = AssemblyService
     public static class AssemblyServiceContext
     {
 		public static string ConnectionName
@@ -31,6 +31,58 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		}
 
 
+	public class AssemblyRequestQueryContext
+	{
+			public AssemblyRequestCollection Where(WhereDelegate<AssemblyRequestColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Where(where, db);
+			}
+		   
+			public AssemblyRequestCollection Where(WhereDelegate<AssemblyRequestColumns> where, OrderBy<AssemblyRequestColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Where(where, orderBy, db);
+			}
+
+			public AssemblyRequest OneWhere(WhereDelegate<AssemblyRequestColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.OneWhere(where, db);
+			}
+
+			public static AssemblyRequest GetOneWhere(WhereDelegate<AssemblyRequestColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.GetOneWhere(where, db);
+			}
+		
+			public AssemblyRequest FirstOneWhere(WhereDelegate<AssemblyRequestColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.FirstOneWhere(where, db);
+			}
+
+			public AssemblyRequestCollection Top(int count, WhereDelegate<AssemblyRequestColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Top(count, where, db);
+			}
+
+			public AssemblyRequestCollection Top(int count, WhereDelegate<AssemblyRequestColumns> where, OrderBy<AssemblyRequestColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<AssemblyRequestColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyRequest.Count(where, db);
+			}
+	}
+
+	static AssemblyRequestQueryContext _assemblyRequests;
+	static object _assemblyRequestsLock = new object();
+	public static AssemblyRequestQueryContext AssemblyRequests
+	{
+		get
+		{
+			return _assemblyRequestsLock.DoubleCheckLock<AssemblyRequestQueryContext>(ref _assemblyRequests, () => new AssemblyRequestQueryContext());
+		}
+	}
 	public class AssemblyDescriptorQueryContext
 	{
 			public AssemblyDescriptorCollection Where(WhereDelegate<AssemblyDescriptorColumns> where, Database db = null)
@@ -342,5 +394,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		{
 			return _assemblyDescriptorAssemblyReferenceDescriptorsLock.DoubleCheckLock<AssemblyDescriptorAssemblyReferenceDescriptorQueryContext>(ref _assemblyDescriptorAssemblyReferenceDescriptors, () => new AssemblyDescriptorAssemblyReferenceDescriptorQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

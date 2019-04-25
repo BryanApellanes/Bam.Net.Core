@@ -13,6 +13,27 @@ namespace Bam.Net
 {
     public static partial class RuntimeSettings
     {
+        public static RuntimeConfig GetConfig()
+        {
+            string fileName = "runtime-config.yaml";
+            FileInfo configFile = new FileInfo(Path.Combine(BamDir, fileName));
+            if (configFile.Exists)
+            {
+                return configFile.FromYamlFile<RuntimeConfig>();
+            }
+
+            RuntimeConfig config = new RuntimeConfig
+            {
+                ReferenceAssembliesDir = ReferenceAssembliesDir,
+                GenDir = GenDir,
+                BamHomeDir = BamHomeDir,
+                BamDir = BamDir,
+                ProcessHomeDir = ProcessHomeDir
+            };
+            config.ToYamlFile(configFile);
+            return config;
+        }
+        
         static string _appDataFolder;
         static object _appDataFolderLock = new object();
         
@@ -30,7 +51,22 @@ namespace Bam.Net
             }
         }
 
-        public static string SysHomeDir
+        public static string ReferenceAssembliesDir
+        {
+            get { return Path.Combine(BinDir, "ReferenceAssemblies"); }
+        }
+
+        public static string GenDir
+        {
+            get { return Path.Combine(BinDir, "gen"); }
+        }
+        
+        public static string BinDir
+        {
+            get { return Path.Combine(BamHomeDir, "bin"); }
+        }
+        
+        public static string BamHomeDir
         {
             get
             {
@@ -38,7 +74,7 @@ namespace Bam.Net
             }
         }
 
-        public static string SysDir
+        public static string BamDir
         {
             get
             {
@@ -66,7 +102,7 @@ namespace Bam.Net
         {
             get
             {
-                return RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
             }
         }
 

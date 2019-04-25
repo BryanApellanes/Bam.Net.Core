@@ -50,6 +50,8 @@ namespace Bam.Net.Automation
             get { return _workerConfLock.DoubleCheckLock(ref _workerConfs, LoadWorkerConfs); }
         }
 
+        public WorkerConf this[string workerName, bool reload = false] => GetWorkerConf(workerName, reload);
+
         List<string> _workerExtensions;
         /// <summary>
         /// An array of worker config file paths to
@@ -144,7 +146,11 @@ namespace Bam.Net.Automation
 
             return null;
         }
-
+        
+        /// <summary>
+        /// Convert the current JobConf file into a Job that can execute.
+        /// </summary>
+        /// <returns></returns>
         public Job CreateJob()
         {
             return new Job(this);
@@ -176,7 +182,7 @@ namespace Bam.Net.Automation
         public string Save()
         {
             EnsureJobDirectory();
-
+            ReloadWorkers();
             string path = GetFilePath();
             this.ToJsonFile(path);
             return path;
@@ -187,6 +193,7 @@ namespace Bam.Net.Automation
             if (WorkerExists(name, out string workerFilePath))
             {
                 File.Delete(workerFilePath);
+                Save();
                 return true;
             }
 

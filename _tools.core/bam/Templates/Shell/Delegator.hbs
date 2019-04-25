@@ -1,0 +1,13 @@
+{{UsingNamespaces}}
+
+namespace {{NameSpace}}
+{
+    public class {{BaseTypeName}}Delegator : ArgZeroDelegator<{{BaseTypeName}}>
+    {
+    
+{{#each Methods}}
+{{> DelegatorMethod}}    
+{{/each}}
+    
+    } 
+}

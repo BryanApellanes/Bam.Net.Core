@@ -17,12 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="AppData\json\test.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="AppData\yaml\test.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Bam-Windows.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -70,6 +64,20 @@
     <EmbeddedResource Include="Templates\Webpack.config.js.hbs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Remove="Templates\Shell\ConcreteProvider.hbs" />
+    <None Remove="Templates\Shell\ConcreteProviderMethod.hbs" />
+    <None Remove="Templates\Shell\Delegator.hbs" />
+    <EmbeddedResource Include="Templates\Shell\Delegator.hbs" />
+    <None Remove="Templates\Shell\DelegatorMethod.hbs" />
+    <EmbeddedResource Include="Templates\Shell\DelegatorMethod.hbs" />
+    <None Remove="Templates\Shell\ProviderBaseClass.hbs" />
+    <EmbeddedResource Include="Templates\Shell\ProviderBaseClass.hbs" />
+    <None Remove="Templates\Shell\ProviderBaseClassMethod.hbs" />
+    <EmbeddedResource Include="Templates\Shell\ProviderBaseClassMethod.hbs" />
+    <None Remove="Templates\Shell\ConcreteClass.hbs" />
+    <EmbeddedResource Include="Templates\Shell\ConcreteClass.hbs" />
+    <None Remove="Templates\Shell\ConcreteMethod.hbs" />
+    <EmbeddedResource Include="Templates\Shell\ConcreteMethod.hbs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -108,5 +116,10 @@
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.pdb" />
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.dll" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
+  </ItemGroup>
+
 
 </Project>

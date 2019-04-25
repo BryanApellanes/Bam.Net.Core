@@ -1,6 +1,6 @@
-﻿# Bhrt.exe
+﻿# BamHeart.exe
 
-Bhrt.exe provides the core set of services for Bam.Net.
+BamHeart.exe provides the core set of services for Bam.Net.
 
 ## Windows
 dotnet publish -c Release -r win10-x64 [-o <outputpath>]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Bam.Net;
 using Bam.Net.CommandLine;
@@ -9,6 +10,7 @@ using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Testing;
 using CsQuery.ExtensionMethods;
+using GraphQL.Types;
 using Lucene.Net.Analysis.Hunspell;
 using Lucene.Net.Analysis.Standard;
 using Microsoft.CodeAnalysis.Operations;
@@ -37,43 +39,98 @@ namespace Bam.Shell
         {
             if (!Targets.AddMissing(arg, method))
             {
-                Args.Throw<InvalidOperationException>("The specified ArgZero is already registered: {0}", arg);
+                MethodInfo registered = Targets[arg];
+                string willUse = $"{registered.DeclaringType.Name}.{registered.Name}";
+                OutLineFormat("The specified ArgZero is already registered {0}, will use {1}", ConsoleColor.Yellow, arg, willUse);
             }
         }
 
         /// <summary>
-        /// Scan for ArgZero methods.
+        /// Register extenders of type T as ArgZero providers
         /// </summary>
-        public static void Scan()
+        public static void RegisterArgZeroProviders<T>(string[] args) where T: IRegisterArguments
         {
-            
-            
-            
-            
-            Assembly current = Assembly.GetExecutingAssembly();
-            
-            
-            current.GetTypes().ForEach(type =>
+            RegisterArgZeroProviders<T>(args, typeof(T).Assembly);
+        }
+        
+        /// <summary>
+        /// Register extenders of type T as ArgZero providers
+        /// </summary>
+        public static void RegisterArgZeroProviders<T>(string[] args, Assembly assembly) where T: IRegisterArguments
+        {
+            RegisterProviderTypes<T>(args, assembly);
+            RegisterDelegatorMethods(assembly);
+        }
+
+        static HashSet<Assembly> _regsiteredDelegatorAssemblies = new HashSet<Assembly>();
+        static object _registerLock = new object();
+        public static void RegisterDelegatorMethods(Assembly assembly)
+        {
+            lock (_registerLock)
             {
-                if (type.ExtendsType<ShellProvider>())
+                if (_regsiteredDelegatorAssemblies.Contains(assembly))
                 {
-                    if (!type.Name.EndsWith("Provider"))
-                    {
-                        OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'", ConsoleColor.Yellow);
-                    }
-                    type.Construct<ShellProvider>().RegisterArguments();
-                    string providerName = type.Name.Truncate("Provider".Length);
-                    ProviderTypes.AddMissing(providerName, type);
+                    return;
                 }
-                
-                type.GetMethods().ForEach(m =>
+
+                _regsiteredDelegatorAssemblies.Add(assembly);
+                foreach (Type type in assembly.GetTypes())
                 {
-                    if (m.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute arg))
+                    foreach (MethodInfo method in type.GetMethods())
                     {
-                        Register(arg.Argument, m);
+                        if (method.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute arg))
+                        {
+                            Register(arg.Argument, method);
+                        }
                     }
-                });
-            });
+                }
+            }
+        }
+        
+        public static void RegisterProviderTypes(Type type, string[] args, Assembly assembly)
+        {
+            foreach (Type extender in assembly.GetTypes().Where(t => t.ExtendsType(type)))
+            {
+                ((IRegisterArguments)extender.Construct()).RegisterArguments(args);
+                string name = extender.Name;
+                if (!extender.Name.EndsWith("Provider"))
+                {
+                    OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'",
+                        ConsoleColor.Yellow);
+                }
+                else
+                {
+                    name = name.Truncate("Provider".Length);
+                }
+
+                ProviderTypes.AddMissing(name, extender);
+            }
+        }
+        
+        /// <summary>
+        /// Register extenders of the specified type from the specified assembly as shell providers.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="assembly"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void RegisterProviderTypes<T>(string[] args, Assembly assembly) where T : IRegisterArguments
+        {
+            foreach (Type type in assembly.GetTypes().Where(type => type.ExtendsType<T>()))
+            {
+                type.Construct<T>().RegisterArguments(args);
+                string name = type.Name;
+                if (!type.Name.EndsWith("Provider"))
+                {
+                    OutLineFormat("For clarity and convention, the name of type {0} should end with 'Provider'",
+                        ConsoleColor.Yellow);
+                }
+                else
+                {
+                    name = name.Truncate("Provider".Length);
+                }
+
+                ProviderTypes.AddMissing(name, type);
+            }
         }
         
         private static Dictionary<string, Type> _providerTypes;
@@ -82,20 +139,30 @@ namespace Bam.Shell
         {
             get { return _providerTypesLock.DoubleCheckLock(ref _providerTypes, () => new Dictionary<string, Type>()); }
         }
+
+        public static void ExecuteArgZero(string[] arguments)
+        {
+            ExecuteArgZero(arguments, () => Exit(0));
+        }
         
         /// <summary>
-        /// Execute any ArgZero arguments specified on the command line then exit.  Has no effect if no relevant arguments
+        /// Execute any ArgZero arguments specified on the command.  Has no effect if no relevant arguments
         /// are detected.
         /// </summary>
-        public static void ExecuteArgZero(string[] arguments)
+        public static void ExecuteArgZero(string[] arguments, Action onArgZeroExecuted = null)
         {
             if (arguments.Length == 0)
             {
                 return;
             }
+
+            if (Environment.GetCommandLineArgs().Any(a => a.Equals("/pause")))
+            {
+                Pause("Press enter to continue");
+            }
+
+            onArgZeroExecuted = onArgZeroExecuted ?? (() => { });
             
-            Scan();
-            ShellProviderDelegator.Register(arguments);
             if (Targets.ContainsKey(arguments[0]))
             {
                 List<string> targetArguments = new List<string>();
@@ -111,6 +178,14 @@ namespace Bam.Shell
                 });
                 Arguments = new ParsedArguments(targetArguments.ToArray(), argumentInfos.ToArray());
                 MethodInfo method = Targets[arguments[0]];
+                if (method.HasCustomAttributeOfType<ArgZeroAttribute>(out ArgZeroAttribute argZeroAttribute))
+                {
+                    if (argZeroAttribute.BaseType != null)
+                    {
+                        RegisterProviderTypes(argZeroAttribute.BaseType, arguments, argZeroAttribute.BaseType.Assembly);
+                    }
+                }
+                
                 object instance = null;
                 if (!method.IsStatic)
                 {
@@ -119,13 +194,15 @@ namespace Bam.Shell
 
                 try
                 {
+                    ArgZeroDelegator.CommandLineArguments = arguments;
                     method.Invoke(instance, null);
                 }
                 catch (Exception ex)
                 {
                     OutLineFormat("Exception executing ArgZero: {0}", ConsoleColor.Magenta, ex.Message);
                 }
-                Exit(0);
+
+                onArgZeroExecuted();
             }
         }
         

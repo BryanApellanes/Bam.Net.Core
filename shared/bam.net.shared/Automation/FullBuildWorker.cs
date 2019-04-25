@@ -1,8 +1,12 @@
 using System;
 using System.IO;
+using System.Xml.Serialization;
+using Bam.Net.Application;
 using Bam.Net.Automation;
 using Bam.Net.CommandLine;
 using Bam.Net.Logging;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Automation
 {
@@ -10,12 +14,12 @@ namespace Bam.Net.Automation
     {
         public FullBuildWorker()
         {
-            RequiredProperties = new string[] { "BuildOutput" };
             BamSettings = BamSettings.Load();
-            BuildSettings = Config.Load<BuildSettings>();
+            BuildSettings = Bam.Net.Config.Load<BuildSettings>();
             Builds = Workspace.CreateDirectory("builds");
             Repos = Workspace.CreateDirectory("repos");
             Tools = Workspace.CreateDirectory("tools");
+            SetBuildSettings();
         }
 
         Workspace _workspace;
@@ -48,17 +52,6 @@ namespace Bam.Net.Automation
         
         public DirectoryInfo Repos { get; set; }
         public DirectoryInfo Tools { get; set; }
-
-        string _buildOutput;
-        public string BuildOutput
-        {
-            get { return _buildOutput; }
-            set
-            {
-                _buildOutput = value; 
-                _builds = new DirectoryInfo(_buildOutput);
-            }
-        }
         
         public bool TryGetBuildRunner(out FileInfo fileInfo)
         {
@@ -193,16 +186,13 @@ namespace Bam.Net.Automation
                         Message = $"Build exited with code {buildOutput.ExitCode}"
                     };
                 }
-            
-                BuildResult result = new BuildResult()
-                {
-                    Success = true,
-                    Message = "Build and test completed successfully"
-                };
 
                 WorkState($"{Name}_BuildOutput", settings.BuildOutput);
-                WorkState($"{Name}_BuildResult", result);
-                return result;
+                WorkState($"{Name}_BuildResult", buildOutput);
+                return new BuildResult()
+                {
+                    Success =  true
+                };
             }
             finally
             {
@@ -225,12 +215,52 @@ namespace Bam.Net.Automation
             return new WorkState(this);
         }
 
-        public override string[] RequiredProperties { get; }
+        public override string[] RequiredProperties
+        {
+            get
+            {
+                return new string[] {"BuildOutput", "RepoName", "RepoPath", "BranchName", "Config", "Runtime"};
+            }
+        }
 
+        public string RepoName { get; set; }
+        public string RepoPath { get; set; }
+        public string BranchName { get; set; }
+        public string Config { get; set; }
+        public string OSName { get; set; }
+        
+        string _buildOutput;
+        public string BuildOutput
+        {
+            get { return _buildOutput; }
+            set
+            {
+                _buildOutput = value;
+                if (string.IsNullOrEmpty(_buildOutput))
+                {
+                    _buildOutput = Workspace.Path("builds");
+                }
+                _builds = new DirectoryInfo(_buildOutput);
+            }
+        }
+
+        public void SetBuildSettings(BuildSettings settings = null)
+        {
+            settings = settings ?? new BuildSettings();
+            this.CopyProperties(settings);
+            Config = settings.Config.ToString();
+            OSName = settings.Runtime.OsName.ToString();
+        }
+        
         public virtual BuildSettings GetBuildSettings()
         {
             return new BuildSettings()
             {
+                RepoName = RepoName,
+                RepoPath = RepoPath,
+                BranchName = BranchName,
+                Config = Config.ToEnum<BuildConfig>(),
+                Runtime = Bam.Net.Application.Runtime.For(OSName),
                 BuildOutput = BuildOutput
             };
         }

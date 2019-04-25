@@ -2,8 +2,14 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
+using System.Linq;
+using Bam.Net.Data;
+using Bam.Net.Data.Repositories;
+using Bam.Net.Data.Repositories.Handlebars;
 using Bam.Net.Logging;
 using Bam.Shell;
+using Bam.Shell.Conf;
+using Bam.Shell.ShellGeneration.Data;
 
 namespace Bam.Net
 {
@@ -13,15 +19,13 @@ namespace Bam.Net
         static void Main(string[] args)
         {
             Log.Default = Workspace.Current.CreateLogger<TextFileLogger>();
-           
             AddArguments();
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
-            
-            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bam.exe");
+
+            RegisterArgZeroProviders<ShellProvider>(args);
             ExecuteArgZero(args);
             
             DefaultMethod = typeof(Program).GetMethod("Start");
-
             Initialize(args);
         }
 
@@ -36,6 +40,30 @@ namespace Bam.Net
             AddValidArgument("class", "When executing command line switches in an external assembly, the name of the class");
         }
 
+        [ConsoleAction]
+        public void TestDaoRepoHbGen()
+        {
+            Database db = DataProvider.Current.GetAppDatabaseFor(ProcessApplicationNameProvider.Current, this);
+            DaoRepository repo = new DaoRepository(db);
+            repo.BaseNamespace = typeof(ShellDescriptor).Namespace;
+            repo.RequireCuid = true;
+            repo.AddType<ShellDescriptor>();
+            ShellDescriptor d = new ShellDescriptor(){AssemblyName = "Ass", NameSpace = "Ns"};
+            d = repo.Save(d);
+
+            ShellDescriptor queried = repo.Query<ShellDescriptor>(c => c.Id == d.Id).FirstOrDefault();
+            Expect.IsNotNull(queried);
+            
+            Expect.AreEqual(d, queried);
+
+            ShellDescriptor retrieved = repo.Retrieve<ShellDescriptor>(d.Id);
+            Expect.IsNotNull(retrieved);
+            
+            Expect.AreEqual(d, retrieved);
+            
+            Pass("yay");
+        }
+        
         #region do not modify
         public static void Start()
         {

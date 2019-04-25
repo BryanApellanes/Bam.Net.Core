@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
+using Bam.Net.Logging;
 using CsQuery.ExtensionMethods;
 
 namespace Bam.Net
@@ -15,6 +17,7 @@ namespace Bam.Net
     {
         public RoslynCompiler()
         {
+            _referencePaths = new HashSet<string>();
             _referenceAssemblies = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
             ReferenceAssemblies = DefaultReferenceAssemblies;
@@ -31,11 +34,28 @@ namespace Bam.Net
             }
         }
 
+        HashSet<string> _referencePaths;
+        public string[] ReferencePaths
+        {
+            get { return _referencePaths.ToArray(); }
+        }
+        
         public OutputKind OutputKind { get; set; }
 
+        public RoslynCompiler AddAssemblyReference(Type type)
+        {
+            return AddAssemblyReference(type.Assembly);
+        }
+
+        public RoslynCompiler AddAssemblyReference(Assembly assembly)
+        {
+            _referenceAssemblies.Add(assembly);
+            return this;
+        }
+        
         public RoslynCompiler AddAssemblyReference(string path)
         {
-            _referenceAssemblies.Add(Assembly.LoadFile(path));
+            _referencePaths.Add(path);
             return this;
         }
         
@@ -45,16 +65,27 @@ namespace Bam.Net
             return this;
         }
         
-        public Assembly Compile(DirectoryInfo directoryInfo, string assemblyFileName)
+        public Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo)
         {
-            return Compile(directoryInfo.GetFiles("*.cs").ToArray(), assemblyFileName);
+            return CompileAssembly(assemblyFileName, directoryInfo.GetFiles("*.cs").ToArray());
         }
 
-        public Assembly Compile(FileInfo[] sourceFiles, string assemblyFileName)
+        public Assembly CompileAssembly(string assemblyFileName, params FileInfo[] sourceFiles)
         {
-            return Assembly.Load(Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray()));
+            return Assembly.Load(Compile(assemblyFileName, sourceFiles));
         }
 
+        public byte[] Compile(string assemblyFileName, DirectoryInfo directoryInfo)
+        {
+            return Compile(assemblyFileName, directoryInfo.GetFiles("*.cs").ToArray());
+        }
+        
+        public byte[] Compile(string assemblyFileName, params FileInfo[] sourceFiles)
+        {
+            return Compile(assemblyFileName,
+                sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray());
+        }
+        
         public byte[] Compile(string assemblyName, string sourceCode)
         {
             SyntaxTree tree = SyntaxFactory.ParseSyntaxTree(sourceCode);
@@ -69,7 +100,11 @@ namespace Bam.Net
         public byte[] Compile(string assemblyName, Func<MetadataReference[]> getMetaDataReferences, params SyntaxTree[] syntaxTrees)
         {
             getMetaDataReferences = getMetaDataReferences ?? GetMetadataReferences;
-            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, syntaxTrees, getMetaDataReferences(), new CSharpCompilationOptions(this.OutputKind));
+            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
+                .WithOptions(new CSharpCompilationOptions(this.OutputKind))
+                .AddReferences(getMetaDataReferences())
+                .AddSyntaxTrees(syntaxTrees);
+            
             using(MemoryStream stream = new MemoryStream())
             {
                 EmitResult compileResult = compilation.Emit(stream);
@@ -90,23 +125,49 @@ namespace Bam.Net
                 {
                     List<Assembly> defaultAssemblies = new List<Assembly>
                     {
-                        typeof(object).Assembly,
                         typeof(System.Dynamic.DynamicObject).Assembly,
                         typeof(System.Xml.XmlDocument).Assembly,
                         typeof(System.Data.DataTable).Assembly,
+                        typeof(object).Assembly,
                         Assembly.GetExecutingAssembly()
                     };
+                    AddCommonReferenceAssemblies(defaultAssemblies);
                     _defaultReferenceAssemblies = defaultAssemblies.ToArray();
                 }
-
+                
                 return _defaultReferenceAssemblies;
+            }
+        }
+
+        private static void AddCommonReferenceAssemblies(List<Assembly> defaultAssemblies)
+        {
+            RuntimeConfig config = RuntimeSettings.GetConfig();
+            DirectoryInfo commonAssemblies = new DirectoryInfo(config.ReferenceAssembliesDir);
+            if (commonAssemblies.Exists)
+            {
+                foreach (FileInfo file in commonAssemblies.GetFiles())
+                {
+                    if (file.HasExtension(".dll") || file.HasExtension(".exe"))
+                    {
+                        try
+                        {
+                            defaultAssemblies.Add(Assembly.LoadFile(file.FullName));
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warn("Exception loading reference assembly {0}: {1}", file.FullName, ex.Message);
+                        }
+                    }
+                }
             }
         }
 
         private MetadataReference[] GetMetadataReferences()
         {
-            MetadataReference[] metaDataReferences = ReferenceAssemblies.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray();
-            return metaDataReferences;
+            List<MetadataReference> metadataReferences = new List<MetadataReference>();
+            metadataReferences.AddRange(ReferencePaths.Select(p => MetadataReference.CreateFromFile(p)));
+            metadataReferences.AddRange(ReferenceAssemblies.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());
+            return metadataReferences.ToArray();
         }
     }
 }

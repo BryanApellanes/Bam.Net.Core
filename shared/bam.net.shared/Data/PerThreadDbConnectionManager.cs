@@ -34,7 +34,7 @@ namespace Bam.Net.Data
             {
                 if (!Exec.SleepUntil(() => _connections.Count < MaxConnections, out int slept, LifetimeMilliseconds))
                 {
-                    Log.TraceWarn("Waited {0} milliseconds for connection count to drop but they were never below {1}, releasing all connections", slept, MaxConnections);
+                    Log.Trace("Waited {0} milliseconds for connection count to drop but they were never below {1}, releasing all connections", slept, MaxConnections);
                     ReleaseAllConnections();
                 }
             }
@@ -98,7 +98,7 @@ namespace Bam.Net.Data
             if(!_connections.TryAdd(threadId, connection))
             {
                 DbConnection c = connection;                
-                Log.TraceInfo("{0}: Failed to add DbConnection to inner tracking dictionary", nameof(PerThreadDbConnectionManager));
+                Log.Trace("{0}: Failed to add DbConnection to inner tracking dictionary", nameof(PerThreadDbConnectionManager));
                 Exec.After(LifetimeMilliseconds, () => ReleaseConnection(c));
             }
         }

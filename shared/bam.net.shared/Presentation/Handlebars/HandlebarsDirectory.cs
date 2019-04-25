@@ -140,6 +140,12 @@ namespace Bam.Net.Presentation.Handlebars
         public HashSet<DirectoryInfo> PartialsDirectories { get; set; }
         object _reloadLock = new object();
         bool _loaded = false;
+
+        public bool IsLoaded
+        {
+            get { return _loaded; }
+        }
+
         public void Reload()
         {
             Load(true);

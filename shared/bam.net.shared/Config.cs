@@ -19,26 +19,42 @@ namespace Bam.Net
         {
             ApplicationNameProvider = ProcessApplicationNameProvider.Current;
         }
-        
-        public Config()
+
+        public Config() : this(true)
+        {
+        }
+
+        private Config(bool subscribeToChanges)
         {
             AppSettings = Read(out FileInfo file);
             File = file;
-            ConfigChangeWatcher = File.OnChange((o, a) =>
-            {
-                Config oldConfig = this.CopyAs<Config>();
-                AppSettings = Read();
-                Config newConfig = this;
-                ConfigChangedEventArgs args = new ConfigChangedEventArgs()
-                {
-                    OldConfig = oldConfig, NewConfig = newConfig
-                };
-                FireEvent(ConfigChanged, this, args);
-            });
-        }
 
+            if(subscribeToChanges)
+            {
+                ConfigChangeWatcher = File.OnChange((o, a) =>
+                {
+                    Config oldConfig = new Config(false)
+                    {
+                        AppSettings = AppSettings
+                    };
+                    AppSettings = Read();
+                    Config newConfig = this;
+                    ConfigChangedEventArgs args = new ConfigChangedEventArgs()
+                    {
+                        OldConfig = oldConfig,
+                        NewConfig = newConfig
+                    };
+                    FireEvent(ConfigChanged, this, args);
+                });
+            }
+        }
+        
         static Config _current;
         static object _currentLock = new object();
+        
+        /// <summary>
+        /// Config for the current process; may be overwritten.
+        /// </summary>
         public static Config Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => new Config()); }
@@ -48,14 +64,14 @@ namespace Bam.Net
         protected FileSystemWatcher ConfigChangeWatcher { get; set; }
         public event EventHandler ConfigChanged;
         public FileInfo File { get; set; }
-
+        
         public Workspace Workspace
         {
             get { return Workspace.Current; }
         }
 
         public Dictionary<string, string> AppSettings { get; set; }
-
+        
         public string this[string key, string defaultValue = null]
         {
             get
@@ -67,18 +83,40 @@ namespace Bam.Net
 
                 if (!string.IsNullOrEmpty(defaultValue))
                 {
-                    BamEnvironmentVariables.SetBamVariable(key, defaultValue);
                     AppSettings.Add(key, defaultValue);
+                    Write(AppSettings);
                 }
 
                 return defaultValue;
             }
+            set
+            {
+                if (AppSettings.ContainsKey(key))
+                {
+                    AppSettings[key] = value;
+                }
+                else
+                {
+                    AppSettings.Add(key, value);
+                }
+                Write(AppSettings);
+            }
         }
 
+        static IApplicationNameProvider _applicationNameProvider;
         public static IApplicationNameProvider ApplicationNameProvider
         {
-            get;
-            set;
+            get
+            {
+                if (_applicationNameProvider == null)
+                {
+                    _applicationNameProvider = ProcessApplicationNameProvider.Current;
+                }
+
+                return _applicationNameProvider;
+            }
+            
+            set { _applicationNameProvider = value; }
         }
         
         public static Dictionary<string, string> Read()
@@ -92,11 +130,14 @@ namespace Bam.Net
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
         
-        public static void Write(Dictionary<string, string> appSettings)
+        public static void Write(Dictionary<string, string> appSettings, bool setBamEnvironmentVariables = true)
         {
-            foreach (string key in appSettings.Keys)
+            if (setBamEnvironmentVariables)
             {
-                BamEnvironmentVariables.SetBamVariable(key, appSettings[key]);
+                foreach (string key in appSettings.Keys)
+                {
+                    BamEnvironmentVariables.SetBamVariable(key, appSettings[key]);
+                }
             }
             FileInfo configFile = GetFile();
             if (configFile.Exists)
@@ -171,11 +212,15 @@ namespace Bam.Net
         
         public static FileInfo GetFile(IApplicationNameProvider applicationNameProvider = null)
         {
+            applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            Log.Trace("Config using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
+            string providedAppName = applicationNameProvider.GetApplicationName();
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
             string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
-            string path = applicationNameProvider != null
-                ? Path.Combine(BamPaths.ConfPath, assemblyName, $"{applicationNameProvider.GetApplicationName()}.appsettings.yaml")
+            string path = !providedAppName.StartsWith("UNKNOWN")
+                ? Path.Combine(BamPaths.ConfPath, assemblyName, $"{providedAppName}.appsettings.yaml")
                 : Path.Combine(BamPaths.ConfPath, assemblyName, $"{assemblyName}.appsettings.yaml"); 
+            Log.Trace("config file path = {0}", path);
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
             {
@@ -186,6 +231,16 @@ namespace Bam.Net
                 System.IO.File.Create(configFile.FullName).Dispose();
             }
             return configFile;
+        }
+        
+        /// <summary>
+        /// Get the name of the entry assembly without extension.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetHostServiceName()
+        {
+            string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
+            return Path.GetFileNameWithoutExtension(assemblyFile);
         }
     }
 }

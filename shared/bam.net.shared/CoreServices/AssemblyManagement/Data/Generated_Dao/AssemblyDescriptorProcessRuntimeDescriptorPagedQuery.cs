@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 {
     public class AssemblyDescriptorProcessRuntimeDescriptorPagedQuery: PagedQuery<AssemblyDescriptorProcessRuntimeDescriptorColumns, AssemblyDescriptorProcessRuntimeDescriptor>
     { 
-		public AssemblyDescriptorProcessRuntimeDescriptorPagedQuery(AssemblyDescriptorProcessRuntimeDescriptorColumns orderByColumn, AssemblyDescriptorProcessRuntimeDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public AssemblyDescriptorProcessRuntimeDescriptorPagedQuery(AssemblyDescriptorProcessRuntimeDescriptorColumns orderByColumn,AssemblyDescriptorProcessRuntimeDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

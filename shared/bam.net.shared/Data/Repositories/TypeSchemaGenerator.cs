@@ -122,7 +122,7 @@ namespace Bam.Net.Data.Repositories
             TypeSchema typeSchema = CreateTypeSchema(types, schemaName);
             FireEvent(CreatingTypeSchemaFinished, EventArgs.Empty);
 
-            schemaName = schemaName ?? string.Format("_{0}_", typeSchema.Name);
+            schemaName = schemaName ?? $"_{typeSchema.Name}_";
             SchemaManager.SetSchema(schemaName, false); //TODO: enable more granular manipulation of schema file path in schema manager by giving it a PathProvider property
             SchemaName = schemaName;
 
@@ -137,12 +137,22 @@ namespace Bam.Net.Data.Repositories
 
             return result;
         }
-
+        
         protected internal TypeSchema CreateTypeSchema(params Type[] types)
         {
             return CreateTypeSchema((IEnumerable<Type>)types);
         }
 
+        public TypeSchema CreateTypeSchema()
+        {
+            return CreateTypeSchema(Types);
+        }
+
+        public SchemaDefinition CreateSchema(string schemaName)
+        {
+            return CreateSchemaDefinition(Types, schemaName).SchemaDefinition;
+        }
+        
         /// <summary>
         /// Create a TypeSchema from the specified types
         /// </summary>

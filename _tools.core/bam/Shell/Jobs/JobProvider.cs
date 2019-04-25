@@ -23,14 +23,20 @@ namespace Bam.Shell.Jobs
             set { _jobManagerService = value; }
         }
 
-        public override void RegisterArguments()
+        public override void RegisterArguments(string[] args)
         {
-            base.RegisterArguments();
+            RawArguments = args;
+            base.RegisterArguments(args);
+            AddValidArgument("copyName", "The name of the job copy");
+            AddValidArgument("newName", "The name to rename the job to");
         }
+        
         protected override ProviderArguments GetProviderArguments()
         {
             return GetProviderArguments(false);
         }
+        
+        public string[] RawArguments { get; private set; }
         
         protected ProviderArguments GetProviderArguments(bool full = false)
         {
@@ -86,6 +92,49 @@ namespace Bam.Shell.Jobs
             Exit(0);
         }
 
+        public override void Copy(Action<string> output = null, Action<string> error = null)
+        {
+            try
+            {
+                PrintMessage();
+                JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
+                string jobName = arguments.JobName;
+                
+                JobConf copy = JobManagerService.CopyJob(jobName,
+                    GetArgument("copyName", "Please enter the name of the copy"));
+                OutLine(copy.ToYaml(), ConsoleColor.Cyan);
+                OutLineFormat("Copied job {0} to {1} in directory {2}", ConsoleColor.Cyan, jobName, copy.Name, copy.JobDirectory);
+            }
+            catch (Exception ex)
+            {
+                OutLineFormat("Exception copying job: {0}", ex.Message);
+                Exit(1);
+            }
+            Exit(0);
+        }
+
+        public override void Rename(Action<string> output = null, Action<string> error = null)
+        {
+            try
+            {
+                PrintMessage();
+                JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
+                string jobName = arguments.JobName;
+
+                JobConf jobConf = JobManagerService.MoveJob(jobName,
+                    GetArgument("newName", "Please enter the new name to give to the job"));
+
+                OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
+                OutLineFormat("Renamed job {0} to {1} in directory {2}", ConsoleColor.Cyan, jobName, jobConf.Name, jobConf.JobDirectory);
+            }
+            catch (Exception ex)
+            {
+                OutLineFormat("Exception renaming job: {0}", ex.Message);
+                Exit(1);
+            }
+            Exit(0);
+        }
+        
         public override void Show(Action<string> output = null, Action<string> error = null)
         {
             try
@@ -94,8 +143,16 @@ namespace Bam.Shell.Jobs
                 JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
                 string jobName = arguments.JobName;
 
-                JobConf jobConf = JobManagerService.GetJob(jobName);
-                OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
+                if (JobManagerService.JobExists(jobName))
+                {
+                    JobConf jobConf = JobManagerService.GetJob(jobName);
+                    OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);
+                }
+                else
+                {
+                    PrintMessage();
+                    OutLineFormat("Specified job does not exist: {0}", ConsoleColor.Yellow, jobName);
+                }
             }
             catch (Exception ex)
             {
@@ -106,18 +163,21 @@ namespace Bam.Shell.Jobs
             Exit(0);
         }
 
-        public override void Pack(Action<string> output = null, Action<string> error = null)
-        {
-            OutLineFormat("Pack is not implemented for the JobProvider", ConsoleColor.Yellow);
-        }
-
         public override void Remove(Action<string> output = null, Action<string> error = null)
         {
             try
             {
                 JobProviderArguments providerArguments = GetProviderArguments() as JobProviderArguments;
-                JobManagerService.RemoveJob(providerArguments.JobName);
-                OutLineFormat("Job {0} was deleted", ConsoleColor.Yellow, providerArguments.JobName);
+                if(JobManagerService.JobExists(providerArguments.JobName))
+                {
+                    JobManagerService.RemoveJob(providerArguments.JobName);
+                    OutLineFormat("Job {0} was deleted", ConsoleColor.Yellow, providerArguments.JobName);
+                }
+                else
+                {
+                    PrintMessage();
+                    OutLineFormat("Specified job doesn't exist: {0}", providerArguments.JobName);
+                }
             }
             catch (Exception ex)
             {
@@ -142,7 +202,7 @@ namespace Bam.Shell.Jobs
                         jobFinished = (args.Cast<WorkStateEventArgs>())?.WorkState?.JobName?.Equals(providerArguments.JobName);
                         if (jobFinished != null && jobFinished.Value == true)
                         {
-                            OutLineFormat("Job {0} finished", providerArguments.JobName);
+                            OutLineFormat("Job {0} finished", ConsoleColor.Cyan, providerArguments.JobName);
                             Unblock();
                         }
                     };

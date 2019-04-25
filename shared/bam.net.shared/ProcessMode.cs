@@ -22,11 +22,6 @@ namespace Bam.Net
     /// </summary>
     public class ProcessMode
     {
-        static ProcessMode()
-        {
-            Current = FromConfig;
-        }
-
         public ProcessModes Mode { get; set; }
         public static ProcessMode FromConfig
         {
@@ -41,11 +36,34 @@ namespace Bam.Net
         {
             get { return new ProcessMode {Mode = BamEnvironmentVariables.ProcessMode()}; }
         }
-        
+
+        static ProcessMode _current;
         public static ProcessMode Current
         {
-            get;
-            set;
+            get 
+            {
+                if (_current == null)
+                {
+                    string processModeArg = Environment.GetCommandLineArgs()
+                        .FirstOrDefault(a => a.StartsWith("/ProcessMode"));
+                    if (!string.IsNullOrEmpty(processModeArg))
+                    {
+                        string[] split = processModeArg.DelimitSplit(":");
+                        if (split.Length == 2)
+                        {
+                            _current = FromString(split[1]);
+                        }
+                    }
+                }
+
+                if (_current == null)
+                {
+                    _current = FromString("Dev");
+                }
+
+                return _current;
+            }
+            set { _current = value; }
         }
 
         public static ProcessMode Dev { get { return new ProcessMode { Mode = ProcessModes.Dev }; } }

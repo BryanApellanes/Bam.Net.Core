@@ -10,7 +10,6 @@ using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Net.Data.Repositories
 {
-    // TODO: rename this to DefaultDataProvider 
     public partial class DataProvider : DatabaseProvider<SQLiteDatabase>, IDataDirectoryProvider, IRepositoryProvider
     {
         public DataProvider()

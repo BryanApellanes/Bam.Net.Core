@@ -88,7 +88,7 @@ namespace Bam.Net
                 });
             }
         }
-
+        
         static Dictionary<ExistingFileAction, Action<Stream, FileInfo>> _writeResourceActions;
         static object _writeResourceActionsLock = new object();
         public static Dictionary<ExistingFileAction, Action<Stream, FileInfo>> WriteResourceActions
@@ -119,6 +119,12 @@ namespace Bam.Net
             }
         }
         
+        /// <summary>
+        /// Deserialize the specified file using the file extension to determine the format.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T FromFile<T>(this FileInfo file)
         {
             return Deserialize<T>(file);
@@ -870,12 +876,15 @@ namespace Bam.Net
             writer.Write(string.Join(",", values.ToArray()));
         }
 
-        public static void WriteToStream(this string text, Stream writeTo)
+        public static void WriteToStream(this string text, Stream writeTo, bool dispose = true)
         {
-            using (StreamWriter sw = new StreamWriter(writeTo))
+            StreamWriter sw = new StreamWriter(writeTo);
+            sw.Write(text);
+            sw.Flush();
+
+            if (dispose)
             {
-                sw.Write(text);
-                sw.Flush();
+                sw.Dispose();
             }
         }
 
@@ -956,6 +965,16 @@ namespace Bam.Net
             }
         }
 
+        public static bool ExtendsType(this Type type, Type extends)
+        {
+            if (type == extends)
+            {
+                return false;
+            }
+            TypeInheritanceDescriptor descriptor = new TypeInheritanceDescriptor(type);
+            return descriptor.Extends(extends);
+        }
+        
         public static bool ExtendsType<T>(this Type type)
         {
             if (type == typeof(T))
@@ -3653,8 +3672,12 @@ namespace Bam.Net
             {
                 if (destProp.IsCompatibleWith(sourceProp))
                 {
-                    object value = sourceProp.GetValue(source, null);
-                    destProp.SetValue(destination, value, null);
+                    ParameterInfo[] indexParameters = sourceProp.GetIndexParameters();
+                    if (indexParameters == null || indexParameters.Length == 0)
+                    {
+                        object value = sourceProp.GetValue(source, null);
+                        destProp.SetValue(destination, value, null);
+                    }
                 }
             }
         }

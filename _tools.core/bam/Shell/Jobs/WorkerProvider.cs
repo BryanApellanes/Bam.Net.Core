@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using bam.Shell;
 using Bam.Net;
 using Bam.Net.Automation;
 using Bam.Net.CommandLine;
@@ -27,9 +26,12 @@ namespace Bam.Shell.Jobs
             set { _jobManagerService = value; }
         }
 
-        public override void RegisterArguments()
+        public string[] RawArguments { get; private set; }
+        
+        public override void RegisterArguments(string[] args)
         {
-            base.RegisterArguments();
+            RawArguments = args;
+            base.RegisterArguments(args);
             AddValidArgument("worker", "The name of the worker to work with");
             AddValidArgument("workerType", "When adding a worker, the type of the worker to add");
             
@@ -151,7 +153,7 @@ namespace Bam.Shell.Jobs
         {
             try
             {
-                JobProviderArguments providerArguments = GetProviderArguments(true) as JobProviderArguments;
+                JobProviderArguments providerArguments = GetProviderArguments(true, true) as JobProviderArguments;
                 JobConf jobConf = GetJobConf(providerArguments.JobName);
                 WorkerConf worker = jobConf.GetWorkerConf(providerArguments.WorkerName);
                 if (worker == null)
@@ -202,6 +204,7 @@ namespace Bam.Shell.Jobs
                 }
 
                 ProcessOutput processOutput = ShellSettings.Current.Editor.Start(workerConf.LoadedFrom);
+                jobConf.Save();
                 Exit(0);
             }
             catch (Exception ex)

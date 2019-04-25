@@ -45,6 +45,7 @@ namespace Bam.Net.Logging
         [XmlIgnore]
         [YamlIgnore]
         [JsonIgnore]
+        [Exclude]
         public virtual ILogger[] Subscribers
         {
             get { return _subscribers.ToArray(); }

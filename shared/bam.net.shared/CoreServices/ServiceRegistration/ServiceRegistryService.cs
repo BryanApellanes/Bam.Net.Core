@@ -226,6 +226,11 @@ namespace Bam.Net.CoreServices
             return results;
         }
 
+        /// <summary>
+        /// Register methods of the specified type where the method is decorated with the ServiceRegistryLoaderAttribute.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         [Local]
         public List<ServiceRegistryContainerRegistrationResult> RegisterServiceRegistryContainer(Type type)
         {

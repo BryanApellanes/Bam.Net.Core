@@ -19,12 +19,17 @@ namespace Bam.Net
 
             return Get(BAM_HOME).Or(BamPaths.BamHome);
         }
+
+        public static void SetApplicationName(string applicationName)
+        {
+            Set(BAM_APPLICATION_NAME, applicationName);
+        }
         
         public static string ApplicationName(string applicationName = null)
         {
             if (applicationName != null)
             {
-                Set(BAM_APPLICATION_NAME, applicationName);
+                SetApplicationName(applicationName);
             }
 
             return Get(BAM_APPLICATION_NAME).Or(ApplicationNameProvider.Default.GetApplicationName());

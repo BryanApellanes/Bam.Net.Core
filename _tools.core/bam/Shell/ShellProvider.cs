@@ -3,13 +3,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Bam.Net;
+using Bam.Net.Application;
+using Bam.Net.Data;
 using Bam.Net.Presentation.Handlebars;
+using Bam.Net.Services;
 using Bam.Net.Testing;
 using Bam.Shell.Jobs;
+using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Shell
 {
-    public abstract class ShellProvider : CommandLineTestInterface
+    public abstract class ShellProvider : CommandLineServiceInterface, IRegisterArguments
     {
         public abstract void List(Action<string> output = null, Action<string> error = null);
         public abstract void Add(Action<string> output = null, Action<string> error = null);
@@ -17,14 +21,24 @@ namespace Bam.Shell
         public abstract void Remove(Action<string> output = null, Action<string> error = null);
         public abstract void Run(Action<string> output = null, Action<string> error = null);
 
-        public virtual void Edit(Action<string> output = null, Action<string> error = null)
+        public virtual void Copy(Action<string> output = null, Action<string> error = null)
         {
-            error($"Edit is not implemented for the current shell provider: {GetType().FullName}");
+            NotImplemented("Copy", error);
         }
 
-        public virtual void Pack(Action<string> output = null, Action<string> error = null)
+        public virtual void Rename(Action<string> output = null, Action<string> error = null)
         {
-            error($"Pack is not implemented for the current shell provider: {GetType().FullName}");
+            NotImplemented("Rename", error);
+        }
+        
+        public virtual void Edit(Action<string> output = null, Action<string> error = null)
+        {
+            NotImplemented("Edit", error);
+        }
+
+        private void NotImplemented(string actionName, Action<string> outputter)
+        {
+            outputter($"{actionName} is not implemented for the specified shell provider: {GetType().FullName}");
         }
         
         static HandlebarsDirectory _handlebarsDirectory;
@@ -59,9 +73,10 @@ namespace Bam.Shell
                 return _providerType;
             }
         }
-        
-        public virtual void RegisterArguments()
+        public string[] RawArguments { get; private set; }
+        public virtual void RegisterArguments(string[] args)
         {
+            RawArguments = args;
             AddValidArgument("name", $"The name of the {ProviderType} to work with");
             AddValidArgument("format", "The desired output format: json | yaml");
         }
@@ -196,6 +211,23 @@ namespace Bam.Shell
             {
                 file.Directory.Create();
             }
+        }
+        
+        protected Role GetRole()
+        {
+            string roleName = GetArgument("roleName", "Please enter the name of the role.");
+            return Role.FirstOneWhere(c => c.Name == roleName, GetUserDb());
+        }
+        
+        protected User GetUser()
+        {
+            string userName = GetArgument("userName", "Please enter the name of the user.");
+            return User.FirstOneWhere(c => c.UserName == userName, GetUserDb());
+        }
+
+        protected Database GetUserDb()
+        {
+            return ServiceTools.GetUserDatabase();
         }
     }
 }

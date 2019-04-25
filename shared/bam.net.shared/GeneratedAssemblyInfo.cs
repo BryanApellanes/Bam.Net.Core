@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using System.CodeDom.Compiler;
+using System.Xml.Serialization;
+using Bam.Net.Logging;
+using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net
 {
@@ -46,10 +50,20 @@ namespace Bam.Net
             Assembly = compilerResults.CompiledAssembly;
         }
 
-        public GeneratedAssemblyInfo(string infoFileName, Assembly assembly) : this(infoFileName)
+        public GeneratedAssemblyInfo(string infoFileName, Assembly assembly, byte[] bytes = null) : this()
         {
-            AssemblyFilePath = assembly.GetFileInfo().FullName;
-            Assembly = assembly;
+	        InfoFileName = infoFileName;
+	        Assembly = assembly;
+	        if (bytes != null)
+	        {
+		        AssemblyBytes = bytes;
+	        }
+        }
+        
+        public GeneratedAssemblyInfo(string infoFileName, byte[] bytes) : this(infoFileName)
+        {
+            Assembly = Assembly.Load(bytes);
+            AssemblyBytes = bytes;
         }
 
         internal GeneratedAssemblyInfo(Assembly assembly)
@@ -64,8 +78,14 @@ namespace Bam.Net
 		/// <summary>
 		/// The path to the Assembly (.dll)
 		/// </summary>
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public string AssemblyFilePath { get; set; }
 
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public bool AssemblyExists
 		{
 			get
@@ -74,8 +94,13 @@ namespace Bam.Net
 			}
 		}
 
+		public byte[] AssemblyBytes { get; set; }
+		
 		Assembly _assembly;
 
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public Assembly Assembly
 		{
 			get
@@ -92,14 +117,27 @@ namespace Bam.Net
 		{
 			if (_assembly == null)
 			{
-				_assembly = Assembly.LoadFrom(AssemblyFilePath);
+				if (AssemblyBytes != null)
+				{
+					_assembly = Assembly.Load(AssemblyBytes);
+				}
+				if (_assembly == null && !string.IsNullOrEmpty(AssemblyFilePath) && File.Exists(AssemblyFilePath))
+				{
+					_assembly = Assembly.LoadFrom(AssemblyFilePath);
+				}
 			}
 
 			return _assembly;
 		}
 
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public string Root { get; set; }
 
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public string InfoFilePath
 		{
 			get
@@ -108,6 +146,9 @@ namespace Bam.Net
             }
 		}
 
+		[XmlIgnore]
+		[YamlIgnore]
+		[JsonIgnore]
 		public bool InfoFileExists
 		{			
 			get

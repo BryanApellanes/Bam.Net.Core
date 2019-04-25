@@ -13,13 +13,18 @@ namespace Bam.Net.Services
 {
     public class ServiceProxyServer : SimpleServer<ServiceProxyResponder>
     {
+        public ServiceProxyServer(ServiceRegistry serviceRegistry, ILogger logger = null) : this(serviceRegistry,
+            new ServiceProxyResponder(new BamConf(), logger), logger)
+        {
+        }
+
         public ServiceProxyServer(ServiceRegistry serviceRegistry, ServiceProxyResponder responder, ILogger logger) : base(responder, logger)
         {
             ServiceSubdomains = new HashSet<ServiceSubdomainAttribute>();
             RegisterServices(serviceRegistry);            
         }
 
-        public void RegisterServices(ServiceRegistry serviceRegistry, bool requireApiKeyResover = false)
+        public void RegisterServices(ServiceRegistry serviceRegistry, bool requireApiKeyResolver = false)
         {
             ServiceRegistry = new WebServiceRegistry(serviceRegistry);
             Responder.ClearCommonServices();
@@ -32,7 +37,7 @@ namespace Bam.Net.Services
                     ServiceSubdomains.Add(attr);
                 }
             }
-            SetApiKeyResolver(serviceRegistry, requireApiKeyResover ? ApiKeyResolver.Default : null);
+            SetApiKeyResolver(serviceRegistry, requireApiKeyResolver ? ApiKeyResolver.Default : null);
         }
 
         public override void Start()

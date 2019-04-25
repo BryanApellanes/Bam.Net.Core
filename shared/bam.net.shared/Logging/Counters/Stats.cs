@@ -38,7 +38,7 @@ namespace Bam.Net.Logging.Counters
             timer.End();
             if(!_stats.TryRemove(name, out Stats value))
             {
-                Log.TraceInfo("Failed to remove timer {0}", name);
+                Log.Trace("Failed to remove timer {0}", name);
             }
             return timer;
         }
@@ -103,7 +103,7 @@ namespace Bam.Net.Logging.Counters
             }
             else
             {
-                Log.TraceInfo("Failed to get stats instance of type {0} named {1}", typeof(T).Name, name);
+                Log.Trace("Failed to get stats instance of type {0} named {1}", typeof(T).Name, name);
                 return new T { Value = initialValue };
             }
         }

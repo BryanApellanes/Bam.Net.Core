@@ -1,0 +1,5 @@
+{
+  "ApplicationName": "heart.bamapps.net",
+  "HostNames": "int-heart.bamapps.net,localhost",
+  "Port": "80"
+}

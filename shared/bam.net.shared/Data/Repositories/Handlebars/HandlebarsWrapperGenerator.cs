@@ -9,6 +9,16 @@ namespace Bam.Net.Data.Repositories.Handlebars
 {
     public class HandlebarsWrapperGenerator : WrapperGenerator
     {
+        public HandlebarsWrapperGenerator()
+        {
+        }
+
+        public HandlebarsWrapperGenerator(string wrapperNamespace, string daoNamespace) : base(wrapperNamespace, daoNamespace)
+        {
+            HandlebarsDirectory = new HandlebarsDirectory("./Templates");
+            HandlebarsEmbeddedResources = new HandlebarsEmbeddedResources(this.GetType().Assembly);
+        }
+
         public HandlebarsDirectory HandlebarsDirectory { get; set; }
         public HandlebarsEmbeddedResources HandlebarsEmbeddedResources { get; set; }
 
@@ -18,7 +28,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
             lock (_generateLock)
             {
                 RoslynCompiler compiler = new RoslynCompiler();
-                Assembly assembly = compiler.Compile(new System.IO.DirectoryInfo(WriteSourceTo), $"{WrapperNamespace}.Wrapper.dll");
+                Assembly assembly = compiler.CompileAssembly($"{WrapperNamespace}.Wrapper.dll", new System.IO.DirectoryInfo(WriteSourceTo));
                 GeneratedAssemblyInfo result = new GeneratedAssemblyInfo($"{WrapperNamespace}.Wrapper.dll", assembly);
                 result.Save();
                 return result;
@@ -30,7 +40,8 @@ namespace Bam.Net.Data.Repositories.Handlebars
             WriteSourceTo = writeSourceDir;
             foreach (Type type in TypeSchema.Tables)
             {
-                WrapperModel model = new WrapperModel(type, TypeSchema, WrapperNamespace, DaoNamespace);
+                HandlebarsWrapperModel model = new HandlebarsWrapperModel(type, TypeSchema, WrapperNamespace, DaoNamespace);
+                model.Renderer = new HandlebarsTemplateRenderer(HandlebarsEmbeddedResources, HandlebarsDirectory);
                 string fileName = "{0}Wrapper.cs"._Format(type.Name.TrimNonLetters());
                 using (StreamWriter sw = new StreamWriter(Path.Combine(writeSourceDir, fileName)))
                 {

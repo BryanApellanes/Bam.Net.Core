@@ -116,6 +116,11 @@ namespace Bam.Net.Automation
             }
 
             JobConf jobConf = GetJob(jobName);
+            if (jobConf == null)
+            {
+                jobConf = CreateJobConf(jobName);
+            }
+            
             AddWorker(jobConf, type, workerName);
         }
 
@@ -204,10 +209,44 @@ namespace Bam.Net.Automation
         public virtual string[] ListJobNames()
         {
             DirectoryInfo jobsDirectory = new DirectoryInfo(JobsDirectory);
+            if (!jobsDirectory.Exists)
+            {
+                return new string[] { };
+            }
             DirectoryInfo[] jobDirectories = jobsDirectory.GetDirectories();
             return jobDirectories.Select(jd => jd.Name).ToArray();
         }
 
+        public JobConf MoveJob(string name, string newName)
+        {
+            JobConf copy = CopyJob(name, newName);
+            RemoveJob(name);
+            return copy;
+        }
+        
+        public JobConf CopyJob(string name, string copyName = null)
+        {
+            if (!JobExists(name))
+            {
+                throw new InvalidOperationException("Specified does not exist");
+            }
+            copyName = copyName ?? $"{name}-copy";
+            int num = 1;
+            while (JobExists(copyName))
+            {
+                copyName += num.ToString();
+            }
+            JobConf conf = GetJob(name);
+            JobConf copy = GetJob(copyName);
+            foreach (string workerName in conf.WorkerConfs.Keys)
+            {
+                WorkerConf workerConf = conf[workerName];
+                AddWorker(copy.Name, workerConf.WorkerTypeName, workerName);
+            }
+
+            return copy;
+        }
+        
         public void SaveJob(JobConf jobConf)
         {
             jobConf.JobDirectory = GetJobDirectoryPath(jobConf.Name);
@@ -251,13 +290,8 @@ namespace Bam.Net.Automation
             return null;
         }
 
-        protected internal JobConf CreateJobConf(string name, bool overwrite = false)
+        protected internal JobConf CreateJobConf(string name)
         {
-            if (JobExists(name))
-            {
-                throw new InvalidOperationException("The specified job {0} already exists, use GetJob to get the existing job"._Format(name));
-            }
-
             JobConf conf = new JobConf(name)
             {
                 JobDirectory = GetJobDirectoryPath(name)
@@ -414,7 +448,7 @@ namespace Bam.Net.Automation
                 }
                 catch (Exception ex)
                 {
-                    Log.TraceWarn("Exception running jobs: {0}", ex.Message);
+                    Log.Trace("Exception running jobs: {0}", ex.Message);
                 }
             }
         }
@@ -454,7 +488,7 @@ namespace Bam.Net.Automation
                     }
                     catch (Exception inner)
                     {
-                        Log.TraceWarn("Exception untracking running job: {0}", inner.Message);
+                        Log.Trace("Exception untracking running job: {0}", inner.Message);
                     }
                 }
             }

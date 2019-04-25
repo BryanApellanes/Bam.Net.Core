@@ -22,15 +22,19 @@ namespace Bam.Net.Services.Automation
         {
         }
 
-        public ServiceResponse<CommandInfo> Start(string command)
+        [RoleRequired("/", "Admin")]
+        public ServiceResponse<CommandInfo> Start(CommandRequest commandRequest)
         {
             try
             {
                 UserIsLoggedInOrDie();
-
+                string command = commandRequest.Command;
+                
                 CommandInfo info = new CommandInfo { Command = command };
                 IRepository repo = RepositoryResolver.GetRepository(HttpContext);
                 info = repo.Save(info);
+                
+                // TODO: fix this to redirect output to specified urls in commandrequest
                 Task<ProcessOutput> task = command.RunAsync();
                 task.ContinueWith((t) =>
                 {

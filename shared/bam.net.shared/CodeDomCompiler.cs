@@ -16,20 +16,26 @@ namespace Bam.Net
 
         public Assembly[] ReferenceAssemblies { get; set; }
 
-        public Assembly Compile(DirectoryInfo directoryInfo, string assemblyFileName)
+        public Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo)
         {
             CompilerResults results = AdHocCSharpCompiler.CompileDirectory(directoryInfo, assemblyFileName, ReferenceAssemblies, Path.GetExtension(assemblyFileName).EndsWith("exe"));
             ThrowIfErrors(results);
             return results.CompiledAssembly;
         }
 
-        public Assembly Compile(FileInfo[] files, string assemblyFileName)
+        public Assembly CompileAssembly(string assemblyFileName, FileInfo[] files)
         {
             CompilerResults results = AdHocCSharpCompiler.CompileFiles(files, assemblyFileName, ReferenceAssemblies, Path.GetExtension(assemblyFileName).EndsWith("exe"));
             ThrowIfErrors(results);
             return results.CompiledAssembly;
         }
 
+        public byte[] Compile(string assemblyFileName, params FileInfo[] sourceFiles)
+        {
+            Assembly assembly = CompileAssembly(assemblyFileName, sourceFiles);
+            return File.ReadAllBytes(assembly.GetFilePath());
+        }
+        
         public byte[] Compile(string assemblyFileName, string sourceCode)
         {
             CompilerResults results = AdHocCSharpCompiler.CompileSource(sourceCode, assemblyFileName, ReferenceAssemblies, Path.GetExtension(assemblyFileName).EndsWith("exe"));

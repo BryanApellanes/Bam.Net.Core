@@ -1,15 +1,15 @@
-# Brpc
+# BamRpc
 
 Use Brpc to expose a class definition as a web service.
 
 # TL;DR
 Serve services:	
 
-brpc /serve:[className] /AssemblySearchPattern:[searchPattern]
+bamrpc /serve:[className] /AssemblySearchPattern:[searchPattern]
 
 or
 
-brpc /registries:[commaSeparatedListOfRegistryNames] /AssemblySearchPattern:[searchPattern]
+bamrpc /registries:[commaSeparatedListOfRegistryNames] /AssemblySearchPattern:[searchPattern]
 
 ### Web Service Class
 ```C#

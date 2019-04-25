@@ -1,7 +1,14 @@
+using Bam.Net.Data.Repositories;
+
 namespace Bam.Net.CoreServices.AssemblyManagement.Data
 {
-    public class AssemblyRequest
+    public class AssemblyRequest : RepoData
     {
+        /// <summary>
+        /// The hash of the requested assembly or null if specific version is not required.
+        /// </summary>
+        public string FileHash { get; set; }
+        
         /// <summary>
         /// The full name of the assembly as reported by Assembly.FullName
         /// </summary>

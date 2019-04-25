@@ -15,7 +15,7 @@ namespace Bam.Net
     {
         public SystemPaths()
         {
-            Root = Paths.Root;
+            Root = BamPaths.BamHome;
             Public = BamPaths.PublicPath;
             SystemDrive = Paths.SystemDrive;
             WindowsBamDrive = Paths.WindowsDrive;

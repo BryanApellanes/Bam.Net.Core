@@ -48,7 +48,7 @@ namespace Bam.Net.Logging.Counters
             ++_count;
             if(CountReader != DefaultCountReader)
             {
-                Log.TraceInfo("Increment called on counter ({0}) with custom CountReader; this may not behave as expected.", Name);
+                Log.Trace("Increment called on counter ({0}) with custom CountReader; this may not behave as expected.", Name);
             }
             return this;
         }
@@ -58,7 +58,7 @@ namespace Bam.Net.Logging.Counters
             --_count;
             if (CountReader != DefaultCountReader)
             {
-                Log.TraceWarn("Decrement called on counter ({0}) with custom CountReader; this may not behave as expected.", Name);
+                Log.Trace("Decrement called on counter ({0}) with custom CountReader; this may not behave as expected.", Name);
             }
             return this;
         }

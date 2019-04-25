@@ -6,7 +6,40 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\BamFramework\Bam.Net\bam.net.core\bam.net.core.csproj" />
+        <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\masuco.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\masuco.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\masuco.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\masuco.pdb" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\masuco.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\masuco.dll.manifest" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\masuco.application" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\masuco.pdb" />
+      <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\masuco.dll" />
     </ItemGroup>
 
 </Project>

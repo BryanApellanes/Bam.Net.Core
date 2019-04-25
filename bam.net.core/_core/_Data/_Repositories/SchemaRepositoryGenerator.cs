@@ -22,7 +22,7 @@ namespace Bam.Net.Data.Repositories
                 BaseNamespace = SourceNamespace,
                 SchemaRepositoryNamespace = SchemaRepositoryNamespace,
                 SchemaName = schemaName,
-                Types = Types.Select(t => GetSchemaTypeModel(t)).ToArray()
+                Types = Types.Select(GetSchemaTypeModel).ToArray()
             };
 
             string filePath = Path.Combine(writeSourceTo, $"{schemaName}Repository.cs");

@@ -32,31 +32,13 @@ namespace Bam.Net.Services
             {
                 return _appRegistryLock.DoubleCheckLock(ref _appRegistry, () => Configure(Configurer ?? ((reg) => { })));
             }
-            private set
+            set
             {
                 _appRegistry = value;
             }
         }
 
-        public static Task<ApplicationServiceRegistry> Discovered
-        {
-            get
-            {
-                return Task.Run(() => Discover());
-            }
-        }
-
         public static Action<ApplicationServiceRegistry> Configurer { get; set; }
-
-        public static ApplicationServiceRegistry Discover()
-        {
-            return Discover(Assembly.GetEntryAssembly().GetFileInfo().Directory.FullName);
-        }
-
-        public static ApplicationServiceRegistry Discover(string directoryPath)
-        {
-            return Discover(new DirectoryInfo(directoryPath));
-        }
 
         public static ApplicationServiceRegistry ForApplication()
         {
@@ -70,13 +52,14 @@ namespace Bam.Net.Services
             {
                 if (!_appRegistries.ContainsKey(applicationName))
                 {
-                    DirectoryInfo directoryInfo = Assembly.GetEntryAssembly().GetFileInfo().Directory;
                     _appRegistries.Add(applicationName, Configure((appSvcReg) =>
                     {
-                        ForEachAssemblyIn(directoryInfo, file => TryAddTypes(appSvcReg, file, (t) =>
+                        Workspace workspace = Workspace.ForApplication(applicationName);
+                        DirectoryInfo services = workspace.Directory("services");
+                        if (services.Exists)
                         {
-                            return t.HasCustomAttributeOfType(out AppProviderAttribute attr) && (attr?.ApplicationName?.Equals(applicationName)).Value;
-                        }));
+                            Parallel.ForEach(services.GetFiles("*.dll"), fileInfo => { TryAddTypes(appSvcReg, fileInfo);});
+                        }
                     }));
                 }
                 return _appRegistries[applicationName];
@@ -87,28 +70,7 @@ namespace Bam.Net.Services
             }
             return Configure(a => { });
         }
-
-        static object _discoverLock = new object();
-        static ApplicationServiceRegistry _discoveredApplicationServiceRegistry;
-        public static ApplicationServiceRegistry Discover(DirectoryInfo directoryInfo)
-        {
-            try
-            {
-                return _discoverLock.DoubleCheckLock(ref _discoveredApplicationServiceRegistry, () =>
-                {
-                    return Configure((appServiceRegistry) =>
-                    {
-                        ForEachAssemblyIn(directoryInfo, file => TryAddTypes(appServiceRegistry, file));
-                    });
-                });                
-            }
-            catch (Exception ex)
-            {
-                Log.Warn("Exception discovering services: {0}", ex, ex.Message);
-            }
-            return Configure(a => { });
-        }
-
+        
         [ServiceRegistryLoader]
         public static ApplicationServiceRegistry Configure(Action<ApplicationServiceRegistry> configure)
         {
@@ -132,20 +94,9 @@ namespace Bam.Net.Services
             return appRegistry;
         }
 
-        private static void ForEachAssemblyIn(DirectoryInfo directoryInfo, Action<FileInfo> action)
-        {
-            foreach (FileInfo file in directoryInfo.GetFiles().Where(file =>
-            {
-                return (file.Extension?.Equals(".dll", StringComparison.InvariantCultureIgnoreCase)).Value || (file.Extension?.Equals(".exe", StringComparison.InvariantCultureIgnoreCase)).Value;
-            }))
-            {
-                action(file);
-            }
-        }
-
         private static void TryAddTypes(ApplicationServiceRegistry appServiceRegistry, FileInfo file)
         {
-            TryAddTypes(appServiceRegistry, file, t => t.HasCustomAttributeOfType<AppProviderAttribute>());
+            TryAddTypes(appServiceRegistry, file, t => t.HasCustomAttributeOfType<AppServiceAttribute>());
         }
 
         private static void TryAddTypes(ApplicationServiceRegistry appServiceRegistry, FileInfo file, Func<Type, bool> predicate)

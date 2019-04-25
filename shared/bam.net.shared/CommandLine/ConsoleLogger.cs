@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 
 namespace Bam.Net.CommandLine
 {
+    // TODO: break this up into ConsoleLogger and DetailConsoleLogger
     public class ConsoleLogger : Logger
     {
         public ConsoleLogger()

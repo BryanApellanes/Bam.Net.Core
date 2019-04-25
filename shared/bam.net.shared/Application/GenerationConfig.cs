@@ -6,7 +6,7 @@ using System.Text;
 namespace Bam.Net.Application
 {
     /// <summary>
-    /// Configuration for generating a schema repository.
+    /// Configuration for generating a dao repository.
     /// </summary>
     public class GenerationConfig
     {
@@ -37,7 +37,7 @@ namespace Bam.Net.Application
         public bool CheckForIds { get; set; }
 
         /// <summary>
-        /// If yes the generated Repository will inherit from DatabaseRepository otherwise DaoRepository
+        /// If yes the when generating a Repository, it will inherit from DatabaseRepository otherwise DaoRepository
         /// </summary>
         public bool UseInheritanceSchema { get; set; }
     }

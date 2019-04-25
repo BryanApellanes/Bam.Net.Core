@@ -27,22 +27,22 @@ namespace Bam.Net.Application
         static string defaultContentRoot = BamPaths.ContentPath;
         static string defaultRpcScriptsSrcPath = BamPaths.RpcScriptsSrcPath;
 
-        static BamRpcServer glooServer;
+        static BamRpcServer bamRpcServer;
         
         [ConsoleAction("startBamRpcServer", "Start the bam rpc server")]
         public void StartBamRpcServerAndPause()
         {
             ConsoleLogger logger = GetLogger();
-            StartGlooServer(logger);
+            StartBamRpcServer(logger);
             Pause("Gloo is running");
         }
 
         [ConsoleAction("killBamRpcServer", "Kill the bam rpc server")]
         public void StopBamRpcServer()
         {
-            if (glooServer != null)
+            if (bamRpcServer != null)
             {
-                glooServer.Stop();
+                bamRpcServer.Stop();
                 Pause("Gloo stopped");
             }
             else
@@ -267,25 +267,25 @@ namespace Bam.Net.Application
             {
                 ServiceRegistry.Default = registry;
             }
-            glooServer = new BamRpcServer(conf, GetLogger(), GetArgument("verbose", "Log responses to the console?").IsAffirmative())
+            bamRpcServer = new BamRpcServer(conf, GetLogger(), GetArgument("verbose", "Log responses to the console?").IsAffirmative())
             {
                 HostPrefixes = new HashSet<HostPrefix>(prefixes),
                 MonitorDirectories = new string[] { }                
             };
-            serviceTypes.Each(t => glooServer.ServiceTypes.Add(t));
+            serviceTypes.Each(t => bamRpcServer.ServiceTypes.Add(t));
 
-            glooServer.Start();
+            bamRpcServer.Start();
         }
         
-        public static void StartGlooServer(ConsoleLogger logger)
+        public static void StartBamRpcServer(ConsoleLogger logger)
         {
             BamConf conf = BamConf.Load(DefaultConfiguration.GetAppSetting(contentRootConfigKey).Or(defaultContentRoot));
-            glooServer = new BamRpcServer(conf, logger, GetArgument("verbose", "Log responses to the console?").IsAffirmative())
+            bamRpcServer = new BamRpcServer(conf, logger, GetArgument("verbose", "Log responses to the console?").IsAffirmative())
             {
                 HostPrefixes = new HashSet<HostPrefix>(HostPrefix.FromDefaultConfiguration("localhost", 9100)),
                 MonitorDirectories = DefaultConfiguration.GetAppSetting("MonitorDirectories").DelimitSplit(",", ";")
             };
-            glooServer.Start();
+            bamRpcServer.Start();
         }
 
         private static ConsoleLogger GetLogger()

@@ -61,7 +61,7 @@ namespace Bam.Net.Server
             {
                 if (_appServiceRegistry == null)
                 {
-                    _appServiceRegistry = ApplicationServiceRegistry.Discover();
+                    _appServiceRegistry = ApplicationServiceRegistry.Current;
                     _appServiceRegistry
                         .For<ContentResponder>().Use(ContentResponder)
                         .For<ITemplateNameResolver>().Use<ContentTemplateNameResolver>()
@@ -124,7 +124,7 @@ namespace Bam.Net.Server
         /// </summary>
         public event Action<BamServer, IResponder, IRequest> Responded;
         /// <summary>
-        /// The event that fires when a repsonse is not sent
+        /// The event that fires when a response is not sent
         /// </summary>
         public event Action<BamServer, IRequest> NotResponded;
         /// <summary>

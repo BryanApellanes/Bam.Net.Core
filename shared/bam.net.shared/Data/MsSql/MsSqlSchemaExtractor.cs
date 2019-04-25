@@ -106,7 +106,6 @@ AND TABLE_NAME = @TableName";
             return Database.GetDataTypeTranslator().TranslateDataType(sqlDataType);
         }
 
-
         internal static DataTable GetForeignKeyData(Database db)
         {
             #region sql
@@ -135,6 +134,7 @@ AND TABLE_NAME = @TableName";
             DataTable foreignKeyData = db.GetDataTable(sql, CommandType.Text);
             return foreignKeyData;
         }
+        
         protected override void SetConnectionName(string connectionString)
         {
             SqlConnectionStringBuilder connectionStringBuilder = Database.CreateConnectionStringBuilder<SqlConnectionStringBuilder>();
@@ -154,6 +154,7 @@ AND TABLE_NAME = @TableName";
 
             Database.ConnectionName = databaseName;
         }
+        
         Dictionary<string, DataTable> _tableColumnInfo = new Dictionary<string, DataTable>();
         private object GetColumnAttribute(string tableName, string columnName, string attributeName)
         {
@@ -171,6 +172,5 @@ AND TABLE_NAME = @TableName";
             }
             return null;
         }
-
     }
 }

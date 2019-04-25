@@ -275,7 +275,7 @@ namespace Bam.Net.Services.DataReplication
                                     JournalEntryWrittenEventArgs eventArgs = new JournalEntryWrittenEventArgs { JournalEntry = journalEntry, File = propertyFile };
                                     FireEvent(EntryFlushed, eventArgs);
                                     journalEntry.OnEntryWritten(this, eventArgs);
-                                    Log.DebugInfo("Entry flushed: {0}", journalEntry.ToString());
+                                    Log.Debug("Entry flushed: {0}", journalEntry.ToString());
                                 }
                             }
                         }
@@ -287,14 +287,14 @@ namespace Bam.Net.Services.DataReplication
                                 _exceptionCount = 0;
                                 FireEvent(QueueEmpty, EventArgs.Empty);
                             }
-                            Log.DebugInfo("Journal Flush thread sleeping: {0}", FlushCycleDelay);
+                            Log.Debug("Journal Flush thread sleeping: {0}", FlushCycleDelay);
                             Thread.Sleep(FlushCycleDelay);
                         }
                     }
                     catch (Exception ex)
                     {
                         _exceptionCount++;
-                        Log.DebugError("Exception in {0}.{1}: Count {2}", ex, nameof(Journal), nameof(FlushQueue), _exceptionCount.ToString());
+                        Log.Debug("Exception in {0}.{1}: Count {2}", ex, nameof(Journal), nameof(FlushQueue), _exceptionCount.ToString());
                         Logger.AddEntry("Exception in {0}.{1}: Count {2}", ex, nameof(Journal), nameof(FlushQueue), _exceptionCount.ToString());
                         if (_exceptionCount >= ExceptionThreshold)
                         {
