@@ -137,17 +137,14 @@ namespace Bam.Net.Logging
 
         private static void WriteTrace(string messageSignature, object[] args)
         {
-            if (ProcessMode.Current.Mode == ProcessModes.Dev || ProcessMode.Current.Mode == ProcessModes.Test)
+            if (TraceOut)
             {
-                if(TraceOut)
+                Task.Run(() =>
                 {
-                    Task.Run(() =>
-                    {
-                        Workspace.Current.WriteLine($"TRACE: {messageSignature}", args);
-                        string message = string.Format(messageSignature, args);
-                        System.Diagnostics.Trace.WriteLine(message);
-                    });
-                }
+                    Workspace.Current.WriteLine($"TRACE: {messageSignature}", args);
+                    string message = string.Format(messageSignature, args);
+                    System.Diagnostics.Trace.WriteLine(message);
+                });
             }
         }
 

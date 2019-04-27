@@ -228,7 +228,7 @@ namespace Bam.Net.Automation
         {
             if (!JobExists(name))
             {
-                throw new InvalidOperationException("Specified does not exist");
+                throw new InvalidOperationException("Specified job does not exist");
             }
             copyName = copyName ?? $"{name}-copy";
             int num = 1;
@@ -246,7 +246,7 @@ namespace Bam.Net.Automation
 
             return copy;
         }
-        
+                
         public void SaveJob(JobConf jobConf)
         {
             jobConf.JobDirectory = GetJobDirectoryPath(jobConf.Name);

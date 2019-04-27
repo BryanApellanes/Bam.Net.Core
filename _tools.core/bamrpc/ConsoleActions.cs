@@ -343,7 +343,7 @@ namespace Bam.Net.Application
 
         private Type GetType(Assembly assembly, string className)
         {
-            return assembly.GetTypes().Where(t => t.Name.Equals(className) || $"{t.Namespace}.{t.Name}".Equals(className)).FirstOrDefault();
+            return assembly.GetTypes().FirstOrDefault(t => t.Name.Equals(className) || $"{t.Namespace}.{t.Name}".Equals(className));
         }
     }
 }

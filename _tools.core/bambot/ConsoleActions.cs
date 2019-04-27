@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
 using Bam.Net.Automation;
 using Bam.Net.CommandLine;
+using Bam.Net.CoreServices;
 using Bam.Net.Server;
 using Bam.Net.Services;
 using Bam.Net.Services.Automation;
@@ -22,10 +24,11 @@ namespace Bam.Net.Application
         [ConsoleAction("S", "Start bambot server")]
         public void StartServer()
         {
-            ServiceProxyServer = new CommandService().Serve();
+            ApplicationServiceRegistry appRegistry = BambotServiceRegistry.ForCurrentProcessMode();
             HashSet<HostPrefix> hostPrefixes = new HashSet<HostPrefix>();
             HostPrefix.FromBamProcessConfig().Each(hp => hostPrefixes.Add(hp));
-            ServiceProxyServer.HostPrefixes = hostPrefixes;
+            ServiceProxyServer = appRegistry.Serve(hostPrefixes.ToArray());
+            
             OutLine($"Config file: {Config.Current.File.FullName}", ConsoleColor.DarkCyan);
             OutLine(Config.Current.File.ReadAllText());
             foreach (HostPrefix hostPrefix in ServiceProxyServer.HostPrefixes)

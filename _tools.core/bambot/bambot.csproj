@@ -14,9 +14,11 @@
       <_UnmanagedRegistrationCache Remove="obj\bambot.csproj.UnmanagedRegistration.cache" />
       <_UnmanagedRegistrationCache Remove="obj\bambot.csproj.UnmanagedRegistration.cache" />
       <_UnmanagedRegistrationCache Remove="obj\bambot.csproj.UnmanagedRegistration.cache" />
+      <_UnmanagedRegistrationCache Remove="obj\bambot.csproj.UnmanagedRegistration.cache" />
     </ItemGroup>
 
     <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bambot.csproj.ResolveComReference.cache" />
       <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bambot.csproj.ResolveComReference.cache" />
       <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bambot.csproj.ResolveComReference.cache" />
       <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bambot.csproj.ResolveComReference.cache" />
@@ -28,9 +30,11 @@
       <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
       <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
       <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
     </ItemGroup>
 
     <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bambot.pdb" />
       <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bambot.pdb" />
       <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bambot.pdb" />
       <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bambot.pdb" />
@@ -42,6 +46,7 @@
       <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
       <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
       <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bambot.dll" />
     </ItemGroup>
 
     <ItemGroup>
@@ -49,6 +54,7 @@
       <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bambot.dll.manifest" />
       <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bambot.dll.manifest" />
       <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bambot.dll.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bambot.dll.manifest" />
     </ItemGroup>
 
     <ItemGroup>
@@ -56,9 +62,12 @@
       <DeployManifest Remove="obj\Debug\netcoreapp2.2\bambot.application" />
       <DeployManifest Remove="obj\Debug\netcoreapp2.2\bambot.application" />
       <DeployManifest Remove="obj\Debug\netcoreapp2.2\bambot.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\bambot.application" />
     </ItemGroup>
 
     <ItemGroup>
+      <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.pdb" />
+      <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.dll" />
       <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.pdb" />
       <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.dll" />
       <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bambot.pdb" />

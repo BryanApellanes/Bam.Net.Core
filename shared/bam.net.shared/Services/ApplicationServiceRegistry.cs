@@ -17,8 +17,7 @@ using Bam.Net.ServiceProxy;
 namespace Bam.Net.Services
 {
     /// <summary>
-    /// A service registry (or dependency injection container) for the currently running application process.  The application name is
-    /// determined by the default configuration file (app.config or web.config).
+    /// A service registry (or dependency injection container) for the currently running application process.  
     /// </summary>
     public class ApplicationServiceRegistry: ServiceRegistry
     {
@@ -40,27 +39,45 @@ namespace Bam.Net.Services
 
         public static Action<ApplicationServiceRegistry> Configurer { get; set; }
 
+        public static ApplicationServiceRegistry ForProcess(Action<ApplicationServiceRegistry> configureMore = null)
+        {
+            return ForApplication(ProcessApplicationNameProvider.Current.GetApplicationName(), configureMore);
+        }
+        
         public static ApplicationServiceRegistry ForApplication()
         {
             return ForApplication(DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName());
         }
 
         static Dictionary<string, ApplicationServiceRegistry> _appRegistries = new Dictionary<string, ApplicationServiceRegistry>();
-        public static ApplicationServiceRegistry ForApplication(string applicationName)
+        static Dictionary<string, Action<ApplicationServiceRegistry>> _applicationConfigurers = new Dictionary<string, Action<ApplicationServiceRegistry>>();
+        public static ApplicationServiceRegistry ForApplication(string applicationName, Action<ApplicationServiceRegistry> configureMore = null)
         {
             try
             {
                 if (!_appRegistries.ContainsKey(applicationName))
                 {
-                    _appRegistries.Add(applicationName, Configure((appSvcReg) =>
+                    if (configureMore == null && _applicationConfigurers.ContainsKey(applicationName))
+                    {
+                        configureMore = _applicationConfigurers[applicationName];
+                    }
+                    else if (configureMore != null)
+                    {
+                        _applicationConfigurers.Set(applicationName, configureMore);
+                    }
+
+                    ApplicationServiceRegistry applicationServiceRegistry = Configure((appSvcReg) =>
                     {
                         Workspace workspace = Workspace.ForApplication(applicationName);
                         DirectoryInfo services = workspace.Directory("services");
                         if (services.Exists)
                         {
-                            Parallel.ForEach(services.GetFiles("*.dll"), fileInfo => { TryAddTypes(appSvcReg, fileInfo);});
+                            Parallel.ForEach(services.GetFiles("*.dll"),
+                                fileInfo => { TryAddTypes(appSvcReg, fileInfo); });
                         }
-                    }));
+                    });
+                    configureMore?.Invoke(applicationServiceRegistry);
+                    _appRegistries.Add(applicationName, applicationServiceRegistry);
                 }
                 return _appRegistries[applicationName];
             }
