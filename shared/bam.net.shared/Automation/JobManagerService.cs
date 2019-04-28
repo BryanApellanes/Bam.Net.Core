@@ -19,9 +19,7 @@ using Bam.Net.Services;
 using Bam.Net.Automation;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Data.Dynamic;
-using Lucene.Net.Analysis.Hunspell;
-using ILogger = NLog.ILogger;
-using Path = System.IO.Path;
+using Bam.Net.UserAccounts;
 
 namespace Bam.Net.Automation
 {
@@ -29,6 +27,7 @@ namespace Bam.Net.Automation
     /// The manager for all jobs.
     /// </summary>
     [Proxy("jobManagerSvc")]
+    [ServiceSubdomain("jobs")]
     public partial class JobManagerService: AsyncProxyableService
     {
         static readonly string ProfigurationSetKey = $"{nameof(JobManagerService)}Settings";
@@ -36,18 +35,31 @@ namespace Bam.Net.Automation
         AutoResetEvent _enqueueSignal;
         AutoResetEvent _runCompleteSignal;
         Thread _runnerThread;
-        protected internal JobManagerService() : this(DefaultConfigurationApplicationNameProvider.Instance, Net.Data.Repositories.DataProvider.Current)
+
+        protected internal JobManagerService() : this(DefaultConfigurationApplicationNameProvider.Instance,
+            Net.Data.Repositories.DataProvider.Current, null)
         {
         }
 
-        public JobManagerService(IApplicationNameProvider appNameProvider, DataProvider dataProvider, Bam.Net.Logging.ILogger logger = null, ProfigurationSet profiguration = null)
+        public JobManagerService(IApplicationNameProvider applicationNameProvider, IDataDirectoryProvider dataProvider) : this(
+            applicationNameProvider, dataProvider, null)
+        {
+        }
+
+        public JobManagerService(IApplicationNameProvider appNameProvider, IDataDirectoryProvider dataProvider,
+            ProfigurationSet profiguration) : this(appNameProvider, dataProvider, Log.Default, profiguration)
+        {
+        }
+
+        public JobManagerService(IApplicationNameProvider appNameProvider, IDataDirectoryProvider dataProvider,
+            Bam.Net.Logging.ILogger logger, ProfigurationSet profiguration = null)
         {
             WorkerTypeProvider = new ScanningWorkerTypeProvider(logger ?? Log.Default);
             TypeResolver = new TypeResolver();
             DataProvider = dataProvider;
             ApplicationNameProvider = appNameProvider;
             JobsDirectory = dataProvider.GetAppDataDirectory(appNameProvider, "Jobs").FullName;
-            ProfigurationSet = profiguration ?? new ProfigurationSet(System.IO.Path.Combine(JobsDirectory, "ProfigurationSet"));
+            ProfigurationSet = profiguration ?? ProfigurationSet.In(JobsDirectory);
             MaxConcurrentJobs = 3;
             _enqueueSignal = new AutoResetEvent(false);
             _runCompleteSignal = new AutoResetEvent(false);
@@ -55,13 +67,13 @@ namespace Bam.Net.Automation
 
         public override object Clone()
         {
-            JobManagerService clone = new JobManagerService(ApplicationNameProvider, DataProvider);
+            JobManagerService clone = new JobManagerService(ApplicationNameProvider, DataProvider, ProfigurationSet);
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;
         }
 
-        public DataProvider DataProvider { get; }        
+        public IDataDirectoryProvider DataProvider { get; }        
         public IWorkerTypeProvider WorkerTypeProvider { get; }
         public ITypeResolver TypeResolver { get; set; }
         public int MaxConcurrentJobs
@@ -107,6 +119,7 @@ namespace Bam.Net.Automation
         /// <param name="workerTypeName"></param>
         /// <param name="workerName"></param>
         /// <returns></returns>
+        [RoleRequired("/", "Admin")]
         public virtual void AddWorker(string jobName, string workerTypeName, string workerName)
         {
             Type type = TypeResolver.ResolveType(workerTypeName);

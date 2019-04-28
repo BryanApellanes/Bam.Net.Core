@@ -25,12 +25,8 @@ namespace Bam.Net.Application
         public void StartServer()
         {
             ApplicationServiceRegistry appRegistry = BambotServiceRegistry.ForCurrentProcessMode();
-            HashSet<HostPrefix> hostPrefixes = new HashSet<HostPrefix>();
-            HostPrefix.FromBamProcessConfig().Each(hp => hostPrefixes.Add(hp));
-            ServiceProxyServer = appRegistry.Serve(hostPrefixes.ToArray());
-            
-            OutLine($"Config file: {Config.Current.File.FullName}", ConsoleColor.DarkCyan);
-            OutLine(Config.Current.File.ReadAllText());
+            ServiceProxyServer = appRegistry.ServeRegistry(HostPrefix.FromBamProcessConfig().ToArray());
+
             foreach (HostPrefix hostPrefix in ServiceProxyServer.HostPrefixes)
             {
                 OutLineFormat("\t{0}", ConsoleColor.Cyan, hostPrefix.ToString());
@@ -46,6 +42,14 @@ namespace Bam.Net.Application
                 ServiceProxyServer.Stop();
                 Pause("Bambot service stopped");
             }
+        }
+
+        [ConsoleAction("config", "Show the current bambot config settings.")]
+        public void ShowConfig()
+        {
+            OutLine($"Config file: {Config.Current.File.FullName}", ConsoleColor.DarkCyan);
+            OutLine(Config.Current.File.ReadAllText());
+            Thread.Sleep(1000);
         }
     }
 }

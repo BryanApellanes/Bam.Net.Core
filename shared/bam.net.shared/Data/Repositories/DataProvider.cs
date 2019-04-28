@@ -179,9 +179,15 @@ namespace Bam.Net.Data.Repositories
             return GetAppDataDirectory(appNameProvider, UsersDirectory);
         }
 
-        public DirectoryInfo GetAppDataDirectory(IApplicationNameProvider appNameProvider, string directoryName)
+        public DirectoryInfo GetAppDataDirectory(IApplicationNameProvider appNameProvider, params string[] directoryName)
         {
-            return new DirectoryInfo(Path.Combine(GetAppDataDirectory(appNameProvider).FullName, directoryName));
+            List<string> pathSegments = new List<string>()
+            {
+                GetAppDataDirectory(appNameProvider).FullName
+            };
+            pathSegments.AddRange(directoryName);
+            
+            return new DirectoryInfo(Path.Combine(pathSegments.ToArray()));
         }
         
         public DirectoryInfo GetAppDatabaseDirectory(IApplicationNameProvider appNameProvider)

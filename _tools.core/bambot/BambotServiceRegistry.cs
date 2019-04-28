@@ -5,6 +5,7 @@ using Bam.Net.CoreServices;
 using Bam.Net.Services;
 using Bam.Net.Services.Automation;
 using System.Linq;
+using Bam.Net.Profiguration;
 
 namespace Bam.Net.Application
 {
@@ -61,6 +62,7 @@ namespace Bam.Net.Application
             ApplicationServiceRegistry result = ForProcess(appSvcReg =>
             {
                 appSvcReg.For<CommandService>().Use<CommandService>();
+                appSvcReg.For<IApplicationNameProvider>().Use<ProcessApplicationNameProvider>();
                 appSvcReg.For<JobManagerService>().Use<JobManagerService>();
             });
             configure?.Invoke(result);

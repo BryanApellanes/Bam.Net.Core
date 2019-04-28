@@ -84,7 +84,7 @@ namespace Bam.Net.Application
             ILogger logger = GetLogger();
             Log.Default = logger;
             ServiceRegistry serviceRegistry = CoreServiceRegistryContainer.Create();
-            server = serviceRegistry.Serve(prefixes, logger);
+            server = serviceRegistry.ServeRegistry(prefixes, logger);
             hostPrefixes = prefixes;
             return serviceRegistry;
         }
