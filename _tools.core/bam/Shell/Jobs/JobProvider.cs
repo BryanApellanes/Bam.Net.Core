@@ -15,7 +15,7 @@ namespace Bam.Shell.Jobs
             {
                 if (_jobManagerService == null)
                 {
-                    _jobManagerService = new JobManagerService(ProcessApplicationNameProvider.Current, DataProvider.Current);
+                    _jobManagerService = JobManagerService.Current;
                 }
                 return _jobManagerService; 
                 
@@ -121,7 +121,7 @@ namespace Bam.Shell.Jobs
                 JobProviderArguments arguments = GetProviderArguments() as JobProviderArguments;
                 string jobName = arguments.JobName;
 
-                JobConf jobConf = JobManagerService.MoveJob(jobName,
+                JobConf jobConf = JobManagerService.RenameJob(jobName,
                     GetArgument("newName", "Please enter the new name to give to the job"));
 
                 OutLine(jobConf.ToYaml(), ConsoleColor.Cyan);

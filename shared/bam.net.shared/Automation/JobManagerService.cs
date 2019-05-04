@@ -73,6 +73,18 @@ namespace Bam.Net.Automation
             return clone;
         }
 
+        static JobManagerService _current;
+        static object _currentLock = new object();
+        public static JobManagerService Current
+        {
+            get
+            {
+                return _currentLock.DoubleCheckLock(ref _current,
+                    () => new JobManagerService(ProcessApplicationNameProvider.Current,
+                        Bam.Net.Data.Repositories.DataProvider.Current));
+            }
+        }
+        
         public IDataDirectoryProvider DataProvider { get; }        
         public IWorkerTypeProvider WorkerTypeProvider { get; }
         public ITypeResolver TypeResolver { get; set; }
@@ -230,14 +242,14 @@ namespace Bam.Net.Automation
             return jobDirectories.Select(jd => jd.Name).ToArray();
         }
 
-        public JobConf MoveJob(string name, string newName)
+        public virtual JobConf RenameJob(string name, string newName)
         {
             JobConf copy = CopyJob(name, newName);
             RemoveJob(name);
             return copy;
         }
         
-        public JobConf CopyJob(string name, string copyName = null)
+        public virtual JobConf CopyJob(string name, string copyName = null)
         {
             if (!JobExists(name))
             {
@@ -260,13 +272,13 @@ namespace Bam.Net.Automation
             return copy;
         }
                 
-        public void SaveJob(JobConf jobConf)
+        public virtual void SaveJob(JobConf jobConf)
         {
             jobConf.JobDirectory = GetJobDirectoryPath(jobConf.Name);
             jobConf.Save();
         }
 
-        public void RemoveJob(string jobName)
+        public virtual void RemoveJob(string jobName)
         {
             DirectoryInfo jobDirectory = new DirectoryInfo(GetJobDirectoryPath(jobName));
             if (jobDirectory.Exists)
@@ -343,7 +355,7 @@ namespace Bam.Net.Automation
             return System.IO.Directory.Exists(jobDirectoryPath);
         }
 
-        public void StartJob(string jobName)
+        public virtual void StartJob(string jobName)
         {
             EnqueueJob(jobName);
         }
@@ -354,7 +366,8 @@ namespace Bam.Net.Automation
         /// </summary>
         /// <param name="name"></param>
         /// <param name="stepNumber"></param>
-        public virtual void EnqueueJob(string name, int stepNumber = 0)
+        [Local]
+        public void EnqueueJob(string name, int stepNumber = 0)
         {
             JobConf conf = GetJobConf(name);
 
@@ -395,6 +408,7 @@ namespace Bam.Net.Automation
         /// must be called prior to queueing up jobs
         /// or the jobs will not be run.
         /// </summary>
+        [Local]
         public void StartJobRunnerThread()
         {
             _runnerThread = new Thread(JobRunner)
@@ -405,6 +419,7 @@ namespace Bam.Net.Automation
             _isRunning = true;
         }
 
+        [Local]
         public void StopJobRunnerThread()
         {
             try

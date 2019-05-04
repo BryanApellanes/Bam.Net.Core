@@ -9,6 +9,7 @@ using Bam.Net.Data.Repositories.Handlebars;
 using Bam.Net.Logging;
 using Bam.Shell;
 using Bam.Shell.Conf;
+using Bam.Shell.Pack;
 using Bam.Shell.ShellGeneration.Data;
 
 namespace Bam.Net
@@ -23,6 +24,7 @@ namespace Bam.Net
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
 
             RegisterArgZeroProviders<ShellProvider>(args);
+            RegisterArgZeroProviders<PackageProvider>(args);
             ExecuteArgZero(args);
             
             DefaultMethod = typeof(Program).GetMethod("Start");

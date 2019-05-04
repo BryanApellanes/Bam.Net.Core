@@ -38,9 +38,13 @@
     <_UnmanagedRegistrationCache Remove="obj\bamheart.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bamheart.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bamheart.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bamheart.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bamheart.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
   <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamheart.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamheart.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamheart.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamheart.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamheart.csproj.ResolveComReference.cache" />
@@ -52,9 +56,13 @@
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
   </ItemGroup>
 
   <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamheart.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamheart.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamheart.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamheart.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamheart.pdb" />
@@ -66,6 +74,8 @@
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamheart.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +83,8 @@
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamheart.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamheart.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamheart.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamheart.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamheart.dll.manifest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,9 +92,15 @@
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamheart.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamheart.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamheart.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamheart.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamheart.application" />
   </ItemGroup>
 
   <ItemGroup>
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.pdb" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.dll" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.pdb" />
+    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.dll" />
     <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.pdb" />
     <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.dll" />
     <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bamheart.pdb" />

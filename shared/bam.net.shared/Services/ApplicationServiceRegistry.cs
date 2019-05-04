@@ -98,7 +98,6 @@ namespace Bam.Net.Services
                 .For<IRepositoryResolver>().Use<DefaultRepositoryResolver>()
                 .For<IApplicationNameProvider>().Use<DefaultConfigurationApplicationNameProvider>()
                 .For<IIncludesResolver>().Use<IncludesResolver>()
-                .For<ProxyAssemblyGeneratorService>().Use<ProxyAssemblyGeneratorServiceProxy>()
                 .For<ApplicationServiceRegistry>().Use(appRegistry)
                 .For<IViewModelProvider>().Use<DefaultViewModelProvider>()
                 .For<IPersistenceModelProvider>().Use<DefaultPersistenceModelProvider>()

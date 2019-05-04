@@ -23,7 +23,11 @@ namespace Bam.Net.Server
             Args.ThrowIfNull(conf.BamConf.ContentRoot, "ContentRoot");
             ApplicationServiceRegistry reg = ApplicationServiceRegistry.ForApplication(conf.Name);
             IIncludesResolver includesResolver = reg.Get<IIncludesResolver>();
-            Includes commonIncludes = includesResolver.ResolveCommonIncludes(conf.BamConf.ContentRoot);
+            Includes commonIncludes = new Includes(); 
+            if (IncludeCommon)
+            {
+                commonIncludes = includesResolver.ResolveCommonIncludes(conf.BamConf.ContentRoot);   
+            }
             Includes appIncludes = includesResolver.ResolveApplicationIncludes(conf.Name, conf.BamConf.ContentRoot);
             Includes combined = commonIncludes.Combine(appIncludes);
             StringBuilder styleSheetLinkTags = new StringBuilder();

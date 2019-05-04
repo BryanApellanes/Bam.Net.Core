@@ -152,6 +152,7 @@ namespace Bam.Net.Logging
         /// </summary>
         /// <param name="messageFormat"></param>
         /// <param name="messageArgs"></param>
+        [Local]
         public void Info(string messageFormat, params string[] messageArgs)
         {
             EventMessage(LogEventType.Information, messageFormat, messageArgs);
@@ -162,6 +163,7 @@ namespace Bam.Net.Logging
         /// </summary>
         /// <param name="messageFormat"></param>
         /// <param name="messageArgs"></param>
+        [Local]
         public void Warn(string messageFormat, params string[] messageArgs)
         {
             EventMessage(LogEventType.Warning, messageFormat, messageArgs);
@@ -172,6 +174,7 @@ namespace Bam.Net.Logging
         /// </summary>
         /// <param name="messageFormat"></param>
         /// <param name="messageArgs"></param>
+        [Local]
         public void Error(string messageFormat, params string[] messageArgs)
         {
             EventMessage(LogEventType.Error, messageFormat, messageArgs);
@@ -183,6 +186,7 @@ namespace Bam.Net.Logging
         /// </summary>
         /// <param name="messageFormat"></param>
         /// <param name="messageArgs"></param>
+        [Local]
         public void Console(string messageFormat, params string[] messageArgs)
         {
             if (messageArgs.Length > 0)

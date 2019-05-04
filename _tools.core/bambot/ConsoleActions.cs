@@ -24,8 +24,9 @@ namespace Bam.Net.Application
         [ConsoleAction("S", "Start bambot server")]
         public void StartServer()
         {
+            ConsoleLogger logger = new ConsoleLogger();
             ApplicationServiceRegistry appRegistry = BambotServiceRegistry.ForCurrentProcessMode();
-            ServiceProxyServer = appRegistry.ServeRegistry(HostPrefix.FromBamProcessConfig().ToArray());
+            ServiceProxyServer = appRegistry.ServeRegistry(HostPrefix.FromBamProcessConfig().ToArray(), logger);
 
             foreach (HostPrefix hostPrefix in ServiceProxyServer.HostPrefixes)
             {
