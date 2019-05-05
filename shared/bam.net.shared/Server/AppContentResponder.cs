@@ -200,12 +200,30 @@ namespace Bam.Net.Server
                 _appTemplateManager = value;
                 _appTemplateManager.AppContentResponder = this;
                 _appTemplateManager.ContentResponder = ContentResponder;
+                if (PageRenderer != null)
+                {
+                    PageRenderer.TemplateManager = _appTemplateManager;
+                }
             }
         }
 
+        IPageRenderer _pageRenderer;
+
         [Inject]
-        public IPageRenderer PageRenderer { get; set; }
-        
+        public IPageRenderer PageRenderer
+        {
+            get
+            {
+                return _pageRenderer;
+            }
+            set
+            {
+                _pageRenderer = value;
+                _pageRenderer.TemplateManager = _appTemplateManager;
+            }
+        }
+
+
         public AppConf AppConf
         {
             get;

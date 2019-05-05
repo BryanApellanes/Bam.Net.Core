@@ -4,10 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.Services
+namespace Bam.Net.Server
 {
     public class RequestRoute
     {
+        public bool IsValid =>
+            !string.IsNullOrEmpty(Protocol) && !string.IsNullOrEmpty(Domain) &&
+            !string.IsNullOrEmpty(PathAndQuery);
+
         public string PathName { get; set; }
 
         public string Protocol { get; set; }
