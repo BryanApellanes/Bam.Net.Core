@@ -75,7 +75,7 @@ namespace Bam.Net.Server
         protected void InitializeFileExtensions()
         {
             FileExtensions = new List<string> { ".html", ".htm", ".js", ".json", ".css", ".yml", ".yaml", ".txt", ".md", ".layout", ".png", ".jpg", ".jpeg", ".gif", ".woff" };
-            TextFileExtensions = new List<string> { ".html", ".htm", ".js", ".json", ".css", ".yml", ".yaml", ".layout", ".txt", ".md" };
+            TextFileExtensions = new List<string> { ".html", ".htm", ".js", ".json", ".css", ".yml", ".yaml", ".layout", ".txt", ".md", ".bmd" };
         }
 
         protected void InitializeCaches()
@@ -107,7 +107,7 @@ namespace Bam.Net.Server
         }
 
         /// <summary>
-        /// Uncache the specified file forcing it to be reloaded the next time it is 
+        /// Un-cache the specified file forcing it to be reloaded the next time it is 
         /// requested.
         /// </summary>
         /// <param name="file"></param>

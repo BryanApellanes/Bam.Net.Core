@@ -233,7 +233,6 @@ namespace Bam.Net.Server
 
                 ConfigureHttpServer();
 
-
                 RegisterWorkspaceDaos();
 
                 OnInitialized();
