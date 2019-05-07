@@ -102,7 +102,6 @@ namespace Bam.Net.Application
 			Pause("BamWeb server re-started");
         }
 
-        [ConsoleAction]
         public static void LogResponses()
         {
             Server.Responded += (s, res, req) =>

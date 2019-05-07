@@ -7,22 +7,18 @@ using Bam.Net.Services;
 
 namespace Bam.Net.Server
 {
-    // TODO: implement this
-    // 
-    public class BamPageRenderer : Loggable, IPageRenderer
+    public abstract class PageRenderer : Loggable, IPageRenderer
     {
-        public BamPageRenderer(): base()
+        public PageRenderer(): base()
         {
             TemplateManager = new AppHandlebarsRenderer();
             RequestRouter = new RequestRouter();
-            _renderedPages = new Dictionary<string, byte[]>();
         }
 
-        public BamPageRenderer(IApplicationTemplateManager templateManager)
+        public PageRenderer(IApplicationTemplateManager templateManager)
         {
             TemplateManager = templateManager;
             RequestRouter = new RequestRouter();
-            _renderedPages = new Dictionary<string, byte[]>();
         }
         
         protected RequestRouter RequestRouter { get; set; }
@@ -40,11 +36,6 @@ namespace Bam.Net.Server
             return isHomeRequest;
         }
 
-        Dictionary<string, byte[]> _renderedPages;
-        
-        public byte[] RenderPage(string path, IRequest request, IResponse response)
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract byte[] RenderPage(string path, IRequest request, IResponse response);
     }
 }

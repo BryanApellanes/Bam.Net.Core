@@ -476,7 +476,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlForeignKeyDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsWrapperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\PageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\HomeRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RequestRoute.cs" />

@@ -24,10 +24,11 @@ namespace Bam.Net.Server
     /// <summary>
     /// Configuration for a Bam Application
     /// </summary>
-    public class AppConf
+    public class AppConf : IApplicationNameProvider
     {
 		public const string DefaultPageConst = "start";
 		public const string DefaultLayoutConst = "basic";
+        public const string DefaultHtmlDirConst = "pages";
 
         public AppConf()
         {
@@ -118,6 +119,11 @@ namespace Bam.Net.Server
         /// </summary>
         public string Name { get; set; }
 
+        public string GetApplicationName()
+        {
+            return Name;
+        }
+
         string _displayName;
         public string DisplayName 
         {
@@ -135,7 +141,7 @@ namespace Bam.Net.Server
                 _displayName = value;
             }
         }
-
+        
         public Workspace GetAppWorkspace()
         {
             return Workspace.ForApplication(new StaticApplicationNameProvider(Name));
@@ -199,7 +205,7 @@ namespace Bam.Net.Server
 		{
 			get
 			{
-				return _defaultPage;
+				return _defaultPage.Or(DefaultPageConst);
 			}
 			set
 			{
@@ -207,6 +213,14 @@ namespace Bam.Net.Server
 			}
 		}
 
+        string _defaultHtmlDir;
+
+        public string HtmlDir
+        {
+            get { return _defaultHtmlDir.Or(DefaultHtmlDirConst); }
+            set { _defaultHtmlDir = value.Or(DefaultHtmlDirConst); }
+        }
+		
         public bool GenerateDao { get; set; }
 
         public bool CheckDaoHashes { get; set; }
