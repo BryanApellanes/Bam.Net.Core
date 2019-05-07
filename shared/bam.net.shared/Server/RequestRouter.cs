@@ -42,13 +42,15 @@ namespace Bam.Net.Server
         public RequestRoute ToRequestRoute(Uri uri)
         {
             Dictionary<string, string> values = ToRouteValues(uri);
-
-            RequestRoute route = new RequestRoute { PathName = PathName, OriginalUrl = uri };
-            route.Protocol = values["Protocol"];
-            route.Domain = values["Domain"];
-            route.PathAndQuery = values["PathAndQuery"];
-            route.ParsedValues = values;
-            return route;
+            return new RequestRoute
+            {
+                PathName = PathName,
+                OriginalUrl = uri,
+                Protocol = values["Protocol"],
+                Domain = values["Domain"],
+                PathAndQuery = values["PathAndQuery"],
+                ParsedValues = values
+            };
         }
 
         protected Dictionary<string, string> ToRouteValues(Uri uri)

@@ -208,7 +208,6 @@ namespace Bam.Net.Server
         }
 
         IPageRenderer _pageRenderer;
-
         [Inject]
         public IPageRenderer PageRenderer
         {
@@ -222,7 +221,6 @@ namespace Bam.Net.Server
                 _pageRenderer.TemplateManager = _appTemplateManager;
             }
         }
-
 
         public AppConf AppConf
         {
@@ -343,7 +341,7 @@ namespace Bam.Net.Server
                     }
                     else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path))
                     {
-                        if (AppRoot.FileExists($"~/pages{path}.html", out locatedPath))
+                        if (AppRoot.FileExists($"~/{AppConf.HtmlDir}{path}.html", out locatedPath))
                         {
                             content = GetContent(locatedPath, request, response);
                         }
@@ -474,8 +472,8 @@ namespace Bam.Net.Server
             }
 
             string lowered = path.ToLowerInvariant();
-            string[] layoutSegments = string.Format("~/pages/{0}{1}", path, LayoutFileExtension).DelimitSplit("/", "\\");
-            string[] htmlSegments = string.Format("~/pages/{0}.html", path).DelimitSplit("/", "\\");
+            string[] layoutSegments = string.Format("~/{0}/{1}{2}", AppConf.HtmlDir, path, LayoutFileExtension).DelimitSplit("/", "\\");
+            string[] htmlSegments = string.Format("~/{0}/{1}.html", AppConf.HtmlDir, path).DelimitSplit("/", "\\");
 
             LayoutModel layoutModel = null;
             if (LayoutModelsByPath.ContainsKey(lowered))

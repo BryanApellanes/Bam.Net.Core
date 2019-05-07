@@ -643,7 +643,7 @@ namespace Bam.Net.Server
                     LayoutConf pageConf = new LayoutConf(appConf);
                     string fileName = Path.GetFileName(path);
                     string json = pageConf.ToJson(true);
-                    appConf.AppRoot.WriteFile("~/pages/{0}.layout"._Format(fileName), json);
+                    appConf.AppRoot.WriteFile($"~/{appConf.HtmlDir}/{fileName}.layout", json);
                 }
             }
 
