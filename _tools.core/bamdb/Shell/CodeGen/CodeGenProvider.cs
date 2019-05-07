@@ -5,6 +5,9 @@ namespace Bam.Shell.CodeGen
 {
     public abstract class CodeGenProvider : CommandLineTestInterface, IRegisterArguments
     {
+        public const string AppDataFolderName = "AppData";
+        public const string GenerationOutputFolderName = "_gen";
+        
         public abstract void Gen(Action<string> output = null, Action<string> error = null);
         
         public string[] RawArguments { get; private set; }

@@ -4,12 +4,12 @@ using Bam.Shell;
 
 namespace Bam.Shell.Data
 {
-    public class DbShellProviderDelegator : ArgZeroDelegator<DbShellProvider>
+    public class DataShellProviderDelegator : ArgZeroDelegator<DataShellProvider>
     {
         [ArgZero("new")]
         public void New()
         {
-            DbShellProvider provider = Construct();
+            DataShellProvider provider = Construct();
             provider?.New(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
@@ -17,7 +17,7 @@ namespace Bam.Shell.Data
         [ArgZero("get")]
         public void Get()
         {
-            DbShellProvider provider = Construct();
+            DataShellProvider provider = Construct();
             provider?.Get(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
@@ -25,7 +25,7 @@ namespace Bam.Shell.Data
         [ArgZero("set")]
         public void Set()
         {
-            DbShellProvider provider = Construct();
+            DataShellProvider provider = Construct();
             provider?.Set(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
@@ -33,7 +33,7 @@ namespace Bam.Shell.Data
         [ArgZero("del")]
         public void Del()
         {
-            DbShellProvider provider = Construct();
+            DataShellProvider provider = Construct();
             provider?.Del(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
@@ -41,7 +41,7 @@ namespace Bam.Shell.Data
         [ArgZero("find")]
         public void Find()
         {
-            DbShellProvider provider = Construct();
+            DataShellProvider provider = Construct();
             provider?.Find(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }

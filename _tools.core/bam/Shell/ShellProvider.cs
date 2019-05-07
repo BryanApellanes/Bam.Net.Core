@@ -198,7 +198,7 @@ namespace Bam.Shell
             return projectParent;
         }
         
-        protected FileInfo FindProjectFile()
+        public static FileInfo FindProjectFile()
         {
             FindProjectParent(out FileInfo csprojFile);
             return csprojFile;

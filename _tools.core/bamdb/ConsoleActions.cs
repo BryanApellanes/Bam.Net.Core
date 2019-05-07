@@ -5,6 +5,9 @@ using Bam.Net.Server;
 using Bam.Net.Testing;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Bam.Net.Data.Dynamic;
+using Bam.Shell;
 
 namespace Bam.Net.Application
 {
@@ -35,7 +38,30 @@ namespace Bam.Net.Application
                 OutLine("BamDb server not running");
             }
         }
-
+        public const string AppDataFolderName = "AppData";
+        
+        static DirectoryInfo _appData;
+        static object _appDataLock = new object();
+        static DirectoryInfo AppData
+        {
+            get
+            {
+                return _appDataLock.DoubleCheckLock(ref _appData, () => new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, AppDataFolderName)));
+            }
+        }
+                
+        [ConsoleAction("import", "Import data files from AppData (csv, json and yaml)")]
+        public void ImportDataFiles()
+        {
+            DynamicDataManager mgr = new DynamicDataManager();
+            DirectoryInfo appData = AppData;
+            if (Arguments.Contains("AppData"))
+            {
+                appData = new DirectoryInfo(Arguments["appData"]);
+            }
+            mgr.ProcessDataFiles(appData);
+        }
+        
         public static void StartBamDbServer(ConsoleLogger logger, IRepository repo)
         {
             BamConf conf = BamConf.Load(DefaultConfiguration.GetAppSetting(contentRootConfigKey).Or(defaultContentRoot));
