@@ -481,6 +481,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\IPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RequestRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RequestRouter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommandLineServiceInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />

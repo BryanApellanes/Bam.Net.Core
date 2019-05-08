@@ -9,22 +9,29 @@ namespace Bam.Net.Server
 {
     public abstract class PageRenderer : Loggable, IPageRenderer
     {
-        public PageRenderer(): base()
+        public PageRenderer(AppContentResponder appContentResponder, ITemplateManager templateManager): base()
         {
-            TemplateManager = new AppHandlebarsRenderer();
+            CommonTemplateManager = templateManager;
+            ApplicationTemplateManager = new AppHandlebarsRenderer(appContentResponder);
             RequestRouter = new RequestRouter();
+            AppContentResponder = appContentResponder;
         }
 
-        public PageRenderer(IApplicationTemplateManager templateManager)
+        public PageRenderer(AppContentResponder appContentResponder, ITemplateManager templateManager,
+            IApplicationTemplateManager applicationTemplateManager)
         {
-            TemplateManager = templateManager;
+            CommonTemplateManager = templateManager;
+            ApplicationTemplateManager = applicationTemplateManager;
             RequestRouter = new RequestRouter();
+            ApplicationTemplateManager.AppContentResponder = appContentResponder;
+            appContentResponder = appContentResponder;
         }
         
         protected RequestRouter RequestRouter { get; set; }
 
-        public IApplicationTemplateManager TemplateManager { get; set; }
-
+        public AppContentResponder AppContentResponder { get; set; }
+        public IApplicationTemplateManager ApplicationTemplateManager { get; set; }
+        public ITemplateManager CommonTemplateManager { get; set; }
         public bool CanRender(IRequest request)
         {
             bool isHomeRequest = RequestRouter.IsHomeRequest(request.RawUrl, out RequestRoute route);

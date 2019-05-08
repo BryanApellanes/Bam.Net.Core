@@ -9,10 +9,6 @@ namespace Bam.Net.Server.Renderers
 {
     public class AppHandlebarsRenderer : CommonHandlebarsRenderer, IApplicationTemplateManager
     {
-        public AppHandlebarsRenderer() : base(null)
-        {
-        }
-
         public AppHandlebarsRenderer(AppContentResponder appContent) : base(appContent.ContentResponder)
         {
             AppContentResponder = appContent;

@@ -202,13 +202,12 @@ namespace Bam.Net.Server
                 _appTemplateManager.ContentResponder = ContentResponder;
                 if (PageRenderer != null)
                 {
-                    PageRenderer.TemplateManager = _appTemplateManager;
+                    PageRenderer.ApplicationTemplateManager = _appTemplateManager;
                 }
             }
         }
 
         IPageRenderer _pageRenderer;
-        [Inject]
         public IPageRenderer PageRenderer
         {
             get
@@ -218,7 +217,7 @@ namespace Bam.Net.Server
             set
             {
                 _pageRenderer = value;
-                _pageRenderer.TemplateManager = _appTemplateManager;
+                _pageRenderer.ApplicationTemplateManager = _appTemplateManager;
             }
         }
 

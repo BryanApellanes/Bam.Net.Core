@@ -65,8 +65,7 @@ namespace Bam.Net.Server
                     _appServiceRegistry
                         .For<ContentResponder>().Use(ContentResponder)
                         .For<ITemplateNameResolver>().Use<ContentTemplateNameResolver>()
-                        .For<ITemplateManager>().Use<CommonHandlebarsRenderer>()
-                        .For<IApplicationTemplateManager>().Use<AppHandlebarsRenderer>();
+                        .For<ITemplateManager>().Use<CommonHandlebarsRenderer>();
 
                     _appServiceRegistry.SetInjectionProperties(ContentResponder);
                     ContentResponder.ApplicationServiceRegistry = _appServiceRegistry;

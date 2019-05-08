@@ -46,7 +46,7 @@ namespace Bam.Net.Server
             
             ContentRoot = conf?.ContentRoot ?? DefaultConfiguration.GetAppSetting(contentRootConfigKey, defaultRoot);
             ServerRoot = new Fs(ContentRoot);
-            TemplateDirectoryNames = new List<string>(new string[] { "views", "templates" });
+            TemplateDirectoryNames = new List<string>(new string[] { "pages", "views", "templates" });
             CommonTemplateManager = commonTemplateManager;
             FileCachesByExtension = new Dictionary<string, FileCache>();
             HostAppMappings = new Dictionary<string, HostAppMap>();     
@@ -162,7 +162,7 @@ namespace Bam.Net.Server
         }
 
         Dictionary<string, AppContentResponder> _appContentResponders;
-        protected internal Dictionary<string, AppContentResponder> AppContentResponders
+        public Dictionary<string, AppContentResponder> AppContentResponders
         {
             get
             {
@@ -203,7 +203,7 @@ namespace Bam.Net.Server
         }
 
         [Inject]
-        public ITemplateManager CommonTemplateManager // TODO: inject this
+        public ITemplateManager CommonTemplateManager
         {
             get;
             set;
@@ -346,6 +346,7 @@ namespace Bam.Net.Server
                 });
                 string appName = ac.Name.ToLowerInvariant();
                 responder.Initialize();
+                responder.PageRenderer = new BamPageRenderer(responder, ApplicationServiceRegistry.Get<ITemplateManager>(), ApplicationServiceRegistry.Get<IApplicationTemplateManager>());
                 responder.FileUploading += (o, a) => FileUploading?.Invoke(o, a);
                 responder.FileUploaded += (o, a) => FileUploaded?.Invoke(o, a);
                 responder.Responded += (r, context) => OnResponded(context);

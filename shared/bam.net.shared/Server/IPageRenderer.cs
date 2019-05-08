@@ -5,7 +5,7 @@ namespace Bam.Net.Server
 {
     public interface IPageRenderer
     {
-        IApplicationTemplateManager TemplateManager { get; set; }
+        IApplicationTemplateManager ApplicationTemplateManager { get; set; }
         bool CanRender(IRequest request);
         byte[] RenderPage(string path, IRequest request, IResponse response);
     }
