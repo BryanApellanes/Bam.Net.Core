@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <ApplicationIcon />
     <StartupObject>Bam.Net.Program</StartupObject>
   </PropertyGroup>
@@ -99,6 +99,11 @@
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
   <ItemGroup>
@@ -116,6 +121,11 @@
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
   </ItemGroup>
 
   <ItemGroup>
@@ -133,6 +143,11 @@
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -150,6 +165,11 @@
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
   </ItemGroup>
 
   <ItemGroup>
@@ -167,6 +187,11 @@
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -184,9 +209,19 @@
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
   </ItemGroup>
 
   <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />

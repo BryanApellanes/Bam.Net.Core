@@ -6,8 +6,13 @@ using Bam.Net.Testing;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using Bam.Net.Data;
 using Bam.Net.Data.Dynamic;
+using Bam.Net.Data.Npgsql;
 using Bam.Shell;
+using Bam.Shell.CodeGen;
 
 namespace Bam.Net.Application
 {
@@ -60,6 +65,20 @@ namespace Bam.Net.Application
                 appData = new DirectoryInfo(Arguments["appData"]);
             }
             mgr.ProcessDataFiles(appData);
+        }
+
+        [ConsoleAction("printConfig")]
+        public void PrintConfig()
+        {
+            Config config = Config.Current;
+            OutLine(config.File.FullName);
+            StringBuilder msg = new StringBuilder();
+            foreach(string key in config.AppSettings.Keys)
+            {
+                msg.AppendLine($"{key} = {config[key]}");
+            }
+
+            OutLine(msg.ToString());
         }
         
         public static void StartBamDbServer(ConsoleLogger logger, IRepository repo)

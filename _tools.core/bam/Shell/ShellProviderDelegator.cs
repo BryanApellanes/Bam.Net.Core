@@ -8,7 +8,7 @@ namespace Bam.Shell
 {
     public class ShellProviderDelegator : ArgZeroDelegator<ShellProvider>
     {
-        [ArgZero("list")]
+        [ArgZero("list", typeof(ShellProvider))]
         public void List()
         {
             ShellProvider provider = Construct();
@@ -16,7 +16,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
         
-        [ArgZero("add")]
+        [ArgZero("add", typeof(ShellProvider))]
         public void Add()
         {
             ShellProvider provider = Construct();
@@ -24,7 +24,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
         
-        [ArgZero("copy")]
+        [ArgZero("copy", typeof(ShellProvider))]
         public void Copy()
         {
             ShellProvider provider = Construct();
@@ -32,7 +32,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
         
-        [ArgZero("rename")]
+        [ArgZero("rename", typeof(ShellProvider))]
         public void Rename()
         {
             ShellProvider provider = Construct();
@@ -40,7 +40,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
 
-        [ArgZero("show")]
+        [ArgZero("show", typeof(ShellProvider))]
         public void Show()
         {
             ShellProvider provider = Construct();
@@ -48,7 +48,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
 
-        [ArgZero("remove")]
+        [ArgZero("remove", typeof(ShellProvider))]
         public void Remove()
         {
             ShellProvider provider = Construct();
@@ -56,7 +56,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
         
-        [ArgZero("run")]
+        [ArgZero("run", typeof(ShellProvider))]
         public void Run()
         {
             ShellProvider provider = Construct();
@@ -64,7 +64,7 @@ namespace Bam.Shell
             Exit(provider != null ? 0: 1);
         }
         
-        [ArgZero("edit")]
+        [ArgZero("edit", typeof(ShellProvider))]
         public void Edit()
         {
             ShellProvider provider = Construct();
