@@ -512,7 +512,7 @@ namespace Bam.Net.CommandLine
 
         public static string Prompt(string message, ConsoleColor textColor, bool allowQuit)
         {
-            return Prompt(message, " >> ", textColor, allowQuit);
+            return Prompt(message, ">>", textColor, allowQuit);
         }
 
         public static string Prompt(string message, string promptTxt, ConsoleColor textColor)
@@ -540,6 +540,14 @@ namespace Bam.Net.CommandLine
             return PromptProvider(message, promptTxt, colors, allowQuit);
         }
 
+        /// <summary>
+        /// Prompt for a selection from the specified list of values
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="prompt"></param>
+        /// <param name="color"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T SelectFrom<T>(IEnumerable<T> options, string prompt = "Select an option from the list", ConsoleColor color = ConsoleColor.DarkCyan)
         {
             return SelectFrom<T>(options, (t) => t.ToString(), prompt, color);
@@ -576,8 +584,8 @@ namespace Bam.Net.CommandLine
                 {
                     _promptProvider = (message, promptTxt, colors, allowQuit) =>
                     {
-                        Out(message, colors);
-                        Out(promptTxt);
+                        OutLine($"{message}{promptTxt}", colors);
+                        Thread.Sleep(200);
                         string answer = Console.ReadLine();
 
                         if (allowQuit && answer.ToLowerInvariant().Equals("q"))
@@ -585,7 +593,7 @@ namespace Bam.Net.CommandLine
                             Environment.Exit(0);
                         }
 
-                        return answer;
+                        return answer.Trim();
                     };
                 }
 

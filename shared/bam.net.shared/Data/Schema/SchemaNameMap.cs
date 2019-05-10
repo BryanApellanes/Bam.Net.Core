@@ -27,6 +27,7 @@ namespace Bam.Net.Data.Schema
         {
             return filePath.FromJsonFile<SchemaNameMap>();
         }
+        
         public void Save(string filePath)
         {
             this.ToJsonFile(filePath);
@@ -51,6 +52,7 @@ namespace Bam.Net.Data.Schema
             }
             return tableName;
         }
+        
         public string GetColumnName(string className, string propertyName)
         {
             string tableName = GetTableName(className);

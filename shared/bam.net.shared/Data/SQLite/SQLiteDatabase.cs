@@ -63,6 +63,12 @@ namespace Bam.Net.Data.SQLite
             Infos.Add(new DatabaseInfo(this));
         }
 
+        public static SQLiteDatabase FromConnectionString(string connectionString)
+        {
+            SQLiteConnectionStringBuilder builder = new SQLiteConnectionStringBuilder(connectionString);
+            return new SQLiteDatabase(builder.DataSource);
+        }
+        
         public IConnectionStringResolver ConnectionStringResolver
         {
             get;

@@ -17,7 +17,7 @@ namespace Bam.Net.Data.Npgsql
         public NpgsqlSchemaExtractor(NpgsqlDatabase database)
         {
             Database = database;
-            TableSchema = Database.Name;
+            TableCatalog = Database.Name;
             ConnectionString = database.ConnectionString;
             _keyColumns = new Dictionary<string, string>();
             _columnDefinitions = new Dictionary<string, Dictionary<string, DataRow>>();
@@ -27,9 +27,7 @@ namespace Bam.Net.Data.Npgsql
         Dictionary<string, Dictionary<string, DataRow>> _columnDefinitions;
         Dictionary<string, NpgSqlForeignKeyDescriptor[]> _foreignKeyDefinitions;
 
-        /// <summary>
-        /// The name of the Postgres schema to extract table information from.
-        /// </summary>
+        public string TableCatalog { get; set; }
         public string TableSchema { get; set; }
         
         public override DataTypes GetColumnDataType(string tableName, string columnName)
@@ -92,7 +90,7 @@ JOIN   pg_attribute a ON a.attrelid = i.indrelid
 WHERE  i.indrelid = '{TableSchema}.{tableName}'::regclass
 AND    i.indisprimary;";
 
-                _keyColumns.AddMissing(tableName, Database.QuerySingleColumn<string>(keyColumnQuery).First());
+                _keyColumns.AddMissing(tableName, Database.QuerySingleColumn<string>(keyColumnQuery).FirstOrDefault());
             }
 
             return _keyColumns[tableName];
@@ -163,7 +161,7 @@ AND    i.indisprimary;";
             sql
                 .Select("information_schema.columns", "*")
                 .Where("table_schema", TableSchema)
-                .Where("table_name", tableName);
+                .And("table_name", tableName);
 
             DataTable data = Database.GetDataTable(sql);
             foreach (DataRow row in data.Rows)

@@ -395,7 +395,46 @@ namespace Bam.Net.Data
 
         public virtual SqlStringBuilder Where(AssignValue filter)
         {
-            WhereFormat where = new WhereFormat();
+            WhereFormat where = new WhereFormat() {ParameterPrefix = filter.ParameterPrefix};
+            where.ColumnNameFormatter = filter.ColumnNameFormatter;
+            where.StartNumber = NextNumber;
+            where.AddAssignment(filter);
+            _stringBuilder.Append(where.Parse());
+            NextNumber = where.NextNumber;
+            this.parameters.AddRange(where.Parameters);
+            return this;
+        }
+
+        public virtual SqlStringBuilder And(IQueryFilter filter)
+        {
+            AndFormat and = new AndFormat(filter)
+            {
+                StartNumber = NextNumber
+            };
+            _stringBuilder.Append(and.Parse());
+            NextNumber = and.NextNumber;
+            this.parameters.AddRange(and.Parameters);
+            return this;
+        }
+
+        public virtual SqlStringBuilder And(string columnName, object value)
+        {
+            return And(new AssignValue(columnName, value, ColumnNameFormatter));
+        }
+
+        public virtual SqlStringBuilder And(dynamic parameters)
+        {
+            IEnumerable<AssignValue> values = AssignValue.FromDynamic(parameters, ColumnNameFormatter);
+            foreach(AssignValue value in values)
+            {
+                this.Where(value);
+            }
+            return this;
+        }
+        
+        public virtual SqlStringBuilder And(AssignValue filter)
+        {
+            AndFormat where = new AndFormat() {ParameterPrefix = filter.ParameterPrefix};
             where.ColumnNameFormatter = filter.ColumnNameFormatter;
             where.StartNumber = NextNumber;
             where.AddAssignment(filter);

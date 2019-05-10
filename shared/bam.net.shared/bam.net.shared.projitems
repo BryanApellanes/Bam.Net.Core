@@ -458,6 +458,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\AndFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResultEventArgs.cs" />

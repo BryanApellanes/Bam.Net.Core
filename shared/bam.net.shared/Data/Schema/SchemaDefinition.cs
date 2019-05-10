@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml.Serialization;
 using Bam.Net;
 using Bam.Net.Data;
 using Newtonsoft.Json;
 using Bam.Net.Configuration;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Data.Schema
 {
@@ -285,6 +287,9 @@ namespace Bam.Net.Data.Schema
         /// The most recent exception that occurred after trying to add a table
         /// or a foreign key
         /// </summary>
+        [JsonIgnore]
+        [YamlIgnore]
+        [XmlIgnore]
         public Exception LastException
         {
             get;

@@ -36,6 +36,7 @@ namespace Bam.Net.Data.Npgsql
         public NpgsqlDatabase(string connectionString, string connectionName = null)
             : base(connectionString, connectionName)
         {
+            Register();
         }
 
         private void Register()

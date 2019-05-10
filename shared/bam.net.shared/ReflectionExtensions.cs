@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using GraphQL.Types;
 
 namespace Bam.Net
 {
@@ -559,6 +560,11 @@ namespace Bam.Net
         private static PropertyInfo GetPropertyOrThrow(Type type, string propertyName, bool throwIfPropertyNotFound)
         {
             PropertyInfo property = type.GetProperty(propertyName);
+            if (property == null)
+            {
+                property = FindPropertyInfoOrThrow(type, propertyName, throwIfPropertyNotFound);
+            }
+            
             if (property == null && throwIfPropertyNotFound)
             {
                 PropertyNotFound(propertyName, type);
@@ -567,6 +573,17 @@ namespace Bam.Net
             return property;
         }
 
+        public static PropertyInfo FindPropertyInfoOrThrow(Type type, string propertyName, bool throwIfPropertyNotFound)
+        {
+            PropertyInfo property = type.GetProperties().FirstOrDefault(t => t.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
+            if (property == null && throwIfPropertyNotFound)
+            {
+                PropertyNotFound(propertyName, type);
+            }
+
+            return property;
+        }
+        
         public static void SetProperty(this object instance, PropertyInfo property, object value)
         {
             if (property != null)

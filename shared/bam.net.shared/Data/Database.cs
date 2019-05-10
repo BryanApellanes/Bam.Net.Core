@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlTypes;
 using Bam.Net.Incubation;
 using Bam.Net.Logging;
 using System.Threading;
@@ -127,22 +128,25 @@ namespace Bam.Net.Data
             {
                 DbConnectionStringBuilder cb = CreateConnectionStringBuilder();                
                 cb.ConnectionString = this.ConnectionString;
+                string databaseName = "";
+                if (cb.ContainsKey("Initial Catalog"))                
+                {
+                    databaseName = cb["Initial Catalog"] as string;
+                }
 
-                string databaseName = cb["Initial Catalog"] as string;
-
-                if (string.IsNullOrEmpty(databaseName))
+                if (cb.ContainsKey("Database"))
                 {
                     databaseName = cb["Database"] as string;
                 }
 
-                if (string.IsNullOrEmpty(databaseName))
+                if (cb.ContainsKey("Data Source"))
                 {
                     databaseName = cb["Data Source"] as string;
                 }
 
                 if (string.IsNullOrEmpty(databaseName))
                 {
-                    throw new InvalidOperationException("Unable to determine database name from the connection string");
+                    throw new InvalidOperationException($"Unable to determine database name from connection string: {ConnectionString}");
                 }
                 return databaseName;
             }
@@ -648,6 +652,11 @@ namespace Bam.Net.Data
             return GetDataTable(sqlStatement, parameters.ToDbParameters(this).ToArray());
         }
 
+        public virtual DataTable GetDataTable(SqlStringBuilder sqlStringBuilder)
+        {
+            return GetDataTable(sqlStringBuilder.ToString(), GetDbParameters(sqlStringBuilder));
+        }
+        
         public virtual DataTable GetDataTable(string sqlStatement, params DbParameter[] dbParameters)
         {
             return GetDataTable(sqlStatement, CommandType.Text, dbParameters);
@@ -686,7 +695,7 @@ namespace Bam.Net.Data
 		{
 			return ServiceProvider.Get<T>();
 		}
-
+		
 		public virtual long? GetIdValue(Dao dao)
 		{
 			string keyColumnName = dao.KeyColumnName;
@@ -717,6 +726,11 @@ namespace Bam.Net.Data
             return conn;
         }
 
+        public virtual DbParameter[] GetDbParameters(SqlStringBuilder sqlStringBuilder)
+        {
+            return GetService<IParameterBuilder>().GetParameters(sqlStringBuilder);
+        }
+        
         public virtual DbCommand CreateCommand()
         {
             return ServiceProvider.Get<DbProviderFactory>().CreateCommand();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Security.Permissions;
@@ -10,6 +11,7 @@ using Bam.Net.Server;
 using Bam.Net.Services;
 using Lucene.Net.Analysis.Hunspell;
 using Lucene.Net.Queries.Function.ValueSources;
+using Npgsql;
 
 namespace Bam.Net
 {
@@ -48,6 +50,36 @@ namespace Bam.Net
                 });
             }
         }
+
+        public Config(string applicationName) : this(applicationName, true)
+        {
+        }
+
+        private Config(string applicationName, bool subscribeToChanges)
+        {
+            AppSettings = Read(applicationName, out FileInfo file);
+            File = file;
+
+            if (subscribeToChanges)
+            {
+                ConfigChangeWatcher = File.OnChange((o, a) =>
+                {
+                    Config oldConfig = new Config(applicationName, false)
+                    {
+                        AppSettings = AppSettings
+                    };
+                    AppSettings = Read(applicationName);
+                    Config newConfig = this;
+                    ConfigChangedEventArgs args = new ConfigChangedEventArgs()
+                    {
+                        OldConfig = oldConfig,
+                        NewConfig = newConfig
+                    };
+                    FireEvent(ConfigChanged, this, args);
+                });
+            }
+        }
+        
         
         static Config _current;
         static object _currentLock = new object();
@@ -59,6 +91,11 @@ namespace Bam.Net
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => new Config()); }
             set { _current = value; }
+        }
+
+        public static Config For(string applicationName)
+        {
+            return new Config(applicationName);
         }
         
         protected FileSystemWatcher ConfigChangeWatcher { get; set; }
@@ -99,7 +136,7 @@ namespace Bam.Net
                 {
                     AppSettings.Add(key, value);
                 }
-                Write(AppSettings);
+                Write();
             }
         }
 
@@ -128,6 +165,26 @@ namespace Bam.Net
         {
             configFile = GetFile();
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
+        }
+
+        public static Dictionary<string, string> Read(string applicationName)
+        {
+            return Read(applicationName, out FileInfo ignore);
+        }
+        
+        public static Dictionary<string, string> Read(string applicationName, out FileInfo configFile)
+        {
+            configFile = GetFile(applicationName);
+            return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
+        }
+
+        public void Write()
+        {
+            if (File == null)
+            {
+                throw new InvalidOperationException("File not set");
+            }
+            AppSettings.ToYaml().SafeWriteToFile(File.FullName, true);
         }
         
         public static void Write(Dictionary<string, string> appSettings, bool setBamEnvironmentVariables = true)
@@ -215,11 +272,16 @@ namespace Bam.Net
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             Log.Trace("Config using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
             string providedAppName = applicationNameProvider.GetApplicationName();
+            return GetFile(providedAppName);
+        }
+
+        public static FileInfo GetFile(string appName)
+        {
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
             string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
-            string path = !providedAppName.StartsWith("UNKNOWN")
-                ? Path.Combine(BamPaths.ConfPath, assemblyName, $"{providedAppName}.appsettings.yaml")
-                : Path.Combine(BamPaths.ConfPath, assemblyName, $"{assemblyName}.appsettings.yaml"); 
+            string path = !appName.StartsWith("UNKNOWN")
+                ? Path.Combine(BamPaths.ConfPath, appName, $"{appName}.appsettings.yaml")
+                : Path.Combine(BamPaths.ConfPath, assemblyName, $"{assemblyName}.appsettings.yaml");
             Log.Trace("config file path = {0}", path);
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
@@ -228,11 +290,13 @@ namespace Bam.Net
                 {
                     configFile.Directory.Create();
                 }
+
                 System.IO.File.Create(configFile.FullName).Dispose();
             }
+
             return configFile;
         }
-        
+
         /// <summary>
         /// Get the name of the entry assembly without extension.
         /// </summary>
