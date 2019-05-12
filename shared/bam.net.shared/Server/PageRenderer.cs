@@ -15,6 +15,7 @@ namespace Bam.Net.Server
             ApplicationTemplateManager = new AppHandlebarsRenderer(appContentResponder);
             RequestRouter = new RequestRouter();
             AppContentResponder = appContentResponder;
+            _routeInfos = new Dictionary<string, RouteInfo>();
         }
 
         public PageRenderer(AppContentResponder appContentResponder, ITemplateManager templateManager,
@@ -25,6 +26,7 @@ namespace Bam.Net.Server
             RequestRouter = new RequestRouter();
             ApplicationTemplateManager.AppContentResponder = appContentResponder;
             appContentResponder = appContentResponder;
+            _routeInfos = new Dictionary<string, RouteInfo>();
         }
         
         protected RequestRouter RequestRouter { get; set; }
@@ -34,15 +36,33 @@ namespace Bam.Net.Server
         public ITemplateManager CommonTemplateManager { get; set; }
         public bool CanRender(IRequest request)
         {
-            bool isHomeRequest = RequestRouter.IsHomeRequest(request.RawUrl, out RequestRoute route);
-            if (!isHomeRequest)
-            {
-                return route.IsValid;
-            }
-
-            return isHomeRequest;
+            return GetRouteInfo(request).CanRender;
         }
 
-        public abstract byte[] RenderPage(string path, IRequest request, IResponse response);
+        public abstract byte[] RenderPage(IRequest request, IResponse response);
+
+        Dictionary<string, RouteInfo> _routeInfos;
+
+        protected RouteInfo GetRouteInfo(IRequest request)
+        {
+            if (!_routeInfos.ContainsKey(request.RawUrl))
+            {
+                RouteInfo info = new RouteInfo() {Request = request};
+                info.IsHomeRequest = RequestRouter.IsHomeRequest(request.RawUrl, out RequestRoute route);
+                info.RequestRoute = route;
+                if (!info.IsHomeRequest)
+                {
+                    info.CanRender = route.IsValid;
+                }
+                else
+                {
+                    info.CanRender = info.IsHomeRequest;
+                }
+
+                _routeInfos.AddMissing(request.RawUrl, info);
+            }
+            
+            return _routeInfos[request.RawUrl];
+        }
     }
 }

@@ -188,7 +188,6 @@ namespace Bam.Net.Server
         }
 
         IApplicationTemplateManager _appTemplateManager;
-        [Inject]
         public IApplicationTemplateManager AppTemplateManager
         {
             get
@@ -344,9 +343,9 @@ namespace Bam.Net.Server
                         {
                             content = GetContent(locatedPath, request, response);
                         }
-                        else if (PageRenderer.CanRender(request))
+                        else if (PageRenderer != null && PageRenderer.CanRender(request))
                         {
-                            content = PageRenderer.RenderPage(locatedPath, request, response);
+                            content = PageRenderer.RenderPage(request, response);
                         }
                         else
                         {
@@ -380,7 +379,7 @@ namespace Bam.Net.Server
             }
         }
 
-        protected byte[] GetContent(string locatedPath, IRequest request, IResponse response)
+        protected internal byte[] GetContent(string locatedPath, IRequest request, IResponse response)
         {
             byte[] content;
             string foundExt = Path.GetExtension(locatedPath);

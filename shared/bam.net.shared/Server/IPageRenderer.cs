@@ -7,6 +7,6 @@ namespace Bam.Net.Server
     {
         IApplicationTemplateManager ApplicationTemplateManager { get; set; }
         bool CanRender(IRequest request);
-        byte[] RenderPage(string path, IRequest request, IResponse response);
+        byte[] RenderPage(IRequest request, IResponse response);
     }
 }
