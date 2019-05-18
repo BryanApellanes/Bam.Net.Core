@@ -35,46 +35,5 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\bamdb.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\bamdb.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\bamdb.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamdb.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamdb.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamdb.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamdb.pdb" />
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamdb.pdb" />
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamdb.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamdb.dll.manifest" />
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamdb.dll.manifest" />
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamdb.dll.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamdb.application" />
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamdb.application" />
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamdb.application" />
-  </ItemGroup>
 
 </Project>

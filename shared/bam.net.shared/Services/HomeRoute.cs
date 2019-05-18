@@ -1,7 +1,8 @@
+using Bam.Net.Server;
 using System;
 using System.Collections.Generic;
 
-namespace Bam.Net.Server
+namespace Bam.Net.Services
 {
     public class HomeRoute
     {
