@@ -35,5 +35,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Build" />
+  </ItemGroup>
+
 
 </Project>

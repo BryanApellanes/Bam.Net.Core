@@ -30,7 +30,6 @@ namespace Bam.Net.Application
                 return false;
             }
             
-            List<string> projectNames = new List<string>();
             List<string> projectFilePaths = new List<string>();
             foreach (DirectoryInfo projectDir in rootDir.GetDirectories())
             {
@@ -40,14 +39,12 @@ namespace Bam.Net.Application
                     OutLineFormat("No project found in {0}", ConsoleColor.Yellow, projectDir.FullName);
                     continue;
                 }
-                projectNames.Add(projectDir.Name);
                 projectFilePaths.Add(projectPath);
             }
 
             Recipe recipe = new Recipe
             {
                 ProjectRoot = directoryPath,
-                ProjectNames = projectNames.ToArray(),
                 ProjectFilePaths = projectFilePaths.ToArray()
             };
             
@@ -86,6 +83,11 @@ namespace Bam.Net.Application
             outputDirectory.Replace("\\", "/");
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
+                string projectName = Path.GetFileNameWithoutExtension(projectFile);
+                if (projectName.Equals("bake"))
+                {
+                    continue;
+                }
                 string dotNetArgs =
                     $"publish {projectFile} -c {recipe.BuildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectory}";
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
@@ -111,7 +113,6 @@ namespace Bam.Net.Application
                 {
                     Recipe specified = Arguments["recipe"].FromJsonFile<Recipe>();
                     specified.ProjectRoot = discovered.ProjectRoot;
-                    specified.ProjectNames = discovered.ProjectNames;
                     specified.ProjectFilePaths = discovered.ProjectFilePaths;
                     toUse = specified;
                 }
