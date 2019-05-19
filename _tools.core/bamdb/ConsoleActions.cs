@@ -21,7 +21,7 @@ namespace Bam.Net.Application
     {
         static string contentRootConfigKey = "ContentRoot";
         static string defaultContentRoot = BamPaths.ContentPath;
-        static BamDbServer trooServer;
+        static BamDbServer bamDbServer;
 
         [ConsoleAction("startBamDbServer", "Start the BamDb server")]
         public void StartConsole()
@@ -33,9 +33,9 @@ namespace Bam.Net.Application
         [ConsoleAction("killBamDbServer", "Kill the BamDb server")]
         public void StopConsole()
         {
-            if (trooServer != null)
+            if (bamDbServer != null)
             {
-                trooServer.Stop();
+                bamDbServer.Stop();
                 Pause("BamDb stopped");
             }
             else
@@ -84,12 +84,12 @@ namespace Bam.Net.Application
         public static void StartBamDbServer(ConsoleLogger logger, IRepository repo)
         {
             BamConf conf = BamConf.Load(DefaultConfiguration.GetAppSetting(contentRootConfigKey).Or(defaultContentRoot));
-            trooServer = new BamDbServer(conf, logger, repo)
+            bamDbServer = new BamDbServer(conf, logger, repo)
             {
                 HostPrefixes = new HashSet<HostPrefix>(HostPrefix.FromDefaultConfiguration()),
                 MonitorDirectories = DefaultConfiguration.GetAppSetting("MonitorDirectories").DelimitSplit(",", ";")
             };
-            trooServer.Start();
+            bamDbServer.Start();
         }
 
         private static IRepository GetRepository()

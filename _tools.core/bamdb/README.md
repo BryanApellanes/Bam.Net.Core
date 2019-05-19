@@ -2,6 +2,9 @@
 
 Bam Database (bamdb.exe) is a high level data access component which provides a client gateway to multiple data persistence layers including various RDBM systems such as Microsoft Sql, MySql, Postgres and SQLite as well as no sql solutions such as mongo and its own internal data repository system.  It is also used to generate data access objects, data transfer objects and repositories from plain CLR classes.
 
+## Code Generation
+
+The following describes the options for code generation using bamdb.
 
 /generateDaoAssemblyForTypes
 Generate a Dao Assembly for types in a specified namespace of a specified assembly.
@@ -15,3 +18,9 @@ Generate Dto source for types in a specified namespace of a specified assembly, 
 /generateSchemaRepository
 In addition to generating Daos and Dtos for types in a specified namespace of a specified assembly, will 
 also generate a schema specific DaoRepository for all the types found.
+
+## Database Server
+
+The following describes the options available to serve data using bamdb.
+
+ 

@@ -22,7 +22,7 @@ namespace Bam.Net
             AddSwitches(typeof(ConsoleActions));
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             AddValidArgument("output", false, true, "Specify the directory to build to");
-            AddValidArgument("recipe", false, false, "Specify the recipe file to use");
+            AddValidArgument("projects", false, false, "Sepcify the recipe file containing project file paths to clean");
         }
 
         #region do not modify
