@@ -54,7 +54,7 @@ namespace Bam.Net.Application
             }
 
             string json = recipe.ToJson(true);
-            string recipeFile = Arguments.Contains("recipe") ? Arguments["recipe"] : "./recipe.json";
+            string recipeFile = Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "./recipe.json";
             FileInfo file = new FileInfo(recipeFile);
             json.SafeWriteToFile(file.FullName, true);
             OutLine(json, ConsoleColor.Cyan);
