@@ -6,6 +6,11 @@
     <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <StartupObject>Bam.Net.Application.Program</StartupObject>
     <RootNamespace>Bam.Net.Application</RootNamespace>
+
+    <PackageId>bamdb.exe</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Bryan Apellanes</Authors>
+    <Company>ThreeHeadz</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
