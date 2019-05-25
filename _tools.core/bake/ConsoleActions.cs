@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Bam.Net.CoreServices;
@@ -142,6 +143,41 @@ namespace Bam.Net.Application
             }
         }
 
+        [ConsoleAction("zip", "Zip the OutputDirectory specified by a recipe")]
+        public void ZipRecipe()
+        {
+            Recipe recipe = GetRecipe();
+            if (!Directory.Exists(recipe.OutputDirectory))
+            {
+                OutLineFormat("Output directory does not exist: {0}", recipe.OutputDirectory);
+                Exit(1);
+            }
+            DirectoryInfo dirInfo = new DirectoryInfo(recipe.OutputDirectory);
+            string fileName = $"{dirInfo.Name}.zip";
+            string output = $"./{fileName}";
+            FileInfo outputFile = new FileInfo(output);
+            if (Arguments.Contains("output"))
+            {
+                output = GetArgument("output");
+                outputFile = new FileInfo(output);
+                if (!outputFile.HasExtension(".zip"))
+                {
+                    dirInfo = new DirectoryInfo(output);
+                    outputFile = new FileInfo(Path.Combine(dirInfo.FullName, fileName));
+                }
+            }
+
+            if (outputFile.Exists)
+            {
+                OutLineFormat("File {0} exists, deleting...", outputFile.FullName);
+                Thread.Sleep(3000);
+                File.Delete(outputFile.FullName);
+            }
+            ZipFile.CreateFromDirectory(recipe.OutputDirectory, outputFile.FullName);
+            OutLineFormat("Zipped {0} to {2}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
+            Thread.Sleep(1000);
+        }
+
         private static Recipe GetRecipe()
         {
             string recipePath = "./recipe.json";
@@ -152,6 +188,10 @@ namespace Bam.Net.Application
             if (Arguments.Contains("clean"))
             {
                 recipePath = GetArgument("clean", "CLEAN: Please enter the path to the recipe file to use");
+            }
+            if (Arguments.Contains("zipRecipe"))
+            {
+                recipePath = GetArgument("zipRecipe", "ZIP: Please enter the path to the zip file to use");
             }
             if (!File.Exists(recipePath))
             {
