@@ -175,12 +175,12 @@ namespace Bam.Net.Application
                 Thread.Sleep(300);
             }
             ZipFile.CreateFromDirectory(recipe.OutputDirectory, outputFile.FullName);
-            OutLineFormat("Zipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
+            OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(1000);
             FileInfo base64File = new FileInfo($"{outputFile.FullName}.b64");
             byte[] bytes = File.ReadAllBytes(outputFile.FullName);
             bytes.ToBase64().SafeWriteToFile(base64File.FullName);
-            OutLineFormat("Wrote base64 encoded zip file: {0}", base64File.FullName);
+            OutLineFormat("Wrote base64 encoded zip file: {0}", ConsoleColor.DarkGreen, base64File.FullName);
             Thread.Sleep(300);
         }
 
