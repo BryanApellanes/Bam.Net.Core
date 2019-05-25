@@ -23,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DaemonService.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="DaemonService.cs" />
   </ItemGroup>
 
   <ItemGroup>

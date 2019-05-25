@@ -19,7 +19,7 @@ namespace Bam.Net.Application
             ProcessModes current = ProcessMode.Current.Mode;
             MethodInfo creator = typeof(BambotServiceRegistry).GetMethods().FirstOrDefault(m =>
             {
-                if (m.HasCustomAttributeOfType<ServiceRegistryLoaderAttribute>(out ServiceRegistryLoaderAttribute attr))
+                if (m.HasCustomAttributeOfType(out ServiceRegistryLoaderAttribute attr))
                 {
                     return attr.ProcessModes.Contains(current);
                 }
