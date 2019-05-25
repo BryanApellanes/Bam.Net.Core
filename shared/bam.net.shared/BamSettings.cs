@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Bam.Net
 {
+    /// <summary>
+    /// A class that represents settings and paths to drive external tools, including git, dotnet, node and docker.
+    /// </summary>
     public class BamSettings
     {
         public BamSettings()

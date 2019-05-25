@@ -8,6 +8,7 @@ namespace Bam.Net.Data
     public interface IDataDirectoryProvider
     {
         DirectoryInfo GetAppDataDirectory(IApplicationNameProvider applicationNameProvider);
+        DirectoryInfo GetAppDataDirectory(IApplicationNameProvider applicationNameProvider, params string[] directoryName);
         DirectoryInfo GetAppUsersDirectory(IApplicationNameProvider applicationNameProvider);
         DirectoryInfo GetAppDatabaseDirectory(IApplicationNameProvider applicationNameProvider);
         DirectoryInfo GetAppRepositoryDirectory(IApplicationNameProvider applicationNameProvider);

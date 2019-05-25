@@ -442,7 +442,7 @@ namespace Bam.Net
 
         public static FileInfo GetFileInfo(this Assembly assembly)
         {
-            return new FileInfo(assembly.CodeBase.Replace("file:///", "").Replace("/", "\\"));
+            return new FileInfo(assembly.CodeBase.Replace("file:///", ""));//.Replace("/", "\\"));
         }
 
         public static string GetFilePath(this Assembly assembly)

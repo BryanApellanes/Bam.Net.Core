@@ -17,7 +17,6 @@ namespace Bam.Net.Application
         }
 
         public string TemplatePath { get; set; }
-
         public string TypeAssembly { get; set; }
         public string SchemaName { get; set; }
 

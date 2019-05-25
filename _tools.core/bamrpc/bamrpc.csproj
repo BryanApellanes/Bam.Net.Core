@@ -4,7 +4,12 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <ApplicationIcon>brpc.ico</ApplicationIcon>
-    <RootNamespace>brpc</RootNamespace>
+    <RootNamespace>Bam.Net.Application</RootNamespace>
+
+    <PackageId>bamrpc.exe</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Bryan Apellanes</Authors>
+    <Company>ThreeHeadz</Company>
   </PropertyGroup>
 
   <ItemGroup>

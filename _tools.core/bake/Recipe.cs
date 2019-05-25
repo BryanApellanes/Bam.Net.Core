@@ -22,7 +22,6 @@ namespace Bam.Net.Application
         /// project directories are found.
         /// </summary>
         public string ProjectRoot { get; set; }
-        public string[] ProjectNames { get; set; }
         public string[] ProjectFilePaths { get; set; }
         public string OutputDirectory { get; set; }
         

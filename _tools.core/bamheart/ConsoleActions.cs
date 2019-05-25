@@ -48,7 +48,7 @@ namespace Bam.Net.Application
             Pause($"Heart server is serving service registry {serviceRegistry.Name}");
         }
 
-        [ConsoleAction("deployHeartServer", "Deploy the Heart server to a kubernetes cluster")]
+        [ConsoleAction("deployHeartServer", "Deploy the Heart server to a remote host")]
         public static void DeployServer()
         {
             string serviceInfo = Arguments.Contains("deployHeartServer") ? Arguments["deployHeartServer"] : string.Empty;
@@ -84,7 +84,7 @@ namespace Bam.Net.Application
             ILogger logger = GetLogger();
             Log.Default = logger;
             ServiceRegistry serviceRegistry = CoreServiceRegistryContainer.Create();
-            server = serviceRegistry.Serve(prefixes, logger);
+            server = serviceRegistry.ServeRegistry(prefixes, logger);
             hostPrefixes = prefixes;
             return serviceRegistry;
         }

@@ -69,10 +69,10 @@ namespace Bam.Net.CoreServices
         {
             if (Default == null)
             {
-                Type coreRegistryContainer = type.Assembly.GetTypes().Where(t => t.HasCustomAttributeOfType<ServiceRegistryContainerAttribute>()).FirstOrDefault();
+                Type coreRegistryContainer = type.Assembly.GetTypes().FirstOrDefault(t => t.HasCustomAttributeOfType<ServiceRegistryContainerAttribute>());
                 if (coreRegistryContainer != null)
                 {
-                    MethodInfo provider = coreRegistryContainer.GetMethods().Where(mi => mi.HasCustomAttributeOfType<ServiceRegistryLoaderAttribute>() || mi.Name.Equals("Get")).FirstOrDefault();
+                    MethodInfo provider = coreRegistryContainer.GetMethods().FirstOrDefault(mi => CustomAttributeExtension.HasCustomAttributeOfType<ServiceRegistryLoaderAttribute>(mi) || mi.Name.Equals("Get"));
                     if (provider != null)
                     {
                         object instance = provider.IsStatic ? null : provider.DeclaringType.Construct();

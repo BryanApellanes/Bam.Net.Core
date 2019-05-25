@@ -1,1 +1,0 @@
-﻿dotnet publish bam.csproj -c Release -o /bam/toolkit

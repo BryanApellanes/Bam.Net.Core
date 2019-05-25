@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Bam.Net.Server;
+using Bam.Net.Services;
 
-namespace Bam.Net.Services
+namespace Bam.Net.Server
 {
     public class RequestRouter
     {
@@ -16,6 +16,18 @@ namespace Bam.Net.Services
             PathName = pathName;
         }
 
+        public bool IsHomeRequest(string uri)
+        {
+            return IsHomeRequest(uri, out RequestRoute ignore);
+        }
+
+        public bool IsHomeRequest(string uri, out RequestRoute requestRoute)
+        {
+            HomeRoute homeRoute = new HomeRoute(uri);
+            requestRoute = ToRequestRoute(uri);
+            return homeRoute.IsValid;
+        }
+        
         /// <summary>
         /// The prefix of the path
         /// </summary>
@@ -30,13 +42,15 @@ namespace Bam.Net.Services
         public RequestRoute ToRequestRoute(Uri uri)
         {
             Dictionary<string, string> values = ToRouteValues(uri);
-
-            RequestRoute route = new RequestRoute { PathName = PathName, OriginalUrl = uri };
-            route.Protocol = values["Protocol"];
-            route.Domain = values["Domain"];
-            route.PathAndQuery = values["PathAndQuery"];
-            route.ParsedValues = values;
-            return route;
+            return new RequestRoute
+            {
+                PathName = PathName,
+                OriginalUrl = uri,
+                Protocol = values["Protocol"],
+                Domain = values["Domain"],
+                PathAndQuery = values["PathAndQuery"],
+                ParsedValues = values
+            };
         }
 
         protected Dictionary<string, string> ToRouteValues(Uri uri)

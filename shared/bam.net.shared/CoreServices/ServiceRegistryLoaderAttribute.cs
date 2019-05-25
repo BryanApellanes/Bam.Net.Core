@@ -14,7 +14,11 @@ namespace Bam.Net.CoreServices
     [AttributeUsage(AttributeTargets.Method)]
     public class ServiceRegistryLoaderAttribute: Attribute
     {
-        public ServiceRegistryLoaderAttribute() { }
+        public ServiceRegistryLoaderAttribute()
+        {
+            ProcessModes = new List<ProcessModes>();
+        }
+
         public ServiceRegistryLoaderAttribute(string registryName)
         {
             RegistryName = registryName;

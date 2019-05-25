@@ -120,6 +120,13 @@ namespace Bam.Net.Profiguration
             });
         }
 
+        public static ProfigurationSet In(params string[] pathSegments)
+        {
+            List<string> pathSegmentList = new List<string>(pathSegments);
+            pathSegmentList.Add(nameof(ProfigurationSet));
+            return new ProfigurationSet(new DirectoryInfo(Path.Combine(pathSegmentList.ToArray())));
+        }
+
         object _writeLock = new object();
         /// <summary>
         /// Get the profiguration of the specified name, creating it

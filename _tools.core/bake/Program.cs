@@ -10,6 +10,7 @@ namespace Bam.Net
     {
         static void Main(string[] args)
         {
+            Console.Write(args.Length);
             AddArguments();
             
             DefaultMethod = typeof(Program).GetMethod("Start");
@@ -22,7 +23,7 @@ namespace Bam.Net
             AddSwitches(typeof(ConsoleActions));
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             AddValidArgument("output", false, true, "Specify the directory to build to");
-            AddValidArgument("recipe", false, false, "Specify the recipe file to use");
+            AddValidArgument("outputRecipe", false, false, "Specify the name of the recipe to write, default is 'recipe.json'");
         }
 
         #region do not modify

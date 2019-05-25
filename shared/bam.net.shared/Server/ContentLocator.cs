@@ -124,14 +124,14 @@ namespace Bam.Net.Server
                 locator.AddSearchRule(".gif", imageDirs);
                 locator.AddSearchRule(".jpg", imageDirs);
 
-                string[] pageDirs = new string[] { "~/pages" };
+                string[] pageDirs = new string[] { "~/pages", "~/views", "~/html" };
                 locator.AddSearchRule(".htm", pageDirs);
                 locator.AddSearchRule(".html", pageDirs);
 
                 string[] cssDirs = new string[] { "~/css" };
                 locator.AddSearchRule(".css", cssDirs);
 
-				string[] jsDirs = new string[] { "~/js", "~/3rdParty", "~/common" };
+				string[] jsDirs = new string[] { "~/js", "~/lib", "~/common" };
 				locator.AddSearchRule(".js", jsDirs);
 
                 locator.Save();

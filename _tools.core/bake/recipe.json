@@ -1,20 +1,5 @@
 {
   "ProjectRoot": "\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\",
-  "ProjectNames": [
-    "bake",
-    "bam",
-    "bamd",
-    "bdb",
-    "bhrt",
-    "breve",
-    "bamrpc",
-    "bamsdo",
-    "bamtest",
-    "bamweb",
-    "chunkr",
-    "laotze",
-    "masuco"
-  ],
   "ProjectFilePaths": [
     "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bake\\bake.csproj",
     "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bam\\bam.csproj",
@@ -30,5 +15,5 @@
     "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\laotze\\laotze.csproj",
     "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\masuco\\masuco.csproj"
   ],
-  "OutputDirectory": "/opt\\bam\\toolkit"
+  "OutputDirectory": "%HOMEDRIVE%%HOMEPATH%\\.bam\\toolkit"
 }

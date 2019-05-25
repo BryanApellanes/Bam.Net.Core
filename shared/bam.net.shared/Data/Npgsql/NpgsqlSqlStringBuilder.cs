@@ -22,31 +22,36 @@ namespace Bam.Net.Data
             GoText = ";\r\n";
             CreateTableFormat = "CREATE TABLE {0} ({1})";
             AddForeignKeyColumnFormat = "ALTER TABLE {0} ADD CONSTRAINT {1} FOREIGN KEY (\"{2}\") REFERENCES {3} (\"{4}\")";
-            TableNameFormatter = (s) => "\"{0}\""._Format(s);
+            TableNameFormatter = (s) => "{0}"._Format(s);
             ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
         }
+        
         public override SqlStringBuilder Id(string idAs)
         {
             Builder.AppendFormat(" RETURNING \"Id\" AS \"{0}\"{1}", idAs, this.GoText);
             return this;
         }
+        
         public override void Reset()
         {
             base.Reset();
             this.GoText = ";\r\n";
         }
+        
         public static void Register(Incubator incubator)
         {
             NpgsqlSqlStringBuilder builder = new NpgsqlSqlStringBuilder();
             incubator.Set(typeof(SqlStringBuilder), builder);
             incubator.Set<SqlStringBuilder>(builder);
         }
+        
         public override string GetKeyColumnDefinition(KeyColumnAttribute keyColumn)
         {
             KeyColumnAttribute key = keyColumn.CopyAs<KeyColumnAttribute>();
             key.DbDataType = "SERIAL";
             return string.Format("{0} PRIMARY KEY ", GetColumnDefinition(key));
         }
+
         public override string GetColumnDefinition(ColumnAttribute column)
         {
             string max = string.Format("({0})", column.MaxLength);
@@ -57,7 +62,8 @@ namespace Bam.Net.Data
             {
                 type = "INT";
                 max = "";
-            }else if (type.Equals("bit"))
+            }
+            else if (type.Equals("bit"))
             {
                 type = "boolean";
                 max = "";
@@ -81,8 +87,15 @@ namespace Bam.Net.Data
                 max = "";
             }
 
-            return string.Format("{0} {1}{2}{3}", ColumnNameFormatter(column.Name), type, max, column.AllowNull ? "" : " NOT NULL");
+            return $"{ColumnNameFormatter(column.Name)} {type}{max}{(column.AllowNull ? "" : " NOT NULL")}";
         }
+
+        public override SqlStringBuilder Where(string columnName, object value)
+        {
+            AssignValue assignValue = new AssignValue(columnName, value, ColumnNameFormatter) {ParameterPrefix = ":"};
+            return Where(assignValue);
+        }
+        
         public override SqlStringBuilder Where(IQueryFilter filter)
         {
             WhereFormat where = NpgsqlFormatProvider.GetWhereFormat(filter, StringBuilder, NextNumber);
@@ -90,6 +103,21 @@ namespace Bam.Net.Data
             this.parameters.AddRange(where.Parameters);
             return this;
         }
+        
+        public override SqlStringBuilder And(IQueryFilter filter)
+        {
+            AndFormat where = NpgsqlFormatProvider.GetAndFormat(filter, StringBuilder, NextNumber);
+            NextNumber = where.NextNumber;
+            this.parameters.AddRange(where.Parameters);
+            return this;
+        }
+
+        public override SqlStringBuilder And(string columnName, object value)
+        {
+            AssignValue assignValue = new AssignValue(columnName, value, ColumnNameFormatter){ParameterPrefix = ":"};
+            return And(assignValue);
+        }
+
         public override SqlStringBuilder Update(string tableName, params AssignValue[] values)
         {
             Builder.AppendFormat("UPDATE {0} ", TableNameFormatter(tableName));

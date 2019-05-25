@@ -18,12 +18,12 @@ namespace Bam.Net.Data
     {
         public override DbParameter BuildParameter(string name, object value)
         {
-            return new NpgsqlParameter($"@{name}", value);
+            return new NpgsqlParameter($":{name}", value);
         }
 
         public override DbParameter BuildParameter(IParameterInfo c)
         {
-            string parameterName = string.Format("@{0}{1}", c.ColumnName, c.Number);
+            string parameterName = string.Format(":{0}{1}", c.ColumnName, c.Number);
             object value = c.Value;
             if (value is DateTime || value is DateTime?)
             {

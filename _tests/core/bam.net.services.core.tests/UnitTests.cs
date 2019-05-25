@@ -201,6 +201,28 @@ namespace Bam.Net.Services.Tests
             Expect.AreEqual("v1/monkey/5?blah=one&blah2=two", route.PathAndQuery);
         }
 
+        [UnitTest]
+        public void RequestParserCanTakeJustADomain()
+        {
+            RouteParser parser = new RouteParser("{Protocol}://{Domain}");
+            Dictionary<string, string> values = parser.ParseRouteInstance("http://v-o.bamapps.net");
+            RequestRoute route = values.ToInstance<RequestRoute>();
+            Expect.AreEqual(2, values.Count, $"Expected 2 but got {values.Count}");
+            Expect.AreEqual("http", route.Protocol);
+            Expect.AreEqual("v-o.bamapps.net", route.Domain);
+        }
+        
+        [UnitTest]
+        public void RequestParserCanTakeEmptyPath()
+        {
+            RouteParser parser = new RouteParser("{Protocol}://{Domain}/{PathAndQuery}");
+            Dictionary<string, string> values = parser.ParseRouteInstance("http://v-o.bamapps.net/");
+            RequestRoute route = values.ToInstance<RequestRoute>();
+            Expect.AreEqual(3, values.Count, $"Expected 3 but got {values.Count}");
+            Expect.AreEqual("http", route.Protocol);
+            Expect.AreEqual("v-o.bamapps.net", route.Domain);
+            Expect.AreEqual("", route.PathAndQuery);
+        }
 
         [UnitTest]
         public void ServiceRequestRouterTest()

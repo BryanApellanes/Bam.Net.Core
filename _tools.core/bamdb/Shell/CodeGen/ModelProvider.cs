@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Bam.Net;
@@ -11,56 +9,23 @@ using Bam.Net.CommandLine;
 using Bam.Net.Data.Dynamic;
 using Bam.Net.Presentation.Handlebars;
 
-namespace Bam.Shell.Models
+namespace Bam.Shell.CodeGen
 {
-    // TODO: refactor this to follow established provider-delegator pattern
-    public class ModelProvider : ShellProvider
+    public class ModelProvider: CodeGenProvider
     {
-        public override void List(Action<string> output = null, Action<string> error = null)
+        static DirectoryInfo _appData;
+        static object _appDataLock = new object();
+        static DirectoryInfo AppData
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Add(Action<string> output = null, Action<string> error = null)
-        {
-            string modelArg = GetArgument("name", "Enter the name of the model to add");
-            AppDataModel dataModel = ParseDataModelArgument(modelArg);
-            DirectoryInfo projectParent = FindProjectParent(out FileInfo csprojFile);
-            if (csprojFile == null)
+            get
             {
-                OutLine("Can't find csproj file", ConsoleColor.Magenta);
-                Exit(1);
+                return _appDataLock.DoubleCheckLock(ref _appData, () => new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, AppDataFolderName)));
             }
-            WriteDataModelDefinition(csprojFile, dataModel);
-            GenerateDataModels();
-        }
-
-        public override void Show(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Remove(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Run(Action<string> output = null, Action<string> error = null)
-        {
-            throw new NotImplementedException();
         }
         
-        [ArgZero("import", "Import data files from AppData (csv, json and yaml)")]
-        public void ImportDataFiles()
+        public override void Gen(Action<string> output = null, Action<string> error = null)
         {
-            DynamicDataManager mgr = new DynamicDataManager();
-            mgr.ProcessDataFiles(AppData);
-        }
-        
-        [ArgZero("gen-model", "src|bin|models|dbjs|repo|all: Generate a dynamic type assembly for json and yaml data")]
-        public void Generate()
-        {
-            GenerationTargets target = Arguments["gen"].ToEnum<GenerationTargets>();
+            GenerationTargets target = Arguments["target"].ToEnum<GenerationTargets>();
             switch (target)
             {
                 case GenerationTargets.Invalid:
@@ -97,22 +62,58 @@ namespace Bam.Shell.Models
             }
         }
         
-        public const string AppDataFolderName = "AppData";
-        public const string GenerationOutputFolderName = "_gen";
-        
-        static DirectoryInfo _appData;
-        static object _appDataLock = new object();
-        static DirectoryInfo AppData
+        static HandlebarsDirectory _handlebarsDirectory;
+        static object _handlebarsLock = new object();
+        public static HandlebarsDirectory GetHandlebarsDirectory()
         {
-            get
+            return _handlebarsLock.DoubleCheckLock(ref _handlebarsDirectory, () =>
             {
-                return _appDataLock.DoubleCheckLock(ref _appData, () => new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, AppDataFolderName)));
+                DirectoryInfo bamDir = Assembly.GetExecutingAssembly().GetFileInfo().Directory;
+                return new HandlebarsDirectory(Path.Combine(bamDir.FullName, "Templates"));
+            });
+        }
+        
+        public static BamSettings GetSettings()
+        {
+            BamSettings settings = BamSettings.Load();
+            if (!settings.IsValid(msg => OutLine(msg, ConsoleColor.Red)))
+            {
+                Exit(1);
+            }
+
+            return settings;
+        }
+        
+        protected string GetAppModelsNamespace(Assembly assembly)
+        {
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (type.Namespace.EndsWith("AppModels"))
+                {
+                    return type.Namespace;
+                }
+            }
+            OutLineFormat("No AppModels namespaces found", ConsoleColor.Yellow);
+            return string.Empty;
+        }
+        
+        public static void GenerateDynamicTypeAssemblies()
+        {
+            DynamicTypeManager dynamicTypeManager = new DynamicTypeManager();
+            Assembly assembly = dynamicTypeManager.GenerateAssembly(AppData);
+
+            Expect.IsNotNull(assembly, "Assembly was not generated");
+            Expect.IsGreaterThan(assembly.GetTypes().Length, 0, "No types were found in the generated assembly");
+
+            foreach (Type type in assembly.GetTypes())
+            {
+                OutLineFormat("{0}.{1}", ConsoleColor.Cyan, type.Namespace, type.Name);
             }
         }
         
-        private void GenerateDataModels()
+        public static void GenerateDataModels()
         {
-            FileInfo csprojFile = FindProjectFile();
+            FileInfo csprojFile = ShellProvider.FindProjectFile();
             DirectoryInfo projectParent = csprojFile.Directory;
             DirectoryInfo appModels = new DirectoryInfo(Path.Combine(projectParent.FullName, "AppModels"));
             DirectoryInfo appModelDefinitions = new DirectoryInfo(Path.Combine(appModels.FullName, "Definitions"));
@@ -123,8 +124,8 @@ namespace Bam.Shell.Models
                 RenderDataModel(csprojFile, dataModelName);
             }
         }
-
-        private void RenderDataModel(FileInfo csprojFile, string dataModelName)
+        
+        public static void RenderDataModel(FileInfo csprojFile, string dataModelName)
         {
             DirectoryInfo projectParent = csprojFile.Directory;
             DirectoryInfo appModels = new DirectoryInfo(Path.Combine(projectParent.FullName, "AppModels"));
@@ -137,31 +138,13 @@ namespace Bam.Shell.Models
 
             handlebarsDirectory.Render("AppDataModel.cs", dataModel).SafeWriteToFile(modelCodeFile.FullName, true);
         }
-
-        private void WriteDataModelDefinition(FileInfo csprojFile, AppDataModel appDataModel)
-        {
-            WriteDataModelDefinition(csprojFile, appDataModel.Name, appDataModel.Properties.ToArray());
-        }
-
-        private AppDataModel WriteDataModelDefinition(FileInfo csprojFile, string dataModelName, params AppDataPropertyModel[] properties)
-        {
-            AppDataModel model = ReadDataModelDefinition(csprojFile, dataModelName, out FileInfo dataModelFile);
-            List<AppDataPropertyModel> props = new List<AppDataPropertyModel>();
-            foreach(AppDataPropertyModel prop in properties)
-            {
-                props.Add(prop);
-            }
-            model.Properties = props.ToArray();
-            model.ToYamlFile(dataModelFile);
-            return model;
-        }
-
-        private AppDataModel ReadDataModelDefinition(FileInfo csprojFile, string dataModelName)
+        
+        public static AppDataModel ReadDataModelDefinition(FileInfo csprojFile, string dataModelName)
         {
             return ReadDataModelDefinition(csprojFile, dataModelName, out FileInfo ignore);
         }
 
-        private AppDataModel ReadDataModelDefinition(FileInfo csprojFile, string dataModelName, out FileInfo modelFile)
+        public static AppDataModel ReadDataModelDefinition(FileInfo csprojFile, string dataModelName, out FileInfo modelFile)
         {
             DirectoryInfo projectParent = csprojFile.Directory;
             DirectoryInfo appModels = new DirectoryInfo(Path.Combine(projectParent.FullName, "AppModels"));
@@ -181,7 +164,7 @@ namespace Bam.Shell.Models
             }
             return model;
         }
-
+        
         private void GenerateDaoFromDbJsFiles()
         {
             //laotze.exe / root:[PATH-TO-DIRECTORY-CONTAINING-DBJS] /keep /s
@@ -193,11 +176,11 @@ namespace Bam.Shell.Models
                 OutLineFormat("Dao generation from *.db.js files exited with code {0}: {1}", ConsoleColor.Yellow, output.ExitCode, output.StandardError.Substring(output.StandardError.Length - 300));
             }
         }
-
+        
         private void GenerateSchemaRepository()
         {
             OutLineFormat("Generating Dao repository for AppModels", ConsoleColor.Cyan);
-            FileInfo csprojFile = FindProjectFile();
+            FileInfo csprojFile = ShellProvider.FindProjectFile();
             BamSettings settings = GetSettings();
 
             string schemaName = $"{Path.GetFileNameWithoutExtension(csprojFile.Name).Replace("_", "").Replace("-", "").Replace(".", "")}Schema";
@@ -225,7 +208,7 @@ namespace Bam.Shell.Models
             };
             GenerateSchemaRepository(generationSettings);
         }
-
+        
         private void GenerateSchemaRepository(string configPath)
         {
             GenerateSchemaRepository(GenerationSettings.FromConfig(configPath));
@@ -233,7 +216,7 @@ namespace Bam.Shell.Models
 
         private void GenerateSchemaRepository(GenerationSettings generationSettings)
         {
-            string bdbCommand = $"bdb.exe /generateSchemaRepository /typeAssembly:\"{generationSettings.Assembly.GetFilePath()}\" /schemaName:{generationSettings.SchemaName} /fromNameSpace:{generationSettings.FromNameSpace} /checkForIds:yes /useInhertianceSchema:{generationSettings.UseInheritanceSchema.ToString()} /writeSource:\"{generationSettings.WriteSourceTo}\"";
+            string bdbCommand = $"bamdb.exe /generateSchemaRepository /typeAssembly:\"{generationSettings.Assembly.GetFilePath()}\" /schemaName:{generationSettings.SchemaName} /fromNameSpace:{generationSettings.FromNameSpace} /checkForIds:yes /useInhertianceSchema:{generationSettings.UseInheritanceSchema.ToString()} /writeSource:\"{generationSettings.WriteSourceTo}\"";
             ProcessOutput output = bdbCommand.Run(o => OutLine(o, ConsoleColor.DarkGreen), 100000);
 
             if (output.ExitCode != 0)
@@ -242,12 +225,12 @@ namespace Bam.Shell.Models
                 Thread.Sleep(300);
             }
         }
-
+                        
         private void GenerateDynamicTypeSource()
         {
             OutLineFormat("Generating dynamic types from json ({0}) and yaml ({1}).", Path.Combine(AppData.FullName, "json"), Path.Combine(AppData.FullName, "yaml"));
             DynamicTypeManager dynamicTypeManager = new DynamicTypeManager();
-            FileInfo csprojFile = FindProjectFile();
+            FileInfo csprojFile = ShellProvider.FindProjectFile();
             if (csprojFile == null)
             {
                 throw new InvalidOperationException("Couldn't find project file");
@@ -257,79 +240,5 @@ namespace Bam.Shell.Models
 
             OutLineFormat("Generated source: {0}", ConsoleColor.DarkCyan, source.Sha256());
         }
-
-        private void GenerateDynamicTypeAssemblies()
-        {
-            DynamicTypeManager dynamicTypeManager = new DynamicTypeManager();
-            Assembly assembly = dynamicTypeManager.GenerateAssembly(AppData);
-
-            Expect.IsNotNull(assembly, "Assembly was not generated");
-            Expect.IsGreaterThan(assembly.GetTypes().Length, 0, "No types were found in the generated assembly");
-
-            foreach (Type type in assembly.GetTypes())
-            {
-                OutLineFormat("{0}.{1}", ConsoleColor.Cyan, type.Namespace, type.Name);
-            }
-        }
-
-
-
-        protected string GetAppModelsNamespace(Assembly assembly)
-        {
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (type.Namespace.EndsWith("AppModels"))
-                {
-                    return type.Namespace;
-                }
-            }
-            OutLineFormat("No AppModels namespaces found", ConsoleColor.Yellow);
-            return string.Empty;
-        }
-
-        private static AppDataModel ParseDataModelArgument(string modelArg)
-        {
-            string[] split = modelArg.DelimitSplit(",", true);
-            string modelName = split[0];
-            AppDataModel dataModel = new AppDataModel { Name = modelName };
-            int num = 0;
-            List<AppDataPropertyModel> props = new List<AppDataPropertyModel>();
-            split.Rest(1, (modelProperty) =>
-            {
-                string[] parts = modelProperty.DelimitSplit(":", true);
-                bool key = false;
-                string type = "string";
-                string name = $"_Property_{++num}";
-                if (parts.Length == 2)
-                {
-                    type = parts[0];
-                    name = parts[1];
-                }
-                else if (parts.Length == 3)
-                {
-                    type = parts[1];
-                    name = parts[2];
-                    string[] keyParts = parts[0].DelimitSplit("=", true);
-                    if (keyParts.Length != 2)
-                    {
-                        OutLineFormat("Unrecognized key specification {0}: expected format key=[true|false].", ConsoleColor.Yellow, parts[0]);
-                    }
-                    else
-                    {
-                        key = keyParts[1].IsAffirmative();
-                    }
-                }
-                props.Add(new AppDataPropertyModel
-                {
-                    Key = key,
-                    Type = type,
-                    Name = name
-                });
-            });
-            dataModel.Properties = props.ToArray();
-            return dataModel;
-        }
-        
-
     }
 }

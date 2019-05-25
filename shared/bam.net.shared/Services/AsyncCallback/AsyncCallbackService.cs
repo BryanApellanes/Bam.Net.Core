@@ -61,7 +61,7 @@ namespace Bam.Net.Services
             {
                 if (_server == null)
                 {
-                    _server = this.Serve(HostPrefix, Logger);
+                    _server = this.ServeType(HostPrefix, Logger);
                 }
             }
             SaveExecutionRequestData(request);

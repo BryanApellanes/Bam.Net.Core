@@ -64,7 +64,7 @@ namespace Bam.Net.Services.DataReplication
 
         protected DataProperty DataProperty(string name, object value = null)
         {
-            DataProperty result = this.Where(dp => dp.Name.Equals(name)).FirstOrDefault();
+            DataProperty result = this.FirstOrDefault(dp => dp.Name.Equals(name));
             if (result == null)
             {
                 result = new Data.DataProperty { Name = name, Value = value };

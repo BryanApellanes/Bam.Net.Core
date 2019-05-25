@@ -21,7 +21,7 @@ namespace Bam.Net.Data.Npgsql
         {
             SetFormat set = new SetFormat();
             set.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
-            set.ParameterPrefix = "@";
+            set.ParameterPrefix = ":";
             foreach (AssignValue value in values)
             {
                 value.ColumnNameFormatter = set.ColumnNameFormatter;
@@ -37,7 +37,7 @@ namespace Bam.Net.Data.Npgsql
         {
             WhereFormat where = new WhereFormat(filter);
             where.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
-            where.ParameterPrefix = "@";
+            where.ParameterPrefix = ":";
             where.StartNumber = startNumber;
             stringBuilder.Append(where.Parse());
             return where;
@@ -47,11 +47,32 @@ namespace Bam.Net.Data.Npgsql
         {
             WhereFormat where = new WhereFormat();
             where.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
-            where.ParameterPrefix = "@";
+            where.ParameterPrefix = ":";
             where.StartNumber = startNumber;
             where.AddAssignment(filter);
             stringBuilder.Append(where.Parse());
             return where;
+        }
+
+        public static AndFormat GetAndFormat(AssignValue filter, StringBuilder stringBuilder, int? startNumber)
+        {
+            AndFormat and = new AndFormat();
+            and.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            and.ParameterPrefix = ":";
+            and.StartNumber = startNumber;
+            and.AddAssignment(filter);
+            stringBuilder.Append(and.Parse());
+            return and;
+        }
+        
+        public static AndFormat GetAndFormat(IQueryFilter filter, StringBuilder stringBuilder, int? startNumber)
+        {
+            AndFormat and = new AndFormat(filter);
+            and.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            and.ParameterPrefix = ":";
+            and.StartNumber = startNumber;
+            stringBuilder.Append(and.Parse());
+            return and;
         }
     }
 }

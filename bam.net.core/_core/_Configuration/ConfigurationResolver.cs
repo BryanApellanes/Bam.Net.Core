@@ -18,7 +18,8 @@ namespace Bam.Net.Configuration
         {
             DefaultConfiguration = ConfigurationManager.AppSettings;
             ConfigurationProvider = new DefaultConfigurationProvider();
-            AppSettings = Config.Read();
+            Config = Config.Current;
+            AppSettings = Config.AppSettings;
         }
 
         public ConfigurationResolver(IConfiguration configuration, ILogger logger = null)
@@ -26,10 +27,13 @@ namespace Bam.Net.Configuration
             Logger = logger ?? Log.Default;
             NetCoreConfiguration = configuration;
             DefaultConfiguration = ConfigurationManager.AppSettings;
-            AppSettings = Config.Read();
+            Config = Config.Current;
+            AppSettings = Config.AppSettings;
         }
         
-        public Dictionary<string, string> AppSettings { get; set; }
+        public Config Config { get; }
+        
+        public Dictionary<string, string> AppSettings { get; }
 
         public IConfiguration NetCoreConfiguration { get; set; }
         public NameValueCollection DefaultConfiguration { get; set; }
@@ -76,8 +80,8 @@ namespace Bam.Net.Configuration
                 }
                 if (!string.IsNullOrEmpty(value))
                 {
-                    AppSettings.AddMissing(key, value);
-                    Config.Write(AppSettings);
+                    Config.AppSettings.AddMissing(key, value);
+                    Config.Write();
                 }
                 return value;
             }       

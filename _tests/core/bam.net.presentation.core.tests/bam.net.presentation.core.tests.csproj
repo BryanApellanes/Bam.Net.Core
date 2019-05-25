@@ -70,4 +70,6 @@
     <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bam.net.presentation.core.tests.dll" />
   </ItemGroup>
 
+  
+
 </Project>

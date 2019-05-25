@@ -8,6 +8,7 @@ using System.Text;
 using System.Reflection;
 using Bam.Net;
 using System.Diagnostics;
+using Bam.Net.Data.Dynamic;
 using Bam.Net.Services;
 
 namespace Bam.Net.Incubation

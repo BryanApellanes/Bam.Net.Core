@@ -588,7 +588,7 @@ namespace Bam.Net.Server
 
         private void RegisterDatabase(DaoProxyRegistration reg)
         {
-            DaoConf daoConf = BamConf.DaoConfigs.Where(d => d.ConnectionName.Equals(reg.ContextName)).FirstOrDefault() ?? DaoConf.GetDefault(reg.ContextName, BamConf);
+            DaoConf daoConf = BamConf.DaoConfigs.FirstOrDefault(d => d.ConnectionName.Equals(reg.ContextName)) ?? DaoConf.GetDefault(reg.ContextName, BamConf);
             daoConf.Register();
             reg.Database = Db.For(reg.ContextName);
             reg.Database.TryEnsureSchema(reg.Assembly, Logger);

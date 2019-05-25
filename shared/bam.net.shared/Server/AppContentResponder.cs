@@ -83,7 +83,7 @@ namespace Bam.Net.Server
         protected List<MethodInfo> CustomHandlerMethods { get; }
 
         /// <summary>
-        /// Load all methods found in the specified file that are addorned with the ContentHandlerAttribute attribute
+        /// Load all methods found in the specified file that are adorned with the ContentHandlerAttribute attribute
         /// into the CustomHandlerMethods list.
         /// </summary>
         /// <param name="file"></param>
@@ -188,7 +188,6 @@ namespace Bam.Net.Server
         }
 
         IApplicationTemplateManager _appTemplateManager;
-        [Inject]
         public IApplicationTemplateManager AppTemplateManager
         {
             get
@@ -200,6 +199,24 @@ namespace Bam.Net.Server
                 _appTemplateManager = value;
                 _appTemplateManager.AppContentResponder = this;
                 _appTemplateManager.ContentResponder = ContentResponder;
+                if (PageRenderer != null)
+                {
+                    PageRenderer.ApplicationTemplateManager = _appTemplateManager;
+                }
+            }
+        }
+
+        IPageRenderer _pageRenderer;
+        public IPageRenderer PageRenderer
+        {
+            get
+            {
+                return _pageRenderer;
+            }
+            set
+            {
+                _pageRenderer = value;
+                _pageRenderer.ApplicationTemplateManager = _appTemplateManager;
             }
         }
 
@@ -316,30 +333,25 @@ namespace Bam.Net.Server
                     }
                     else if (AppContentLocator.Locate(path, out string locatedPath, out checkedPaths))
                     {
-                        string foundExt = Path.GetExtension(locatedPath);
-                        if (FileCachesByExtension.ContainsKey(foundExt))
-                        {
-                            FileCache cache = FileCachesByExtension[ext];
-                            if (ShouldZip(request))
-                            {
-                                SetGzipContentEncodingHeader(response);
-                                content = cache.GetZippedContent(locatedPath);
-                            }
-                            else
-                            {
-                                content = cache.GetContent(locatedPath);
-                            }
-                        }
-                        else
-                        {
-                            content = File.ReadAllBytes(locatedPath);
-                        }
+                        content = GetContent(locatedPath, request, response);
                         handled = true;
                         Etags.SetLastModified(response, request.Url.ToString(), new FileInfo(locatedPath).LastWriteTime);
                     }
-                    else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path) || (AppRoot.FileExists($"~/pages{path}.html", out locatedPath)))
+                    else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path))
                     {
-                        content = RenderLayout(response, path);
+                        if (AppRoot.FileExists($"~/{AppConf.HtmlDir}{path}.html", out locatedPath))
+                        {
+                            content = GetContent(locatedPath, request, response);
+                        }
+                        else if (PageRenderer != null && PageRenderer.CanRender(request))
+                        {
+                            content = PageRenderer.RenderPage(request, response);
+                        }
+                        else
+                        {
+                            content = RenderLayout(response, path);
+                        }
+
                         handled = true;
                     }
                 }
@@ -365,6 +377,31 @@ namespace Bam.Net.Server
                 OnNotResponded(context);
                 return false;
             }
+        }
+
+        protected internal byte[] GetContent(string locatedPath, IRequest request, IResponse response)
+        {
+            byte[] content;
+            string foundExt = Path.GetExtension(locatedPath);
+            if (FileCachesByExtension.ContainsKey(foundExt))
+            {
+                FileCache cache = FileCachesByExtension[foundExt];
+                if (ShouldZip(request))
+                {
+                    SetGzipContentEncodingHeader(response);
+                    content = cache.GetZippedContent(locatedPath);
+                }
+                else
+                {
+                    content = cache.GetContent(locatedPath);
+                }
+            }
+            else
+            {
+                content = File.ReadAllBytes(locatedPath);
+            }
+
+            return content;
         }
 
         protected virtual void SetResponseHeaders(IResponse response, string path)
@@ -433,8 +470,8 @@ namespace Bam.Net.Server
             }
 
             string lowered = path.ToLowerInvariant();
-            string[] layoutSegments = string.Format("~/pages/{0}{1}", path, LayoutFileExtension).DelimitSplit("/", "\\");
-            string[] htmlSegments = string.Format("~/pages/{0}.html", path).DelimitSplit("/", "\\");
+            string[] layoutSegments = string.Format("~/{0}/{1}{2}", AppConf.HtmlDir, path, LayoutFileExtension).DelimitSplit("/", "\\");
+            string[] htmlSegments = string.Format("~/{0}/{1}.html", AppConf.HtmlDir, path).DelimitSplit("/", "\\");
 
             LayoutModel layoutModel = null;
             if (LayoutModelsByPath.ContainsKey(lowered))
@@ -476,14 +513,13 @@ namespace Bam.Net.Server
 
         private byte[] RenderLayout(IResponse response, string path, string queryString = null)
         {
-            byte[] content;
             AppTemplateManager.SetContentType(response);
             MemoryStream ms = new MemoryStream();
             LayoutModel layoutModel = GetLayoutModelForPath(path);
             layoutModel.QueryString = queryString ?? layoutModel.QueryString;
             AppTemplateManager.RenderLayout(layoutModel, ms);
             ms.Seek(0, SeekOrigin.Begin);
-            content = ms.GetBuffer();
+            byte[] content = ms.GetBuffer();
             return content;
         }
 

@@ -3,6 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <PackageId>bamd.exe</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Bryan Apellanes</Authors>
+    <Company>ThreeHeadz</Company>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DaemonService.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="DaemonService.cs" />
   </ItemGroup>
 
   <ItemGroup>

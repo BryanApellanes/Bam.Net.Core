@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Permissions;
 using System.Threading;
 using Bam.Net.Automation;
 using Bam.Net.CommandLine;
+using Bam.Net.CoreServices;
 using Bam.Net.Server;
 using Bam.Net.Services;
 using Bam.Net.Services.Automation;
@@ -22,12 +24,10 @@ namespace Bam.Net.Application
         [ConsoleAction("S", "Start bambot server")]
         public void StartServer()
         {
-            ServiceProxyServer = new CommandService().Serve();
-            HashSet<HostPrefix> hostPrefixes = new HashSet<HostPrefix>();
-            HostPrefix.FromBamProcessConfig().Each(hp => hostPrefixes.Add(hp));
-            ServiceProxyServer.HostPrefixes = hostPrefixes;
-            OutLine($"Config file: {Config.Current.File.FullName}", ConsoleColor.DarkCyan);
-            OutLine(Config.Current.File.ReadAllText());
+            ConsoleLogger logger = new ConsoleLogger();
+            ApplicationServiceRegistry appRegistry = BambotServiceRegistry.ForCurrentProcessMode();
+            ServiceProxyServer = appRegistry.ServeRegistry(HostPrefix.FromBamProcessConfig().ToArray(), logger);
+
             foreach (HostPrefix hostPrefix in ServiceProxyServer.HostPrefixes)
             {
                 OutLineFormat("\t{0}", ConsoleColor.Cyan, hostPrefix.ToString());
@@ -43,6 +43,14 @@ namespace Bam.Net.Application
                 ServiceProxyServer.Stop();
                 Pause("Bambot service stopped");
             }
+        }
+
+        [ConsoleAction("config", "Show the current bambot config settings.")]
+        public void ShowConfig()
+        {
+            OutLine($"Config file: {Config.Current.File.FullName}", ConsoleColor.DarkCyan);
+            OutLine(Config.Current.File.ReadAllText());
+            Thread.Sleep(1000);
         }
     }
 }

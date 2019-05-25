@@ -2,13 +2,12 @@
 
 using System;
 using GraphQL;
+using Npgsql;
 
 namespace Bam.Shell.Conf
 {
     public class ConfProviderDelegator : ArgZeroDelegator<ConfProvider>
     {
-    
-
         [ArgZero("get", typeof(ConfProvider))]
         public void Get()
         {
@@ -24,6 +23,13 @@ namespace Bam.Shell.Conf
             provider?.Set(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
-            
+
+        [ArgZero("print", typeof(ConfProvider))]
+        public void Print()
+        {
+            ConfProvider provider = Construct();
+            provider?.Print(StandardOut, StandardError);
+            Exit(provider != null ? 0 : 1);
+        }
     } 
 }

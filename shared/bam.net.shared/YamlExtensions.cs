@@ -62,6 +62,12 @@ namespace Bam.Net
             return deserializer.Deserialize(new StreamReader(file.FullName));
         }
 
+        /// <summary>
+        /// Deserialize the contents of the current path as an instance of the specified generic type.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T FromYamlFile<T>(this string path)
         {
             return FromYamlFile<T>(new FileInfo(path));

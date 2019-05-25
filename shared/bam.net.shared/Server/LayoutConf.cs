@@ -57,7 +57,6 @@ namespace Bam.Net.Server
                 ApplicationName = AppConf.Name,
                 QueryString = QueryString,
                 Extras = string.IsNullOrEmpty(Extras) ? null : JsonConvert.DeserializeObject(Extras),
-
                 LayoutName = LayoutName,
                 ApplicationDisplayName = AppConf.DisplayName
             };
@@ -65,7 +64,7 @@ namespace Bam.Net.Server
 
             if (htmlPathSegments != null && RenderBody) 
             {
-                SetBody(model, htmlPathSegments);
+                SetContent(model, htmlPathSegments);
             }
 
             return model;
@@ -79,20 +78,20 @@ namespace Bam.Net.Server
             }
         }
 
-        protected internal void SetBody(LayoutModel layout, string[] pathSegments) 
+        protected internal void SetContent(LayoutModel layout, string[] pathSegments) 
         {
             Fs appRoot = AppConf.AppRoot;
             if (appRoot.FileExists(pathSegments)) 
             {
                 string html = appRoot.ReadAllText(pathSegments);
                 CQ dollarSign = CQ.Create(html);
-                string body = dollarSign["body"].Html().Replace("\r", "").Replace("\n", "").Replace("\t", "");
+                string body = dollarSign["body"].Html();
                 layout.PageContent = body;
 
                 StringBuilder headLinks = new StringBuilder();
-                dollarSign["link", dollarSign["head"]].Each(el => 
+                dollarSign["link", dollarSign["head"]].Each(el =>
                 {
-                    AddLink(headLinks, el);
+                    headLinks.AppendLine(el.OuterHTML);
                 });
                 StringBuilder links = new StringBuilder(layout.StyleSheetLinkTags);
                 links.Append(headLinks.ToString());              
@@ -101,38 +100,12 @@ namespace Bam.Net.Server
                 StringBuilder scriptTags = new StringBuilder();
                 dollarSign["script", dollarSign["head"]].Each(el =>
                 {
-                  AddScript(scriptTags, el);
+                    scriptTags.AppendLine(el.OuterHTML);
                 });
                 StringBuilder scripts = new StringBuilder(layout.ScriptTags);
                 scripts.Append(scriptTags.ToString());
                 layout.ScriptTags = scripts.ToString();
             }
-        }
-
-        private void AddLink(StringBuilder headLinks, IDomObject el) 
-        {
-            CQ cq = CQ.Create(el);
-            string relAttr = cq.Attr("rel");
-            string typeAttr = cq.Attr("type");
-            string hrefAttr = cq.Attr("href");
-            var obj = new
-            {
-                rel = string.IsNullOrEmpty(relAttr) ? "" : "rel=\"{0}\""._Format(relAttr),
-                type = string.IsNullOrEmpty(typeAttr) ? "" : "type=\"{0}\""._Format(typeAttr),
-                href = string.IsNullOrEmpty(hrefAttr) ? "" : "href=\"{0}\""._Format(hrefAttr)
-            };
-            headLinks.Append("<link {rel} {type} {href}>".NamedFormat(obj));
-        }
-
-        private void AddScript(StringBuilder scriptTags, IDomObject el)
-        {
-          CQ cq = CQ.Create(el);
-
-          var obj = new
-          {
-            src = "src=\"{0}\""._Format(cq.Attr("src"))
-          };
-          scriptTags.Append("<script {src}></script>".NamedFormat(obj));
         }
     }
 }
