@@ -174,7 +174,7 @@ namespace Bam.Net.Application
                 File.Delete(outputFile.FullName);
             }
             ZipFile.CreateFromDirectory(recipe.OutputDirectory, outputFile.FullName);
-            OutLineFormat("Zipped {0} to {2}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
+            OutLineFormat("Zipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(1000);
         }
 
