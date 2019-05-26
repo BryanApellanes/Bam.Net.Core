@@ -49,14 +49,22 @@ namespace Bam.Net.Application
                 ProjectFilePaths = projectFilePaths.ToArray()
             };
 
+            string recipeFile = Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "./recipe.json";
+            FileInfo file = new FileInfo(recipeFile);
+            if (file.Exists)
+            {
+                Recipe fromFile = file.FromJsonFile<Recipe>();
+                recipe.OutputDirectory = fromFile.OutputDirectory;
+                recipe.BuildConfig = fromFile.BuildConfig;
+                recipe.OsName = fromFile.OsName;
+            }
+            
             if (Arguments.Contains("output"))
             {
                 recipe.OutputDirectory = GetArgument("output");
             }
-
+            
             string json = recipe.ToJson(true);
-            string recipeFile = Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "./recipe.json";
-            FileInfo file = new FileInfo(recipeFile);
             json.SafeWriteToFile(file.FullName, true);
             OutLine(json, ConsoleColor.Cyan);
             OutLineFormat("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
