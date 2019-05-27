@@ -101,7 +101,7 @@ namespace Bam.Net.Application
                 string tempRecipe = $"./temp_recipe_{6.RandomLetters()}.json";
                 toUse.ToJsonFile(tempRecipe);
                 Arguments["recipe"] = new FileInfo(tempRecipe).FullName;
-                BuildToolkit();
+                BakeRecipe();
             }
         }
 
@@ -120,7 +120,7 @@ namespace Bam.Net.Application
         }
 
         [ConsoleAction("recipe", "bake the specified recipe")]
-        public void BuildToolkit()
+        public void BakeRecipe()
         {
             // build each csproj with dotnet publish
             Recipe recipe = GetRecipe();

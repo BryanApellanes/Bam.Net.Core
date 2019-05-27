@@ -25,7 +25,7 @@ namespace Bam.Net.Server
             ApplicationTemplateManager = applicationTemplateManager;
             RequestRouter = new RequestRouter();
             ApplicationTemplateManager.AppContentResponder = appContentResponder;
-            appContentResponder = appContentResponder;
+            AppContentResponder = appContentResponder;
             _routeInfos = new Dictionary<string, RouteInfo>();
         }
         
@@ -48,7 +48,7 @@ namespace Bam.Net.Server
             if (!_routeInfos.ContainsKey(request.RawUrl))
             {
                 RouteInfo info = new RouteInfo() {Request = request};
-                info.IsHomeRequest = RequestRouter.IsHomeRequest(request.RawUrl, out RequestRoute route);
+                info.IsHomeRequest = RequestRouter.IsHomeRequest(request.Url, out RequestRoute route);
                 info.RequestRoute = route;
                 if (!info.IsHomeRequest)
                 {

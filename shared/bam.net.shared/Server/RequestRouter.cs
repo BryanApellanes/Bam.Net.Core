@@ -27,6 +27,18 @@ namespace Bam.Net.Server
             requestRoute = ToRequestRoute(uri);
             return homeRoute.IsValid;
         }
+
+        public bool IsHomeRequest(Uri uri)
+        {
+            return IsHomeRequest(uri, out RequestRoute ignore);
+        }
+
+        public bool IsHomeRequest(Uri uri, out RequestRoute requestRoute)
+        {
+            HomeRoute homeRoute = new HomeRoute(uri);
+            requestRoute = ToRequestRoute(uri);
+            return homeRoute.IsValid;
+        }
         
         /// <summary>
         /// The prefix of the path
