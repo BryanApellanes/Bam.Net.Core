@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Data.Dynamic.Data
 {
     [Serializable]
-    public class DataInstancePropertyValue: CompositeKeyRepoData
+    public class DataInstancePropertyValue: KeyedAuditRepoData
     {
         public ulong DataInstanceId { get; set; }
         public virtual DataInstance DataInstance { get; set; }

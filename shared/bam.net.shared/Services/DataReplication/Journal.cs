@@ -105,12 +105,12 @@ namespace Bam.Net.Services.DataReplication
             return TypeMap.GetPropertyShortName(propId);
         }
 
-        public T LoadInstance<T>(JournalEntryInfo info) where T : KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(JournalEntryInfo info) where T : CompositeKeyAuditRepoData, new()
         {
             return LoadInstance<T>(info.InstanceId);
         }
 
-        public T LoadInstance<T>(JournalEntry entry) where T : KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(JournalEntry entry) where T : CompositeKeyAuditRepoData, new()
         {
             return LoadInstance<T>(entry.InstanceId);
         }
@@ -122,19 +122,19 @@ namespace Bam.Net.Services.DataReplication
         /// <typeparam name="T"></typeparam>
         /// <param name="instance">The instance.</param>
         /// <returns></returns>
-        public T LoadInstance<T>(T instance) where T: KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(T instance) where T: CompositeKeyAuditRepoData, new()
         {
             return LoadInstance<T>(instance.GetULongKeyHash());
         }
 
         /// <summary>
         /// Reads the entry from disk by determining what the Id is using GetULongKeyHash.  Keys must be 
-        /// made of one or more properties addorned with CompositeKeyAttribute.
+        /// made of one or more properties adorned with CompositeKeyAttribute.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public T LoadInstance<T>(ulong id) where T : KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(ulong id) where T : CompositeKeyAuditRepoData, new()
         {
             T toLoad = new T();
             List<JournalEntry> instanceEntries = JournalEntry.LoadInstanceEntries<T>(id, this).ToList();
@@ -184,12 +184,12 @@ namespace Bam.Net.Services.DataReplication
         /// </value>
         public int ExceptionThreshold { get; set; }
 
-        public IEnumerable<JournalEntry> Enqueue(KeyHashAuditRepoData data)
+        public IEnumerable<JournalEntry> Enqueue(CompositeKeyAuditRepoData data)
         {
             return Enqueue(data, (e) => { });
         }
 
-        public IEnumerable<JournalEntry> Enqueue(KeyHashAuditRepoData data, Action<JournalEntry[]> onFullyFlushed)
+        public IEnumerable<JournalEntry> Enqueue(CompositeKeyAuditRepoData data, Action<JournalEntry[]> onFullyFlushed)
         {
             TypeMap.AddMapping(data);
             

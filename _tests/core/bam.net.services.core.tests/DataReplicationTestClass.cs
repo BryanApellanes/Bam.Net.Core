@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Services.Tests
 {
-    public class DataReplicationTestClass: KeyHashAuditRepoData
+    public class DataReplicationTestClass: CompositeKeyAuditRepoData
     {
         [CompositeKey]
         public string FirstName { get; set; }

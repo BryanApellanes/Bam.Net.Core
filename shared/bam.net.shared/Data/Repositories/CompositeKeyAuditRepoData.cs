@@ -8,14 +8,14 @@ namespace Bam.Net.Data.Repositories
 {
     /// <summary>
     /// The base class to extend for any class whose identity is determined
-    /// by multiple properties addorned with CompositeKeyAttribute.
+    /// by multiple properties adorned with CompositeKeyAttribute.
     /// </summary>
     /// <seealso cref="Bam.Net.Data.Repositories.AuditRepoData" />
     /// <seealso cref="Bam.Net.Data.Repositories.IHasKeyHash" />
     [Serializable]
-    public abstract class KeyHashAuditRepoData : AuditRepoData, IHasKeyHash
+    public abstract class CompositeKeyAuditRepoData : AuditRepoData, IHasKeyHash
     {
-        public KeyHashAuditRepoData()
+        public CompositeKeyAuditRepoData()
         {
             PropertyDelimiter = "\r\n";
         }
@@ -61,7 +61,7 @@ namespace Bam.Net.Data.Repositories
 
         public override bool Equals(object obj)
         {
-            if (obj is KeyHashAuditRepoData o)
+            if (obj is CompositeKeyAuditRepoData o)
             {
                 return o.GetHashCode().Equals(GetHashCode());
             }

@@ -119,7 +119,7 @@ namespace Bam.Net.Services.DataReplication
             return this.CopyAs<JournalEntryInfo>();
         }
         
-        public T LoadInstance<T>(Journal journal) where T: KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(Journal journal) where T: CompositeKeyAuditRepoData, new()
         {
             return journal.LoadInstance<T>(this);
         }

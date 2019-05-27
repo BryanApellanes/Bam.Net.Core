@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Data.Dynamic.Data
 {
     [Serializable]
-    public class DynamicNamespaceDescriptor: CompositeKeyRepoData
+    public class DynamicNamespaceDescriptor: KeyedAuditRepoData
     {
         public DynamicNamespaceDescriptor()
         {

@@ -52,7 +52,7 @@ namespace Bam.Net.Services.DataReplication
         public ConcurrentDictionary<long, string> TypeMappings { get; set; }
         public ConcurrentDictionary<long, string> PropertyMappings { get; set; }
 
-        public void AddMapping(KeyHashAuditRepoData instance)
+        public void AddMapping(CompositeKeyAuditRepoData instance)
         {
             Args.ThrowIfNull(instance, "instance");
             Type type = instance.GetType();
@@ -82,12 +82,12 @@ namespace Bam.Net.Services.DataReplication
             return typeId.ToString();
         }
 
-        public string GetTypeName(KeyHashAuditRepoData instance)
+        public string GetTypeName(CompositeKeyAuditRepoData instance)
         {
             return GetTypeName(GetTypeId(instance));
         }
 
-        public string GetTypeShortName(KeyHashAuditRepoData instance)
+        public string GetTypeShortName(CompositeKeyAuditRepoData instance)
         {
             return GetTypeShortName(GetTypeId(instance));
         }
@@ -132,13 +132,13 @@ namespace Bam.Net.Services.DataReplication
             return key;
         }
 
-        public static PropertyInfo[] GetTypeProperties<T>() where T: KeyHashAuditRepoData, new()
+        public static PropertyInfo[] GetTypeProperties<T>() where T: CompositeKeyAuditRepoData, new()
         {
             GetTypeId(new T(), out object ignore, out Type dynamicType);
             return dynamicType.GetProperties();
         }
 
-        public static long GetTypeId(KeyHashAuditRepoData instance)
+        public static long GetTypeId(CompositeKeyAuditRepoData instance)
         {
             return GetTypeId(instance, out object ignore1, out Type ignore2);
         }

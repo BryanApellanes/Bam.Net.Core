@@ -15,7 +15,7 @@ namespace Bam.Net.Services.DataReplication
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns></returns>
-        public static IEnumerable<JournalEntry> FromInstance(KeyHashAuditRepoData instance, Journal journal = null)
+        public static IEnumerable<JournalEntry> FromInstance(CompositeKeyAuditRepoData instance, Journal journal = null)
         {
             Args.ThrowIfNull(instance, "instance");
             Type type = instance.GetType();
@@ -27,7 +27,7 @@ namespace Bam.Net.Services.DataReplication
             }
         }
 
-        public static IEnumerable<JournalEntry> LoadInstanceEntries<T>(ulong id, Journal journal) where T : KeyHashAuditRepoData, new()
+        public static IEnumerable<JournalEntry> LoadInstanceEntries<T>(ulong id, Journal journal) where T : CompositeKeyAuditRepoData, new()
         {
             DirectoryInfo journalDirectory = journal.JournalDirectory;
             JournalTypeMap typeMap = journal.TypeMap;

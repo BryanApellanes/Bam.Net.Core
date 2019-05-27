@@ -7,11 +7,11 @@ namespace Bam.Net.Data.Repositories
 
     /// <summary>
     /// Extend this class to define a type that uses multiple properties to determine
-    /// persistence instance uniqueness.  Addorn key properties with the CompositeKey
+    /// persistence instance uniqueness.  Adorn key properties with the CompositeKey
     /// attribute.  Adds the Key property to KeyHashAuditRepoData.
     /// </summary>
     [Serializable]
-    public abstract class CompositeKeyRepoData : KeyHashAuditRepoData
+    public abstract class KeyedAuditRepoData : CompositeKeyAuditRepoData
     {
         ulong key = Convert.ToUInt64(0);
         public ulong Key

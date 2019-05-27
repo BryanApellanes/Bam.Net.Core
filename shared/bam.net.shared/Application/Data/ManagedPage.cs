@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Bam.Net.Application.Data
 {
-    public class ManagedPage: CompositeKeyRepoData
+    public class ManagedPage: KeyedAuditRepoData
     {
         public ManagedPage()
         {

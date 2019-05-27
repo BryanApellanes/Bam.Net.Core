@@ -514,7 +514,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlRegistrarCaller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlSchemaExtractor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlSqlStringBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyRepoData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyedAuditRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsSchemaRepositoryGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsSchemaTypeModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsTypeDaoGenerator.cs" />
@@ -1294,7 +1294,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\IStorableTypesProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ITypeTableNameProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyHashAuditRepoData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyAuditRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyHashProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyHashRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Meta.cs" />
