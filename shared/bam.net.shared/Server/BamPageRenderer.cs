@@ -36,7 +36,8 @@ namespace Bam.Net.Server
             RouteInfo routeInfo = GetRouteInfo(request);
             if (routeInfo.IsHomeRequest)
             {
-                if (AppRoot.FileExists($"~/{AppConf.HtmlDir}{AppConf.DefaultPage}.html", out string locatedPath))
+                string relativePath = Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}.html");
+                if (AppRoot.FileExists(relativePath, out string locatedPath))
                 {
                     return AppContentResponder.GetContent(locatedPath, request, response);
                 }
