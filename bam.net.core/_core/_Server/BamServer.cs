@@ -86,9 +86,10 @@ namespace Bam.Net.Server
                 sw.Write(@"<!DOCTYPE html>
 <html>
 <body>
-<h1>" + description + @"
+<h1>" + description + @"</h1>
 <p>" + string.Format(messageFormat, path) + @"</p>
-");
+</body>
+</html>");
                 sw.Flush();
                 sw.Close();
             }

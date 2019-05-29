@@ -18,6 +18,7 @@ using System.Xml.Serialization;
 using Bam.Net.Incubation;
 using Bam.Net.Configuration;
 using Bam.Net.ServiceProxy.Secure;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Server
 {
@@ -69,6 +70,7 @@ namespace Bam.Net.Server
         object _appRootLock = new object();
         [JsonIgnore]
         [XmlIgnore]
+        [YamlIgnore]
         public Fs AppRoot
         {
             get
@@ -169,7 +171,7 @@ namespace Bam.Net.Server
                     {
                         new HostPrefix
                         {
-                            HostName = $"{Name}.bamapps.com",
+                            HostName = $"{Name}.bamapps.net",
                             Port = 80,
                             Ssl = false
                         },
@@ -257,8 +259,8 @@ namespace Bam.Net.Server
 
         /// <summary>
         /// The assembly qualified name of an IAppInitializer
-        /// implementation that will be called on application 
-        /// initialization
+        /// implementation that is called on application 
+        /// initialization.
         /// </summary>
         public string AppInitializer
         {

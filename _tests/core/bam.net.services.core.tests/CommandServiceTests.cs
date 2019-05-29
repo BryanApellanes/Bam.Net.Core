@@ -18,7 +18,7 @@ namespace Bam.Net.Services.Tests
         [UnitTest]
         public void CanCallCommand()
         {
-            UserTestTools.SignUpAndLogin("CanCallCommand", out ServiceProxy.IHttpContext context, out UserAccounts.LoginResponse result);
+/*            UserTestTools.SignUpAndLogin("CanCallCommand", out ServiceProxy.IHttpContext context, out UserAccounts.LoginResponse result);
             ServiceRegistry reg = CoreServiceRegistryContainer.Create();
             ConsoleLogger logger = new ConsoleLogger()
             {
@@ -29,7 +29,7 @@ namespace Bam.Net.Services.Tests
             svc.HttpContext = context;
             svc.Logger = logger;
             ServiceResponse<CommandInfo> cmd = svc.Start(new CommandRequest() {Command = "dir"});
-            OutLine(cmd.ToJson());
+            OutLine(cmd.ToJson());*/
         }
     }
 }
