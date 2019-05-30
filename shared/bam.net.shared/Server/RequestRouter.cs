@@ -45,7 +45,6 @@ namespace Bam.Net.Server
         /// </summary>
         public string PathName { get; set; }
 
-
         public RequestRoute ToRequestRoute(string url)
         {
             return ToRequestRoute(new Uri(url));

@@ -30,6 +30,7 @@ using FakeItEasy;
 using Bam.Net.Testing.Unit;
 using Bam.Net.Server.Meta;
 using Bam.Net.Data;
+using UAParser;
 
 namespace Bam.Net.Server.Tests
 {
@@ -1156,6 +1157,23 @@ namespace Bam.Net.Server.Tests
             OutLineFormat(Assembly.GetExecutingAssembly().Location);
         }
 
+        [UnitTest]
+        public void TestUserAgentParser()
+        {
+            Parser parser = Parser.GetDefault();
+            ClientInfo macInfo = parser.Parse(
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9");
+            ClientInfo windowsInfo =
+                parser.Parse(
+                    "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)");
+            ClientInfo linuxInfo =
+                parser.Parse(
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+            OutLine(macInfo.ToJson(true), ConsoleColor.Cyan);
+            OutLine(windowsInfo.ToJson(true), ConsoleColor.Blue);
+            OutLine(linuxInfo.ToJson(true), ConsoleColor.DarkGreen);
+        }
+        
         private static void CreateTestRootAndSetDefaultConfig(DirectoryInfo dir)
         {
             if (!dir.Exists)

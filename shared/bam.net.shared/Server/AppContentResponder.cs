@@ -21,6 +21,7 @@ using Bam.Net.Data.Repositories;
 using System.Linq;
 using Bam.Net.Configuration;
 using Bam.Net.Services;
+using UAParser;
 
 namespace Bam.Net.Server
 {
@@ -43,6 +44,7 @@ namespace Bam.Net.Server
             AllRequestHandler = new ContentHandler($"{conf.Name}.AllRequestHandler", AppRoot) { CheckPaths = false };
             CustomHandlerMethods = new List<MethodInfo>();
             SetUploadHandler();
+            SetDownloadHandler();
             SetBaseIgnorePrefixes();
             ContentHandlerScanTask = ScanForContentHandlers();
             SetAllRequestHandler();
@@ -174,6 +176,38 @@ namespace Bam.Net.Server
                     query = query.TruncateFront(1);
                 }
                 return RenderLayout(ctx.Response, request.Url.AbsolutePath, query);
+            });
+        }
+
+        protected void SetDownloadHandler()
+        {
+            SetCustomContentHandler("Toolkit Download", "/download-toolkit", (ctx, fs) =>
+            {
+                IRequest request = ctx.Request;
+                Parser parser = Parser.GetDefault();
+                ClientInfo clientInfo = parser.Parse(request.UserAgent);
+                string runtime = "win10-x64";
+                if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    runtime = "osx-x64";
+                }else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    runtime = "linux-x64";
+                }
+
+                string fileName = $"bamtoolkit-{runtime}.zip";
+                string[] segments = new string[] {"~", "common", "files", fileName};
+                if (ServerRoot.FileExists(segments))
+                {
+                    IResponse response = ctx.Response;
+                    response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+                    response.Headers.Add("Content-type", "application/zip");
+                    
+                    byte[] data = File.ReadAllBytes(ServerRoot.GetFile(Path.Combine(segments)).FullName);
+                    return data;
+                }
+
+                return null;
             });
         }
 
