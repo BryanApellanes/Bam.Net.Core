@@ -41,6 +41,21 @@ namespace Bam.Net
             }
         }
 
+        public static string UserHome
+        {
+            get
+            {
+                if (OSInfo.Current == OSNames.Windows)
+                {
+                    return Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+                }
+                else
+                {
+                    return Environment.GetEnvironmentVariable("$HOME");
+                }
+            }
+        }
+        
         public static string Build
         {
             get { return Path.Combine(BamHome, "build"); }
@@ -55,7 +70,10 @@ namespace Bam.Net
 
         public static string[] ToolkitSegments
         {
-            get { return new List<string>(BamHomeSegments) {"toolkit"}.ToArray(); }
+            get
+            {
+                return new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
+            }
         }
 
         public static string ContentPath { get { return Path.Combine(ContentSegments); } }

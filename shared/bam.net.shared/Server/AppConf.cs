@@ -308,7 +308,7 @@ namespace Bam.Net.Server
 
         public string Setting(string settingName, string insteadIfNullOrEmpty)
         {
-            AppSetting setting = AppSettings.Where(s => s.Name.Equals(settingName)).FirstOrDefault();
+            AppSetting setting = AppSettings.FirstOrDefault(s => s.Name.Equals(settingName));
             if(setting != null)
             {
                 return setting.Value;

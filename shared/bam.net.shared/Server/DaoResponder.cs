@@ -162,7 +162,7 @@ namespace Bam.Net.Server
             IResponse response = context.Response;
             bool handled = false;
             string path = request.Url.AbsolutePath;
-            string appName = ApplicationNameResolver.ResolveApplicationName(context);//UriApplicationNameResolver.ResolveApplicationName(request.Url, BamConf.AppConfigs);
+            string appName = ApplicationNameResolver.ResolveApplicationName(context);
             string[] chunks = path.DelimitSplit("/");
 
             HttpArgs queryString = new HttpArgs(request.Url.Query);
@@ -527,7 +527,7 @@ namespace Bam.Net.Server
 
                 if (!hashes.Contains(currentHash) && appConf.CheckDaoHashes)
                 {
-                    FileContentHash remove = hashes.Where(h => h.FilePath.ToLowerInvariant().Equals(path)).FirstOrDefault();
+                    FileContentHash remove = hashes.FirstOrDefault(h => h.FilePath.ToLowerInvariant().Equals(path));
                     if (remove != null)
                     {
                         hashes.Remove(remove);
@@ -693,7 +693,7 @@ namespace Bam.Net.Server
         }
 
         public event Action<string, FileInfo, DirectoryInfo, SchemaResult> GenerateAppDaoSucceeded;
-        protected void OnGerateAppDaoSucceeded(string appName, FileInfo dbJsFile, DirectoryInfo daoBin, SchemaResult result)
+        protected void OnGenerateAppDaoSucceeded(string appName, FileInfo dbJsFile, DirectoryInfo daoBin, SchemaResult result)
         {
             if (GenerateAppDaoSucceeded != null)
             {
@@ -722,7 +722,7 @@ namespace Bam.Net.Server
             }
             else
             {
-                OnGerateAppDaoSucceeded(appName, jsOrJsonDb, daoBinDir, schemaResult);
+                OnGenerateAppDaoSucceeded(appName, jsOrJsonDb, daoBinDir, schemaResult);
             }
         }
 

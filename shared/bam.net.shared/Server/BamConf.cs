@@ -317,7 +317,7 @@ namespace Bam.Net.Server
                         Type[] types = currentAssembly.GetTypes().Where(type => type.ImplementsInterface<ILogger>()).ToArray();
                         results.AddRange(types);
                     }
-                    catch //(Exception ex)
+                    catch
                     {
                         // failed
                         // this is acceptable, we're just looking for loggers
@@ -329,29 +329,20 @@ namespace Bam.Net.Server
         }
 
         int _maxThreads;
+        /// <summary>
+        /// Advice to subordinate components.  Not currently used ¯\_(ツ)_/¯
+        /// </summary>
         public int MaxThreads
         {
-            get
-            {
-                return _maxThreads;
-            }
-            set
-            {
-                _maxThreads = value;
-            }
+            get => _maxThreads;
+            set => _maxThreads = value;
         }
 
         List<SchemaInitializer> _schemaInitializers;
         public SchemaInitializer[] SchemaInitializers
         {
-            get
-            {
-                return _schemaInitializers.ToArray();
-            }
-            set
-            {
-                _schemaInitializers = new List<SchemaInitializer>(value ?? new SchemaInitializer[] { });
-            }
+            get => _schemaInitializers.ToArray();
+            set => _schemaInitializers = new List<SchemaInitializer>(value ?? new SchemaInitializer[] { });
         }
 
         List<AppConf> _appConfigs;
@@ -360,13 +351,7 @@ namespace Bam.Net.Server
         /// Represents the configs for each application found in ~s:/apps 
         /// (where each subdirectory is assumed to be a Bam application)
         /// </summary>
-        public AppConf[] AppConfigs
-        {
-            get
-            {
-                return _appConfigsLock.DoubleCheckLock(ref _appConfigs, () => InitializeAppConfigs()).ToArray();
-            }
-        }
+        public AppConf[] AppConfigs => _appConfigsLock.DoubleCheckLock(ref _appConfigs, InitializeAppConfigs).ToArray();
 
         protected internal AppConf[] ReloadAppConfigs()
         {
@@ -388,14 +373,7 @@ namespace Bam.Net.Server
             get
             {
                 Dictionary<string, AppConf> dictionary = _appConfigsByAppNameLock.DoubleCheckLock(ref _appConfigsByAppName, () => AppConfigs.ToDictionary(conf => conf.Name));
-                if (dictionary.ContainsKey(appName))
-                {
-                    return dictionary[appName];
-                }
-                else
-                {
-                    return null;
-                }
+                return dictionary.ContainsKey(appName) ? dictionary[appName] : null;
             }
         }
 

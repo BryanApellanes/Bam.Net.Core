@@ -34,7 +34,7 @@ namespace Bam.Net.Application
         {
             ConsoleLogger logger = GetLogger();
             StartBamRpcServer(logger);
-            Pause("Gloo is running");
+            Pause("BamRpc is running");
         }
 
         [ConsoleAction("killBamRpcServer", "Kill the bam rpc server")]
@@ -43,11 +43,11 @@ namespace Bam.Net.Application
             if (bamRpcServer != null)
             {
                 bamRpcServer.Stop();
-                Pause("Gloo stopped");
+                Pause("BamRpc stopped");
             }
             else
             {
-                OutLine("Gloo server not running");
+                OutLine("BamRpc server not running");
             }
         }
 
@@ -155,7 +155,7 @@ namespace Bam.Net.Application
             registry.ToJsonFile(path);           
         }
 
-        [ConsoleAction("downloadProxyCode", "Generate proxies for a running service proxy host")]
+        [ConsoleAction("downloadProxyCode", "Generate proxies from a running service proxy host")]
         public void GenerateProxies()
         {
             ConsoleLogger logger = new ConsoleLogger();
@@ -177,26 +177,26 @@ namespace Bam.Net.Application
             OutLineFormat("Wrote file {0}", filePath);
         }
 
-        [ConsoleAction("csgloo", "Start the gloo server serving the compiled results of the specified csgloo files")]
+        [ConsoleAction("csBamRpc", "Start the BamRpc server serving the compiled results of the specified csBamRpc files")]
         public void ServeCsGloo()
         {
-            string csglooDirectoryPath = GetArgument("CsGlooSrc", $"Enter the path to the CsGloo source directory (default: {defaultRpcScriptsSrcPath})");
-            Assembly csglooAssembly = CompileTvgSource(csglooDirectoryPath, "csgloo");
+            string csglooDirectoryPath = GetArgument("BamRpcSrc", $"Enter the path to the CsGloo source directory (default: {defaultRpcScriptsSrcPath})");
+            Assembly bamRpcAssembly = CompileBamRpcSource(csglooDirectoryPath, "csBamRpc");
 
             string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot} ");
 
             HostPrefix[] prefixes = ServiceConfig.GetConfiguredHostPrefixes();
-            Type[] glooTypes = csglooAssembly.GetTypes().Where(t => t.HasCustomAttributeOfType<ProxyAttribute>()).ToArray();
+            Type[] glooTypes = bamRpcAssembly.GetTypes().Where(t => t.HasCustomAttributeOfType<ProxyAttribute>()).ToArray();
             ServeServiceTypes(contentRoot, prefixes, null, glooTypes);
-            Pause($"Gloo server is serving cs gloo types: {string.Join(", ", glooTypes.Select(t => t.Name).ToArray())}");
+            Pause($"BamRpc server is serving cs types: {string.Join(", ", glooTypes.Select(t => t.Name).ToArray())}");
         }
 
-        public static Assembly CompileTvgSource(string csglooDirectoryPath, string extension)
+        public static Assembly CompileBamRpcSource(string csglooDirectoryPath, string extension)
         {
-            string binPath = $"/opt/bam/sys/{extension}/bin";//$"C:\\bam\\sys\\{extension}\\bin";
-            DirectoryInfo csTvgSrcDirectory = new DirectoryInfo(csglooDirectoryPath.Or(defaultRpcScriptsSrcPath)).EnsureExists();
-            DirectoryInfo csTvgBinDirectory = new DirectoryInfo(binPath).EnsureExists();
-            FileInfo[] files = csTvgSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
+            string binPath = Path.Combine(BamPaths.ToolkitPath, "BamRpc_bin");
+            DirectoryInfo bamRpcSrcDirectory = new DirectoryInfo(csglooDirectoryPath.Or(defaultRpcScriptsSrcPath)).EnsureExists();
+            DirectoryInfo bamRpcBnDirectory = new DirectoryInfo(binPath).EnsureExists();
+            FileInfo[] files = bamRpcSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
             StringBuilder src = new StringBuilder();
             foreach (FileInfo file in files)
             {
@@ -204,12 +204,12 @@ namespace Bam.Net.Application
             }
             string hash = src.ToString().Sha1();
             string assemblyName = $"{hash}.dll";
-            Assembly csTvgAssembly = null;
-            string csTvgAssemblyBinPath = Path.Combine(csTvgBinDirectory.FullName, assemblyName);
+            Assembly bamRpcAssembly = null;
+            string csTvgAssemblyBinPath = Path.Combine(bamRpcBnDirectory.FullName, assemblyName);
             if (!File.Exists(csTvgAssemblyBinPath))
             {
-                csTvgAssembly = files.ToAssembly(assemblyName);
-                FileInfo assemblyFile = csTvgAssembly.GetFileInfo();
+                bamRpcAssembly = files.ToAssembly(assemblyName);
+                FileInfo assemblyFile = bamRpcAssembly.GetFileInfo();
                 FileInfo targetPath = new FileInfo(csTvgAssemblyBinPath);
                 if (!targetPath.Directory.Exists)
                 {
@@ -219,10 +219,10 @@ namespace Bam.Net.Application
             }
             else
             {
-                csTvgAssembly = Assembly.LoadFile(csTvgAssemblyBinPath);
+                bamRpcAssembly = Assembly.LoadFile(csTvgAssemblyBinPath);
             }
 
-            return csTvgAssembly;
+            return bamRpcAssembly;
         }
 
         private static void ServeRegistries(ILogger logger, string registries)

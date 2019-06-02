@@ -184,13 +184,20 @@ namespace Bam.Net.Server
             SetCustomContentHandler("Toolkit Download", "/download-toolkit", (ctx, fs) =>
             {
                 IRequest request = ctx.Request;
+                string requestedFileName = request.QueryString?.Get("fileName");
+                if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(segments))
+                {
+                    
+                }
+                
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(request.UserAgent);
                 string runtime = "win10-x64";
                 if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
                 {
                     runtime = "osx-x64";
-                }else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
+                }
+                else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
                 {
                     runtime = "linux-x64";
                 }
@@ -202,7 +209,7 @@ namespace Bam.Net.Server
                     IResponse response = ctx.Response;
                     response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
                     response.Headers.Add("Content-type", "application/zip");
-                    
+
                     byte[] data = File.ReadAllBytes(ServerRoot.GetFile(Path.Combine(segments)).FullName);
                     return data;
                 }
@@ -373,7 +380,8 @@ namespace Bam.Net.Server
                     }
                     else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path))
                     {
-                        if (AppRoot.FileExists($"~/{AppConf.HtmlDir}{path}.html", out locatedPath))
+                        string relativePath = Path.Combine("~/", AppConf.HtmlDir, $"{path}.html");
+                        if (AppRoot.FileExists(relativePath, out locatedPath))
                         {
                             content = GetContent(locatedPath, request, response);
                         }

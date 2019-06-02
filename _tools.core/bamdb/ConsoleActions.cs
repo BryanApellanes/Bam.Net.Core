@@ -23,14 +23,14 @@ namespace Bam.Net.Application
         static string defaultContentRoot = BamPaths.ContentPath;
         static BamDbServer bamDbServer;
 
-        [ConsoleAction("startBamDbServer", "Start the BamDb server")]
+        [ConsoleAction("S", "Start the BamDb server")]
         public void StartConsole()
         {
             StartBamDbServer(GetLogger(), GetRepository());
             Pause("BamDb is running");
         }
 
-        [ConsoleAction("killBamDbServer", "Kill the BamDb server")]
+        [ConsoleAction("K", "Kill the BamDb server")]
         public void StopConsole()
         {
             if (bamDbServer != null)
@@ -83,11 +83,11 @@ namespace Bam.Net.Application
         
         public static void StartBamDbServer(ConsoleLogger logger, IRepository repo)
         {
-            BamConf conf = BamConf.Load(DefaultConfiguration.GetAppSetting(contentRootConfigKey).Or(defaultContentRoot));
+            BamConf conf = BamConf.Load(GetArgument("content", "Enter the path to the content root").Or(defaultContentRoot));
             bamDbServer = new BamDbServer(conf, logger, repo)
             {
-                HostPrefixes = new HashSet<HostPrefix>(HostPrefix.FromDefaultConfiguration()),
-                MonitorDirectories = DefaultConfiguration.GetAppSetting("MonitorDirectories").DelimitSplit(",", ";")
+                HostPrefixes = new HashSet<HostPrefix>(HostPrefix.FromBamProcessConfig()),
+                MonitorDirectories = Config.Current["MonitorDirectories"].DelimitSplit(",", ";")
             };
             bamDbServer.Start();
         }
@@ -99,9 +99,7 @@ namespace Bam.Net.Application
         
         private static ConsoleLogger GetLogger()
         {
-            ConsoleLogger logger = new ConsoleLogger();
-            logger.AddDetails = false;
-            logger.UseColors = true;
+            ConsoleLogger logger = new ConsoleLogger {AddDetails = false, UseColors = true};
             logger.StartLoggingThread();
             return logger;
         }
