@@ -6,19 +6,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Data.Schema
 {
-    public class SchemaResult
+    public class SchemaManagerResult
     {
-        public SchemaResult(string message)
+        public SchemaManagerResult(string message)
         {
             this.Message = message;
             this.Success = true;
         }
 
-        public SchemaResult(string message, bool success)
+        public SchemaManagerResult(string message, bool success)
         {
             this.Message = message;
             this.Success = success;
@@ -34,6 +36,8 @@ namespace Bam.Net.Data.Schema
 
         [Exclude]
         [JsonIgnore]
+        [YamlIgnore]
+        [XmlIgnore]
 		public FileInfo DaoAssembly { get; set; }
     }
 }

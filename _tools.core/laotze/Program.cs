@@ -100,31 +100,31 @@ namespace laotze
 
                             DirectoryInfo partialsDir = GetPartialsDir(genToDir);
 
-							SchemaResult result = null;
+							SchemaManagerResult managerResult = null;
 							if (!Arguments.Contains("dll"))
 							{
 								bool compile = !keep;
-								result = manager.GenerateDao(file, compile, keep, genToDir.FullName, partialsDir.FullName);
+								managerResult = manager.GenerateDaoAssembly(file, compile, keep, genToDir.FullName, partialsDir.FullName);
 							}
 							else
 							{
-								result = manager.GenerateDao(file, new DirectoryInfo(Arguments["dll"]), keep, genToDir.FullName, partialsDir.FullName);
+								managerResult = manager.GenerateDaoAssembly(file, new DirectoryInfo(Arguments["dll"]), keep, genToDir.FullName, partialsDir.FullName);
 							}
 
-                            if (!result.Success)
+                            if (!managerResult.Success)
                             {
-                                throw new Exception(result.Message);
+                                throw new Exception(managerResult.Message);
                             }
 
 							if (Arguments.Contains("sql"))
 							{
-								WriteSqlFile(result);
+								WriteSqlFile(managerResult);
 							}
 
-                            OutLine(result.Message, ConsoleColor.Green);
-							if (result.DaoAssembly != null)
+                            OutLine(managerResult.Message, ConsoleColor.Green);
+							if (managerResult.DaoAssembly != null)
 							{
-								OutLineFormat("Compiled to: {0}", result.DaoAssembly.FullName, ConsoleColor.Yellow);
+								OutLineFormat("Compiled to: {0}", managerResult.DaoAssembly.FullName, ConsoleColor.Yellow);
 							}
                         }
                         catch (Exception ex)
@@ -177,9 +177,9 @@ namespace laotze
             ParseArgs(args);
         }
 
-		private static void WriteSqlFile(SchemaResult result)
+		private static void WriteSqlFile(SchemaManagerResult managerResult)
 		{
-			if (result.DaoAssembly == null)
+			if (managerResult.DaoAssembly == null)
 			{
 				OutLine("Unable to locate Dao assembly for sql schema generation, specify dll argument", ConsoleColor.Red);
 			}
@@ -191,7 +191,7 @@ namespace laotze
 				{
 					dialect = (SqlDialect)Enum.Parse(typeof(SqlDialect), Arguments["dialect"]);
 				}
-				WriteSqlFile(result.DaoAssembly, sqlFile, dialect);
+				WriteSqlFile(managerResult.DaoAssembly, sqlFile, dialect);
 				OutLineFormat("Sql script written: {0}", sqlFile.FullName);
 			}
 		}

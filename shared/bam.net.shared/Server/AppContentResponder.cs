@@ -184,38 +184,48 @@ namespace Bam.Net.Server
             SetCustomContentHandler("Toolkit Download", "/download-toolkit", (ctx, fs) =>
             {
                 IRequest request = ctx.Request;
-                string requestedFileName = request.QueryString?.Get("fileName");
-                if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(segments))
-                {
-                    
-                }
-                
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(request.UserAgent);
+                
                 string runtime = "win10-x64";
-                if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
+               
+                string requestedFileName = request.QueryString?.Get("fileName");
+                string[] requestedSegments = new string[] {"~", "common", "files", requestedFileName};
+                if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(out string requestedFilePath, requestedSegments))
                 {
-                    runtime = "osx-x64";
+                    return GetResponseData(ctx, requestedFileName, requestedFilePath);
                 }
-                else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
+                else
                 {
-                    runtime = "linux-x64";
+                    string fileName = $"bamtoolkit-{runtime}.zip";
+                
+                    if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        runtime = "osx-x64";
+                    }
+                    else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        runtime = "linux-x64";
+                    }
+
+                    string[] segments = new string[] {"~", "common", "files", fileName};
+                    if (ServerRoot.FileExists(out string filePath, segments))
+                    {
+                        return GetResponseData(ctx, fileName, filePath);
+                    }
                 }
-
-                string fileName = $"bamtoolkit-{runtime}.zip";
-                string[] segments = new string[] {"~", "common", "files", fileName};
-                if (ServerRoot.FileExists(segments))
-                {
-                    IResponse response = ctx.Response;
-                    response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
-                    response.Headers.Add("Content-type", "application/zip");
-
-                    byte[] data = File.ReadAllBytes(ServerRoot.GetFile(Path.Combine(segments)).FullName);
-                    return data;
-                }
-
                 return null;
             });
+        }
+
+        private static byte[] GetResponseData(IHttpContext ctx, string nameToGiveFile, string filePath)
+        {
+            IResponse response = ctx.Response;
+            response.Headers.Add("Content-Disposition", $"attachment; filename={nameToGiveFile}");
+            response.Headers.Add("Content-type", "application/zip");
+
+            byte[] data = File.ReadAllBytes(filePath);
+            return data;
         }
 
         /// <summary>

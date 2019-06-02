@@ -1374,7 +1374,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaManagerAugmentation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaNameMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaNameMapNameFormatter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\SchemaManagerResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Table.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\TableNameToClassName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\TargetTableEventDelegate.cs" />

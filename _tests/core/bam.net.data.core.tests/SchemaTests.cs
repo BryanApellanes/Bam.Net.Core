@@ -119,7 +119,7 @@ namespace Bam.Net.Data.Tests
 
         class TestSchemaManager : SchemaManager
         {
-            public SchemaResult TestAddForeignKey(Table table, Table target, ForeignKeyColumn fk)
+            public SchemaManagerResult TestAddForeignKey(Table table, Table target, ForeignKeyColumn fk)
             {
                 return SetForeignKey(table, target, fk);
             }
@@ -175,7 +175,7 @@ namespace Bam.Net.Data.Tests
             SchemaDefinition s = mgr.SetSchema("test");
             mgr.AddTable("TableOne");
             mgr.AddTable("ReferringTable");
-            SchemaResult r = mgr.SetForeignKey("TableOne", "ReferringTable", "TableOneID");
+            SchemaManagerResult r = mgr.SetForeignKey("TableOne", "ReferringTable", "TableOneID");
 
             Expect.IsFalse(r.Success);
             OutLine(r.Message, ConsoleColor.Yellow);
@@ -248,7 +248,7 @@ namespace Bam.Net.Data.Tests
         {
             SchemaManager mgr = new SchemaManager();
             SchemaDefinition s = mgr.SetSchema("test");
-            SchemaResult r = mgr.AddTable("tableOne");
+            SchemaManagerResult r = mgr.AddTable("tableOne");
             Expect.IsTrue(r.Success);
 
             TryDeleteSchema(s);
@@ -272,7 +272,7 @@ namespace Bam.Net.Data.Tests
             string tableName = "tableOne";
             SchemaManager mgr = new SchemaManager();
             SchemaDefinition s = mgr.SetSchema("test");
-            SchemaResult r = mgr.AddTable(tableName);
+            SchemaManagerResult r = mgr.AddTable(tableName);
             r = mgr.AddColumn(tableName, new Column("ColumnOne", DataTypes.ULong, false));
             Expect.IsTrue(r.Success);
         }

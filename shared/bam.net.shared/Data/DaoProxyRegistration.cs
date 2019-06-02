@@ -122,6 +122,11 @@ namespace Bam.Net.Data
             return Registrations[connectionName];
         }
 
+        public static DaoProxyRegistration[] FromDirectory(DirectoryInfo dir, string searchPattern = "*.Dao.dll")
+        {
+            return Register(dir, searchPattern);
+        }
+
         public static DaoProxyRegistration[] Register(DirectoryInfo dir, string searchPattern = "*.dll")
         {
             DaoProxyRegistration[] results = new DaoProxyRegistration[] { };
