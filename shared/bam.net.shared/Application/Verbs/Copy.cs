@@ -1,3 +1,4 @@
+using Bam.Net.Application.Network;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 
 namespace Bam.Net.Application.Verbs

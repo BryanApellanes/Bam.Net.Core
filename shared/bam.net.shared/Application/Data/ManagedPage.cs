@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Bam.Net.Application.Data
 {
-    public class ManagedPage: KeyedAuditRepoData
+    public class ManagedPage: NamedAuditRepoData
     {
         public ManagedPage()
         {
@@ -18,9 +18,6 @@ namespace Bam.Net.Application.Data
 
         [CompositeKey]
         public string ApplicationName { get; set; }
-
-        [CompositeKey]
-        public string Name { get; set; }
 
         public ulong ManagedApplicationId { get; set; }
         public virtual ManagedApplication ManagedApplication { get; set; }

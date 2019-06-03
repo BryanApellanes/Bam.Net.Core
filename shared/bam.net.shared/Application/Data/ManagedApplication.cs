@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bam.Net.Application.Data
 {
-    public class ManagedApplication : KeyedAuditRepoData
+    public class ManagedApplication : NamedAuditRepoData
     {
         public virtual List<ManagedPage> Pages { get; set; }
     }

@@ -18,6 +18,8 @@ namespace Bam.Net.Services.Automation
     [ServiceSubdomain("command")]
     public class CommandService : AsyncProxyableService
     {
+        public const int DefaultPort = 8413;
+        
         public CommandService()
         {
         }

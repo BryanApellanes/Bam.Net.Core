@@ -89,9 +89,12 @@ namespace Bam.Net.Services
         }
         
         [ServiceRegistryLoader]
-        public static ApplicationServiceRegistry Configure(Action<ApplicationServiceRegistry> configure)
+        public static ApplicationServiceRegistry Configure(Action<ApplicationServiceRegistry> configure, bool setConfigurer = true)
         {
-            Configurer = configure;
+            if (setConfigurer && Configurer != configure)
+            {
+                Configurer = configure;
+            }
             ApplicationServiceRegistry appRegistry = new ApplicationServiceRegistry();
             appRegistry.CombineWith(CoreClientServiceRegistryContainer.Current);
             appRegistry

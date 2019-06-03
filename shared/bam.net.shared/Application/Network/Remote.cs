@@ -7,15 +7,45 @@ namespace Bam.Net.Application.Network
 {
     public class Remote
     {
-        public Remote()
+        public Remote() : this(null)
         {
-            ScanReport = new Lazy<string>(() => Nmap.Run(HostName, "-O").StandardOutput);
+
         }
+
+        public Remote(string hostName)
+        {
+            HostName = hostName;
+        }
+
+        public static Remote For(string hostName)
+        {
+            return new Remote(hostName);
+        }
+
+        string _scanReport;
+        object _scanReportLock = new object();
+        public string ScanReport
+        {
+            get
+            {
+                return _scanReportLock.DoubleCheckLock(ref _scanReport, () =>
+                {
+                    if (!string.IsNullOrEmpty(HostName))
+                    {
+                        return Nmap.Run(HostName, "-O").StandardOutput;
+                    }
+
+                    return null;
+                });
+            }
+        }
+
         public string HostName { get; set; }
 
         /// <summary>
         /// The admin share of the remote host if it is running windows.  This is invalid if the remote is NOT running Windows OS.
         /// </summary>
+        [Exclude]
         public string AdminShare
         {
             get
@@ -31,8 +61,7 @@ namespace Bam.Net.Application.Network
             }
         }
         
-        protected Lazy<string> ScanReport { get; set; }
-
+        [Exclude]
         public OSNames OS
         {
             get
@@ -55,7 +84,7 @@ namespace Bam.Net.Application.Network
 
         protected IEnumerable<string> GetScanReportLines()
         {
-            foreach (string line in ScanReport?.Value.DelimitSplit("\r", "\n"))
+            foreach (string line in ScanReport?.DelimitSplit("\r", "\n"))
             {
                 yield return line;
             }
