@@ -1,6 +1,7 @@
 ﻿using Bam.Net.CommandLine;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Bam.Net.Automation
     {
         static PsExec()
         {
-            Path = "/bam/tools/PsExec.exe";
+            SetPath();
         }
 
         public static string Path { get; set; }
@@ -24,6 +25,12 @@ namespace Bam.Net.Automation
         public static ProcessOutput Run(string computerName, string command, Action<string> standout, Action<string> errorout, int timeout = 600000)
         {
             return $"{Path} \\\\{computerName} {command}".Run(standout, errorout, timeout);
+        }
+
+        private static void SetPath()
+        {
+            string fileName = "PsExec.exe";
+            Path = OSInfo.TryGetPath(fileName, out string path) ? path : OSInfo.DefaultToolPath(fileName);
         }
     }
 }

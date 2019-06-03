@@ -208,6 +208,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedApplication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Network\Remote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DeployInfo.cs" />
@@ -215,6 +216,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\GenerationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\PageRenderModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\RenderableModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Copy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\CopyContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyGenerator.cs" />
@@ -277,6 +280,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\MSBuild\MSBuildExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\MSBuild\Project.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\MultiFileCopyWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Nmap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\NotificationWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ProcessWorker.cs" />
@@ -499,6 +503,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommandLineServiceInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsFileExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsRemoteFileHandler.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLType.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLQueryContext.hbs" />
@@ -2994,7 +3000,6 @@
     <Content Include="$(MSBuildThisFileDirectory)UserAccounts\UserAccounts.db.js" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Application\Components" />
     <Folder Include="$(MSBuildThisFileDirectory)Presentation\Components\Templates\" />
   </ItemGroup>
 </Project>
