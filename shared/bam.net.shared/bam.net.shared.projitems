@@ -2994,6 +2994,7 @@
     <Content Include="$(MSBuildThisFileDirectory)UserAccounts\UserAccounts.db.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Application\Components" />
     <Folder Include="$(MSBuildThisFileDirectory)Presentation\Components\Templates\" />
   </ItemGroup>
 </Project>
