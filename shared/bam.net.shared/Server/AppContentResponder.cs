@@ -186,19 +186,17 @@ namespace Bam.Net.Server
                 IRequest request = ctx.Request;
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(request.UserAgent);
-                
+                byte[] responseData = null;
                 string runtime = "win10-x64";
                
                 string requestedFileName = request.QueryString?.Get("fileName");
                 string[] requestedSegments = new string[] {"~", "common", "files", requestedFileName};
                 if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(out string requestedFilePath, requestedSegments))
                 {
-                    return GetResponseData(ctx, requestedFileName, requestedFilePath);
+                    responseData = GetResponseData(ctx, requestedFileName, requestedFilePath);
                 }
                 else
                 {
-                    string fileName = $"bamtoolkit-{runtime}.zip";
-                
                     if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
                     {
                         runtime = "osx-x64";
@@ -208,14 +206,27 @@ namespace Bam.Net.Server
                         runtime = "linux-x64";
                     }
 
-                    string[] segments = new string[] {"~", "common", "files", fileName};
-                    if (ServerRoot.FileExists(out string filePath, segments))
-                    {
-                        return GetResponseData(ctx, fileName, filePath);
-                    }
+                    responseData = GetResponseData(ctx, runtime);
                 }
-                return null;
+                return responseData;
             });
+            
+            SetCustomContentHandler("Windows Toolkit Download", "/download-windows-toolkit", (ctx, fs) => GetResponseData(ctx, "win10-x64"));
+            SetCustomContentHandler("Linux Toolkit Download", "/download-linux-toolkit", (ctx, fs) => GetResponseData(ctx, "linux-x64"));
+            SetCustomContentHandler("Mac Toolkit Download", "/download-mac-toolkit", (ctx, fs) => GetResponseData(ctx, "osx-x64"));
+        }
+
+        private byte[] GetResponseData(IHttpContext ctx, string runtime)
+        {
+            byte[] responseData = null;
+            string fileName = $"bamtoolkit-{runtime}.zip";
+            string[] segments = new string[] {"~", "common", "files", fileName};
+            if (ServerRoot.FileExists(out string filePath, segments))
+            {
+                responseData = GetResponseData(ctx, fileName, filePath);
+            }
+
+            return responseData;
         }
 
         private static byte[] GetResponseData(IHttpContext ctx, string nameToGiveFile, string filePath)
