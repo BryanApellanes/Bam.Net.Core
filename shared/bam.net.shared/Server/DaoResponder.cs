@@ -509,12 +509,12 @@ namespace Bam.Net.Server
             GenerateAppDaoSucceeded -= RegisterNewAppDaoDll;
         }
 
-        protected internal void GenerateAppDaos(string dbJsRoot, AppConf appConf, DirectoryInfo appDaoDir, string fileSearchPattern)
+        protected internal void GenerateAppDaos(string dbJsRoot, AppConf appConf, DirectoryInfo appDaoBinDir, string fileSearchPattern)
         {
-            DirectoryInfo daoTemp = appConf.AppRoot.GetDirectory(Path.Combine(dbJsRoot, "appdaotmp_".RandomLetters(4)));
+            DirectoryInfo daoTemp = appConf.AppRoot.GetDirectory(Path.Combine(dbJsRoot, "app_dao_tmp_".RandomLetters(4)));
 
             // get the saved hashes to determine if changes were made
-            string hashPath = GetHashFilePath(appDaoDir);
+            string hashPath = GetHashFilePath(appDaoBinDir);
             List<FileContentHash> hashes = GetHashes(hashPath);
 
             //      generate app dao from *.db.js ~a:/dao/
@@ -534,11 +534,11 @@ namespace Bam.Net.Server
                     }
                     hashes.Add(currentHash);
                     hashes.ToArray().ToJsonFile(hashPath);
-                    GenerateAppDao(appConf.Name, appDaoDir, daoTemp, dbJs);
+                    GenerateAppDao(appConf.Name, appDaoBinDir, daoTemp, dbJs);
                 }
                 else if (!appConf.CheckDaoHashes)
                 {
-                    GenerateAppDao(appConf.Name, appDaoDir, daoTemp, dbJs);
+                    GenerateAppDao(appConf.Name, appDaoBinDir, daoTemp, dbJs);
                 }
             });
         }
