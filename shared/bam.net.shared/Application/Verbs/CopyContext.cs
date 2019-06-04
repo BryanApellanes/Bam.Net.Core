@@ -14,11 +14,11 @@ namespace Bam.Net.Application.Verbs
     {
         public CopyContext()
         {
-            Setup();
+            SetupHostScan();
         }
 
         private static bool _setup;
-        protected static void Setup()
+        protected internal static void SetupHostScan()
         {
             if (!_setup)
             {
