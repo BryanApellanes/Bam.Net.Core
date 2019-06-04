@@ -1,9 +1,9 @@
 using System.IO;
 using Bam.Net.Automation;
 
-namespace Bam.Net.Unix
+namespace Bam.Net.Application.Network
 {
-    public class UnixRemoteFileHandler: IRemoteFileHandler
+    public class SshRemoteFileHandler: IRemoteFileHandler
     {
         public void CopyTo(string host, FileSystemInfo localData, string localPathOnRemote = null)
         {

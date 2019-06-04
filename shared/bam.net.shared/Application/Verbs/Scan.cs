@@ -7,45 +7,38 @@ namespace Bam.Net.Application.Verbs
 {
     public class Scan
     {
-        static Dictionary<Type, Func<string, object>> _scanners;
-        static Dictionary<string, object> _scanResults;
+        static Dictionary<Type, Scanner> _scanners;
         
         static Scan()
         {
-            _scanners = new Dictionary<Type, Func<string, object>>();
-            _scanResults = new Dictionary<string, object>();
+            _scanners = new Dictionary<Type, Scanner>();
         }
-        
-        public static T For<T>(string hostName)
+
+        /// <summary>
+        /// Executes the prepared function for the specified generic return type, if one was prepared with a call to the Prepare method.  If a scanner function is specified Prepare is called passing the specified scanner as a parameter before executing it to retrieve the result.
+        /// </summary>
+        /// <param name="hostName"></param>
+        /// <param name="scanner"></param>
+        /// <returns></returns>
+        public static T HostFor<T>(string hostName)
         {
-            if (_scanResults.ContainsKey(hostName) && _scanResults[hostName] != null)
-            {
-                return (T)_scanResults[hostName];
-            }
-            
             if (_scanners.ContainsKey(typeof(T)))
             {
-                object result = _scanners[typeof(T)](hostName);
-                if (result is T response)
-                {
-                    _scanResults.AddMissing(hostName, response);
-                    return response;
-                }
-                else
-                {
-                    Log.Error("The scanner for hostName ({0}) and type ({1}) returned an instance of ({2})", hostName, typeof(T).FullName,
-                        result?.GetType().FullName);
-                }
+                return (T)_scanners[typeof(T)].GetResult(hostName);
             }
 
             return default(T);
         }
 
-        public static void Prepare<T>(Func<string, object> hostNameScanner)
+        /// <summary>
+        /// Prepare the specified scanner.  The results of 
+        /// </summary>
+        /// <param name="hostScanner"></param>
+        public static void SetHostScanFor<T>(Func<string, T> hostScanner)
         {
             if (!_scanners.ContainsKey(typeof(T)))
             {
-                _scanners.AddMissing(typeof(T), hostNameScanner);
+                _scanners.AddMissing(typeof(T), new Scanner<T>() {Scan = hostScanner});
             }
             else
             {

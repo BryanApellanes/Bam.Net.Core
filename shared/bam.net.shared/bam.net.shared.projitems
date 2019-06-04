@@ -208,7 +208,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\NmapScan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Network\CommandServiceClientRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\Remote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Network\SshRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DeployInfo.cs" />
@@ -221,6 +223,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Execute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Find.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Scan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Scanner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Search.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
@@ -502,15 +505,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\Automation\CommandServiceClientRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HomeRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\PageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommandLineServiceInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Hosts\HostClientServiceRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Unix\UnixRemoteFileHandler.cs" />
+    <Folder Include="$(MSBuildThisFileDirectory)Unix" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsFileExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsRemoteFileHandler.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />

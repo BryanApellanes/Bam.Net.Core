@@ -1,12 +1,12 @@
 using System;
+using System.IO;
 using Bam.Net.Automation;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.Services;
 using Bam.Net.Application.Network;
 using Bam.Net.Services.Automation;
-using Bam.Net.Unix;
 using Bam.Net.Windows;
-using DefaultNamespace;
+using Bam.Net.Logging;
 
 namespace Bam.Net.Application.Verbs
 {
@@ -23,7 +23,7 @@ namespace Bam.Net.Application.Verbs
             if (!_setup)
             {
                 _setup = true;
-                Scan.Prepare<IRemoteFileHandler>(hostName =>
+                Scan.SetHostScanFor<IRemoteFileHandler>(hostName =>
                 {
                     Network.Remote remote = Network.Remote.For(hostName);
                     switch (remote.OS)
@@ -33,22 +33,55 @@ namespace Bam.Net.Application.Verbs
                             break;
                         case OSNames.Linux:
                         case OSNames.OSX:
-                            return new UnixRemoteFileHandler();
+                            return new SshRemoteFileHandler();
                         case OSNames.Invalid:
+                        default:
                             return new CommandServiceClientRemoteFileHandler(hostName, CommandService.DefaultPort);
                     }
                 });
             }
         }
-        
+
+        protected bool IsFile => File.Exists(LocalPath);
+
+        protected bool IsDirectory => Directory.Exists(LocalPath);
+
+        protected FileSystemInfo GetFileSystemInfo()
+        {
+            if (IsFile)
+            {
+                return new FileInfo(LocalPath);
+            }
+            else if (IsDirectory)
+            {
+                return new DirectoryInfo(LocalPath);
+            }
+
+            return null;
+        }
+
         public string LocalPath { get; set; }
         public string RemotePath { get; set; }
         public Remote Remote { get; set; }
         
         public bool Execute()
         {
-            IRemoteFileHandler fileHandler = Scan.For<IRemoteFileHandler>(Remote.HostName);
-            throw new NotImplementedException();
+            try
+            {
+                FileSystemInfo fsInfo = GetFileSystemInfo();
+                if (fsInfo != null)
+                {
+                    IRemoteFileHandler fileHandler = Scan.HostFor<IRemoteFileHandler>(Remote.HostName);
+                    fileHandler.CopyTo(Remote.HostName, fsInfo);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Exception copying {0} to remote host {1}", LocalPath, Remote?.HostName);
+            }
+
+            return false;
         }
     }
 }

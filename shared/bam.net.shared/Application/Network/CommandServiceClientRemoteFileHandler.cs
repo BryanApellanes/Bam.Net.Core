@@ -1,7 +1,7 @@
 using System.IO;
 using Bam.Net.Automation;
 
-namespace DefaultNamespace
+namespace Bam.Net.Application.Network
 {
     public class CommandServiceClientRemoteFileHandler: IRemoteFileHandler
     {
