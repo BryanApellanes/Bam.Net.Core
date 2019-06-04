@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="FtpUnitTests.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 

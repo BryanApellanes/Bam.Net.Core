@@ -21,7 +21,7 @@ namespace Bam.Net.Testing
             IsolateMethodCalls = false;
             PreInit();
             Initialize(args);
-            ConsoleLogger logger = new ConsoleLogger() { AddDetails = false, ShowTime = true, ApplicationName = "bamtestrunnter", UseColors = true };
+            ConsoleLogger logger = new ConsoleLogger() { AddDetails = false, ShowTime = true, ApplicationName = "bamtest", UseColors = true };
             logger.StartLoggingThread();
             if(ExecuteSwitches(Arguments, typeof(Program), false, logger))
             {

@@ -112,6 +112,11 @@ namespace Bam.Net.CommandLine
             return GetArgument(name, promptMessage, (p) => PasswordPrompt(p));
         }
 
+        public static string GetArgumentOrDefault(string name, string ifNotSpecified)
+        {
+            return Arguments.Contains(name) ? Arguments[name] : ifNotSpecified;
+        }
+        
         /// <summary>
         /// Get the value specified for the argument with the 
         /// specified name either from the command line or

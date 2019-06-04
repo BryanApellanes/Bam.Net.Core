@@ -12,6 +12,7 @@ using System.IO;
 using System.Diagnostics;
 using Bam.Net.Data;
 using Bam.Net.Automation.Testing;
+using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Testing
 {
@@ -110,6 +111,68 @@ namespace Bam.Net.Testing
             RunUnitTestsInFile(assemblyPath, Environment.CurrentDirectory);
         }
 
+        [ConsoleAction("Group", "[name of test group]",
+            "Run tests with the specified TestGroup attribute name in assemblies found for the given search pattern.")]
+        public static void RunTestGroupsInFolder()
+        {
+            string testGroupName = GetArgument("Group", "Please enter the name of the test group to run.");
+            string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
+            string testDir = GetArgumentOrDefault("dir", BamPaths.BamHome);
+            DirectoryInfo directory = new DirectoryInfo(testDir);
+            FileInfo[] files = directory.GetFiles(searchPattern);
+            if (files.Length > 0)
+            {
+                List<UnitTestMethod> succeeded = new List<UnitTestMethod>();
+                Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
+                foreach (FileInfo file in files)
+                {
+                    Assembly testAssembly = Assembly.Load(file.FullName);
+                    List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
+                    {
+                        if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(out TestGroupAttribute testGroupAttribute))
+                        {
+                            return testGroupAttribute.Groups.Contains(testGroupName);
+                        }
+
+                        return false;
+                    }).ToList();
+                    OutLineFormat("Found ({0}) tests in group ({1}) in assembly ({2})", ConsoleColor.Blue, testMethods.Count, testGroupName, testAssembly.FullName);
+                    testMethods.Each(testMethod =>
+                    {
+                        if (testMethod.TryInvoke(ex =>
+                        {
+                            OutLineFormat("{0} failed: {1}", testMethod.Description, ex.Message);
+                            failed.Add(testMethod, ex);
+                        }))
+                        {
+                            succeeded.Add(testMethod);
+                        };
+                    });
+                }
+
+                if (succeeded.Count > 0)
+                {
+                    OutLineFormat("{0} tests passed", ConsoleColor.Green, succeeded.Count);
+                    succeeded.Each(unitTest=> OutLineFormat("{0} passed", ConsoleColor.Green, unitTest.Description));
+                }
+                
+                if (failed.Count > 0)
+                {
+                    StringBuilder failures = new StringBuilder();
+                    failed.Keys.Each(unitTest =>  failures.AppendLine($"{unitTest.Description}: {failed[unitTest].Message}\r\n{failed[unitTest].StackTrace}\r\n"));
+                    OutLineFormat("There were {0} failures", failed.Count);
+                    OutLine(failures.ToString(), ConsoleColor.Magenta);
+                    Exit(1);
+                }
+                else
+                {
+                    Exit(0);
+                }
+            }
+            OutLineFormat("No files found in ({0}) for search pattern ({1})", testDir, searchPattern);
+            Exit(1);
+        }
+        
         /// <summary>
         /// Runs the unit tests in specified assemlby.
         /// </summary>
