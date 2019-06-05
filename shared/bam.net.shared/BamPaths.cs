@@ -32,12 +32,10 @@ namespace Bam.Net
                 {
                     return new string[] {"C:", "bam"};
                 }
-                else if (OSInfo.Current == OSNames.OSX)
+                else
                 {
                     return new string[] {"/", "opt", "bam"};
                 }
-
-                return new string[] {"/", "usr", "local", "bam"};
             }
         }
 

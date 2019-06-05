@@ -24,6 +24,7 @@ namespace Bam.Net
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             AddValidArgument("output", false, true, "Specify the directory to build to");
             AddValidArgument("outputRecipe", false, false, "On /discover, Specify the name of the recipe to write, default is 'recipe.json'");
+            AddValidArgument("recipePerProject", "On /discover, Specifies that all discovered projects have their own recipe written.");
             AddValidArgument("zipRecipe", false, false, "On /zip, Specify the recipe whose 'OutputDirectory' setting is zipped.");
         }
 

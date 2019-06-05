@@ -15,7 +15,8 @@ namespace Bam.Net.Application
     [Serializable]
     public class ConsoleActions : CommandLineTestInterface
     {
-        [ConsoleAction("discover", "Read a specified directory and discover csproj files in the child directories therein.")]
+        [ConsoleAction("discover",
+            "Read a specified directory and discover csproj files in the child directories therein, writing a recipe for all projects found.")]
         public bool Discover()
         {
             string directoryPath = GetArgument("discover", "Please enter the path to the root of the projects folder");
@@ -24,52 +25,40 @@ namespace Bam.Net.Application
                 OutLine("Directory not specified", ConsoleColor.Yellow);
                 return false;
             }
+
             DirectoryInfo rootDir = new DirectoryInfo(directoryPath);
             if (!rootDir.Exists)
             {
                 OutLineFormat("Specified directory does not exist: {0}", ConsoleColor.Yellow, directoryPath);
                 return false;
             }
-            
-            List<string> projectFilePaths = new List<string>();
-            foreach (DirectoryInfo projectDir in rootDir.GetDirectories())
+
+            List<string> projectFilePaths = GetProjectFilePaths(rootDir);
+
+            if (Arguments.Contains("recipePerProject"))
             {
-                string projectPath = Path.Combine(projectDir.FullName, $"{projectDir.Name}.csproj");
-                if (!File.Exists(projectPath))
+                WriteRecipes(directoryPath, projectFilePaths);
+                return true;
+            }
+            else
+            {
+                Recipe recipe = new Recipe
                 {
-                    OutLineFormat("No project found in {0}", ConsoleColor.Yellow, projectDir.FullName);
-                    continue;
+                    ProjectRoot = directoryPath,
+                    ProjectFilePaths = projectFilePaths.ToArray()
+                };
+
+                string recipeFile = Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "./recipe.json";
+                FileInfo file = ReadRecipe(recipeFile, recipe);
+
+                if (Arguments.Contains("output"))
+                {
+                    recipe.OutputDirectory = GetArgument("output");
                 }
-                projectFilePaths.Add(projectPath);
-            }
 
-            Recipe recipe = new Recipe
-            {
-                ProjectRoot = directoryPath,
-                ProjectFilePaths = projectFilePaths.ToArray()
-            };
-
-            string recipeFile = Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "./recipe.json";
-            FileInfo file = new FileInfo(recipeFile);
-            if (file.Exists)
-            {
-                Recipe fromFile = file.FromJsonFile<Recipe>();
-                recipe.OutputDirectory = fromFile.OutputDirectory;
-                recipe.BuildConfig = fromFile.BuildConfig;
-                recipe.OsName = fromFile.OsName;
+                WriteRecipe(recipe, file);
+                return true;
             }
-            
-            if (Arguments.Contains("output"))
-            {
-                recipe.OutputDirectory = GetArgument("output");
-            }
-            
-            string json = recipe.ToJson(true);
-            json.SafeWriteToFile(file.FullName, true);
-            OutLine(json, ConsoleColor.Cyan);
-            OutLineFormat("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
-            Thread.Sleep(300);
-            return true;
         }
 
         [ConsoleAction("all", "Discover tools projects and build")]
@@ -184,6 +173,67 @@ namespace Bam.Net.Application
             }
             ZipFile.CreateFromDirectory(recipe.OutputDirectory, outputFile.FullName);
             OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
+            Thread.Sleep(300);
+        }
+        
+        private static List<string> GetProjectFilePaths(DirectoryInfo rootDir)
+        {
+            List<string> projectFilePaths = new List<string>();
+            foreach (DirectoryInfo projectDir in rootDir.GetDirectories())
+            {
+                string projectPath = Path.Combine(projectDir.FullName, $"{projectDir.Name}.csproj");
+                if (!File.Exists(projectPath))
+                {
+                    OutLineFormat("No project found in {0}", ConsoleColor.Yellow, projectDir.FullName);
+                    continue;
+                }
+
+                projectFilePaths.Add(projectPath);
+            }
+
+            return projectFilePaths;
+        }
+
+        private static FileInfo ReadRecipe(string recipeFile, Recipe recipe)
+        {
+            FileInfo file = new FileInfo(recipeFile);
+            if (file.Exists)
+            {
+                Recipe fromFile = file.FromJsonFile<Recipe>();
+                recipe.OutputDirectory = fromFile.OutputDirectory;
+                recipe.BuildConfig = fromFile.BuildConfig;
+                recipe.OsName = fromFile.OsName;
+            }
+
+            return file;
+        }
+
+        private static void WriteRecipes(string projectRoot, List<string> projectPaths)
+        {
+            FileInfo outputFile = new FileInfo(Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "-recipe");
+            string fileNameSuffix = Path.GetFileNameWithoutExtension(outputFile.Name);
+            foreach (string projectFilePath in projectPaths)
+            {
+                FileInfo projectFile = new FileInfo(projectFilePath);
+                Recipe recipe = new Recipe
+                {
+                    ProjectRoot = projectRoot,
+                    ProjectFilePaths = new string[]{projectFilePath} 
+                };
+
+                string projectName = Path.GetFileNameWithoutExtension(projectFilePath);
+                string recipeFilePath = Path.Combine("recipes", $"{projectName}{fileNameSuffix}.json");
+                FileInfo recipeFile = ReadRecipe(recipeFilePath, recipe);
+                WriteRecipe(recipe, recipeFile);
+            }
+        }
+        
+        private static void WriteRecipe(Recipe recipe, FileInfo file)
+        {
+            string json = recipe.ToJson(true);
+            json.SafeWriteToFile(file.FullName, true);
+            OutLine(json, ConsoleColor.Cyan);
+            OutLineFormat("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
             Thread.Sleep(300);
         }
 

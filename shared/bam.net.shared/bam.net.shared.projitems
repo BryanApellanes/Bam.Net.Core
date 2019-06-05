@@ -297,6 +297,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsKill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningWorkerTypeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Scp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\CSharpScriptContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\CSharpScriptContextModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scripting\IncludeDescriptor.cs" />
