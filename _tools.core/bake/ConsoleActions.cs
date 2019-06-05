@@ -210,7 +210,7 @@ namespace Bam.Net.Application
 
         private static void WriteRecipes(string projectRoot, List<string> projectPaths)
         {
-            FileInfo outputFile = new FileInfo(Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "-recipe");
+            FileInfo outputFile = new FileInfo(Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : "recipe");
             string fileNameSuffix = Path.GetFileNameWithoutExtension(outputFile.Name);
             foreach (string projectFilePath in projectPaths)
             {
@@ -222,7 +222,7 @@ namespace Bam.Net.Application
                 };
 
                 string projectName = Path.GetFileNameWithoutExtension(projectFilePath);
-                string recipeFilePath = Path.Combine("recipes", $"{projectName}{fileNameSuffix}.json");
+                string recipeFilePath = Path.Combine("recipes", $"{projectName}-{fileNameSuffix}.json");
                 FileInfo recipeFile = ReadRecipe(recipeFilePath, recipe);
                 WriteRecipe(recipe, recipeFile);
             }
