@@ -210,7 +210,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\NmapScan.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\CommandServiceClientRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\Remote.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Application\Network\SshRemoteFileHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Network\ScpRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DeployInfo.cs" />

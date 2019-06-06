@@ -3,7 +3,7 @@ using Bam.Net.Automation;
 
 namespace Bam.Net.Application.Network
 {
-    public class SshRemoteFileHandler: IRemoteFileHandler
+    public class ScpRemoteFileHandler: IRemoteFileHandler
     {
         public void CopyTo(string host, FileSystemInfo localData, string localPathOnRemote = null)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.Design;
 using Bam.Net.CommandLine;
 
 namespace Bam.Net.Automation
@@ -14,12 +15,12 @@ namespace Bam.Net.Automation
 
         public static ProcessOutput Run(string source, string destination)
         {
-            throw new NotImplementedException();
+            return $"{Path} {source} {destination}".Run();
         }
         
         public static void SetPath()
         {
-            string fileName = "Scp";
+            string fileName = "scp";
             Path = OSInfo.TryGetPath(fileName, out string path) ? path : OSInfo.DefaultToolPath(fileName);
         }
     }

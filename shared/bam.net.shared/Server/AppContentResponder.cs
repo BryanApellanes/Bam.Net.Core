@@ -193,6 +193,7 @@ namespace Bam.Net.Server
                 string[] requestedSegments = new string[] {"~", "common", "files", requestedFileName};
                 if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(out string requestedFilePath, requestedSegments))
                 {
+                    Logger.Info("Sending file {0}", requestedFilePath);
                     responseData = GetResponseData(ctx, requestedFileName, requestedFilePath);
                 }
                 else

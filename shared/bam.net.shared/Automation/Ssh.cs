@@ -28,7 +28,12 @@ namespace Bam.Net.Automation
             public string Password { get; set; }
             public string ServerHost { get; set; }
             public int Port { get; set; }
+            
+            /// <summary>
+            /// The path to the local public key file used for authentication to the ServerHost.
+            /// </summary>
             public string PublicKeyPath { get; set; }
+            
             public ConnectionInfo ToConnectionInfo()
             {
                 if (!string.IsNullOrEmpty(PublicKeyPath))

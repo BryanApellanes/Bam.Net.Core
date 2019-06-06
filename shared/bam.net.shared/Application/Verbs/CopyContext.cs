@@ -33,7 +33,7 @@ namespace Bam.Net.Application.Verbs
                             break;
                         case OSNames.Linux:
                         case OSNames.OSX:
-                            return new SshRemoteFileHandler();
+                            return new ScpRemoteFileHandler();
                         case OSNames.Invalid:
                         default:
                             return new CommandServiceClientRemoteFileHandler(hostName, CommandService.DefaultPort);
