@@ -186,37 +186,39 @@ namespace Bam.Net.Server
                 IRequest request = ctx.Request;
                 Parser parser = Parser.GetDefault();
                 ClientInfo clientInfo = parser.Parse(request.UserAgent);
-                byte[] responseData = null;
                 string runtime = "win10-x64";
                
-                string requestedFileName = request.QueryString?.Get("fileName");
-                string[] requestedSegments = new string[] {"~", "common", "files", requestedFileName};
-                if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(out string requestedFilePath, requestedSegments))
+                if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Logger.Info("Sending file {0}", requestedFilePath);
-                    responseData = GetResponseData(ctx, requestedFileName, requestedFilePath);
+                    runtime = "osx-x64";
                 }
-                else
+                else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        runtime = "osx-x64";
-                    }
-                    else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        runtime = "linux-x64";
-                    }
+                    runtime = "linux-x64";
+                }
 
-                    responseData = GetResponseData(ctx, runtime);
-                }
-                return responseData;
+                return GetResponseData(ctx, runtime);                
             });
             
             SetCustomContentHandler("Windows Toolkit Download", "/download-windows-toolkit", (ctx, fs) => GetResponseData(ctx, "win10-x64"));
             SetCustomContentHandler("Linux Toolkit Download", "/download-linux-toolkit", (ctx, fs) => GetResponseData(ctx, "linux-x64"));
             SetCustomContentHandler("Mac Toolkit Download", "/download-mac-toolkit", (ctx, fs) => GetResponseData(ctx, "osx-x64"));
-        }
+            
+            SetCustomContentHandler("Toolkit Install Script", "/download", (ctx, fs) =>
+            {
+                IRequest request = ctx.Request;
+                byte[] responseData = null;
+                string requestedFileName = request.QueryString?.Get("fileName");
+                string[] requestedSegments = new string[] {"~", "common", "files", requestedFileName};
+                if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(out string requestedFilePath, requestedSegments))
+                {
+                    responseData = GetResponseData(ctx, requestedFileName, requestedFilePath);
+                }
 
+                return responseData;
+            });
+        }
+        
         private byte[] GetResponseData(IHttpContext ctx, string runtime)
         {
             byte[] responseData = null;
