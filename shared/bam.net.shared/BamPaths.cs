@@ -88,7 +88,7 @@ namespace Bam.Net
         
         public static string[] AppsSegments
         {
-            get { return new List<string>(BamHomeSegments) {"apps"}.ToArray(); }
+            get { return new List<string>(ContentSegments) {"apps"}.ToArray(); }
         }
         
         public static string RpcScriptsSrcPath

@@ -36,7 +36,7 @@ namespace Bam.Net.Server
             HttpListenerRequest request = context.Request;
             HttpListenerResponse response = context.Response;
 
-            IHttpContext wrapper = new HttpContextWrapper(context);//new HttpContextWrapper(new RequestWrapper(request), new ResponseWrapper(response));
+            IHttpContext wrapper = new HttpContextWrapper(context);
             HandleRequestAsync(wrapper);
         }
 

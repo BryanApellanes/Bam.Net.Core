@@ -32,6 +32,7 @@ namespace Bam.Net.Application
 			Type type = typeof(Program);
             AddValidArgument("content", false, false, "The path to the content root directory");
             AddValidArgument("verbose", true, false, "Log 200 and 404 responses");
+            AddValidArgument("ProcessMode", false, false, "Specify the process mode overriding what is found in the config file."); // this setting is automatically checked by ProcessMode.Current, adding the argument here as a reminder
 			AddSwitches(type);
 			DefaultMethod = type.GetMethod(nameof(Interactive));
             Initialize(args);
@@ -62,27 +63,11 @@ namespace Bam.Net.Application
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
             Server.Subscribe(logger);
             Log.Default = logger;
-            if (Arguments.Contains("verbose"))
-            {
-                LogResponses();
-            }
+            ProcessArguments();
+
             Server.Start();
-            BamConf conf = Server.GetCurrentConf();
-            StringBuilder configurationMessage = new StringBuilder();
-            configurationMessage.AppendLine();
-            configurationMessage.AppendLine(new string('*', 40));
-            foreach(AppConf appConfig in conf.AppConfigs)
-            {
-                configurationMessage.AppendLine(appConfig.Name);
-                foreach(HostPrefix hostPrefix in appConfig.Bindings)
-                {
-                    configurationMessage.AppendFormat("\t{0}\r\n", hostPrefix.ToString());
-                }
-                configurationMessage.AppendLine();
-            }
-            configurationMessage.AppendLine(new string('*', 40));
-            logger.AddEntry(configurationMessage.ToString());
-			Pause("BamWeb server started");
+            LogConfig(logger);
+            Pause("BamWeb server started");
         }
 
         [ConsoleAction("K", "Stop (Kill) BamWeb server")]
@@ -123,6 +108,44 @@ namespace Bam.Net.Application
                 messageFormat.AppendLine("***");
                 Logger.Warning(messageFormat.ToString(), req?.GetClientIp() ?? "[null]", req?.Url?.ToString() ?? "[null]", req?.PropertiesToString());
             };
+        }
+        
+        private static void LogConfig(ConsoleLogger logger)
+        {
+            BamConf conf = Server.GetCurrentConf();
+            StringBuilder configurationMessage = new StringBuilder();
+            configurationMessage.AppendLine();
+            configurationMessage.AppendLine(new string('*', 40));
+            foreach (AppConf appConfig in conf.AppConfigs)
+            {
+                configurationMessage.AppendLine(appConfig.Name);
+                foreach (HostPrefix hostPrefix in appConfig.Bindings)
+                {
+                    configurationMessage.AppendFormat("\t{0}\r\n", hostPrefix.ToString());
+                }
+
+                configurationMessage.AppendLine();
+            }
+
+            configurationMessage.AppendLine(new string('*', 40));
+            logger.AddEntry(configurationMessage.ToString());
+        }
+        
+        private static void ProcessArguments()
+        {
+            if (Arguments.Contains("verbose"))
+            {
+                LogResponses();
+            }
+
+            if (Arguments.Contains("ProcessMode"))
+            {
+                string specifiedMode = Arguments["ProcessMode"];
+                if (specifiedMode.TryToEnum(out ProcessModes mode))
+                {
+                    ProcessMode.Current.Mode = mode;
+                }
+            }
         }
     }
 }

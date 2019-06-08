@@ -154,7 +154,14 @@ namespace Bam.Net.Server
             return Workspace.ForApplication();
         }
         
+        [JsonIgnore]
+        [XmlIgnore]
+        [YamlIgnore]
         public bool IsProd => ProcessMode.Equals("Prod");
+        
+        [JsonIgnore]
+        [XmlIgnore]
+        [YamlIgnore]
         public bool IsTest => ProcessMode.Equals("Test");
 
         public string ProcessMode { get; set; } 

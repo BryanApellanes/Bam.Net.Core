@@ -4,8 +4,6 @@ namespace Bam.Shell.Pack
 {
     public class PackageProviderDelegator : ArgZeroDelegator<PackageProvider>
     {
-    
-
         [ArgZero("build")]
         public void Build()
         {
