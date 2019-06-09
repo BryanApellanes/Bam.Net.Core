@@ -120,7 +120,16 @@ namespace Bam.Net.Testing
                 Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
                 foreach (FileInfo file in files)
                 {
-                    Assembly testAssembly = Assembly.Load(file.FullName);
+                    Assembly testAssembly = null;
+                    try
+                    {
+                        testAssembly = Assembly.Load(file.FullName);
+                    }
+                    catch (Exception ex)
+                    {
+                        OutLineFormat("Failed to load assembly from file {0}: {1}", file.FullName, ex.Message);
+                        continue;
+                    }
                     List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
                     {
                         if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(out TestGroupAttribute testGroupAttribute))
