@@ -8,19 +8,13 @@ namespace Bam.Net
 {
     public class BamPaths
     {
-        public static string BamHome
-        {
-            get { return Path.Combine(BamHomeSegments); }
-        }
+        public static string BamHome => Path.Combine(BamHomeSegments);
 
         /// <summary>
         /// The root of the bam installation, the same as BamHome
         /// </summary>
-        public static string Root
-        {
-            get { return BamHome; }
-        }
-        
+        public static string Root => BamHome;
+
         /// <summary>
         /// The path segments for BamHome
         /// </summary>
@@ -54,71 +48,36 @@ namespace Bam.Net
             }
         }
         
-        public static string Build
-        {
-            get { return Path.Combine(BamHome, "build"); }
-        }
-        
-        public static string PublicPath
-        {
-            get { return Path.Combine(BamHome, "public"); }
-        }
-        
-        public static string ToolkitPath { get { return Path.Combine(ToolkitSegments); } }
+        public static string Build => Path.Combine(BamHome, "build");
 
-        public static string[] ToolkitSegments
-        {
-            get
-            {
-                return new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
-            }
-        }
+        public static string PublicPath => Path.Combine(BamHome, "public");
 
-        public static string ContentPath { get { return Path.Combine(ContentSegments); } }
+        public static string ToolkitPath => Path.Combine(ToolkitSegments);
 
-        public static string[] ContentSegments
-        {
-            get { return new List<string>(BamHomeSegments) {"content"}.ToArray(); }
-        }
+        public static string[] ToolkitSegments => new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
 
-        public static string Apps
-        {
-            get { return Path.Combine(AppsSegments); }
-        }
-        
-        public static string[] AppsSegments
-        {
-            get { return new List<string>(ContentSegments) {"apps"}.ToArray(); }
-        }
-        
-        public static string RpcScriptsSrcPath
-        {
-            get { return Path.Combine(RpcScriptsSrcSegments); }
-        }
-        
-        public static string[] RpcScriptsSrcSegments
-        {
-            get { return new List<string>(BamHomeSegments) {"rpc", "scripts"}.ToArray(); }
-        }
-        
-        public static string ConfPath
-        {
-            get { return Path.Combine(ConfSegments); }
-        }
+        public static string TestsPath => Path.Combine(TestsSegments);
 
-        public static string[] ConfSegments
-        {
-            get { return new List<string>(BamHomeSegments) {"conf"}.ToArray(); }
-        }
-        
-        public static string DataPath
-        {
-            get { return Path.Combine(DataSegments); }
-        }
+        public static string[] TestsSegments => new List<string>() {UserHome, ".bam", "tests"}.ToArray();
 
-        public static string[] DataSegments
-        {
-            get { return new List<string>(BamHomeSegments) {"data"}.ToArray(); }
-        }
+        public static string ContentPath => Path.Combine(ContentSegments);
+
+        public static string[] ContentSegments => new List<string>(BamHomeSegments) {"content"}.ToArray();
+
+        public static string Apps => Path.Combine(AppsSegments);
+
+        public static string[] AppsSegments => new List<string>(ContentSegments) {"apps"}.ToArray();
+
+        public static string RpcScriptsSrcPath => Path.Combine(RpcScriptsSrcSegments);
+
+        public static string[] RpcScriptsSrcSegments => new List<string>(BamHomeSegments) {"rpc", "scripts"}.ToArray();
+
+        public static string ConfPath => Path.Combine(ConfSegments);
+
+        public static string[] ConfSegments => new List<string>(BamHomeSegments) {"conf"}.ToArray();
+
+        public static string DataPath => Path.Combine(DataSegments);
+
+        public static string[] DataSegments => new List<string>(BamHomeSegments) {"data"}.ToArray();
     }
 }
