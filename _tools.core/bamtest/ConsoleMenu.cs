@@ -118,7 +118,7 @@ namespace Bam.Net.Testing
             {
                 List<UnitTestMethod> succeeded = new List<UnitTestMethod>();
                 Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
-                foreach (FileInfo file in files)
+                foreach (FileInfo file in files.Where(fi=> fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     Assembly testAssembly = null;
                     try
