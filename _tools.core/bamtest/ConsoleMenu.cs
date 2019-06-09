@@ -10,6 +10,7 @@ using Bam.Net.Logging;
 using Bam.Net.Testing.Integration;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 using Bam.Net.Data;
 using Bam.Net.Automation.Testing;
 using Bam.Net.Testing.Unit;
@@ -116,6 +117,8 @@ namespace Bam.Net.Testing
             FileInfo[] files = directory.GetFiles(searchPattern);
             if (files.Length > 0)
             {
+                OutLine($"There are {files.Length} files matching search pattern {searchPattern}", ConsoleColor.Green);
+                Thread.Sleep(3000);
                 List<UnitTestMethod> succeeded = new List<UnitTestMethod>();
                 Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
                 foreach (FileInfo file in files.Where(fi=> fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase)))
