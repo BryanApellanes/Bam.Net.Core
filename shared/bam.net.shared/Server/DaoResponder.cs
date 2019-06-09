@@ -476,7 +476,7 @@ namespace Bam.Net.Server
                         OnSchemaInitializing(name, si);
                         if (!si.Initialize(Logger, out Exception ex))
                         {
-                            Logger.AddEntry("Failed to initilialize schema ({0}): {1}", ex, si.SchemaContext, ex.Message);
+                            Logger.AddEntry("Failed to initialize schema ({0}): {1}", ex, si.SchemaContext, ex.Message);
                         }
                         OnSchemaInitialized(name, si);
                     });

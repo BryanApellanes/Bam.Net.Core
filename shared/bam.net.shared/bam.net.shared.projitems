@@ -208,6 +208,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\NmapScan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelSchema.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelSchemaManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\CommandServiceClientRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\Remote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\ScpRemoteFileHandler.cs" />
@@ -875,13 +879,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyAssemblyGenerationEventSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyAssemblyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ProxyAssemblyGeneratorService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchema.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchemaArrayItemType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchemaArrayProperty.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchemaAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchemaProperty.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchemaObjectProperty.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\Json\JsonSchemaTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\ErrorMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\CookieData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\CookieData.cs" />
