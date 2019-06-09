@@ -38,13 +38,7 @@ namespace Bam.Net.Testing
         /// <value>
         /// The output root.
         /// </value>
-        protected static string OutputRoot
-        {
-            get
-            {
-                return "/bam/tests/";
-            }
-        }
+        protected static string OutputRoot => BamPaths.TestsPath;
 
         /// <summary>
         /// Runs the tests with coverage.
