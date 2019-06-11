@@ -10,6 +10,7 @@ using Bam.Net.Logging;
 using Bam.Net.Testing.Integration;
 using System.IO;
 using System.Diagnostics;
+using System.Runtime.Loader;
 using System.Threading;
 using Bam.Net.Data;
 using Bam.Net.Automation.Testing;
@@ -25,13 +26,7 @@ namespace Bam.Net.Testing
         /// <value>
         /// The open cover.
         /// </value>
-        protected static string OpenCover
-        {
-            get
-            {
-                return "/bam/tools/OpenCover/OpenCover.Console.exe";
-            }
-        }
+        protected static string OpenCover => Path.Combine(BamPaths.ToolsPath, "OpenCover", "OpenCover.Console.exe");
 
         /// <summary>
         /// Gets the output root.
@@ -126,7 +121,7 @@ namespace Bam.Net.Testing
                     Assembly testAssembly = null;
                     try
                     {
-                        testAssembly = Assembly.Load(file.FullName);
+                        testAssembly = Assembly.LoadFile(file.FullName);
                     }
                     catch (Exception ex)
                     {

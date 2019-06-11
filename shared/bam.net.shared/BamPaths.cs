@@ -56,6 +56,12 @@ namespace Bam.Net
 
         public static string[] ToolkitSegments => new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
 
+        /// <summary>
+        /// The path where third party tools are found, including sysinternals and opencover.
+        /// </summary>
+        public static string ToolsPath => Path.Combine(ToolsSegments);
+        public static string[] ToolsSegments => new List<string>() {BamHome, "bin", "tools"}.ToArray();
+        
         public static string TestsPath => Path.Combine(TestsSegments);
 
         public static string[] TestsSegments => new List<string>() {UserHome, ".bam", "tests"}.ToArray();
