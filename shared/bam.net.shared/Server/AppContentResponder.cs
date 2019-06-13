@@ -185,16 +185,19 @@ namespace Bam.Net.Server
             {
                 IRequest request = ctx.Request;
                 Parser parser = Parser.GetDefault();
-                ClientInfo clientInfo = parser.Parse(request.UserAgent);
                 string runtime = "win10-x64";
+                if (request.UserAgent != null)
+                {
+                    ClientInfo clientInfo = parser.Parse(request.UserAgent);
                
-                if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    runtime = "osx-x64";
-                }
-                else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    runtime = "linux-x64";
+                    if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        runtime = "osx-x64";
+                    }
+                    else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        runtime = "linux-x64";
+                    }
                 }
 
                 return GetResponseData(ctx, runtime);                

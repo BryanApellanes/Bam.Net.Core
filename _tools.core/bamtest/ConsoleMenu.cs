@@ -125,9 +125,11 @@ namespace Bam.Net.Testing
                     }
                     catch (Exception ex)
                     {
-                        OutLineFormat("Failed to load assembly from file {0}: {1}", file.FullName, ex.Message);
+                        OutLineFormat("Failed to load assembly from file {0}: {1}", ConsoleColor.Yellow, file.FullName, ex.Message);
                         continue;
                     }
+
+                    OutLineFormat("Loaded assembly {0}", ConsoleColor.Green, testAssembly.FullName);
                     List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
                     {
                         if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(out TestGroupAttribute testGroupAttribute))
