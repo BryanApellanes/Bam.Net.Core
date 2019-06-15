@@ -60,12 +60,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Remove="Templates\Program.cs.hbs" />
-    <EmbeddedResource Include="Templates\Program.cs.hbs" />
     <None Remove="Templates\ScopedAppModule.cs.hbs" />
     <None Remove="Templates\SingletonAppModule.cs.hbs" />
     <None Remove="Templates\Startup.cs.hbs" />
     <None Remove="Templates\TransientAppModule.cs.hbs" />
     <None Remove="Templates\Webpack.config.js.hbs" />
+    <EmbeddedResource Include="Templates\Process\Program.cs.hbs" />
     <EmbeddedResource Include="Templates\Webpack.config.js.hbs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -276,10 +276,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Templates\ServiceProcess" />
   </ItemGroup>
 
 

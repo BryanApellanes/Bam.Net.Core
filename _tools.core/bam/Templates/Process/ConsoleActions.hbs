@@ -1,0 +1,19 @@
+using System;
+using Bam.Net.CommandLine;
+using Bam.Net.Server;
+using Bam.Net.Testing;
+
+namespace Bam.Net.Services
+{
+    [Serializable]
+    public class ConsoleActions: CommandLineTestInterface
+    {
+        static BamServer server;
+
+        [ConsoleAction("S", "Start the server")]
+        public static void StartServer()
+        {
+            // use bamheart ConsoleActions as a reference to finish this
+        }
+    }
+}

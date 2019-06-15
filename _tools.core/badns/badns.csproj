@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Bam.Net.Services" />
+      <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
     </ItemGroup>
 
 </Project>

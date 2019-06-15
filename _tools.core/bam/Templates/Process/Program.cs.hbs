@@ -14,12 +14,17 @@ namespace {{BaseNamespace}}
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             DefaultMethod = typeof(Program).GetMethod("Start");
 
-            Initialize(args);
+            Initialize(args, (a) =>
+            {
+                OutLineFormat("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
+                Environment.Exit(1);
+            });
         }
 
         public static void AddArguments()
         {
             AddSwitches(typeof(WebActions));
+            AddConfigurationSwitches();
         }
 
         #region do not modify
