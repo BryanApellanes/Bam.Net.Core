@@ -25,6 +25,7 @@ namespace Bam.Net.Services
             try
             {
                 WriteResponse(context.Response, DiagnosticInfo.Current.ToJson(true));
+                return true;
             }
             catch (Exception ex)
             {
