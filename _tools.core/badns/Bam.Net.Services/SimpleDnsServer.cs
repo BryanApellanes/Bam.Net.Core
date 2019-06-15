@@ -1,3 +1,4 @@
+using Bam.Net.Application;
 using Bam.Net.Logging;
 using Bam.Net.Services;
 using Bam.Net.Server;
@@ -15,11 +16,19 @@ namespace Bam.Net.Services
         {
         }
 
-        public void Listen(int port = 53)
+        public override void Start()
         {
-            MasterFile masterFile = new MasterFile();
-            
-            DnsServer server = new DnsServer();
+            base.Start();
+            Listen(Config.Current["Port", "53"].ToInt());
+        }
+
+        public DnsServer DnsServer { get; private set; }
+        
+        public void Listen(int port = 53)
+        {   
+            DnsServer server = new DnsServer(new BamDnsRequestResolver());
+            server.Listen(port);
+            DnsServer = server;
         }
     }
 }

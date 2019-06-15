@@ -1,6 +1,8 @@
-namespace Bam.Net.Application
+using Bam.Net.Data.Repositories;
+
+namespace Bam.Net.Services.Data
 {
-    public class RootDnsServerInfo
+    public class RootDnsServer : CompositeKeyAuditRepoData
     {
         public string Letter { get; set; }
         public string Ipv4Address { get; set; }
