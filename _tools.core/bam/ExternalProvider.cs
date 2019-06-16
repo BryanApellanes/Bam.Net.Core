@@ -13,6 +13,9 @@ using Bam.Shell;
 
 namespace Bam.Net.Application
 {
+    /// <summary>
+    /// Used to execute 
+    /// </summary>
     [Serializable]
     public class ExternalProvider: CommandLineTestInterface
     {

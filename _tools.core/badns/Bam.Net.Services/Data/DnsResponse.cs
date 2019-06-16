@@ -13,7 +13,7 @@ namespace Bam.Net.Services.Data
             Code = Cuid;
         }
         
-        public virtual RootDnsServer RootDnsServer { get; set; }
+        public virtual DnsServerDescriptor DnsServerDescriptor { get; set; }
         
         [CompositeKey]
         public string HostName { get; set; }

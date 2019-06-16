@@ -6,9 +6,9 @@ namespace Bam.Net.Application
 {
     public class BamDnsClient : DNS.Client.DnsClient
     {
-        public BamDnsClient(RootDnsServer rootDnsServer) : this(rootDnsServer.Ipv4Address)
+        public BamDnsClient(DnsServerDescriptor rootDnsServerDescriptor) : this(rootDnsServerDescriptor.Ipv4Address)
         {
-            RootDnsServer = rootDnsServer;
+            DnsServerDescriptor = rootDnsServerDescriptor;
         }
 
         public BamDnsClient(IPEndPoint dns) : base(dns)
@@ -27,6 +27,6 @@ namespace Bam.Net.Application
         {
         }
         
-        public RootDnsServer RootDnsServer { get; set; }
+        public DnsServerDescriptor DnsServerDescriptor { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using DNS.Client.RequestResolver;
 using DNS.Client;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
+using MongoDB.Driver;
 using DnsClient = DNS.Client.DnsClient;
 
 namespace Bam.Net.Application
@@ -24,15 +25,15 @@ namespace Bam.Net.Application
             _clients = new HashSet<BamDnsClient>();
             _recordTypeHandlers = new Dictionary<RecordType, List<Action<IResponse>>>();
             
-            Repository = new DaoRepository();
+            Repository = new DatabaseRepository();
             Repository.AddType<DnsResponse>();
-            Repository.AddType<RootDnsServer>();
+            Repository.AddType<RootDnsServerDescriptor>();
             
             LoadRootDnsServerData();
             AddRootServerARecordResolver();
         }
         
-        public DaoRepository Repository { get; set; }
+        public DatabaseRepository Repository { get; set; }
         
         public Task<IResponse> Resolve(IRequest request)
         {
@@ -74,7 +75,7 @@ namespace Bam.Net.Application
             {
                 using (CsvReader csvReader = new CsvReader(reader))
                 {
-                    foreach (RootDnsServer serverInfo in csvReader.GetRecords<RootDnsServer>())
+                    foreach (RootDnsServerDescriptor serverInfo in csvReader.GetRecords<RootDnsServerDescriptor>())
                     {
                         _clients.Add(new BamDnsClient(serverInfo));
                     }
@@ -100,7 +101,7 @@ namespace Bam.Net.Application
                                 response.AnswerRecords.Add(new IPAddressResourceRecord(question.Name, ip));
                                 DnsResponse cached = new DnsResponse()
                                 {
-                                    HostName = question.Name.ToString(), RootDnsServer = client.RootDnsServer,
+                                    HostName = question.Name.ToString(), DnsServerDescriptor = client.DnsServerDescriptor,
                                     IpAddress = ip.ToString()
                                 };
                                 cachedResponses.Add(cached);
