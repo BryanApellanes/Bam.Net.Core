@@ -1,4 +1,5 @@
 using System.IO;
+using Bam.Net.Application.Network;
 using Bam.Net.Automation;
 using Bam.Net.Logging;
 using Bam.Net.Server;
@@ -7,6 +8,11 @@ namespace Bam.Net.Windows
 {
     public class WindowsRemoteFileHandler : IRemoteFileHandler
     {
+        public void CopyTo(Remote remote, FileSystemInfo localData, string localPathOnRemote = null)
+        {
+            CopyTo(remote.HostName, localData, localPathOnRemote);
+        }
+
         public void CopyTo(string host, FileSystemInfo localData, string localPathOnRemote = null)
         {
             if (localData is DirectoryInfo directoryInfo)

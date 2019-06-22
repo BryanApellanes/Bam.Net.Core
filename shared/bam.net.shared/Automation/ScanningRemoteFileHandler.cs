@@ -1,4 +1,5 @@
 using System.IO;
+using Bam.Net.Application.Network;
 using Bam.Net.Application.Verbs;
 
 namespace Bam.Net.Automation
@@ -9,7 +10,12 @@ namespace Bam.Net.Automation
         {
             CopyContext.SetupHostScan();
         }
-        
+
+        public void CopyTo(Remote remote, FileSystemInfo localData, string localPathOnRemote = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void CopyTo(string host, FileSystemInfo localData, string localPathOnRemote = null)
         {
             IRemoteFileHandler remoteFileHandler = Scan.HostFor<IRemoteFileHandler>(host);

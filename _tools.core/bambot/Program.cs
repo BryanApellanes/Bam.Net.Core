@@ -14,6 +14,7 @@ namespace Bam.Net.Application
         {
             TryWritePid(true);
             IsolateMethodCalls = false;
+            AddValidArgument("host", false, false, "The host name to deploy to");
             AddSwitches(typeof(ConsoleActions));
             AddConfigurationSwitches();
             Initialize(args, (a) =>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bam.Net.Automation;
+using Bam.Net.Testing;
 
 namespace Bam.Net.Application.Network
 {
@@ -82,12 +83,15 @@ namespace Bam.Net.Application.Network
             }
         }
 
-        protected IEnumerable<string> GetScanReportLines()
+        protected List<string> GetScanReportLines()
         {
+            List<string> lines = new List<string>();
             foreach (string line in ScanReport?.DelimitSplit("\r", "\n"))
             {
-                yield return line;
+                lines.Add(line);
             }
+
+            return lines;
         }
     }
 }

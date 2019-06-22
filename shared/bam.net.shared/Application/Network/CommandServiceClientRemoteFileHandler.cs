@@ -13,6 +13,11 @@ namespace Bam.Net.Application.Network
         
         public string CommandServerHostName { get; set; }
         public int CommandServerPort { get; set; }
+        public void CopyTo(Remote remote, FileSystemInfo localData, string localPathOnRemote = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void CopyTo(string host, FileSystemInfo localData, string localPathOnRemote = null)
         {
             throw new System.NotImplementedException();

@@ -34,6 +34,18 @@ namespace Bam.Net
             }
         }
 
+        static Dictionary<OSNames, string> _runtimeNames = new Dictionary<OSNames, string>
+        {
+            {OSNames.Invalid, "win10-x64"},
+            {OSNames.Windows, "win10-x64"},
+            {OSNames.Linux, "ubuntu.16.10-x64"},
+            {OSNames.OSX, "osx-x64"}
+        };
+        public static string RuntimeName
+        {
+            get { return _runtimeNames[Current]; }
+        }
+        
         public static string DefaultToolPath(string fileName)
         {
             return $"/bam/tools/{fileName}";

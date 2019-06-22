@@ -1,3 +1,4 @@
+using System.IO;
 using Bam.Net.Application.Network;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 
@@ -5,6 +6,11 @@ namespace Bam.Net.Application.Verbs
 {
     public static class Copy
     {
+        public static CopyContext To(string remoteHostName)
+        {
+            return To(Remote.For(remoteHostName));
+        }
+        
         public static CopyContext To(Remote machine)
         {
             CopyContext ctx = new CopyContext();
@@ -21,13 +27,13 @@ namespace Bam.Net.Application.Verbs
             return ctx;
         }
         
-        public static CopyContext LocalFile(string localPath)
+        public static CopyContext LocalPath(string localPath)
         {
             CopyContext ctx = new CopyContext();
-            return ctx.LocalFile(localPath);
+            return ctx.LocalPath(localPath);
         }
         
-        public static CopyContext LocalFile(this CopyContext ctx, string path)
+        public static CopyContext LocalPath(this CopyContext ctx, string path)
         {
             ctx.LocalPath = path;
             return ctx;

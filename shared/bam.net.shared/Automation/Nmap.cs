@@ -13,7 +13,7 @@ namespace Bam.Net.Automation
 
         public static ProcessOutput Run(string computerName, string options = "", int timeout = 600000)
         {
-            return $"{Path} {options}".Run(timeout);
+            return Path.ToStartInfo($"{computerName} {options}").RunAndWait();
         }
         
         private static void SetPath()

@@ -423,6 +423,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CodeAnalysis\NamespaceComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeAnalysis\PropertyComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeDomCompiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandLineTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ArgumentInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ArgumentInfoHash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\CommandLineArgumentConfigurer.cs" />

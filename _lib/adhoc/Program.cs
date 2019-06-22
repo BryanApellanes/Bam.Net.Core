@@ -1,12 +1,14 @@
 ﻿using System;
+using Bam.Net.Testing;
 
 namespace adhoc
 {
-    class Program
+    [Serializable]
+    class Program : CommandLineTestInterface
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Initialize(args);
         }
     }
 }
