@@ -57,7 +57,7 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("S", "Start default server")]
+        [ConsoleAction("S", "Start Bamweb server")]
         public static void StartServer()
         {
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
@@ -129,8 +129,31 @@ namespace Bam.Net.Application
 
             configurationMessage.AppendLine(new string('*', 40));
             logger.AddEntry(configurationMessage.ToString());
+            OutLineFormat("Server configured for Process Modes: {0}", ConsoleColor.DarkYellow, string.Join(',', conf.ProcessModes));
+            PrintProcessMode();
         }
-        
+
+        private static void PrintProcessMode()
+        {
+            ProcessModes processMode = ProcessMode.Current.Mode;
+            ConsoleColor color = ConsoleColor.Red;
+            switch (processMode)
+            {
+                case ProcessModes.Dev:
+                    color = ConsoleColor.Green;
+                    break;
+                case ProcessModes.Test:
+                    color = ConsoleColor.Yellow;
+                    break;
+                case ProcessModes.Prod:
+                    color = ConsoleColor.Red;
+                    break;
+            }
+
+            OutLineFormat("Current ProcessMode is {0}", color, processMode.ToString());
+            Thread.Sleep(30);
+        }
+
         private static void ProcessArguments()
         {
             if (Arguments.Contains("verbose"))

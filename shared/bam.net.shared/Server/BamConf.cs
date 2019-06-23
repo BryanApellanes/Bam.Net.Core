@@ -3,6 +3,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using Bam.Net;
@@ -17,6 +18,8 @@ using Bam.Net.UserAccounts.Data;
 using Bam.Net.UserAccounts;
 using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Bam.Net.Server
 {
@@ -50,6 +53,8 @@ namespace Bam.Net.Server
                 new SchemaInitializer(typeof(UserAccountsContext), typeof(SQLiteRegistrarCaller))
             };
 
+            this.ProcessModes = new ProcessModes[]{Net.ProcessModes.Dev, Net.ProcessModes.Test, Net.ProcessModes.Prod};
+            
             this._schemaInitializers = schemaInitInfos;
         }
 
@@ -118,6 +123,12 @@ namespace Bam.Net.Server
             set;
         }
 
+        public ProcessModes[] ProcessModes
+        {
+            get;
+            set;
+        }
+        
         /// <summary>
         /// The root of the filesystem that will be served
         /// </summary>
@@ -351,6 +362,7 @@ namespace Bam.Net.Server
         /// Represents the configs for each application found in ~s:/apps 
         /// (where each subdirectory is assumed to be a Bam application)
         /// </summary>
+        [JsonIgnore]
         public AppConf[] AppConfigs => _appConfigsLock.DoubleCheckLock(ref _appConfigs, InitializeAppConfigs).ToArray();
 
         protected internal AppConf[] ReloadAppConfigs()
