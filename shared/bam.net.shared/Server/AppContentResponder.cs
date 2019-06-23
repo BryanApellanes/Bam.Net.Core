@@ -229,6 +229,7 @@ namespace Bam.Net.Server
                 }
                 
                 Log.Warn("Install script is missing");
+                return null;
             });
             
             SetCustomContentHandler("Download tool install script", "/install-tool.sh", (ctx, fs) =>
@@ -239,6 +240,7 @@ namespace Bam.Net.Server
                 }
                 
                 Log.Warn("Tool install script is missing");
+                return null;
             });
         }
         
