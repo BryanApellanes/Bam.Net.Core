@@ -19,8 +19,8 @@ namespace Bam.Net
         public void Deploy()
         {
             string toolName = GetToolName();
-            OutLine("This is not fully implemented");
-            OutLine("Ssh to the remote then download and run http://bamapps.net/download?fileName=install.sh, use 'source install.sh' to set path after install.");
+            OutLine("This is not fully implemented", ConsoleColor.Yellow);
+            OutLine("Ssh to the remote then download and run http://bamapps.net/download?fileName=install.sh, use 'source install.sh' to set path after install.", ConsoleColor.Cyan);
         }
         
         [ConsoleAction("Install", "Download and install the latest version of a tool.")]

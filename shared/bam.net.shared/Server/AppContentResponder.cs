@@ -44,7 +44,7 @@ namespace Bam.Net.Server
             AllRequestHandler = new ContentHandler($"{conf.Name}.AllRequestHandler", AppRoot) { CheckPaths = false };
             CustomHandlerMethods = new List<MethodInfo>();
             SetUploadHandler();
-            SetDownloadHandler();
+            SetDownloadHandlers();
             SetBaseIgnorePrefixes();
             ContentHandlerScanTask = ScanForContentHandlers();
             SetAllRequestHandler();
@@ -179,7 +179,7 @@ namespace Bam.Net.Server
             });
         }
 
-        protected void SetDownloadHandler()
+        protected virtual void SetDownloadHandlers()
         {
             SetCustomContentHandler("Toolkit Download", "/download-toolkit", (ctx, fs) =>
             {
@@ -207,7 +207,7 @@ namespace Bam.Net.Server
             SetCustomContentHandler("Linux Toolkit Download", "/download-linux-toolkit", (ctx, fs) => GetResponseData(ctx, "linux-x64"));
             SetCustomContentHandler("Mac Toolkit Download", "/download-mac-toolkit", (ctx, fs) => GetResponseData(ctx, "osx-x64"));
             
-            SetCustomContentHandler("Toolkit Install Script", "/download", (ctx, fs) =>
+            SetCustomContentHandler("Download a named file", "/download", (ctx, fs) =>
             {
                 IRequest request = ctx.Request;
                 byte[] responseData = null;
@@ -219,6 +219,26 @@ namespace Bam.Net.Server
                 }
 
                 return responseData;
+            });
+            
+            SetCustomContentHandler("Download toolkit install script", "/install.sh", (ctx, fs) =>
+            {
+                if (ServerRoot.FileExists(out string installScriptPath, "~", "common", "files", "install.sh"))
+                {
+                    return GetResponseData(ctx, "install.sh", installScriptPath);
+                }
+                
+                Log.Warn("Install script is missing");
+            });
+            
+            SetCustomContentHandler("Download tool install script", "/install-tool.sh", (ctx, fs) =>
+            {
+                if (ServerRoot.FileExists(out string installToolScriptPath, "~", "common", "files", "install-tool.sh"))
+                {
+                    return GetResponseData(ctx, "install-tool.sh", installToolScriptPath);
+                }
+                
+                Log.Warn("Tool install script is missing");
             });
         }
         
@@ -500,12 +520,11 @@ namespace Bam.Net.Server
 
         public virtual void HandleUpload(IHttpContext context, HttpPostedFile file)
         {
-            FileUploadEventArgs args = new FileUploadEventArgs(context, file, ApplicationName);
+            string userName = GetUser(context).UserName;
+            FileUploadEventArgs args = new FileUploadEventArgs(context, file, ApplicationName) {UserName = userName};
             FireEvent(FileUploading, args);
             if (args.Continue)
             {
-                string userName = GetUser(context).UserName;
-                args.UserName = userName;
                 string saveToPath = Path.Combine(AppRoot.Root, "workspace", "uploads", userName, "temp_".RandomLetters(8));
                 FileInfo fileInfo = new FileInfo(saveToPath);
                 if (!fileInfo.Directory.Exists)
@@ -539,8 +558,8 @@ namespace Bam.Net.Server
             }
 
             string lowered = path.ToLowerInvariant();
-            string[] layoutSegments = string.Format("~/{0}/{1}{2}", AppConf.HtmlDir, path, LayoutFileExtension).DelimitSplit("/", "\\");
-            string[] htmlSegments = string.Format("~/{0}/{1}.html", AppConf.HtmlDir, path).DelimitSplit("/", "\\");
+            string[] layoutSegments = $"~/{AppConf.HtmlDir}/{path}{LayoutFileExtension}".DelimitSplit("/", "\\");
+            string[] htmlSegments = $"~/{AppConf.HtmlDir}/{path}.html".DelimitSplit("/", "\\");
 
             LayoutModel layoutModel = null;
             if (LayoutModelsByPath.ContainsKey(lowered))
