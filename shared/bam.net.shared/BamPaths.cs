@@ -47,7 +47,21 @@ namespace Bam.Net
                 }
             }
         }
-        
+
+        public static string SystemRuntime => Path.Combine(Path.Combine(ReferenceRuntimeSegments), "System.Runtime.dll");
+
+        public static string[] ReferenceRuntimeSegments
+        {
+            get
+            {
+                return new List<string>
+                {
+                    BamHome, "nuget", "global", $"runtime.{OSInfo.ReferenceRuntime}.microsoft.netcore.app",
+                    OSInfo.CoreVersion, "runtimes", OSInfo.ReferenceRuntime, "lib", OSInfo.DefaultLibSubfolder,
+                }.ToArray();
+            }
+        }
+
         public static string Build => Path.Combine(BamHome, "build");
 
         public static string PublicPath => Path.Combine(BamHome, "public");

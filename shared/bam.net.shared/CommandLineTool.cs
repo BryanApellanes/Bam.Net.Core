@@ -28,7 +28,7 @@ namespace Bam.Net
         {
             string toolName = GetToolName();
             string homeDir = BamPaths.UserHome;
-            string runtime = OSInfo.RuntimeName;
+            string runtime = OSInfo.BuildRuntimeName;
             string zipFileName = $"bamtoolkit-{toolName}-{runtime}.zip";
 
             string tmpDir = Path.Combine(homeDir, ".bam", "tmp");
@@ -74,7 +74,7 @@ namespace Bam.Net
         {
             string toolName = GetToolName();
             string homeDir = BamPaths.UserHome;
-            string runtime = OSInfo.RuntimeName;
+            string runtime = OSInfo.BuildRuntimeName;
             return $"bamtoolkit-{toolName}-{runtime}.zip";
         }
     }

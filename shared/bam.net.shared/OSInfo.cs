@@ -9,6 +9,9 @@ namespace Bam.Net
 {
     public class OSInfo
     {
+        public const string DefaultCoreVersion = "2.2.4";
+        public const string DefaultLibSubfolder = "netcoreapp2.2";
+        
         static OSNames _current;
         public static OSNames Current
         {
@@ -34,16 +37,35 @@ namespace Bam.Net
             }
         }
 
-        static Dictionary<OSNames, string> _runtimeNames = new Dictionary<OSNames, string>
+        public static string CoreVersion
+        {
+            get { return Config.Current["CoreVersion"].Or(DefaultCoreVersion); }
+        }
+        
+        private static Dictionary<OSNames, string> _referenceRuntimeNames = new Dictionary<OSNames, string>
+        {
+            {OSNames.Invalid, "win-x64"},
+            {OSNames.Windows, "win-x64"},
+            {OSNames.Linux, "linux-x64"},
+            {OSNames.OSX, "osx-x64"}
+        };
+
+        public static string ReferenceRuntime
+        {
+            get { return _referenceRuntimeNames[Current]; }
+        }
+        
+        static Dictionary<OSNames, string> _buildRuntimeNames = new Dictionary<OSNames, string>
         {
             {OSNames.Invalid, "win10-x64"},
             {OSNames.Windows, "win10-x64"},
             {OSNames.Linux, "ubuntu.16.10-x64"},
             {OSNames.OSX, "osx-x64"}
         };
-        public static string RuntimeName
+        
+        public static string BuildRuntimeName
         {
-            get { return _runtimeNames[Current]; }
+            get { return _buildRuntimeNames[Current]; }
         }
         
         public static string DefaultToolPath(string fileName)

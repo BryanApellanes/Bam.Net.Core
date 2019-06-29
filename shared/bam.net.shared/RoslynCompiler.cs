@@ -94,12 +94,12 @@ namespace Bam.Net
 
         public byte[] Compile(string assemblyName, params SyntaxTree[] syntaxTrees)
         {
-            return Compile(assemblyName, GetMetadataReferences, syntaxTrees);
+            return Compile(assemblyName, GetMetaDataReferences, syntaxTrees);
         }
 
         public byte[] Compile(string assemblyName, Func<MetadataReference[]> getMetaDataReferences, params SyntaxTree[] syntaxTrees)
         {
-            getMetaDataReferences = getMetaDataReferences ?? GetMetadataReferences;
+            getMetaDataReferences = getMetaDataReferences ?? GetMetaDataReferences;
             CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
                 .WithOptions(new CSharpCompilationOptions(this.OutputKind))
                 .AddReferences(getMetaDataReferences())
@@ -162,7 +162,7 @@ namespace Bam.Net
             }
         }
 
-        private MetadataReference[] GetMetadataReferences()
+        private MetadataReference[] GetMetaDataReferences()
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
             metadataReferences.AddRange(ReferencePaths.Select(p => MetadataReference.CreateFromFile(p)));
