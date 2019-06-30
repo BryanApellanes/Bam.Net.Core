@@ -24,31 +24,13 @@ namespace Bam.Net.CoreServices.ServiceRegistration.Data
             Type toUse = types.FirstOrDefault();
             if(types.Length > 1)
             {
-                Log.Warn("The specified assembly {0} contains more than one type addorned with a {1} attribute, registering {2}", ass.GetFilePath(), nameof(ServiceRegistryContainerAttribute), toUse.FullName);
+                Log.Warn("The specified assembly {0} contains more than one type adorned with a {1} attribute, registering {2}", ass.GetFilePath(), nameof(ServiceRegistryContainerAttribute), toUse.FullName);
             }
             Initialize(toUse);
         }
         public ServiceRegistryLoaderDescriptor(Type type, string name = null, string description = null)
         {
             Initialize(type, name, description);
-        }
-
-        private void Initialize(Type type, string name = null, string description = null)
-        {
-            LoaderType = type.FullName;
-            LoaderAssembly = type.Assembly.FullName;
-            MethodInfo loaderMethodInfo = type.GetMethods().Where(mi => mi.HasCustomAttributeOfType(out ServiceRegistryLoaderAttribute a) && a.RegistryName.Equals(name)).FirstOrDefault();
-            if (loaderMethodInfo == null)
-            {
-                loaderMethodInfo = type.GetFirstMethodWithAttributeOfType<ServiceRegistryLoaderAttribute>();
-                if(loaderMethodInfo == null)
-                {
-                    throw new InvalidOperationException($"The specified type doesn't have a method addorned with an attribute of {nameof(ServiceRegistryLoaderAttribute)}");
-                }
-            }
-            ServiceRegistryLoaderAttribute attr = loaderMethodInfo.GetCustomAttributeOfType<ServiceRegistryLoaderAttribute>();
-            Name = string.IsNullOrEmpty(name) ? (string.IsNullOrEmpty(attr.RegistryName) ?  $"{type.Assembly.GetFileInfo().Name}_{type.Name}" : attr.RegistryName): name;
-            Description = string.IsNullOrEmpty(description) ? attr.Description: description;
         }
 
         /// <summary>
@@ -91,5 +73,23 @@ namespace Bam.Net.CoreServices.ServiceRegistration.Data
         /// The loader method.
         /// </value>
         public string LoaderMethod { get; set; }
+        
+        private void Initialize(Type type, string name = null, string description = null)
+        {
+            LoaderType = type.FullName;
+            LoaderAssembly = type.Assembly.FullName;
+            MethodInfo loaderMethodInfo = type.GetMethods().FirstOrDefault(mi => ((MemberInfo) mi).HasCustomAttributeOfType(out ServiceRegistryLoaderAttribute a) && a.RegistryName.Equals(name));
+            if (loaderMethodInfo == null)
+            {
+                loaderMethodInfo = type.GetFirstMethodWithAttributeOfType<ServiceRegistryLoaderAttribute>();
+                if(loaderMethodInfo == null)
+                {
+                    throw new InvalidOperationException($"The specified type doesn't have a method adorned with an attribute of {nameof(ServiceRegistryLoaderAttribute)}");
+                }
+            }
+            ServiceRegistryLoaderAttribute attr = loaderMethodInfo.GetCustomAttributeOfType<ServiceRegistryLoaderAttribute>();
+            Name = string.IsNullOrEmpty(name) ? (string.IsNullOrEmpty(attr.RegistryName) ?  $"{type.Assembly.GetFileInfo().Name}_{type.Name}" : attr.RegistryName): name;
+            Description = string.IsNullOrEmpty(description) ? attr.Description: description;
+        }
     }
 }

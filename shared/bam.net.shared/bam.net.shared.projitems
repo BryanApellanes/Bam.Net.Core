@@ -476,6 +476,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ApplicationServiceHostResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ServiceHostResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\DnsServerDescriptorClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\DnsRootServerRequestResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\DnsResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\DnsServerDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\RootDnsServerDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\Vouch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\AndFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />
@@ -2994,6 +3002,9 @@
     <Content Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\ln.node.js" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\README.md" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\root-servers.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\ServiceRegistration\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\AES.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA1.js" />

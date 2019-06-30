@@ -3,6 +3,7 @@ using Bam.Net.Logging;
 using Bam.Net.Services;
 using Bam.Net.Server;
 using DNS.Server;
+using Bam.Net.CoreServices.NameResolution;
 
 namespace Bam.Net.Services
 {
@@ -26,7 +27,7 @@ namespace Bam.Net.Services
         
         public void Listen(int port = 53)
         {   
-            DnsServer server = new DnsServer(new BamDnsRequestResolver());
+            DnsServer server = new DnsServer(new DnsRootServerRequestResolver());
             server.Listen(port);
             DnsServer = server;
         }

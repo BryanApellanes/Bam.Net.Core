@@ -4,7 +4,7 @@ using Bam.Net.Data.Repositories;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
 
-namespace Bam.Net.Services.Data
+namespace Bam.Net.CoreServices.NameResolution.Data
 {
     public class DnsResponse : CompositeKeyAuditRepoData
     {

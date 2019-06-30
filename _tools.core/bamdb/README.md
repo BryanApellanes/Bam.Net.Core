@@ -6,16 +6,16 @@ Bam Database (bamdb.exe) is a high level data access component which provides a 
 
 The following describes the options for code generation using bamdb.
 
-/generateDaoAssemblyForTypes
+### /generateDaoAssemblyForTypes
 Generate a Dao Assembly for types in a specified namespace of a specified assembly.
 
-/generateDaoCodeForTypes
+### /generateDaoCodeForTypes
 Generate Dao source code for types in a specified namespace of a specified assembly.
 
-/generateDtosForDaos
+### /generateDtosForDaos
 Generate Dto source for types in a specified namespace of a specified assembly, optionally compiling and keeping the source.
 
-/generateSchemaRepository
+### /generateSchemaRepository
 In addition to generating Daos and Dtos for types in a specified namespace of a specified assembly, will 
 also generate a schema specific DaoRepository for all the types found.
 

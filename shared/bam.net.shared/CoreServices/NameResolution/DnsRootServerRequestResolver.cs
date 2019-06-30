@@ -5,24 +5,27 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bam.Net.Data.Repositories;
-using Bam.Net.Services.Data;
+using Bam.Net.CoreServices.NameResolution.Data;
 using CsvHelper;
 using DNS.Client.RequestResolver;
 using DNS.Client;
 using DNS.Protocol;
 using DNS.Protocol.ResourceRecords;
-using MongoDB.Driver;
+using Bam.Net.Logging;
 using DnsClient = DNS.Client.DnsClient;
 
-namespace Bam.Net.Application
+namespace Bam.Net.CoreServices.NameResolution
 {
-    public class BamDnsRequestResolver : IRequestResolver
+    /// <summary>
+    /// A Dns name resolver that resolves A records by asking a list of root servers specified in the root-servers.csv file,
+    /// </summary>
+    public class DnsRootServerRequestResolver : IRequestResolver
     {
-        readonly HashSet<BamDnsClient> _clients;
+        readonly HashSet<DnsServerDescriptorClient> _clients;
         readonly Dictionary<RecordType, List<Action<IResponse>>> _recordTypeHandlers;
-        public BamDnsRequestResolver()
+        public DnsRootServerRequestResolver()
         {
-            _clients = new HashSet<BamDnsClient>();
+            _clients = new HashSet<DnsServerDescriptorClient>();
             _recordTypeHandlers = new Dictionary<RecordType, List<Action<IResponse>>>();
             
             Repository = new DatabaseRepository();
@@ -43,7 +46,14 @@ namespace Bam.Net.Application
             {
                 if (_recordTypeHandlers.ContainsKey(question.Type))
                 {
-                    Parallel.ForEach(_recordTypeHandlers[question.Type], (action) => action(response));
+                    if (_recordTypeHandlers.ContainsKey(question.Type))
+                    {
+                        Parallel.ForEach(_recordTypeHandlers[question.Type], (action) => action(response));
+                    }
+                    else
+                    {
+                        Log.Warn("No handlers are registered for question type {0}", question.Type.ToString());
+                    }
                 }
             }
 
@@ -71,13 +81,19 @@ namespace Bam.Net.Application
         
         protected void LoadRootDnsServerData()
         {
-            using (StreamReader reader = new StreamReader(Path.Combine(".", "root-servers.csv")))
+            string rootDnsServerData = Path.Combine(".", "root-servers.csv");
+            if (!File.Exists(rootDnsServerData))
+            {
+                Log.Warn("root-servers.csv file not found, BaDns will not resolve public host records: {0}", rootDnsServerData);
+                return;
+            }
+            using (StreamReader reader = new StreamReader(rootDnsServerData))
             {
                 using (CsvReader csvReader = new CsvReader(reader))
                 {
                     foreach (RootDnsServerDescriptor serverInfo in csvReader.GetRecords<RootDnsServerDescriptor>())
                     {
-                        _clients.Add(new BamDnsClient(serverInfo));
+                        _clients.Add(new DnsServerDescriptorClient(serverInfo));
                     }
                 }
             }

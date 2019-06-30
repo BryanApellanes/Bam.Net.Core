@@ -1,6 +1,6 @@
 using Bam.Net.Data.Repositories;
 
-namespace Bam.Net.Services.Data
+namespace Bam.Net.CoreServices.NameResolution.Data
 {
     public class Vouch : CompositeKeyAuditRepoData
     {
