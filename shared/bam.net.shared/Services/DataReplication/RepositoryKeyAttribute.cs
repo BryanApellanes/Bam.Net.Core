@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Services.DataReplication
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class RepositoryKey: Attribute
+    public class RepositoryKeyAttribute: Attribute
     {
     }
 }

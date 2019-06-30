@@ -37,11 +37,11 @@ namespace Bam.Net.Services.DataReplication
 
         protected Arc FindArc(object value)
         {
-            int key = GetRepositoryKey(value);
-			return FindArcByKey(key);
+            int key = GetObjectKey(value);
+			return FindArcByObjectKey(key);
         }
 
-        protected override Arc FindArcByKey(int key)
+        protected override Arc FindArcByObjectKey(int key)
         {
             double slotIndex = Math.Floor((double)(key / ArcSize));
             Arc result = null;
@@ -65,8 +65,8 @@ namespace Bam.Net.Services.DataReplication
         {
             Type type = value.GetType();
             
-            PropertyInfo[] keyProperties = type.GetPropertiesWithAttributeOfType<RepositoryKey>();
-            Type marker = keyProperties.Length > 0 ? typeof(RepositoryKey) : typeof(ColumnAttribute);
+            PropertyInfo[] keyProperties = type.GetPropertiesWithAttributeOfType<RepositoryKeyAttribute>();
+            Type marker = keyProperties.Length > 0 ? typeof(RepositoryKeyAttribute) : typeof(ColumnAttribute);
 
             StringBuilder stringToHashBuilder = GetHashStringFromProperties(value, new Type[] { marker }, type);
             string stringToHash = stringToHashBuilder.ToString();
@@ -79,9 +79,14 @@ namespace Bam.Net.Services.DataReplication
             return stringToHash.Sha1();
         }
 
-        public override int GetRepositoryKey(object value)
+        /// <summary>
+        /// A mechanism for assigning an id to the specified value for use within the current ring.  The resultant value is used as the values identifier/key within the Ring.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override int GetObjectKey(object value)
         {
-            int code = GetHashString(value).GetHashCode();
+            int code = GetHashString(value).ToSha1Int();
             code = code < 0 ? code * -1 : code;
             return code;
         }

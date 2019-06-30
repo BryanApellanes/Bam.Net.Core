@@ -89,11 +89,21 @@ namespace Bam.Net.Services.DataReplication
 
         protected internal abstract Arc CreateArc();
         
+        /// <summary>
+        /// Gets a string that uniquely identifies the value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public abstract string GetHashString(object value);
 
-        public abstract int GetRepositoryKey(object value);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public abstract int GetObjectKey(object value);
 
-        protected abstract Arc FindArcByKey(int key);
+        protected abstract Arc FindArcByObjectKey(int key);
 
         /// <summary>
         /// When implemented by a derived class should 

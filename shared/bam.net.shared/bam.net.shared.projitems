@@ -519,6 +519,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ConsensusLogReplicationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ConsensusRing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\LogEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\LeaderElection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Vote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ILogReplicationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\LogEntryState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ReplicateLogEntryRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ReplicateLogEntryResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ReplicationLogEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ConsensusServiceNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ReplicationLog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\ConsensusNodeState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HomeRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\PageRenderer.cs" />
@@ -1323,7 +1336,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ITypeTableNameProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyAuditRepoData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyHashProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyHashProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyHashRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Meta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\MetaId.cs" />
@@ -2216,7 +2229,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\OperationIntent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\OpertionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\ReplicationStatus.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryKeyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryTypeResolver.cs" />

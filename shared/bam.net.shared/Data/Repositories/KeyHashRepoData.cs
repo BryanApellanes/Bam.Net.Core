@@ -28,7 +28,7 @@ namespace Bam.Net.Data.Repositories
             {
                 if (_compositeKeyProperties == null)
                 {
-                    _compositeKeyProperties = KeyHashProvider.GetCompositeKeyProperties(GetType());
+                    _compositeKeyProperties = CompositeKeyHashProvider.GetCompositeKeyProperties(GetType());
                 }
                 return _compositeKeyProperties;
             }
@@ -56,17 +56,17 @@ namespace Bam.Net.Data.Repositories
         
         public int GetIntKeyHash()
         {
-            return KeyHashProvider.GetIntKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
+            return CompositeKeyHashProvider.GetIntKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
         }
 
         public ulong GetULongKeyHash()
         {
-            return KeyHashProvider.GetULongKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
+            return CompositeKeyHashProvider.GetULongKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
         }
 
         public long GetLongKeyHash()
         {
-            return KeyHashProvider.GetLongKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
+            return CompositeKeyHashProvider.GetLongKeyHash(this, PropertyDelimiter, CompositeKeyProperties);
         }
 
         protected string PropertyDelimiter { get; set; }
