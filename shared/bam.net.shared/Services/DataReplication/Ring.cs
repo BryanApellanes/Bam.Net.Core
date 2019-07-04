@@ -35,6 +35,30 @@ namespace Bam.Net.Services.DataReplication
 
             Arcs = newArcs.ToArray();            
         }
+
+        public Arc<TService> FirstArcWhere(Func<Arc<TService>, bool> where)
+        {
+            foreach (Arc<TService> arc in Arcs)
+            {
+                if (where(arc))
+                {
+                    return arc;
+                }
+            }
+
+            return null;
+        }
+
+        public IEnumerable<Arc<TService>> ArcsWhere(Func<Arc<TService>, bool> where)
+        {
+            foreach (Arc<TService> arc in Arcs)
+            {
+                if (where(arc))
+                {
+                    yield return arc;
+                }
+            }
+        }
     }
 
     public abstract class Ring

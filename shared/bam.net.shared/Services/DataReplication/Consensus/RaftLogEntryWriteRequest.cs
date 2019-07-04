@@ -2,8 +2,8 @@ using Bam.Net.Services.DataReplication.Consensus.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
-    public class ReplicateLogEntryResponse
+    public class RaftLogEntryWriteRequest
     {
-        public LogEntry LogEntry { get; set; }
+        public RaftLogEntry LogEntry { get; set; }
     }
 }

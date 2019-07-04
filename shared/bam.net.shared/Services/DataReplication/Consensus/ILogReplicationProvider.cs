@@ -5,14 +5,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
 {
     public interface ILogReplicationProvider
     {
-        void ReplicateValue(ReplicateLogEntryRequest replicateLogEntryRequest);
+        void FollowerWriteValue(RaftLogEntryWriteRequest writeRequest);
 
-        void ReceiveReplicateValueResponse(ReplicateLogEntryResponse replicateLogEntryResponse);
+        void LeaderReceiveWriteResponse(RaftLogEntryWriteResponse raftLogEntryWriteResponse);
 
-        bool MajorityOfFollowersHaveCommitted(ReplicateLogEntryResponse replicateLogEntryResponse);
+        bool MajorityOfFollowersHaveWritten(RaftLogEntryWriteResponse raftLogEntryWriteResponse);
 
-        void LeaderCommit(LogEntry logEntry);
+        void LeaderCommit(RaftLogEntry raftLogEntry);
 
-        void FollowerReceiveCommit(LogEntry logEntry);
+        void FollowerReceiveCommit(RaftLogEntry raftLogEntry);
     }
 }

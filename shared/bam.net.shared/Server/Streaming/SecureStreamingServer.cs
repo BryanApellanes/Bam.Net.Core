@@ -75,6 +75,17 @@ namespace Bam.Net.Server.Streaming
         
         public HashAlgorithms HmacAlgorithm { get; set; }
 
+        /// <summary>
+        /// Intentionally not implemented because SecureStreamingServer uses ProcessSecureRequest instead.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public override TResponse ProcessRequest(StreamingContext<TRequest> context)
+        {
+            throw new NotImplementedException();
+        }
+        
         public abstract TResponse ProcessDecryptedRequest(TRequest request);
 
         public void WriteSecureResponse(StreamingContext context, SecureStreamingResponse<TResponse> response, bool encrypt = false)

@@ -117,7 +117,7 @@ namespace Bam.Net.Services.DataReplication
 
         /// <summary>
         /// Reads the entry from disk by determining what the Id is using GetULongKeyHash.  Keys must be 
-        /// made of one or more properties addorned with CompositeKeyAttribute.
+        /// made of one or more properties adorned with CompositeKeyAttribute.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="instance">The instance.</param>

@@ -51,7 +51,7 @@ namespace Bam.Net.Services.DataReplication.Data
             return new DataPoint { TypeNamespace = instanceType.Namespace, TypeName = instanceType.Name, Description = $"{instanceType.Namespace}.{instanceType.Name}", DataPropertySet = DataPropertySet.FromInstance(instance) };
         }
 
-        public T ToInsance<T>() where T: class, new()
+        public T ToInstance<T>() where T: class, new()
         {
             T result = new T();
             DataPropertySet.Each(dp => result.Property(dp.Name, dp.Value));            
