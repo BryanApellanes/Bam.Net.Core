@@ -17,8 +17,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
     /// </summary>
     public class RaftNode : ApplicationProxyableService, IDistributedRepository
     {
-        public RaftNode()
+        public RaftNode(RaftRing ring)
         {
+            RaftRing = ring;
             NodeType = RaftNodeType.Follower;
             
             LocalRepository = new DaoRepository();
@@ -29,9 +30,19 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftReplicationLog = new RaftReplicationLog();
         }
 
-        public static RaftNode FromIdentifier(RaftNodeIdentifier identifier)
+        public static RaftNode ForCurrentProcess(RaftRing ring)
         {
-            return new RaftNode()
+            return FromIdentifier(ring, RaftNodeIdentifier.ForCurrentProcess());
+        }
+        
+        public static RaftNode ForHost(RaftRing ring, string hostName, int port = RaftNodeIdentifier.DefaultPort)
+        {
+            return FromIdentifier(ring, new RaftNodeIdentifier() {HostName = hostName, Port = port});
+        }
+        
+        public static RaftNode FromIdentifier(RaftRing ring, RaftNodeIdentifier identifier)
+        {
+            return new RaftNode(ring)
             {
                 Identifier = identifier
             };
@@ -39,7 +50,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public override object Clone()
         {
-            RaftNode clone = new RaftNode();
+            RaftNode clone = new RaftNode(RaftRing);
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;
@@ -53,7 +64,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         /// Get a RaftClient for the current node.  
         /// </summary>
         /// <returns></returns>
-        public RaftClient GetClient()
+        public virtual RaftClient GetClient()
         {
             return new RaftClient(Identifier.HostName, Identifier.Port);
         }
@@ -64,49 +75,82 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftReplicationLog RaftReplicationLog { get; set; }
 
-        /// <summary>
-        /// Accept a new value for the specified key if this is a Leader node.  Otherwise ignore the request.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        public virtual void LeaderWriteValue(object key, object value)
+
+        public virtual void WriteValue(RaftLogEntryWriteRequest writeRequest)
         {
-            Args.ThrowIfNull(key, "key");
-            Args.ThrowIfNull(value, "value");
-            
             if (NodeType == RaftNodeType.Leader)
-            {;
-                FollowerWriteValue(new RaftLogEntryWriteRequest()
-                {
-                    LogEntry = new RaftLogEntry()
-                    {
-                        Base64Key = key.ToBinaryBytes().ToBase64(),
-                        Base64Value = value.ToBinaryBytes().ToBase64()
-                    }
-                });
+            {
+                LeaderWriteValue(writeRequest);
+            }
+            else
+            {
+                RaftRing?.BroadcastWriteRequestToFollowers(writeRequest);
             }
         }
 
-        public virtual RaftLogEntry FollowerWriteValue(RaftLogEntryWriteRequest writeWriteRequest)
+        public event EventHandler ValueWrittenAsLeader;
+        public event EventHandler ValueCommittedAsLeader;
+        public event EventHandler ValueWrittenAsFollower;
+        public event EventHandler ValueCommittedAsFollower;
+        /// <summary>
+        /// Write a new value for the specified key if this is a Leader node.  Otherwise ignore the request.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public virtual void LeaderWriteValue(RaftLogEntryWriteRequest writeRequest)
         {
-            throw new NotImplementedException();
+            Args.ThrowIfNull(writeRequest, "writeRequest");
+            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
+            
+            if (NodeType == RaftNodeType.Leader)
+            {
+                LocalRepository.SaveAsync(writeRequest.LogEntry);
+                FireEvent(ValueWrittenAsLeader, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
+            }
         }
 
-        public virtual void LeaderReceiveWriteResponse(RaftLogEntryWriteResponse raftLogEntryWriteResponse)
+        public virtual void LeaderCommitValue(RaftLogEntryWriteRequest writeRequest)
         {
-            throw new NotImplementedException();
-        }
+            Args.ThrowIfNull(writeRequest, "writeRequest");
+            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
 
-        public virtual void LeaderCommit(RaftLogEntry raftLogEntry)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void FollowerReceiveCommit(RaftLogEntry raftLogEntry)
-        {
-            throw new NotImplementedException();
+            if (NodeType == RaftNodeType.Leader)
+            {
+                RaftLogEntry logEntry = writeRequest.LogEntry;
+                logEntry.State = RaftLogEntryState.Committed;
+                LocalRepository.SaveAsync(logEntry);
+                FireEvent(ValueCommittedAsLeader, new RaftLogEntryWrittenEventArgs(){WriteRequest = writeRequest});
+            }
         }
         
+        public virtual void FollowerWriteValue(RaftLogEntryWriteRequest writeRequest)
+        {
+            if (!FollowerWriteRequestIsValid(writeRequest))
+            {
+                return;
+            }
+
+            if (writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted)
+            {
+                Info("FollowerWriteValue called but the specified LogEntry is already committed: {0}", writeRequest.LogEntry.GetId().ToString());
+                return;
+            }
+
+            LocalRepository.SaveAsync(writeRequest.LogEntry);
+            FireEvent(ValueWrittenAsFollower, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
+        }
+
+        public virtual void FollowerCommitValue(RaftLogEntryWriteRequest writeRequest)
+        {
+            if (!FollowerWriteRequestIsValid(writeRequest))
+            {
+                return;
+            }
+
+            writeRequest.LogEntry.State = RaftLogEntryState.Committed;
+            LocalRepository.SaveAsync(writeRequest.LogEntry);
+            
+        }
         
         // -- IDistributedRepository methods
         public object Save(SaveOperation value)
@@ -147,6 +191,20 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public IEnumerable<object> NextSet(ReplicationOperation operation)
         {
             throw new NotImplementedException();
+        }
+        
+        private bool FollowerWriteRequestIsValid(RaftLogEntryWriteRequest writeRequest)
+        {
+            Args.ThrowIfNull(writeRequest, "writeRequest");
+            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
+
+            if (NodeType != RaftNodeType.Follower)
+            {
+                Info("FollowerWriteValue called but this node is not a follower: {0}", this.ToString());
+                return false;
+            }
+
+            return true;
         }
     }
 }
