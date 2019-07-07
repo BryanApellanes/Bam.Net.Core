@@ -30,8 +30,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public RaftNodeIdentifier AddNode(string hostName, int port)
         {
             RaftNode newNode = RaftNode.ForHost(this, hostName, port);
-            newNode.ValueWrittenAsFollower += OnValueWrittenAsFollower;
-            newNode.ValueWrittenAsLeader += OnValueWrittenAsLeader;
+            newNode.FollowerValueWritten += OnFollowerValueWritten;
+            newNode.LeaderValueWritten += OnLeaderValueWritten;
+            newNode.LeaderValueCommitted += OnLeaderValueCommitted;
             
             AddArc(newNode);            
             return newNode.Identifier;
@@ -63,9 +64,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public void WriteValue(object key, object value)
+        public void WriteValue(CompositeKeyAuditRepoData data)
         {
-            WriteValue(new RaftLogEntryWriteRequest(key, value));
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromData(data).ToList())
+            {
+                WriteValue(writeRequest);
+            }
         }
 
         /// <summary>
@@ -114,14 +118,32 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 LocalNode.LeaderCommitValue(writeRequest);
             }
         }
-        
-        public virtual void BroadcastWriteRequestToFollowers(RaftLogEntryWriteRequest writeRequest)
+
+        public virtual void ReceiveLeaderCommittedValueNotification(RaftLogEntryWriteRequest writeRequest)
         {
-            foreach (RaftNode follower in GetFollowers())
-            {
-                RaftClient client = follower.GetClient();
-                Task.Run(() => client.WriteFollowerRequest(writeRequest));
-            }
+            LocalNode.FollowerCommitValue(writeRequest);
+        }
+        
+        public virtual void BroadcastFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
+        {
+            Parallel.ForEach(GetFollowers(),
+                (follower) => follower.GetClient().SendFollowerWriteRequest(writeRequest.FollowerCopy()));
+        }
+
+        public virtual void BroadcastFollowerCommitRequest(RaftLogEntryWriteRequest writeRequest)
+        {
+            Parallel.ForEach(GetFollowers(),
+                (follower) => follower.GetClient()
+                    .SendFollowerCommitRequest(writeRequest.FollowerCopy(RaftLogEntryState.Committed)));
+        }
+        
+        public virtual void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
+        {
+            // forward to the leaders ring using an appropriate client
+            ValidateWriteRequest(writeRequest, RaftNodeType.Leader);
+
+            RaftClient raftClient = GetLeaderNode().GetClient();
+            Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
         }
 
         protected decimal GetMajority()
@@ -129,39 +151,49 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return (decimal) Math.Ceiling(ArcCount * .51);
         }
 
-        protected void OnValueWrittenAsFollower(object sender, EventArgs e)
+        protected void OnFollowerValueWritten(object sender, EventArgs e)
         {
             try
             {
                 RaftLogEntryWrittenEventArgs args = (RaftLogEntryWrittenEventArgs) e;
-                NotifyLeaderValueWrittenAsFollower(args.WriteRequest);
+                NotifyLeaderFollowerValueWritten(args.WriteRequest.LeaderCopy());
             }
             catch (Exception ex)
             {
-                Logger.Warning("Exception OnValueWrittenAsFollower: {0}", ex.Message);
+                Logger.Warning("Exception handling follower value write event: {0}", ex.Message);
             }
         }
 
-        protected void OnValueWrittenAsLeader(object sender, EventArgs e)
+        protected void OnLeaderValueWritten(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                RaftLogEntryWrittenEventArgs args = (RaftLogEntryWrittenEventArgs) e;
+                BroadcastFollowerWriteRequest(args.WriteRequest);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warning("Exception handling leader value write event: {0}", ex.Message);
+            }
         }
 
-        protected void NotifyLeaderValueWrittenAsFollower(RaftLogEntryWriteRequest writeRequest)
+        protected void OnLeaderValueCommitted(object sender, EventArgs e)
         {
-            RaftClient raftClient = GetLeaderNode().GetClient();
-            raftClient.NotifyLeaderValueWrittenAsFollower(writeRequest);
+            try
+            {
+                RaftLogEntryWrittenEventArgs args = (RaftLogEntryWrittenEventArgs) e;
+                BroadcastFollowerCommitRequest(args.WriteRequest);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warning("Exception handling leader value committed event: {0}", ex.Message);
+            }
         }
         
-        protected void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
+        protected void NotifyLeaderFollowerValueWritten(RaftLogEntryWriteRequest writeRequest)
         {
-            // forward to the leaders ring using an appropriate client
-            Args.ThrowIfNull(writeRequest);
-            Args.ThrowIfNull(writeRequest.LogEntry);
-            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Leader, "{0} for write request not intended for leader.");
-            
             RaftClient raftClient = GetLeaderNode().GetClient();
-            Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest));
+            raftClient.NotifyLeaderFollowerValueWritten(writeRequest.LeaderCopy());
         }
         
         protected internal RaftNode GetLeaderNode()
@@ -203,6 +235,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
             }
 
             return result;
+        }
+        
+        private static void ValidateWriteRequest(RaftLogEntryWriteRequest writeRequest, RaftNodeType nodeType)
+        {
+            Args.ThrowIfNull(writeRequest);
+            Args.ThrowIfNull(writeRequest.LogEntry);
+            Args.ThrowIf(writeRequest.TargetNodeType != nodeType, "Write request not intended for {0}.", nodeType.ToString());
         }
     }
 }

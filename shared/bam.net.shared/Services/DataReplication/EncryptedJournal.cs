@@ -9,7 +9,7 @@ namespace Bam.Net.Services.DataReplication
 {
     public class EncryptedJournal: Journal
     {
-        public EncryptedJournal(SystemPaths paths, JournalTypeMap typeMap, ISequenceProvider sequenceProvider, ITypeConverter typeConverter = null, ILogger logger = null) : base(paths, typeMap, sequenceProvider, new EncryptedJournalEntryValueFlusher(), new EncryptedJournalEntryValueLoader(), typeConverter, logger)
+        public EncryptedJournal(SystemPaths paths, TypeMap typeMap, ISequenceProvider sequenceProvider, ITypeConverter typeConverter = null, ILogger logger = null) : base(paths, typeMap, sequenceProvider, new EncryptedJournalEntryValueFlusher(), new EncryptedJournalEntryValueLoader(), typeConverter, logger)
         { }
     }
 }

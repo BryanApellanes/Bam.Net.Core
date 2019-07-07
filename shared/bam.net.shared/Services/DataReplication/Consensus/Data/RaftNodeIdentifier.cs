@@ -27,7 +27,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
             };
         }
 
-        public static ulong IdFor(string hostName, int port)
+        public static ulong For(string hostName, int port)
         {
             return new RaftNodeIdentifier() {HostName = hostName, Port = port}.GetId();
         } 

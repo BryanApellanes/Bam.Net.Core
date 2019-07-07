@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Services.DataReplication
 {
-    public partial class JournalTypeMap
+    public partial class TypeMap
     {
         public static long GetTypeId(CompositeKeyAuditRepoData instance, out object dynamicInstance, out Type dynamicType)
         {

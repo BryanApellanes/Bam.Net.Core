@@ -19,23 +19,23 @@ namespace Bam.Net.Services.DataReplication
         {
             Args.ThrowIfNull(instance, "instance");
             Type type = instance.GetType();
-            long typeId = JournalTypeMap.GetTypeId(type, out string ignore);            
+            long typeId = TypeMap.GetTypeId(type);            
             instance.Id = instance.GetULongKeyHash();
             foreach (PropertyInfo prop in GetProperties(type))
             {
-                yield return new JournalEntry { Journal = journal, TypeId = typeId, InstanceId = instance.Id, PropertyId = JournalTypeMap.GetPropertyId(prop, out string i), Value = prop.GetValue(instance)?.ToString() };
+                yield return new JournalEntry { Journal = journal, TypeId = typeId, InstanceId = instance.Id, PropertyId = TypeMap.GetPropertyId(prop, out string i), Value = prop.GetValue(instance)?.ToString() };
             }
         }
 
         public static IEnumerable<JournalEntry> LoadInstanceEntries<T>(ulong id, Journal journal) where T : CompositeKeyAuditRepoData, new()
         {
             DirectoryInfo journalDirectory = journal.JournalDirectory;
-            JournalTypeMap typeMap = journal.TypeMap;
+            TypeMap typeMap = journal.TypeMap;
             IJournalEntryValueLoader loader = journal.Loader;
-            long typeId = JournalTypeMap.GetTypeId(typeof(T));
+            long typeId = TypeMap.GetTypeId(typeof(T));
             foreach (PropertyInfo prop in GetProperties(typeof(T)))
             {
-                JournalEntry entry = new JournalEntry { Journal = journal, TypeId = typeId, InstanceId = id, PropertyId = JournalTypeMap.GetPropertyId(prop, out string ignore) };
+                JournalEntry entry = new JournalEntry { Journal = journal, TypeId = typeId, InstanceId = id, PropertyId = TypeMap.GetPropertyId(prop, out string ignore) };
                 yield return entry.LoadLatestValue(journalDirectory, typeMap, loader) ?? entry;
             }
         }

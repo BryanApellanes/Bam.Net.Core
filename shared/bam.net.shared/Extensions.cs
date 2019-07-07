@@ -486,14 +486,24 @@ namespace Bam.Net
             }
         }
         
-        public static object CopyAs<T>(this object source, params object[] ctorParams)
+        /// <summary>
+        /// Copy the specified source object as an instance of the specified generic type T using the specified, constructor
+        /// parameters to construct the new instance.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="ctorParams"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T CopyAs<T>(this object source, params object[] ctorParams)
         {
-            return CopyAs(source, typeof(T), ctorParams);
+            return (T)CopyAs(source, typeof(T), ctorParams);
         }
+        
         public static T ToInstance<T>(this Dictionary<string, string> dictionary) where T : class, new()
         {
             return CopyAs<T>(dictionary);
         }
+        
         public static T CopyAs<T>(this Dictionary<string, string> dictionary) where T: class, new()
         {
             T result = new T();
@@ -520,8 +530,8 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Copy the current sourcce instance as the spcified type
-        /// copying all properties that match in name and type
+        /// Copy the current source instance as the specified type
+        /// copying all properties that match in name and type.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="type"></param>

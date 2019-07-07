@@ -127,7 +127,7 @@ namespace Bam.Net
         public static T FromBinaryBytes<T>(this byte[] bytes)
         {
             object retVal = FromBinaryBytes(bytes);
-            Expect.IsTrue(retVal.GetType() == typeof(T));
+            (retVal.GetType() == typeof(T)).IsTrue();
             return (T)retVal;
         }
 

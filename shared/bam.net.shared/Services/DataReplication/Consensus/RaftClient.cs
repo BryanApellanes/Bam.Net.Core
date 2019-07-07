@@ -26,36 +26,54 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public StreamingClient<RaftRequest, RaftResponse> StreamingClient { get; set; }
 
-        public void WriteFollowerRequest(RaftLogEntryWriteRequest writeRequest)
+        public void SendFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
-            Args.ThrowIf(writeRequest.LogEntry.State == RaftLogEntryState.Committed, "RaftLogEntry already committed");
-            Args.ThrowIf(writeRequest.TargetNodeType == RaftNodeType.Leader, "{0} called for RaftLogEntryWriteRequest intended for leader.", MethodInfo.GetCurrentMethod().Name);
-            
-            StreamingClient.SendRequest(new RaftRequest() { RequestType = RaftRequestType.WriteValue, WriteRequest = writeRequest});
+            Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted, "RaftLogEntry already committed");
+            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerWriteRequest));
+
+            StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.WriteValue));
         }
 
+        public void SendFollowerCommitRequest(RaftLogEntryWriteRequest writeRequest)
+        {
+            Args.ThrowIfNull(writeRequest, "writeRequest");
+            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
+            Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Committed, "RaftLogEntry not committed");
+            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerCommitRequest));
+
+            StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.NotifyFollowerLeaderValueCommitted));
+        }
+        
         public void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
-            Args.ThrowIf(writeRequest.LogEntry.State == RaftLogEntryState.Committed, "RaftLogEntry already committed");
-            Args.ThrowIf(writeRequest.TargetNodeType == RaftNodeType.Follower, "{0} called for RaftLogEntryWriteRequest intended for follower.");
+            Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted, "RaftLogEntry already committed");
+            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Leader, "{0} called for RaftLogEntryWriteRequest not intended for leader.", nameof(ForwardWriteRequestToLeader));
 
-            StreamingClient.SendRequest(new RaftRequest() {RequestType = RaftRequestType.WriteValue, WriteRequest = writeRequest});
+            StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.WriteValue));
         }
 
-        public void NotifyLeaderValueWrittenAsFollower(RaftLogEntryWriteRequest writeRequest)
+        public void NotifyLeaderFollowerValueWritten(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
 
-            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(new RaftRequest()
+            StreamingResponse<RaftResponse> response =
+                StreamingClient.SendRequest(CreateRaftRequest(writeRequest,
+                    RaftRequestType.NotifyLeaderFollowerValueWritten));
+        }
+
+        protected RaftRequest CreateRaftRequest(RaftLogEntryWriteRequest writeRequest, RaftRequestType requestType)
+        {
+            return new RaftRequest()
             {
-                SenderNodeIdentifier = RaftNodeIdentifier.IdFor(HostName, Port),
-                RequestType = RaftRequestType.NotifyLeaderFollowerValueWritten, WriteRequest = writeRequest
-            });
+                RequesterNodeIdentifier = RaftNodeIdentifier.For(HostName, Port),
+                RequestType = requestType,
+                WriteRequest = writeRequest
+            };
         }
     }
 }

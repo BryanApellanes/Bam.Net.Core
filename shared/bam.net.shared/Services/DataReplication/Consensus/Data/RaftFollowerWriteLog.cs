@@ -11,7 +11,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
         {
             return new RaftFollowerWriteLog()
             {
-                NodeIdentifier = RaftNodeIdentifier.IdFor(hostName, port),
+                NodeIdentifier = RaftNodeIdentifier.For(hostName, port),
                 LogEntryIdentifier = writeRequest.LogEntry.GetId()
             };
         }

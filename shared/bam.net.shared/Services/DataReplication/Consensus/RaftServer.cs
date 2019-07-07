@@ -17,19 +17,23 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftResponse response = new RaftResponse() {Request = request};
             try
             {
+                Args.ThrowIfNull(request, "RaftRequest");
+                Args.ThrowIfNull(request.WriteRequest, "RaftRequest.WriteRequest");
+                
                 switch (request.RequestType)
                 {
                     case RaftRequestType.WriteValue:
-                        if (request.WriteRequest != null)
-                        {
-                            HandleWriteRequest(request.WriteRequest);
-                        }
-
+                        HandleWriteRequest(request.WriteRequest);
                         break;
                     case RaftRequestType.NotifyLeaderFollowerValueWritten:
                         Ring.ReceiveFollowerWriteValueNotification(request.WriteRequest);
                         break;
+                    case RaftRequestType.NotifyFollowerLeaderValueCommitted:
+                        Ring.ReceiveLeaderCommittedValueNotification(request.WriteRequest);
+                        break;
                     case RaftRequestType.Invalid:
+                        Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
+                        break;
                     default:
                         break;
                 }

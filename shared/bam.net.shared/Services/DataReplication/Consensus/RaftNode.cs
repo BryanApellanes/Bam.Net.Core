@@ -74,82 +74,62 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public RaftNodeType NodeType { get; set; }
         
         public RaftReplicationLog RaftReplicationLog { get; set; }
-
-
+        
         public virtual void WriteValue(RaftLogEntryWriteRequest writeRequest)
         {
             if (NodeType == RaftNodeType.Leader)
             {
-                LeaderWriteValue(writeRequest);
+                LeaderWriteValue(writeRequest.LeaderCopy());
             }
             else
             {
-                RaftRing?.BroadcastWriteRequestToFollowers(writeRequest);
+                RaftRing?.ForwardWriteRequestToLeader(writeRequest.LeaderCopy());
             }
         }
 
-        public event EventHandler ValueWrittenAsLeader;
-        public event EventHandler ValueCommittedAsLeader;
-        public event EventHandler ValueWrittenAsFollower;
-        public event EventHandler ValueCommittedAsFollower;
+        public event EventHandler LeaderValueWritten;
+        public event EventHandler LeaderValueCommitted;
+        public event EventHandler FollowerValueWritten;
+        public event EventHandler FollowerValueCommitted;
+
         /// <summary>
         /// Write a new value for the specified key if this is a Leader node.  Otherwise ignore the request.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public virtual void LeaderWriteValue(RaftLogEntryWriteRequest writeRequest)
+        protected internal virtual void LeaderWriteValue(RaftLogEntryWriteRequest writeRequest)
         {
-            Args.ThrowIfNull(writeRequest, "writeRequest");
-            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
-            
-            if (NodeType == RaftNodeType.Leader)
-            {
-                LocalRepository.SaveAsync(writeRequest.LogEntry);
-                FireEvent(ValueWrittenAsLeader, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
-            }
+            ValidateLeaderWriteRequest(writeRequest);
+
+            RaftLogEntry logEntry = writeRequest.LeaderCopy().LogEntry;
+            LocalRepository.SaveAsync(logEntry);
+            FireEvent(LeaderValueWritten, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
         }
 
-        public virtual void LeaderCommitValue(RaftLogEntryWriteRequest writeRequest)
+        protected internal virtual void LeaderCommitValue(RaftLogEntryWriteRequest writeRequest)
         {
-            Args.ThrowIfNull(writeRequest, "writeRequest");
-            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
+            ValidateLeaderWriteRequest(writeRequest);
 
-            if (NodeType == RaftNodeType.Leader)
-            {
-                RaftLogEntry logEntry = writeRequest.LogEntry;
-                logEntry.State = RaftLogEntryState.Committed;
-                LocalRepository.SaveAsync(logEntry);
-                FireEvent(ValueCommittedAsLeader, new RaftLogEntryWrittenEventArgs(){WriteRequest = writeRequest});
-            }
-        }
-        
-        public virtual void FollowerWriteValue(RaftLogEntryWriteRequest writeRequest)
-        {
-            if (!FollowerWriteRequestIsValid(writeRequest))
-            {
-                return;
-            }
-
-            if (writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted)
-            {
-                Info("FollowerWriteValue called but the specified LogEntry is already committed: {0}", writeRequest.LogEntry.GetId().ToString());
-                return;
-            }
-
-            LocalRepository.SaveAsync(writeRequest.LogEntry);
-            FireEvent(ValueWrittenAsFollower, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
+            RaftLogEntry logEntry = writeRequest.LeaderCopy(RaftLogEntryState.Committed).LogEntry;
+            LocalRepository.SaveAsync(logEntry);
+            FireEvent(LeaderValueCommitted, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
         }
 
-        public virtual void FollowerCommitValue(RaftLogEntryWriteRequest writeRequest)
+        protected internal virtual void FollowerWriteValue(RaftLogEntryWriteRequest writeRequest)
         {
-            if (!FollowerWriteRequestIsValid(writeRequest))
-            {
-                return;
-            }
+            ValidateFollowerWriteRequest(writeRequest);
 
-            writeRequest.LogEntry.State = RaftLogEntryState.Committed;
-            LocalRepository.SaveAsync(writeRequest.LogEntry);
-            
+            RaftLogEntry logEntry = writeRequest.FollowerCopy().LogEntry;
+            LocalRepository.SaveAsync(logEntry);
+            FireEvent(FollowerValueWritten, new RaftLogEntryWrittenEventArgs() {WriteRequest = writeRequest});
+        }
+
+        protected internal virtual void FollowerCommitValue(RaftLogEntryWriteRequest writeRequest)
+        {
+            ValidateFollowerWriteRequest(writeRequest);
+
+            RaftLogEntry logEntry = writeRequest.FollowerCopy(RaftLogEntryState.Committed).LogEntry;
+            LocalRepository.SaveAsync(logEntry);
         }
         
         // -- IDistributedRepository methods
@@ -193,18 +173,20 @@ namespace Bam.Net.Services.DataReplication.Consensus
             throw new NotImplementedException();
         }
         
-        private bool FollowerWriteRequestIsValid(RaftLogEntryWriteRequest writeRequest)
+        private void ValidateFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
-
-            if (NodeType != RaftNodeType.Follower)
-            {
-                Info("FollowerWriteValue called but this node is not a follower: {0}", this.ToString());
-                return false;
-            }
-
-            return true;
+            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Follower,
+                "writeRequest.TargetNodeType != RaftNodeType.Leader");
+        }
+        
+        private static void ValidateLeaderWriteRequest(RaftLogEntryWriteRequest writeRequest)
+        {
+            Args.ThrowIfNull(writeRequest, "writeRequest");
+            Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
+            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Leader,
+                "writeRequest.TargetNodeType != RaftNodeType.Leader");
         }
     }
 }

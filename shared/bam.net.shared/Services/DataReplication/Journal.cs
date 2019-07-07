@@ -18,10 +18,10 @@ namespace Bam.Net.Services.DataReplication
         bool _keepFlushing;
 
         public Journal(ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter, ILogger logger = null) 
-            : this(SystemPaths.Get(DataProvider.Current), new JournalTypeMap(SystemPaths.Get(DataProvider.Current)), sequenceProvider, flusher, loader, typeConverter, logger)
+            : this(SystemPaths.Get(DataProvider.Current), new TypeMap(SystemPaths.Get(DataProvider.Current)), sequenceProvider, flusher, loader, typeConverter, logger)
         { }
 
-        public Journal(SystemPaths paths, JournalTypeMap typeMap, ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter = null, ILogger logger = null)
+        public Journal(SystemPaths paths, TypeMap typeMap, ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter = null, ILogger logger = null)
         {
             _journalEntryQueue = new Queue<JournalEntry>();
             _keepFlushing = true;
@@ -52,7 +52,7 @@ namespace Bam.Net.Services.DataReplication
             }
 
         }
-        protected internal JournalTypeMap TypeMap { get; set; }
+        protected internal TypeMap TypeMap { get; set; }
         protected internal ISequenceProvider SequenceProvider { get; set; }
 
         DirectoryInfo _journalDirectory;

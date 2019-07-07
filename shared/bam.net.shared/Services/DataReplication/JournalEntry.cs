@@ -135,7 +135,7 @@ namespace Bam.Net.Services.DataReplication
         /// <param name="journalDirectory">The journal directory.</param>
         /// <param name="typeMap">The type map.</param>
         /// <returns></returns>
-        internal protected JournalEntry LoadLatestValue(DirectoryInfo journalDirectory, JournalTypeMap typeMap, IJournalEntryValueLoader loader = null)
+        internal protected JournalEntry LoadLatestValue(DirectoryInfo journalDirectory, TypeMap typeMap, IJournalEntryValueLoader loader = null)
         {
             IEnumerable<JournalEntry> entries = GetSequencedHistoryValues(journalDirectory, typeMap, loader);
             return entries.FirstOrDefault();
@@ -157,7 +157,7 @@ namespace Bam.Net.Services.DataReplication
         /// <param name="journalDirectory">The journal directory.</param>
         /// <param name="typeMap">The type map.</param>
         /// <returns></returns>
-        internal IEnumerable<JournalEntry> GetSequencedHistoryValues(DirectoryInfo journalDirectory, JournalTypeMap typeMap, IJournalEntryValueLoader loader = null)
+        internal IEnumerable<JournalEntry> GetSequencedHistoryValues(DirectoryInfo journalDirectory, TypeMap typeMap, IJournalEntryValueLoader loader = null)
         {
             DirectoryInfo propertyDirectory = GetPropertyDirectory(journalDirectory, typeMap);
             return new SortedSet<JournalEntry>(LoadHistory(journalDirectory, typeMap, loader), new Comparer<JournalEntry>((x, y) => y.Seq.CompareTo(x.Seq)));
@@ -179,7 +179,7 @@ namespace Bam.Net.Services.DataReplication
         /// <param name="journalDirectory">The journal directory.</param>
         /// <param name="typeMap">The type map.</param>
         /// <returns></returns>
-        internal IEnumerable<JournalEntry> LoadHistory(DirectoryInfo journalDirectory, JournalTypeMap typeMap, IJournalEntryValueLoader loader = null)
+        internal IEnumerable<JournalEntry> LoadHistory(DirectoryInfo journalDirectory, TypeMap typeMap, IJournalEntryValueLoader loader = null)
         {
             loader = loader ?? new JournalEntryValueLoader();
             DirectoryInfo propertyDirectory = GetPropertyDirectory(journalDirectory, typeMap);
@@ -207,7 +207,7 @@ namespace Bam.Net.Services.DataReplication
         /// </summary>
         /// <param name="journalDirectory">The journal directory.</param>
         /// <returns></returns>
-        public FileInfo GetFileInfo(DirectoryInfo journalDirectory, JournalTypeMap typeMap)
+        public FileInfo GetFileInfo(DirectoryInfo journalDirectory, TypeMap typeMap)
         {
             DirectoryInfo propertyDirectory = GetPropertyDirectory(journalDirectory, typeMap);
             FileInfo propertyFile = new FileInfo(Path.Combine(propertyDirectory.FullName, Seq.ToString()));
@@ -220,7 +220,7 @@ namespace Bam.Net.Services.DataReplication
         /// <param name="journalDirectory">The journal directory.</param>
         /// <param name="typeMap">The type map.</param>
         /// <returns></returns>
-        public DirectoryInfo GetPropertyDirectory(DirectoryInfo journalDirectory, JournalTypeMap typeMap)
+        public DirectoryInfo GetPropertyDirectory(DirectoryInfo journalDirectory, TypeMap typeMap)
         {
             DirectoryInfo instanceDirectory = GetInstanceDirectory(journalDirectory, typeMap);
             string propertyDirectoryName = typeMap.GetPropertyShortName(PropertyId);
@@ -234,7 +234,7 @@ namespace Bam.Net.Services.DataReplication
         /// <param name="journalDirectory">The journal directory.</param>
         /// <param name="typeMap">The type map.</param>
         /// <returns></returns>
-        public DirectoryInfo GetInstanceDirectory(DirectoryInfo journalDirectory, JournalTypeMap typeMap)
+        public DirectoryInfo GetInstanceDirectory(DirectoryInfo journalDirectory, TypeMap typeMap)
         {
             DirectoryInfo typeDirectory = GetTypeDirectory(journalDirectory, typeMap);
             DirectoryInfo instanceDirectory = new DirectoryInfo(Path.Combine(typeDirectory.FullName, InstanceId.ToString()));
@@ -246,7 +246,7 @@ namespace Bam.Net.Services.DataReplication
             return new JournalEntry { TypeId = typeId }.GetTypeDirectory(journal.JournalDirectory, journal.TypeMap);
         }
 
-        public DirectoryInfo GetTypeDirectory(DirectoryInfo journalDirectory, JournalTypeMap typeMap)
+        public DirectoryInfo GetTypeDirectory(DirectoryInfo journalDirectory, TypeMap typeMap)
         {
             string typeDirectoryName = typeMap.GetTypeShortName(TypeId);
             DirectoryInfo typeDirectory = new DirectoryInfo(Path.Combine(journalDirectory.FullName, typeDirectoryName));

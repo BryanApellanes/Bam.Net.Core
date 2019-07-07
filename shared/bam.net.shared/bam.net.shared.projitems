@@ -521,8 +521,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftFollowerWriteLog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftNodeIdentifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\IRaftLogEntryPropertyHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryCommittedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryPropertyHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryWrittenEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRequestType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRing.cs" />
@@ -531,7 +533,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftVote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryWriteRequest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryWriteResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftReplicationLog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNodeType.cs" />
@@ -2229,7 +2230,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\JournalRequestTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\JournalResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\JournalServer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\JournalTypeMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\TypeMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Keyspace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\ObjectIdentifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\OperationIntent.cs" />
