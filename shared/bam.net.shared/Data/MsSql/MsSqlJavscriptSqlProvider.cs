@@ -26,7 +26,7 @@ namespace Bam.Net.Javascript.Sql
 		protected override void Initialize()
 		{
 			MsSqlDatabase database = new MsSqlDatabase();
-			MsSqlCredentials creds = new MsSqlCredentials { UserName = MsSqlUserId, Password = MsSqlPassword };
+			MsSqlCredentials creds = new MsSqlCredentials { UserId = MsSqlUserId, Password = MsSqlPassword };
             MsSqlConnectionStringResolver conn = new MsSqlConnectionStringResolver(MsSqlServerName, MsSqlDatabaseName, creds);
 			database.ConnectionStringResolver = conn;
 			Database = database;

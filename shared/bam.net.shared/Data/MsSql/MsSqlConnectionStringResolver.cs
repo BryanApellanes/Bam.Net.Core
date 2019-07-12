@@ -55,7 +55,7 @@ namespace Bam.Net.Data.MsSql
             }
             else
             {
-                connectionStringBuilder.Add("User ID", Credentials.UserName);
+                connectionStringBuilder.Add("User ID", Credentials.UserId);
                 connectionStringBuilder.Add("Password", Credentials.Password);
             }
 

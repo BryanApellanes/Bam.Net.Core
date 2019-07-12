@@ -485,6 +485,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\RootDnsServerDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\Vouch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\AndFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Config\IDatabaseCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\RelationalDatabaseTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResultEventArgs.cs" />
