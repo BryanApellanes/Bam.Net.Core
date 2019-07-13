@@ -15,7 +15,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
 
         HashSet<RaftVote> _votes;
 
-        public List<RaftVote> Votes
+        public virtual List<RaftVote> Votes
         {
             get
             {

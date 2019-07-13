@@ -9,21 +9,21 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using {{TypeNamespace}};
-using {{DaoNamespace}};
+using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 
-namespace {{WrapperNamespace}}
+namespace Bam.Net.Services.DataReplication.Consensus.Data.Wrappers
 {
 	// generated
 	[Serializable]
-	public class {{WrapperTypeName}}: {{TypeNamespace}}.{{{BaseTypeName}}}, IHasUpdatedXrefCollectionProperties
+	public class RaftLeaderElectionWrapper: Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection, IHasUpdatedXrefCollectionProperties
 	{
-		public {{TypeName}}Wrapper()
+		public RaftLeaderElectionWrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public {{TypeName}}Wrapper(DaoRepository repository) : this()
+		public RaftLeaderElectionWrapper(DaoRepository repository) : this()
 		{
 			this.DaoRepository = repository;
 		}
@@ -46,23 +46,24 @@ namespace {{WrapperNamespace}}
 			}
 		}
 
-{{#each ForeignKeys}}
-{{> WrapperForeignKeyProperty}}
-{{/each}}
+        System.Collections.Generic.List<Bam.Net.Services.DataReplication.Consensus.Data.RaftVote> _votes;
+		public override System.Collections.Generic.List<Bam.Net.Services.DataReplication.Consensus.Data.RaftVote> Votes
+		{
+			get
+			{
+				if (_votes == null)
+				{
+					_votes = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection, Bam.Net.Services.DataReplication.Consensus.Data.RaftVote>(this).ToList();
+				}
+				return _votes;
+			}
+			set
+			{
+				_votes = value;
+			}
+		}
 
-{{#each ChildPrimaryKeys}}
-{{> ChildPrimaryKeyProperty}}
-{{/each}}
 
-{{#each LeftXrefs}}
-        // left xref
-{{> XrefLeftProperty}}
-{{/each}}
-
-{{#each RightXrefs}}
-        // right xref
-{{> XrefRightProperty}}
-{{/each}}
 
 	}
 	// -- generated

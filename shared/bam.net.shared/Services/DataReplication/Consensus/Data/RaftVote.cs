@@ -7,7 +7,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
         public string FromNodeIdentifier { get; set; }
         public string ForNodeIdentifier { get; set; }
         
-        public ulong RaftLeaderElectionId { get; set; }
+        public virtual ulong RaftLeaderElectionId { get; set; }
         public virtual RaftLeaderElection RaftLeaderElection { get; set; }
     }
 }

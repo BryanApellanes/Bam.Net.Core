@@ -9,21 +9,21 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using {{TypeNamespace}};
-using {{DaoNamespace}};
+using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 
-namespace {{WrapperNamespace}}
+namespace Bam.Net.Services.DataReplication.Consensus.Data.Wrappers
 {
 	// generated
 	[Serializable]
-	public class {{WrapperTypeName}}: {{TypeNamespace}}.{{{BaseTypeName}}}, IHasUpdatedXrefCollectionProperties
+	public class RaftNodeIdentifierWrapper: Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier, IHasUpdatedXrefCollectionProperties
 	{
-		public {{TypeName}}Wrapper()
+		public RaftNodeIdentifierWrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public {{TypeName}}Wrapper(DaoRepository repository) : this()
+		public RaftNodeIdentifierWrapper(DaoRepository repository) : this()
 		{
 			this.DaoRepository = repository;
 		}
@@ -46,23 +46,9 @@ namespace {{WrapperNamespace}}
 			}
 		}
 
-{{#each ForeignKeys}}
-{{> WrapperForeignKeyProperty}}
-{{/each}}
 
-{{#each ChildPrimaryKeys}}
-{{> ChildPrimaryKeyProperty}}
-{{/each}}
 
-{{#each LeftXrefs}}
-        // left xref
-{{> XrefLeftProperty}}
-{{/each}}
 
-{{#each RightXrefs}}
-        // right xref
-{{> XrefRightProperty}}
-{{/each}}
 
 	}
 	// -- generated

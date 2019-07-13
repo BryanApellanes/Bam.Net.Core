@@ -5,7 +5,7 @@
 			{
 				if (_{{CollectionPropertyCamelCaseName}} == null)
 				{
-					_{{CollectionPropertyCamelCaseName}} = Repository.ForeignKeyCollectionLoader<{{PrimaryKeyType.Namespace}}.{{PrimaryKeyType.Name}}, {{ForeignKeyType.Namespace}}.{{ForeignKeyType.Name}}>(this).To{{CollectionPropertyTypeName}}();
+					_{{CollectionPropertyCamelCaseName}} = DaoRepository.ForeignKeyCollectionLoader<{{PrimaryKeyType.Namespace}}.{{PrimaryKeyType.Name}}, {{ForeignKeyType.Namespace}}.{{ForeignKeyType.Name}}>(this).To{{CollectionPropertyTypeName}}();
 				}
 				return _{{CollectionPropertyCamelCaseName}};
 			}

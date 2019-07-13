@@ -9,21 +9,21 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using {{TypeNamespace}};
-using {{DaoNamespace}};
+using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 
-namespace {{WrapperNamespace}}
+namespace Bam.Net.Services.DataReplication.Consensus.Data.Wrappers
 {
 	// generated
 	[Serializable]
-	public class {{WrapperTypeName}}: {{TypeNamespace}}.{{{BaseTypeName}}}, IHasUpdatedXrefCollectionProperties
+	public class RaftVoteWrapper: Bam.Net.Services.DataReplication.Consensus.Data.RaftVote, IHasUpdatedXrefCollectionProperties
 	{
-		public {{TypeName}}Wrapper()
+		public RaftVoteWrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public {{TypeName}}Wrapper(DaoRepository repository) : this()
+		public RaftVoteWrapper(DaoRepository repository) : this()
 		{
 			this.DaoRepository = repository;
 		}
@@ -46,23 +46,24 @@ namespace {{WrapperNamespace}}
 			}
 		}
 
-{{#each ForeignKeys}}
-{{> WrapperForeignKeyProperty}}
-{{/each}}
 
-{{#each ChildPrimaryKeys}}
-{{> ChildPrimaryKeyProperty}}
-{{/each}}
+        Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection _raftLeaderElection;
+		public override Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection RaftLeaderElection
+		{
+			get
+			{
+				if (_raftLeaderElection == null)
+				{
+					_raftLeaderElection = (Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection));
+				}
+				return _raftLeaderElection;
+			}
+			set
+			{
+				_raftLeaderElection = value;
+			}
+		}
 
-{{#each LeftXrefs}}
-        // left xref
-{{> XrefLeftProperty}}
-{{/each}}
-
-{{#each RightXrefs}}
-        // right xref
-{{> XrefRightProperty}}
-{{/each}}
 
 	}
 	// -- generated
