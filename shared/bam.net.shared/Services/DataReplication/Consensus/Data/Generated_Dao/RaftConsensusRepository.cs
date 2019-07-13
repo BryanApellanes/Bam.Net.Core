@@ -17,11 +17,11 @@ using Bam.Net.Services.DataReplication.Consensus.Data;
 namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 {
 	[Serializable]
-	public class ConsensusRepository: DaoRepository
+	public class RaftConsensusRepository: DaoRepository
 	{
-		public ConsensusRepository()
+		public RaftConsensusRepository()
 		{
-			SchemaName = "Consensus";
+			SchemaName = "RaftConsensus";
 			BaseNamespace = "Bam.Net.Services.DataReplication.Consensus.Data";			
 
 			
@@ -40,7 +40,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 			AddType<Bam.Net.Services.DataReplication.Consensus.Data.RaftVote>();
 			
 
-			DaoAssembly = typeof(ConsensusRepository).Assembly;
+			DaoAssembly = typeof(RaftConsensusRepository).Assembly;
 		}
 
 		object _addLock = new object();
@@ -49,14 +49,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             lock (_addLock)
             {
                 base.AddType(type);
-                DaoAssembly = typeof(ConsensusRepository).Assembly;
+                DaoAssembly = typeof(RaftConsensusRepository).Assembly;
             }
         }
 
 		
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftFollowerWriteLogWhere(WhereDelegate<RaftFollowerWriteLogColumns> where)
@@ -66,7 +66,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftFollowerWriteLogWhere(WhereDelegate<RaftFollowerWriteLogColumns> where, out Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog result)
@@ -77,7 +77,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -92,7 +92,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single RaftFollowerWriteLog instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftFollowerWriteLogColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftFollowerWriteLogColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftFollowerWriteLogColumns and other values
 		/// </param>
@@ -105,7 +105,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLogColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLogColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLogColumns and other values
 		/// </param>
@@ -116,14 +116,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftFollowerWriteLogColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftFollowerWriteLogColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftFollowerWriteLogColumns and other values
 		/// </param>
@@ -132,6 +132,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftFollowerWriteLog.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog> TopRaftFollowerWriteLogsWhere(int count, WhereDelegate<RaftFollowerWriteLogColumns> where, OrderBy<RaftFollowerWriteLogColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftFollowerWriteLog.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of RaftFollowerWriteLogs
 		/// </summary>
@@ -143,7 +148,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftFollowerWriteLogColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftFollowerWriteLogColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftFollowerWriteLogColumns and other values
 		/// </param>
@@ -171,7 +176,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftNodeIdentifierWhere(WhereDelegate<RaftNodeIdentifierColumns> where)
@@ -181,7 +186,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftNodeIdentifierWhere(WhereDelegate<RaftNodeIdentifierColumns> where, out Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier result)
@@ -192,7 +197,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -207,7 +212,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single RaftNodeIdentifier instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftNodeIdentifierColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftNodeIdentifierColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftNodeIdentifierColumns and other values
 		/// </param>
@@ -220,7 +225,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifierColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifierColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifierColumns and other values
 		/// </param>
@@ -231,14 +236,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftNodeIdentifierColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftNodeIdentifierColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftNodeIdentifierColumns and other values
 		/// </param>
@@ -247,6 +252,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftNodeIdentifier.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier> TopRaftNodeIdentifiersWhere(int count, WhereDelegate<RaftNodeIdentifierColumns> where, OrderBy<RaftNodeIdentifierColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftNodeIdentifier.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of RaftNodeIdentifiers
 		/// </summary>
@@ -258,7 +268,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftNodeIdentifierColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftNodeIdentifierColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftNodeIdentifierColumns and other values
 		/// </param>
@@ -286,7 +296,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftLogEntryWhere(WhereDelegate<RaftLogEntryColumns> where)
@@ -296,7 +306,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftLogEntryWhere(WhereDelegate<RaftLogEntryColumns> where, out Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry result)
@@ -307,7 +317,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -322,7 +332,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single RaftLogEntry instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLogEntryColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftLogEntryColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftLogEntryColumns and other values
 		/// </param>
@@ -335,7 +345,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryColumns and other values
 		/// </param>
@@ -346,14 +356,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftLogEntryColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftLogEntryColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftLogEntryColumns and other values
 		/// </param>
@@ -362,6 +372,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntry.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry> TopRaftLogEntriesWhere(int count, WhereDelegate<RaftLogEntryColumns> where, OrderBy<RaftLogEntryColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntry.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of RaftLogEntries
 		/// </summary>
@@ -373,7 +388,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLogEntryColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftLogEntryColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftLogEntryColumns and other values
 		/// </param>
@@ -401,7 +416,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftLeaderElectionWhere(WhereDelegate<RaftLeaderElectionColumns> where)
@@ -411,7 +426,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftLeaderElectionWhere(WhereDelegate<RaftLeaderElectionColumns> where, out Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection result)
@@ -422,7 +437,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -437,7 +452,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single RaftLeaderElection instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftLeaderElectionColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftLeaderElectionColumns and other values
 		/// </param>
@@ -450,7 +465,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElectionColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElectionColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElectionColumns and other values
 		/// </param>
@@ -461,14 +476,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftLeaderElectionColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftLeaderElectionColumns and other values
 		/// </param>
@@ -477,6 +492,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLeaderElection.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection> TopRaftLeaderElectionsWhere(int count, WhereDelegate<RaftLeaderElectionColumns> where, OrderBy<RaftLeaderElectionColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLeaderElection.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of RaftLeaderElections
 		/// </summary>
@@ -488,7 +508,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftLeaderElectionColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftLeaderElectionColumns and other values
 		/// </param>
@@ -516,7 +536,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftVoteWhere(WhereDelegate<RaftVoteColumns> where)
@@ -526,7 +546,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOneRaftVoteWhere(WhereDelegate<RaftVoteColumns> where, out Bam.Net.Services.DataReplication.Consensus.Data.RaftVote result)
@@ -537,7 +557,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -552,7 +572,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single RaftVote instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftVoteColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftVoteColumns and other values
 		/// </param>
@@ -565,7 +585,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.Services.DataReplication.Consensus.Data.RaftVoteColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Consensus.Data.RaftVoteColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.Services.DataReplication.Consensus.Data.RaftVoteColumns and other values
 		/// </param>
@@ -576,14 +596,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftVoteColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftVoteColumns and other values
 		/// </param>
@@ -592,6 +612,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftVote>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftVote.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftVote> TopRaftVotesWhere(int count, WhereDelegate<RaftVoteColumns> where, OrderBy<RaftVoteColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftVote>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftVote.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of RaftVotes
 		/// </summary>
@@ -603,7 +628,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns 
+		/// <param name="where">A WhereDelegate that receives a RaftVoteColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between RaftVoteColumns and other values
 		/// </param>

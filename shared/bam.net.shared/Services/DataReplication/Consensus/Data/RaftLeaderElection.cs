@@ -26,15 +26,5 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
                 _votes = new HashSet<RaftVote>(value);
             }
         }
-
-        public static RaftLeaderElection StartElection()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int LatestTerm()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

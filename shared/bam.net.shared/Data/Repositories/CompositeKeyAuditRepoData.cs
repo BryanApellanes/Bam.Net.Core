@@ -37,6 +37,22 @@ namespace Bam.Net.Data.Repositories
             }
         }
 
+        ulong _key;
+
+        public ulong Key
+        {
+            get
+            {
+                if (_key == 0)
+                {
+                    return GetULongKeyHash();
+                }
+
+                return _key;
+            }
+            set { _key = value; }
+        }
+
         public int GetIntKeyHash()
         {
             return CompositeKeyHashProvider.GetIntKeyHash(this, PropertyDelimiter, CompositeKeyProperties);

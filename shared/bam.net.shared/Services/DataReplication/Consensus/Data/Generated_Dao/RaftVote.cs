@@ -14,10 +14,10 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 {
-	// schema = Consensus
-	// connection Name = Consensus
+	// schema = RaftConsensus
+	// connection Name = RaftConsensus
 	[Serializable]
-	[Bam.Net.Data.Table("RaftVote", "Consensus")]
+	[Bam.Net.Data.Table("RaftVote", "RaftConsensus")]
 	public partial class RaftVote: Bam.Net.Data.Dao
 	{
 		public RaftVote():base()

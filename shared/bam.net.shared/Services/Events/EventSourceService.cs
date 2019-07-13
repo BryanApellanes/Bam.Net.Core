@@ -104,7 +104,7 @@ namespace Bam.Net.Services.Events
                         }
                         catch (Exception ex)
                         {
-                            Logger.AddEntry("{0}::Exception occurred in EventSource Listenter for event name ({1}): {2}", LogEventType.Warning, ex, GetType().Name, eventName, ex.Message);
+                            Logger.AddEntry("{0}::Exception occurred in EventSource Listener for event name ({1}): {2}", LogEventType.Warning, ex, GetType().Name, eventName, ex.Message);
                         }
                     });
                 }
@@ -117,7 +117,7 @@ namespace Bam.Net.Services.Events
         {
             args = args ?? EventArgs.Empty;
             IEnumerable<EventSubscription> subs = this.GetEventSubscriptions(eventName);
-            if (subs.Count() > 0)
+            if (subs.Any())
             {
                 subs.Each(es =>
                 {

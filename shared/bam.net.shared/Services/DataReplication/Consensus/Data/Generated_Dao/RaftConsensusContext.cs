@@ -11,14 +11,14 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 {
-	// schema = Consensus
-    public static class ConsensusContext
+	// schema = RaftConsensus
+    public static class RaftConsensusContext
     {
 		public static string ConnectionName
 		{
 			get
 			{
-				return "Consensus";
+				return "RaftConsensus";
 			}
 		}
 

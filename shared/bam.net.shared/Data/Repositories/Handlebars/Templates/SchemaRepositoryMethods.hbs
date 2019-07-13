@@ -1,7 +1,7 @@
 ﻿		
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOne{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where)
@@ -11,7 +11,7 @@
 
 		/// <summary>
 		/// Set one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		public void SetOne{{Type.Name}}Where(WhereDelegate<{{Type.Name}}Columns> where, out {{{Type.FullName}}} result)
@@ -22,7 +22,7 @@
 
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -37,7 +37,7 @@
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single {{Type.Name}} instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a {{Type.Name}}Columns 
+		/// <param name="where">A WhereDelegate that receives a {{Type.Name}}Columns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between {{Type.Name}}Columns and other values
 		/// </param>
@@ -50,7 +50,7 @@
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a {{{Type.FullName}}}Columns 
+		/// <param name="where">A WhereDelegate that receives a {{{Type.FullName}}}Columns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between {{{Type.FullName}}}Columns and other values
 		/// </param>
@@ -61,14 +61,14 @@
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a {{Type.Name}}Columns 
+		/// <param name="where">A WhereDelegate that receives a {{Type.Name}}Columns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between {{Type.Name}}Columns and other values
 		/// </param>
@@ -77,6 +77,11 @@
             return Wrap<{{{Type.FullName}}}>({{DaoNamespace}}.{{Type.Name}}.Top(count, where, Database));
         }
 
+        public IEnumerable<{{{Type.FullName}}}> Top{{TypeNamePluralized}}Where(int count, WhereDelegate<{{Type.Name}}Columns> where, OrderBy<{{Type.Name}}Columns> orderBy)
+        {
+            return Wrap<{{{Type.FullName}}}>({{DaoNamespace}}.{{Type.Name}}.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of {{TypeNamePluralized}}
 		/// </summary>
@@ -88,7 +93,7 @@
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a {{Type.Name}}Columns 
+		/// <param name="where">A WhereDelegate that receives a {{Type.Name}}Columns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between {{Type.Name}}Columns and other values
 		/// </param>

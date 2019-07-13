@@ -1,4 +1,4 @@
-SchemaName: Consensus
+SchemaName: RaftConsensus
 WriteSourceTo: C:\bam\src\BamFrameworkCore\Bam.Net\shared\bam.net.shared\Services\DataReplication\Consensus\Data\Generated_Dao
 TypeAssembly: C:\bam\src\BamFrameworkCore\Bam.Net\bam.net.core\bin\Debug\netcoreapp2.2\bam.net.core.dll
 FromNameSpace: Bam.Net.Services.DataReplication.Consensus.Data
