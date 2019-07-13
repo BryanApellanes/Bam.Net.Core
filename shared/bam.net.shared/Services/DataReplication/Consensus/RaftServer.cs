@@ -49,12 +49,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         protected virtual void HandleWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
-            if (writeRequest.TargetNodeType == RaftNodeType.Leader)
+            if (writeRequest.TargetNodeState == RaftNodeState.Leader)
             {
                 Ring.LeaderWriteValue(writeRequest);
             }
 
-            if (writeRequest.TargetNodeType == RaftNodeType.Follower)
+            if (writeRequest.TargetNodeState == RaftNodeState.Follower)
             {
                 Ring.FollowerWriteValue(writeRequest);
             }

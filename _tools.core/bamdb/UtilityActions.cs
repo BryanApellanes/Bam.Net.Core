@@ -22,7 +22,7 @@ namespace Bam.Net.Application
             ConsoleLogger logger = new ConsoleLogger();
             logger.StartLoggingThread();
 
-            GenerationConfig config = GetGenerationConfig(o=> OutLineFormat(o, ConsoleColor.Cyan));
+            GenerationConfig config = GetGenerationConfig(o=> OutLine(o, ConsoleColor.Cyan));
 
             string targetDir = config.WriteSourceTo;
             DaoGenerationServiceRegistry registry = DaoGenerationServiceRegistry.ForConfiguration(config, logger);
@@ -253,7 +253,8 @@ namespace Bam.Net.Application
 
             output($"using config: {configFile.FullName}");
             config = configFile.FromFile<T>();
-            output(config.ToJson(true));
+            string json = config.ToJson(true);
+            output(json);
             return config;
         }
     }

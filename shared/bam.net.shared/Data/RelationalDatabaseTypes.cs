@@ -5,8 +5,6 @@ namespace Bam.Net.Data
         SQLite,
         MsSql,
         MySql,
-        Npgsql,
-        Oracle,
-        FirebirdSql
+        Npgsql
     }
 }

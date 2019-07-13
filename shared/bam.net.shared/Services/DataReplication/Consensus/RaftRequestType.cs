@@ -5,6 +5,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
         Invalid,
         WriteValue,
         NotifyLeaderFollowerValueWritten,
-        NotifyFollowerLeaderValueCommitted
+        NotifyFollowerLeaderValueCommitted,
+        
+        VoteRequest,
+        VoteResponse
     }
 }

@@ -538,7 +538,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryWriteRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftReplicationLog.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNodeType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNodeState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftServer.cs" />
@@ -844,7 +844,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ClientRegistrationFailedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\CompositeRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ConfigurationResolverServiceUrlProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Configuration\ConfigurationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Configuration\ConfigurationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\CoreExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\CoreServiceRegistryContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\CoreServiceResponse.cs" />
@@ -3042,6 +3042,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Server\Renderers\dust.custom.js" />
     <Content Include="$(MSBuildThisFileDirectory)Server\Renderers\json2.js" />
     <Content Include="$(MSBuildThisFileDirectory)ServiceProxy\Js\FileExt.js" />
+    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Translation\Translation.db.js" />

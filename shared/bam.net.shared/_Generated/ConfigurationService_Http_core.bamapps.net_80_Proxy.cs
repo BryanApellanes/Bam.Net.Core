@@ -144,15 +144,15 @@ namespace Bam.Net.CoreServices
 	using System.Collections.Generic;
 	using Bam.Net.UserAccounts;
 
-	public class ConfigurationProviderProxy: ConfigurationProvider, IProxy 
+	public class ConfigurationServiceProxy: ConfigurationService, IProxy 
 	{
 		ConfigurationServiceClient _proxyClient;
-		public ConfigurationProviderProxy()
+		public ConfigurationServiceProxy()
 		{
 			_proxyClient = new ConfigurationServiceClient();
 		}
 
-		public ConfigurationProviderProxy(string baseUrl)
+		public ConfigurationServiceProxy(string baseUrl)
 		{
 			_proxyClient = new ConfigurationServiceClient(baseUrl);
 		}
@@ -169,7 +169,7 @@ namespace Bam.Net.CoreServices
 		{
 			get
 			{
-				return typeof(ConfigurationProvider);
+				return typeof(ConfigurationService);
 			}
 		}
 

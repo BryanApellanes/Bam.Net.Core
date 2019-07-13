@@ -75,30 +75,30 @@ namespace Bam.Net.Services.Clients
 
         protected string GetCommonSetting(string key)
         {
-            return ConfigurationProvider.GetCommonConfiguration()[key];
+            return ConfigurationService.GetCommonConfiguration()[key];
         }
 
         protected string GetMachineSetting(string key)
         {
-            return ConfigurationProvider.GetMachineConfiguration(Environment.MachineName)[key];
+            return ConfigurationService.GetMachineConfiguration(Environment.MachineName)[key];
         }
 
         protected string GetApplicationSetting(string key)
         {
-            return ConfigurationProvider.GetApplicationConfiguration(ApplicationNameProvider.GetApplicationName())[key];
+            return ConfigurationService.GetApplicationConfiguration(ApplicationNameProvider.GetApplicationName())[key];
         }
 
         public ILogger Logger { get; set; }
 
         public SettingSource SettingSource { get; set; }
 
-        ConfigurationProvider _configurationProvider;
+        ConfigurationService _configurationService;
         object _configLock = new object();
-        public ConfigurationProvider ConfigurationProvider
+        public ConfigurationService ConfigurationService
         {
             get
             {
-                return _configLock.DoubleCheckLock(ref _configurationProvider, () => new ProxyFactory().GetProxy<ConfigurationProvider>(ConfigurationServerHost, ConfigurationServerPort, Logger));
+                return _configLock.DoubleCheckLock(ref _configurationService, () => new ProxyFactory().GetProxy<ConfigurationService>(ConfigurationServerHost, ConfigurationServerPort, Logger));
             }
         }
 
@@ -124,12 +124,12 @@ namespace Bam.Net.Services.Clients
 
         public string GetUserNameFor(string machineName, string serviceName)
         {
-            return ConfigurationProvider.GetMachineConfiguration(machineName)[$"{serviceName}.User"];
+            return ConfigurationService.GetMachineConfiguration(machineName)[$"{serviceName}.User"];
         }
 
         public string GetPasswordFor(string machineName, string serviceName)
         {
-            return ConfigurationProvider.GetMachineConfiguration(machineName)[$"{serviceName}.Password"];
+            return ConfigurationService.GetMachineConfiguration(machineName)[$"{serviceName}.Password"];
         }
     }
 }

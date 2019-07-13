@@ -23,14 +23,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftLogEntry LogEntry { get; set; }
         
-        public RaftNodeType TargetNodeType { get; set; }
+        public RaftNodeState TargetNodeState { get; set; }
 
         public RaftLogEntryWriteRequest LeaderCopy(RaftLogEntryState state = RaftLogEntryState.Uncommitted)
         {
             Args.ThrowIfNull(LogEntry, "LogEntry");
             
             RaftLogEntryWriteRequest copy = this.CopyAs<RaftLogEntryWriteRequest>();
-            copy.TargetNodeType = RaftNodeType.Leader;
+            copy.TargetNodeState = RaftNodeState.Leader;
             copy.LogEntry = copy.LogEntry.CopyAs<RaftLogEntry>();
             copy.LogEntry.State = state;
             return copy;
@@ -41,7 +41,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIfNull(LogEntry, "LogEntry");
             
             RaftLogEntryWriteRequest copy = this.CopyAs<RaftLogEntryWriteRequest>();
-            copy.TargetNodeType = RaftNodeType.Follower;
+            copy.TargetNodeState = RaftNodeState.Follower;
             copy.LogEntry = copy.LogEntry.CopyAs<RaftLogEntry>();
             copy.LogEntry.State = state;
             return copy;

@@ -115,7 +115,7 @@ namespace Bam.Net
             Deserializer deserializer = new Deserializer();
             using (StreamReader sr = new StreamReader(ms))
             {
-                return deserializer.Deserialize(sr);
+                return deserializer.Deserialize(sr, type);
             }
         }
 

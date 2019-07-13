@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
+using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data;
 
@@ -39,6 +41,40 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
         
         public int ElectionTimeout { get; set; }
+        public RaftLeaderElection LatestElection { get; set; }
+        public void CandidateLoop()
+        {
+            try
+            {
+                Timer candidateTimer = new Timer(ElectionTimeout) {AutoReset = true};
+                // use timer to become candidate after election timeout expires then start election term
+                candidateTimer.Elapsed += (o, a) =>
+                {
+                    if (LocalNode.NodeState == RaftNodeState.Follower)
+                    {
+                        Task.Run(StartElection);
+                        
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Logger.AddEntry("Exception in LeaderElectionTask: {0}", ex, ex.Message);
+            }
+        }
+
+        protected void StartElection()
+        {
+            LocalNode.NodeState = RaftNodeState.Candidate;
+            CastVote(RaftLeaderElection.LatestTerm() + 1, new RaftNodeIdentifier(HostName, Port));
+            BroadcastVoteRequest();
+        }
+
+        protected void CastVote(int term, RaftNodeIdentifier identifier)
+        {
+            // locally record vote
+            throw new NotImplementedException();
+        }
         
         public RaftServer Server { get; set; }
 
@@ -136,11 +172,16 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 (follower) => follower.GetClient()
                     .SendFollowerCommitRequest(writeRequest.FollowerCopy(RaftLogEntryState.Committed)));
         }
+
+        public virtual void BroadcastVoteRequest()
+        {
+            throw new NotImplementedException();
+        }
         
         public virtual void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
         {
             // forward to the leaders ring using an appropriate client
-            ValidateWriteRequest(writeRequest, RaftNodeType.Leader);
+            ValidateWriteRequest(writeRequest, RaftNodeState.Leader);
 
             RaftClient raftClient = GetLeaderNode().GetClient();
             Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
@@ -198,13 +239,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         protected internal RaftNode GetLeaderNode()
         {
-            return FirstArcWhere(a => a.GetTypedServiceProvider().NodeType == RaftNodeType.Leader)
+            return FirstArcWhere(a => a.GetTypedServiceProvider().NodeState == RaftNodeState.Leader)
                 .GetTypedServiceProvider();
         }
 
         protected internal List<RaftNode> GetFollowers()
         {
-            return ArcsWhere(a => a.GetTypedServiceProvider().NodeType == RaftNodeType.Follower)
+            return ArcsWhere(a => a.GetTypedServiceProvider().NodeState == RaftNodeState.Follower)
                 .Select(a => a.GetTypedServiceProvider()).ToList();
         }
         
@@ -237,11 +278,11 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return result;
         }
         
-        private static void ValidateWriteRequest(RaftLogEntryWriteRequest writeRequest, RaftNodeType nodeType)
+        private static void ValidateWriteRequest(RaftLogEntryWriteRequest writeRequest, RaftNodeState nodeState)
         {
             Args.ThrowIfNull(writeRequest);
             Args.ThrowIfNull(writeRequest.LogEntry);
-            Args.ThrowIf(writeRequest.TargetNodeType != nodeType, "Write request not intended for {0}.", nodeType.ToString());
+            Args.ThrowIf(writeRequest.TargetNodeState != nodeState, "Write request not intended for {0}.", nodeState.ToString());
         }
     }
 }

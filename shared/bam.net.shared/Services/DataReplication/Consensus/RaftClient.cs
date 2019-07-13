@@ -31,7 +31,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
             Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted, "RaftLogEntry already committed");
-            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerWriteRequest));
+            Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerWriteRequest));
 
             StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.WriteValue));
         }
@@ -41,7 +41,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
             Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Committed, "RaftLogEntry not committed");
-            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerCommitRequest));
+            Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerCommitRequest));
 
             StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.NotifyFollowerLeaderValueCommitted));
         }
@@ -51,7 +51,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
             Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted, "RaftLogEntry already committed");
-            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Leader, "{0} called for RaftLogEntryWriteRequest not intended for leader.", nameof(ForwardWriteRequestToLeader));
+            Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Leader, "{0} called for RaftLogEntryWriteRequest not intended for leader.", nameof(ForwardWriteRequestToLeader));
 
             StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.WriteValue));
         }

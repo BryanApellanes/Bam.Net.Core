@@ -20,7 +20,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public RaftNode(RaftRing ring)
         {
             RaftRing = ring;
-            NodeType = RaftNodeType.Follower;
+            NodeState = RaftNodeState.Follower;
             
             LocalRepository = new DaoRepository();
             LocalRepository.AddType<RaftLogEntry>();
@@ -55,6 +55,11 @@ namespace Bam.Net.Services.DataReplication.Consensus
             clone.CopyEventHandlers(this);
             return clone;
         }
+
+        public override string ToString()
+        {
+            return $"{Identifier?.HostName}:{Identifier.Port}";
+        }
         
         public RaftRing RaftRing { get; set; }
 
@@ -71,13 +76,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public DaoRepository LocalRepository { get; set; }
 
-        public RaftNodeType NodeType { get; set; }
+        public RaftNodeState NodeState { get; set; }
         
         public RaftReplicationLog RaftReplicationLog { get; set; }
         
         public virtual void WriteValue(RaftLogEntryWriteRequest writeRequest)
         {
-            if (NodeType == RaftNodeType.Leader)
+            if (NodeState == RaftNodeState.Leader)
             {
                 LeaderWriteValue(writeRequest.LeaderCopy());
             }
@@ -177,7 +182,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
-            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Follower,
+            Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Follower,
                 "writeRequest.TargetNodeType != RaftNodeType.Leader");
         }
         
@@ -185,7 +190,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
-            Args.ThrowIf(writeRequest.TargetNodeType != RaftNodeType.Leader,
+            Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Leader,
                 "writeRequest.TargetNodeType != RaftNodeType.Leader");
         }
     }

@@ -6,7 +6,17 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
     public class RaftNodeIdentifier : CompositeKeyAuditRepoData
     {
         public const int DefaultPort = 8417;
-        
+
+        public RaftNodeIdentifier()
+        {
+        }
+
+        public RaftNodeIdentifier(string hostName, int port)
+        {
+            HostName = hostName;
+            Port = port;
+        }
+
         [CompositeKey]
         public string HostName { get; set; }
         
