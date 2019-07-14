@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Bam.Net.Data.Repositories
 {
@@ -18,6 +20,7 @@ namespace Bam.Net.Data.Repositories
         public CompositeKeyAuditRepoData()
         {
             PropertyDelimiter = "\r\n";
+            CompositeKeyAlgorithm = HashAlgorithms.SHA256;
         }
 
         string[] _compositeKeyProperties;
@@ -37,15 +40,16 @@ namespace Bam.Net.Data.Repositories
             }
         }
 
+        public HashAlgorithms CompositeKeyAlgorithm { get; set; }
+        
         ulong _key;
-
-        public ulong Key
+        public ulong CompositeKey
         {
             get
             {
-                if (_key == 0)
+                if (_key == 0 || _key != GetULongKeyHash())
                 {
-                    return GetULongKeyHash();
+                    _key = GetULongKeyHash();
                 }
 
                 return _key;
@@ -53,6 +57,31 @@ namespace Bam.Net.Data.Repositories
             set { _key = value; }
         }
 
+        string _compositeKeyString;
+        public string CompositeKeyString
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_compositeKeyString))
+                {
+                    _compositeKeyString = GetCompositeKeyString(CompositeKeyAlgorithm);
+                }
+
+                return _compositeKeyString;
+            }
+            set { _compositeKeyString = value; }
+        }
+        
+        public string GetCompositeKeyString(HashAlgorithms algorithm = HashAlgorithms.SHA256)
+        {
+            if (algorithm == HashAlgorithms.Invalid)
+            {
+                algorithm = CompositeKeyAlgorithm;
+            }
+
+            return CompositeKeyHashProvider.GetStringKeyHash(this, PropertyDelimiter, algorithm);
+        }
+        
         public int GetIntKeyHash()
         {
             return CompositeKeyHashProvider.GetIntKeyHash(this, PropertyDelimiter, CompositeKeyProperties);

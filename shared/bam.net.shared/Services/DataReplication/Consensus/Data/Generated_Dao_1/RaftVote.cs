@@ -17,30 +17,30 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 	// schema = RaftConsensus
 	// connection Name = RaftConsensus
 	[Serializable]
-	[Bam.Net.Data.Table("RaftLeaderElection", "RaftConsensus")]
-	public partial class RaftLeaderElection: Bam.Net.Data.Dao
+	[Bam.Net.Data.Table("RaftVote", "RaftConsensus")]
+	public partial class RaftVote: Bam.Net.Data.Dao
 	{
-		public RaftLeaderElection():base()
+		public RaftVote():base()
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public RaftLeaderElection(DataRow data)
+		public RaftVote(DataRow data)
 			: base(data)
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public RaftLeaderElection(Database db)
+		public RaftVote(Database db)
 			: base(db)
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public RaftLeaderElection(Database db, DataRow data)
+		public RaftVote(Database db, DataRow data)
 			: base(db, data)
 		{
 			this.SetKeyColumnName();
@@ -48,19 +48,15 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		}
 
 		[Bam.Net.Exclude]
-		public static implicit operator RaftLeaderElection(DataRow data)
+		public static implicit operator RaftVote(DataRow data)
 		{
-			return new RaftLeaderElection(data);
+			return new RaftVote(data);
 		}
 
 		private void SetChildren()
 		{
 
 
-			if(_database != null)
-			{
-				this.ChildCollections.Add("RaftVote_RaftLeaderElectionId", new RaftVoteCollection(Database.GetQuery<RaftVoteColumns, RaftVote>((c) => c.RaftLeaderElectionId == GetULongValue("Id")), this, "RaftLeaderElectionId"));
-			}
 
 
 		} // end SetChildren
@@ -107,17 +103,31 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		}
 	}
 
-	// property:Term, columnName: Term	
-	[Bam.Net.Data.Column(Name="Term", DbDataType="Int", MaxLength="10", AllowNull=true)]
-	public int? Term
+	// property:FromNodeIdentifier, columnName: FromNodeIdentifier	
+	[Bam.Net.Data.Column(Name="FromNodeIdentifier", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string FromNodeIdentifier
 	{
 		get
 		{
-			return GetIntValue("Term");
+			return GetStringValue("FromNodeIdentifier");
 		}
 		set
 		{
-			SetValue("Term", value);
+			SetValue("FromNodeIdentifier", value);
+		}
+	}
+
+	// property:ForNodeIdentifier, columnName: ForNodeIdentifier	
+	[Bam.Net.Data.Column(Name="ForNodeIdentifier", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string ForNodeIdentifier
+	{
+		get
+		{
+			return GetStringValue("ForNodeIdentifier");
+		}
+		set
+		{
+			SetValue("ForNodeIdentifier", value);
 		}
 	}
 
@@ -220,31 +230,43 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 	}
 
 
-
-	[Bam.Net.Exclude]	
-	public RaftVoteCollection RaftVotesByRaftLeaderElectionId
+	// start RaftLeaderElectionId -> RaftLeaderElectionId
+	[Bam.Net.Data.ForeignKey(
+        Table="RaftVote",
+		Name="RaftLeaderElectionId",
+		DbDataType="BigInt",
+		MaxLength="",
+		AllowNull=true,
+		ReferencedKey="Id",
+		ReferencedTable="RaftLeaderElection",
+		Suffix="1")]
+	public ulong? RaftLeaderElectionId
 	{
 		get
 		{
-			if (this.IsNew)
-			{
-				throw new InvalidOperationException("The current instance of type({0}) hasn't been saved and will have no child collections, call Save() or Save(Database) first."._Format(this.GetType().Name));
-			}
-
-			if(!this.ChildCollections.ContainsKey("RaftVote_RaftLeaderElectionId"))
-			{
-				SetChildren();
-			}
-
-			var c = (RaftVoteCollection)this.ChildCollections["RaftVote_RaftLeaderElectionId"];
-			if(!c.Loaded)
-			{
-				c.Load(Database);
-			}
-			return c;
+			return GetULongValue("RaftLeaderElectionId");
+		}
+		set
+		{
+			SetValue("RaftLeaderElectionId", value);
 		}
 	}
-	
+
+    RaftLeaderElection _raftLeaderElectionOfRaftLeaderElectionId;
+	public RaftLeaderElection RaftLeaderElectionOfRaftLeaderElectionId
+	{
+		get
+		{
+			if(_raftLeaderElectionOfRaftLeaderElectionId == null)
+			{
+				_raftLeaderElectionOfRaftLeaderElectionId = Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLeaderElection.OneWhere(c => c.KeyColumn == this.RaftLeaderElectionId, this.Database);
+			}
+			return _raftLeaderElectionOfRaftLeaderElectionId;
+		}
+	}
+
+
+
 
 
 
@@ -262,23 +284,23 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 			}
 			else
 			{
-				var colFilter = new RaftLeaderElectionColumns();
+				var colFilter = new RaftVoteColumns();
 				return (colFilter.KeyColumn == IdValue);
 			}
 		}
 
 		/// <summary>
-        /// Return every record in the RaftLeaderElection table.
+        /// Return every record in the RaftVote table.
         /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
-		public static RaftLeaderElectionCollection LoadAll(Database database = null)
+		public static RaftVoteCollection LoadAll(Database database = null)
 		{
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
             SqlStringBuilder sql = db.GetSqlStringBuilder();
-            sql.Select<RaftLeaderElection>();
-            var results = new RaftLeaderElectionCollection(db, sql.GetDataTable(db))
+            sql.Select<RaftVote>();
+            var results = new RaftVoteCollection(db, sql.GetDataTable(db))
             {
                 Database = db
             };
@@ -289,12 +311,12 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
         /// Process all records in batches of the specified size
         /// </summary>
         [Bam.Net.Exclude]
-        public static async Task BatchAll(int batchSize, Action<IEnumerable<RaftLeaderElection>> batchProcessor, Database database = null)
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<RaftVote>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				RaftLeaderElectionColumns columns = new RaftLeaderElectionColumns();
-				var orderBy = Bam.Net.Data.Order.By<RaftLeaderElectionColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
+				RaftVoteColumns columns = new RaftVoteColumns();
+				var orderBy = Bam.Net.Data.Order.By<RaftVoteColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, (c) => c.KeyColumn > 0, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -312,7 +334,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<RaftLeaderElection>> batchProcessor, Database database = null)
+		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<RaftVote>> batchProcessor, Database database = null)
 		{
 			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
@@ -321,12 +343,12 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery(int batchSize, WhereDelegate<RaftLeaderElectionColumns> where, Action<IEnumerable<RaftLeaderElection>> batchProcessor, Database database = null)
+		public static async Task BatchQuery(int batchSize, WhereDelegate<RaftVoteColumns> where, Action<IEnumerable<RaftVote>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				RaftLeaderElectionColumns columns = new RaftLeaderElectionColumns();
-				var orderBy = Bam.Net.Data.Order.By<RaftLeaderElectionColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
+				RaftVoteColumns columns = new RaftVoteColumns();
+				var orderBy = Bam.Net.Data.Order.By<RaftVoteColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -335,7 +357,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
-					results = Top(batchSize, (RaftLeaderElectionColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
+					results = Top(batchSize, (RaftVoteColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
 			});
 		}
@@ -344,7 +366,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<RaftLeaderElection>> batchProcessor, Bam.Net.Data.OrderBy<RaftLeaderElectionColumns> orderBy, Database database = null)
+		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<RaftVote>> batchProcessor, Bam.Net.Data.OrderBy<RaftVoteColumns> orderBy, Database database = null)
 		{
 			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
@@ -353,11 +375,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<RaftLeaderElectionColumns> where, Action<IEnumerable<RaftLeaderElection>> batchProcessor, Bam.Net.Data.OrderBy<RaftLeaderElectionColumns> orderBy, Database database = null)
+		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<RaftVoteColumns> where, Action<IEnumerable<RaftVote>> batchProcessor, Bam.Net.Data.OrderBy<RaftVoteColumns> orderBy, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				RaftLeaderElectionColumns columns = new RaftLeaderElectionColumns();
+				RaftVoteColumns columns = new RaftVoteColumns();
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -366,101 +388,101 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
-					results = Top(batchSize, (RaftLeaderElectionColumns)where(columns) && orderBy.Column > top, orderBy, database);
+					results = Top(batchSize, (RaftVoteColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
 			});
 		}
 
-		public static RaftLeaderElection GetById(uint id, Database database = null)
+		public static RaftVote GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
-		public static RaftLeaderElection GetById(int id, Database database = null)
+		public static RaftVote GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
-		public static RaftLeaderElection GetById(long id, Database database = null)
+		public static RaftVote GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
-		public static RaftLeaderElection GetById(ulong id, Database database = null)
+		public static RaftVote GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
-		public static RaftLeaderElection GetByUuid(string uuid, Database database = null)
+		public static RaftVote GetByUuid(string uuid, Database database = null)
 		{
 			return OneWhere(c => Bam.Net.Data.Query.Where("Uuid") == uuid, database);
 		}
 
-		public static RaftLeaderElection GetByCuid(string cuid, Database database = null)
+		public static RaftVote GetByCuid(string cuid, Database database = null)
 		{
 			return OneWhere(c => Bam.Net.Data.Query.Where("Cuid") == cuid, database);
 		}
 
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Query(QueryFilter filter, Database database = null)
+		public static RaftVoteCollection Query(QueryFilter filter, Database database = null)
 		{
 			return Where(filter, database);
 		}
 
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Where(QueryFilter filter, Database database = null)
+		public static RaftVoteCollection Where(QueryFilter filter, Database database = null)
 		{
-			WhereDelegate<RaftLeaderElectionColumns> whereDelegate = (c) => filter;
+			WhereDelegate<RaftVoteColumns> whereDelegate = (c) => filter;
 			return Where(whereDelegate, database);
 		}
 
 		/// <summary>
 		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A Func delegate that recieves a RaftVoteColumns
 		/// and returns a QueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Where(Func<RaftLeaderElectionColumns, QueryFilter<RaftLeaderElectionColumns>> where, OrderBy<RaftLeaderElectionColumns> orderBy = null, Database database = null)
+		public static RaftVoteCollection Where(Func<RaftVoteColumns, QueryFilter<RaftVoteColumns>> where, OrderBy<RaftVoteColumns> orderBy = null, Database database = null)
 		{
-			database = database ?? Db.For<RaftLeaderElection>();
-			return new RaftLeaderElectionCollection(database.GetQuery<RaftLeaderElectionColumns, RaftLeaderElection>(where, orderBy), true);
+			database = database ?? Db.For<RaftVote>();
+			return new RaftVoteCollection(database.GetQuery<RaftVoteColumns, RaftVote>(where, orderBy), true);
 		}
 
 		/// <summary>
 		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Where(WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static RaftVoteCollection Where(WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
-			database = database ?? Db.For<RaftLeaderElection>();
-			var results = new RaftLeaderElectionCollection(database, database.GetQuery<RaftLeaderElectionColumns, RaftLeaderElection>(where), true);
+			database = database ?? Db.For<RaftVote>();
+			var results = new RaftVoteCollection(database, database.GetQuery<RaftVoteColumns, RaftVote>(where), true);
 			return results;
 		}
 
 		/// <summary>
 		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="orderBy">
 		/// Specifies what column and direction to order the results by
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Where(WhereDelegate<RaftLeaderElectionColumns> where, OrderBy<RaftLeaderElectionColumns> orderBy = null, Database database = null)
+		public static RaftVoteCollection Where(WhereDelegate<RaftVoteColumns> where, OrderBy<RaftVoteColumns> orderBy = null, Database database = null)
 		{
-			database = database ?? Db.For<RaftLeaderElection>();
-			var results = new RaftLeaderElectionCollection(database, database.GetQuery<RaftLeaderElectionColumns, RaftLeaderElection>(where, orderBy), true);
+			database = database ?? Db.For<RaftVote>();
+			var results = new RaftVoteCollection(database, database.GetQuery<RaftVoteColumns, RaftVote>(where, orderBy), true);
 			return results;
 		}
 
@@ -468,13 +490,13 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// This method is intended to respond to client side Qi queries.
 		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate`RaftLeaderElectionColumns`.
+		/// WhereDelegate`RaftVoteColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
-		public static RaftLeaderElectionCollection Where(QiQuery where, Database database = null)
+		public static RaftVoteCollection Where(QiQuery where, Database database = null)
 		{
-			var results = new RaftLeaderElectionCollection(database, Select<RaftLeaderElectionColumns>.From<RaftLeaderElection>().Where(where, database));
+			var results = new RaftVoteCollection(database, Select<RaftVoteColumns>.From<RaftVote>().Where(where, database));
 			return results;
 		}
 
@@ -484,7 +506,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection GetOneWhere(QueryFilter where, Database database = null)
+		public static RaftVote GetOneWhere(QueryFilter where, Database database = null)
 		{
 			var result = OneWhere(where, database);
 			if(result == null)
@@ -503,9 +525,9 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// <param name="where"></param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection OneWhere(QueryFilter where, Database database = null)
+		public static RaftVote OneWhere(QueryFilter where, Database database = null)
 		{
-			WhereDelegate<RaftLeaderElectionColumns> whereDelegate = (c) => where;
+			WhereDelegate<RaftVoteColumns> whereDelegate = (c) => where;
 			var result = Top(1, whereDelegate, database);
 			return OneOrThrow(result);
 		}
@@ -516,9 +538,9 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static void SetOneWhere(WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static void SetOneWhere(WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
-			SetOneWhere(where, out RaftLeaderElection ignore, database);
+			SetOneWhere(where, out RaftVote ignore, database);
 		}
 
 		/// <summary>
@@ -527,7 +549,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static void SetOneWhere(WhereDelegate<RaftLeaderElectionColumns> where, out RaftLeaderElection result, Database database = null)
+		public static void SetOneWhere(WhereDelegate<RaftVoteColumns> where, out RaftVote result, Database database = null)
 		{
 			result = GetOneWhere(where, database);
 		}
@@ -540,12 +562,12 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// <param name="where"></param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection GetOneWhere(WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static RaftVote GetOneWhere(WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
 			var result = OneWhere(where, database);
 			if(result == null)
 			{
-				RaftLeaderElectionColumns c = new RaftLeaderElectionColumns();
+				RaftVoteColumns c = new RaftVoteColumns();
 				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
@@ -559,13 +581,13 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// be thrown.  This method is most commonly used to retrieve a
 		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection OneWhere(WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static RaftVote OneWhere(WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
@@ -575,11 +597,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// This method is intended to respond to client side Qi queries.
 		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate`RaftLeaderElectionColumns`.
+		/// WhereDelegate`RaftVoteColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
-		public static RaftLeaderElection OneWhere(QiQuery where, Database database = null)
+		public static RaftVote OneWhere(QiQuery where, Database database = null)
 		{
 			var results = Top(1, where, database);
 			return OneOrThrow(results);
@@ -589,13 +611,13 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection FirstOneWhere(WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static RaftVote FirstOneWhere(WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
 			var results = Top(1, where, database);
 			if(results.Count > 0)
@@ -612,13 +634,13 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection FirstOneWhere(WhereDelegate<RaftLeaderElectionColumns> where, OrderBy<RaftLeaderElectionColumns> orderBy, Database database = null)
+		public static RaftVote FirstOneWhere(WhereDelegate<RaftVoteColumns> where, OrderBy<RaftVoteColumns> orderBy, Database database = null)
 		{
 			var results = Top(1, where, orderBy, database);
 			if(results.Count > 0)
@@ -634,15 +656,15 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElection FirstOneWhere(QueryFilter where, OrderBy<RaftLeaderElectionColumns> orderBy = null, Database database = null)
+		public static RaftVote FirstOneWhere(QueryFilter where, OrderBy<RaftVoteColumns> orderBy = null, Database database = null)
 		{
-			WhereDelegate<RaftLeaderElectionColumns> whereDelegate = (c) => where;
+			WhereDelegate<RaftVoteColumns> whereDelegate = (c) => where;
 			var results = Top(1, whereDelegate, orderBy, database);
 			if(results.Count > 0)
 			{
@@ -663,13 +685,13 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Top(int count, WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static RaftVoteCollection Top(int count, WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
 			return Top(count, where, null, database);
 		}
@@ -683,9 +705,9 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="orderBy">
 		/// Specifies what column and direction to order the results by
@@ -694,29 +716,29 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Top(int count, WhereDelegate<RaftLeaderElectionColumns> where, OrderBy<RaftLeaderElectionColumns> orderBy, Database database = null)
+		public static RaftVoteCollection Top(int count, WhereDelegate<RaftVoteColumns> where, OrderBy<RaftVoteColumns> orderBy, Database database = null)
 		{
-			RaftLeaderElectionColumns c = new RaftLeaderElectionColumns();
+			RaftVoteColumns c = new RaftVoteColumns();
 			IQueryFilter filter = where(c);
 
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<RaftLeaderElection>(count);
+			query.Top<RaftVote>(count);
 			query.Where(filter);
 
 			if(orderBy != null)
 			{
-				query.OrderBy<RaftLeaderElectionColumns>(orderBy);
+				query.OrderBy<RaftVoteColumns>(orderBy);
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<RaftLeaderElectionCollection>(0);
+			var results = query.Results.As<RaftVoteCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Top(int count, QueryFilter where, Database database)
+		public static RaftVoteCollection Top(int count, QueryFilter where, Database database)
 		{
 			return Top(count, where, null, database);
 		}
@@ -740,30 +762,30 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Top(int count, QueryFilter where, OrderBy<RaftLeaderElectionColumns> orderBy = null, Database database = null)
+		public static RaftVoteCollection Top(int count, QueryFilter where, OrderBy<RaftVoteColumns> orderBy = null, Database database = null)
 		{
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<RaftLeaderElection>(count);
+			query.Top<RaftVote>(count);
 			query.Where(where);
 
 			if(orderBy != null)
 			{
-				query.OrderBy<RaftLeaderElectionColumns>(orderBy);
+				query.OrderBy<RaftVoteColumns>(orderBy);
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<RaftLeaderElectionCollection>(0);
+			var results = query.Results.As<RaftVoteCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		[Bam.Net.Exclude]
-		public static RaftLeaderElectionCollection Top(int count, QueryFilter where, string orderBy = null, SortOrder sortOrder = SortOrder.Ascending, Database database = null)
+		public static RaftVoteCollection Top(int count, QueryFilter where, string orderBy = null, SortOrder sortOrder = SortOrder.Ascending, Database database = null)
 		{
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<RaftLeaderElection>(count);
+			query.Top<RaftVote>(count);
 			query.Where(where);
 
 			if(orderBy != null)
@@ -772,7 +794,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<RaftLeaderElectionCollection>(0);
+			var results = query.Results.As<RaftVoteCollection>(0);
 			results.Database = db;
 			return results;
 		}
@@ -793,14 +815,14 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
-		public static RaftLeaderElectionCollection Top(int count, QiQuery where, Database database = null)
+		public static RaftVoteCollection Top(int count, QiQuery where, Database database = null)
 		{
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<RaftLeaderElection>(count);
+			query.Top<RaftVote>(count);
 			query.Where(where);
 			query.Execute(db);
-			var results = query.Results.As<RaftLeaderElectionCollection>(0);
+			var results = query.Results.As<RaftVoteCollection>(0);
 			results.Database = db;
 			return results;
 		}
@@ -813,9 +835,9 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// </param>
 		public static long Count(Database database = null)
         {
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
             QuerySet query = GetQuerySet(db);
-            query.Count<RaftLeaderElection>();
+            query.Count<RaftVote>();
             query.Execute(db);
             return (long)query.Results[0].DataRow[0];
         }
@@ -823,22 +845,22 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a RaftLeaderElectionColumns
+		/// <param name="where">A WhereDelegate that recieves a RaftVoteColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between RaftLeaderElectionColumns and other values
+		/// between RaftVoteColumns and other values
 		/// </param>
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static long Count(WhereDelegate<RaftLeaderElectionColumns> where, Database database = null)
+		public static long Count(WhereDelegate<RaftVoteColumns> where, Database database = null)
 		{
-			RaftLeaderElectionColumns c = new RaftLeaderElectionColumns();
+			RaftVoteColumns c = new RaftVoteColumns();
 			IQueryFilter filter = where(c) ;
 
-			Database db = database ?? Db.For<RaftLeaderElection>();
+			Database db = database ?? Db.For<RaftVote>();
 			QuerySet query = GetQuerySet(db);
-			query.Count<RaftLeaderElection>();
+			query.Count<RaftVote>();
 			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
@@ -846,18 +868,18 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 
 		public static long Count(QiQuery where, Database database = null)
 		{
-		    Database db = database ?? Db.For<RaftLeaderElection>();
+		    Database db = database ?? Db.For<RaftVote>();
 			QuerySet query = GetQuerySet(db);
-			query.Count<RaftLeaderElection>();
+			query.Count<RaftVote>();
 			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
 
-		private static RaftLeaderElection CreateFromFilter(IQueryFilter filter, Database database = null)
+		private static RaftVote CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<RaftLeaderElection>();
-			var dao = new RaftLeaderElection();
+			Database db = database ?? Db.For<RaftVote>();
+			var dao = new RaftVote();
 			filter.Parameters.Each(p=>
 			{
 				dao.Property(p.ColumnName, p.Value);
@@ -866,7 +888,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 			return dao;
 		}
 
-		private static RaftLeaderElection OneOrThrow(RaftLeaderElectionCollection c)
+		private static RaftVote OneOrThrow(RaftVoteCollection c)
 		{
 			if(c.Count == 1)
 			{

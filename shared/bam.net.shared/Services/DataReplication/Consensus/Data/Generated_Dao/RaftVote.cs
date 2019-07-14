@@ -131,6 +131,48 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		}
 	}
 
+	// property:ElectionKey, columnName: ElectionKey	
+	[Bam.Net.Data.Column(Name="ElectionKey", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string ElectionKey
+	{
+		get
+		{
+			return GetStringValue("ElectionKey");
+		}
+		set
+		{
+			SetValue("ElectionKey", value);
+		}
+	}
+
+	// property:CompositeKey, columnName: CompositeKey	
+	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? CompositeKey
+	{
+		get
+		{
+			return GetULongValue("CompositeKey");
+		}
+		set
+		{
+			SetValue("CompositeKey", value);
+		}
+	}
+
+	// property:CompositeKeyString, columnName: CompositeKeyString	
+	[Bam.Net.Data.Column(Name="CompositeKeyString", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string CompositeKeyString
+	{
+		get
+		{
+			return GetStringValue("CompositeKeyString");
+		}
+		set
+		{
+			SetValue("CompositeKeyString", value);
+		}
+	}
+
 	// property:CreatedBy, columnName: CreatedBy	
 	[Bam.Net.Data.Column(Name="CreatedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string CreatedBy

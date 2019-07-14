@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data;
@@ -21,7 +22,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Port = StreamingClient.Port;
         }
         
+        /// <summary>
+        /// The host that this is a client of.
+        /// </summary>
         public string HostName { get; set; }
+        
+        /// <summary>
+        /// The port that the server host is listening on.
+        /// </summary>
         public int Port { get; set; }
         
         public StreamingClient<RaftRequest, RaftResponse> StreamingClient { get; set; }
@@ -64,16 +72,43 @@ namespace Bam.Net.Services.DataReplication.Consensus
             StreamingResponse<RaftResponse> response =
                 StreamingClient.SendRequest(CreateRaftRequest(writeRequest,
                     RaftRequestType.NotifyLeaderFollowerValueWritten));
+
+            ResponseHandler?.Invoke(response);
         }
 
+        public void SendVoteResponse(RaftRequest request, RaftVote vote)
+        {
+            // send response to requester
+            throw new NotImplementedException();
+        }
+        
+        public void SendVoteRequest(int term)
+        {
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateVoteRequest(term));
+            ResponseHandler?.Invoke(response);
+        }
+
+        protected RaftRequest CreateVoteRequest(int term)
+        {
+            RaftRequest voteRequest = CreateRaftRequest(null, RaftRequestType.VoteRequest);
+            voteRequest.ElectionTerm = term;
+        }
+        
         protected RaftRequest CreateRaftRequest(RaftLogEntryWriteRequest writeRequest, RaftRequestType requestType)
         {
+            RaftNodeIdentifier current = RaftNodeIdentifier.ForCurrentProcess();
             return new RaftRequest()
             {
-                RequesterNodeIdentifier = RaftNodeIdentifier.For(HostName, Port),
+                RequesterHostName = current.HostName,
+                RequesterPort = current.Port,
                 RequestType = requestType,
                 WriteRequest = writeRequest
             };
         }
+        
+        /// <summary>
+        /// Optionally analyse responses.
+        /// </summary>
+        public Action<StreamingResponse<RaftResponse>> ResponseHandler { get; set; }
     }
 }

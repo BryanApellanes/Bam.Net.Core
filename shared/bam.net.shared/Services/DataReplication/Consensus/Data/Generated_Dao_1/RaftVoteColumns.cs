@@ -55,13 +55,6 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
                 return new RaftVoteColumns("ForNodeIdentifier");
             }
         }
-        public RaftVoteColumns ElectionKey
-        {
-            get
-            {
-                return new RaftVoteColumns("ElectionKey");
-            }
-        }
         public RaftVoteColumns CompositeKey
         {
             get

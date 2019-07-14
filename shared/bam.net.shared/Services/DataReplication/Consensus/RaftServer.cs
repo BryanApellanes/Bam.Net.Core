@@ -31,6 +31,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
                     case RaftRequestType.NotifyFollowerLeaderValueCommitted:
                         Ring.ReceiveLeaderCommittedValueNotification(request.WriteRequest);
                         break;
+                    case RaftRequestType.VoteRequest:
+                        Ring.ReceiveVoteRequest(request);
+                        break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
                         break;

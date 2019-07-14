@@ -16,18 +16,25 @@ namespace Bam.Net.Data.Repositories
             return props.ToArray();
         }
 
-        public static string GetStringKeyHash(object instance)
+        public static string GetStringKeyHash(object instance, HashAlgorithms algorithm = HashAlgorithms.SHA256)
         {
             Args.ThrowIfNull(instance);
-            return GetStringKeyHash(instance, "\r\n", GetCompositeKeyProperties(instance.GetType()));
+            return GetStringKeyHash(instance, "\r\n", GetCompositeKeyProperties(instance.GetType()), algorithm);
+        }
+
+        internal static string GetStringKeyHash(object instance, string propertyDelimiter, HashAlgorithms algorithm)
+        {
+            Args.ThrowIfNull(instance);
+            return GetStringKeyHash(instance, propertyDelimiter, GetCompositeKeyProperties(instance.GetType()),
+                algorithm);
         }
         
         internal static string GetStringKeyHash(object instance, string propertyDelimiter,
-            string[] compositeKeyProperties)
+            string[] compositeKeyProperties, HashAlgorithms algorithm)
         {
             CheckArgs(instance, compositeKeyProperties);
             return string.Join(propertyDelimiter, compositeKeyProperties.Select(prop => instance.Property(prop)))
-                .Sha1();
+                .Hash(algorithm);
         }
 
         internal static int GetIntKeyHash(object instance, string propertyDelimiter, string[] compositeKeyProperties)

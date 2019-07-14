@@ -14,6 +14,7 @@ using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 using RaftFollowerWriteLog = Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog;
 using RaftLeaderElection = Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection;
 using RaftNodeIdentifier = Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier;
+using RaftVote = Bam.Net.Services.DataReplication.Consensus.Data.RaftVote;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -120,22 +121,22 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return LatestElection;
         }
 
+        protected RaftLeaderElection GetElectionForTerm(int term)
+        {
+            return RaftLeaderElection.ForTerm(term, RaftConsensusRepository);
+        }
+        
         protected virtual void CastVoteForSelf()
         {
-            CastVote(GetLatestElection().Term + 1, new RaftNodeIdentifier(HostName, Port));
+            CastVoteFor(GetLatestElection().Term + 1, new RaftNodeIdentifier(HostName, Port));
         }
         
-        protected virtual void CastVote(int term, RaftNodeIdentifier identifier)
+        protected virtual void CastVoteFor(int term, RaftNodeIdentifier voteFor)
         {
-            RaftLeaderElection leaderElection =
-                RaftConsensusRepository.GetOneRaftLeaderElectionWhere(le => le.Term == term);
-            throw new NotImplementedException();
+            RaftLeaderElection leaderElection = GetElectionForTerm(term);
+            RaftVote.Cast(RaftConsensusRepository, term, voteFor);
         }
-        
-        protected virtual void BroadcastVoteRequest()
-        {
-            throw new NotImplementedException();
-        }
+
         
         public RaftServer Server { get; set; }
 
@@ -148,6 +149,11 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 return _raftNodeLock.DoubleCheckLock(ref _raftNode,
                     () => RaftNode.FromIdentifier(this, RaftNodeIdentifier.ForCurrentProcess()));
             }
+        }
+
+        public override string GetHashString(object value)
+        {
+            return CompositeKeyHashProvider.GetStringKeyHash(value);
         }
 
         public DaoRepository LocalRepository
@@ -243,6 +249,18 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
         }
 
+        public virtual void ReceiveVoteRequest(RaftRequest request)
+        {
+            RaftVote vote = RaftVote.Cast(RaftConsensusRepository, request.ElectionTerm, request);
+            RaftClient voteResponseClient = request.GetResponseClient();
+            voteResponseClient.SendVoteResponse(request, vote);
+        }
+        
+        protected virtual void BroadcastVoteRequest()
+        {
+            Parallel.ForEach(GetAllOtherNodes(), (other) => other.GetClient().SendVoteRequest(GetLatestElection().Term));
+        }
+       
         protected decimal GetMajority()
         {
             return (decimal) Math.Ceiling(ArcCount * .51);
@@ -304,17 +322,27 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return ArcsWhere(a => a.GetTypedServiceProvider().NodeState == RaftNodeState.Follower)
                 .Select(a => a.GetTypedServiceProvider()).ToList();
         }
+
+        protected internal List<RaftNode> GetAllOtherNodes()
+        {
+            return ArcsWhere(a => a.GetTypedServiceProvider() != LocalNode).Select(a => a.GetTypedServiceProvider())
+                .ToList();
+        }
         
         protected internal override Arc CreateArc()
         {
             return new Arc<RaftNode>();
         }
 
-        public override string GetHashString(object value)
+        public string GetHashString(object value, HashAlgorithms algorithm = HashAlgorithms.Invalid)
         {
             Args.ThrowIfNull(value);
+            if (algorithm == HashAlgorithms.Invalid)
+            {
+                algorithm = HashAlgorithms.SHA256;
+            }
             return CompositeKeyHashProvider.GetStringKeyHash(value, ",",
-                CompositeKeyHashProvider.GetCompositeKeyProperties(value.GetType()));
+                CompositeKeyHashProvider.GetCompositeKeyProperties(value.GetType()), algorithm);
         }
 
         public override int GetObjectKey(object value)
