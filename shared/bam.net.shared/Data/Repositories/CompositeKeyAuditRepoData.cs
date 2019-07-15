@@ -42,34 +42,34 @@ namespace Bam.Net.Data.Repositories
 
         public HashAlgorithms CompositeKeyAlgorithm { get; set; }
         
-        ulong _key;
-        public ulong CompositeKey
+        ulong _keyId;
+        public ulong CompositeKeyId
         {
             get
             {
-                if (_key == 0 || _key != GetULongKeyHash())
+                if (_keyId == 0 || _keyId != GetULongKeyHash())
                 {
-                    _key = GetULongKeyHash();
+                    _keyId = GetULongKeyHash();
                 }
 
-                return _key;
+                return _keyId;
             }
-            set { _key = value; }
+            set { _keyId = value; }
         }
 
-        string _compositeKeyString;
-        public string CompositeKeyString
+        string _compositeKey;
+        public string CompositeKey
         {
             get
             {
-                if (string.IsNullOrEmpty(_compositeKeyString))
+                if (string.IsNullOrEmpty(_compositeKey))
                 {
-                    _compositeKeyString = GetCompositeKeyString(CompositeKeyAlgorithm);
+                    _compositeKey = GetCompositeKeyString(CompositeKeyAlgorithm);
                 }
 
-                return _compositeKeyString;
+                return _compositeKey;
             }
-            set { _compositeKeyString = value; }
+            set { _compositeKey = value; }
         }
         
         public string GetCompositeKeyString(HashAlgorithms algorithm = HashAlgorithms.SHA256)

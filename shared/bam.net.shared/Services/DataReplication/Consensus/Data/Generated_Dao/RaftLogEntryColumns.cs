@@ -69,18 +69,18 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
                 return new RaftLogEntryColumns("Value");
             }
         }
+        public RaftLogEntryColumns CompositeKeyId
+        {
+            get
+            {
+                return new RaftLogEntryColumns("CompositeKeyId");
+            }
+        }
         public RaftLogEntryColumns CompositeKey
         {
             get
             {
                 return new RaftLogEntryColumns("CompositeKey");
-            }
-        }
-        public RaftLogEntryColumns CompositeKeyString
-        {
-            get
-            {
-                return new RaftLogEntryColumns("CompositeKeyString");
             }
         }
         public RaftLogEntryColumns CreatedBy

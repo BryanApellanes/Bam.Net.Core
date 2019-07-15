@@ -28,7 +28,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
         public static RaftVote Cast(RaftConsensusRepository repository, int term, RaftRequest request)
         {
             Data.RaftLeaderElection election = RaftLeaderElection.ForTerm(term, repository);
-            RaftVote termVote = ForElection(repository, election.CompositeKeyString);
+            RaftVote termVote = ForElection(repository, election.CompositeKey);
             if (termVote == null) // if the current node hasn't voted, vote for the requester
             {
                 termVote = Cast(repository, term, request.RequesterIdentifier());
@@ -39,7 +39,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
         
         public static RaftVote ForElection(RaftConsensusRepository repository, string electionKey)
         {
-            return repository.OneRaftVoteWhere(v => v.ElectionKey == electionKey);
+            return repository.OneRaftVoteWhere(v => v.ElectionKey == electionKey && v.FromNodeIdentifier == RaftNodeIdentifier.ForCurrentProcess().CompositeKey);
         }
 
         public static RaftVote Create(RaftLeaderElection election, RaftNodeIdentifier voter, RaftNodeIdentifier voteFor)
@@ -48,9 +48,9 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
             
             return new RaftVote
             {
-                FromNodeIdentifier = voter.CompositeKeyString,
-                ForNodeIdentifier = voteFor.CompositeKeyString,
-                ElectionKey = election.CompositeKeyString,
+                FromNodeIdentifier = voter.CompositeKey,
+                ForNodeIdentifier = voteFor.CompositeKey,
+                ElectionKey = election.CompositeKey,
                 RaftLeaderElectionId = election.Id
             };
         }

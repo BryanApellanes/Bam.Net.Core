@@ -47,7 +47,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
 
         public static ulong KeyFor(string hostName, int port)
         {
-            return ForHost(hostName, port).CompositeKey;
+            return ForHost(hostName, port).CompositeKeyId;
         }
 
         public static RaftNodeIdentifier FromRepository(RaftConsensusRepository repository, int port = DefaultPort)

@@ -240,14 +240,14 @@ namespace Bam.Net.Data.Repositories
         
         public virtual T LoadByCompositeKey<T>(CompositeKeyAuditRepoData toLoad) where T : CompositeKeyAuditRepoData, new()
         {
-	        return RetrieveByCompositeKey<T>(toLoad.CompositeKeyString);
+	        return RetrieveByCompositeKey<T>(toLoad.CompositeKey);
         }
 
         public virtual T RetrieveByCompositeKey<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
         {
 	        return Query<T>(new Dictionary<string, object>
 	        {
-		        { nameof(CompositeKeyAuditRepoData.CompositeKey), compositeKey}
+		        { nameof(CompositeKeyAuditRepoData.CompositeKeyId), compositeKey}
 	        }).FirstOrDefault();
         }
         
@@ -255,7 +255,7 @@ namespace Bam.Net.Data.Repositories
         {
 	        return Query<T>(new Dictionary<string, object>
 	        {
-		        { nameof(CompositeKeyAuditRepoData.CompositeKeyString), compositeKey}
+		        { nameof(CompositeKeyAuditRepoData.CompositeKey), compositeKey}
 	        }).FirstOrDefault();
         }
         

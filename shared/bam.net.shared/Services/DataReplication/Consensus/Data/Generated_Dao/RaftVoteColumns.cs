@@ -62,18 +62,18 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
                 return new RaftVoteColumns("ElectionKey");
             }
         }
+        public RaftVoteColumns CompositeKeyId
+        {
+            get
+            {
+                return new RaftVoteColumns("CompositeKeyId");
+            }
+        }
         public RaftVoteColumns CompositeKey
         {
             get
             {
                 return new RaftVoteColumns("CompositeKey");
-            }
-        }
-        public RaftVoteColumns CompositeKeyString
-        {
-            get
-            {
-                return new RaftVoteColumns("CompositeKeyString");
             }
         }
         public RaftVoteColumns CreatedBy

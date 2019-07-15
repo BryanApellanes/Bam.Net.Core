@@ -48,18 +48,18 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
                 return new RaftLeaderElectionColumns("Term");
             }
         }
+        public RaftLeaderElectionColumns CompositeKeyId
+        {
+            get
+            {
+                return new RaftLeaderElectionColumns("CompositeKeyId");
+            }
+        }
         public RaftLeaderElectionColumns CompositeKey
         {
             get
             {
                 return new RaftLeaderElectionColumns("CompositeKey");
-            }
-        }
-        public RaftLeaderElectionColumns CompositeKeyString
-        {
-            get
-            {
-                return new RaftLeaderElectionColumns("CompositeKeyString");
             }
         }
         public RaftLeaderElectionColumns CreatedBy

@@ -55,18 +55,18 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
                 return new RaftNodeIdentifierColumns("Port");
             }
         }
+        public RaftNodeIdentifierColumns CompositeKeyId
+        {
+            get
+            {
+                return new RaftNodeIdentifierColumns("CompositeKeyId");
+            }
+        }
         public RaftNodeIdentifierColumns CompositeKey
         {
             get
             {
                 return new RaftNodeIdentifierColumns("CompositeKey");
-            }
-        }
-        public RaftNodeIdentifierColumns CompositeKeyString
-        {
-            get
-            {
-                return new RaftNodeIdentifierColumns("CompositeKeyString");
             }
         }
         public RaftNodeIdentifierColumns CreatedBy

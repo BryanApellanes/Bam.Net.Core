@@ -76,10 +76,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
             ResponseHandler?.Invoke(response);
         }
 
-        public void SendVoteResponse(RaftRequest request, RaftVote vote)
+        public void SendVoteResponse(int term, RaftVote vote)
         {
-            // send response to requester
-            throw new NotImplementedException();
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateVoteResponse(term, vote));
+            ResponseHandler?.Invoke(response);
         }
         
         public void SendVoteRequest(int term)
@@ -92,6 +92,15 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             RaftRequest voteRequest = CreateRaftRequest(null, RaftRequestType.VoteRequest);
             voteRequest.ElectionTerm = term;
+            return voteRequest;
+        }
+
+        protected RaftRequest CreateVoteResponse(int term, RaftVote vote)
+        {
+            RaftRequest voteResponse = CreateRaftRequest(null, RaftRequestType.VoteResponse);
+            voteResponse.ElectionTerm = term;
+            voteResponse.VoteResponse = vote;
+            return voteResponse;
         }
         
         protected RaftRequest CreateRaftRequest(RaftLogEntryWriteRequest writeRequest, RaftRequestType requestType)

@@ -145,31 +145,31 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 		}
 	}
 
-	// property:CompositeKey, columnName: CompositeKey	
-	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
-	public ulong? CompositeKey
+	// property:CompositeKeyId, columnName: CompositeKeyId	
+	[Bam.Net.Data.Column(Name="CompositeKeyId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? CompositeKeyId
 	{
 		get
 		{
-			return GetULongValue("CompositeKey");
+			return GetULongValue("CompositeKeyId");
+		}
+		set
+		{
+			SetValue("CompositeKeyId", value);
+		}
+	}
+
+	// property:CompositeKey, columnName: CompositeKey	
+	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string CompositeKey
+	{
+		get
+		{
+			return GetStringValue("CompositeKey");
 		}
 		set
 		{
 			SetValue("CompositeKey", value);
-		}
-	}
-
-	// property:CompositeKeyString, columnName: CompositeKeyString	
-	[Bam.Net.Data.Column(Name="CompositeKeyString", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string CompositeKeyString
-	{
-		get
-		{
-			return GetStringValue("CompositeKeyString");
-		}
-		set
-		{
-			SetValue("CompositeKeyString", value);
 		}
 	}
 

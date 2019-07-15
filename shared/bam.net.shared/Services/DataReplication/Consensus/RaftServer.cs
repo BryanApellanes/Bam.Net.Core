@@ -26,7 +26,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
                         HandleWriteRequest(request.WriteRequest);
                         break;
                     case RaftRequestType.NotifyLeaderFollowerValueWritten:
-                        Ring.ReceiveFollowerWriteValueNotification(request.WriteRequest);
+                        Ring.ReceiveFollowerWriteValueNotification(request.WriteRequest);                        
                         break;
                     case RaftRequestType.NotifyFollowerLeaderValueCommitted:
                         Ring.ReceiveLeaderCommittedValueNotification(request.WriteRequest);
@@ -36,10 +36,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
                         break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
+                        throw new InvalidOperationException(
+                            $"Invalid raft request received: {request?.ToString() ?? "[null"}");
                         break;
                     default:
                         break;
                 }
+                response.Success = true;
             }
             catch (Exception ex)
             {

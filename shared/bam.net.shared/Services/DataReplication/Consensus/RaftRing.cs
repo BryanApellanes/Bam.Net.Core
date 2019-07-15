@@ -253,7 +253,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             RaftVote vote = RaftVote.Cast(RaftConsensusRepository, request.ElectionTerm, request);
             RaftClient voteResponseClient = request.GetResponseClient();
-            voteResponseClient.SendVoteResponse(request, vote);
+            voteResponseClient.SendVoteResponse(request.ElectionTerm, vote);
+        }
+
+        public virtual void ReceiveVoteResponse(RaftRequest request)
+        {
+            
         }
         
         protected virtual void BroadcastVoteRequest()
