@@ -71,6 +71,27 @@ namespace Bam.Net.Data.Repositories
             }
             set { _compositeKey = value; }
         }
+
+        public bool ExistsIn<T>(IRepository repository) where T : CompositeKeyAuditRepoData, new()
+        {
+            return ExistsIn<T>(repository, out T ignore);
+        }
+        
+        public bool ExistsIn<T>(IRepository repository, out T existing) where T: CompositeKeyAuditRepoData, new()
+        {
+            existing = LoadByCompositeKey<T>(repository);
+            return existing != null;
+        }
+        
+        public virtual T LoadByCompositeKey<T>(IRepository repository) where T : CompositeKeyAuditRepoData, new()
+        {
+            return repository.Query<T>(new {CompositeKey = CompositeKey}).FirstOrDefault();
+        }
+
+        public virtual T LoadByCompositeKeyId<T>(IRepository repository) where T : CompositeKeyAuditRepoData, new()
+        {
+            return repository.Query<T>(new {CompositeKeyId = CompositeKeyId}).FirstOrDefault();
+        }
         
         public string GetCompositeKeyString(HashAlgorithms algorithm = HashAlgorithms.SHA256)
         {
