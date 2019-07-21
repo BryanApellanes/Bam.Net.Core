@@ -36,6 +36,11 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
 
             return termVote;
         }
+
+        public static RaftVote ForElection(RaftConsensusRepository repository, Data.RaftLeaderElection election)
+        {
+            return ForElection(repository, election.CompositeKey);
+        }
         
         public static RaftVote ForElection(RaftConsensusRepository repository, string electionKey)
         {

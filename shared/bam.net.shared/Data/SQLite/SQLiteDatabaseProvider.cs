@@ -78,7 +78,7 @@ namespace Bam.Net.Data
         public void SetDatabases(object instance, string root)
         {
             Type type = instance.GetType();
-            type.GetProperties().Where(pi => pi.PropertyType.Equals(typeof(Database))).Each(new { Instance = instance }, (ctx, pi) =>
+            type.GetProperties().Where(pi => pi.PropertyType == typeof(Database)).Each(new { Instance = instance }, (ctx, pi) =>
             {
                 Database db = new SQLiteDatabase(root, $"{type.Name}.{pi.Name}");
                 if (pi.HasCustomAttributeOfType(out SchemasAttribute schemas))

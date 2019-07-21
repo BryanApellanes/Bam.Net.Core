@@ -6,6 +6,7 @@ using Bam.Net.CoreServices;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 using Bam.Net.Services.DataReplication.Data;
 using Lucene.Net.Index;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,7 +23,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftRing = ring;
             NodeState = RaftNodeState.Follower;
             
-            LocalRepository = new DaoRepository();
+            LocalRepository = new RaftConsensusRepository();
             LocalRepository.AddType<RaftLogEntry>();
             LocalRepository.AddType<RaftVote>();
             LocalRepository.AddType<RaftLeaderElection>();
@@ -74,7 +75,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return new RaftClient(Identifier.HostName, Identifier.Port);
         }
         
-        public DaoRepository LocalRepository { get; set; }
+        public RaftConsensusRepository LocalRepository { get; set; }
 
         public RaftNodeState NodeState { get; set; }
         

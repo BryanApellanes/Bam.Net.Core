@@ -30,9 +30,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Server = new RaftServer(this);
             StartHeartbeat();
         }
-        
-        public string HostName { get; set; }
-        public int Port { get; set; }
+
+        public string HostName => LocalNode?.Identifier?.HostName;
+        public int Port => (LocalNode?.Identifier?.Port).Value;
 
         public ILogger Logger { get; }
         
@@ -156,7 +156,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return CompositeKeyHashProvider.GetStringKeyHash(value);
         }
 
-        public DaoRepository LocalRepository
+        public RaftConsensusRepository LocalRepository
         {
             get { return LocalNode.LocalRepository; }
         }
@@ -258,7 +258,21 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public virtual void ReceiveVoteResponse(RaftRequest request)
         {
-            
+            RaftLeaderElection LatestElection = GetLatestElection();
+            RaftLeaderElection electionForRequestedTerm = GetElectionForTerm(request.ElectionTerm);
+            if (LatestElection.Term == electionForRequestedTerm.Term)
+            {
+                // get the local vote for the response if it exists
+                RaftVote vote = RaftVote.ForElection(LocalRepository, electionForRequestedTerm);
+                // save it if it doesn't
+                if (vote == null)
+                {
+                    LocalRepository.Save(request.VoteResponse);
+                }
+                // check if we've received the majority of votes
+                // become leader
+            }
+            throw new NotImplementedException();
         }
         
         protected virtual void BroadcastVoteRequest()

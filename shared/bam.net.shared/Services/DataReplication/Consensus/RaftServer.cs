@@ -18,7 +18,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
             try
             {
                 Args.ThrowIfNull(request, "RaftRequest");
-                Args.ThrowIfNull(request.WriteRequest, "RaftRequest.WriteRequest");
                 
                 switch (request.RequestType)
                 {
@@ -34,10 +33,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
                     case RaftRequestType.VoteRequest:
                         Ring.ReceiveVoteRequest(request);
                         break;
+                    case RaftRequestType.VoteResponse:
+                        Ring.ReceiveVoteResponse(request);
+                        break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
                         throw new InvalidOperationException(
-                            $"Invalid raft request received: {request?.ToString() ?? "[null"}");
+                            $"Invalid raft request received: {request?.ToString() ?? "[null]"}");
                         break;
                     default:
                         break;
