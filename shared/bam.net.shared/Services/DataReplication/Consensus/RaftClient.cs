@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -76,6 +77,19 @@ namespace Bam.Net.Services.DataReplication.Consensus
             ResponseHandler?.Invoke(response);
         }
 
+        public RaftResponse SendJoinRaftRequest()
+        {
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateJoinRaftRequest());
+            ResponseHandler?.Invoke(response);
+            return response.Body;
+        }
+
+        public void SendHeartbeat()
+        {
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateHeartbeatRequest());
+            ResponseHandler?.Invoke(response);
+        }
+        
         public void SendVoteResponse(int term, RaftVote vote)
         {
             StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateVoteResponse(term, vote));
@@ -88,6 +102,16 @@ namespace Bam.Net.Services.DataReplication.Consensus
             ResponseHandler?.Invoke(response);
         }
 
+        protected RaftRequest CreateHeartbeatRequest()
+        {
+            return CreateRaftRequest(null, RaftRequestType.Heartbeat);
+        }
+
+        protected  RaftRequest CreateJoinRaftRequest()
+        {
+            return CreateRaftRequest(null, RaftRequestType.JoinRaft);
+        }
+        
         protected RaftRequest CreateVoteRequest(int term)
         {
             RaftRequest voteRequest = CreateRaftRequest(null, RaftRequestType.VoteRequest);

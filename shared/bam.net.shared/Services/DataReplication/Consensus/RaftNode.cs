@@ -24,10 +24,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
             NodeState = RaftNodeState.Follower;
             
             LocalRepository = new RaftConsensusRepository();
-            LocalRepository.AddType<RaftLogEntry>();
-            LocalRepository.AddType<RaftVote>();
-            LocalRepository.AddType<RaftLeaderElection>();
-            
             RaftReplicationLog = new RaftReplicationLog();
         }
 

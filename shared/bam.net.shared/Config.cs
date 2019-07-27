@@ -28,6 +28,7 @@ namespace Bam.Net
 
         private Config(bool subscribeToChanges)
         {
+            ApplicationName = ProcessApplicationNameProvider.Current.GetApplicationName();
             AppSettings = Read(out FileInfo file);
             File = file;
 
@@ -57,6 +58,7 @@ namespace Bam.Net
 
         private Config(string applicationName, bool subscribeToChanges)
         {
+            ApplicationName = applicationName;
             AppSettings = Read(applicationName, out FileInfo file);
             File = file;
 
@@ -80,6 +82,7 @@ namespace Bam.Net
             }
         }
         
+        public string ApplicationName { get; private set; }
         
         static Config _current;
         static object _currentLock = new object();

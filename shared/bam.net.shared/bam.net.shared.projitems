@@ -558,10 +558,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftNodeIdentifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\IRaftLogEntryPropertyHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftEventSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryCommittedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryPropertyHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryWrittenEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNodeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRequestType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftLogEntry.cs" />

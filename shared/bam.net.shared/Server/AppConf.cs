@@ -66,6 +66,11 @@ namespace Bam.Net.Server
             return new AppConf { Name = DefaultConfiguration.GetAppSetting("ApplicationName", ServiceProxy.Secure.Application.Unknown.Name) };
         }
 
+        public static AppConf FromConfig()
+        {
+            return new AppConf{ Name = Config.Current.ApplicationName};
+        }
+
         Fs _appRoot;
         object _appRootLock = new object();
         [JsonIgnore]

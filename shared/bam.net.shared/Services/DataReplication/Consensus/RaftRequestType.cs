@@ -8,6 +8,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
         NotifyFollowerLeaderValueCommitted,
         
         VoteRequest,
-        VoteResponse
+        VoteResponse,
+        
+        Heartbeat,
+        
+        JoinRaft
     }
 }

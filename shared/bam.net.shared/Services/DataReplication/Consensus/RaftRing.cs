@@ -8,9 +8,12 @@ using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Presentation.Handlebars;
+using Bam.Net.Server;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
+using MongoDB.Driver.Core.WireProtocol.Messages.Encoders.JsonEncoders;
+using UnityEngine.SocialPlatforms;
 using RaftFollowerWriteLog = Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog;
 using RaftLeaderElection = Bam.Net.Services.DataReplication.Consensus.Data.RaftLeaderElection;
 using RaftNodeIdentifier = Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier;
@@ -19,17 +22,42 @@ using RaftVote = Bam.Net.Services.DataReplication.Consensus.Data.RaftVote;
 namespace Bam.Net.Services.DataReplication.Consensus
 {
     /// <summary>
-    /// RaftRing provides local state tracking for a raft consensus implementation.  It also manages communication between RaftNodes.
+    /// RaftRing provides local state tracking for a raft consensus implementation by managing communication between a local RaftNode and other RaftNodes participating in the protocol.
     /// </summary>
     public class RaftRing : Ring<RaftNode>
     {
-        public RaftRing()
+        public RaftRing(RaftConsensusRepository raftConsensusRepository, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null)
         {
+            RaftConsensusRepository = raftConsensusRepository;
+            HeartbeatTimeout = 75;
             Logger = Log.Default;
-            ElectionTimeout = RandomNumber.Between(150, 300);
-            Server = new RaftServer(this);
-            StartHeartbeat();
+            AppConf = appConf ?? AppConf.FromConfig();
+            EventSource = new RaftEventSource(raftConsensusRepository, AppConf, Logger);
+            Server = new RaftServer(this, port);
         }
+
+        public static RaftRing FromConfig(RaftConfig config)
+        {
+            RaftRing result = new RaftRing(new RaftConsensusRepository());
+            HashSet<RaftNodeIdentifier> nodeIdentifiers = new HashSet<RaftNodeIdentifier>();
+            foreach (RaftNodeInfo nodeInfo in config.ServerNodes)
+            {
+                if (!string.IsNullOrEmpty(nodeInfo.HostName))
+                {
+                    nodeIdentifiers.Add(new RaftNodeIdentifier(nodeInfo.HostName, nodeInfo.Port));
+                }
+            }
+
+            foreach (RaftNodeIdentifier identifier in nodeIdentifiers)
+            {
+                result.AddNode(identifier);
+            }
+
+            return result;
+        }
+        
+        public AppConf AppConf { get; private set; }
+        public RaftEventSource EventSource { get; private set; }
 
         public string HostName => LocalNode?.Identifier?.HostName;
         public int Port => (LocalNode?.Identifier?.Port).Value;
@@ -38,44 +66,133 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftConsensusRepository RaftConsensusRepository { get; set; }
 
+        public RaftNodeIdentifier AddNode(RaftNodeIdentifier identifier)
+        {
+            return AddNode(identifier.HostName, identifier.Port);
+        }
+        
         public RaftNodeIdentifier AddNode(string hostName, int port)
         {
             RaftNode newNode = RaftNode.ForHost(this, hostName, port);
-            newNode.FollowerValueWritten += OnFollowerValueWritten;
-            newNode.LeaderValueWritten += OnLeaderValueWritten;
-            newNode.LeaderValueCommitted += OnLeaderValueCommitted;
+            if (!LocalNode.Identifier.HostName.Equals(hostName) ||
+                LocalNode.Identifier.Port != port)
+            {
+                AddArc(newNode);
+                JoinRaft(newNode);
+            }
             
-            AddArc(newNode);            
-            return newNode.Identifier;
+            return RaftConsensusRepository.GetByCompositeKey<RaftNodeIdentifier>(newNode.Identifier);
+        }
+
+        public static RaftRing StartFromConfig(RaftConfig config)
+        {
+            RaftRing fromConfig = RaftRing.FromConfig(config);
+            fromConfig.StartRaftProtocol();
+            return fromConfig;
         }
         
+        public void StartRaftProtocol()
+        {
+            Server.Start();
+            ResetElectionTimeout();
+        }
+
+        public RaftResponse JoinRaft(RaftNode raftNode)
+        {
+            Args.ThrowIfNull(raftNode, "raftNode");
+            return JoinRaft(raftNode.Identifier.HostName, raftNode.Identifier.Port);
+        }
+
+        public RaftResponse JoinRaft(string hostName, int port)
+        {
+            Args.ThrowIfNullOrEmpty(hostName);
+            Args.ThrowIf(port <= 0, "port must be a valid network port"); 
+            RaftClient client = new RaftClient(hostName, port);
+            return client.SendJoinRaftRequest();
+        }
+        
+        public event Action<RaftRequest> RequestReceived;
+        
         public int ElectionTimeout { get; set; }
+        public int HeartbeatTimeout { get; set; }
         public int Heartbeats { get; set; }
+        
+        /// <summary>
+        /// Gets the LatestElection.
+        /// </summary>
         public RaftLeaderElection LatestElection { get; private set; }
 
-        public Task FollowerHeartbeat { get; private set; }
-
-        bool _stopHeartbeat;
-        public void StartHeartbeat()
+        public Task LeaderHeartBeat { get; private set; }
+        public Task FollowerHeartbeatCheck { get; private set; }
+        
+        bool _stopLeaderHeartbeat;
+        public void StartLeaderHeartbeat()
         {
-            _stopHeartbeat = false;
-            FollowerHeartbeat = Task.Run(FollowerHeartbeatLoop);
+            _stopLeaderHeartbeat = false;
+            LeaderHeartBeat = Task.Run(LeaderHeartbeatLoop);
         }
 
-        public void StopHeartbeat()
+        public void StopLeaderHeartbeat()
         {
-            _stopHeartbeat = true;
+            _stopLeaderHeartbeat = true;
         }
 
-        protected void FollowerHeartbeatLoop()
+        public void RestartLeaderHeartbeat()
+        {
+            StopLeaderHeartbeat();
+            StartLeaderHeartbeat();
+        }
+
+        protected void ReceiveRequestAsync(RaftRequest request)
+        {
+            Task.Run(() => RequestReceived?.Invoke(request));
+        }
+        
+        protected void LeaderHeartbeatLoop()
         {
             try
             {
-                while (!_stopHeartbeat)
+                while (!_stopLeaderHeartbeat && LocalNode.NodeState == RaftNodeState.Leader)
+                {
+                    Parallel.ForEach(GetAllOtherNodes(), node => node.GetClient().SendHeartbeat());
+                    Thread.Sleep(HeartbeatTimeout);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.AddEntry("Exception in {0}: {1}", ex, nameof(LeaderHeartbeatLoop), ex.Message);
+                RestartLeaderHeartbeat();
+            }
+        }
+        
+        bool _stopFollowerHeartbeatCheck;
+        public void StartFollowerHeartbeatCheck()
+        {
+            _stopFollowerHeartbeatCheck = false;
+            FollowerHeartbeatCheck = Task.Run(FollowerHeartbeatCheckLoop);
+        }
+
+        public void RestartFollowerHeartbeatCheck()
+        {
+            StopFollowerHeartbeatCheck();
+            Thread.Sleep(ElectionTimeout);
+            StartFollowerHeartbeatCheck();
+        }
+        
+        public void StopFollowerHeartbeatCheck()
+        {
+            _stopFollowerHeartbeatCheck = true;
+        }
+
+        protected void FollowerHeartbeatCheckLoop()
+        {
+            try
+            {
+                while (!_stopFollowerHeartbeatCheck)
                 {
                     int currentBeats = Heartbeats;
                     Thread.Sleep(ElectionTimeout);
-                    if (currentBeats == Heartbeats && !_stopHeartbeat) // didn't increment = didn't receive a leader heartbeat
+                    if (currentBeats == Heartbeats && !_stopFollowerHeartbeatCheck) // didn't increment = didn't receive a leader heartbeat
                     {
                         if (LocalNode.NodeState == RaftNodeState.Follower)
                         {
@@ -87,11 +204,20 @@ namespace Bam.Net.Services.DataReplication.Consensus
             }
             catch (Exception ex)
             {
-                Logger.AddEntry("Exception in {0}: {1}", ex, nameof(FollowerHeartbeatLoop), ex.Message);
+                Logger.AddEntry("Exception in {0}: {1}", ex, nameof(FollowerHeartbeatCheckLoop), ex.Message);
+                RestartFollowerHeartbeatCheck();
             }
         }
 
-        protected virtual void ReceiveHeartbeat()
+        protected virtual void ResetElectionTimeout()
+        {
+            AddHeartbeat();
+            StopFollowerHeartbeatCheck();
+            ElectionTimeout = RandomNumber.Between(150, 300);
+            RestartFollowerHeartbeatCheck();
+        }
+
+        protected virtual void AddHeartbeat()
         {
             ++Heartbeats;
         }
@@ -100,21 +226,29 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             LocalNode.NodeState = RaftNodeState.Candidate;
             
-            CastVoteForSelf();
-            BroadcastVoteRequest();
+            RaftLeaderElection election = CastVoteForSelf();
+            BroadcastVoteRequest(election.Term);
         }
 
+        object _latestElectionLock = new object();
+        /// <summary>
+        /// Thread safe way of accessing the latest election.
+        /// </summary>
+        /// <returns></returns>
         protected RaftLeaderElection GetLatestElection()
         {
-            if (LatestElection == null)
+            lock (_latestElectionLock)
             {
-                LatestElection = RaftConsensusRepository.TopRaftLeaderElectionsWhere(1, e => e.Term > 0,
-                    Order.By<RaftLeaderElectionColumns>(c => c.Term, SortOrder.Descending)).FirstOrDefault();
-
                 if (LatestElection == null)
                 {
-                    LatestElection = new RaftLeaderElection {Term = 1};
-                    LatestElection = RaftConsensusRepository.Save(LatestElection);
+                    LatestElection = RaftConsensusRepository.TopRaftLeaderElectionsWhere(1, e => e.Term > 0,
+                        Order.By<RaftLeaderElectionColumns>(c => c.Term, SortOrder.Descending)).FirstOrDefault();
+
+                    if (LatestElection == null)
+                    {
+                        LatestElection = new RaftLeaderElection {Term = 1};
+                        LatestElection = RaftConsensusRepository.Save(LatestElection);
+                    }
                 }
             }
 
@@ -126,15 +260,17 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return RaftLeaderElection.ForTerm(term, RaftConsensusRepository);
         }
         
-        protected virtual void CastVoteForSelf()
+        protected virtual RaftLeaderElection CastVoteForSelf()
         {
-            CastVoteFor(GetLatestElection().Term + 1, new RaftNodeIdentifier(HostName, Port));
+            return CastVoteFor(GetLatestElection().Term + 1, LocalNode.Identifier);
         }
         
-        protected virtual void CastVoteFor(int term, RaftNodeIdentifier voteFor)
+        protected virtual RaftLeaderElection CastVoteFor(int term, RaftNodeIdentifier voteFor)
         {
             RaftLeaderElection leaderElection = GetElectionForTerm(term);
-            RaftVote.Cast(RaftConsensusRepository, term, voteFor);
+            RaftVote.Cast(RaftConsensusRepository, leaderElection, LocalNode.Identifier, voteFor);
+            ResetElectionTimeout();
+            return leaderElection;
         }
 
         
@@ -147,7 +283,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
             get
             {
                 return _raftNodeLock.DoubleCheckLock(ref _raftNode,
-                    () => RaftNode.FromIdentifier(this, RaftNodeIdentifier.ForCurrentProcess()));
+                    () =>
+                    {
+                        RaftNode local = RaftNode.FromIdentifier(this, RaftNodeIdentifier.ForCurrentProcess());
+                        local.FollowerValueWritten += OnFollowerValueWritten;
+                        local.LeaderValueWritten += OnLeaderValueWritten;
+                        local.LeaderValueCommitted += OnLeaderValueCommitted;
+                        return local;
+                    });
             }
         }
 
@@ -249,8 +392,21 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
         }
 
+        public virtual void ReceiveJoinRaftRequest(RaftRequest request)
+        {
+            ReceiveRequestAsync(request);
+            AddNode(request.RequesterHostName, request.RequesterPort);
+        }
+        
+        public virtual void ReceiveHeartbeat(RaftRequest request)
+        {
+            ReceiveRequestAsync(request);
+            ResetElectionTimeout();
+        }
+        
         public virtual void ReceiveVoteRequest(RaftRequest request)
         {
+            ReceiveRequestAsync(request);
             RaftVote vote = RaftVote.Cast(RaftConsensusRepository, request.ElectionTerm, request);
             RaftClient voteResponseClient = request.GetResponseClient();
             voteResponseClient.SendVoteResponse(request.ElectionTerm, vote);
@@ -258,6 +414,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public virtual void ReceiveVoteResponse(RaftRequest request)
         {
+            ReceiveRequestAsync(request);
             RaftLeaderElection LatestElection = GetLatestElection();
             RaftLeaderElection electionForRequestedTerm = GetElectionForTerm(request.ElectionTerm);
             if (LatestElection.Term == electionForRequestedTerm.Term)
@@ -269,15 +426,50 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 {
                     LocalRepository.Save(request.VoteResponse);
                 }
-                // check if we've received the majority of votes
-                // become leader
+                
+                if (LocalNodeWonLatestElection())
+                {
+                    BecomeLeader();
+                }
+                else
+                {
+                    BecomeFollower();
+                }
             }
-            throw new NotImplementedException();
+        }
+
+        protected void BecomeLeader()
+        {
+            if (LocalNode.NodeState != RaftNodeState.Leader)
+            {
+                LocalNode.NodeState = RaftNodeState.Leader;
+                StopFollowerHeartbeatCheck();
+                RestartLeaderHeartbeat();
+            }
+        }
+
+        protected void BecomeFollower()
+        {
+            if (LocalNode.NodeState != RaftNodeState.Follower)
+            {
+                LocalNode.NodeState = RaftNodeState.Follower;
+                StopLeaderHeartbeat();
+                RestartFollowerHeartbeatCheck();
+            }
         }
         
-        protected virtual void BroadcastVoteRequest()
+        protected bool LocalNodeWonLatestElection()
         {
-            Parallel.ForEach(GetAllOtherNodes(), (other) => other.GetClient().SendVoteRequest(GetLatestElection().Term));
+            RaftLeaderElection election = GetLatestElection();
+            decimal votesReceived = (decimal)LocalRepository.CountRaftVotesWhere(v =>
+                v.ElectionKey == election.CompositeKey && v.ForNodeIdentifier == LocalNode.Identifier.CompositeKey);
+
+            return votesReceived >= GetMajority();
+        }
+        
+        protected virtual void BroadcastVoteRequest(int term)
+        {
+            Parallel.ForEach(GetAllOtherNodes(), (other) => other.GetClient().SendVoteRequest(term));
         }
        
         protected decimal GetMajority()

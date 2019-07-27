@@ -56,6 +56,16 @@ namespace Bam.Net.Services.Events
             return instance;
         }
 
+        public virtual void TriggerAsync(string eventName)
+        {
+            Task.Run(() => Trigger(eventName));
+        }
+        
+        public virtual void TriggerAsync(string eventName, EventArgs args)
+        {
+            Task.Run(() => Trigger(eventName, args));
+        }
+        
         public virtual Task Trigger(string eventName)
         {
             InvokeEventSubscriptions(eventName);

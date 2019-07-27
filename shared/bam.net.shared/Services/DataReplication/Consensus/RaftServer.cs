@@ -1,12 +1,14 @@
 using System;
 using Bam.Net.Server.Streaming;
+using Bam.Net.Services.DataReplication.Consensus.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
     public class RaftServer : SecureStreamingServer<RaftRequest, RaftResponse>
     {
-        public RaftServer(RaftRing ring)
+        public RaftServer(RaftRing ring, int port = RaftNodeIdentifier.DefaultPort)
         {
+            Port = port;
             Ring = ring;
         }
         
@@ -35,6 +37,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
                         break;
                     case RaftRequestType.VoteResponse:
                         Ring.ReceiveVoteResponse(request);
+                        break;
+                    case RaftRequestType.Heartbeat:
+                        Ring.ReceiveHeartbeat(request);
+                        break;
+                    case RaftRequestType.JoinRaft:
+                        Ring.ReceiveJoinRaftRequest(request);
                         break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
