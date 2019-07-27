@@ -17,7 +17,7 @@ namespace Bam.Net.Data
         public abstract DbParameter BuildParameter(string name, object value);
         public abstract DbParameter BuildParameter(IParameterInfo c);
 
-        public DbParameter[] BuildParamters(InComparison c)
+        public DbParameter[] BuildParameters(InComparison c)
         {
             DbParameter[] results = new DbParameter[c.Parameters.Length];
 
@@ -40,7 +40,7 @@ namespace Bam.Net.Data
                 {
                     if (c is InComparison inC)
                     {
-                        parameters.AddRange(BuildParamters(inC));
+                        parameters.AddRange(BuildParameters(inC));
                     }
                     else
                     {
