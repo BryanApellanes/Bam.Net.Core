@@ -1157,16 +1157,20 @@ namespace Bam.Net
 
         /// <summary>
         /// Iterate over the current IEnumerable passing
-        /// each element to the specified function
+        /// each element to the specified function, if the specified function returns false the remainder of the
+        /// iteration is stopped. 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
+        /// <param name="enumerable"></param>
         /// <param name="function"></param>
-        public static void Each<T>(this IEnumerable<T> arr, Func<T, bool> function)
+        public static void Each<T>(this IEnumerable<T> enumerable, Func<T, bool> function)
         {
-            foreach (T item in arr)
+            foreach (T item in enumerable)
             {
-                function(item);
+                if (!function(item))
+                {
+                    break;
+                }
             }
         }
 
@@ -1201,11 +1205,20 @@ namespace Bam.Net
         /// false to stop
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
+        /// <param name="enumerable"></param>
         /// <param name="function"></param>
-        public static void Each<T>(this IEnumerable<T> arr, Func<T, int, bool> function)
+        public static void Each<T>(this IEnumerable<T> enumerable, Func<T, int, bool> function)
         {
-            arr.ToArray().Each(function);
+            int counter = 0;
+            foreach (T item in enumerable)
+            {
+                if (!function(item, counter))
+                {
+                    break;
+                }
+
+                counter++;
+            }
         }
 
         /// <summary>
@@ -1237,11 +1250,16 @@ namespace Bam.Net
         /// each element to the specified action
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
+        /// <param name="enumerable"></param>
         /// <param name="action"></param>
-        public static void Each<T>(this IEnumerable<T> arr, Action<T, int> action)
+        public static void Each<T>(this IEnumerable<T> enumerable, Action<T, int> action)
         {
-            arr.ToArray().Each(action);
+            int counter = 0;
+            foreach (T item in enumerable)
+            {
+                action(item, counter);
+                counter++;
+            }
         }
 
         /// <summary>
@@ -1263,9 +1281,12 @@ namespace Bam.Net
             }
         }
 
-        public static void Each<T>(this IEnumerable<T> arr, dynamic context, Action<dynamic, T> action)
+        public static void Each<T>(this IEnumerable<T> enumerable, dynamic context, Action<dynamic, T> action)
         {
-            Each<T>(arr.ToArray(), context, action);
+            foreach (T item in enumerable)
+            {
+                action(context, item);
+            }
         }
 
         public static void Each<T>(this T[] arr, dynamic context, Action<dynamic, T> action)

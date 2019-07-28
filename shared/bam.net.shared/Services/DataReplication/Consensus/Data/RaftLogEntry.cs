@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Bam.Net.Data.Repositories;
+using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 
 namespace Bam.Net.Services.DataReplication.Consensus.Data
 {
@@ -12,7 +13,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
         public RaftLogEntryState State { get; set; }
 
         /// <summary>
-        /// The universal identifier for the Instance.
+        /// The universal identifier for the data value Instance.
         /// </summary>
         [CompositeKey]
         public ulong InstanceId { get; set; }
@@ -31,6 +32,16 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
             return GetULongKeyHash();
         }
 
+        /// <summary>
+        /// Ensures that the current RaftLogEntry exists in the specified repository.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <returns></returns>
+        public RaftLogEntry GetFromRepository(RaftConsensusRepository repository)
+        {
+            return repository.GetByCompositeKey<RaftLogEntry>(this);
+        } 
+        
         public static IEnumerable<RaftLogEntry> FromInstance(CompositeKeyAuditRepoData instance)
         {
             if (instance is RaftLogEntry raftLogEntry)

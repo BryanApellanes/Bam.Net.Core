@@ -565,6 +565,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftLogEntryWrittenEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftNodeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRequestType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftLogEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftLeaderElection.cs" />

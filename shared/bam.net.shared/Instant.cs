@@ -50,6 +50,10 @@ namespace Bam.Net
             return $"{Month}/{Day}/{Year};{Hour}.{Minute}.{Second}.{Millisecond}";
         }
 
+        public static Instant UtcNow => new Instant();
+
+        public static Instant Now => new Instant(DateTime.Now);
+        
         public string ToString(Func<Instant, string> toStringer)
         {
             return toStringer(this);

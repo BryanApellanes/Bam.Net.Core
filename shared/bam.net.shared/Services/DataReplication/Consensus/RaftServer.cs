@@ -24,25 +24,25 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 switch (request.RequestType)
                 {
                     case RaftRequestType.WriteValue:
-                        HandleWriteRequest(request.WriteRequest);
+                        response.Data = Ring.ReceiveWriteRequest(request);
                         break;
                     case RaftRequestType.NotifyLeaderFollowerValueWritten:
-                        Ring.ReceiveFollowerWriteValueNotification(request.WriteRequest);                        
+                        response.Data = Ring.ReceiveFollowerWriteValueNotification(request);                        
                         break;
                     case RaftRequestType.NotifyFollowerLeaderValueCommitted:
-                        Ring.ReceiveLeaderCommittedValueNotification(request.WriteRequest);
+                        response.Data = Ring.ReceiveLeaderCommittedValueNotification(request);
                         break;
                     case RaftRequestType.VoteRequest:
-                        Ring.ReceiveVoteRequest(request);
+                        response.Data = Ring.ReceiveVoteRequest(request);
                         break;
                     case RaftRequestType.VoteResponse:
-                        Ring.ReceiveVoteResponse(request);
+                        response.Data = Ring.ReceiveVoteResponse(request);
                         break;
                     case RaftRequestType.Heartbeat:
-                        Ring.ReceiveHeartbeat(request);
+                        response.Data = Ring.ReceiveHeartbeat(request);
                         break;
                     case RaftRequestType.JoinRaft:
-                        Ring.ReceiveJoinRaftRequest(request);
+                        response.Data = Ring.ReceiveJoinRaftRequest(request);
                         break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
@@ -63,17 +63,5 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return response;
         }
 
-        protected virtual void HandleWriteRequest(RaftLogEntryWriteRequest writeRequest)
-        {
-            if (writeRequest.TargetNodeState == RaftNodeState.Leader)
-            {
-                Ring.LeaderWriteValue(writeRequest);
-            }
-
-            if (writeRequest.TargetNodeState == RaftNodeState.Follower)
-            {
-                Ring.FollowerWriteValue(writeRequest);
-            }
-        }
     }
 }

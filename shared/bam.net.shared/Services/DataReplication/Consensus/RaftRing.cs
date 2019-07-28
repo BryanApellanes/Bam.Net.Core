@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -12,6 +13,7 @@ using Bam.Net.Server;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
+using CsQuery.ExtensionMethods;
 using MongoDB.Driver.Core.WireProtocol.Messages.Encoders.JsonEncoders;
 using UnityEngine.SocialPlatforms;
 using RaftFollowerWriteLog = Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog;
@@ -40,6 +42,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             RaftRing result = new RaftRing(new RaftConsensusRepository());
             HashSet<RaftNodeIdentifier> nodeIdentifiers = new HashSet<RaftNodeIdentifier>();
+            if (config.IncludeLocalNode)
+            {
+                nodeIdentifiers.Add(RaftNodeIdentifier.ForCurrentProcess());
+            }
             foreach (RaftNodeInfo nodeInfo in config.ServerNodes)
             {
                 if (!string.IsNullOrEmpty(nodeInfo.HostName))
@@ -47,13 +53,18 @@ namespace Bam.Net.Services.DataReplication.Consensus
                     nodeIdentifiers.Add(new RaftNodeIdentifier(nodeInfo.HostName, nodeInfo.Port));
                 }
             }
-
+            
             foreach (RaftNodeIdentifier identifier in nodeIdentifiers)
             {
                 result.AddNode(identifier);
             }
 
             return result;
+        }
+
+        public void ForEachRaftNode(Action<RaftNode> action)
+        {
+            ForEachArcService(action);
         }
         
         public AppConf AppConf { get; private set; }
@@ -78,7 +89,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 LocalNode.Identifier.Port != port)
             {
                 AddArc(newNode);
-                JoinRaft(newNode);
             }
             
             return RaftConsensusRepository.GetByCompositeKey<RaftNodeIdentifier>(newNode.Identifier);
@@ -97,12 +107,23 @@ namespace Bam.Net.Services.DataReplication.Consensus
             ResetElectionTimeout();
         }
 
+        /// <summary>
+        /// Join the raft protocol where the specified node is already a member.
+        /// </summary>
+        /// <param name="raftNode"></param>
+        /// <returns></returns>
         public RaftResponse JoinRaft(RaftNode raftNode)
         {
             Args.ThrowIfNull(raftNode, "raftNode");
             return JoinRaft(raftNode.Identifier.HostName, raftNode.Identifier.Port);
         }
 
+        /// <summary>
+        /// Join the raft protocol where the specified node is already a member.
+        /// </summary>
+        /// <param name="hostName"></param>
+        /// <param name="port"></param>
+        /// <returns></returns>
         public RaftResponse JoinRaft(string hostName, int port)
         {
             Args.ThrowIfNullOrEmpty(hostName);
@@ -111,6 +132,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return client.SendJoinRaftRequest();
         }
         
+        /// <summary>
+        /// The event that fires when a RaftRequest is received.  Handlers of this event
+        /// are executed asynchronously; this event is intended for diagnostics and debugging.
+        /// </summary>
         public event Action<RaftRequest> RequestReceived;
         
         public int ElectionTimeout { get; set; }
@@ -118,7 +143,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public int Heartbeats { get; set; }
         
         /// <summary>
-        /// Gets the LatestElection.
+        /// Gets the LatestElection, may be null if GetLatestElection has not been called.
         /// </summary>
         public RaftLeaderElection LatestElection { get; private set; }
 
@@ -235,11 +260,11 @@ namespace Bam.Net.Services.DataReplication.Consensus
         /// Thread safe way of accessing the latest election.
         /// </summary>
         /// <returns></returns>
-        protected RaftLeaderElection GetLatestElection()
+        protected RaftLeaderElection GetLatestElection(bool reload = false)
         {
             lock (_latestElectionLock)
             {
-                if (LatestElection == null)
+                if (LatestElection == null || reload)
                 {
                     LatestElection = RaftConsensusRepository.TopRaftLeaderElectionsWhere(1, e => e.Term > 0,
                         Order.By<RaftLeaderElectionColumns>(c => c.Term, SortOrder.Descending)).FirstOrDefault();
@@ -305,48 +330,113 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
         
         /// <summary>
-        /// Write the specified key value pair by delegating to the local node.
+        /// Write the specified key value pair by delegating to the local node.  This request is distributed to the other nodes in the raft.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         public void WriteValue(CompositeKeyAuditRepoData data)
         {
-            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromData(data).ToList())
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromData(data))
             {
                 WriteValue(writeRequest);
             }
         }
 
         /// <summary>
-        /// Write the specified request by delegating to the local node.
+        /// Write the specified request asynchronously by delegating to the local node.  This request is distributed to the other nodes in the raft.
         /// </summary>
         /// <param name="writeRequest"></param>
         /// <returns></returns>
         public void WriteValue(RaftLogEntryWriteRequest writeRequest)
         {
-            LocalNode.WriteValue(writeRequest);
+            Task.Run(() =>
+            {
+                try
+                {
+                    LocalNode.WriteValue(writeRequest);
+                }
+                catch (Exception ex)
+                {
+                    Logger.AddEntry("Error writing value: {0}", ex, ex.Message);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Receive the specified request and write as leader or follower as appropriate for the current LocalNode.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public virtual RaftResult ReceiveWriteRequest(RaftRequest request)
+        {
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                Args.ThrowIfNull(request, "request");
+                Args.ThrowIfNull(request.WriteRequest, "request.WriteRequest");
+                
+                if (request.WriteRequest.TargetNodeState == RaftNodeState.Leader)
+                {
+                    LeaderWriteValue(request);
+                }
+                else if (request.WriteRequest.TargetNodeState == RaftNodeState.Follower)
+                {
+                    FollowerWriteValue(request.WriteRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
         }
 
         /// <summary>
         /// Write the specified value to the local repo if we are the leader.
         /// </summary>
-        /// <param name="writeRequest"></param>
-        public virtual void LeaderWriteValue(RaftLogEntryWriteRequest writeRequest)
+        /// <param name="request"></param>
+        protected virtual void LeaderWriteValue(RaftRequest request)
         {
-            LocalNode.LeaderWriteValue(writeRequest);
+            LatestElection = GetLatestElection(true);
+            if (request.ElectionTerm > LatestElection.Term)
+            {
+                BecomeFollower();
+                LocalNode.FollowerWriteValue(request.WriteRequest);
+            }
+            else
+            {
+                LocalNode.LeaderWriteValue(request.WriteRequest);
+            }
         }
         
         /// <summary>
         /// Write the specified value to the local repo if we are a follower.
         /// </summary>
         /// <param name="writeRequest"></param>
-        public virtual void FollowerWriteValue(RaftLogEntryWriteRequest writeRequest)
+        protected virtual void FollowerWriteValue(RaftLogEntryWriteRequest writeRequest)
         {
             LocalNode.FollowerWriteValue(writeRequest);
         }
 
-        public virtual void ReceiveFollowerWriteValueNotification(RaftLogEntryWriteRequest writeRequest)
+        public virtual RaftResult ReceiveFollowerWriteValueNotification(RaftRequest request)
+        {
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                Args.ThrowIfNull(request, "request");
+                ReceiveFollowerWriteValueNotification(request.WriteRequest);
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+
+        protected virtual void ReceiveFollowerWriteValueNotification(RaftLogEntryWriteRequest writeRequest)
         {
             RaftFollowerWriteLog followerWriteLog = RaftFollowerWriteLog.For(HostName, Port, writeRequest);
             // track the follower write
@@ -358,24 +448,56 @@ namespace Bam.Net.Services.DataReplication.Consensus
             List<RaftFollowerWriteLog> allFollowerWrites = LocalRepository.Query<RaftFollowerWriteLog>(
                 Filter.Where(nameof(RaftFollowerWriteLog.LogEntryIdentifier)) == followerWriteLog.LogEntryIdentifier).ToList();
             // determine if majority of followers have written
-            if (allFollowerWrites.Count >= GetMajority())
+            if (allFollowerWrites.Count >= GetMajority() && LocalNode.NodeState == RaftNodeState.Leader)
             {
                 // LeaderCommit
                 LocalNode.LeaderCommitValue(writeRequest);
             }
         }
 
-        public virtual void ReceiveLeaderCommittedValueNotification(RaftLogEntryWriteRequest writeRequest)
+        public virtual RaftResult ReceiveLeaderCommittedValueNotification(RaftRequest request)
+        {
+            Args.ThrowIfNull(request, "request");
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                ReceiveLeaderCommittedValueNotification(request.WriteRequest);
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+
+        protected virtual void ReceiveLeaderCommittedValueNotification(RaftLogEntryWriteRequest writeRequest)
         {
             LocalNode.FollowerCommitValue(writeRequest);
         }
         
+        /// <summary>
+        /// Notify followers that the current node as leader has written a value (uncommitted).
+        /// </summary>
+        /// <param name="writeRequest"></param>
         public virtual void BroadcastFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Parallel.ForEach(GetFollowers(),
                 (follower) => follower.GetClient().SendFollowerWriteRequest(writeRequest.FollowerCopy()));
         }
 
+        public virtual void BroadcastLeaderWriteRequest(RaftLogEntryWriteRequest writeRequest)
+        {
+            Parallel.ForEach(GetAllOtherNodes(),
+                (node) => node.GetClient().ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
+        }
+
+        public virtual void BroadcastNotifyLeaderFollowerValueWritten(RaftLogEntryWriteRequest writeRequest)
+        {
+            Parallel.ForEach(GetAllOtherNodes(),
+                (node) => node.GetClient().NotifyLeaderFollowerValueWritten(writeRequest));
+        }
+        
         public virtual void BroadcastFollowerCommitRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Parallel.ForEach(GetFollowers(),
@@ -385,57 +507,141 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public virtual void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
         {
-            // forward to the leaders ring using an appropriate client
             ValidateWriteRequest(writeRequest, RaftNodeState.Leader);
 
-            RaftClient raftClient = GetLeaderNode().GetClient();
-            Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
-        }
-
-        public virtual void ReceiveJoinRaftRequest(RaftRequest request)
-        {
-            ReceiveRequestAsync(request);
-            AddNode(request.RequesterHostName, request.RequesterPort);
-        }
-        
-        public virtual void ReceiveHeartbeat(RaftRequest request)
-        {
-            ReceiveRequestAsync(request);
-            ResetElectionTimeout();
-        }
-        
-        public virtual void ReceiveVoteRequest(RaftRequest request)
-        {
-            ReceiveRequestAsync(request);
-            RaftVote vote = RaftVote.Cast(RaftConsensusRepository, request.ElectionTerm, request);
-            RaftClient voteResponseClient = request.GetResponseClient();
-            voteResponseClient.SendVoteResponse(request.ElectionTerm, vote);
-        }
-
-        public virtual void ReceiveVoteResponse(RaftRequest request)
-        {
-            ReceiveRequestAsync(request);
-            RaftLeaderElection LatestElection = GetLatestElection();
-            RaftLeaderElection electionForRequestedTerm = GetElectionForTerm(request.ElectionTerm);
-            if (LatestElection.Term == electionForRequestedTerm.Term)
+            RaftNode leaderNode = GetLeaderNode();
+            if (leaderNode != null)
             {
-                // get the local vote for the response if it exists
-                RaftVote vote = RaftVote.ForElection(LocalRepository, electionForRequestedTerm);
-                // save it if it doesn't
-                if (vote == null)
+                RaftClient raftClient = GetLeaderNode().GetClient();
+                Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
+            }
+            else
+            {
+                BroadcastLeaderWriteRequest(writeRequest);
+            }
+        }
+
+        /// <summary>
+        /// Records the requester as a node in the current raft ring.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public virtual RaftResult ReceiveJoinRaftRequest(RaftRequest request)
+        {
+            Args.ThrowIfNull(request, "request");
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                ReceiveRequestAsync(request);
+                AddNode(request.RequesterHostName, request.RequesterPort);
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+        
+        public virtual RaftResult ReceiveHeartbeat(RaftRequest request)
+        {
+            Args.ThrowIfNull(request, "request");
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                ReceiveRequestAsync(request);
+                SetLeaderAsync(request);
+                ResetElectionTimeout();
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+
+        protected Task SetLeaderAsync(RaftRequest request)
+        {
+            return Task.Run(() =>
+            {   
+                Arc<RaftNode> leader = ArcsWhere(arc =>
                 {
-                    LocalRepository.Save(request.VoteResponse);
-                }
-                
-                if (LocalNodeWonLatestElection())
+                    RaftNode node = arc.GetTypedServiceProvider();
+                    return node.Identifier.CompositeKey.Equals(request.RequesterIdentifier());
+                }).FirstOrDefault();
+
+                if (leader == null)
                 {
-                    BecomeLeader();
+                    Logger.Warning("Unable to locate leader Arc for specified request: {0}:{1}/{2}", request.RequesterHostName, request.RequesterPort, request.RequesterIdentifier().CompositeKey);
                 }
                 else
                 {
-                    BecomeFollower();
+                    ForEachRaftNode(node =>
+                    {
+                        node.NodeState = node.Identifier.CompositeKey.Equals(request.RequesterIdentifier().CompositeKey) ? RaftNodeState.Leader : RaftNodeState.Follower;
+                    });                    
+                }
+            });
+        }
+        
+        public virtual RaftResult ReceiveVoteRequest(RaftRequest request)
+        {
+            Args.ThrowIfNull(request, "request");
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                Task.Run(() =>
+                {
+                    ReceiveRequestAsync(request);
+                    RaftVote vote = RaftVote.Cast(RaftConsensusRepository, request.ElectionTerm, request);
+                    RaftClient voteResponseClient = request.GetResponseClient();
+                    voteResponseClient.SendVoteResponse(request.ElectionTerm, vote);
+                });
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+
+        public virtual RaftResult ReceiveVoteResponse(RaftRequest request)
+        {
+            Args.ThrowIfNull(request);
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                ReceiveRequestAsync(request);
+                RaftLeaderElection LatestElection = GetLatestElection();
+                RaftLeaderElection electionForRequestedTerm = GetElectionForTerm(request.ElectionTerm);
+                if (LatestElection.Term == electionForRequestedTerm.Term)
+                {
+                    // get the local vote for the response if it exists
+                    RaftVote vote = RaftVote.ForElection(LocalRepository, electionForRequestedTerm);
+                    // save it if it doesn't
+                    if (vote == null)
+                    {
+                        LocalRepository.Save(request.VoteResponse);
+                    }
+
+                    if (LocalNodeWonLatestElection())
+                    {
+                        BecomeLeader();
+                    }
+                    else
+                    {
+                        BecomeFollower();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
         }
 
         protected void BecomeLeader()
@@ -443,6 +649,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
             if (LocalNode.NodeState != RaftNodeState.Leader)
             {
                 LocalNode.NodeState = RaftNodeState.Leader;
+                ForEachRaftNode(node =>
+                {
+                    node.NodeState = node.Equals(LocalNode) ? RaftNodeState.Leader : RaftNodeState.Follower;
+                });
                 StopFollowerHeartbeatCheck();
                 RestartLeaderHeartbeat();
             }
@@ -495,7 +705,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             try
             {
                 RaftLogEntryWrittenEventArgs args = (RaftLogEntryWrittenEventArgs) e;
-                BroadcastFollowerWriteRequest(args.WriteRequest);
+                BroadcastFollowerWriteRequest(args.WriteRequest.FollowerCopy(RaftLogEntryState.Uncommitted, LocalNode.Identifier.CompositeKey));
             }
             catch (Exception ex)
             {
@@ -518,8 +728,15 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         protected void NotifyLeaderFollowerValueWritten(RaftLogEntryWriteRequest writeRequest)
         {
-            RaftClient raftClient = GetLeaderNode().GetClient();
-            raftClient.NotifyLeaderFollowerValueWritten(writeRequest.LeaderCopy());
+            RaftClient raftClient = GetLeaderNode()?.GetClient();
+            if (raftClient != null)
+            {
+                raftClient.NotifyLeaderFollowerValueWritten(writeRequest.LeaderCopy());
+            }
+            else
+            {
+                BroadcastNotifyLeaderFollowerValueWritten(writeRequest.LeaderCopy());
+            }
         }
         
         protected internal RaftNode GetLeaderNode()
@@ -578,6 +795,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIfNull(writeRequest);
             Args.ThrowIfNull(writeRequest.LogEntry);
             Args.ThrowIf(writeRequest.TargetNodeState != nodeState, "Write request not intended for {0}.", nodeState.ToString());
+        }
+        
+        private void HandleException(RaftRequest request, Exception ex, RaftResult result)
+        {
+            Logger.Error("Error handling write request: \r\n{0}\r\n{1}", ex.Message, request?.ToJson());
+            result.Message = ex.Message;
+            result.Success = false;
         }
     }
 }

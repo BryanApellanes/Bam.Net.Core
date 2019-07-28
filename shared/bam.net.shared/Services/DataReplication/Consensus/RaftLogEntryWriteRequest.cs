@@ -24,6 +24,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public RaftLogEntry LogEntry { get; set; }
         
         public RaftNodeState TargetNodeState { get; set; }
+        
+        public string LeaderIdentifier { get; set; }
 
         public RaftLogEntryWriteRequest LeaderCopy(RaftLogEntryState state = RaftLogEntryState.Uncommitted)
         {
@@ -36,7 +38,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return copy;
         }
 
-        public RaftLogEntryWriteRequest FollowerCopy(RaftLogEntryState state = RaftLogEntryState.Uncommitted)
+        public RaftLogEntryWriteRequest FollowerCopy(RaftLogEntryState state = RaftLogEntryState.Uncommitted, string leaderIdentifier = null)
         {
             Args.ThrowIfNull(LogEntry, "LogEntry");
             
@@ -44,6 +46,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             copy.TargetNodeState = RaftNodeState.Follower;
             copy.LogEntry = copy.LogEntry.CopyAs<RaftLogEntry>();
             copy.LogEntry.State = state;
+            copy.LeaderIdentifier = leaderIdentifier;
             return copy;
         }
     }

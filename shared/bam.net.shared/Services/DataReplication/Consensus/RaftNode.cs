@@ -77,6 +77,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftReplicationLog RaftReplicationLog { get; set; }
         
+        /// <summary>
+        /// If the current node is the leader calls LeaderWriteValue with a leader copy of the request, otherwise forwards the request to the leader.
+        /// </summary>
+        /// <param name="writeRequest"></param>
         public virtual void WriteValue(RaftLogEntryWriteRequest writeRequest)
         {
             if (NodeState == RaftNodeState.Leader)
@@ -85,6 +89,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             }
             else
             {
+                FollowerWriteValue(writeRequest.FollowerCopy());
                 RaftRing?.ForwardWriteRequestToLeader(writeRequest.LeaderCopy());
             }
         }
@@ -175,7 +180,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             throw new NotImplementedException();
         }
         
-        private void ValidateFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
+        private static void ValidateFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
             Args.ThrowIfNull(writeRequest.LogEntry, "writeRequest.LogEntry");
