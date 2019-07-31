@@ -19,7 +19,7 @@ namespace Bam.Net.Services.DataReplication.Data
         {
             WriteEvent writeEvent = this.CopyAs<WriteEvent>();            
             Commit(repo, writeEvent);
-            Any?.Invoke(this, new OpertionEventArgs { WriteEvent = writeEvent });
+            Any?.Invoke(this, new OperationEventArgs { WriteEvent = writeEvent });
             return writeEvent;
         }
 

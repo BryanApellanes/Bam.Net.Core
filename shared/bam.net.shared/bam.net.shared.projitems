@@ -2273,7 +2273,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Keyspace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\ObjectIdentifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\OperationIntent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\OpertionEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\OperationEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\ReplicationStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryKeyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\RepositoryRing.cs" />
