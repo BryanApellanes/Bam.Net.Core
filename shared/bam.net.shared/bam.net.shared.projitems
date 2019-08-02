@@ -601,7 +601,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlDatabaseInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlDataTypeTranslator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlJavscriptSqlProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlJavaScriptSqlProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlParameterBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlQuerySet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlRegistrar.cs" />

@@ -12,9 +12,9 @@ using Bam.Net.Configuration;
 
 namespace Bam.Net.Javascript.Sql
 {
-	public class MsSqlJavscriptSqlProvider: JavaScriptSqlProvider
+	public class MsSqlJavaScriptSqlProvider: JavaScriptSqlProvider
 	{
-		public MsSqlJavscriptSqlProvider()
+		public MsSqlJavaScriptSqlProvider()
 		{
 		}
 
