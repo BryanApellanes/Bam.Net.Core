@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Data.Npgsql
 {
-    public class NpgsqlCredentials : IDatabaseCredentials
+    public class NpgsqlCredentials : DatabaseCredentials
     {
         public string UserId { get; set; }
         public string Password { get; set; }

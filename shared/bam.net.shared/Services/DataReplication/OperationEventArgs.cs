@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Services.DataReplication
 {
-    public class OpertionEventArgs: EventArgs
+    public class OperationEventArgs: EventArgs
     {
         public WriteEvent WriteEvent { get; set; }
     }
