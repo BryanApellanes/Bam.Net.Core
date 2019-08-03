@@ -47,6 +47,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
                     case RaftRequestType.LogSyncRequest:
                         response.Data = Ring.ReceiveLogSyncRequest(request);
                         break;
+                    case RaftRequestType.LogSyncResponse:
+                        response.Data = Ring.ReceiveLogSyncRequest(request);
+                        break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
                         throw new InvalidOperationException(

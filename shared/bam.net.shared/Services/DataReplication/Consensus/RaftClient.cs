@@ -88,7 +88,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             throw new NotImplementedException(); // use StreamingClient SendRequest(CreateLogSyncResponse(log));
             // follow existing server pattern
         }
-
+        
         public RaftResponse SendJoinRaftRequest()
         {
             StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateJoinRaftRequest());

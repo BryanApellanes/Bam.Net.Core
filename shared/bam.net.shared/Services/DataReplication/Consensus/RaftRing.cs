@@ -551,7 +551,25 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
             return result;
         }
-        
+
+        public virtual RaftResult ReceiveLogSyncResponse(RaftRequest request)
+        {
+            Args.ThrowIfNull(request, "request");
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                ReceiveRequestAsync(request);
+                throw new NotImplementedException();
+                // write local commits based on request.LogsyncResponse
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Records the requester as a node in the current raft ring.
         /// </summary>
