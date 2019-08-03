@@ -54,7 +54,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
             StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.NotifyFollowerLeaderValueCommitted));
         }
-        
+
         public void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
@@ -75,6 +75,18 @@ namespace Bam.Net.Services.DataReplication.Consensus
                     RaftRequestType.NotifyLeaderFollowerValueWritten));
 
             ResponseHandler?.Invoke(response);
+        }
+
+        public void SendLogSyncRequest(ulong sinceSequence)
+        {
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateLogSyncRequest(sinceSequence));
+            ResponseHandler?.Invoke(response);
+        }
+
+        public void SendLogSyncResponse(RaftReplicationLog log)
+        {
+            throw new NotImplementedException(); // use StreamingClient SendRequest(CreateLogSyncResponse(log));
+            // follow existing server pattern
         }
 
         public RaftResponse SendJoinRaftRequest()
@@ -125,6 +137,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
             voteResponse.ElectionTerm = term;
             voteResponse.VoteResponse = vote;
             return voteResponse;
+        }
+
+        protected RaftRequest CreateLogSyncRequest(ulong sinceSeq)
+        {
+            RaftRequest request = CreateRaftRequest(null, RaftRequestType.LogSyncRequest);
+            request.CommitSeq = sinceSeq;
+            return request;
         }
         
         protected RaftRequest CreateRaftRequest(RaftLogEntryWriteRequest writeRequest, RaftRequestType requestType)

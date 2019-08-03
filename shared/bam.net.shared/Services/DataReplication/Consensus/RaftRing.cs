@@ -165,6 +165,15 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public void RestartLeaderHeartbeat()
         {
             StopLeaderHeartbeat();
+            try
+            {
+                LeaderHeartBeat.Dispose();
+            }
+            catch
+            {
+                // swallow
+            }
+
             StartLeaderHeartbeat();
         }
 
@@ -497,6 +506,11 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Parallel.ForEach(GetAllOtherNodes(),
                 (node) => node.GetClient().NotifyLeaderFollowerValueWritten(writeRequest));
         }
+
+        public virtual void BroadcastLogSyncRequest(ulong sinceSequence)
+        {
+            Parallel.ForEach(GetAllOtherNodes(), node => node.GetClient().SendLogSyncRequest(sinceSequence));
+        }
         
         public virtual void BroadcastFollowerCommitRequest(RaftLogEntryWriteRequest writeRequest)
         {
@@ -521,6 +535,23 @@ namespace Bam.Net.Services.DataReplication.Consensus
             }
         }
 
+        public virtual RaftResult ReceiveLogSyncRequest(RaftRequest request)
+        {
+            Args.ThrowIfNull(request, "request");
+            RaftResult result = new RaftResult(request);
+            try
+            {
+                ReceiveRequestAsync(request);
+                LocalNode.SendLogSyncResponse(request);
+            }
+            catch (Exception ex)
+            {
+                HandleException(request, ex, result);
+            }
+
+            return result;
+        }
+        
         /// <summary>
         /// Records the requester as a node in the current raft ring.
         /// </summary>
@@ -665,6 +696,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 LocalNode.NodeState = RaftNodeState.Follower;
                 StopLeaderHeartbeat();
                 RestartFollowerHeartbeatCheck();
+                SendLogSyncRequest();
             }
         }
         
@@ -723,6 +755,19 @@ namespace Bam.Net.Services.DataReplication.Consensus
             catch (Exception ex)
             {
                 Logger.Warning("Exception handling leader value committed event: {0}", ex.Message);
+            }
+        }
+
+        protected void SendLogSyncRequest(ulong sinceSequence)
+        {
+            RaftClient raftClient = GetLeaderNode().GetClient();
+            if (raftClient != null)
+            {
+                raftClient.SendLogSyncRequest(sinceSequence);
+            }
+            else
+            {
+                BroadcastLogSyncRequest(sinceSequence);
             }
         }
         

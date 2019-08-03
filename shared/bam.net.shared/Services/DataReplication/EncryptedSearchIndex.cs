@@ -74,7 +74,7 @@ namespace Bam.Net.Services.DataReplication
             }
             else
             {
-                Logger.AddEntry("Key mismatch when retrieving encrypted value from keyvalue store. Expected ({0}), Actual ({1})", key, kvp.Key);
+                Logger.AddEntry("Key mismatch when retrieving encrypted value from key-value store. Expected ({0}), Actual ({1})", key, kvp.Key);
                 return string.Empty;
             }
         }

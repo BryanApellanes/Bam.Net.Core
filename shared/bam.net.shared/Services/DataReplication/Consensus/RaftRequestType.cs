@@ -12,6 +12,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         Heartbeat,
         
-        JoinRaft
+        JoinRaft,
+        
+        LogSyncRequest,
+        LogSyncResponse
     }
 }

@@ -540,6 +540,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCommit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCommitCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCommitColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCommitPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCommitQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryCommitWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftLogEntryWrapper.cs" />
@@ -556,6 +562,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftVoteQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftVoteWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftFollowerWriteLog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftLogEntryCommit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\RaftNodeIdentifier.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\IRaftLogEntryPropertyHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftClient.cs" />

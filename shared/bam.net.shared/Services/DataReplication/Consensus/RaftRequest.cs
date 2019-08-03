@@ -49,6 +49,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
         /// </summary>
         public RaftVote VoteResponse { get; set; }
         
+        public RaftReplicationLog LogSyncResponse { get; set; }
+        
+        public ulong? CommitSeq { get; set; }
+        
         public RaftNodeIdentifier RequesterIdentifier()
         {
             return new RaftNodeIdentifier(RequesterHostName, RequesterPort);

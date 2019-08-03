@@ -83,6 +83,58 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
 			return _raftFollowerWriteLogsLock.DoubleCheckLock<RaftFollowerWriteLogQueryContext>(ref _raftFollowerWriteLogs, () => new RaftFollowerWriteLogQueryContext());
 		}
 	}
+	public class RaftLogEntryCommitQueryContext
+	{
+			public RaftLogEntryCommitCollection Where(WhereDelegate<RaftLogEntryCommitColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Where(where, db);
+			}
+		   
+			public RaftLogEntryCommitCollection Where(WhereDelegate<RaftLogEntryCommitColumns> where, OrderBy<RaftLogEntryCommitColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Where(where, orderBy, db);
+			}
+
+			public RaftLogEntryCommit OneWhere(WhereDelegate<RaftLogEntryCommitColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.OneWhere(where, db);
+			}
+
+			public static RaftLogEntryCommit GetOneWhere(WhereDelegate<RaftLogEntryCommitColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.GetOneWhere(where, db);
+			}
+		
+			public RaftLogEntryCommit FirstOneWhere(WhereDelegate<RaftLogEntryCommitColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.FirstOneWhere(where, db);
+			}
+
+			public RaftLogEntryCommitCollection Top(int count, WhereDelegate<RaftLogEntryCommitColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Top(count, where, db);
+			}
+
+			public RaftLogEntryCommitCollection Top(int count, WhereDelegate<RaftLogEntryCommitColumns> where, OrderBy<RaftLogEntryCommitColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<RaftLogEntryCommitColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Count(where, db);
+			}
+	}
+
+	static RaftLogEntryCommitQueryContext _raftLogEntryCommits;
+	static object _raftLogEntryCommitsLock = new object();
+	public static RaftLogEntryCommitQueryContext RaftLogEntryCommits
+	{
+		get
+		{
+			return _raftLogEntryCommitsLock.DoubleCheckLock<RaftLogEntryCommitQueryContext>(ref _raftLogEntryCommits, () => new RaftLogEntryCommitQueryContext());
+		}
+	}
 	public class RaftNodeIdentifierQueryContext
 	{
 			public RaftNodeIdentifierCollection Where(WhereDelegate<RaftNodeIdentifierColumns> where, Database db = null)

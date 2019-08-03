@@ -37,7 +37,7 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
         /// </summary>
         /// <param name="repository"></param>
         /// <returns></returns>
-        public RaftLogEntry GetFromRepository(RaftConsensusRepository repository)
+        public RaftLogEntry GetFromRepository(Repository repository)
         {
             return repository.GetByCompositeKey<RaftLogEntry>(this);
         } 

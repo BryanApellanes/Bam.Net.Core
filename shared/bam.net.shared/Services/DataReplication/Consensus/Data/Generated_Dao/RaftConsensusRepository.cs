@@ -28,6 +28,9 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
 			AddType<Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog>();
 			
 			
+			AddType<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>();
+			
+			
 			AddType<Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier>();
 			
 			
@@ -170,6 +173,126 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository
             await Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftFollowerWriteLog.BatchAll(batchSize, (batch) =>
             {
 				batchProcessor(Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftFollowerWriteLog>(batch));
+            }, Database);
+        }
+
+		
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneRaftLogEntryCommitWhere(WhereDelegate<RaftLogEntryCommitColumns> where)
+		{
+			Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.SetOneWhere(where, Database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneRaftLogEntryCommitWhere(WhereDelegate<RaftLogEntryCommitColumns> where, out Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit result)
+		{
+			Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.SetOneWhere(where, out Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit daoResult, Database);
+			result = daoResult.CopyAs<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>();
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		/// <param name="where"></param>
+		public Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit GetOneRaftLogEntryCommitWhere(WhereDelegate<RaftLogEntryCommitColumns> where)
+		{
+			Type wrapperType = GetWrapperType<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>();
+			return (Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit)Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+		}
+
+		/// <summary>
+		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
+		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
+		/// single RaftLogEntryCommit instance by its Id/Key value
+		/// </summary>
+		/// <param name="where">A WhereDelegate that receives a RaftLogEntryCommitColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between RaftLogEntryCommitColumns and other values
+		/// </param>
+		public Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit OneRaftLogEntryCommitWhere(WhereDelegate<RaftLogEntryCommitColumns> where)
+        {
+            Type wrapperType = GetWrapperType<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>();
+            return (Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit)Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+        }
+
+		/// <summary>
+		/// Execute a query and return the results. 
+		/// </summary>
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommitColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommitColumns and other values
+		/// </param>
+		public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit> RaftLogEntryCommitsWhere(WhereDelegate<RaftLogEntryCommitColumns> where, OrderBy<RaftLogEntryCommitColumns> orderBy = null)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Where(where, orderBy, Database));
+        }
+		
+		/// <summary>
+		/// Execute a query and return the specified number
+		/// of values. This method issues a sql TOP clause so only the 
+		/// specified number of values will be returned.
+		/// </summary>
+		/// <param name="count">The number of values to return.
+		/// This value is used in the sql query so no more than this 
+		/// number of values will be returned by the database.
+		/// </param>
+		/// <param name="where">A WhereDelegate that receives a RaftLogEntryCommitColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between RaftLogEntryCommitColumns and other values
+		/// </param>
+		public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit> TopRaftLogEntryCommitsWhere(int count, WhereDelegate<RaftLogEntryCommitColumns> where)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Top(count, where, Database));
+        }
+
+        public IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit> TopRaftLogEntryCommitsWhere(int count, WhereDelegate<RaftLogEntryCommitColumns> where, OrderBy<RaftLogEntryCommitColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>(Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Top(count, where, orderBy, Database));
+        }
+                                
+		/// <summary>
+		/// Return the count of RaftLogEntryCommits
+		/// </summary>
+		public long CountRaftLogEntryCommits()
+        {
+            return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Count(Database);
+        }
+
+		/// <summary>
+		/// Execute a query and return the number of results
+		/// </summary>
+		/// <param name="where">A WhereDelegate that receives a RaftLogEntryCommitColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between RaftLogEntryCommitColumns and other values
+		/// </param>
+        public long CountRaftLogEntryCommitsWhere(WhereDelegate<RaftLogEntryCommitColumns> where)
+        {
+            return Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.Count(where, Database);
+        }
+        
+        public async Task BatchQueryRaftLogEntryCommits(int batchSize, WhereDelegate<RaftLogEntryCommitColumns> where, Action<IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>> batchProcessor)
+        {
+            await Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.BatchQuery(batchSize, where, (batch) =>
+            {
+				batchProcessor(Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>(batch));
+            }, Database);
+        }
+		
+        public async Task BatchAllRaftLogEntryCommits(int batchSize, Action<IEnumerable<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>> batchProcessor)
+        {
+            await Bam.Net.Services.DataReplication.Consensus.Data.Dao.RaftLogEntryCommit.BatchAll(batchSize, (batch) =>
+            {
+				batchProcessor(Wrap<Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit>(batch));
             }, Database);
         }
 
