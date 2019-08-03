@@ -52,7 +52,7 @@ namespace Bam.Net.Tests
             Console.WriteLine("spec test");
             Feature<AccessControlService>("Set permissions to restrict access to resources", (svc) =>
             {
-                Expect.IsInstanceOfType<AccessControlService>(svc);
+                svc.IsInstanceOfType<AccessControlService>();
                 Scenario("Set deny permission on resource", () =>
                 {
                     Given("I have been denied access to a resource", () =>

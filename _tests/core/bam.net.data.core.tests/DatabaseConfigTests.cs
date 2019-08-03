@@ -10,7 +10,7 @@ namespace Bam.Net.Data.Tests
     public class DatabaseConfigTests: CommandLineTestInterface
     {
         [ConsoleAction("dynamicQuery", "Run the db config test")]
-        [TestGroup("Data.Core")]
+        [TestGroup("Data.Dynamic")]
         [UnitTest]
         public void GetDbFromConfig()
         {

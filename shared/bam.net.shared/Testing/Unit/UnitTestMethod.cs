@@ -32,5 +32,12 @@ namespace Bam.Net.Testing.Unit
             tests.Sort((l, r) => l.Information.CompareTo(r.Information));
             return tests;
         }
+
+        public static List<UnitTestMethod> FromAssembly(Assembly assembly, string testGroup)
+        {
+            return FromAssembly(assembly).Where(utm => utm.Method.HasCustomAttributeOfType<TestGroupAttribute>(
+                                                           out TestGroupAttribute testGroupAttribute)
+                                                       && testGroupAttribute.Groups.Contains(testGroup)).ToList();
+        }
     }
 }

@@ -88,19 +88,34 @@ namespace Bam.Net.Testing
         public void RunAllTests()
         {
             List<TTestMethod> tests = TestMethodProvider.GetTests();
+            RunTestList(tests);
+        }
+
+        public void RunTestGroup(string testGroup)
+        {
+            Args.ThrowIfNullOrEmpty(testGroup, "testGroup");
+            List<TTestMethod> tests = TestMethodProvider.GetTests(testGroup);
+            RunTestList(tests);
+        }
+
+        private void RunTestList(List<TTestMethod> tests)
+        {
             if (tests.Count == 0)
             {
                 FireEvent(NoTestsDiscovered);
                 return;
             }
 
-            FireEvent(TestsDiscovered, new TestsDiscoveredEventArgs<TTestMethod> { Assembly = Assembly, TestRunner = this, Tests = tests.Select(t => (TestMethod)t).ToList() });
-            FireEvent(TestsStarting, new TestEventArgs<TTestMethod> { TestRunner = this, Assembly = Assembly });
+            FireEvent(TestsDiscovered,
+                new TestsDiscoveredEventArgs<TTestMethod>
+                    {Assembly = Assembly, TestRunner = this, Tests = tests.Select(t => (TestMethod) t).ToList()});
+            FireEvent(TestsStarting, new TestEventArgs<TTestMethod> {TestRunner = this, Assembly = Assembly});
             foreach (TestMethod test in tests)
             {
                 RunTest(test);
             }
-            FireEvent(TestsFinished, new TestEventArgs<TTestMethod> { TestRunner = this, Assembly = Assembly });
+
+            FireEvent(TestsFinished, new TestEventArgs<TTestMethod> {TestRunner = this, Assembly = Assembly});
         }
 
         /// <summary>

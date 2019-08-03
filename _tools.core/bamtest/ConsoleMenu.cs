@@ -118,39 +118,7 @@ namespace Bam.Net.Testing
                 Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
                 foreach (FileInfo file in files.Where(fi=> fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    Assembly testAssembly = null;
-                    try
-                    {
-                        testAssembly = Assembly.LoadFile(file.FullName);
-                    }
-                    catch (Exception ex)
-                    {
-                        OutLineFormat("Failed to load assembly from file {0}: {1}", ConsoleColor.Yellow, file.FullName, ex.Message);
-                        continue;
-                    }
-
-                    OutLineFormat("Loaded assembly {0}", ConsoleColor.Green, testAssembly.FullName);
-                    List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
-                    {
-                        if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(out TestGroupAttribute testGroupAttribute))
-                        {
-                            return testGroupAttribute.Groups.Contains(testGroupName);
-                        }
-
-                        return false;
-                    }).ToList();
-                    OutLineFormat("Found ({0}) tests in group ({1}) in assembly ({2})", ConsoleColor.Blue, testMethods.Count, testGroupName, testAssembly.FullName);
-                    testMethods.Each(testMethod =>
-                    {
-                        if (testMethod.TryInvoke(ex =>
-                        {
-                            OutLineFormat("{0} failed: {1}", testMethod.Description, ex.Message);
-                            failed.Add(testMethod, ex);
-                        }))
-                        {
-                            succeeded.Add(testMethod);
-                        };
-                    });
+                    RunTestGroupFromFile(file, testGroupName, failed, succeeded);
                 }
 
                 if (succeeded.Count > 0)
@@ -175,7 +143,48 @@ namespace Bam.Net.Testing
             OutLineFormat("No files found in ({0}) for search pattern ({1})", testDir, searchPattern);
             Exit(1);
         }
-        
+
+        private static void RunTestGroupFromFile(FileInfo file, string testGroupName, Dictionary<UnitTestMethod, Exception> failed, List<UnitTestMethod> succeeded)
+        {
+            Assembly testAssembly = null;
+            try
+            {
+                testAssembly = Assembly.LoadFile(file.FullName);
+            }
+            catch (Exception ex)
+            {
+                OutLineFormat("Failed to load assembly from file {0}: {1}", ConsoleColor.Yellow, file.FullName, ex.Message);
+                return;
+            }
+
+            OutLineFormat("Loaded assembly {0}", ConsoleColor.Green, testAssembly.FullName);
+            List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
+            {
+                if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(
+                    out TestGroupAttribute testGroupAttribute))
+                {
+                    return testGroupAttribute.Groups.Contains(testGroupName);
+                }
+
+                return false;
+            }).ToList();
+            OutLineFormat("Found ({0}) tests in group ({1}) in assembly ({2})", ConsoleColor.Blue, testMethods.Count,
+                testGroupName, testAssembly.FullName);
+            testMethods.Each(testMethod =>
+            {
+                if (testMethod.TryInvoke(ex =>
+                {
+                    OutLineFormat("{0} failed: {1}", testMethod.Description, ex.Message);
+                    failed.Add(testMethod, ex);
+                }))
+                {
+                    succeeded.Add(testMethod);
+                }
+
+                ;
+            });
+        }
+
         /// <summary>
         /// Runs the unit tests in specified assemlby.
         /// </summary>

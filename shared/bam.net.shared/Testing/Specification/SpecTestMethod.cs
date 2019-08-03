@@ -32,5 +32,11 @@ namespace Bam.Net.Testing.Specification
             tests.Sort((l, r) => l.Information.CompareTo(r.Information));
             return tests;
         }
+
+        public static List<SpecTestMethod> FromAssembly(Assembly assembly, string testGroup)
+        {
+            return FromAssembly(assembly).Where(stm => stm.Method.HasCustomAttributeOfType<TestGroupAttribute>(out TestGroupAttribute testGroupAttribute)
+                                                       && testGroupAttribute.Groups.Contains(testGroup)).ToList();
+        }
     }
 }

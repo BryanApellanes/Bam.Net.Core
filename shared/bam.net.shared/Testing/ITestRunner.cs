@@ -21,6 +21,7 @@ namespace Bam.Net.Testing
         TestMethodProvider<TTestMethod> TestMethodProvider { get; set; }
         List<TTestMethod> GetTests();
         void RunAllTests();
+        void RunTestGroup(string testGroup);
         void RunSpecifiedTests(string testIdentifiers);
         void RunTest(string testNumber);
         void RunTest(TestMethod test);
