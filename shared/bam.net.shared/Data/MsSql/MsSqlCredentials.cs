@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Data.MsSql
 {
-	public class MsSqlCredentials : IDatabaseCredentials
+	public class MsSqlCredentials : DatabaseCredentials
 	{
 		public string UserId { get; set; }
 		public string Password { get; set; }

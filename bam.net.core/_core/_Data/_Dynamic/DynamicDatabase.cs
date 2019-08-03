@@ -1,4 +1,6 @@
-﻿namespace Bam.Net.Data.Dynamic
+﻿
+
+namespace Bam.Net.Data.Dynamic
 {
     using System;
     using System.Collections.Generic;
@@ -45,6 +47,16 @@
             yield break;
         }
 
+        /// <summary>
+        /// Execute a dynamic query using the specified querySpec.  The same as Retrieve.
+        /// </summary>
+        /// <param name="querySpec"></param>
+        /// <returns></returns>
+        public IEnumerable<dynamic> Query(dynamic querySpec)
+        {
+            return Retrieve(querySpec);
+        }
+        
         /// <summary>
         /// Execute the specified sql using the specified parameters
         /// </summary>

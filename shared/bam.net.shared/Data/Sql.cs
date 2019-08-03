@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data.Dynamic;
 
 namespace Bam.Net.Data
 {
     public static partial class Sql
-    { 
+    {
+        public static DynamicDatabase In(Database db)
+        {
+            return new DynamicDatabase(db);
+        }
+        
         public static void ExecuteFile(string path, Database db, object parameters = null)
         {
             ExecuteFile(new FileInfo(path), db, parameters);

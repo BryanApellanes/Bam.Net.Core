@@ -486,7 +486,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\Vouch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\AndFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Config\IDatabaseCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlJavaScriptSqlProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\RelationalDatabaseTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />

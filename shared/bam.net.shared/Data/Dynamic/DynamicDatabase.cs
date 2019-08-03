@@ -236,7 +236,7 @@ namespace Bam.Net.Data.Dynamic
                 else
                 {
                     // TODO: enable multiple operators like QiQuery, contains, doesn't contain starts with etc
-                    string columnName = NameMap.GetColumnName(tableName, prop.Name);
+                    string columnName = NameMap?.GetColumnName(tableName, prop.Name) ?? prop.Name;
                     QueryFilter queryFilter = Bam.Net.Data.Query.Where(columnName) == prop.GetValue(where);
                     filter = filter.IsEmpty ? queryFilter : filter && queryFilter;
                 }
@@ -258,7 +258,7 @@ namespace Bam.Net.Data.Dynamic
                 ReflectionExtensions.Property<string>(querySpec, "ClassName", false) ??
                 ReflectionExtensions.Property<string>(querySpec, "className", false);
             Args.ThrowIfNullOrEmpty(table, "From/Table/Class not specified");
-            table = NameMap.GetTableName(table);
+            table = NameMap?.GetTableName(table) ?? table;
             return table;
         }
 
@@ -310,7 +310,7 @@ namespace Bam.Net.Data.Dynamic
             DataTable result = new DataTable();
             foreach (DataColumn column in dataTable.Columns)
             {
-                string property = NameMap.GetPropertyName(tableName, column.ColumnName);
+                string property = NameMap?.GetPropertyName(tableName, column.ColumnName) ?? column.ColumnName;
                 result.Columns.Add(new DataColumn(property));
             }
             foreach (DataRow row in dataTable.Rows)
@@ -318,7 +318,7 @@ namespace Bam.Net.Data.Dynamic
                 DataRow newRow = result.NewRow();
                 foreach (DataColumn column in dataTable.Columns)
                 {
-                    string property = NameMap.GetPropertyName(tableName, column.ColumnName);
+                    string property = NameMap?.GetPropertyName(tableName, column.ColumnName) ?? column.ColumnName;
                     newRow[property] = row[column];
                 }
                 result.Rows.Add(newRow);

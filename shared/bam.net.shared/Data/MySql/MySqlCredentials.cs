@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Data.MySql
 {
-    public class MySqlCredentials : IDatabaseCredentials
+    public class MySqlCredentials : DatabaseCredentials
     {
         public string UserId { get; set; }
         public string Password { get; set; }

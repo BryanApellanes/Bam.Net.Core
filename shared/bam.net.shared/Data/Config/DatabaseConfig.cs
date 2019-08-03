@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Bam.Net.Data.MsSql;
 using Bam.Net.Data.MySql;
 using Bam.Net.Data.Npgsql;
@@ -38,7 +40,8 @@ namespace Bam.Net.Data
         public string DatabaseName { get; set; }
         public string ServerName { get; set; }
         
-        public IDatabaseCredentials Credentials { get; set; }
+        public DatabaseCredentials Credentials { get; set; }
+        
         
         public RelationalDatabaseTypes DatabaseType { get; set; }
         
@@ -50,6 +53,18 @@ namespace Bam.Net.Data
         public T GetDatabase<T>() where T : Database
         {
             return (T) GetDatabase();
+        }
+
+        public static DatabaseConfig[] LoadConfigs(string filePath = null)
+        {
+            filePath = filePath ?? $"{nameof(DatabaseConfig).Pluralize()}.yaml";
+            return new FileInfo(filePath).FromYamlFile<DatabaseConfig[]>();
+        }
+
+        public static Database GetFirstDatabase(string filePath = null)
+        {
+            DatabaseConfig config = LoadConfigs(filePath).FirstOrDefault();
+            return config?.GetDatabase();
         }
     }
 }
