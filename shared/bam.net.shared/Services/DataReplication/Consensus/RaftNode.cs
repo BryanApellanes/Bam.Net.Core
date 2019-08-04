@@ -71,9 +71,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
         /// Get a RaftClient for the current node.  
         /// </summary>
         /// <returns></returns>
-        public virtual RaftClient GetClient()
+        public virtual RaftProtocolClient GetClient()
         {
-            return new RaftClient(Identifier.HostName, Identifier.Port);
+            return new RaftProtocolClient(Identifier.HostName, Identifier.Port);
         }
         
         public RaftConsensusRepository LocalRepository { get; set; }
@@ -125,12 +125,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
             // get all RaftLogEntryCommits since the specified request.CommitSeq
             if (NodeState == RaftNodeState.Leader)
             {
+                Args.ThrowIfNull(request.CommitSeq, nameof(RaftRequest.CommitSeq));
                 RaftReplicationLog log = new RaftReplicationLog()
                 {
                     SourceNode = Identifier,
                     Entries = LocalRepository.RaftLogEntryCommitsWhere(c => c.Seq >= request.CommitSeq).ToList()
                 };
-                request.GetResponseClient().SendLogSyncResponse(log);
+                request.GetResponseClient().SendLogSyncResponse(request.CommitSeq.Value, log);
             }
         }
 

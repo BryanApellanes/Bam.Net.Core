@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -19,7 +21,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
                     LogEntry = raftLogEntry
                 };
             }
-        } 
+        }
+
+        public static IEnumerable<RaftLogEntryWriteRequest> FromWriteOperation(WriteOperation writeOperation)
+        {
+            throw new NotImplementedException();
+        }
         
         public RaftLogEntry LogEntry { get; set; }
         

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
+using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus.Data
 {
@@ -66,6 +67,19 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
                     };
                 }
             }
+        }
+
+        public static IEnumerable<RaftLogEntry> FromDataPropertySet(DataPropertySet dataPropertySet)
+        {
+            foreach (DataProperty dataProperty in dataPropertySet)
+            {
+                yield return FromDataProperty(dataProperty);
+            }
+        }
+
+        public static RaftLogEntry FromDataProperty(DataProperty dataProperty)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Bam.Net.Services.DataReplication.Data
         public OperationIntent Intent { get; set; }
 
         /// <summary>
-        /// The properties that were written
+        /// The properties to write
         /// </summary>
         public List<DataProperty> Properties { get; set; }
 
@@ -30,15 +30,15 @@ namespace Bam.Net.Services.DataReplication.Data
 
         public static event EventHandler Any;
 
+        public static DataPoint GetDataPoint(object instance)
+        {
+            return DataPoint.FromInstance(instance);
+        } 
+        
         protected static List<DataProperty> GetData(object instance)
         {
-            List<DataProperty> data = new List<DataProperty>();
-            Type type = instance.GetType();
-            type.GetValueProperties().Each(prop =>
-            {
-                data.Add(new Data.DataProperty { Name = prop.Name, Value = prop.GetValue(instance) });
-            });
-            return data;
+            DataPoint dataPoint = GetDataPoint(instance);
+            return dataPoint.DataPropertySet.ToList();
         }
     }
 }

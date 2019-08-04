@@ -237,6 +237,11 @@ namespace Bam.Net.Data.Repositories
 
 	        return result;
         }
+
+        public virtual T LoadByCompositeKey<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
+        {
+	        return RetrieveByCompositeKey<T>(compositeKey);
+        }
         
         public virtual T LoadByCompositeKey<T>(CompositeKeyAuditRepoData toLoad) where T : CompositeKeyAuditRepoData, new()
         {

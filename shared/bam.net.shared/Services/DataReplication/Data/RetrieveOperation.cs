@@ -21,6 +21,11 @@ namespace Bam.Net.Services.DataReplication.Data
             return repository.Retrieve(this);
 		}
 
+		public static RetrieveOperation For(CompositeKeyAuditRepoData data)
+		{
+			return For(data.GetType(), data.CompositeKeyId.ToString(), UniversalIdentifier.CKey);
+		}
+		
         public static RetrieveOperation For(Type type, string identifier, UniversalIdentifier universalIdentifier = UniversalIdentifier.Cuid)
         {
             RetrieveOperation operation = For<RetrieveOperation>(type);

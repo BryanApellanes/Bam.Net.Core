@@ -7,16 +7,16 @@ using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
-    public class RaftClient
+    public class RaftProtocolClient
     {
-        public RaftClient(string hostName, int port)
+        public RaftProtocolClient(string hostName, int port)
         {
             StreamingClient = new SecureStreamingClient<RaftRequest, RaftResponse>(hostName, port);
             HostName = hostName;
             Port = port;
         }
 
-        public RaftClient(StreamingClient<RaftRequest, RaftResponse> streamingClient)
+        public RaftProtocolClient(StreamingClient<RaftRequest, RaftResponse> streamingClient)
         {
             StreamingClient = streamingClient;
             HostName = StreamingClient.HostName;
@@ -83,10 +83,11 @@ namespace Bam.Net.Services.DataReplication.Consensus
             ResponseHandler?.Invoke(response);
         }
 
-        public void SendLogSyncResponse(RaftReplicationLog log)
+        public void SendLogSyncResponse(ulong sinceSequence, RaftReplicationLog log)
         {
-            throw new NotImplementedException(); // use StreamingClient SendRequest(CreateLogSyncResponse(log));
-            // follow existing server pattern
+            StreamingResponse<RaftResponse> response =
+                StreamingClient.SendRequest(CreateLogSyncResponse(sinceSequence, log));
+            ResponseHandler?.Invoke(response);
         }
         
         public RaftResponse SendJoinRaftRequest()
@@ -139,6 +140,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return voteResponse;
         }
 
+        protected RaftRequest CreateLogSyncResponse(ulong sinceSeq, RaftReplicationLog log)
+        {
+            RaftRequest request = CreateRaftRequest(null, RaftRequestType.LogSyncResponse);
+            request.CommitSeq = sinceSeq;
+            request.LogSyncResponse = log;
+            return request;
+        }
+        
         protected RaftRequest CreateLogSyncRequest(ulong sinceSeq)
         {
             RaftRequest request = CreateRaftRequest(null, RaftRequestType.LogSyncRequest);
@@ -151,8 +160,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftNodeIdentifier current = RaftNodeIdentifier.ForCurrentProcess();
             return new RaftRequest()
             {
-                RequesterHostName = current.HostName,
-                RequesterPort = current.Port,
+                OriginHostName = current.HostName,
+                OriginPort = current.Port,
                 RequestType = requestType,
                 WriteRequest = writeRequest
             };

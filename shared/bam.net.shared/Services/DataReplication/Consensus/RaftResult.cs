@@ -4,7 +4,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
     {
         public RaftResult()
         {
-            Success = true; 
+            Status = RaftResultStatus.Success;
         }
 
         public RaftResult(RaftRequest request) : this()
@@ -12,7 +12,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             CollationPath = request.CollationPath;
         }
 
-        public bool Success { get; set; }
+        public RaftResultStatus Status { get; set; }
         public string Message { get; set; }
         public string CollationPath { get; set; }
         public object Data { get; set; }

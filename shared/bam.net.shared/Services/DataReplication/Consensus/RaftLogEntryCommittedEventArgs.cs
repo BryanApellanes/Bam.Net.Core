@@ -1,12 +1,17 @@
+using System;
+using Bam.Net.Services.DataReplication.Consensus.Data;
+
 namespace Bam.Net.Services.DataReplication.Consensus
 {
-    public class RaftLogEntryCommittedEventArgs
+    public class RaftLogEntryCommittedEventArgs : EventArgs
     {
         public RaftLogEntryCommittedEventArgs()
         {
             
         }
         
-        public RaftLogEntryWriteRequest WriteRequest { get; set; }
+        public RaftNodeIdentifier CommittingNode { get; set; }
+        public RaftNodeIdentifier DataSourceNode { get; set; }
+        public RaftLogEntry LogEntry { get; set; }
     }
 }

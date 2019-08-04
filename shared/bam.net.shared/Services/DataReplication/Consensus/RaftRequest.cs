@@ -10,8 +10,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
             CollationAlgorithm = HashAlgorithms.SHA256;
         }
         
-        public string RequesterHostName { get; set; }
-        public int RequesterPort { get; set; }
+        public string OriginHostName { get; set; }
+        public int OriginPort { get; set; }
         public RaftRequestType RequestType { get; set; }
         public int ElectionTerm { get; set; }
 
@@ -29,7 +29,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 if (string.IsNullOrEmpty(_collationPath))
                 {
                     _collationPath =
-                        $"{RequesterHostName}:{RequesterPort}/{ElectionTerm}/{RequestType.ToString()}/{Instant.Now.ToString()}";
+                        $"{OriginHostName}:{OriginPort}/{ElectionTerm}/{RequestType.ToString()}/{Instant.Now.ToString()}";
                 }
 
                 return _collationPath;
@@ -38,7 +38,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
 
         public ulong CollationId => CollationPath.ToHashULong(CollationAlgorithm);
-
+        
         /// <summary>
         /// For write RequestTypes 
         /// </summary>
@@ -55,12 +55,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftNodeIdentifier RequesterIdentifier()
         {
-            return new RaftNodeIdentifier(RequesterHostName, RequesterPort);
+            return new RaftNodeIdentifier(OriginHostName, OriginPort);
         }
 
-        public RaftClient GetResponseClient()
+        public RaftProtocolClient GetResponseClient()
         {
-            return new RaftClient(RequesterHostName, RequesterPort);
+            return new RaftProtocolClient(OriginHostName, OriginPort);
         }
     }
 }

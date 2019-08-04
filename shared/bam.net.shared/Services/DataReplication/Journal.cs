@@ -197,7 +197,7 @@ namespace Bam.Net.Services.DataReplication
             return Enqueue(journalEntries, onFullyFlushed);
         }
 
-        internal protected IEnumerable<JournalEntry> Enqueue(JournalEntry[] journalEntries, Action<JournalEntry[]> onFullyFlushed)
+        protected internal IEnumerable<JournalEntry> Enqueue(JournalEntry[] journalEntries, Action<JournalEntry[]> onFullyFlushed)
         {
             HashSet<JournalEntry> written = new HashSet<JournalEntry>();
             int doneCount = journalEntries.Length;

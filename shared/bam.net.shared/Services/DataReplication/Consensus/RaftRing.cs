@@ -13,6 +13,7 @@ using Bam.Net.Server;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
+using Bam.Net.Services.DataReplication.Data;
 using CsQuery.ExtensionMethods;
 using MongoDB.Driver.Core.WireProtocol.Messages.Encoders.JsonEncoders;
 using UnityEngine.SocialPlatforms;
@@ -26,18 +27,84 @@ namespace Bam.Net.Services.DataReplication.Consensus
     /// <summary>
     /// RaftRing provides local state tracking for a raft consensus implementation by managing communication between a local RaftNode and other RaftNodes participating in the protocol.
     /// </summary>
-    public class RaftRing : Ring<RaftNode>
+    public class RaftRing : Ring<RaftNode>, IDistributedRepository
     {
-        public RaftRing(RaftConsensusRepository raftConsensusRepository, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null)
+        public RaftRing(RaftConsensusRepository raftConsensusRepository, IRaftReplicationLogSyncManager replicationLogSyncManager = null, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null)
         {
             RaftConsensusRepository = raftConsensusRepository;
             HeartbeatTimeout = 75;
             Logger = Log.Default;
             AppConf = appConf ?? AppConf.FromConfig();
             EventSource = new RaftEventSource(raftConsensusRepository, AppConf, Logger);
-            Server = new RaftServer(this, port);
+            ProtocolServer = new RaftProtocolServer(this, port);
+            ReplicationLogSyncManager = replicationLogSyncManager ?? new RaftReplicationLogSyncManager(this);
         }
+        
+        public IRaftReplicationLogSyncManager ReplicationLogSyncManager { get; set; }
+        public RaftProtocolServer ProtocolServer { get; set; }
 
+        RaftNode _raftNode;
+        readonly object _raftNodeLock = new object();
+        public RaftNode LocalNode
+        {
+            get
+            {
+                return _raftNodeLock.DoubleCheckLock(ref _raftNode,
+                    () =>
+                    {
+                        RaftNode local = RaftNode.FromIdentifier(this, RaftNodeIdentifier.ForCurrentProcess());
+                        local.FollowerValueWritten += OnFollowerValueWritten;
+                        local.LeaderValueWritten += OnLeaderValueWritten;
+                        local.LeaderValueCommitted += OnLeaderValueCommitted;
+                        return local;
+                    });
+            }
+        }
+        public AppConf AppConf { get; private set; }
+        public RaftEventSource EventSource { get; private set; }
+
+        public string HostName => LocalNode?.Identifier?.HostName;
+        public int Port => (LocalNode?.Identifier?.Port).Value;
+
+        public ILogger Logger { get; }
+        
+        public RaftConsensusRepository RaftConsensusRepository { get; set; }
+        
+        /// <summary>
+        /// The event that fires when a RaftRequest is received.  Handlers of this event
+        /// are executed asynchronously; this event is intended for diagnostics and debugging.
+        /// </summary>
+        public event Action<RaftRequest> RequestReceived;
+        
+        public int ElectionTimeout { get; set; }
+        public int HeartbeatTimeout { get; set; }
+        public int Heartbeats { get; set; }
+        
+        /// <summary>
+        /// Gets the LatestElection, may be null if GetLatestElection has not been called.
+        /// </summary>
+        public RaftLeaderElection LatestElection { get; private set; }
+
+        public Task LeaderHeartBeat { get; private set; }
+        public Task FollowerHeartbeatCheck { get; private set; }
+        
+        public RaftNodeIdentifier AddNode(RaftNodeIdentifier identifier)
+        {
+            return AddNode(identifier.HostName, identifier.Port);
+        }
+        
+        public RaftNodeIdentifier AddNode(string hostName, int port)
+        {
+            RaftNode newNode = RaftNode.ForHost(this, hostName, port);
+            if (!LocalNode.Identifier.HostName.Equals(hostName) ||
+                LocalNode.Identifier.Port != port)
+            {
+                AddArc(newNode);
+            }
+            
+            return RaftConsensusRepository.GetByCompositeKey<RaftNodeIdentifier>(newNode.Identifier);
+        }
+        
         public static RaftRing FromConfig(RaftConfig config)
         {
             RaftRing result = new RaftRing(new RaftConsensusRepository());
@@ -66,33 +133,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             ForEachArcService(action);
         }
-        
-        public AppConf AppConf { get; private set; }
-        public RaftEventSource EventSource { get; private set; }
-
-        public string HostName => LocalNode?.Identifier?.HostName;
-        public int Port => (LocalNode?.Identifier?.Port).Value;
-
-        public ILogger Logger { get; }
-        
-        public RaftConsensusRepository RaftConsensusRepository { get; set; }
-
-        public RaftNodeIdentifier AddNode(RaftNodeIdentifier identifier)
-        {
-            return AddNode(identifier.HostName, identifier.Port);
-        }
-        
-        public RaftNodeIdentifier AddNode(string hostName, int port)
-        {
-            RaftNode newNode = RaftNode.ForHost(this, hostName, port);
-            if (!LocalNode.Identifier.HostName.Equals(hostName) ||
-                LocalNode.Identifier.Port != port)
-            {
-                AddArc(newNode);
-            }
-            
-            return RaftConsensusRepository.GetByCompositeKey<RaftNodeIdentifier>(newNode.Identifier);
-        }
 
         public static RaftRing StartFromConfig(RaftConfig config)
         {
@@ -103,7 +143,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public void StartRaftProtocol()
         {
-            Server.Start();
+            ProtocolServer.Start();
             ResetElectionTimeout();
         }
 
@@ -128,27 +168,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             Args.ThrowIfNullOrEmpty(hostName);
             Args.ThrowIf(port <= 0, "port must be a valid network port"); 
-            RaftClient client = new RaftClient(hostName, port);
-            return client.SendJoinRaftRequest();
+            RaftProtocolClient protocolClient = new RaftProtocolClient(hostName, port);
+            return protocolClient.SendJoinRaftRequest();
         }
-        
-        /// <summary>
-        /// The event that fires when a RaftRequest is received.  Handlers of this event
-        /// are executed asynchronously; this event is intended for diagnostics and debugging.
-        /// </summary>
-        public event Action<RaftRequest> RequestReceived;
-        
-        public int ElectionTimeout { get; set; }
-        public int HeartbeatTimeout { get; set; }
-        public int Heartbeats { get; set; }
-        
-        /// <summary>
-        /// Gets the LatestElection, may be null if GetLatestElection has not been called.
-        /// </summary>
-        public RaftLeaderElection LatestElection { get; private set; }
-
-        public Task LeaderHeartBeat { get; private set; }
-        public Task FollowerHeartbeatCheck { get; private set; }
         
         bool _stopLeaderHeartbeat;
         public void StartLeaderHeartbeat()
@@ -305,27 +327,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftVote.Cast(RaftConsensusRepository, leaderElection, LocalNode.Identifier, voteFor);
             ResetElectionTimeout();
             return leaderElection;
-        }
-
-        
-        public RaftServer Server { get; set; }
-
-        RaftNode _raftNode;
-        readonly object _raftNodeLock = new object();
-        public RaftNode LocalNode
-        {
-            get
-            {
-                return _raftNodeLock.DoubleCheckLock(ref _raftNode,
-                    () =>
-                    {
-                        RaftNode local = RaftNode.FromIdentifier(this, RaftNodeIdentifier.ForCurrentProcess());
-                        local.FollowerValueWritten += OnFollowerValueWritten;
-                        local.LeaderValueWritten += OnLeaderValueWritten;
-                        local.LeaderValueCommitted += OnLeaderValueCommitted;
-                        return local;
-                    });
-            }
         }
 
         public override string GetHashString(object value)
@@ -526,8 +527,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftNode leaderNode = GetLeaderNode();
             if (leaderNode != null)
             {
-                RaftClient raftClient = GetLeaderNode().GetClient();
-                Task.Run(() => raftClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
+                RaftProtocolClient raftProtocolClient = GetLeaderNode().GetClient();
+                Task.Run(() => raftProtocolClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
             }
             else
             {
@@ -542,7 +543,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             try
             {
                 ReceiveRequestAsync(request);
-                LocalNode.SendLogSyncResponse(request);
+                Task.Run(() => LocalNode.SendLogSyncResponse(request));
             }
             catch (Exception ex)
             {
@@ -559,8 +560,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             try
             {
                 ReceiveRequestAsync(request);
-                throw new NotImplementedException();
-                // write local commits based on request.LogsyncResponse
+                Task.Run(() => ReplicationLogSyncManager.HandleReplicationLog(request.LogSyncResponse));
             }
             catch (Exception ex)
             {
@@ -582,7 +582,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             try
             {
                 ReceiveRequestAsync(request);
-                AddNode(request.RequesterHostName, request.RequesterPort);
+                AddNode(request.OriginHostName, request.OriginPort);
             }
             catch (Exception ex)
             {
@@ -622,7 +622,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
                 if (leader == null)
                 {
-                    Logger.Warning("Unable to locate leader Arc for specified request: {0}:{1}/{2}", request.RequesterHostName, request.RequesterPort, request.RequesterIdentifier().CompositeKey);
+                    Logger.Warning("Unable to locate leader Arc for specified request: {0}:{1}/{2}", request.OriginHostName, request.OriginPort, request.RequesterIdentifier().CompositeKey);
                 }
                 else
                 {
@@ -644,8 +644,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 {
                     ReceiveRequestAsync(request);
                     RaftVote vote = RaftVote.Cast(RaftConsensusRepository, request.ElectionTerm, request);
-                    RaftClient voteResponseClient = request.GetResponseClient();
-                    voteResponseClient.SendVoteResponse(request.ElectionTerm, vote);
+                    RaftProtocolClient voteResponseProtocolClient = request.GetResponseClient();
+                    voteResponseProtocolClient.SendVoteResponse(request.ElectionTerm, vote);
                 });
             }
             catch (Exception ex)
@@ -658,7 +658,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public virtual RaftResult ReceiveVoteResponse(RaftRequest request)
         {
-            Args.ThrowIfNull(request);
+            Args.ThrowIfNull(request, "request");
+            Args.ThrowIfNull(request.VoteResponse, "request.VoteResponse");
             RaftResult result = new RaftResult(request);
             try
             {
@@ -668,7 +669,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 if (LatestElection.Term == electionForRequestedTerm.Term)
                 {
                     // get the local vote for the response if it exists
-                    RaftVote vote = RaftVote.ForElection(LocalRepository, electionForRequestedTerm);
+                    RaftVote vote = LocalRepository.LoadByCompositeKey<RaftVote>(request.VoteResponse.CompositeKeyId);
                     // save it if it doesn't
                     if (vote == null)
                     {
@@ -776,25 +777,26 @@ namespace Bam.Net.Services.DataReplication.Consensus
             }
         }
 
-        protected void SendLogSyncRequest(ulong sinceSequence)
+        protected void SendLogSyncRequest()
         {
-            RaftClient raftClient = GetLeaderNode().GetClient();
-            if (raftClient != null)
+            ulong sinceSequence = GetLatestCommitSequence();
+            RaftProtocolClient raftProtocolClient = GetLeaderNode()?.GetClient();
+            if (raftProtocolClient != null)
             {
-                raftClient.SendLogSyncRequest(sinceSequence);
+                raftProtocolClient.SendLogSyncRequest(sinceSequence);
             }
             else
             {
                 BroadcastLogSyncRequest(sinceSequence);
             }
         }
-        
+
         protected void NotifyLeaderFollowerValueWritten(RaftLogEntryWriteRequest writeRequest)
         {
-            RaftClient raftClient = GetLeaderNode()?.GetClient();
-            if (raftClient != null)
+            RaftProtocolClient raftProtocolClient = GetLeaderNode()?.GetClient();
+            if (raftProtocolClient != null)
             {
-                raftClient.NotifyLeaderFollowerValueWritten(writeRequest.LeaderCopy());
+                raftProtocolClient.NotifyLeaderFollowerValueWritten(writeRequest.LeaderCopy());
             }
             else
             {
@@ -864,7 +866,94 @@ namespace Bam.Net.Services.DataReplication.Consensus
         {
             Logger.Error("Error handling write request: \r\n{0}\r\n{1}", ex.Message, request?.ToJson());
             result.Message = ex.Message;
-            result.Success = false;
+            result.Status = RaftResultStatus.Error;
+        }
+        
+        private ulong GetLatestCommitSequence()
+        {
+            Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit commit = LocalRepository.TopRaftLogEntryCommitsWhere(1, c => c.Seq > -1,
+                Order.By<RaftLogEntryCommitColumns>(c => c.Seq, SortOrder.Descending)).FirstOrDefault();
+
+            return commit.Seq;
+        }
+
+        // delegate write operations to RaftRing.WriteValue
+        // delegate read operations to the LocalNode, if no values are found delegate to leader if leader is known otherwise broadcast read request
+        public object Save(SaveOperation value)
+        {
+            // this should use WriteValue
+            throw new NotImplementedException();
+        }
+
+        public object Create(CreateOperation value)
+        {
+            // this should use WriteValue
+            throw new NotImplementedException();
+            
+        }
+
+        public object Retrieve(RetrieveOperation value)
+        {
+            object retrieved = LocalNode.Retrieve(value);
+            if (retrieved == null)
+            {
+                // request from leader 
+                
+                // if leader is not known broadcast request
+            }
+
+            return retrieved;
+        }
+
+        public object Update(UpdateOperation value)
+        {
+            // transform the operation into an appropriate RaftWriteRequest
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(DeleteOperation value)
+        {
+            return LocalNode.Delete(value);
+        }
+
+        public void ForEachQueryResult(QueryOperation query, Action<object> action)
+        {
+            Task.Run(() => Parallel.ForEach(LocalQuery(query), action));
+            Task.Run(() => Parallel.ForEach(BroadcastQuery(query), action));
+        }
+        
+        public IEnumerable<object> Query(QueryOperation query)
+        {
+            foreach (object localObject in LocalQuery(query))
+            {
+                yield return localObject;
+            }
+
+            foreach (object broadcastResponse in BroadcastQuery(query))
+            {
+                yield return broadcastResponse;
+            }
+        }
+        
+        private IEnumerable<object> LocalQuery(QueryOperation query)
+        {
+            return LocalNode.Query(query);
+        }
+
+        private IEnumerable<object> BroadcastQuery(QueryOperation query)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ReplicationOperation Replicate(ReplicationOperation operation)
+        {
+            return LocalNode.Replicate(operation);
+        }
+
+        public IEnumerable<object> NextSet(ReplicationOperation operation)
+        {
+            return LocalNode.NextSet(operation);
         }
     }
 }

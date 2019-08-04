@@ -4,9 +4,9 @@ using Bam.Net.Services.DataReplication.Consensus.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
-    public class RaftServer : SecureStreamingServer<RaftRequest, RaftResponse>
+    public class RaftProtocolServer : SecureStreamingServer<RaftRequest, RaftResponse>
     {
-        public RaftServer(RaftRing ring, int port = RaftNodeIdentifier.DefaultPort)
+        public RaftProtocolServer(RaftRing ring, int port = RaftNodeIdentifier.DefaultPort)
         {
             Port = port;
             Ring = ring;
@@ -48,7 +48,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
                         response.Data = Ring.ReceiveLogSyncRequest(request);
                         break;
                     case RaftRequestType.LogSyncResponse:
-                        response.Data = Ring.ReceiveLogSyncRequest(request);
+                        response.Data = Ring.ReceiveLogSyncResponse(request);
                         break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");
