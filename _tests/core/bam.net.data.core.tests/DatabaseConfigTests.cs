@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Bam.Net.CommandLine;
+using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Npgsql;
+using Bam.Net.Data.Repositories;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 
@@ -25,7 +27,7 @@ namespace Bam.Net.Data.Tests
                         }
                     }).Each(app =>
                             {
-                                OutLine(app.ToJson());
+                                OutLine(Reflect.ToJson(app));
                             });
             
         }

@@ -1210,6 +1210,14 @@ File Version: {1}
             AddValidArgument(name, false, description: description);
         }
 
+        public static void AddSwitches()
+        {
+            foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
+            {
+                AddSwitches(type);
+            }
+        }
+        
         /// <summary>
         /// Calls AddValidArgument for every ConsoleAction that has a 
         /// CommandLineSwitch defined
@@ -1273,6 +1281,19 @@ File Version: {1}
             return ExecuteSwitches(arguments, instance.GetType(), instance, logger);
         }
 
+        public static bool ExecuteSwitches(bool isolateMethodCalls = false, ILogger logger = null)
+        {
+            bool executed = false;
+            foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
+            {
+                if (!executed && ExecuteSwitches(Arguments, type, false, logger))
+                {
+                    executed = true;
+                }
+            }
+
+            return executed;
+        }
         /// <summary>
         /// Execute the methods on the specified instance that are addorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the

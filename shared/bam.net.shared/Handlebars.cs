@@ -41,7 +41,7 @@ namespace Bam.Net
 
         private static void EnsureTemplatesAreLoaded()
         {
-            if (!HandlebarsDirectory.IsLoaded)
+            if (HandlebarsDirectory != null && !HandlebarsDirectory.IsLoaded)
             {
                 HandlebarsDirectory.Reload();
             }

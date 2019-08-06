@@ -35,13 +35,14 @@ namespace Bam.Net.Data.Dynamic
             if (CurrentSql != null)
             {
                 DataTable table = CurrentSql.GetDataTable(Database);
-                table = MapDataTable(tableName, table);
-                CurrentSql = null;
-                // TODO: fix this to do something more "dynamic"; generate and compile dynamic types using something other than IL emit.
-                List<dynamic> results = new List<dynamic>();
-                foreach (DataRow row in table.Rows)
+                if (NameMap != null)
                 {
-                    yield return row;
+                    table = MapDataTable(tableName, table); 
+                }
+                CurrentSql = null;
+                foreach (object obj in table.ToDynamic(tableName))
+                {
+                    yield return obj;
                 }
             }
             yield break;
@@ -70,9 +71,9 @@ namespace Bam.Net.Data.Dynamic
             DataTable table = Database.GetDataTable(sql, System.Data.CommandType.Text, dbParameters.ToArray());
             if (table.Rows?.Count > 0)
             {
-                foreach (DataRow row in table.Rows)
+                foreach (object obj in table.ToDynamic(table.TableName ?? sql.Sha256()))
                 {
-                    yield return row;
+                    yield return obj;
                 }
             }
             yield break;

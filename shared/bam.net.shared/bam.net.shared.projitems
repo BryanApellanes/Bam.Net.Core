@@ -2720,6 +2720,7 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\Templates\ChildPrimaryKeyProperty.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\Templates\SchemaRepository.hbs" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\Templates\Dto.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\Templates\SchemaRepositoryAddType.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\Templates\SchemaRepositoryMethods.hbs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\Templates\Wrapper.hbs" />
