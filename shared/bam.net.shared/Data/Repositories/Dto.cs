@@ -95,6 +95,18 @@ namespace Bam.Net.Data.Repositories
             return fileName;
         }
 
+        public static Assembly AssemblyFor(dynamic dynamicInstance)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Type TypeFor(dynamic dynamicInstance)
+        {
+            Assembly assembly = AssemblyFor(dynamicInstance);
+            
+            throw new NotImplementedException();
+        }
+
         public static void WriteRenderedDto(string nameSpace, string writeSourceTo, Type daoType, Func<PropertyInfo, bool> propertyFilter)
         {
             string typeName = Dao.TableName(daoType);
@@ -102,7 +114,7 @@ namespace Bam.Net.Data.Repositories
             DtoModel dtoModel = new DtoModel(nameSpace, typeName, daoType.GetProperties().Where(propertyFilter).Select(pi=> new DtoPropertyModel(pi)).ToArray());
             WriteRenderedDto(writeSourceTo, dtoModel);
         }
-
+        
         public static void WriteRenderedDto(string nameSpace, string writeSourceTo, Type dynamicDtoType)
         {
             DtoModel dtoModel = new DtoModel(dynamicDtoType, nameSpace);
