@@ -31,7 +31,6 @@ namespace Bam.Net.Data.Tests
                             });
             
         }
-
         
         [ConsoleAction("loadDbConfigTest", "Run the db config test")]
         [TestGroup("Data.Core")]

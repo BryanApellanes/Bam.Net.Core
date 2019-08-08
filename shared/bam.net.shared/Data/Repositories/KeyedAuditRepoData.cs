@@ -8,7 +8,7 @@ namespace Bam.Net.Data.Repositories
     /// <summary>
     /// Extend this class to define a type that uses multiple properties to determine
     /// persistence instance uniqueness.  Adorn key properties with the CompositeKey
-    /// attribute.  Adds the Key property to KeyHashAuditRepoData.
+    /// attribute.  Adds the Key property to CompositeKeyAuditRepoData.
     /// </summary>
     [Serializable]
     public abstract class KeyedAuditRepoData : CompositeKeyAuditRepoData

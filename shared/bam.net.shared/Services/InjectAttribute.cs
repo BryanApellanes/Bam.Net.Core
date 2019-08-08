@@ -6,7 +6,7 @@ namespace Bam.Net.Services
 {
     /// <summary>
     /// Used to denote a property that is set by injection after
-    /// object instanciation using a call to Incubator.SetProperties.
+    /// object instantiation using a call to Incubator.SetProperties.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class InjectAttribute: Attribute

@@ -33,6 +33,10 @@ namespace Bam.Net.Javascript
 				Initialize();				
 			}
 		}
+		
+		/// <summary>
+		/// Initialize the database by instantiating it and setting the connection string.
+		/// </summary>
 		protected abstract void Initialize();
 
 		#region IConfigurable Members

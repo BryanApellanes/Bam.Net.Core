@@ -482,6 +482,13 @@ namespace Bam.Net.Server
             return conf;
         }
 
+        static BamConf _default;
+        static object _defaultLock = new object();
+        public static BamConf Default
+        {
+            get { return _defaultLock.DoubleCheckLock(ref _default, Load); }
+        }
+        
         public static BamConf Load()
         {
             return Load(DefaultConfiguration.GetAppSetting(ContentRootConfigKey, RuntimeSettings.AppDataFolder));
