@@ -443,7 +443,7 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Get the property of the current instance with the specified name
+        /// Get the value of the specified propertyName from the current instance.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="propertyName"></param>

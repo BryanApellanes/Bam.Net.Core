@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bam.Net.Application.Data
 {
-    public class ManagedComponent: CompositeKeyRepoData
+    public class ManagedComponent: NamedAuditRepoData
     {
         public string DomId { get; set; }
 

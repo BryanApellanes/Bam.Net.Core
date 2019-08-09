@@ -48,6 +48,11 @@ namespace Bam.Net.Automation.Tests
             throw new NotImplementedException();
         }
 
+        public void RunTestGroup(string testGroup)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RunSpecifiedTests(string testIdentifiers)
         {
             throw new NotImplementedException();

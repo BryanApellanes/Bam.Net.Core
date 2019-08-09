@@ -330,8 +330,11 @@ namespace Bam.Net.Server
         
         private void InitializeAppResponders(AppConf[] configs)
         {
-            string currentMode = ProcessMode.Current.Mode.ToString();
-            configs.Where(c=> c.ProcessMode.Equals(currentMode)).Each(ac =>
+            HashSet<string> configured = new HashSet<string>(BamConf.ProcessModes.Select(m => m.ToString()))
+            {
+                ProcessMode.Current.Mode.ToString()
+            };
+            configs.Where(c=> configured.Contains(c.ProcessMode)).Each(ac =>
             {
                 OnAppContentResponderInitializing(ac);
                 Logger.RestartLoggingThread();

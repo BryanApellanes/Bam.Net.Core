@@ -14,7 +14,7 @@ using Bam.Net.Logging;
 namespace Bam.Net.Data
 {
 	/// <summary>
-	/// Utitlity for setting default databases
+	/// Utility for setting default databases
 	/// in the default database container.
 	/// </summary>
     public static class Db

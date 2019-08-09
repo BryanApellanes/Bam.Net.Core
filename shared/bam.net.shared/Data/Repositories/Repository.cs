@@ -220,6 +220,50 @@ namespace Bam.Net.Data.Repositories
             }
         }
 
+        /// <summary>
+        /// Load the data represented by the specified toGet saving it if it doesn't exist.
+        /// </summary>
+        /// <param name="toGet"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public virtual T GetByCompositeKey<T>(CompositeKeyAuditRepoData toGet)
+	        where T : CompositeKeyAuditRepoData, new()
+        {
+	        T result = LoadByCompositeKey<T>(toGet);
+	        if (result == null)
+	        {
+		        result = Save<T>((T) toGet);
+	        }
+
+	        return result;
+        }
+
+        public virtual T LoadByCompositeKey<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
+        {
+	        return RetrieveByCompositeKey<T>(compositeKey);
+        }
+        
+        public virtual T LoadByCompositeKey<T>(CompositeKeyAuditRepoData toLoad) where T : CompositeKeyAuditRepoData, new()
+        {
+	        return RetrieveByCompositeKey<T>(toLoad.CompositeKey);
+        }
+
+        public virtual T RetrieveByCompositeKey<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
+        {
+	        return Query<T>(new Dictionary<string, object>
+	        {
+		        { nameof(CompositeKeyAuditRepoData.CompositeKeyId), compositeKey}
+	        }).FirstOrDefault();
+        }
+        
+        public virtual T RetrieveByCompositeKey<T>(string compositeKey) where T : CompositeKeyAuditRepoData, new()
+        {
+	        return Query<T>(new Dictionary<string, object>
+	        {
+		        { nameof(CompositeKeyAuditRepoData.CompositeKey), compositeKey}
+	        }).FirstOrDefault();
+        }
+        
         public virtual object Retrieve(string typeIdentifier, string instanceIdentifier)
         {
             Type type = Type.GetType(typeIdentifier, true);

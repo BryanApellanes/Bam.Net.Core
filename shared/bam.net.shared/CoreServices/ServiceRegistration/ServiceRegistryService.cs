@@ -177,7 +177,7 @@ namespace Bam.Net.CoreServices
         public IAssemblyService AssemblyService { get; set; }
 
         /// <summary>
-        /// Get the service registry using the underlying ServcieRegistryLoaderDescriptor
+        /// Get the service registry using the underlying ServiceRegistryLoaderDescriptor
         /// or ServiceRegistryDescriptor with the specified name
         /// </summary>
         /// <param name="registryName"></param>
@@ -445,7 +445,7 @@ namespace Bam.Net.CoreServices
 
         /// <summary>
         /// Lock the ServiceRegistry with the specified name.  This effectively
-        /// dissables updates
+        /// disables updates
         /// </summary>
         /// <param name="name"></param>
         [RoleRequired("/", "Admin")]

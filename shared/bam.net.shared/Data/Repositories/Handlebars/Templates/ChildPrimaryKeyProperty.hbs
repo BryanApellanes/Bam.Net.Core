@@ -1,11 +1,11 @@
         {{PrimaryKeyType.Namespace}}.{{{PrimaryKeyType.Name}}} _{{{PrimaryKeyTypeCamelCaseName}}};
-		public override {{PrimaryKeyType.Namespace}}.{{{Model.PrimaryKeyType.Name}}} {{Model.ChildParentProperty.Name}}
+		public override {{PrimaryKeyType.Namespace}}.{{{PrimaryKeyType.Name}}} {{ChildParentProperty.Name}}
 		{
 			get
 			{
 				if (_{{{PrimaryKeyTypeCamelCaseName}}} == null)
 				{
-					_{{{PrimaryKeyTypeCamelCaseName}}} = ({{PrimaryKeyType.Namespace}}.{{{PrimaryKeyType.Name}}})Repository.GetParentPropertyOfChild(this, typeof({{{PrimaryKeyType.Namespace}}}.{{{PrimaryKeyType.Name}}}));
+					_{{{PrimaryKeyTypeCamelCaseName}}} = ({{PrimaryKeyType.Namespace}}.{{{PrimaryKeyType.Name}}})DaoRepository.GetParentPropertyOfChild(this, typeof({{{PrimaryKeyType.Namespace}}}.{{{PrimaryKeyType.Name}}}));
 				}
 				return _{{{PrimaryKeyTypeCamelCaseName}}};
 			}

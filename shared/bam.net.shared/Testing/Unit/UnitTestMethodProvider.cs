@@ -11,9 +11,9 @@ namespace Bam.Net.Testing.Unit
     {
         public UnitTestMethodProvider() { }
 
-        public override List<UnitTestMethod> GetTests()
+        public override List<UnitTestMethod> GetTests(string testGroup = null)
         {
-            return UnitTestMethod.FromAssembly(Assembly);
+            return string.IsNullOrEmpty(testGroup) ? UnitTestMethod.FromAssembly(Assembly) : UnitTestMethod.FromAssembly(Assembly, testGroup);
         }
     }
 }

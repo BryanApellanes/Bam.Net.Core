@@ -73,8 +73,8 @@ namespace Bam.Net.Data
         public InComparison(string columnName, object[] values, string parameterPrefix = "@")
             :base(columnName, " IN ", values)
         {
+            ThrowIfNull(values, "values");
             Args.ThrowIf<InvalidOperationException>(values.Length == 0, "At least one value must be specified");
-            ThrowIfNullOrEmpty(values, "values");
             Values = new object[values.Length];
             for (int i = 0; i < values.Length; i++)
             {
@@ -87,8 +87,8 @@ namespace Bam.Net.Data
         public InComparison(string columnName, long[] values, string parameterPrefix = "@")
             :base(columnName, " IN ", values)
         {
+            ThrowIfNull(values, "values");
             Args.ThrowIf<InvalidOperationException>(values.Length == 0, "At least one value must be specified for 'InComparison'");
-            ThrowIfNullOrEmpty(values, "values");
             Values = new object[values.Length];
             for (int i = 0; i < values.Length; i++)
             {
@@ -101,8 +101,8 @@ namespace Bam.Net.Data
         public InComparison(string columnName, ulong[] values, string parameterPrefix = "@")
            : base(columnName, " IN ", values)
         {
+            ThrowIfNull(values, "values");
             Args.ThrowIf<InvalidOperationException>(values.Length == 0, "At least one value must be specified for 'InComparison'");
-            ThrowIfNullOrEmpty(values, "values");
             Values = new object[values.Length];
             for (int i = 0; i < values.Length; i++)
             {
@@ -115,8 +115,8 @@ namespace Bam.Net.Data
         public InComparison(string columnName, string[] values, string parameterPrefix = "@")
             : base(columnName, " IN ", values)
         {
+            ThrowIfNull(values, "values");
             Args.ThrowIf<InvalidOperationException>(values.Length == 0, "At least one value must be specified for 'InComparison'");
-            ThrowIfNullOrEmpty(values, "values");
             Values = new object[values.Length];
             for (int i = 0; i < values.Length; i++)
             {
@@ -170,17 +170,17 @@ namespace Bam.Net.Data
             List<string> paramNames = new List<string>();
             foreach(int i in numbers)
             {
-                paramNames.Add(string.Format("{0}P{1}", ParameterPrefix, i));
+                paramNames.Add($"{ParameterPrefix}P{i}");
             }
 
-            return string.Format("{0} IN ({1})", ColumnNameFormatter(ColumnName), paramNames.ToArray().ToDelimited(s => s));
+            return $"{ColumnNameFormatter(ColumnName)} IN ({paramNames.ToArray().ToDelimited(s => s)})";
         }
 
-        private void ThrowIfNullOrEmpty(IEnumerable values, string name)
+        private void ThrowIfNull(IEnumerable values, string name)
         {
             if (values == null)
             {
-                throw new InvalidOperationException(string.Format("{0} can't be null or empty", name));
+                throw new InvalidOperationException($"{name} can't be null or empty");
             }
         }
     }

@@ -2,9 +2,11 @@
 	Copyright © Bryan Apellanes 2015  
 */
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Bam.Net.Data.Repositories
 {
@@ -13,7 +15,13 @@ namespace Bam.Net.Data.Repositories
 	/// of Dao types without the associated methods.  
 	/// </summary>
 	public partial class Dto
-	{
+    {
+        public const string DefaultNamespace = "Bam.Net.Data.Dto";
+        public string ToJson()
+        {
+            return Extensions.ToJson(this);
+        }
+        
         /// <summary>
         /// Get the associated Dto types for the 
         /// Dao types in the specified daoAssembly.
@@ -47,7 +55,7 @@ namespace Bam.Net.Data.Repositories
         /// <returns></returns>
         public static Type TypeFor(Type daoType)
         {
-            return GetTypesFromDaos(daoType.Assembly).Where(t => t.Name.Equals(daoType.Name)).FirstOrDefault();
+            return GetTypesFromDaos(daoType.Assembly).FirstOrDefault(t => t.Name.Equals(daoType.Name));
         }
 
         /// <summary>
@@ -95,6 +103,57 @@ namespace Bam.Net.Data.Repositories
             return fileName;
         }
 
+        public static dynamic InstanceFor(string typeName, Dictionary<object, object> dictionary)
+        {
+            return InstanceFor(DefaultNamespace, typeName, dictionary);
+        }
+        
+        public static dynamic InstanceFor(string nameSpace, string typeName, Dictionary<object, object> dictionary)
+        {
+            Type type = TypeFor(nameSpace, typeName, dictionary);
+            return dictionary.ToInstance(type);
+        }
+
+        public static Type TypeFor(string typeName, Dictionary<object, object> dictionary)
+        {
+            return TypeFor(DefaultNamespace, typeName, dictionary);
+        }
+        
+        public static Type TypeFor(string nameSpace, string typeName, Dictionary<object, object> dictionary)
+        {
+            return AssemblyFor(nameSpace, typeName, dictionary).GetTypes().FirstOrDefault(t => t.Name.Equals(DtoModel.CleanTypeName(typeName)));
+        }
+
+        public static Assembly AssemblyFor(string typeName, Dictionary<object, object> dictionary)
+        {
+            return AssemblyFor(DefaultNamespace, typeName, dictionary);
+        }
+
+        public static Assembly AssemblyFor(string nameSpace, string typeName, Dictionary<object, object> dictionary)
+        {
+            return AssemblyFor(nameSpace, nameSpace, typeName, dictionary);
+        }
+        
+        static Dictionary<string, Assembly> _dtoAssemblies = new Dictionary<string, Assembly>();
+        static object _dtoAssemblyLock = new object();
+        public static Assembly AssemblyFor(string assemblyName, string nameSpace, string typeName, Dictionary<object, object> dictionary)
+        {
+            nameSpace = nameSpace ?? DefaultNamespace;
+            DtoModel dtoModel = new DtoModel(nameSpace, typeName, dictionary);
+            string dtoSrc = dtoModel.Render();
+            string key = dtoSrc.Sha256();
+            lock (_dtoAssemblyLock)
+            {
+                if (!_dtoAssemblies.ContainsKey(key))
+                {
+                    RoslynCompiler compiler = new RoslynCompiler();
+                    _dtoAssemblies.Add(key, compiler.CompileAssembly(assemblyName, dtoSrc));
+                }
+            }
+
+            return _dtoAssemblies[key];
+        }
+        
         public static void WriteRenderedDto(string nameSpace, string writeSourceTo, Type daoType, Func<PropertyInfo, bool> propertyFilter)
         {
             string typeName = Dao.TableName(daoType);
@@ -102,7 +161,7 @@ namespace Bam.Net.Data.Repositories
             DtoModel dtoModel = new DtoModel(nameSpace, typeName, daoType.GetProperties().Where(propertyFilter).Select(pi=> new DtoPropertyModel(pi)).ToArray());
             WriteRenderedDto(writeSourceTo, dtoModel);
         }
-
+        
         public static void WriteRenderedDto(string nameSpace, string writeSourceTo, Type dynamicDtoType)
         {
             DtoModel dtoModel = new DtoModel(dynamicDtoType, nameSpace);

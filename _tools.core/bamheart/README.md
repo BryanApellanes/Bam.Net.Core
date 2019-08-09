@@ -1,6 +1,11 @@
 ﻿# Bamheart
 
-Bamheart.exe provides the core set of services for Bam.Net.
+Bamheart.exe provides the core set of services for Bam.Net.  Services included:
+
+- UserRegistryService
+- ConfigurationService
+- 
+
 
 ## UserRegistryService
 

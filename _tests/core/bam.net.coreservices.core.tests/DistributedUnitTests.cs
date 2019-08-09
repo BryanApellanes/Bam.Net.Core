@@ -29,12 +29,12 @@ namespace Bam.Net.Distributed.Tests
 				throw new NotImplementedException();
 			}
 
-			public override int GetRepositoryKey(object value)
+			public override int GetObjectKey(object value)
 			{
 				throw new NotImplementedException();
 			}
 
-			protected override Arc FindArcByKey(int key)
+			protected override Arc FindArcByObjectKey(int key)
 			{
 				throw new NotImplementedException();
 			}

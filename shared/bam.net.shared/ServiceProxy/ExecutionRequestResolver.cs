@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.ServiceProxy
 {
+    /// <summary>
+    /// Class used to determine what method to execute for a given HttpContext.
+    /// </summary>
     public class ExecutionRequestResolver: IExecutionRequestResolver
     {
         public ExecutionRequestResolver(ILogger logger = null)

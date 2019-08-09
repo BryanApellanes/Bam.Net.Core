@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Data.Dynamic.Data
 {
     [Serializable]
-    public class DataInstance: CompositeKeyRepoData
+    public class DataInstance: KeyedAuditRepoData
     {
         public ulong DynamicNameSpaceDescriptorId { get; set; }
         public virtual DynamicNamespaceDescriptor DynamicNamespaceDescriptor { get; set; }

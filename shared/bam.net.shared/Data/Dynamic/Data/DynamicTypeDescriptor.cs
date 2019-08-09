@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Data.Dynamic.Data
 {
     [Serializable]
-    public class DynamicTypeDescriptor: CompositeKeyRepoData
+    public class DynamicTypeDescriptor: KeyedAuditRepoData
     {
         public DynamicTypeDescriptor()
         { }

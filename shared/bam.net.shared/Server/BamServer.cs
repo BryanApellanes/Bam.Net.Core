@@ -534,6 +534,7 @@ namespace Bam.Net.Server
         public bool UseCache { get; set; }
         public bool InitializeWebBooks { get; set; }
         public string DaoSearchPattern { get; set; }
+        public ProcessModes[] ProcessModes { get; set; }
         public string ServiceSearchPattern { get; set; }
         public string MainLoggerName { get; set; }
         public string InitializeFileSystemFrom { get; set; }

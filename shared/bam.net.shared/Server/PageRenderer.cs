@@ -25,7 +25,7 @@ namespace Bam.Net.Server
             ApplicationTemplateManager = applicationTemplateManager;
             RequestRouter = new RequestRouter();
             ApplicationTemplateManager.AppContentResponder = appContentResponder;
-            appContentResponder = appContentResponder;
+            AppContentResponder = appContentResponder;
             _routeInfos = new Dictionary<string, RouteInfo>();
         }
         
@@ -45,10 +45,11 @@ namespace Bam.Net.Server
 
         protected RouteInfo GetRouteInfo(IRequest request)
         {
-            if (!_routeInfos.ContainsKey(request.RawUrl))
+            string url = request.Url?.ToString();
+            if (!_routeInfos.ContainsKey(url))
             {
                 RouteInfo info = new RouteInfo() {Request = request};
-                info.IsHomeRequest = RequestRouter.IsHomeRequest(request.RawUrl, out RequestRoute route);
+                info.IsHomeRequest = RequestRouter.IsHomeRequest(request.Url, out RequestRoute route);
                 info.RequestRoute = route;
                 if (!info.IsHomeRequest)
                 {
@@ -59,10 +60,10 @@ namespace Bam.Net.Server
                     info.CanRender = info.IsHomeRequest;
                 }
 
-                _routeInfos.AddMissing(request.RawUrl, info);
+                _routeInfos.AddMissing(url, info);
             }
             
-            return _routeInfos[request.RawUrl];
+            return _routeInfos[url];
         }
     }
 }

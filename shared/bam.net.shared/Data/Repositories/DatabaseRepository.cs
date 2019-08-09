@@ -15,7 +15,7 @@ namespace Bam.Net.Data.Repositories
     /// <summary>
     /// An extension to the DaoRepository that supports saving
     /// types that extend other types in a schema that reflects
-    /// the inheritance chain
+    /// the inheritance chain.
     /// </summary>
     public class DatabaseRepository : DaoRepository
     {

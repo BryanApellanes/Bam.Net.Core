@@ -25,5 +25,12 @@ namespace Bam.Net.CoreServices // core
 
             AppDiagInfo = new ApplicationDiagnosticInfo();
         }
+
+        static DiagnosticInfo _current;
+        static object _currentLock = new object();
+        public static DiagnosticInfo Current
+        {
+            get { return _currentLock.DoubleCheckLock(ref _current, () => new DiagnosticInfo()); }
+        }
     }
 }

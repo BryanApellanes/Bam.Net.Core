@@ -30,7 +30,7 @@ namespace Bam.Net.Services.DataReplication
             registry
                 .For<ISequenceProvider>().Use<FileSequenceProvider>()
                 .For<ITypeConverter>().Use<DefaultTypeConverter>()
-                .For<JournalTypeMap>().Use<JournalTypeMap>()
+                .For<TypeMap>().Use<TypeMap>()
                 .For<IJournalEntryValueFlusher>().Use<JournalEntryValueFlusher>()
                 .For<IJournalEntryValueLoader>().Use<JournalEntryValueLoader>()
                 .For<Journal>().Use<Journal>()

@@ -30,7 +30,7 @@ namespace Bam.Net.Server.Rest
                 }
             }
             Query = queryString;
-            switch (HttpMethd.ToUpperInvariant())
+            switch (HttpMethod.ToUpperInvariant())
             {
                 case "POST":
                     // ** Create / POST (data in request body)**
@@ -38,7 +38,7 @@ namespace Bam.Net.Server.Rest
                     if(split.Length == 2)
                     {
                         TypeName = split[0];
-                        Extension = string.Format(".{0}", split[1]);
+                        Extension = $".{split[1]}";
                         IsValid = true;
                     };
                     break;
@@ -51,16 +51,15 @@ namespace Bam.Net.Server.Rest
                     {
                         case 2:
                             TypeName = split[0];
-                            Extension = string.Format(".{0}", split[1]);
+                            Extension = $".{split[1]}";
                             IsValid = true;
                             break;
                         case 3:
-                            long id3;
-                            if (long.TryParse(split[1], out id3))
+                            if (long.TryParse(split[1], out var id3))
                             {
                                 TypeName = split[0];
                                 Id = id3;
-                                Extension = string.Format(".{0}", split[2]);
+                                Extension = $".{split[2]}";
                                 IsValid = true;
                             }
                             break;
@@ -71,7 +70,7 @@ namespace Bam.Net.Server.Rest
                                 TypeName = split[0];
                                 Id = id4;
                                 ChildListProperty = split[2];
-                                Extension = string.Format(".{0}", split[3]);
+                                Extension = $".{split[3]}";
                                 IsValid = true;
                             }
                             break;
@@ -81,26 +80,24 @@ namespace Bam.Net.Server.Rest
                     }
                     break;
                 case "PUT":
-                // ** Update / PUT (data in request body)**
-                // /{Type}/{Id}.{ext}
-                    long putId;
-                    if (long.TryParse(split[1], out putId))
+                    // ** Update / PUT (data in request body)**
+                    // /{Type}/{Id}.{ext}
+                    if (long.TryParse(split[1], out var putId))
                     {
                         TypeName = split[0];
                         Id = putId;
-                        Extension = string.Format(".{0}", split[2]);
+                        Extension = $".{split[2]}";
                         IsValid = true;
                     }
                     break;
                 case "DELETE":
-                // ** Delete / DELETE
-                // /{Type}/{Id}
-                    long deleteId;
-                    if (long.TryParse(split[1], out deleteId))
+                    // ** Delete / DELETE
+                    // /{Type}/{Id}
+                    if (long.TryParse(split[1], out var deleteId))
                     {
                         TypeName = split[0];
                         Id = deleteId;
-                        Extension = string.Format(".{0}", split[2]);
+                        Extension = $".{split[2]}";
                         IsValid = true;
                     }
                     break;
@@ -111,7 +108,7 @@ namespace Bam.Net.Server.Rest
         }
 
         public bool IsValid { get; private set; }
-        public string HttpMethd { get { return Request.HttpMethod; } }
+        public string HttpMethod { get { return Request.HttpMethod; } }
         public IRequest Request { get; private set; }
         public IResponse Response { get; private set; }
         public string TypeName { get; private set; }

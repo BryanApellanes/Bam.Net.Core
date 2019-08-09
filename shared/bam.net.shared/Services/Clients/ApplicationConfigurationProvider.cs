@@ -18,7 +18,7 @@ namespace Bam.Net.Services.Clients
         public ApplicationConfigurationProvider(CoreClient client)
         {
             Args.ThrowIfNull(client, "client");
-            Args.ThrowIfNull(client.ConfigurationProvider, "client.ConfigurationService");
+            Args.ThrowIfNull(client.ConfigurationService, "client.ConfigurationService");
             CoreClient = client;
             Configurations = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
             SaveDefaultConfiguration();
@@ -46,12 +46,12 @@ namespace Bam.Net.Services.Clients
 
         public void SetApplicationConfiguration(string applicationName, Dictionary<string, string> settings, string configurationName)
         {
-            CoreClient.ConfigurationProvider.SetApplicationConfiguration(settings, applicationName, configurationName);
+            CoreClient.ConfigurationService.SetApplicationConfiguration(settings, applicationName, configurationName);
         }
 
         public ApplicationConfiguration GetConfiguration(string configurationName = "Default")
         {
-            return CoreClient.ConfigurationProvider.GetConfiguration(ApplicationName, Machine.Current.Name, configurationName);
+            return CoreClient.ConfigurationService.GetConfiguration(ApplicationName, Machine.Current.Name, configurationName);
         }
 
         bool _defaultConfigurationSaved;
@@ -84,7 +84,7 @@ namespace Bam.Net.Services.Clients
         /// <returns></returns>
         public ApplicationConfiguration LoadConfiguration(string configName = "Default", bool inject = false)
         {
-            ApplicationConfiguration config = CoreClient.ConfigurationProvider.GetConfiguration(ApplicationName, Machine.Current.Name, configName);
+            ApplicationConfiguration config = CoreClient.ConfigurationService.GetConfiguration(ApplicationName, Machine.Current.Name, configName);
             if (inject)
             {
                 config.Inject();

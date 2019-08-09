@@ -44,11 +44,6 @@ namespace Bam.Net.CommandLine
 
         public override void CommitLogEvent(LogEvent logEvent)
         {
-            if (AddDetails)
-            {
-                ShowDetails(logEvent);
-            }
-
             if (UseColors)
             {
                 switch (logEvent.Severity)
@@ -95,17 +90,6 @@ namespace Bam.Net.CommandLine
                 local = input.ToLocalTime();
             }
             return local;
-        }
-
-        private static void ShowDetails(LogEvent logEvent)
-        {
-            Console.WriteLine(logEvent.Severity.ToString());
-            Console.WriteLine("Computer: {0}", logEvent.Computer);
-            string[] split = logEvent.Message.Split(new string[] { "~~" }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < split.Length - 1; i++)
-            {
-                Console.WriteLine(split[i]);
-            }
         }
     }
 }

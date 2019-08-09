@@ -11,7 +11,7 @@ namespace Bam.Net.Automation
     {
         static PsKill()
         {
-            Path = "/bam/tools/PsKill.exe";
+            SetPath();
         }
 
         public static string Path { get; set; }
@@ -31,6 +31,12 @@ namespace Bam.Net.Automation
             command.Append($" {processIdOrName}");
 
             return command.ToString().Run(timeout);
+        }
+        
+        private static void SetPath()
+        {
+            string fileName = "PsKill.exe";
+            Path = OSInfo.TryGetPath(fileName, out string path) ? path : OSInfo.DefaultToolPath(fileName);
         }
     }
 }

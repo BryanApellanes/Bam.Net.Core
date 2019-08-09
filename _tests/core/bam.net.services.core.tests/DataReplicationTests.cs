@@ -31,7 +31,7 @@ namespace Bam.Net.Services.Tests
         [UnitTest("Data Replication: can get type map")]
         public void CanGetTypeMap()
         {
-            JournalTypeMap typeMap = GetEncryptionJournal<JournalTypeMap>();
+            TypeMap typeMap = GetEncryptionJournal<TypeMap>();
             Expect.IsNotNull(typeMap, "typeMap was null");
         }
 
@@ -236,7 +236,7 @@ namespace Bam.Net.Services.Tests
         [UnitTest("Data Replication: can save and load type map")]
         public void CanSaveAndLoadTypeMap()
         {
-            JournalTypeMap typeMap = GetEncryptionJournal<JournalTypeMap>();
+            TypeMap typeMap = GetEncryptionJournal<TypeMap>();
             typeMap.AddMapping(new DataReplicationTestClass());
             int typeCount = typeMap.TypeMappings.Count;
             int propCount = typeMap.PropertyMappings.Count;
@@ -244,7 +244,7 @@ namespace Bam.Net.Services.Tests
             string filePath = typeMap.Save();
             Expect.IsTrue(File.Exists(filePath));
 
-            JournalTypeMap loaded = JournalTypeMap.Load(filePath);
+            TypeMap loaded = TypeMap.Load(filePath);
             Expect.AreEqual(loaded.TypeMappings.Count, typeCount);
             Expect.AreEqual(loaded.PropertyMappings.Count, propCount);
         }

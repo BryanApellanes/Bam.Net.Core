@@ -24,7 +24,7 @@ namespace Bam.Net.Automation.Testing
             {
                 coverageFolder.Create();
             }
-            string[] reportXmlFilePaths = coverageFolder.GetFiles("*_coverage.xml").Select(fi => fi.FullName).ToArray(); //bamtestrunner.exe will output xml files to this folder 
+            string[] reportXmlFilePaths = coverageFolder.GetFiles("*_coverage.xml").Select(fi => fi.FullName).ToArray(); //bamtest.exe will output xml files to this folder 
             return Run(outputDirectoryPath, reportXmlFilePaths, System.IO.Path.Combine(Paths.Tests, TestConstants.HistoryFolder));
         }
 

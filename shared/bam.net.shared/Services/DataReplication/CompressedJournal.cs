@@ -9,7 +9,7 @@ namespace Bam.Net.Services.DataReplication
 {
     public class CompressedJournal: Journal
     {
-        public CompressedJournal(SystemPaths paths, JournalTypeMap typeMap, ISequenceProvider sequenceProvider, ITypeConverter typeConverter = null, ILogger logger = null) : base(paths, typeMap, sequenceProvider, new CompressedJournalEntryValueFlusher(), new CompressedJournalEntryValueLoader(), typeConverter, logger)
+        public CompressedJournal(SystemPaths paths, TypeMap typeMap, ISequenceProvider sequenceProvider, ITypeConverter typeConverter = null, ILogger logger = null) : base(paths, typeMap, sequenceProvider, new CompressedJournalEntryValueFlusher(), new CompressedJournalEntryValueLoader(), typeConverter, logger)
         { }
     }
 }

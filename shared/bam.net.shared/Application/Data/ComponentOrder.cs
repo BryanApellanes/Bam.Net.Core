@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Bam.Net.Application.Data
 {
-    public class ComponentOrder : CompositeKeyRepoData
+    public class ComponentOrder : KeyedAuditRepoData
     {
         [CompositeKey]
         public string PageCuid { get; set; }

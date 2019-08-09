@@ -147,7 +147,7 @@ namespace Bam.Net.Data.Schema
             return CurrentSchema;
         }
 
-        public SchemaResult AddTable(string tableName, string className = null)
+        public SchemaManagerResult AddTable(string tableName, string className = null)
         {
             try
             {
@@ -155,12 +155,12 @@ namespace Bam.Net.Data.Schema
                 Table t = new Table();
                 t.ClassName = className ?? tableName;
                 t.Name = tableName;
-                SchemaResult result = schema.AddTable(t);
+                SchemaManagerResult managerResult = schema.AddTable(t);
                 if (AutoSave)
                 {
                     schema.Save();
                 }
-                return result;
+                return managerResult;
             }
             catch (Exception ex)
             {
@@ -168,18 +168,18 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        public SchemaResult AddXref(string left, string right)
+        public SchemaManagerResult AddXref(string left, string right)
         {
             try
             {
                 SchemaDefinition schema = CurrentSchema;
                 XrefTable x = new XrefTable(left, right);
-                SchemaResult result = schema.AddXref(x);
+                SchemaManagerResult managerResult = schema.AddXref(x);
                 if (AutoSave)
                 {
                     schema.Save();
                 }
-                return result;
+                return managerResult;
             }
             catch (Exception ex)
             {
@@ -195,7 +195,7 @@ namespace Bam.Net.Data.Schema
         /// <param name="columnName"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public SchemaResult SetColumnPropertyName(string tableName, string columnName, string propertyName)
+        public SchemaManagerResult SetColumnPropertyName(string tableName, string columnName, string propertyName)
         {
             try
             {
@@ -205,7 +205,7 @@ namespace Bam.Net.Data.Schema
                 {
                     CurrentSchema.Save();
                 }
-                return new SchemaResult("column property name set");
+                return new SchemaManagerResult("column property name set");
             }
             catch (Exception ex)
             {
@@ -213,7 +213,7 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        public SchemaResult SetTableClassName(string tableName, string className)
+        public SchemaManagerResult SetTableClassName(string tableName, string className)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace Bam.Net.Data.Schema
                 {
                     CurrentSchema.Save();
                 }
-                return new SchemaResult("class name set");
+                return new SchemaManagerResult("class name set");
             }
             catch (Exception ex)
             {
@@ -236,7 +236,7 @@ namespace Bam.Net.Data.Schema
             }
         }
         
-        public SchemaResult AddColumn(string tableName, string columnName, DataTypes dataType = DataTypes.String)
+        public SchemaManagerResult AddColumn(string tableName, string columnName, DataTypes dataType = DataTypes.String)
         {
             return AddColumn(tableName, new Column(columnName, dataType));
         }
@@ -247,7 +247,7 @@ namespace Bam.Net.Data.Schema
         /// <param name="tableName"></param>
         /// <param name="column"></param>
         /// <returns></returns>
-        public SchemaResult AddColumn(string tableName, Column column)
+        public SchemaManagerResult AddColumn(string tableName, Column column)
         {
             try
             {
@@ -257,7 +257,7 @@ namespace Bam.Net.Data.Schema
                 {
                     CurrentSchema.Save();
                 }
-                return new SchemaResult("column added");
+                return new SchemaManagerResult("column added");
             }
             catch (Exception ex)
             {
@@ -265,7 +265,7 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        public SchemaResult RemoveColumn(string tableName, string columnName)
+        public SchemaManagerResult RemoveColumn(string tableName, string columnName)
         {
             try
             {
@@ -275,7 +275,7 @@ namespace Bam.Net.Data.Schema
                 {
                     CurrentSchema.Save();
                 }
-                return new SchemaResult("column removed");
+                return new SchemaManagerResult("column removed");
             }
             catch (Exception ex)
             {
@@ -283,7 +283,7 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        public SchemaResult SetKeyColumn(string tableName, string columnName)
+        public SchemaManagerResult SetKeyColumn(string tableName, string columnName)
         {
             try
             {
@@ -293,7 +293,7 @@ namespace Bam.Net.Data.Schema
                 {
                     CurrentSchema.Save();
                 }
-                return new SchemaResult("Key column set");
+                return new SchemaManagerResult("Key column set");
             }
             catch (Exception ex)
             {
@@ -301,7 +301,7 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        public SchemaResult SetForeignKey(string targetTable, string referencingTable, string referencingColumn, string referencedKey = null, INameFormatter nameFormatter = null)
+        public SchemaManagerResult SetForeignKey(string targetTable, string referencingTable, string referencingColumn, string referencedKey = null, INameFormatter nameFormatter = null)
         {
             try
             {
@@ -358,7 +358,7 @@ namespace Bam.Net.Data.Schema
             });
         }
 
-        protected virtual SchemaResult SetForeignKey(Table table, Table target, ForeignKeyColumn fk)
+        protected virtual SchemaManagerResult SetForeignKey(Table table, Table target, ForeignKeyColumn fk)
         {
             CurrentSchema.AddForeignKey(fk);
             table.RemoveColumn(fk.Name);
@@ -369,7 +369,7 @@ namespace Bam.Net.Data.Schema
             {
                 CurrentSchema.Save();
             }
-            return new SchemaResult("ForeignKeyColumn set");
+            return new SchemaManagerResult("ForeignKeyColumn set");
         }
 
         protected void SetXrefs(XrefTable[] xrefs)
@@ -418,28 +418,28 @@ namespace Bam.Net.Data.Schema
             CurrentSchema.RemoveTable(tableName);
         }
 
-        public SchemaResult GenerateDao(FileInfo databaseDotJs, bool compile = false, bool keepSource = false, string genTo = "./tmp", string partialsDir = null)
+        public SchemaManagerResult GenerateDaoAssembly(FileInfo databaseDotJs, bool compile = false, bool keepSource = false, string genTo = "./tmp", string partialsDir = null)
         {
             string result = databaseDotJs.JsonFromJsLiteralFile("database");
-            return GenerateDao(result, compile ? new DirectoryInfo(BinDir) : null, keepSource, genTo, partialsDir);
+            return GenerateDaoAssembly(result, compile ? new DirectoryInfo(BinDir) : null, keepSource, genTo, partialsDir);
         }
 
-        public SchemaResult GenerateDao(FileInfo databaseDotJs, DirectoryInfo compileTo, bool keepSource = false, string genTo = "./tmp", string partialsDir = null)
+        public SchemaManagerResult GenerateDaoAssembly(FileInfo databaseDotJs, DirectoryInfo compileTo, bool keepSource = false, string genTo = "./tmp", string partialsDir = null)
         {
             string result = databaseDotJs.JsonFromJsLiteralFile("database");
 
-            return GenerateDao(result, compileTo, keepSource, genTo, partialsDir);
+            return GenerateDaoAssembly(result, compileTo, keepSource, genTo, partialsDir);
         }
 
-        public SchemaResult GenerateDao(FileInfo databaseDotJs, DirectoryInfo compileTo, DirectoryInfo temp, DirectoryInfo partialsDir)
+        public SchemaManagerResult GenerateDaoAssembly(FileInfo databaseDotJs, DirectoryInfo compileTo, DirectoryInfo temp, DirectoryInfo partialsDir)
         {
             string databaseSchemaJson = databaseDotJs.JsonFromJsLiteralFile("database");
-            return GenerateDao(databaseSchemaJson, compileTo, false, temp.FullName, partialsDir.FullName);
+            return GenerateDaoAssembly(databaseSchemaJson, compileTo, false, temp.FullName, partialsDir.FullName);
         }
 
-        public SchemaResult GenerateDao(string simpleSchemaJson, DirectoryInfo compileTo, DirectoryInfo temp)
+        public SchemaManagerResult GenerateDaoAssembly(string simpleSchemaJson, DirectoryInfo compileTo, DirectoryInfo temp)
         {
-            return GenerateDao(simpleSchemaJson, compileTo, false, temp.FullName);
+            return GenerateDaoAssembly(simpleSchemaJson, compileTo, false, temp.FullName);
         }
 
         /// <summary>
@@ -447,31 +447,31 @@ namespace Bam.Net.Data.Schema
         /// </summary>
         /// <param name="simpleSchemaJson"></param>
         /// <returns></returns>
-        public SchemaResult GenerateDao(string simpleSchemaJson, DirectoryInfo compileTo = null, bool keepSource = false, string tempDir = ".\\tmp", string partialsDir = null)
+        public SchemaManagerResult GenerateDaoAssembly(string simpleSchemaJson, DirectoryInfo compileTo = null, bool keepSource = false, string tempDir = ".\\tmp", string partialsDir = null)
         {
             try
             {
                 bool compile = compileTo != null;
-                SchemaResult result = new SchemaResult("Generation completed");
+                SchemaManagerResult managerResult = new SchemaManagerResult("Generation completed");
                 dynamic rehydrated = JsonConvert.DeserializeObject<dynamic>(simpleSchemaJson);
                 if (rehydrated["nameSpace"] == null)// || rehydrated["schemaName"] == null)
                 {
-                    result.ExceptionMessage = "Please specify nameSpace";
-                    result.Message = string.Empty;
-                    result.Success = false;
+                    managerResult.ExceptionMessage = "Please specify nameSpace";
+                    managerResult.Message = string.Empty;
+                    managerResult.Success = false;
                 }
                 else if (rehydrated["schemaName"] == null)
                 {
-                    result.ExceptionMessage = "Please specify schemaName";
-                    result.Message = string.Empty;
-                    result.Success = false;
+                    managerResult.ExceptionMessage = "Please specify schemaName";
+                    managerResult.Message = string.Empty;
+                    managerResult.Success = false;
                 }
                 else
                 {
                     string nameSpace = (string)rehydrated["nameSpace"];
                     string schemaName = (string)rehydrated["schemaName"];
-                    result.Namespace = nameSpace;
-                    result.SchemaName = schemaName;
+                    managerResult.Namespace = nameSpace;
+                    managerResult.SchemaName = schemaName;
                     List<dynamic> foreignKeys = new List<dynamic>();
 
                     SetSchema(schemaName, false);
@@ -491,15 +491,15 @@ namespace Bam.Net.Data.Schema
                         daoDir.Create();
                     }
 
-                    DaoGenerator generator = GetDaoGenerator(compileTo, keepSource, partialsDir, compile, result, nameSpace, daoDir);
+                    DaoGenerator generator = GetDaoGenerator(compileTo, keepSource, partialsDir, compile, managerResult, nameSpace, daoDir);
                     generator.Generate(CurrentSchema, daoDir.FullName, partialsDir);
-                    result.DaoAssembly = generator.DaoAssemblyFile;
+                    managerResult.DaoAssembly = generator.DaoAssemblyFile;
                 }
-                return result;
+                return managerResult;
             }
             catch (Exception ex)
             {
-                SchemaResult r = new SchemaResult(ex.Message);
+                SchemaManagerResult r = new SchemaManagerResult(ex.Message);
                 r.StackTrace = ex.StackTrace ?? "";
                 r.Success = false;
                 return r;
@@ -657,7 +657,7 @@ namespace Bam.Net.Data.Schema
                 foreach (dynamic column in table["cols"])
                 {
                     PropertyDescriptorCollection columnProperties = TypeDescriptor.GetProperties(column);
-                    bool allowNull = column["Null"] == null ? true : (bool)column["Null"];
+                    bool allowNull = column["Null"] == null || (bool)column["Null"];
                     string maxLength = column["MaxLength"] == null ? "" : (string)column["MaxLength"];
                     foreach (PropertyDescriptor pd in columnProperties)
                     {
@@ -802,18 +802,18 @@ namespace Bam.Net.Data.Schema
         }
 
 
-        private static SchemaResult GetErrorResult(Exception ex)
+        private static SchemaManagerResult GetErrorResult(Exception ex)
         {
-            SchemaResult result = new SchemaResult(ex.Message);
-            result.ExceptionMessage = ex.Message;
-            result.Success = false;
+            SchemaManagerResult managerResult = new SchemaManagerResult(ex.Message);
+            managerResult.ExceptionMessage = ex.Message;
+            managerResult.Success = false;
 #if DEBUG
-            result.StackTrace = ex.StackTrace;
+            managerResult.StackTrace = ex.StackTrace;
 #endif
-            return result;
+            return managerResult;
         }
 
-        private DaoGenerator GetDaoGenerator(DirectoryInfo compileTo, bool keepSource, string partialsDir, bool compile, SchemaResult result, string nameSpace, DirectoryInfo daoDir)
+        private DaoGenerator GetDaoGenerator(DirectoryInfo compileTo, bool keepSource, string partialsDir, bool compile, SchemaManagerResult managerResult, string nameSpace, DirectoryInfo daoDir)
         {
             DaoGenerator generator = new DaoGenerator(nameSpace);
             if (compile)
@@ -836,18 +836,18 @@ namespace Bam.Net.Data.Schema
 
                     if (CompilerErrors != null)
                     {
-                        result.Success = false;
-                        result.Message = string.Empty;
+                        managerResult.Success = false;
+                        managerResult.Message = string.Empty;
                         foreach (CompilerError err in GetErrors())
                         {
-                            result.Message = string.Format("{0}\r\nFile=>{1}\r\n{2}:::Line {3}, Column {4}::{5}",
-                                    result.Message, err.FileName, err.ErrorNumber, err.Line, err.Column, err.ErrorText);
+                            managerResult.Message = string.Format("{0}\r\nFile=>{1}\r\n{2}:::Line {3}, Column {4}::{5}",
+                                    managerResult.Message, err.FileName, err.ErrorNumber, err.Line, err.Column, err.ErrorText);
                         }
                     }
                     else
                     {
-                        result.Message = string.Format("{0}\r\n{1}", result.Message, "Dao compiled");
-                        result.Success = true;
+                        managerResult.Message = string.Format("{0}\r\n{1}", managerResult.Message, "Dao compiled");
+                        managerResult.Success = true;
                     }
 
                     if (!keepSource)

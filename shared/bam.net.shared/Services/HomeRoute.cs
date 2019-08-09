@@ -12,6 +12,12 @@ namespace Bam.Net.Services
             Parse();
         }
 
+        public HomeRoute(Uri uri)
+        {
+            Uri = uri;
+            Parse();
+        }
+
         public bool IsValid
         {
             get { return !string.IsNullOrEmpty(Protocol) && !string.IsNullOrEmpty(Domain); }

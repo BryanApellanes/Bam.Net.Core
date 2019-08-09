@@ -1,6 +1,6 @@
 ﻿# Bam.exe
 
-Bam.exe is a tool used to manage BamFramework features and functionality.  In addition to bam apps, it works with asp.net core razor page applications.
+Bam.exe is a tool used to manage BamFramework features and functionality.
 
 TL;DR
 

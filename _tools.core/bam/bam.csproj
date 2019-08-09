@@ -19,13 +19,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
+    <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Bam-Windows.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="GenerationConfig.yaml">
+    <None Update="ManagedApplicationGenerationConfig.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -60,12 +61,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Remove="Templates\Program.cs.hbs" />
-    <EmbeddedResource Include="Templates\Program.cs.hbs" />
     <None Remove="Templates\ScopedAppModule.cs.hbs" />
     <None Remove="Templates\SingletonAppModule.cs.hbs" />
     <None Remove="Templates\Startup.cs.hbs" />
     <None Remove="Templates\TransientAppModule.cs.hbs" />
     <None Remove="Templates\Webpack.config.js.hbs" />
+    <EmbeddedResource Include="Templates\Process\Program.cs.hbs" />
     <EmbeddedResource Include="Templates\Webpack.config.js.hbs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

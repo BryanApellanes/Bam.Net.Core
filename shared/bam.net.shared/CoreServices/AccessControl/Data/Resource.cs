@@ -9,7 +9,7 @@ using Bam.Net.CoreServices.AccessControl.Data.Dao.Repository;
 
 namespace Bam.Net.CoreServices.AccessControl.Data
 {
-    public class Resource: KeyHashAuditRepoData
+    public class Resource: CompositeKeyAuditRepoData
     {
         [CompositeKey]
         public ulong ResourceHostId { get; set; }

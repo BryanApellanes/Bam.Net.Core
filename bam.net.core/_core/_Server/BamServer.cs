@@ -36,7 +36,7 @@ namespace Bam.Net.Server
             HttpListenerRequest request = context.Request;
             HttpListenerResponse response = context.Response;
 
-            IHttpContext wrapper = new HttpContextWrapper(context);//new HttpContextWrapper(new RequestWrapper(request), new ResponseWrapper(response));
+            IHttpContext wrapper = new HttpContextWrapper(context);
             HandleRequestAsync(wrapper);
         }
 
@@ -86,9 +86,10 @@ namespace Bam.Net.Server
                 sw.Write(@"<!DOCTYPE html>
 <html>
 <body>
-<h1>" + description + @"
+<h1>" + description + @"</h1>
 <p>" + string.Format(messageFormat, path) + @"</p>
-");
+</body>
+</html>");
                 sw.Flush();
                 sw.Close();
             }

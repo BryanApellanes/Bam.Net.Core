@@ -18,10 +18,10 @@ namespace Bam.Net.Services.DataReplication
         bool _keepFlushing;
 
         public Journal(ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter, ILogger logger = null) 
-            : this(SystemPaths.Get(DataProvider.Current), new JournalTypeMap(SystemPaths.Get(DataProvider.Current)), sequenceProvider, flusher, loader, typeConverter, logger)
+            : this(SystemPaths.Get(DataProvider.Current), new TypeMap(SystemPaths.Get(DataProvider.Current)), sequenceProvider, flusher, loader, typeConverter, logger)
         { }
 
-        public Journal(SystemPaths paths, JournalTypeMap typeMap, ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter = null, ILogger logger = null)
+        public Journal(SystemPaths paths, TypeMap typeMap, ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter = null, ILogger logger = null)
         {
             _journalEntryQueue = new Queue<JournalEntry>();
             _keepFlushing = true;
@@ -52,7 +52,7 @@ namespace Bam.Net.Services.DataReplication
             }
 
         }
-        protected internal JournalTypeMap TypeMap { get; set; }
+        protected internal TypeMap TypeMap { get; set; }
         protected internal ISequenceProvider SequenceProvider { get; set; }
 
         DirectoryInfo _journalDirectory;
@@ -105,36 +105,36 @@ namespace Bam.Net.Services.DataReplication
             return TypeMap.GetPropertyShortName(propId);
         }
 
-        public T LoadInstance<T>(JournalEntryInfo info) where T : KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(JournalEntryInfo info) where T : CompositeKeyAuditRepoData, new()
         {
             return LoadInstance<T>(info.InstanceId);
         }
 
-        public T LoadInstance<T>(JournalEntry entry) where T : KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(JournalEntry entry) where T : CompositeKeyAuditRepoData, new()
         {
             return LoadInstance<T>(entry.InstanceId);
         }
 
         /// <summary>
         /// Reads the entry from disk by determining what the Id is using GetULongKeyHash.  Keys must be 
-        /// made of one or more properties addorned with CompositeKeyAttribute.
+        /// made of one or more properties adorned with CompositeKeyAttribute.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="instance">The instance.</param>
         /// <returns></returns>
-        public T LoadInstance<T>(T instance) where T: KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(T instance) where T: CompositeKeyAuditRepoData, new()
         {
             return LoadInstance<T>(instance.GetULongKeyHash());
         }
 
         /// <summary>
         /// Reads the entry from disk by determining what the Id is using GetULongKeyHash.  Keys must be 
-        /// made of one or more properties addorned with CompositeKeyAttribute.
+        /// made of one or more properties adorned with CompositeKeyAttribute.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public T LoadInstance<T>(ulong id) where T : KeyHashAuditRepoData, new()
+        public T LoadInstance<T>(ulong id) where T : CompositeKeyAuditRepoData, new()
         {
             T toLoad = new T();
             List<JournalEntry> instanceEntries = JournalEntry.LoadInstanceEntries<T>(id, this).ToList();
@@ -184,12 +184,12 @@ namespace Bam.Net.Services.DataReplication
         /// </value>
         public int ExceptionThreshold { get; set; }
 
-        public IEnumerable<JournalEntry> Enqueue(KeyHashAuditRepoData data)
+        public IEnumerable<JournalEntry> Enqueue(CompositeKeyAuditRepoData data)
         {
             return Enqueue(data, (e) => { });
         }
 
-        public IEnumerable<JournalEntry> Enqueue(KeyHashAuditRepoData data, Action<JournalEntry[]> onFullyFlushed)
+        public IEnumerable<JournalEntry> Enqueue(CompositeKeyAuditRepoData data, Action<JournalEntry[]> onFullyFlushed)
         {
             TypeMap.AddMapping(data);
             
@@ -197,7 +197,7 @@ namespace Bam.Net.Services.DataReplication
             return Enqueue(journalEntries, onFullyFlushed);
         }
 
-        internal protected IEnumerable<JournalEntry> Enqueue(JournalEntry[] journalEntries, Action<JournalEntry[]> onFullyFlushed)
+        protected internal IEnumerable<JournalEntry> Enqueue(JournalEntry[] journalEntries, Action<JournalEntry[]> onFullyFlushed)
         {
             HashSet<JournalEntry> written = new HashSet<JournalEntry>();
             int doneCount = journalEntries.Length;

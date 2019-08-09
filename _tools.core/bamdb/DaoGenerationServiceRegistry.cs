@@ -10,6 +10,7 @@ using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Services;
 using Bam.Net.Testing;
 using System;
+using Bam.Net.Server;
 
 namespace Bam.Net.Application
 {
@@ -23,7 +24,8 @@ namespace Bam.Net.Application
             daoRegistry.CombineWith(Configure(appRegistry =>
             {
                 appRegistry
-                    .For<SchemaRepositoryGenerator>().Use(new HandlebarsSchemaRepositoryGenerator(config, logger));
+                    .For<SchemaRepositoryGenerator>().Use(new HandlebarsSchemaRepositoryGenerator(config, logger))
+                    .For<IDataDomainResolver>().Use<SchemaPrefixDataDomainResolver>();
             }));
 
             return daoRegistry;

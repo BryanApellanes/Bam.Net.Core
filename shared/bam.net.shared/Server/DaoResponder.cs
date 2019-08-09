@@ -87,10 +87,9 @@ namespace Bam.Net.Server
                 else
                 {
                     // templates are in ~s:/dao/dust and ~a:/dao/dust
-                    string dustRelativePath = ViewsRelativePath;
-                    DirectoryInfo commonTemplateDir = new DirectoryInfo(ServerRoot.GetAbsolutePath(dustRelativePath));
+                    DirectoryInfo commonTemplateDir = new DirectoryInfo(ServerRoot.GetAbsolutePath(ViewsRelativePath));
                     Fs appFs = BamConf.AppFs(appName); //AppFs(appName);
-                    DirectoryInfo appTemplateDir = new DirectoryInfo(appFs.GetAbsolutePath(dustRelativePath));
+                    DirectoryInfo appTemplateDir = new DirectoryInfo(appFs.GetAbsolutePath(ViewsRelativePath));
 
                     StringBuilder tmp = new StringBuilder();
                     tmp.AppendLine(DustScript.CompileTemplates(commonTemplateDir));
@@ -115,9 +114,9 @@ namespace Bam.Net.Server
 
             if (AppDaoProxyRegistrations.ContainsKey(appName))
             {
-                AppDaoProxyRegistrations[appName].Each((reg, i) =>
+                AppDaoProxyRegistrations[appName].Each(reg =>
                 {
-                    string ctorScript = min ? AppDaoProxyRegistrations[appName][i].MinCtors.ToString() : AppDaoProxyRegistrations[appName][i].Ctors.ToString();
+                    string ctorScript = min ? reg.MinCtors.ToString() : reg.Ctors.ToString();
                     result.AppendLine(";\r\n");
                     result.AppendLine(ctorScript);
                 });
@@ -138,9 +137,9 @@ namespace Bam.Net.Server
 
             if (AppDaoProxyRegistrations.ContainsKey(appName))
             {
-                AppDaoProxyRegistrations[appName].Each((reg, i) =>
+                AppDaoProxyRegistrations[appName].Each(reg =>
                 {
-                    string ctorScript = min ? AppDaoProxyRegistrations[appName][i].MinProxies.ToString() : AppDaoProxyRegistrations[appName][i].Proxies.ToString();
+                    string ctorScript = min ? reg.MinProxies.ToString() : reg.Proxies.ToString();
                     result.AppendLine(";\r\n");
                     result.AppendLine(ctorScript);
                 });
@@ -162,7 +161,7 @@ namespace Bam.Net.Server
             IResponse response = context.Response;
             bool handled = false;
             string path = request.Url.AbsolutePath;
-            string appName = ApplicationNameResolver.ResolveApplicationName(context);//UriApplicationNameResolver.ResolveApplicationName(request.Url, BamConf.AppConfigs);
+            string appName = ApplicationNameResolver.ResolveApplicationName(context);
             string[] chunks = path.DelimitSplit("/");
 
             HttpArgs queryString = new HttpArgs(request.Url.Query);
@@ -205,7 +204,7 @@ namespace Bam.Net.Server
             }
             else if (AppDaoProxyRegistrations.ContainsKey(appName))
             {
-                daoProxyReg = AppDaoProxyRegistrations[appName].Where(dpr => dpr.ContextName.Equals(connectionName)).FirstOrDefault();
+                daoProxyReg = AppDaoProxyRegistrations[appName].FirstOrDefault(dpr => dpr.ContextName.Equals(connectionName));
             }
 
             if (daoProxyReg != null)
@@ -403,38 +402,38 @@ namespace Bam.Net.Server
             }
         }
 
-        Dictionary<string, List<DaoProxyRegistration>> _appDaoProxyRegistrations;
+        Dictionary<string, HashSet<DaoProxyRegistration>> _appDaoProxyRegistrations;
         /// <summary>
         /// The DaoProxyRegistrations keyed by application name
         /// </summary>
-        public Dictionary<string, List<DaoProxyRegistration>> AppDaoProxyRegistrations
+        public Dictionary<string, HashSet<DaoProxyRegistration>> AppDaoProxyRegistrations
         {
             get
             {
                 if (_appDaoProxyRegistrations == null)
                 {
-                    _appDaoProxyRegistrations = new Dictionary<string, List<DaoProxyRegistration>>();
+                    _appDaoProxyRegistrations = new Dictionary<string, HashSet<DaoProxyRegistration>>();
                 }
 
                 return _appDaoProxyRegistrations;
             }
         }
         
-        private void RegisterNewAppDaoDll(string appName, FileInfo dbJs, DirectoryInfo daoBin, SchemaResult result)
+        private void RegisterNewAppDaoDll(string appName, FileInfo dbJs, DirectoryInfo daoBin, SchemaManagerResult managerResult)
         {
-            FileInfo daoDll = new FileInfo(Path.Combine(daoBin.FullName, "{0}.dll"._Format(result.Namespace)));
+            FileInfo daoDll = new FileInfo(Path.Combine(daoBin.FullName, "{0}.dll"._Format(managerResult.Namespace)));
             DaoProxyRegistration reg = DaoProxyRegistration.Register(daoDll);
             string name = appName.ToLowerInvariant();
 
             AppDaoProxyRegistrations[name].Add(reg);
         }
-        private void RegisterNewCommonDaoDll(FileInfo dbJs, DirectoryInfo daoBin, SchemaResult result)
+        private void RegisterNewCommonDaoDll(FileInfo dbJs, DirectoryInfo daoBin, SchemaManagerResult managerResult)
         {
-            FileInfo daoDll = new FileInfo(Path.Combine(daoBin.FullName, "{0}.dll"._Format(result.Namespace)));
+            FileInfo daoDll = new FileInfo(Path.Combine(daoBin.FullName, "{0}.dll"._Format(managerResult.Namespace)));
             RegisterCommonDaoDll(daoDll);
         }
 
-        object _initializeLock = new object();
+        readonly object _initializeLock = new object();
         public void Initialize()
         {
             OnInitializing();
@@ -459,7 +458,7 @@ namespace Bam.Net.Server
                     string name = appConf.Name.ToLowerInvariant();
                     if (!AppDaoProxyRegistrations.ContainsKey(name))
                     {
-                        AppDaoProxyRegistrations.Add(name, new List<DaoProxyRegistration>());
+                        AppDaoProxyRegistrations.Add(name, new HashSet<DaoProxyRegistration>());
                     }
 
                     //  if appconf.generatedao
@@ -476,7 +475,7 @@ namespace Bam.Net.Server
                         OnSchemaInitializing(name, si);
                         if (!si.Initialize(Logger, out Exception ex))
                         {
-                            Logger.AddEntry("Failed to initilialize schema ({0}): {1}", ex, si.SchemaContext, ex.Message);
+                            Logger.AddEntry("Failed to initialize schema ({0}): {1}", ex, si.SchemaContext, ex.Message);
                         }
                         OnSchemaInitialized(name, si);
                     });
@@ -509,12 +508,12 @@ namespace Bam.Net.Server
             GenerateAppDaoSucceeded -= RegisterNewAppDaoDll;
         }
 
-        protected internal void GenerateAppDaos(string dbJsRoot, AppConf appConf, DirectoryInfo appDaoDir, string fileSearchPattern)
+        protected internal void GenerateAppDaos(string dbJsRoot, AppConf appConf, DirectoryInfo appDaoBinDir, string fileSearchPattern)
         {
-            DirectoryInfo daoTemp = appConf.AppRoot.GetDirectory(Path.Combine(dbJsRoot, "appdaotmp_".RandomLetters(4)));
+            DirectoryInfo daoTemp = appConf.AppRoot.GetDirectory(Path.Combine(dbJsRoot, "app_dao_tmp_".RandomLetters(4)));
 
             // get the saved hashes to determine if changes were made
-            string hashPath = GetHashFilePath(appDaoDir);
+            string hashPath = GetHashFilePath(appDaoBinDir);
             List<FileContentHash> hashes = GetHashes(hashPath);
 
             //      generate app dao from *.db.js ~a:/dao/
@@ -527,18 +526,18 @@ namespace Bam.Net.Server
 
                 if (!hashes.Contains(currentHash) && appConf.CheckDaoHashes)
                 {
-                    FileContentHash remove = hashes.Where(h => h.FilePath.ToLowerInvariant().Equals(path)).FirstOrDefault();
+                    FileContentHash remove = hashes.FirstOrDefault(h => h.FilePath.ToLowerInvariant().Equals(path));
                     if (remove != null)
                     {
                         hashes.Remove(remove);
                     }
                     hashes.Add(currentHash);
                     hashes.ToArray().ToJsonFile(hashPath);
-                    GenerateAppDao(appConf.Name, appDaoDir, daoTemp, dbJs);
+                    GenerateAppDao(appConf.Name, appDaoBinDir, daoTemp, dbJs);
                 }
                 else if (!appConf.CheckDaoHashes)
                 {
-                    GenerateAppDao(appConf.Name, appDaoDir, daoTemp, dbJs);
+                    GenerateAppDao(appConf.Name, appDaoBinDir, daoTemp, dbJs);
                 }
             });
         }
@@ -552,7 +551,7 @@ namespace Bam.Net.Server
         private void GenerateCommonDao(string dbjsRoot, DirectoryInfo daoBinDir, string fileSearchPattern)
         {
             DirectoryInfo dbjsRootDir = BamConf.Fs.GetDirectory(dbjsRoot);
-            DirectoryInfo daoTemp = BamConf.Fs.GetDirectory(Path.Combine(dbjsRoot, "commondaotmp_".RandomLetters(4)));
+            DirectoryInfo daoTemp = BamConf.Fs.GetDirectory(Path.Combine(dbjsRoot, "common_dao_tmp_".RandomLetters(4)));
 
             string hashPath = GetHashFilePath(dbjsRootDir);
             List<FileContentHash> hashes = GetHashes(hashPath);
@@ -565,7 +564,7 @@ namespace Bam.Net.Server
 
                 if (!hashes.Contains(currentHash))
                 {
-                    FileContentHash remove = hashes.Where(h => h.FilePath.ToLowerInvariant().Equals(path)).FirstOrDefault();
+                    FileContentHash remove = hashes.FirstOrDefault(h => h.FilePath.ToLowerInvariant().Equals(path));
                     if (remove != null)
                     {
                         hashes.Remove(remove);
@@ -669,7 +668,7 @@ namespace Bam.Net.Server
                 DaoProxyRegistration[] daoRegistrations = DaoProxyRegistration.Register(daoDir, BamConf.DaoSearchPattern);
                 daoRegistrations.Each(daoReg =>
                 {
-                    List<DaoProxyRegistration> list = AppDaoProxyRegistrations[name];
+                    HashSet<DaoProxyRegistration> list = AppDaoProxyRegistrations[name];
                     if (!list.Contains(daoReg))
                     {
                         AppDaoProxyRegistrations[name].Add(daoReg);
@@ -683,21 +682,21 @@ namespace Bam.Net.Server
             }
         }
 
-        public event Action<string, FileInfo, SchemaResult> GenerateAppDaoFailed;
-        protected void OnGenerateAppDaoFailed(string appName, FileInfo dbJsFile, SchemaResult result)
+        public event Action<string, FileInfo, SchemaManagerResult> GenerateAppDaoFailed;
+        protected void OnGenerateAppDaoFailed(string appName, FileInfo dbJsFile, SchemaManagerResult managerResult)
         {
             if (GenerateAppDaoFailed != null)
             {
-                GenerateAppDaoFailed(appName, dbJsFile, result);
+                GenerateAppDaoFailed(appName, dbJsFile, managerResult);
             }
         }
 
-        public event Action<string, FileInfo, DirectoryInfo, SchemaResult> GenerateAppDaoSucceeded;
-        protected void OnGerateAppDaoSucceeded(string appName, FileInfo dbJsFile, DirectoryInfo daoBin, SchemaResult result)
+        public event Action<string, FileInfo, DirectoryInfo, SchemaManagerResult> GenerateAppDaoSucceeded;
+        protected void OnGenerateAppDaoSucceeded(string appName, FileInfo dbJsFile, DirectoryInfo daoBin, SchemaManagerResult managerResult)
         {
             if (GenerateAppDaoSucceeded != null)
             {
-                GenerateAppDaoSucceeded(appName, dbJsFile, daoBin, result);
+                GenerateAppDaoSucceeded(appName, dbJsFile, daoBin, managerResult);
             }
         }
 
@@ -714,37 +713,17 @@ namespace Bam.Net.Server
         {
             OnGeneratingAppDao(appName, jsOrJsonDb, daoBinDir);
 
-            SchemaResult schemaResult = GenerateDaoForFile(daoBinDir, daoTemp, jsOrJsonDb);
+            SchemaManagerResult schemaManagerResult = Dao.GenerateAssembly(jsOrJsonDb, daoBinDir, daoTemp);
 
-            if (!schemaResult.Success)
+            if (!schemaManagerResult.Success)
             {
-                OnGenerateAppDaoFailed(appName, jsOrJsonDb, schemaResult);
+                OnGenerateAppDaoFailed(appName, jsOrJsonDb, schemaManagerResult);
             }
             else
             {
-                OnGerateAppDaoSucceeded(appName, jsOrJsonDb, daoBinDir, schemaResult);
+                OnGenerateAppDaoSucceeded(appName, jsOrJsonDb, daoBinDir, schemaManagerResult);
             }
         }
-
-        private static SchemaResult GenerateDaoForFile(DirectoryInfo daoBinDir, DirectoryInfo daoTemp, FileInfo dbJs)
-        {
-            SchemaManager schemaManager = new UuidSchemaManager();
-
-            DirectoryInfo partialsDir = new DirectoryInfo(Path.Combine(dbJs.Directory.FullName, "DaoPartials"));
-            SchemaResult schemaResult = new SchemaResult("Generator Not Run, invalid file extension", false);
-            if (dbJs.Extension.ToLowerInvariant().Equals(".js"))
-            {
-                schemaResult = schemaManager.GenerateDao(dbJs, daoBinDir, daoTemp, partialsDir);
-            }
-            else if (dbJs.Extension.ToLowerInvariant().Equals(".json"))
-            {
-                string json = File.ReadAllText(dbJs.FullName);
-                schemaResult = schemaManager.GenerateDao(json, daoBinDir, daoTemp);
-            }
-
-            return schemaResult;
-        }
-
 
         private static List<FileContentHash> GetHashes(string hashPath)
         {
@@ -756,46 +735,37 @@ namespace Bam.Net.Server
             return hashes;
         }
 
-        public event Action<FileInfo, SchemaResult> GenerateCommonDaoFailed;
-        protected void OnGenerateCommonDaoFailed(FileInfo dbJsFile, SchemaResult result)
+        public event Action<FileInfo, SchemaManagerResult> GenerateCommonDaoFailed;
+        protected void OnGenerateCommonDaoFailed(FileInfo dbJsFile, SchemaManagerResult managerResult)
         {
-            if (GenerateCommonDaoFailed != null)
-            {
-                GenerateCommonDaoFailed(dbJsFile, result);
-            }
+            GenerateCommonDaoFailed?.Invoke(dbJsFile, managerResult);
         }
 
-        public event Action<FileInfo, DirectoryInfo, SchemaResult> GenerateCommonDaoSucceeded;
-        protected void OnGenerateCommonDaoSucceeded(FileInfo dbJsFile, DirectoryInfo daoBin, SchemaResult result)
+        public event Action<FileInfo, DirectoryInfo, SchemaManagerResult> GenerateCommonDaoSucceeded;
+        protected void OnGenerateCommonDaoSucceeded(FileInfo dbJsFile, DirectoryInfo daoBin, SchemaManagerResult managerResult)
         {
-            if (GenerateCommonDaoSucceeded != null)
-            {
-                GenerateCommonDaoSucceeded(dbJsFile, daoBin, result);
-            }
+            GenerateCommonDaoSucceeded?.Invoke(dbJsFile, daoBin, managerResult);
         }
 
         public event Action<FileInfo, DirectoryInfo> GeneratingCommonDao;
         protected void OnGeneratingCommonDao(FileInfo dbJsFile, DirectoryInfo daoBin)
         {
-            if (GeneratingCommonDao != null)
-            {
-                GeneratingCommonDao(dbJsFile, daoBin);
-            }
+            GeneratingCommonDao?.Invoke(dbJsFile, daoBin);
         }
 
         private void GenerateCommonDao(DirectoryInfo daoBinDir, DirectoryInfo daoTemp, FileInfo jsOrJsonDb)
         {
             OnGeneratingCommonDao(jsOrJsonDb, daoBinDir);
 
-            SchemaResult schemaResult = GenerateDaoForFile(daoBinDir, daoTemp, jsOrJsonDb);
+            SchemaManagerResult schemaManagerResult = Dao.GenerateAssembly(jsOrJsonDb, daoBinDir, daoTemp);
 
-            if (!schemaResult.Success)
+            if (!schemaManagerResult.Success)
             {
-                OnGenerateCommonDaoFailed(jsOrJsonDb, schemaResult);
+                OnGenerateCommonDaoFailed(jsOrJsonDb, schemaManagerResult);
             }
             else
             {
-                OnGenerateCommonDaoSucceeded(jsOrJsonDb, daoBinDir, schemaResult);
+                OnGenerateCommonDaoSucceeded(jsOrJsonDb, daoBinDir, schemaManagerResult);
             }
         }
 
@@ -803,19 +773,13 @@ namespace Bam.Net.Server
 
         protected void OnInitializing()
         {
-            if (Initializing != null)
-            {
-                Initializing(this);
-            }
+            Initializing?.Invoke(this);
         }
 
         public event Action<DaoResponder> Initialized;
         protected void OnInitialized()
         {
-            if (Initialized != null)
-            {
-                Initialized(this);
-            }
+            Initialized?.Invoke(this);
         }
     }
 }

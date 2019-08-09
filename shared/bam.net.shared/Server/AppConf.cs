@@ -18,6 +18,7 @@ using System.Xml.Serialization;
 using Bam.Net.Incubation;
 using Bam.Net.Configuration;
 using Bam.Net.ServiceProxy.Secure;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Server
 {
@@ -65,10 +66,16 @@ namespace Bam.Net.Server
             return new AppConf { Name = DefaultConfiguration.GetAppSetting("ApplicationName", ServiceProxy.Secure.Application.Unknown.Name) };
         }
 
+        public static AppConf FromConfig()
+        {
+            return new AppConf{ Name = Config.Current.ApplicationName};
+        }
+
         Fs _appRoot;
         object _appRootLock = new object();
         [JsonIgnore]
         [XmlIgnore]
+        [YamlIgnore]
         public Fs AppRoot
         {
             get
@@ -152,7 +159,14 @@ namespace Bam.Net.Server
             return Workspace.ForApplication();
         }
         
+        [JsonIgnore]
+        [XmlIgnore]
+        [YamlIgnore]
         public bool IsProd => ProcessMode.Equals("Prod");
+        
+        [JsonIgnore]
+        [XmlIgnore]
+        [YamlIgnore]
         public bool IsTest => ProcessMode.Equals("Test");
 
         public string ProcessMode { get; set; } 
@@ -169,7 +183,7 @@ namespace Bam.Net.Server
                     {
                         new HostPrefix
                         {
-                            HostName = $"{Name}.bamapps.com",
+                            HostName = $"{Name}.bamapps.net",
                             Port = 80,
                             Ssl = false
                         },
@@ -257,8 +271,8 @@ namespace Bam.Net.Server
 
         /// <summary>
         /// The assembly qualified name of an IAppInitializer
-        /// implementation that will be called on application 
-        /// initialization
+        /// implementation that is called on application 
+        /// initialization.
         /// </summary>
         public string AppInitializer
         {
@@ -306,7 +320,7 @@ namespace Bam.Net.Server
 
         public string Setting(string settingName, string insteadIfNullOrEmpty)
         {
-            AppSetting setting = AppSettings.Where(s => s.Name.Equals(settingName)).FirstOrDefault();
+            AppSetting setting = AppSettings.FirstOrDefault(s => s.Name.Equals(settingName));
             if(setting != null)
             {
                 return setting.Value;

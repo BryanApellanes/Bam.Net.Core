@@ -198,6 +198,7 @@ namespace Bam.Net.Services.Tests
             RequestRoute route = router.ToRequestRoute("bam://bamapps.net/api/v1/monkey/5?blah=one&blah2=two");
             Expect.AreEqual("bam", route.Protocol);
             Expect.AreEqual("bamapps.net", route.Domain);
+            Expect.AreEqual("api", route.PathName);
             Expect.AreEqual("v1/monkey/5?blah=one&blah2=two", route.PathAndQuery);
         }
 

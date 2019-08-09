@@ -47,11 +47,11 @@ namespace {{WrapperNamespace}}
 		}
 
 {{#each ForeignKeys}}
-{{> ForeignKeyProperty}}
+{{> WrapperForeignKeyProperty}}
 {{/each}}
 
 {{#each ChildPrimaryKeys}}
-{{> ChildPrimaryProperty}}
+{{> ChildPrimaryKeyProperty}}
 {{/each}}
 
 {{#each LeftXrefs}}

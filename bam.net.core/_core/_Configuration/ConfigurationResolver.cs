@@ -133,6 +133,7 @@ namespace Bam.Net.Configuration
                     return value;
                 }
             }            
+            FireEvent(CalledConfigService, new ConfigurationEventArgs{Key = key});
             return string.Empty;
         }
     }

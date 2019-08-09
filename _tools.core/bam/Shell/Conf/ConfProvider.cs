@@ -12,7 +12,6 @@ namespace Bam.Shell.Conf
             RawArguments = args;
         }
 
-
         public abstract void Get(Action<string> output = null, Action<string> error = null);
         public abstract void Set(Action<string> output = null, Action<string> error = null);
         public abstract void Print(Action<string> output = null, Action<string> error = null);

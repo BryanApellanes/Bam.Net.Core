@@ -7,7 +7,7 @@ using System.Text;
 namespace Bam.Net.CoreServices.AccessControl.Data
 {
     [Serializable]
-    public class PermissionSpecification : KeyHashAuditRepoData
+    public class PermissionSpecification : CompositeKeyAuditRepoData
     {
         [CompositeKey]
         public ulong ResourceId { get; set; }

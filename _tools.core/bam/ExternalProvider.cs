@@ -13,14 +13,21 @@ using Bam.Shell;
 
 namespace Bam.Net.Application
 {
+    /// <summary>
+    /// Used to execute 
+    /// </summary>
     [Serializable]
     public class ExternalProvider: CommandLineTestInterface
     {
         [ArgZero("menu")]
         public void Menu()
         {
-            string assemblyPath =
-                GetArgument("assembly", "Please enter the path to the assembly to show a console menu for");
+            FileInfo file = typeof(Adhoc.Adhoc).Assembly.GetFileInfo();
+            string assemblyPath = file.FullName;
+            if (Arguments.Contains("assembly"))
+            {
+                assemblyPath = Arguments["assembly"];
+            }
             
             FileInfo assemblyFile = new FileInfo(assemblyPath);
             ShowMenu(Assembly.LoadFile(assemblyFile.FullName), new ConsoleMenu[]{}, assemblyPath);

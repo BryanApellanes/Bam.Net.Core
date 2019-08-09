@@ -1,4 +1,6 @@
-﻿namespace Bam.Net.Data.Dynamic
+﻿
+
+namespace Bam.Net.Data.Dynamic
 {
     using System;
     using System.Collections.Generic;
@@ -33,18 +35,29 @@
             if (CurrentSql != null)
             {
                 DataTable table = CurrentSql.GetDataTable(Database);
-                table = MapDataTable(tableName, table);
-                CurrentSql = null;
-                // TODO: fix this to do something more "dynamic"; generate and compile dynamic types using something other than IL emit.
-                List<dynamic> results = new List<dynamic>();
-                foreach (DataRow row in table.Rows)
+                if (NameMap != null)
                 {
-                    yield return row;
+                    table = MapDataTable(tableName, table); 
+                }
+                CurrentSql = null;
+                foreach (object obj in table.ToDynamic(tableName))
+                {
+                    yield return obj;
                 }
             }
             yield break;
         }
 
+        /// <summary>
+        /// Execute a dynamic query using the specified querySpec.  The same as Retrieve.
+        /// </summary>
+        /// <param name="querySpec"></param>
+        /// <returns></returns>
+        public IEnumerable<dynamic> Query(dynamic querySpec)
+        {
+            return Retrieve(querySpec);
+        }
+        
         /// <summary>
         /// Execute the specified sql using the specified parameters
         /// </summary>
@@ -58,9 +71,9 @@
             DataTable table = Database.GetDataTable(sql, System.Data.CommandType.Text, dbParameters.ToArray());
             if (table.Rows?.Count > 0)
             {
-                foreach (DataRow row in table.Rows)
+                foreach (object obj in table.ToDynamic(table.TableName ?? sql.Sha256()))
                 {
-                    yield return row;
+                    yield return obj;
                 }
             }
             yield break;

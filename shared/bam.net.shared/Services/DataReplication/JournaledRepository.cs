@@ -34,7 +34,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override T Create<T>(T toCreate)
         {
-            KeyHashAuditRepoData data = CastOrDie(toCreate);
+            CompositeKeyAuditRepoData data = CastOrDie(toCreate);
             AutoResetEvent blocker = new AutoResetEvent(false);
             T result = toCreate;
             JournalManager.Enqueue(data, (je) =>
@@ -48,7 +48,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override object Create(object toCreate)
         {
-            KeyHashAuditRepoData data = CastOrDie(toCreate);
+            CompositeKeyAuditRepoData data = CastOrDie(toCreate);
             AutoResetEvent blocker = new AutoResetEvent(false);
             object result = toCreate;
             JournalManager.Enqueue(data, (je) =>
@@ -62,7 +62,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override object Create(Type type, object toCreate)
         {
-            KeyHashAuditRepoData data = CastOrDie(toCreate);
+            CompositeKeyAuditRepoData data = CastOrDie(toCreate);
             AutoResetEvent blocker = new AutoResetEvent(false);
             object result = toCreate;
             JournalManager.Enqueue(data, (je) =>
@@ -76,7 +76,7 @@ namespace Bam.Net.Services.DataReplication
         
         public override T Update<T>(T toUpdate)
         {
-            KeyHashAuditRepoData data = CastOrDie(toUpdate);
+            CompositeKeyAuditRepoData data = CastOrDie(toUpdate);
             AutoResetEvent blocker = new AutoResetEvent(false);
             T result = toUpdate;
             JournalManager.Enqueue(data, (je) =>
@@ -90,7 +90,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override object Update(object toUpdate)
         {
-            KeyHashAuditRepoData data = CastOrDie(toUpdate);
+            CompositeKeyAuditRepoData data = CastOrDie(toUpdate);
             AutoResetEvent blocker = new AutoResetEvent(false);
             object result = toUpdate;
             JournalManager.Enqueue(data, (je) =>
@@ -104,7 +104,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override object Update(Type type, object toUpdate)
         {
-            KeyHashAuditRepoData data = CastOrDie(toUpdate);
+            CompositeKeyAuditRepoData data = CastOrDie(toUpdate);
             AutoResetEvent blocker = new AutoResetEvent(false);
             object result = toUpdate;
             JournalManager.Enqueue(data, (je) =>
@@ -118,7 +118,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override bool Delete<T>(T toDelete)
         {
-            KeyHashAuditRepoData data = CastOrDie(toDelete);
+            CompositeKeyAuditRepoData data = CastOrDie(toDelete);
             AutoResetEvent blocker = new AutoResetEvent(false);
             bool? result = false;
             JournalManager.Enqueue(data, (je) =>
@@ -132,7 +132,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override bool Delete(object toDelete)
         {
-            KeyHashAuditRepoData data = CastOrDie(toDelete);
+            CompositeKeyAuditRepoData data = CastOrDie(toDelete);
             AutoResetEvent blocker = new AutoResetEvent(false);
             bool? result = false;
             JournalManager.Enqueue(data, (je) =>
@@ -146,7 +146,7 @@ namespace Bam.Net.Services.DataReplication
 
         public override bool Delete(Type type, object toDelete)
         {
-            KeyHashAuditRepoData data = CastOrDie(toDelete);
+            CompositeKeyAuditRepoData data = CastOrDie(toDelete);
             AutoResetEvent blocker = new AutoResetEvent(false);
             bool? result = false;
             JournalManager.Enqueue(data, (je) =>
@@ -238,12 +238,12 @@ namespace Bam.Net.Services.DataReplication
             return RetrieveAll(type);
         }
 
-        private static KeyHashAuditRepoData CastOrDie<T>(T toCreate)
+        private static CompositeKeyAuditRepoData CastOrDie<T>(T toCreate)
         {
-            if (!toCreate.TryCast(out KeyHashAuditRepoData data))
+            if (!toCreate.TryCast(out CompositeKeyAuditRepoData data))
             {
                 string name = toCreate == null ? "[null]" : toCreate.GetType().Name;
-                throw new InvalidOperationException($"Could not cast specified instance to {nameof(KeyHashAuditRepoData)}, was {name}");
+                throw new InvalidOperationException($"Could not cast specified instance to {nameof(CompositeKeyAuditRepoData)}, was {name}");
             }
 
             return data;

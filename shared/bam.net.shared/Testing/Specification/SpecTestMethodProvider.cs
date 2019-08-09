@@ -11,7 +11,7 @@ namespace Bam.Net.Testing.Specification
     {
         public SpecTestMethodProvider() { }
 
-        public override List<SpecTestMethod> GetTests()
+        public override List<SpecTestMethod> GetTests(string testGroup = null)
         {
             return SpecTestMethod.FromAssembly(Assembly);
         }

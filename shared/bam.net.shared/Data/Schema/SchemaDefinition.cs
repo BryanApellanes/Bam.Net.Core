@@ -177,9 +177,9 @@ namespace Bam.Net.Data.Schema
             return result;
         }
 
-        public SchemaResult AddXref(XrefTable xref)
+        public SchemaManagerResult AddXref(XrefTable xref)
         {
-            SchemaResult r = new SchemaResult(string.Format("XrefTable {0} was added.", xref.Name));
+            SchemaManagerResult r = new SchemaManagerResult(string.Format("XrefTable {0} was added.", xref.Name));
             try
             {
                 xref.ConnectionName = this.Name;
@@ -217,9 +217,9 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        public SchemaResult AddTable(Table table)
+        public SchemaManagerResult AddTable(Table table)
         {
-            SchemaResult r = new SchemaResult(string.Format("Table {0} was added.", table.Name));
+            SchemaManagerResult r = new SchemaManagerResult(string.Format("Table {0} was added.", table.Name));
             try
             {
                 table.ConnectionName = this.Name;
@@ -241,9 +241,9 @@ namespace Bam.Net.Data.Schema
             return r;
         }
 
-        public SchemaResult AddForeignKey(ForeignKeyColumn fk)
+        public SchemaManagerResult AddForeignKey(ForeignKeyColumn fk)
         {
-            SchemaResult r = new SchemaResult(string.Format("ForeignKey {0} was added.", fk.ReferenceName));
+            SchemaManagerResult r = new SchemaManagerResult(string.Format("ForeignKey {0} was added.", fk.ReferenceName));
             try
             {
                 if (!this._foreignKeys.Contains(fk))
@@ -275,7 +275,7 @@ namespace Bam.Net.Data.Schema
             return r;
         }
         
-        private void SetErrorDetails(SchemaResult r, Exception ex)
+        private void SetErrorDetails(SchemaManagerResult r, Exception ex)
         {
             this.LastException = ex;
             r.Message = ex.Message;

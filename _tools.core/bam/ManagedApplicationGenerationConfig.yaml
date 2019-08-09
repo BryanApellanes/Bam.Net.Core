@@ -1,0 +1,5 @@
+﻿SchemaName: ManagedApplication
+WriteSourceTo: C:\bam\src\_gen\ManagedApplication
+TypeAssembly: C:\bam\toolkit\bam.net.dll # the assembly containing types to generate data access objects for
+FromNameSpace: Bam.Net.Application.Data # the namespace containing types to generate data access objects for
+ToNameSpace: Bam.Net.Appliction.Data.Dao # the namespace to write generated data access objects into

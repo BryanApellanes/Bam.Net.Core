@@ -21,13 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="TestDoc.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

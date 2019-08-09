@@ -3,36 +3,38 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data.Dynamic;
 
 namespace Bam.Net.Data
 {
     public static partial class Sql
-    { 
-        public static void ExecuteSqlFile(string path, Database db, object parameters = null)
+    {
+        public static DynamicDatabase In(Database db)
         {
-            ExecuteSqlFile(new FileInfo(path), db, parameters);
+            return new DynamicDatabase(db);
+        }
+        
+        public static void ExecuteFile(string path, Database db, object parameters = null)
+        {
+            ExecuteFile(new FileInfo(path), db, parameters);
         }
 
-        public static void ExecuteSqlFile(FileInfo file, Database db, object parameters = null)
+        public static void ExecuteFile(FileInfo file, Database db, object parameters = null)
         {
-            ExecuteSqlFile(file, db, parameters?.ToDbParameters(db).ToArray() ?? new DbParameter[] { });
+            ExecuteFile(file, db, parameters?.ToDbParameters(db).ToArray() ?? new DbParameter[] { });
         }
 
-        public static void ExecuteSqlFile(FileInfo file, Database db, params DbParameter[] parameters)
+        public static void ExecuteFile(FileInfo file, Database db, params DbParameter[] parameters)
         {
-            ExecutSqlFile<object>(file, db, parameters);
+            ExecuteSqlFile<object>(file, db, parameters);
         }
 
         public static void ExecuteSqlFile(string file, Database db, params DbParameter[] parameters)
         {
             Execute<object>(file, db, parameters);
-        }
-
-        public static IEnumerable<T> ExecutSqlFile<T>(FileInfo file, Database db, params DbParameter[] parameters) where T: class, new()
-        {
-            return ExecuteSqlFile<T>(file, db, parameters);
         }
 
         public static IEnumerable<T> Execute<T>(string sql, Database db, params DbParameter[] parameters) where T: class, new()
@@ -57,7 +59,7 @@ namespace Bam.Net.Data
 
         public static void ExecuteSql(this string sql, Database db, object parameters = null)
         {
-            db.ExecuteSql(sql, parameters.ToDbParameters(db).ToArray());//ExecuteSql<object>(sql, db, parameters.ToDbParameters(db).ToArray());
+            db.ExecuteSql(sql, parameters.ToDbParameters(db).ToArray());
         }
 
         public static IEnumerable<T> ExecuteSql<T>(this string sql, Database db, params DbParameter[] parameters) where T : class, new()

@@ -219,6 +219,11 @@ namespace Bam.Net.Logging
             return _subscribers.Contains(logger);
         }
 
+        protected void FireEventAsync(EventHandler eventHandler, object sender = null, EventArgs eventArgs = null)
+        {
+            Task.Run(() => FireEvent(eventHandler, sender ?? this, eventArgs ?? EventArgs.Empty));
+        }
+        
         /// <summary>
         /// Fire the specified event if there are
         /// subscribers

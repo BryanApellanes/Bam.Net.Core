@@ -24,7 +24,7 @@ using Bam.Net.Configuration;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
-using Lucene.Net.Analysis.Hunspell;
+using Bam.Net.Testing.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ParameterInfo = System.Reflection.ParameterInfo;
@@ -486,14 +486,24 @@ namespace Bam.Net
             }
         }
         
-        public static object CopyAs<T>(this object source, params object[] ctorParams)
+        /// <summary>
+        /// Copy the specified source object as an instance of the specified generic type T using the specified, constructor
+        /// parameters to construct the new instance.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="ctorParams"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T CopyAs<T>(this object source, params object[] ctorParams)
         {
-            return CopyAs(source, typeof(T), ctorParams);
+            return (T)CopyAs(source, typeof(T), ctorParams);
         }
+        
         public static T ToInstance<T>(this Dictionary<string, string> dictionary) where T : class, new()
         {
             return CopyAs<T>(dictionary);
         }
+        
         public static T CopyAs<T>(this Dictionary<string, string> dictionary) where T: class, new()
         {
             T result = new T();
@@ -519,9 +529,26 @@ namespace Bam.Net
             return result;
         }
 
+        public static object ToInstance(this Dictionary<object, object> dictionary, Type type,
+            params object[] ctorParams)
+        {
+            return CopyAs(dictionary, type, ctorParams);
+        }
+        
+        public static object CopyAs(this Dictionary<object, object> dictionary, Type type, params object[] ctorParams)
+        {
+            object result = type.Construct(ctorParams);
+            foreach (object key in dictionary.Keys)
+            {
+                result.Property(key.ToString(), dictionary[key]);
+            }
+
+            return result;
+        }
+        
         /// <summary>
-        /// Copy the current sourcce instance as the spcified type
-        /// copying all properties that match in name and type
+        /// Copy the current source instance as the specified type
+        /// copying all properties that match in name and type.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="type"></param>
@@ -1147,16 +1174,20 @@ namespace Bam.Net
 
         /// <summary>
         /// Iterate over the current IEnumerable passing
-        /// each element to the specified function
+        /// each element to the specified function, if the specified function returns false the remainder of the
+        /// iteration is stopped. 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
+        /// <param name="enumerable"></param>
         /// <param name="function"></param>
-        public static void Each<T>(this IEnumerable<T> arr, Func<T, bool> function)
+        public static void Each<T>(this IEnumerable<T> enumerable, Func<T, bool> function)
         {
-            foreach (T item in arr)
+            foreach (T item in enumerable)
             {
-                function(item);
+                if (!function(item))
+                {
+                    break;
+                }
             }
         }
 
@@ -1191,11 +1222,20 @@ namespace Bam.Net
         /// false to stop
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
+        /// <param name="enumerable"></param>
         /// <param name="function"></param>
-        public static void Each<T>(this IEnumerable<T> arr, Func<T, int, bool> function)
+        public static void Each<T>(this IEnumerable<T> enumerable, Func<T, int, bool> function)
         {
-            arr.ToArray().Each(function);
+            int counter = 0;
+            foreach (T item in enumerable)
+            {
+                if (!function(item, counter))
+                {
+                    break;
+                }
+
+                counter++;
+            }
         }
 
         /// <summary>
@@ -1227,11 +1267,16 @@ namespace Bam.Net
         /// each element to the specified action
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
+        /// <param name="enumerable"></param>
         /// <param name="action"></param>
-        public static void Each<T>(this IEnumerable<T> arr, Action<T, int> action)
+        public static void Each<T>(this IEnumerable<T> enumerable, Action<T, int> action)
         {
-            arr.ToArray().Each(action);
+            int counter = 0;
+            foreach (T item in enumerable)
+            {
+                action(item, counter);
+                counter++;
+            }
         }
 
         /// <summary>
@@ -1253,9 +1298,12 @@ namespace Bam.Net
             }
         }
 
-        public static void Each<T>(this IEnumerable<T> arr, dynamic context, Action<dynamic, T> action)
+        public static void Each<T>(this IEnumerable<T> enumerable, dynamic context, Action<dynamic, T> action)
         {
-            Each<T>(arr.ToArray(), context, action);
+            foreach (T item in enumerable)
+            {
+                action(context, item);
+            }
         }
 
         public static void Each<T>(this T[] arr, dynamic context, Action<dynamic, T> action)
@@ -3876,6 +3924,55 @@ namespace Bam.Net
             ConstructorInfo ctor = type.GetConstructor(paramTypes.ToArray());
             return ctor;
         }
+
+        public static IEnumerable<dynamic> ToDynamic(this DataTable table, string typeName, string nameSpace = null)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                yield return ToDynamic(row, typeName, nameSpace);
+            }
+        }
+        
+        public static dynamic ToDynamic(this DataRow row, string typeName, string nameSpace = null)
+        {
+            return ToDynamic(row.ToDictionary(), typeName, nameSpace);
+        }
+
+        public static dynamic ToDynamic(this Dictionary<object, object> dictionary, string typeName, string nameSpace = null)
+        {
+            nameSpace = nameSpace ?? Dto.DefaultNamespace;
+            return Dto.InstanceFor(nameSpace, typeName, dictionary);
+        }
+        
+        public static IEnumerable<Dictionary<object, object>> ToDictionaries(this DataTable table)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                yield return ToDictionary(row);
+            }
+        }
+        
+        public static Dictionary<object, object> ToDictionary(this DataRow row)
+        {
+            Dictionary<object, object> result = new Dictionary<object, object>();
+            foreach (DataColumn column in row.Table.Columns)
+            {
+                result.Add(column.ColumnName, row[column]);
+            }
+
+            return result;
+        }
+        
+        public static TResult As<TKey, TValue, TResult>(this Dictionary<TKey, TValue> dictionary,
+            params object[] ctorParams)
+        {
+            return FromDictionary<TKey, TValue, TResult>(dictionary, ctorParams);
+        }
+
+        public static object As(this Dictionary<object, object> dictionary, Type type, params object[] ctorParams)
+        {
+            return FromDictionary(dictionary, type, ctorParams);
+        }
         
         /// <summary>
         /// Convert a dictionary to an instance of a specified type.
@@ -4019,7 +4116,7 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Used as a filter for the specified property to determine apprpriateness
+        /// Used as a filter for the specified property to determine appropriateness
         /// of it's type for use as a property. 
         /// </summary>
         /// <param name="prop">The property.</param>

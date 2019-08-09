@@ -33,24 +33,31 @@ namespace Bam.Net.Server
         public override byte[] RenderPage(IRequest request, IResponse response)
         {
             string path = request.Url.AbsolutePath;
+            string relativePath = Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}.html");
             RouteInfo routeInfo = GetRouteInfo(request);
             if (routeInfo.IsHomeRequest)
             {
-                if (AppRoot.FileExists($"~/{AppConf.HtmlDir}{AppConf.DefaultPage}.html", out string locatedPath))
+                if (AppRoot.FileExists(relativePath, out string locatedPath))
                 {
                     return AppContentResponder.GetContent(locatedPath, request, response);
                 }
             }
             else 
             {
-                string absolutePath = AppRoot.GetAbsolutePath($"~/{AppConf.HtmlDir}{path}.html");
+                string absolutePath = AppRoot.GetAbsolutePath(relativePath);
                 if (File.Exists(absolutePath))
                 {
                     return AppContentResponder.GetContent(absolutePath, request, response);
                 }
             }
-            
-            return Encoding.UTF8.GetBytes($"<h2>404 Not Found: {request.RawUrl}</h2>");
+
+            string notFoundHtml = $@"<!DOCTYPE html>
+<html>
+<body>
+<h2>404 Not Found: {request.Url}</h2>
+</body>
+</html>";
+            return Encoding.UTF8.GetBytes(notFoundHtml);
         }
     }
 }

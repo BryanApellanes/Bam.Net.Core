@@ -11,6 +11,6 @@ namespace Bam.Net.Testing
     {
         public Assembly Assembly { get; set; }
 
-        public abstract List<TTestMethod> GetTests();
+        public abstract List<TTestMethod> GetTests(string testGroup = null);
     }
 }

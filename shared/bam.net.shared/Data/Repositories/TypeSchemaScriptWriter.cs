@@ -32,8 +32,7 @@ namespace Bam.Net.Data.Repositories
         /// <returns></returns>
         public SqlStringBuilder WriteSchemaScript(Database database, params Type[] types)
         {
-            TypeInheritanceSchemaGenerator schemaGenerator = new TypeInheritanceSchemaGenerator();
-            schemaGenerator.Types = types;
+            TypeInheritanceSchemaGenerator schemaGenerator = new TypeInheritanceSchemaGenerator {Types = types};
             return WriteSchemaScript(database, schemaGenerator);
         }
 

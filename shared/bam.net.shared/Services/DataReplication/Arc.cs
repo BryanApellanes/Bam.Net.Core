@@ -29,9 +29,14 @@ namespace Bam.Net.Services.DataReplication
     {
 		public Arc()
 		{
-			this.Index = -1;
+			Index = -1;
 		}
 
+		public Arc(object serviceProvider):this()
+		{
+			ServiceProvider = serviceProvider;
+		}
+		
         /// <summary>
         /// The local ProxyableService proxy instance
         /// </summary>
@@ -54,7 +59,7 @@ namespace Bam.Net.Services.DataReplication
         }
 
         /// <summary>
-        /// Gets the starting angle that this slot is valid for
+        /// Gets the starting angle that this slot/arc is valid for
         /// </summary>
         public double StartAngle { get; internal set; }
 

@@ -58,7 +58,7 @@ namespace Bam.Net.CoreServices
 
         public override int GetThrottledValue()
         {
-            Organization org = User.Organizations.Where(o => o.Name.Equals(OrganizationName)).FirstOrDefault();
+            Organization org = User.Organizations.FirstOrDefault(o => o.Name.Equals(OrganizationName));
             if (org?.Applications != null)
             {
                 return org.Applications.Length;
@@ -74,7 +74,7 @@ namespace Bam.Net.CoreServices
 
         public CoreServiceResponse<CoreServices.ApplicationRegistration.Data.Application> CreateApplication(string applicationName)
         {
-            Organization org = User.Organizations.Where(o => o.Name.Equals(OrganizationName)).FirstOrDefault();
+            Organization org = User.Organizations.FirstOrDefault(o => o.Name.Equals(OrganizationName));
             CoreServices.ApplicationRegistration.Data.Application app = ApplicationRegistrationRepository.OneApplicationWhere(c => c.Name == applicationName && c.OrganizationId == org.Id);
             if (app == null)
             {

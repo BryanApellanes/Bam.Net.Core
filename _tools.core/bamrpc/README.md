@@ -1,6 +1,6 @@
 # BamRpc
 
-Use Brpc to expose a class definition as a web service.
+Use Bamrpc to expose a class definition as a web service.
 
 # TL;DR
 Serve services:	
@@ -30,26 +30,24 @@ ServiceProxySystem.Register<Echo>();
 
 ### Web Service Clients
 In addition to automatically exposing any class that you choose as a
-web service, the ServiceProxySystem will also automatically generate clients
-on your behalf.
+web service, BamRpc will also automatically generate clients.
 
 #### C# Clients
-To obtain C# client code simply download the code from a running ServiceProxySystem
-installation using the following path:
+To obtain C# client code simply download the code from a running BamRpc server using the following path:
 
 ```
 /ServiceProxy/CSharpProxies
 ```
 
-You may also specify an optional namespace that the clients will be defined in
+You may also specify an optional namespace that the clients are defined in
 
 ```
 /ServiceProxy/CSharpProxies?namespace=My.Name.Space
 ```
 
 #### JavaScript Clients
-The ServiceProxySystem also generates JavaScript clients as well which
-can be downloaded in a similar fashion as the C# clients.  But, the recommended way
+The BamRpc also generates JavaScript clients, which
+are downloaded in a similar way as the C# clients.  But, the recommended way
 of acquiring JavaScript clients would be to include a script tag in your pages
 with the src attribute set to the JavaScript proxies path:
 

@@ -74,7 +74,7 @@ namespace Bam.Net.Data.Repositories
         {
             EnsureConfigOrDie();
             SourceAssembly = Assembly.LoadFile(Config.TypeAssembly);
-            Args.ThrowIfNull(SourceAssembly, string.Format("Assembly not found {0}", Config.TypeAssembly), "SourceAssembly");
+            Args.ThrowIfNull(SourceAssembly, $"Assembly not found {Config.TypeAssembly}", "SourceAssembly");
             AddTypes(SourceAssembly, Config.FromNameSpace);
         }
 

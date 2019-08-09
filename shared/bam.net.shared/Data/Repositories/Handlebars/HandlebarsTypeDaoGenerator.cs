@@ -71,16 +71,21 @@ namespace Bam.Net.Data.Repositories.Handlebars
             {
                 typeof(JsonConvert).Assembly.GetFilePath(),
                 typeof(MarshalByValueComponent).Assembly.GetFilePath(),
-                typeof(System.Linq.Enumerable).Assembly.GetFilePath()
+                typeof(System.Linq.Enumerable).Assembly.GetFilePath(),
+                typeof(System.Object).Assembly.GetFilePath(),
+                Path.Combine(Path.Combine(BamPaths.ReferenceRuntimeSegments), "System.Collections.dll"),
+                Path.Combine(Path.Combine(BamPaths.ReferenceRuntimeSegments), "netstandard.dll"),
+                typeof(Attribute).Assembly.GetFilePath(),
+                BamPaths.SystemRuntime
             };
         }
 
-        private byte[] Compile(string assemblyNameToCreate, string writeSourceTo)
+        private byte[] Compile(string assemblyNameToCreate, string sourcePath)
         {
             HashSet<string> references = GetReferenceAssemblies();
             RoslynCompiler compiler = new RoslynCompiler();
             references.Each(path => compiler.AddAssemblyReference(path));
-            return compiler.Compile(assemblyNameToCreate, new DirectoryInfo(writeSourceTo));
+            return compiler.Compile(assemblyNameToCreate, new DirectoryInfo(sourcePath));
         }
     }
 }

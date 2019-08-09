@@ -49,7 +49,7 @@ namespace Bam.Net.Services.DataReplication
             return Load(journal.JournalDirectory, journal.TypeMap);
         }
 
-        public JournalEntry Load(DirectoryInfo journalDirectory, JournalTypeMap typeMap)
+        public JournalEntry Load(DirectoryInfo journalDirectory, TypeMap typeMap)
         {
             JournalEntry entry = this.CopyAs<JournalEntry>();
             return entry.LoadLatestValue(journalDirectory, typeMap);            

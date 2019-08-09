@@ -54,10 +54,7 @@ namespace Bam.Net.Testing
 
             if(parseErrorHandler == null)
             {
-                parseErrorHandler = (a)=>
-                {
-                    throw new ArgumentException(a.Message);
-                };
+                parseErrorHandler = (a)=> throw new ArgumentException(a.Message);
             }
 
             ArgsParsedError += parseErrorHandler;            
@@ -68,6 +65,7 @@ namespace Bam.Net.Testing
             AddValidArgument("it", true, description: "Run all integration tests");
             AddValidArgument("spec", true, description: "Run all specification tests");
             AddValidArgument("tag", false, description: "Specify a tag to associate with test executions");
+            AddValidArgument("group", false, description: "When running unit and spec tests, only run the tests in the specified test group");
 
 			ParseArgs(args);
 
@@ -83,12 +81,12 @@ namespace Bam.Net.Testing
             }
             else if (Arguments.Contains("t"))
             {
-                RunAllUnitTests(Assembly.GetEntryAssembly());
+                RunUnitTests();
                 return;
             }
             else if (Arguments.Contains("spec"))
             {
-                RunAllSpecTests(Assembly.GetEntryAssembly());
+                RunSpecTests();
                 return;
             }
             else if (Arguments.Contains("it"))
@@ -113,6 +111,30 @@ namespace Bam.Net.Testing
 				}
 			}
 		}
+
+        private static void RunSpecTests()
+        {
+            if (Arguments.Contains("group"))
+            {
+                RunSpecTestGroup(Assembly.GetEntryAssembly(), Arguments["group"]);
+            }
+            else
+            {
+                RunAllSpecTests(Assembly.GetEntryAssembly());
+            }
+        }
+
+        private static void RunUnitTests()
+        {
+            if (Arguments.Contains("group"))
+            {
+                RunUnitTestGroup(Assembly.GetEntryAssembly(), Arguments["group"]);
+            }
+            else
+            {
+                RunAllUnitTests(Assembly.GetEntryAssembly());
+            }
+        }
 
         protected static void InitLogger()
         {
@@ -211,38 +233,35 @@ namespace Bam.Net.Testing
         {
             ITestRunner<SpecTestMethod> runner = GetSpecTestRunner(assembly, logger);
             AttachHandlers<SpecTestMethod>(passedHandler, failedHandler, runner);
-            foreach (ITestRunListener<SpecTestMethod> listener in GetSpecTestRunListeners())
-            {
-                listener.Tag = runner.Tag;
-                listener.Listen(runner);
-            }
+            AttachSpecTestRunListeners(runner);
             runner.RunAllTests();
         }
 
-        public static void RunAllUnitTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
+        public static void RunSpecTestGroup(Assembly assembly, string testGroup, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
+        {
+            ITestRunner<SpecTestMethod> runner = GetSpecTestRunner(assembly, logger);
+            AttachHandlers<SpecTestMethod>(passedHandler, failedHandler, runner);
+            AttachSpecTestRunListeners(runner);
+            runner.RunTestGroup(testGroup);
+        }
+
+        public static void RunAllUnitTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null,
+            EventHandler failedHandler = null)
         {
             ITestRunner<UnitTestMethod> runner = GetUnitTestRunner(assembly, logger);
             AttachHandlers<UnitTestMethod>(passedHandler, failedHandler, runner);
-            foreach (ITestRunListener<UnitTestMethod> listener in GetUnitTestRunListeners())
-            {
-                listener.Tag = runner.Tag;
-                listener.Listen(runner);
-            }
+            AttachUnitTestRunListeners(runner);
             runner.RunAllTests();
         }
 
-        private static void AttachHandlers<TTestMethod>(EventHandler passedHandler, EventHandler failedHandler, ITestRunner<TTestMethod> runner) where TTestMethod : TestMethod
+        public static void RunUnitTestGroup(Assembly assembly, string testGroup, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
-            if (passedHandler != null)
-            {
-                runner.TestPassed += passedHandler;
-            }
-            if (failedHandler != null)
-            {
-                runner.TestFailed += failedHandler;
-            }
+            ITestRunner<UnitTestMethod> runner = GetUnitTestRunner(assembly, logger);
+            AttachHandlers<UnitTestMethod>(passedHandler, failedHandler, runner);
+            AttachUnitTestRunListeners(runner);
+            runner.RunTestGroup(testGroup);
         }
-
+        
         protected internal static Func<IEnumerable<ITestRunListener<UnitTestMethod>>> GetUnitTestRunListeners
         {
             get;
@@ -376,5 +395,35 @@ namespace Bam.Net.Testing
 				Environment.Exit(1);
 			}
 		}
+		
+        private static void AttachSpecTestRunListeners(ITestRunner<SpecTestMethod> runner)
+        {
+            foreach (ITestRunListener<SpecTestMethod> listener in GetSpecTestRunListeners())
+            {
+                listener.Tag = runner.Tag;
+                listener.Listen(runner);
+            }
+        }
+        
+        private static void AttachUnitTestRunListeners(ITestRunner<UnitTestMethod> runner)
+        {
+            foreach (ITestRunListener<UnitTestMethod> listener in GetUnitTestRunListeners())
+            {
+                listener.Tag = runner.Tag;
+                listener.Listen(runner);
+            }
+        }
+        
+        private static void AttachHandlers<TTestMethod>(EventHandler passedHandler, EventHandler failedHandler, ITestRunner<TTestMethod> runner) where TTestMethod : TestMethod
+        {
+            if (passedHandler != null)
+            {
+                runner.TestPassed += passedHandler;
+            }
+            if (failedHandler != null)
+            {
+                runner.TestFailed += failedHandler;
+            }
+        }
     }
 }

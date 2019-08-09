@@ -112,6 +112,11 @@ namespace Bam.Net.CommandLine
             return GetArgument(name, promptMessage, (p) => PasswordPrompt(p));
         }
 
+        public static string GetArgumentOrDefault(string name, string ifNotSpecified)
+        {
+            return Arguments.Contains(name) ? Arguments[name] : ifNotSpecified;
+        }
+        
         /// <summary>
         /// Get the value specified for the argument with the 
         /// specified name either from the command line or
@@ -203,9 +208,9 @@ namespace Bam.Net.CommandLine
 
         /// <summary>
         /// Try to write the current process id to a file either in the 
-        /// same directory as the main executable or the user's temp 
-        /// directory if that fails.  Kills any existing process that
-        /// was invoked with the same command line if killOldProcess is true
+        /// same directory as the main executable or, if that fails, the user's temp 
+        /// directory.  Kills any existing process that
+        /// was invoked with the same command line if killOldProcess is true.
         /// </summary>
         /// <param name="killOldProcess">Try to kill the old process if the pid file already exists</param>
         public static void TryWritePid(bool killOldProcess = false)
@@ -1205,6 +1210,14 @@ File Version: {1}
             AddValidArgument(name, false, description: description);
         }
 
+        public static void AddSwitches()
+        {
+            foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
+            {
+                AddSwitches(type);
+            }
+        }
+        
         /// <summary>
         /// Calls AddValidArgument for every ConsoleAction that has a 
         /// CommandLineSwitch defined
@@ -1268,6 +1281,19 @@ File Version: {1}
             return ExecuteSwitches(arguments, instance.GetType(), instance, logger);
         }
 
+        public static bool ExecuteSwitches(bool isolateMethodCalls = false, ILogger logger = null)
+        {
+            bool executed = false;
+            foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
+            {
+                if (!executed && ExecuteSwitches(Arguments, type, false, logger))
+                {
+                    executed = true;
+                }
+            }
+
+            return executed;
+        }
         /// <summary>
         /// Execute the methods on the specified instance that are addorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the

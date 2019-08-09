@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Bam.Net
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ProcessModes
     {
         Dev,
@@ -49,7 +52,7 @@ namespace Bam.Net
         static ProcessMode _current;
         public static ProcessMode Current
         {
-            get 
+            get
             {
                 if (_current == null)
                 {
@@ -65,12 +68,7 @@ namespace Bam.Net
                     }
                 }
 
-                if (_current == null)
-                {
-                    _current = FromBamConfig;
-                }
-
-                return _current;
+                return _current ?? (_current = FromBamConfig);
             }
             set { _current = value; }
         }

@@ -69,7 +69,7 @@ namespace Bam.Net.Server
             _server.Stop();
         }
         /// <summary>
-        /// The delegate that will be subscribed to the renamed event of the underlying
+        /// The delegate that is subscribed to the renamed event of the underlying
         /// FileSystemWatcher(s)
         /// </summary>
         public RenamedEventHandler RenamedHandler { get; set; }

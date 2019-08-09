@@ -78,16 +78,18 @@ namespace Bam.Net.CommandLine
 
         public Attribute Attribute { get; set; }
 
-        public void TryInvoke(Action<Exception> exceptionHandler = null)
+        public bool TryInvoke(Action<Exception> exceptionHandler = null)
         {
             try
             {
                 Invoke();
+                return true;
             }
             catch (Exception ex)
             {
                 Action<Exception> handler = exceptionHandler ?? ((e) => { });
                 handler(ex.GetInnerException());
+                return false;
             }
         }
 

@@ -21,6 +21,7 @@ using Bam.Net.Data.Repositories;
 using System.Linq;
 using Bam.Net.Configuration;
 using Bam.Net.Services;
+using UAParser;
 
 namespace Bam.Net.Server
 {
@@ -43,6 +44,7 @@ namespace Bam.Net.Server
             AllRequestHandler = new ContentHandler($"{conf.Name}.AllRequestHandler", AppRoot) { CheckPaths = false };
             CustomHandlerMethods = new List<MethodInfo>();
             SetUploadHandler();
+            SetDownloadHandlers();
             SetBaseIgnorePrefixes();
             ContentHandlerScanTask = ScanForContentHandlers();
             SetAllRequestHandler();
@@ -175,6 +177,94 @@ namespace Bam.Net.Server
                 }
                 return RenderLayout(ctx.Response, request.Url.AbsolutePath, query);
             });
+        }
+
+        protected virtual void SetDownloadHandlers()
+        {
+            SetCustomContentHandler("Toolkit Download", "/download-toolkit", (ctx, fs) =>
+            {
+                IRequest request = ctx.Request;
+                Parser parser = Parser.GetDefault();
+                string runtime = "win10-x64";
+                if (request.UserAgent != null)
+                {
+                    ClientInfo clientInfo = parser.Parse(request.UserAgent);
+               
+                    if (clientInfo.OS.Family.Contains("Mac", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        runtime = "osx-x64";
+                    }
+                    else if (clientInfo.OS.Family.Contains("Linux", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        runtime = "linux-x64";
+                    }
+                }
+
+                return GetResponseData(ctx, runtime);                
+            });
+            
+            SetCustomContentHandler("Windows Toolkit Download", "/download-windows-toolkit", (ctx, fs) => GetResponseData(ctx, "win10-x64"));
+            SetCustomContentHandler("Linux Toolkit Download", "/download-linux-toolkit", (ctx, fs) => GetResponseData(ctx, "linux-x64"));
+            SetCustomContentHandler("Mac Toolkit Download", "/download-mac-toolkit", (ctx, fs) => GetResponseData(ctx, "osx-x64"));
+            
+            SetCustomContentHandler("Download a named file", "/download", (ctx, fs) =>
+            {
+                IRequest request = ctx.Request;
+                byte[] responseData = null;
+                string requestedFileName = request.QueryString?.Get("fileName");
+                string[] requestedSegments = new string[] {"~", "common", "files", requestedFileName};
+                if (!string.IsNullOrEmpty(requestedFileName) && ServerRoot.FileExists(out string requestedFilePath, requestedSegments))
+                {
+                    responseData = GetResponseData(ctx, requestedFileName, requestedFilePath);
+                }
+
+                return responseData;
+            });
+            
+            SetCustomContentHandler("Download toolkit install script", "/install.sh", (ctx, fs) =>
+            {
+                if (ServerRoot.FileExists(out string installScriptPath, "~", "common", "files", "install.sh"))
+                {
+                    return GetResponseData(ctx, "install.sh", installScriptPath);
+                }
+                
+                Log.Warn("Install script is missing");
+                return null;
+            });
+            
+            SetCustomContentHandler("Download tool install script", "/install-tool.sh", (ctx, fs) =>
+            {
+                if (ServerRoot.FileExists(out string installToolScriptPath, "~", "common", "files", "install-tool.sh"))
+                {
+                    return GetResponseData(ctx, "install-tool.sh", installToolScriptPath);
+                }
+                
+                Log.Warn("Tool install script is missing");
+                return null;
+            });
+        }
+        
+        private byte[] GetResponseData(IHttpContext ctx, string runtime)
+        {
+            byte[] responseData = null;
+            string fileName = $"bamtoolkit-{runtime}.zip";
+            string[] segments = new string[] {"~", "common", "files", fileName};
+            if (ServerRoot.FileExists(out string filePath, segments))
+            {
+                responseData = GetResponseData(ctx, fileName, filePath);
+            }
+
+            return responseData;
+        }
+
+        private static byte[] GetResponseData(IHttpContext ctx, string nameToGiveFile, string filePath)
+        {
+            IResponse response = ctx.Response;
+            response.Headers.Add("Content-Disposition", $"attachment; filename={nameToGiveFile}");
+            response.Headers.Add("Content-type", "application/zip");
+
+            byte[] data = File.ReadAllBytes(filePath);
+            return data;
         }
 
         /// <summary>
@@ -339,7 +429,8 @@ namespace Bam.Net.Server
                     }
                     else if (string.IsNullOrEmpty(ext) && !ShouldIgnore(path))
                     {
-                        if (AppRoot.FileExists($"~/{AppConf.HtmlDir}{path}.html", out locatedPath))
+                        string relativePath = Path.Combine("~/", AppConf.HtmlDir, $"{path}.html");
+                        if (AppRoot.FileExists(relativePath, out locatedPath))
                         {
                             content = GetContent(locatedPath, request, response);
                         }
@@ -431,12 +522,11 @@ namespace Bam.Net.Server
 
         public virtual void HandleUpload(IHttpContext context, HttpPostedFile file)
         {
-            FileUploadEventArgs args = new FileUploadEventArgs(context, file, ApplicationName);
+            string userName = GetUser(context).UserName;
+            FileUploadEventArgs args = new FileUploadEventArgs(context, file, ApplicationName) {UserName = userName};
             FireEvent(FileUploading, args);
             if (args.Continue)
             {
-                string userName = GetUser(context).UserName;
-                args.UserName = userName;
                 string saveToPath = Path.Combine(AppRoot.Root, "workspace", "uploads", userName, "temp_".RandomLetters(8));
                 FileInfo fileInfo = new FileInfo(saveToPath);
                 if (!fileInfo.Directory.Exists)
@@ -470,8 +560,8 @@ namespace Bam.Net.Server
             }
 
             string lowered = path.ToLowerInvariant();
-            string[] layoutSegments = string.Format("~/{0}/{1}{2}", AppConf.HtmlDir, path, LayoutFileExtension).DelimitSplit("/", "\\");
-            string[] htmlSegments = string.Format("~/{0}/{1}.html", AppConf.HtmlDir, path).DelimitSplit("/", "\\");
+            string[] layoutSegments = $"~/{AppConf.HtmlDir}/{path}{LayoutFileExtension}".DelimitSplit("/", "\\");
+            string[] htmlSegments = $"~/{AppConf.HtmlDir}/{path}.html".DelimitSplit("/", "\\");
 
             LayoutModel layoutModel = null;
             if (LayoutModelsByPath.ContainsKey(lowered))

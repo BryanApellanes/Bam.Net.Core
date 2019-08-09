@@ -289,6 +289,18 @@ namespace Bam.Net.Data.Schema
             }
         }
 
+        public bool HasColumn(string columnName)
+        {
+            return HasColumn(columnName, out Column ignore);
+        }
+        
+        public bool HasColumn(string columnName, out Column column)
+        {
+            bool result = _columns.ContainsKey(columnName);
+            column = _columns[columnName];
+            return result;
+        }
+        
         public override string ToString()
         {
             return string.Format("{0}.Name={1}::{0}.ClassName={2}", typeof(Table).Name, this.Name, this.ClassName);

@@ -15,6 +15,6 @@ namespace Bam.Net.Services.DataReplication
 
         void Enqueue(IEnumerable<JournalEntry> journalEntries, Action<JournalEntry[]> onFullyFlushed = null);
 
-        T Load<T>(ulong id) where T : KeyHashAuditRepoData, new();
+        T Load<T>(ulong id) where T : CompositeKeyAuditRepoData, new();
     }
 }

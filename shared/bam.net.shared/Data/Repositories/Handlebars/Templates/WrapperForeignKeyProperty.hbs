@@ -1,0 +1,16 @@
+        {{{CollectionPropertyTypeString}}} _{{CollectionPropertyCamelCaseName}};
+		public override {{{CollectionPropertyTypeString}}} {{CollectionProperty.Name}}
+		{
+			get
+			{
+				if (_{{CollectionPropertyCamelCaseName}} == null)
+				{
+					_{{CollectionPropertyCamelCaseName}} = DaoRepository.ForeignKeyCollectionLoader<{{PrimaryKeyType.Namespace}}.{{PrimaryKeyType.Name}}, {{ForeignKeyType.Namespace}}.{{ForeignKeyType.Name}}>(this).To{{CollectionPropertyTypeName}}();
+				}
+				return _{{CollectionPropertyCamelCaseName}};
+			}
+			set
+			{
+				_{{CollectionPropertyCamelCaseName}} = value;
+			}
+		}

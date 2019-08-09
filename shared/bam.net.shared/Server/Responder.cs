@@ -363,6 +363,9 @@ namespace Bam.Net.Server
             set;
         }
 
+        /// <summary>
+        /// The name of the current responder with the "Responder" suffix removed.
+        /// </summary>
         protected internal virtual string ResponderSignificantName
         {
             get

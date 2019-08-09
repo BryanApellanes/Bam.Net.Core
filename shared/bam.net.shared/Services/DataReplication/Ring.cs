@@ -35,6 +35,38 @@ namespace Bam.Net.Services.DataReplication
 
             Arcs = newArcs.ToArray();            
         }
+
+        public Arc<TService> FirstArcWhere(Func<Arc<TService>, bool> where)
+        {
+            foreach (Arc<TService> arc in Arcs)
+            {
+                if (where(arc))
+                {
+                    return arc;
+                }
+            }
+
+            return null;
+        }
+
+        public IEnumerable<Arc<TService>> ArcsWhere(Func<Arc<TService>, bool> where)
+        {
+            foreach (Arc<TService> arc in Arcs)
+            {
+                if (where(arc))
+                {
+                    yield return arc;
+                }
+            }
+        }
+
+        public void ForEachArcService(Action<TService> action)
+        {
+            foreach (Arc<TService> arc in Arcs)
+            {
+                action(arc.GetTypedServiceProvider());
+            }
+        }
     }
 
     public abstract class Ring
@@ -45,9 +77,9 @@ namespace Bam.Net.Services.DataReplication
             this._arcs = new List<Arc>();
         }
 
-        public Ring(int slotCount)
+        public Ring(int arcCount)
         {
-            this.SetArcCount(slotCount);
+            this.SetArcCount(arcCount);
         }
 
         public void SetArcCount(int count)
@@ -89,11 +121,21 @@ namespace Bam.Net.Services.DataReplication
 
         protected internal abstract Arc CreateArc();
         
+        /// <summary>
+        /// Gets a string that uniquely identifies the value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public abstract string GetHashString(object value);
 
-        public abstract int GetRepositoryKey(object value);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public abstract int GetObjectKey(object value);
 
-        protected abstract Arc FindArcByKey(int key);
+        protected abstract Arc FindArcByObjectKey(int key);
 
         /// <summary>
         /// When implemented by a derived class should 

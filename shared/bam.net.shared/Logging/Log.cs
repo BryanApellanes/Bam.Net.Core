@@ -8,6 +8,7 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Bam.Net.CommandLine;
 using Bam.Net.Configuration;
 
 namespace Bam.Net.Logging
@@ -58,7 +59,7 @@ namespace Bam.Net.Logging
         {
             get
             {
-				return _defaultLoggerLock.DoubleCheckLock(ref _defaultLogger, () => GetDefaultLogger());
+				return _defaultLoggerLock.DoubleCheckLock(ref _defaultLogger, GetDefaultLogger);
             }
 			set
 			{
@@ -188,7 +189,7 @@ namespace Bam.Net.Logging
         {
             lock (_currentLoggerLock)
             {
-                string loggerTypeName = string.Format("{0}", logType);
+                string loggerTypeName = $"{logType}";
                 Type loggerType = null;
                 try
                 {
@@ -196,7 +197,7 @@ namespace Bam.Net.Logging
                 }
                 catch
                 {
-                    loggerTypeName = string.Format("{0}Logger", logType);
+                    loggerTypeName = $"{logType}Logger";
                     loggerType = Type.GetType(loggerTypeName);
                 }
                 
@@ -204,7 +205,7 @@ namespace Bam.Net.Logging
                 {
                     try
                     {
-                        loggerType = Type.GetType(string.Format("{0}.{1}Logger", _loggingNamespace, logType));
+                        loggerType = Type.GetType($"{_loggingNamespace}.{logType}Logger");
                     }
                     catch
                     {
@@ -215,7 +216,7 @@ namespace Bam.Net.Logging
                     {
                         try
                         {
-                            loggerType = Type.GetType(string.Format("{0}.{1}", _loggingNamespace, logType));
+                            loggerType = Type.GetType($"{_loggingNamespace}.{logType}");
                         }
                         catch
                         {
@@ -225,7 +226,7 @@ namespace Bam.Net.Logging
 
                     if (loggerType == null)
                     {
-                        throw new InvalidOperationException(string.Format("The specified logType ({0}) was not found.", logType));
+                        return new ConsoleLogger();
                     }
                 }
 

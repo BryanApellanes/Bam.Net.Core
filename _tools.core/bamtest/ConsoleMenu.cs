@@ -10,8 +10,11 @@ using Bam.Net.Logging;
 using Bam.Net.Testing.Integration;
 using System.IO;
 using System.Diagnostics;
+using System.Runtime.Loader;
+using System.Threading;
 using Bam.Net.Data;
 using Bam.Net.Automation.Testing;
+using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Testing
 {
@@ -23,13 +26,7 @@ namespace Bam.Net.Testing
         /// <value>
         /// The open cover.
         /// </value>
-        protected static string OpenCover
-        {
-            get
-            {
-                return "/bam/tools/OpenCover/OpenCover.Console.exe";
-            }
-        }
+        protected static string OpenCover => Path.Combine(BamPaths.ToolsPath, "OpenCover", "OpenCover.Console.exe");
 
         /// <summary>
         /// Gets the output root.
@@ -37,13 +34,7 @@ namespace Bam.Net.Testing
         /// <value>
         /// The output root.
         /// </value>
-        protected static string OutputRoot
-        {
-            get
-            {
-                return "/bam/tests/";
-            }
-        }
+        protected static string OutputRoot => BamPaths.TestsPath;
 
         /// <summary>
         /// Runs the tests with coverage.
@@ -108,6 +99,90 @@ namespace Bam.Net.Testing
                 throw new InvalidOperationException("UnitTest file not specified");
             }
             RunUnitTestsInFile(assemblyPath, Environment.CurrentDirectory);
+        }
+
+        [ConsoleAction("Group", "[name of test group]",
+            "Run tests with the specified TestGroup attribute name in assemblies found for the given search pattern.")]
+        public static void RunTestGroupsInFolder()
+        {
+            string testGroupName = GetArgument("Group", "Please enter the name of the test group to run.");
+            string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
+            string testDir = GetArgumentOrDefault("dir", BamPaths.BamHome);
+            DirectoryInfo directory = new DirectoryInfo(testDir);
+            FileInfo[] files = directory.GetFiles(searchPattern);
+            if (files.Length > 0)
+            {
+                OutLine($"There are {files.Length} files matching search pattern {searchPattern}", ConsoleColor.Green);
+                Thread.Sleep(3000);
+                List<UnitTestMethod> succeeded = new List<UnitTestMethod>();
+                Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
+                foreach (FileInfo file in files.Where(fi=> fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    RunTestGroupFromFile(file, testGroupName, failed, succeeded);
+                }
+
+                if (succeeded.Count > 0)
+                {
+                    OutLineFormat("{0} tests passed", ConsoleColor.Green, succeeded.Count);
+                    succeeded.Each(unitTest=> OutLineFormat("{0} passed", ConsoleColor.Green, unitTest.Description));
+                }
+                
+                if (failed.Count > 0)
+                {
+                    StringBuilder failures = new StringBuilder();
+                    failed.Keys.Each(unitTest =>  failures.AppendLine($"{unitTest.Description}: {failed[unitTest].Message}\r\n{failed[unitTest].StackTrace}\r\n"));
+                    OutLineFormat("There were {0} failures", failed.Count);
+                    OutLine(failures.ToString(), ConsoleColor.Magenta);
+                    Exit(1);
+                }
+                else
+                {
+                    Exit(0);
+                }
+            }
+            OutLineFormat("No files found in ({0}) for search pattern ({1})", testDir, searchPattern);
+            Exit(1);
+        }
+
+        private static void RunTestGroupFromFile(FileInfo file, string testGroupName, Dictionary<UnitTestMethod, Exception> failed, List<UnitTestMethod> succeeded)
+        {
+            Assembly testAssembly = null;
+            try
+            {
+                testAssembly = Assembly.LoadFile(file.FullName);
+            }
+            catch (Exception ex)
+            {
+                OutLineFormat("Failed to load assembly from file {0}: {1}", ConsoleColor.Yellow, file.FullName, ex.Message);
+                return;
+            }
+
+            OutLineFormat("Loaded assembly {0}", ConsoleColor.Green, testAssembly.FullName);
+            List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
+            {
+                if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(
+                    out TestGroupAttribute testGroupAttribute))
+                {
+                    return testGroupAttribute.Groups.Contains(testGroupName);
+                }
+
+                return false;
+            }).ToList();
+            OutLineFormat("Found ({0}) tests in group ({1}) in assembly ({2})", ConsoleColor.Blue, testMethods.Count,
+                testGroupName, testAssembly.FullName);
+            testMethods.Each(testMethod =>
+            {
+                if (testMethod.TryInvoke(ex =>
+                {
+                    OutLineFormat("{0} failed: {1}", testMethod.Description, ex.Message);
+                    failed.Add(testMethod, ex);
+                }))
+                {
+                    succeeded.Add(testMethod);
+                }
+
+                ;
+            });
         }
 
         /// <summary>

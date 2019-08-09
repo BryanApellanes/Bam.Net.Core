@@ -115,7 +115,7 @@ namespace Bam.Net
             Deserializer deserializer = new Deserializer();
             using (StreamReader sr = new StreamReader(ms))
             {
-                return deserializer.Deserialize(sr);
+                return deserializer.Deserialize(sr, type);
             }
         }
 
@@ -125,9 +125,10 @@ namespace Bam.Net
             stream.CopyTo(ms);
             ms.Flush();
             ms.Seek(0, SeekOrigin.Begin);
+            Deserializer deserializer = new Deserializer();
             using (StreamReader sr = new StreamReader(ms))
             {
-                return sr.ReadToEnd().FromYaml<T>();
+                return deserializer.Deserialize<T>(sr);
             }
         }
         

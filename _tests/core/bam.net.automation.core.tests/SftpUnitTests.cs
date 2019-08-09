@@ -9,7 +9,6 @@ namespace Bam.Net.Automation.Tests
     [Serializable]
     public class SftpUnitTests : CommandLineTestInterface
     {
-
         [UnitTest]
         public void ShouldSetSshServer()
         {

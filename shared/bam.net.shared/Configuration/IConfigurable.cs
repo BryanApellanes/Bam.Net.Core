@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Configuration
 {
     /// <summary>
-    /// 
+    /// When implemented allows configuration by applying a configuration or specifying a configurer.
     /// </summary>
     /// <seealso cref="Bam.Net.Configuration.IHasRequiredProperties" />
     public interface IConfigurable : IHasRequiredProperties
