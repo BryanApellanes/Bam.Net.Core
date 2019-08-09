@@ -404,7 +404,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
 
         /// <summary>
-        /// Write the specified value to the local repo if we are the leader.
+        /// Write the specified value to the local repo if we are the leader for the term specified in the request, otherwise become a
+        /// follower and write the value as a follower.
         /// </summary>
         /// <param name="request"></param>
         protected virtual void LeaderWriteValue(RaftRequest request)
@@ -807,7 +808,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         protected internal RaftNode GetLeaderNode()
         {
             return FirstArcWhere(a => a.GetTypedServiceProvider().NodeState == RaftNodeState.Leader)
-                .GetTypedServiceProvider();
+                ?.GetTypedServiceProvider();
         }
 
         protected internal List<RaftNode> GetFollowers()
@@ -898,8 +899,17 @@ namespace Bam.Net.Services.DataReplication.Consensus
             if (retrieved == null)
             {
                 // request from leader 
-                
-                // if leader is not known broadcast request
+                RaftNode leader = GetLeaderNode();
+                if (leader != null)
+                {
+                    leader.GetClient().SendRetrieveRequest(value);
+                }
+                else
+                {
+                    // if leader is not known broadcast request
+                    
+                    
+                }
             }
 
             return retrieved;

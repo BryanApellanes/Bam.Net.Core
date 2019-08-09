@@ -4,6 +4,7 @@ using System.Reflection;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
+using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -35,6 +36,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public StreamingClient<RaftRequest, RaftResponse> StreamingClient { get; set; }
 
+        public void SendRetrieveRequest(RetrieveOperation retrieveOperation)
+        {
+            Args.ThrowIfNull(retrieveOperation, "retrieveOperation");
+            
+            throw new NotImplementedException();
+            //StreamingClient.SendRequest()
+        }
+        
         public void SendFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");

@@ -54,10 +54,7 @@ namespace Bam.Net.Data.Qi
 
         #region IHasFilters Members
 
-        public IEnumerable<IFilterToken> Filters
-        {
-            get { return this.Parameters; }
-        }
+        public IEnumerable<IFilterToken> Filters => this.Parameters;
 
         #endregion
 
@@ -65,10 +62,7 @@ namespace Bam.Net.Data.Qi
 
         public IParameterInfo[] Parameters
         {
-            get
-            {
-                return clauses;
-            }
+            get => clauses;
             set
             {
                 //throw new NotImplementedException();

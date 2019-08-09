@@ -179,10 +179,7 @@ namespace Bam.Net.Data.Qi
 
         public string Operator
         {
-            get
-            {
-                return this.ResolveOperator();
-            }
+            get => this.ResolveOperator();
             set
             {
                 //

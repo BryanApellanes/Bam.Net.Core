@@ -68,7 +68,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public RaftNodeIdentifier Identifier { get; set; }
         
         /// <summary>
-        /// Get a RaftClient for the current node.  
+        /// Get a RaftProtocolClient for the current node.  
         /// </summary>
         /// <returns></returns>
         public virtual RaftProtocolClient GetClient()
