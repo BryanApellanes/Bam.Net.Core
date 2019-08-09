@@ -307,7 +307,7 @@ namespace Bam.Net.Data.Dynamic
 
         private DataTable MapDataTable(string tableName, DataTable dataTable)
         {
-            DataTable result = new DataTable();
+            DataTable result = new DataTable(tableName);
             foreach (DataColumn column in dataTable.Columns)
             {
                 string property = NameMap?.GetPropertyName(tableName, column.ColumnName) ?? column.ColumnName;

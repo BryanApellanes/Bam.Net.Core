@@ -29,6 +29,26 @@ namespace Bam.Net.Application
             private set;
         }
 
+        /// <summary>
+        /// ServiceProxyResponder used to respond to sql pass through requests if SqlPassThroughEnabled is true.  This may be null.
+        /// </summary>
+        protected ServiceProxyResponder ServiceProxyResponder
+        {
+            get;
+            private set;
+        }
+        
+        private bool _sqlPassThroughEnabled;
+        public bool SqlPassThroughEnabled
+        {
+            get { return _sqlPassThroughEnabled; }
+            set
+            {
+                _sqlPassThroughEnabled = value;
+                SetSqlPassThrough();
+            }
+        }
+
         public override bool Respond(IHttpContext context)
         {
             if (!TryRespond(context))
@@ -47,7 +67,15 @@ namespace Bam.Net.Application
             }
             else
             {
-                return RestResponder.TryRespond(context);
+                if (!RestResponder.TryRespond(context))
+                {
+                    // the rest responder didn't respond, check if sql pass through is enabled and try to respond.
+                    return SqlPassThroughEnabled && ServiceProxyResponder.TryRespond(context);
+                }
+                else
+                {
+                    return true; // rest responder responded
+                }
             }
         }
 
@@ -73,5 +101,29 @@ namespace Bam.Net.Application
         {
             Initialized?.Invoke(this);
         }
+        
+        private void SetSqlPassThrough()
+        {
+            if (_sqlPassThroughEnabled)
+            {
+                EnableSqlPassThrough();
+            }
+            else
+            {
+                DisableSqlPassThrough();
+            }
+        }
+
+        private void EnableSqlPassThrough()
+        {
+            //ServiceProxyResponder  = new ServiceProxyResponder();
+            throw new NotImplementedException();
+        }
+
+        private void DisableSqlPassThrough()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

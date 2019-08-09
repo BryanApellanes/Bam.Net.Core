@@ -10,12 +10,12 @@ namespace Bam.Net.Data.Tests
     {
         static void Main(string[] args)
         {
-            AddSwitches(typeof(DatabaseConfigTests));
+            AddSwitches();
             AddConfigurationSwitches();
             Initialize(args);
             if (Arguments.Length > 0 && !Arguments.Contains("i"))
             {
-                ExecuteSwitches(Arguments, typeof(DatabaseConfigTests), false, new ConsoleLogger());
+                ExecuteSwitches(false, new ConsoleLogger());
             }
         }
     }

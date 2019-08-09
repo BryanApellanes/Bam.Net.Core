@@ -24,7 +24,7 @@ using Bam.Net.Configuration;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
-using Lucene.Net.Analysis.Hunspell;
+using Bam.Net.Testing.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ParameterInfo = System.Reflection.ParameterInfo;
@@ -529,6 +529,23 @@ namespace Bam.Net
             return result;
         }
 
+        public static object ToInstance(this Dictionary<object, object> dictionary, Type type,
+            params object[] ctorParams)
+        {
+            return CopyAs(dictionary, type, ctorParams);
+        }
+        
+        public static object CopyAs(this Dictionary<object, object> dictionary, Type type, params object[] ctorParams)
+        {
+            object result = type.Construct(ctorParams);
+            foreach (object key in dictionary.Keys)
+            {
+                result.Property(key.ToString(), dictionary[key]);
+            }
+
+            return result;
+        }
+        
         /// <summary>
         /// Copy the current source instance as the specified type
         /// copying all properties that match in name and type.
@@ -3907,6 +3924,55 @@ namespace Bam.Net
             ConstructorInfo ctor = type.GetConstructor(paramTypes.ToArray());
             return ctor;
         }
+
+        public static IEnumerable<dynamic> ToDynamic(this DataTable table, string typeName, string nameSpace = null)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                yield return ToDynamic(row, typeName, nameSpace);
+            }
+        }
+        
+        public static dynamic ToDynamic(this DataRow row, string typeName, string nameSpace = null)
+        {
+            return ToDynamic(row.ToDictionary(), typeName, nameSpace);
+        }
+
+        public static dynamic ToDynamic(this Dictionary<object, object> dictionary, string typeName, string nameSpace = null)
+        {
+            nameSpace = nameSpace ?? Dto.DefaultNamespace;
+            return Dto.InstanceFor(nameSpace, typeName, dictionary);
+        }
+        
+        public static IEnumerable<Dictionary<object, object>> ToDictionaries(this DataTable table)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                yield return ToDictionary(row);
+            }
+        }
+        
+        public static Dictionary<object, object> ToDictionary(this DataRow row)
+        {
+            Dictionary<object, object> result = new Dictionary<object, object>();
+            foreach (DataColumn column in row.Table.Columns)
+            {
+                result.Add(column.ColumnName, row[column]);
+            }
+
+            return result;
+        }
+        
+        public static TResult As<TKey, TValue, TResult>(this Dictionary<TKey, TValue> dictionary,
+            params object[] ctorParams)
+        {
+            return FromDictionary<TKey, TValue, TResult>(dictionary, ctorParams);
+        }
+
+        public static object As(this Dictionary<object, object> dictionary, Type type, params object[] ctorParams)
+        {
+            return FromDictionary(dictionary, type, ctorParams);
+        }
         
         /// <summary>
         /// Convert a dictionary to an instance of a specified type.
@@ -4050,7 +4116,7 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Used as a filter for the specified property to determine apprpriateness
+        /// Used as a filter for the specified property to determine appropriateness
         /// of it's type for use as a property. 
         /// </summary>
         /// <param name="prop">The property.</param>

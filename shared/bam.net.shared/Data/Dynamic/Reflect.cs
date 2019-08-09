@@ -96,5 +96,10 @@ namespace Bam.Net.Data.Dynamic
             DynamicDatabase ddb = new DynamicDatabase(db);
             return ddb.Query(sql, parameters ?? new Dictionary<string, object>());
         }
+
+        public static string ToJson(dynamic dyn)
+        {
+            return Extensions.ToJson(dyn);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Bam.Net.Data.Schema;
+using Bam.Net.Presentation.Handlebars;
 using Bam.Net.ServiceProxy;
 
 namespace Bam.Net.Data.Repositories
@@ -23,6 +24,8 @@ namespace Bam.Net.Data.Repositories
 			Properties = properties.ToArray();
 			DtoType = dynamicDtoType;
 			Namespace = nameSpace;
+			LoadEmbeddedHandlebars();
+			CleanTypeName();
 		}
 
         public DtoModel(string nameSpace, string typeName, params DtoPropertyModel[] propertyModels)
@@ -35,13 +38,46 @@ namespace Bam.Net.Data.Repositories
             TypeName = typeName;
             Properties = properties.ToArray();
             Namespace = nameSpace;
+            LoadEmbeddedHandlebars();
+            CleanTypeName();
         }
 
+        public DtoModel(string nameSpace, string typeName, Dictionary<object, object> propertyValues)
+        {
+	        TypeName = typeName;
+	        List<string> propertyNames = new List<string>();
+	        foreach (object key in propertyValues.Keys)
+	        {
+		        string propertyName = key.ToString();
+		        string propertyType = propertyValues[key].GetType().Name;
+		        propertyNames.Add($"\t\tpublic {propertyType} {propertyName} {{get; set;}}\r\n");
+	        }
+
+	        Properties = propertyNames.ToArray();
+	        Namespace = nameSpace;
+	        LoadEmbeddedHandlebars();
+	        CleanTypeName();
+        }
+        
 		public string TypeName { get; set; }
 		public string Namespace { get; set; }
 		public string[] Properties { get; set; }
 
 		public Type DtoType { get; set; }
 
+		private void LoadEmbeddedHandlebars()
+		{
+			Net.Handlebars.HandlebarsEmbeddedResources = new HandlebarsEmbeddedResources(this.GetType().Assembly);
+		}
+
+		private void CleanTypeName()
+		{
+			TypeName = CleanTypeName(TypeName);
+		}
+
+		internal static string CleanTypeName(string typeName)
+		{
+			return typeName.Replace(".", "_");
+		}
 	}
 }

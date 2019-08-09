@@ -32,7 +32,7 @@ namespace Bam.Net.ServiceProxy
                 {
                     if (!serviceProvider.HasClass(currentChunk) && proxyAliases != null)
                     {
-                        ProxyAlias alias = proxyAliases.Where(pa => pa.Alias.Equals(currentChunk)).FirstOrDefault();
+                        ProxyAlias alias = proxyAliases.FirstOrDefault(pa => pa.Alias.Equals(currentChunk));
                         if (alias != null)
                         {
                             result.ClassName = alias.ClassName;

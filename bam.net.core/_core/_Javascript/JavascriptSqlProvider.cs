@@ -25,6 +25,7 @@ namespace Bam.Net.Javascript
                 {
                     rows.Add(row);
                 }
+
                 result.Results = rows.ToArray();
                 result.Count = results.Rows.Count;
             }
