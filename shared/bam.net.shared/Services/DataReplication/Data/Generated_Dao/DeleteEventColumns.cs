@@ -20,7 +20,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 		}	
 
-				
         public DeleteEventColumns Id
         {
             get
@@ -70,6 +69,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DeleteEventColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

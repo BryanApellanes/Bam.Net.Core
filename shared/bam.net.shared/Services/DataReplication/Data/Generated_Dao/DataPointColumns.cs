@@ -20,7 +20,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 		}	
 
-				
         public DataPointColumns Id
         {
             get
@@ -105,6 +104,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DataPointColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

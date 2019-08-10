@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.Services.DataReplication.Data.Dao
 {
-	// schema = DataReplication 
+	// schema = DataReplication
     public static class DataReplicationContext
     {
 		public static string ConnectionName
@@ -31,6 +31,162 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 
 
+	public class DataPropertyFilterQueryContext
+	{
+			public DataPropertyFilterCollection Where(WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.Where(where, db);
+			}
+		   
+			public DataPropertyFilterCollection Where(WhereDelegate<DataPropertyFilterColumns> where, OrderBy<DataPropertyFilterColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.Where(where, orderBy, db);
+			}
+
+			public DataPropertyFilter OneWhere(WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.OneWhere(where, db);
+			}
+
+			public static DataPropertyFilter GetOneWhere(WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.GetOneWhere(where, db);
+			}
+		
+			public DataPropertyFilter FirstOneWhere(WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.FirstOneWhere(where, db);
+			}
+
+			public DataPropertyFilterCollection Top(int count, WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.Top(count, where, db);
+			}
+
+			public DataPropertyFilterCollection Top(int count, WhereDelegate<DataPropertyFilterColumns> where, OrderBy<DataPropertyFilterColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPropertyFilter.Count(where, db);
+			}
+	}
+
+	static DataPropertyFilterQueryContext _dataPropertyFilters;
+	static object _dataPropertyFiltersLock = new object();
+	public static DataPropertyFilterQueryContext DataPropertyFilters
+	{
+		get
+		{
+			return _dataPropertyFiltersLock.DoubleCheckLock<DataPropertyFilterQueryContext>(ref _dataPropertyFilters, () => new DataPropertyFilterQueryContext());
+		}
+	}
+	public class QueryOperationResultQueryContext
+	{
+			public QueryOperationResultCollection Where(WhereDelegate<QueryOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.Where(where, db);
+			}
+		   
+			public QueryOperationResultCollection Where(WhereDelegate<QueryOperationResultColumns> where, OrderBy<QueryOperationResultColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.Where(where, orderBy, db);
+			}
+
+			public QueryOperationResult OneWhere(WhereDelegate<QueryOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.OneWhere(where, db);
+			}
+
+			public static QueryOperationResult GetOneWhere(WhereDelegate<QueryOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.GetOneWhere(where, db);
+			}
+		
+			public QueryOperationResult FirstOneWhere(WhereDelegate<QueryOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.FirstOneWhere(where, db);
+			}
+
+			public QueryOperationResultCollection Top(int count, WhereDelegate<QueryOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.Top(count, where, db);
+			}
+
+			public QueryOperationResultCollection Top(int count, WhereDelegate<QueryOperationResultColumns> where, OrderBy<QueryOperationResultColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<QueryOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.QueryOperationResult.Count(where, db);
+			}
+	}
+
+	static QueryOperationResultQueryContext _queryOperationResults;
+	static object _queryOperationResultsLock = new object();
+	public static QueryOperationResultQueryContext QueryOperationResults
+	{
+		get
+		{
+			return _queryOperationResultsLock.DoubleCheckLock<QueryOperationResultQueryContext>(ref _queryOperationResults, () => new QueryOperationResultQueryContext());
+		}
+	}
+	public class RetrieveOperationResultQueryContext
+	{
+			public RetrieveOperationResultCollection Where(WhereDelegate<RetrieveOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.Where(where, db);
+			}
+		   
+			public RetrieveOperationResultCollection Where(WhereDelegate<RetrieveOperationResultColumns> where, OrderBy<RetrieveOperationResultColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.Where(where, orderBy, db);
+			}
+
+			public RetrieveOperationResult OneWhere(WhereDelegate<RetrieveOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.OneWhere(where, db);
+			}
+
+			public static RetrieveOperationResult GetOneWhere(WhereDelegate<RetrieveOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.GetOneWhere(where, db);
+			}
+		
+			public RetrieveOperationResult FirstOneWhere(WhereDelegate<RetrieveOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.FirstOneWhere(where, db);
+			}
+
+			public RetrieveOperationResultCollection Top(int count, WhereDelegate<RetrieveOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.Top(count, where, db);
+			}
+
+			public RetrieveOperationResultCollection Top(int count, WhereDelegate<RetrieveOperationResultColumns> where, OrderBy<RetrieveOperationResultColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<RetrieveOperationResultColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.RetrieveOperationResult.Count(where, db);
+			}
+	}
+
+	static RetrieveOperationResultQueryContext _retrieveOperationResults;
+	static object _retrieveOperationResultsLock = new object();
+	public static RetrieveOperationResultQueryContext RetrieveOperationResults
+	{
+		get
+		{
+			return _retrieveOperationResultsLock.DoubleCheckLock<RetrieveOperationResultQueryContext>(ref _retrieveOperationResults, () => new RetrieveOperationResultQueryContext());
+		}
+	}
 	public class CreateOperationQueryContext
 	{
 			public CreateOperationCollection Where(WhereDelegate<CreateOperationColumns> where, Database db = null)
@@ -654,5 +810,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		{
 			return _writeEventsLock.DoubleCheckLock<WriteEventQueryContext>(ref _writeEvents, () => new WriteEventQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

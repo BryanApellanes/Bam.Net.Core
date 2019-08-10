@@ -43,28 +43,28 @@ namespace Bam.Net.Services.DataReplication
             return clone;
         }
 
-        public virtual object Save(SaveOperation value)
+        public virtual object Save(SaveOperation saveOperation)
         {
-            ResolveTypeAndInstance(value, out Type type, out object instance);
+            ResolveTypeAndInstance(saveOperation, out Type type, out object instance);
             return Repository.Save(instance);
         }
 
-        public virtual object Create(CreateOperation value)
+        public virtual object Create(CreateOperation createOperation)
         {
-            ResolveTypeAndInstance(value, out Type type, out object instance);
+            ResolveTypeAndInstance(createOperation, out Type type, out object instance);
             return Repository.Create(type, instance);
         }
 
-        public virtual bool Delete(DeleteOperation value)
+        public virtual bool Delete(DeleteOperation deleteOperation)
         {
-            ResolveTypeAndInstance(value, out Type type, out object instance);
+            ResolveTypeAndInstance(deleteOperation, out Type type, out object instance);
             return Repository.Delete(type, instance);
         }
 
-        public virtual IEnumerable<object> Query(QueryOperation query)
+        public virtual IEnumerable<object> Query(QueryOperation queryOperation)
         {
-            Type type = TypeResolver.ResolveType(query);
-            return Repository.Query(type, query.Properties.ToDictionary(dp => dp.Name, dp => dp.Value));
+            Type type = TypeResolver.ResolveType(queryOperation);
+            return Repository.Query(type, queryOperation.PropertyFilters.ToDictionary(dp => dp.Name, dp => dp.Value));
         }
 
         public virtual ReplicationOperation Replicate(ReplicationOperation operation)
@@ -74,14 +74,14 @@ namespace Bam.Net.Services.DataReplication
             return result;
         }
 
-        public virtual object Retrieve(RetrieveOperation value)
+        public virtual object Retrieve(RetrieveOperation retrieveOperation)
         {
-            return Repository.Query(value.UniversalIdentifier.ToString(), value.Identifier).FirstOrDefault();
+            return Repository.Query(retrieveOperation.UniversalIdentifier.ToString(), retrieveOperation.Identifier).FirstOrDefault();
         }
 
-        public virtual object Update(UpdateOperation value)
+        public virtual object Update(UpdateOperation updateOperation)
         {
-            ResolveTypeAndInstance(value, out Type type, out object instance);
+            ResolveTypeAndInstance(updateOperation, out Type type, out object instance);
             return Repository.Update(type, instance);
         }
 

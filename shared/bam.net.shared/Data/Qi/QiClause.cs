@@ -11,6 +11,9 @@ using System.Data.Common;
 
 namespace Bam.Net.Data.Qi
 {
+    /// <summary>
+    /// This class exists to deserialize requests built by Qi.js, hence the lowercased property names.
+    /// </summary>
     public class QiClause: IParameterInfo
     {
         public QiClause()

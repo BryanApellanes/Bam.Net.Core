@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace Bam.Net.Services.DataReplication
 {
     /// <summary>
-    /// A class that provides a mapping between numeric (long) id values and Types.
+    /// A class that provides a universal mapping between numeric (long) id values and Types.
+    /// The id of a type uniquely identifies a type by its fully qualified namespace name.
     /// </summary>
     public partial class TypeMap
     {

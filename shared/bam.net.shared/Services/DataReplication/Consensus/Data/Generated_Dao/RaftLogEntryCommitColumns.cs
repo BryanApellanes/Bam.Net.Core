@@ -55,48 +55,6 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data.Dao
                 return new RaftLogEntryCommitColumns("Seq");
             }
         }
-        public RaftLogEntryCommitColumns CompositeKeyId
-        {
-            get
-            {
-                return new RaftLogEntryCommitColumns("CompositeKeyId");
-            }
-        }
-        public RaftLogEntryCommitColumns CompositeKey
-        {
-            get
-            {
-                return new RaftLogEntryCommitColumns("CompositeKey");
-            }
-        }
-        public RaftLogEntryCommitColumns CreatedBy
-        {
-            get
-            {
-                return new RaftLogEntryCommitColumns("CreatedBy");
-            }
-        }
-        public RaftLogEntryCommitColumns ModifiedBy
-        {
-            get
-            {
-                return new RaftLogEntryCommitColumns("ModifiedBy");
-            }
-        }
-        public RaftLogEntryCommitColumns Modified
-        {
-            get
-            {
-                return new RaftLogEntryCommitColumns("Modified");
-            }
-        }
-        public RaftLogEntryCommitColumns Deleted
-        {
-            get
-            {
-                return new RaftLogEntryCommitColumns("Deleted");
-            }
-        }
         public RaftLogEntryCommitColumns Created
         {
             get

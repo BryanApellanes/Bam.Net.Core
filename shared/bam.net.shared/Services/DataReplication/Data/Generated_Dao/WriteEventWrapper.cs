@@ -25,11 +25,11 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 
 		public WriteEventWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -46,6 +46,22 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 			}
 		}
 
+        System.Collections.Generic.List<Bam.Net.Services.DataReplication.Data.DataProperty> _properties;
+		public override System.Collections.Generic.List<Bam.Net.Services.DataReplication.Data.DataProperty> Properties
+		{
+			get
+			{
+				if (_properties == null)
+				{
+					_properties = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.Services.DataReplication.Data.WriteEvent, Bam.Net.Services.DataReplication.Data.DataProperty>(this).ToList();
+				}
+				return _properties;
+			}
+			set
+			{
+				_properties = value;
+			}
+		}
 
 
 

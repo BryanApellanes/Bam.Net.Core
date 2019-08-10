@@ -1,6 +1,7 @@
 using System;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -49,6 +50,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
                         break;
                     case RaftRequestType.LogSyncResponse:
                         response.Data = Ring.ReceiveLogSyncResponse(request);
+                        break;
+                    case RaftRequestType.RetrieveRequest:
+                        response.Data = Ring.RetrieveLocal((RetrieveOperation) request.Operation);
+                        break;
+                    case RaftRequestType.QueryRequest:
+                        response.Data = Ring.QueryLocal((QueryOperation) request.Operation);
                         break;
                     case RaftRequestType.Invalid:
                         Logger.AddEntry("Invalid raft request received: {0}", request?.ToString() ?? "[null]");

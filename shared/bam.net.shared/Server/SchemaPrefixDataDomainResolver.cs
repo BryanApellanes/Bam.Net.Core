@@ -3,6 +3,9 @@ using System;
 
 namespace Bam.Net.Server
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SchemaPrefixDataDomainResolver : IDataDomainResolver
     {
         public SchemaPrefixDataDomainResolver()

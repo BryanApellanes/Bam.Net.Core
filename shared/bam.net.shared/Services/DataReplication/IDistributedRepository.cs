@@ -12,12 +12,12 @@ namespace Bam.Net.Services.DataReplication
 {
     public interface IDistributedRepository
     {
-        object Save(SaveOperation value);
-        object Create(CreateOperation value);
-        object Retrieve(RetrieveOperation value);
-        object Update(UpdateOperation value);
-        bool Delete(DeleteOperation value);
-        IEnumerable<object> Query(QueryOperation query);
+        object Save(SaveOperation saveOperation);
+        object Create(CreateOperation createOperation);
+        object Retrieve(RetrieveOperation retrieveOperation);
+        object Update(UpdateOperation updateOperation);
+        bool Delete(DeleteOperation deleteOperation);
+        IEnumerable<object> Query(QueryOperation queryOperation);
 
         ReplicationOperation Replicate(ReplicationOperation operation);
 

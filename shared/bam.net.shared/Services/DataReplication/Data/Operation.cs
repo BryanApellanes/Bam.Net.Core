@@ -14,7 +14,10 @@ namespace Bam.Net.Services.DataReplication.Data
     {
         public string TypeNamespace { get; set; }
         public string TypeName { get; set; }
-        
+        public string AssemblyPath { get; set; }
+
+        protected internal string NamespaceQualifiedTypeName => $"{TypeNamespace}.{TypeName}";
+
         public abstract object Execute(IDistributedRepository repository);		
 
         public static TOperation For<TOperation>(Type type) where TOperation: Operation, new()
@@ -22,8 +25,10 @@ namespace Bam.Net.Services.DataReplication.Data
             TOperation result = new TOperation()
             {
                 TypeName = type.Name,
-                TypeNamespace = type.Namespace
+                TypeNamespace = type.Namespace,
+                AssemblyPath = type.Assembly.GetFilePath()
             };
+            
             return result;
         }
 	}

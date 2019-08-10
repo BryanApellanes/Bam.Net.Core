@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class DataPropertyPagedQuery: PagedQuery<DataPropertyColumns, DataProperty>
     { 
-		public DataPropertyPagedQuery(DataPropertyColumns orderByColumn, DataPropertyQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public DataPropertyPagedQuery(DataPropertyColumns orderByColumn,DataPropertyQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

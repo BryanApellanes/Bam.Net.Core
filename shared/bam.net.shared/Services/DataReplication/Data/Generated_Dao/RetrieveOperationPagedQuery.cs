@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class RetrieveOperationPagedQuery: PagedQuery<RetrieveOperationColumns, RetrieveOperation>
     { 
-		public RetrieveOperationPagedQuery(RetrieveOperationColumns orderByColumn, RetrieveOperationQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public RetrieveOperationPagedQuery(RetrieveOperationColumns orderByColumn,RetrieveOperationQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

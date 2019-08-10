@@ -10,7 +10,6 @@ using Bam.Net.Logging;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 using Bam.Net.Services.DataReplication.Data;
-using Lucene.Net.Index;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RaftLogEntry = Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry;
 using RaftLogEntryCommit = Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit;
@@ -178,34 +177,60 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
         
         // -- IDistributedRepository methods
-        public object Save(SaveOperation value)
+        public object Save(SaveOperation saveOperation)
         {
             throw new NotImplementedException();
         }
 
-        public object Create(CreateOperation value)
+        public object Create(CreateOperation createOperation)
         {
             throw new NotImplementedException();
         }
 
-        public object Retrieve(RetrieveOperation value)
+        public object Retrieve(RetrieveOperation retrieveOperation)
+        {
+            if (retrieveOperation.UniversalIdentifier != UniversalIdentifier.CKey)
+            {
+                throw new OperationNotSupportedException(retrieveOperation);
+            }
+
+            Type type = RaftRing.TypeResolver.ResolveType(retrieveOperation.NamespaceQualifiedTypeName);
+            object result = type.Construct();
+            foreach (RaftLogEntry entry in LocalRepository.RaftLogEntriesWhere(c => c.CompositeKey == retrieveOperation.Identifier))
+            {
+                RaftRing.RaftLogEntryPropertyHandler.DecodeProperty(entry, type, result);
+            }
+
+            return result;
+        }
+
+        public object Update(UpdateOperation updateOperation)
         {
             throw new NotImplementedException();
         }
 
-        public object Update(UpdateOperation value)
+        public bool Delete(DeleteOperation deleteOperation)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete(DeleteOperation value)
+        public IEnumerable<object> Query(QueryOperation queryOperation)
         {
-            throw new NotImplementedException();
-        }
+            Type type = RaftRing.TypeResolver.ResolveType(queryOperation.NamespaceQualifiedTypeName);
+            QueryFilter queryFilter = null;
+            foreach (DataPropertyFilter filter in queryOperation.PropertyFilters)
+            {
+                if (queryFilter != null)
+                {
+                    queryFilter.And(filter.ToQueryFilter());
+                }
+                else
+                {
+                    queryFilter = filter.ToQueryFilter();
+                }
+            }
 
-        public IEnumerable<object> Query(QueryOperation query)
-        {
-            throw new NotImplementedException();
+            return LocalRepository.Query(queryFilter).CopyAs(type);
         }
 
         public ReplicationOperation Replicate(ReplicationOperation operation)

@@ -244,10 +244,7 @@ namespace Bam.Net
 
         public static bool TakesTooLong<TResult>(this Func<TResult> function, Func<TResult, TResult> callBack, TimeSpan timeToWait, string threadName = null)
         {
-            return TakesTooLong((o) =>
-            {
-                return function();
-            }, callBack, timeToWait, null, threadName);
+            return TakesTooLong((o) => function(), callBack, timeToWait, null, threadName);
         }
 
         /// <summary>
@@ -256,7 +253,7 @@ namespace Bam.Net
         /// Will return true if the function throws an exception with the logic being that the 
         /// function was not able to complete its work
         /// </summary>
-        /// <typeparam name="TResult">The Type returned by the sepcified function, also the return and parameter type of the
+        /// <typeparam name="TResult">The Type returned by the specified function, also the return and parameter type of the
         /// specified callBack.</typeparam>
         /// <param name="function">The function to execute and time</param>
         /// <param name="callBack">The callBack to execute when function completes</param>
@@ -279,7 +276,7 @@ namespace Bam.Net
                 int suffix = 1;
                 while (_threads.ContainsKey(threadName))
                 {
-                    threadName = string.Format("{0}_{1}", threadName, suffix.ToString());
+                    threadName = $"{threadName}_{suffix.ToString()}";
                     suffix++;
                 }
 
@@ -293,11 +290,11 @@ namespace Bam.Net
                     {
                         function(state);
                     }
+
                     returnThreadController.Set();
                     _threads.Remove(threadName);
-                });
+                }) {IsBackground = true};
 
-                functionThread.IsBackground = true;
                 _threads.Add(threadName, functionThread); // make sure the thread doesn't get garbage collected
                                                           // give the function a head start
                 functionThread.Start();

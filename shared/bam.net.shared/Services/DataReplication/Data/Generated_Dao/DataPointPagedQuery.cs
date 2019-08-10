@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class DataPointPagedQuery: PagedQuery<DataPointColumns, DataPoint>
     { 
-		public DataPointPagedQuery(DataPointColumns orderByColumn, DataPointQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public DataPointPagedQuery(DataPointColumns orderByColumn,DataPointQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

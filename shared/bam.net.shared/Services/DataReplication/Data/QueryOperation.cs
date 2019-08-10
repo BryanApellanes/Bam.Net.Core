@@ -12,7 +12,7 @@ namespace Bam.Net.Services.DataReplication.Data
     [Serializable]
 	public class QueryOperation: Operation
 	{
-        public List<DataProperty> Properties { get; set; }
+        public List<DataPropertyFilter> PropertyFilters { get; set; }
 		public override object Execute(IDistributedRepository repository)
 		{
             return repository.Query(this);
@@ -26,10 +26,10 @@ namespace Bam.Net.Services.DataReplication.Data
         public static QueryOperation For(Type type, Dictionary<string, object> properties)
         {
             QueryOperation operation = For<QueryOperation>(type);
-            operation.Properties = new List<DataProperty>();
+            operation.PropertyFilters = new List<DataPropertyFilter>();
             properties.Keys.Each(key =>
             {
-                operation.Properties.Add(new DataProperty { Name = key, Value = properties[key] });
+                operation.PropertyFilters.Add(new DataPropertyFilter { Name = key, Value = properties[key], Operator =  QueryOperator.Equals});
             });
             return operation;
         }

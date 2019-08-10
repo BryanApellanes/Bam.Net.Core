@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class DataRelationshipPagedQuery: PagedQuery<DataRelationshipColumns, DataRelationship>
     { 
-		public DataRelationshipPagedQuery(DataRelationshipColumns orderByColumn, DataRelationshipQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public DataRelationshipPagedQuery(DataRelationshipColumns orderByColumn,DataRelationshipQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }
