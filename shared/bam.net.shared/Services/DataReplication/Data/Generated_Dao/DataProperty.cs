@@ -103,6 +103,34 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 	}
 
+	// property:TypeNamespace, columnName: TypeNamespace	
+	[Bam.Net.Data.Column(Name="TypeNamespace", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string TypeNamespace
+	{
+		get
+		{
+			return GetStringValue("TypeNamespace");
+		}
+		set
+		{
+			SetValue("TypeNamespace", value);
+		}
+	}
+
+	// property:TypeName, columnName: TypeName	
+	[Bam.Net.Data.Column(Name="TypeName", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string TypeName
+	{
+		get
+		{
+			return GetStringValue("TypeName");
+		}
+		set
+		{
+			SetValue("TypeName", value);
+		}
+	}
+
 	// property:InstanceIdentifier, columnName: InstanceIdentifier	
 	[Bam.Net.Data.Column(Name="InstanceIdentifier", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string InstanceIdentifier
@@ -128,6 +156,48 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		set
 		{
 			SetValue("Name", value);
+		}
+	}
+
+	// property:Key, columnName: Key	
+	[Bam.Net.Data.Column(Name="Key", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? Key
+	{
+		get
+		{
+			return GetULongValue("Key");
+		}
+		set
+		{
+			SetValue("Key", value);
+		}
+	}
+
+	// property:CompositeKeyId, columnName: CompositeKeyId	
+	[Bam.Net.Data.Column(Name="CompositeKeyId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? CompositeKeyId
+	{
+		get
+		{
+			return GetULongValue("CompositeKeyId");
+		}
+		set
+		{
+			SetValue("CompositeKeyId", value);
+		}
+	}
+
+	// property:CompositeKey, columnName: CompositeKey	
+	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string CompositeKey
+	{
+		get
+		{
+			return GetStringValue("CompositeKey");
+		}
+		set
+		{
+			SetValue("CompositeKey", value);
 		}
 	}
 

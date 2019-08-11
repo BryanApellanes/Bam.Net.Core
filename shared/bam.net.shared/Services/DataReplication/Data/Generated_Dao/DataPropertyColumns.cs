@@ -41,6 +41,20 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DataPropertyColumns("Cuid");
             }
         }
+        public DataPropertyColumns TypeNamespace
+        {
+            get
+            {
+                return new DataPropertyColumns("TypeNamespace");
+            }
+        }
+        public DataPropertyColumns TypeName
+        {
+            get
+            {
+                return new DataPropertyColumns("TypeName");
+            }
+        }
         public DataPropertyColumns InstanceIdentifier
         {
             get
@@ -53,6 +67,27 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
             get
             {
                 return new DataPropertyColumns("Name");
+            }
+        }
+        public DataPropertyColumns Key
+        {
+            get
+            {
+                return new DataPropertyColumns("Key");
+            }
+        }
+        public DataPropertyColumns CompositeKeyId
+        {
+            get
+            {
+                return new DataPropertyColumns("CompositeKeyId");
+            }
+        }
+        public DataPropertyColumns CompositeKey
+        {
+            get
+            {
+                return new DataPropertyColumns("CompositeKey");
             }
         }
         public DataPropertyColumns CreatedBy
