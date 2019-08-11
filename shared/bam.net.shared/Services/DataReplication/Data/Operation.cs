@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Services.DataReplication.Data
@@ -26,7 +27,7 @@ namespace Bam.Net.Services.DataReplication.Data
             {
                 TypeName = type.Name,
                 TypeNamespace = type.Namespace,
-                AssemblyPath = type.Assembly.GetFilePath()
+                AssemblyPath = type?.Assembly?.GetFilePath()
             };
             
             return result;

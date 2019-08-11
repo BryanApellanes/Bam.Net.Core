@@ -14,7 +14,7 @@ namespace Bam.Net.Services.DataReplication.Data
     [Serializable]
     public class RetrieveOperation: Operation
 	{
-        public UniversalIdentifier UniversalIdentifier { get; set; }
+        public UniversalIdentifiers UniversalIdentifier { get; set; }
         public string Identifier { get; set; }
 		public override object Execute(IDistributedRepository repository)
 		{
@@ -23,10 +23,10 @@ namespace Bam.Net.Services.DataReplication.Data
 
 		public static RetrieveOperation For(CompositeKeyAuditRepoData data)
 		{
-			return For(data.GetType(), data.CompositeKeyId.ToString(), UniversalIdentifier.CKey);
+			return For(data.GetType(), data.CompositeKeyId.ToString(), UniversalIdentifiers.CKey);
 		}
 		
-        public static RetrieveOperation For(Type type, string identifier, UniversalIdentifier universalIdentifier = UniversalIdentifier.Cuid)
+        public static RetrieveOperation For(Type type, string identifier, UniversalIdentifiers universalIdentifier = UniversalIdentifiers.Cuid)
         {
             RetrieveOperation operation = For<RetrieveOperation>(type);
             operation.UniversalIdentifier = universalIdentifier;

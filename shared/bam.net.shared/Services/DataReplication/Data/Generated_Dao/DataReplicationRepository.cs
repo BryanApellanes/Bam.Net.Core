@@ -25,6 +25,9 @@ namespace Bam.Net.Services.DataReplication.Data.Dao.Repository
 			BaseNamespace = "Bam.Net.Services.DataReplication.Data";			
 
 			
+			AddType<Bam.Net.Services.DataReplication.Data.DataPointOrigin>();
+			
+			
 			AddType<Bam.Net.Services.DataReplication.Data.DataPropertyFilter>();
 			
 			
@@ -81,6 +84,126 @@ namespace Bam.Net.Services.DataReplication.Data.Dao.Repository
                 base.AddType(type);
                 DaoAssembly = typeof(DataReplicationRepository).Assembly;
             }
+        }
+
+		
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneDataPointOriginWhere(WhereDelegate<DataPointOriginColumns> where)
+		{
+			Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.SetOneWhere(where, Database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneDataPointOriginWhere(WhereDelegate<DataPointOriginColumns> where, out Bam.Net.Services.DataReplication.Data.DataPointOrigin result)
+		{
+			Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.SetOneWhere(where, out Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin daoResult, Database);
+			result = daoResult.CopyAs<Bam.Net.Services.DataReplication.Data.DataPointOrigin>();
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		/// <param name="where"></param>
+		public Bam.Net.Services.DataReplication.Data.DataPointOrigin GetOneDataPointOriginWhere(WhereDelegate<DataPointOriginColumns> where)
+		{
+			Type wrapperType = GetWrapperType<Bam.Net.Services.DataReplication.Data.DataPointOrigin>();
+			return (Bam.Net.Services.DataReplication.Data.DataPointOrigin)Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+		}
+
+		/// <summary>
+		/// Execute a query that should return only one result.  If no result is found null is returned.  If more
+		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
+		/// single DataPointOrigin instance by its Id/Key value
+		/// </summary>
+		/// <param name="where">A WhereDelegate that receives a DataPointOriginColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between DataPointOriginColumns and other values
+		/// </param>
+		public Bam.Net.Services.DataReplication.Data.DataPointOrigin OneDataPointOriginWhere(WhereDelegate<DataPointOriginColumns> where)
+        {
+            Type wrapperType = GetWrapperType<Bam.Net.Services.DataReplication.Data.DataPointOrigin>();
+            return (Bam.Net.Services.DataReplication.Data.DataPointOrigin)Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+        }
+
+		/// <summary>
+		/// Execute a query and return the results. 
+		/// </summary>
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.Services.DataReplication.Data.DataPointOriginColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between Bam.Net.Services.DataReplication.Data.DataPointOriginColumns and other values
+		/// </param>
+		public IEnumerable<Bam.Net.Services.DataReplication.Data.DataPointOrigin> DataPointOriginsWhere(WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy = null)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Data.DataPointOrigin>(Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Where(where, orderBy, Database));
+        }
+		
+		/// <summary>
+		/// Execute a query and return the specified number
+		/// of values. This method issues a sql TOP clause so only the 
+		/// specified number of values will be returned.
+		/// </summary>
+		/// <param name="count">The number of values to return.
+		/// This value is used in the sql query so no more than this 
+		/// number of values will be returned by the database.
+		/// </param>
+		/// <param name="where">A WhereDelegate that receives a DataPointOriginColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between DataPointOriginColumns and other values
+		/// </param>
+		public IEnumerable<Bam.Net.Services.DataReplication.Data.DataPointOrigin> TopDataPointOriginsWhere(int count, WhereDelegate<DataPointOriginColumns> where)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Data.DataPointOrigin>(Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Top(count, where, Database));
+        }
+
+        public IEnumerable<Bam.Net.Services.DataReplication.Data.DataPointOrigin> TopDataPointOriginsWhere(int count, WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy)
+        {
+            return Wrap<Bam.Net.Services.DataReplication.Data.DataPointOrigin>(Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Top(count, where, orderBy, Database));
+        }
+                                
+		/// <summary>
+		/// Return the count of DataPointOrigins
+		/// </summary>
+		public long CountDataPointOrigins()
+        {
+            return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Count(Database);
+        }
+
+		/// <summary>
+		/// Execute a query and return the number of results
+		/// </summary>
+		/// <param name="where">A WhereDelegate that receives a DataPointOriginColumns 
+		/// and returns a IQueryFilter which is the result of any comparisons
+		/// between DataPointOriginColumns and other values
+		/// </param>
+        public long CountDataPointOriginsWhere(WhereDelegate<DataPointOriginColumns> where)
+        {
+            return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Count(where, Database);
+        }
+        
+        public async Task BatchQueryDataPointOrigins(int batchSize, WhereDelegate<DataPointOriginColumns> where, Action<IEnumerable<Bam.Net.Services.DataReplication.Data.DataPointOrigin>> batchProcessor)
+        {
+            await Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.BatchQuery(batchSize, where, (batch) =>
+            {
+				batchProcessor(Wrap<Bam.Net.Services.DataReplication.Data.DataPointOrigin>(batch));
+            }, Database);
+        }
+		
+        public async Task BatchAllDataPointOrigins(int batchSize, Action<IEnumerable<Bam.Net.Services.DataReplication.Data.DataPointOrigin>> batchProcessor)
+        {
+            await Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.BatchAll(batchSize, (batch) =>
+            {
+				batchProcessor(Wrap<Bam.Net.Services.DataReplication.Data.DataPointOrigin>(batch));
+            }, Database);
         }
 
 		

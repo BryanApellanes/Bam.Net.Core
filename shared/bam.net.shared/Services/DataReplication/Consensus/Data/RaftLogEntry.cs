@@ -79,7 +79,17 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
 
         public static RaftLogEntry FromDataProperty(DataProperty dataProperty)
         {
-            throw new NotImplementedException();
+            if (ulong.TryParse(dataProperty.InstanceIdentifier, out ulong instanceId))
+            {
+                return new RaftLogEntry()
+                {
+                    InstanceId = instanceId,
+                    TypeId = TypeMap.GetTypeId(dataProperty.TypeNamespace, dataProperty.TypeName),
+                    PropertyId = TypeMap.GetPropertyId(dataProperty.TypeNamespace, dataProperty.TypeName, dataProperty.Name),
+                    Value = dataProperty.Value?.ToString() ?? string.Empty
+                };
+            }
+            throw new InvalidOperationException("Unable to parse dataProperty.InstanceIdentifier, expected ulong");
         }
     }
 }

@@ -55,11 +55,25 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DataPointColumns("TypeName");
             }
         }
+        public DataPointColumns AssemblyPath
+        {
+            get
+            {
+                return new DataPointColumns("AssemblyPath");
+            }
+        }
         public DataPointColumns Description
         {
             get
             {
                 return new DataPointColumns("Description");
+            }
+        }
+        public DataPointColumns InstanceIdentifier
+        {
+            get
+            {
+                return new DataPointColumns("InstanceIdentifier");
             }
         }
         public DataPointColumns DataProperties
@@ -106,6 +120,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
         }
 
 
+        public DataPointColumns DataPointOriginId
+        {
+            get
+            {
+                return new DataPointColumns("DataPointOriginId");
+            }
+        }
 
 		protected internal Type TableType
 		{

@@ -17,30 +17,30 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 	// schema = DataReplication
 	// connection Name = DataReplication
 	[Serializable]
-	[Bam.Net.Data.Table("DataPoint", "DataReplication")]
-	public partial class DataPoint: Bam.Net.Data.Dao
+	[Bam.Net.Data.Table("DataPointOrigin", "DataReplication")]
+	public partial class DataPointOrigin: Bam.Net.Data.Dao
 	{
-		public DataPoint():base()
+		public DataPointOrigin():base()
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public DataPoint(DataRow data)
+		public DataPointOrigin(DataRow data)
 			: base(data)
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public DataPoint(Database db)
+		public DataPointOrigin(Database db)
 			: base(db)
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public DataPoint(Database db, DataRow data)
+		public DataPointOrigin(Database db, DataRow data)
 			: base(db, data)
 		{
 			this.SetKeyColumnName();
@@ -48,15 +48,19 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 
 		[Bam.Net.Exclude]
-		public static implicit operator DataPoint(DataRow data)
+		public static implicit operator DataPointOrigin(DataRow data)
 		{
-			return new DataPoint(data);
+			return new DataPointOrigin(data);
 		}
 
 		private void SetChildren()
 		{
 
 
+			if(_database != null)
+			{
+				this.ChildCollections.Add("DataPoint_DataPointOriginId", new DataPointCollection(Database.GetQuery<DataPointColumns, DataPoint>((c) => c.DataPointOriginId == GetULongValue("Id")), this, "DataPointOriginId"));
+			}
 
 
 		} // end SetChildren
@@ -103,31 +107,17 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 	}
 
-	// property:TypeNamespace, columnName: TypeNamespace	
-	[Bam.Net.Data.Column(Name="TypeNamespace", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string TypeNamespace
+	// property:MachineName, columnName: MachineName	
+	[Bam.Net.Data.Column(Name="MachineName", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string MachineName
 	{
 		get
 		{
-			return GetStringValue("TypeNamespace");
+			return GetStringValue("MachineName");
 		}
 		set
 		{
-			SetValue("TypeNamespace", value);
-		}
-	}
-
-	// property:TypeName, columnName: TypeName	
-	[Bam.Net.Data.Column(Name="TypeName", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string TypeName
-	{
-		get
-		{
-			return GetStringValue("TypeName");
-		}
-		set
-		{
-			SetValue("TypeName", value);
+			SetValue("MachineName", value);
 		}
 	}
 
@@ -145,45 +135,45 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 	}
 
-	// property:Description, columnName: Description	
-	[Bam.Net.Data.Column(Name="Description", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string Description
+	// property:Key, columnName: Key	
+	[Bam.Net.Data.Column(Name="Key", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? Key
 	{
 		get
 		{
-			return GetStringValue("Description");
+			return GetULongValue("Key");
 		}
 		set
 		{
-			SetValue("Description", value);
+			SetValue("Key", value);
 		}
 	}
 
-	// property:InstanceIdentifier, columnName: InstanceIdentifier	
-	[Bam.Net.Data.Column(Name="InstanceIdentifier", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string InstanceIdentifier
+	// property:CompositeKeyId, columnName: CompositeKeyId	
+	[Bam.Net.Data.Column(Name="CompositeKeyId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? CompositeKeyId
 	{
 		get
 		{
-			return GetStringValue("InstanceIdentifier");
+			return GetULongValue("CompositeKeyId");
 		}
 		set
 		{
-			SetValue("InstanceIdentifier", value);
+			SetValue("CompositeKeyId", value);
 		}
 	}
 
-	// property:DataProperties, columnName: DataProperties	
-	[Bam.Net.Data.Column(Name="DataProperties", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string DataProperties
+	// property:CompositeKey, columnName: CompositeKey	
+	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string CompositeKey
 	{
 		get
 		{
-			return GetStringValue("DataProperties");
+			return GetStringValue("CompositeKey");
 		}
 		set
 		{
-			SetValue("DataProperties", value);
+			SetValue("CompositeKey", value);
 		}
 	}
 
@@ -258,43 +248,31 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 	}
 
 
-	// start DataPointOriginId -> DataPointOriginId
-	[Bam.Net.Data.ForeignKey(
-        Table="DataPoint",
-		Name="DataPointOriginId",
-		DbDataType="BigInt",
-		MaxLength="",
-		AllowNull=true,
-		ReferencedKey="Id",
-		ReferencedTable="DataPointOrigin",
-		Suffix="1")]
-	public ulong? DataPointOriginId
-	{
-		get
-		{
-			return GetULongValue("DataPointOriginId");
-		}
-		set
-		{
-			SetValue("DataPointOriginId", value);
-		}
-	}
 
-    DataPointOrigin _dataPointOriginOfDataPointOriginId;
-	public DataPointOrigin DataPointOriginOfDataPointOriginId
+	[Bam.Net.Exclude]	
+	public DataPointCollection DataPointsByDataPointOriginId
 	{
 		get
 		{
-			if(_dataPointOriginOfDataPointOriginId == null)
+			if (this.IsNew)
 			{
-				_dataPointOriginOfDataPointOriginId = Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.OneWhere(c => c.KeyColumn == this.DataPointOriginId, this.Database);
+				throw new InvalidOperationException("The current instance of type({0}) hasn't been saved and will have no child collections, call Save() or Save(Database) first."._Format(this.GetType().Name));
 			}
-			return _dataPointOriginOfDataPointOriginId;
+
+			if(!this.ChildCollections.ContainsKey("DataPoint_DataPointOriginId"))
+			{
+				SetChildren();
+			}
+
+			var c = (DataPointCollection)this.ChildCollections["DataPoint_DataPointOriginId"];
+			if(!c.Loaded)
+			{
+				c.Load(Database);
+			}
+			return c;
 		}
 	}
-
-
-
+	
 
 
 
@@ -312,23 +290,23 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 			else
 			{
-				var colFilter = new DataPointColumns();
+				var colFilter = new DataPointOriginColumns();
 				return (colFilter.KeyColumn == IdValue);
 			}
 		}
 
 		/// <summary>
-        /// Return every record in the DataPoint table.
+        /// Return every record in the DataPointOrigin table.
         /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
-		public static DataPointCollection LoadAll(Database database = null)
+		public static DataPointOriginCollection LoadAll(Database database = null)
 		{
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
             SqlStringBuilder sql = db.GetSqlStringBuilder();
-            sql.Select<DataPoint>();
-            var results = new DataPointCollection(db, sql.GetDataTable(db))
+            sql.Select<DataPointOrigin>();
+            var results = new DataPointOriginCollection(db, sql.GetDataTable(db))
             {
                 Database = db
             };
@@ -339,12 +317,12 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
         /// Process all records in batches of the specified size
         /// </summary>
         [Bam.Net.Exclude]
-        public static async Task BatchAll(int batchSize, Action<IEnumerable<DataPoint>> batchProcessor, Database database = null)
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<DataPointOrigin>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				DataPointColumns columns = new DataPointColumns();
-				var orderBy = Bam.Net.Data.Order.By<DataPointColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
+				DataPointOriginColumns columns = new DataPointOriginColumns();
+				var orderBy = Bam.Net.Data.Order.By<DataPointOriginColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, (c) => c.KeyColumn > 0, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -362,7 +340,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<DataPoint>> batchProcessor, Database database = null)
+		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<DataPointOrigin>> batchProcessor, Database database = null)
 		{
 			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
@@ -371,12 +349,12 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery(int batchSize, WhereDelegate<DataPointColumns> where, Action<IEnumerable<DataPoint>> batchProcessor, Database database = null)
+		public static async Task BatchQuery(int batchSize, WhereDelegate<DataPointOriginColumns> where, Action<IEnumerable<DataPointOrigin>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				DataPointColumns columns = new DataPointColumns();
-				var orderBy = Bam.Net.Data.Order.By<DataPointColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
+				DataPointOriginColumns columns = new DataPointOriginColumns();
+				var orderBy = Bam.Net.Data.Order.By<DataPointOriginColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -385,7 +363,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
-					results = Top(batchSize, (DataPointColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
+					results = Top(batchSize, (DataPointOriginColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
 			});
 		}
@@ -394,7 +372,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<DataPoint>> batchProcessor, Bam.Net.Data.OrderBy<DataPointColumns> orderBy, Database database = null)
+		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<DataPointOrigin>> batchProcessor, Bam.Net.Data.OrderBy<DataPointOriginColumns> orderBy, Database database = null)
 		{
 			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
@@ -403,11 +381,11 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Process results of a query in batches of the specified size
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<DataPointColumns> where, Action<IEnumerable<DataPoint>> batchProcessor, Bam.Net.Data.OrderBy<DataPointColumns> orderBy, Database database = null)
+		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<DataPointOriginColumns> where, Action<IEnumerable<DataPointOrigin>> batchProcessor, Bam.Net.Data.OrderBy<DataPointOriginColumns> orderBy, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				DataPointColumns columns = new DataPointColumns();
+				DataPointOriginColumns columns = new DataPointOriginColumns();
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -416,101 +394,101 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
-					results = Top(batchSize, (DataPointColumns)where(columns) && orderBy.Column > top, orderBy, database);
+					results = Top(batchSize, (DataPointOriginColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
 			});
 		}
 
-		public static DataPoint GetById(uint id, Database database = null)
+		public static DataPointOrigin GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
-		public static DataPoint GetById(int id, Database database = null)
+		public static DataPointOrigin GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
-		public static DataPoint GetById(long id, Database database = null)
+		public static DataPointOrigin GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
-		public static DataPoint GetById(ulong id, Database database = null)
+		public static DataPointOrigin GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
-		public static DataPoint GetByUuid(string uuid, Database database = null)
+		public static DataPointOrigin GetByUuid(string uuid, Database database = null)
 		{
 			return OneWhere(c => Bam.Net.Data.Query.Where("Uuid") == uuid, database);
 		}
 
-		public static DataPoint GetByCuid(string cuid, Database database = null)
+		public static DataPointOrigin GetByCuid(string cuid, Database database = null)
 		{
 			return OneWhere(c => Bam.Net.Data.Query.Where("Cuid") == cuid, database);
 		}
 
 		[Bam.Net.Exclude]
-		public static DataPointCollection Query(QueryFilter filter, Database database = null)
+		public static DataPointOriginCollection Query(QueryFilter filter, Database database = null)
 		{
 			return Where(filter, database);
 		}
 
 		[Bam.Net.Exclude]
-		public static DataPointCollection Where(QueryFilter filter, Database database = null)
+		public static DataPointOriginCollection Where(QueryFilter filter, Database database = null)
 		{
-			WhereDelegate<DataPointColumns> whereDelegate = (c) => filter;
+			WhereDelegate<DataPointOriginColumns> whereDelegate = (c) => filter;
 			return Where(whereDelegate, database);
 		}
 
 		/// <summary>
 		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a DataPointColumns
+		/// <param name="where">A Func delegate that recieves a DataPointOriginColumns
 		/// and returns a QueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
-		public static DataPointCollection Where(Func<DataPointColumns, QueryFilter<DataPointColumns>> where, OrderBy<DataPointColumns> orderBy = null, Database database = null)
+		public static DataPointOriginCollection Where(Func<DataPointOriginColumns, QueryFilter<DataPointOriginColumns>> where, OrderBy<DataPointOriginColumns> orderBy = null, Database database = null)
 		{
-			database = database ?? Db.For<DataPoint>();
-			return new DataPointCollection(database.GetQuery<DataPointColumns, DataPoint>(where, orderBy), true);
+			database = database ?? Db.For<DataPointOrigin>();
+			return new DataPointOriginCollection(database.GetQuery<DataPointOriginColumns, DataPointOrigin>(where, orderBy), true);
 		}
 
 		/// <summary>
 		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
-		public static DataPointCollection Where(WhereDelegate<DataPointColumns> where, Database database = null)
+		public static DataPointOriginCollection Where(WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
-			database = database ?? Db.For<DataPoint>();
-			var results = new DataPointCollection(database, database.GetQuery<DataPointColumns, DataPoint>(where), true);
+			database = database ?? Db.For<DataPointOrigin>();
+			var results = new DataPointOriginCollection(database, database.GetQuery<DataPointOriginColumns, DataPointOrigin>(where), true);
 			return results;
 		}
 
 		/// <summary>
 		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="orderBy">
 		/// Specifies what column and direction to order the results by
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPointCollection Where(WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy = null, Database database = null)
+		public static DataPointOriginCollection Where(WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy = null, Database database = null)
 		{
-			database = database ?? Db.For<DataPoint>();
-			var results = new DataPointCollection(database, database.GetQuery<DataPointColumns, DataPoint>(where, orderBy), true);
+			database = database ?? Db.For<DataPointOrigin>();
+			var results = new DataPointOriginCollection(database, database.GetQuery<DataPointOriginColumns, DataPointOrigin>(where, orderBy), true);
 			return results;
 		}
 
@@ -518,13 +496,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// This method is intended to respond to client side Qi queries.
 		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate`DataPointColumns`.
+		/// WhereDelegate`DataPointOriginColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
-		public static DataPointCollection Where(QiQuery where, Database database = null)
+		public static DataPointOriginCollection Where(QiQuery where, Database database = null)
 		{
-			var results = new DataPointCollection(database, Select<DataPointColumns>.From<DataPoint>().Where(where, database));
+			var results = new DataPointOriginCollection(database, Select<DataPointOriginColumns>.From<DataPointOrigin>().Where(where, database));
 			return results;
 		}
 
@@ -534,7 +512,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static DataPoint GetOneWhere(QueryFilter where, Database database = null)
+		public static DataPointOrigin GetOneWhere(QueryFilter where, Database database = null)
 		{
 			var result = OneWhere(where, database);
 			if(result == null)
@@ -553,9 +531,9 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// <param name="where"></param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPoint OneWhere(QueryFilter where, Database database = null)
+		public static DataPointOrigin OneWhere(QueryFilter where, Database database = null)
 		{
-			WhereDelegate<DataPointColumns> whereDelegate = (c) => where;
+			WhereDelegate<DataPointOriginColumns> whereDelegate = (c) => where;
 			var result = Top(1, whereDelegate, database);
 			return OneOrThrow(result);
 		}
@@ -566,9 +544,9 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static void SetOneWhere(WhereDelegate<DataPointColumns> where, Database database = null)
+		public static void SetOneWhere(WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
-			SetOneWhere(where, out DataPoint ignore, database);
+			SetOneWhere(where, out DataPointOrigin ignore, database);
 		}
 
 		/// <summary>
@@ -577,7 +555,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static void SetOneWhere(WhereDelegate<DataPointColumns> where, out DataPoint result, Database database = null)
+		public static void SetOneWhere(WhereDelegate<DataPointOriginColumns> where, out DataPointOrigin result, Database database = null)
 		{
 			result = GetOneWhere(where, database);
 		}
@@ -590,12 +568,12 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// <param name="where"></param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPoint GetOneWhere(WhereDelegate<DataPointColumns> where, Database database = null)
+		public static DataPointOrigin GetOneWhere(WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
 			var result = OneWhere(where, database);
 			if(result == null)
 			{
-				DataPointColumns c = new DataPointColumns();
+				DataPointOriginColumns c = new DataPointOriginColumns();
 				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
@@ -609,13 +587,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// be thrown.  This method is most commonly used to retrieve a
 		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPoint OneWhere(WhereDelegate<DataPointColumns> where, Database database = null)
+		public static DataPointOrigin OneWhere(WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
@@ -625,11 +603,11 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// This method is intended to respond to client side Qi queries.
 		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate`DataPointColumns`.
+		/// WhereDelegate`DataPointOriginColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
-		public static DataPoint OneWhere(QiQuery where, Database database = null)
+		public static DataPointOrigin OneWhere(QiQuery where, Database database = null)
 		{
 			var results = Top(1, where, database);
 			return OneOrThrow(results);
@@ -639,13 +617,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPoint FirstOneWhere(WhereDelegate<DataPointColumns> where, Database database = null)
+		public static DataPointOrigin FirstOneWhere(WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
 			var results = Top(1, where, database);
 			if(results.Count > 0)
@@ -662,13 +640,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPoint FirstOneWhere(WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy, Database database = null)
+		public static DataPointOrigin FirstOneWhere(WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy, Database database = null)
 		{
 			var results = Top(1, where, orderBy, database);
 			if(results.Count > 0)
@@ -684,15 +662,15 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPoint FirstOneWhere(QueryFilter where, OrderBy<DataPointColumns> orderBy = null, Database database = null)
+		public static DataPointOrigin FirstOneWhere(QueryFilter where, OrderBy<DataPointOriginColumns> orderBy = null, Database database = null)
 		{
-			WhereDelegate<DataPointColumns> whereDelegate = (c) => where;
+			WhereDelegate<DataPointOriginColumns> whereDelegate = (c) => where;
 			var results = Top(1, whereDelegate, orderBy, database);
 			if(results.Count > 0)
 			{
@@ -713,13 +691,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static DataPointCollection Top(int count, WhereDelegate<DataPointColumns> where, Database database = null)
+		public static DataPointOriginCollection Top(int count, WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
 			return Top(count, where, null, database);
 		}
@@ -733,9 +711,9 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="orderBy">
 		/// Specifies what column and direction to order the results by
@@ -744,29 +722,29 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static DataPointCollection Top(int count, WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy, Database database = null)
+		public static DataPointOriginCollection Top(int count, WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy, Database database = null)
 		{
-			DataPointColumns c = new DataPointColumns();
+			DataPointOriginColumns c = new DataPointOriginColumns();
 			IQueryFilter filter = where(c);
 
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<DataPoint>(count);
+			query.Top<DataPointOrigin>(count);
 			query.Where(filter);
 
 			if(orderBy != null)
 			{
-				query.OrderBy<DataPointColumns>(orderBy);
+				query.OrderBy<DataPointOriginColumns>(orderBy);
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<DataPointCollection>(0);
+			var results = query.Results.As<DataPointOriginCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		[Bam.Net.Exclude]
-		public static DataPointCollection Top(int count, QueryFilter where, Database database)
+		public static DataPointOriginCollection Top(int count, QueryFilter where, Database database)
 		{
 			return Top(count, where, null, database);
 		}
@@ -790,30 +768,30 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static DataPointCollection Top(int count, QueryFilter where, OrderBy<DataPointColumns> orderBy = null, Database database = null)
+		public static DataPointOriginCollection Top(int count, QueryFilter where, OrderBy<DataPointOriginColumns> orderBy = null, Database database = null)
 		{
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<DataPoint>(count);
+			query.Top<DataPointOrigin>(count);
 			query.Where(where);
 
 			if(orderBy != null)
 			{
-				query.OrderBy<DataPointColumns>(orderBy);
+				query.OrderBy<DataPointOriginColumns>(orderBy);
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<DataPointCollection>(0);
+			var results = query.Results.As<DataPointOriginCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		[Bam.Net.Exclude]
-		public static DataPointCollection Top(int count, QueryFilter where, string orderBy = null, SortOrder sortOrder = SortOrder.Ascending, Database database = null)
+		public static DataPointOriginCollection Top(int count, QueryFilter where, string orderBy = null, SortOrder sortOrder = SortOrder.Ascending, Database database = null)
 		{
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<DataPoint>(count);
+			query.Top<DataPointOrigin>(count);
 			query.Where(where);
 
 			if(orderBy != null)
@@ -822,7 +800,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<DataPointCollection>(0);
+			var results = query.Results.As<DataPointOriginCollection>(0);
 			results.Database = db;
 			return results;
 		}
@@ -843,14 +821,14 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
-		public static DataPointCollection Top(int count, QiQuery where, Database database = null)
+		public static DataPointOriginCollection Top(int count, QiQuery where, Database database = null)
 		{
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<DataPoint>(count);
+			query.Top<DataPointOrigin>(count);
 			query.Where(where);
 			query.Execute(db);
-			var results = query.Results.As<DataPointCollection>(0);
+			var results = query.Results.As<DataPointOriginCollection>(0);
 			results.Database = db;
 			return results;
 		}
@@ -863,9 +841,9 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// </param>
 		public static long Count(Database database = null)
         {
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
             QuerySet query = GetQuerySet(db);
-            query.Count<DataPoint>();
+            query.Count<DataPointOrigin>();
             query.Execute(db);
             return (long)query.Results[0].DataRow[0];
         }
@@ -873,22 +851,22 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
+		/// <param name="where">A WhereDelegate that recieves a DataPointOriginColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between DataPointColumns and other values
+		/// between DataPointOriginColumns and other values
 		/// </param>
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static long Count(WhereDelegate<DataPointColumns> where, Database database = null)
+		public static long Count(WhereDelegate<DataPointOriginColumns> where, Database database = null)
 		{
-			DataPointColumns c = new DataPointColumns();
+			DataPointOriginColumns c = new DataPointOriginColumns();
 			IQueryFilter filter = where(c) ;
 
-			Database db = database ?? Db.For<DataPoint>();
+			Database db = database ?? Db.For<DataPointOrigin>();
 			QuerySet query = GetQuerySet(db);
-			query.Count<DataPoint>();
+			query.Count<DataPointOrigin>();
 			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
@@ -896,18 +874,18 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 
 		public static long Count(QiQuery where, Database database = null)
 		{
-		    Database db = database ?? Db.For<DataPoint>();
+		    Database db = database ?? Db.For<DataPointOrigin>();
 			QuerySet query = GetQuerySet(db);
-			query.Count<DataPoint>();
+			query.Count<DataPointOrigin>();
 			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
 
-		private static DataPoint CreateFromFilter(IQueryFilter filter, Database database = null)
+		private static DataPointOrigin CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<DataPoint>();
-			var dao = new DataPoint();
+			Database db = database ?? Db.For<DataPointOrigin>();
+			var dao = new DataPointOrigin();
 			filter.Parameters.Each(p=>
 			{
 				dao.Property(p.ColumnName, p.Value);
@@ -916,7 +894,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			return dao;
 		}
 
-		private static DataPoint OneOrThrow(DataPointCollection c)
+		private static DataPointOrigin OneOrThrow(DataPointOriginCollection c)
 		{
 			if(c.Count == 1)
 			{

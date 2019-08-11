@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data;
+using Bam.Net.Data.Repositories;
 using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication
@@ -67,7 +68,7 @@ namespace Bam.Net.Services.DataReplication
             DataProperty result = this.FirstOrDefault(dp => dp.Name.Equals(name));
             if (result == null)
             {
-                result = new Data.DataProperty { Name = name, Value = value };
+                result = new DataProperty { Name = name, Value = value };
                 Add(result);
                 return result;
             }
@@ -85,7 +86,7 @@ namespace Bam.Net.Services.DataReplication
         public static DataPropertySet FromInstance(object instance)
         {
             DataPropertySet result = new DataPropertySet();
-            instance.EachDataProperty((pi, obj) => new DataProperty { Name = pi.Name, Value = obj }).Each(dp => result.Add(dp));
+            instance.EachDataProperty((pi, obj) => new DataProperty { InstanceIdentifier = RepoData.GetInstanceId(instance)?.ToString(), Name = pi.Name, Value = obj }).Each(dp => result.Add(dp));
             return result;
         }
 

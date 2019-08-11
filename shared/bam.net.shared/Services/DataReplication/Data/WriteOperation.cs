@@ -13,7 +13,7 @@ namespace Bam.Net.Services.DataReplication.Data
         /// <summary>
         /// The properties to write
         /// </summary>
-        public List<DataProperty> Properties { get; set; }
+        public virtual List<DataProperty> Properties { get; set; }
 
         public override object Execute(IDistributedRepository repo)
         {
@@ -35,7 +35,7 @@ namespace Bam.Net.Services.DataReplication.Data
             return DataPoint.FromInstance(instance);
         } 
         
-        protected static List<DataProperty> GetData(object instance)
+        protected static List<DataProperty> GetDataProperties(object instance)
         {
             DataPoint dataPoint = GetDataPoint(instance);
             return dataPoint.DataPropertySet.ToList();

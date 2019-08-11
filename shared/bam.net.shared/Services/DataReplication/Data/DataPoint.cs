@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Services.DataReplication.Data
@@ -16,21 +17,30 @@ namespace Bam.Net.Services.DataReplication.Data
     {
         public DataPoint()
         {
+            CreatedBy = Machine.Current.Name;
             DataPropertySet = new DataPropertySet();
         }
+
+        public DataPoint(object instance): this()
+        {
+            Type instanceType = instance.GetType();
+            TypeNamespace = instanceType?.Namespace;
+            TypeName = instanceType?.Name;
+            AssemblyPath = instanceType?.Assembly?.GetFilePath();
+        }
+        
+        public ulong DataPointOriginId { get; set; }
+        public virtual DataPointOrigin DataPointOrigin { get; set; }
+        
         public string TypeNamespace { get; set; }
         public string TypeName { get; set; }
+        public string AssemblyPath { get; set; }
         public string Description { get; set; }
+        public string InstanceIdentifier { get; set; }
         public string DataProperties
         {
-            get
-            {
-                return DataPropertySet.ToBinaryBytes().ToBase64();
-            }
-            set
-            {
-                DataPropertySet = value.FromBase64().FromBinaryBytes<DataPropertySet>();
-            }
+            get => DataPropertySet.ToBinaryBytes().ToBase64();
+            set => DataPropertySet = value.FromBase64().FromBinaryBytes<DataPropertySet>();
         }
         protected internal DataPropertySet DataPropertySet { get; set; }
 
@@ -47,8 +57,9 @@ namespace Bam.Net.Services.DataReplication.Data
 
         public static DataPoint FromInstance(object instance)
         {
+            Args.ThrowIfNull(instance, "instance");
             Type instanceType = instance.GetType();
-            return new DataPoint { TypeNamespace = instanceType.Namespace, TypeName = instanceType.Name, Description = $"{instanceType.Namespace}.{instanceType.Name}", DataPropertySet = DataPropertySet.FromInstance(instance) };
+            return new DataPoint { InstanceIdentifier = RepoData.GetInstanceId(instance)?.ToString(), TypeNamespace = instanceType?.Namespace, TypeName = instanceType?.Name, AssemblyPath = instanceType?.Assembly?.GetFilePath(), Description = $"{instanceType.Namespace}.{instanceType.Name}", DataPropertySet = DataPropertySet.FromInstance(instance) };
         }
 
         public T ToInstance<T>() where T: class, new()

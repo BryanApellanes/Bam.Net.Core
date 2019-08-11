@@ -46,7 +46,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public T ReadInstance<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
         {
-            return Retrieve(RetrieveOperation.For(typeof(T), compositeKey.ToString(), UniversalIdentifier.CKey)).CopyAs<T>();
+            return Retrieve(RetrieveOperation.For(typeof(T), compositeKey.ToString(), UniversalIdentifiers.CKey)).CopyAs<T>();
         }
 
         public object Retrieve(RetrieveOperation retrieveOperation)

@@ -16,14 +16,14 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 {
 	// generated
 	[Serializable]
-	public class DataPointWrapper: Bam.Net.Services.DataReplication.Data.DataPoint, IHasUpdatedXrefCollectionProperties
+	public class DataPointOriginWrapper: Bam.Net.Services.DataReplication.Data.DataPointOrigin, IHasUpdatedXrefCollectionProperties
 	{
-		public DataPointWrapper()
+		public DataPointOriginWrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public DataPointWrapper(DaoRepository repository) : this()
+		public DataPointOriginWrapper(DaoRepository repository) : this()
 		{
 			this.DaoRepository = repository;
 		}
@@ -46,23 +46,23 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 			}
 		}
 
-
-        Bam.Net.Services.DataReplication.Data.DataPointOrigin _dataPointOrigin;
-		public override Bam.Net.Services.DataReplication.Data.DataPointOrigin DataPointOrigin
+        System.Collections.Generic.List<Bam.Net.Services.DataReplication.Data.DataPoint> _dataPoints;
+		public override System.Collections.Generic.List<Bam.Net.Services.DataReplication.Data.DataPoint> DataPoints
 		{
 			get
 			{
-				if (_dataPointOrigin == null)
+				if (_dataPoints == null)
 				{
-					_dataPointOrigin = (Bam.Net.Services.DataReplication.Data.DataPointOrigin)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.Services.DataReplication.Data.DataPointOrigin));
+					_dataPoints = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.Services.DataReplication.Data.DataPointOrigin, Bam.Net.Services.DataReplication.Data.DataPoint>(this).ToList();
 				}
-				return _dataPointOrigin;
+				return _dataPoints;
 			}
 			set
 			{
-				_dataPointOrigin = value;
+				_dataPoints = value;
 			}
 		}
+
 
 
 	}

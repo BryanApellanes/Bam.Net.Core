@@ -25,7 +25,7 @@ namespace Bam.Net.Services.DataReplication.Data
 
         public static CreateOperation For(object toCreate)
         {
-            List<DataProperty> data = GetData(toCreate);
+            List<DataProperty> data = GetDataProperties(toCreate);
             CreateOperation result = For<CreateOperation>(toCreate.GetType());
             result.Properties = data;            
             return result;

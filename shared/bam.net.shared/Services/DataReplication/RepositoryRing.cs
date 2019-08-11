@@ -53,7 +53,7 @@ namespace Bam.Net.Services.DataReplication
             return result;
         }        
 
-        public UniversalIdentifier UniversalIdentifier { get; set; }
+        public UniversalIdentifiers UniversalIdentifier { get; set; }
         public ITypeResolver TypeResolver { get; set; }
 
         public Task<string> GetHashStringAsync(object value)
@@ -145,7 +145,7 @@ namespace Bam.Net.Services.DataReplication
             {
                 parameters.Add(key, queryParameters[key]);
             }
-            QueryOperation operation = QueryOperation.For(type, parameters);
+            QueryOperation operation = QueryOperation.Where(type, parameters);
             List<object> results = new List<object>();
             ForEachArc(svc =>
             {

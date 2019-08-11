@@ -5,6 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Bam.Net.CoreServices;
 using Bam.Net.Data;
+using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
@@ -29,6 +30,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             
             LocalRepository = new RaftConsensusRepository();
             RaftReplicationLog = new RaftReplicationLog() {SourceNode = ring.LocalNode.Identifier};
+            Identifier = RaftNodeIdentifier.ForCurrentProcess();
         }
 
         public static RaftNode ForCurrentProcess(RaftRing ring)
@@ -63,6 +65,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
         
         public RaftRing RaftRing { get; set; }
+
+        public ITypeResolver TypeResolver => RaftRing?.TypeResolver ?? Bam.Net.Data.Dynamic.TypeResolver.Default;
 
         public RaftNodeIdentifier Identifier { get; set; }
         
@@ -189,12 +193,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public object Retrieve(RetrieveOperation retrieveOperation)
         {
-            if (retrieveOperation.UniversalIdentifier != UniversalIdentifier.CKey)
+            if (retrieveOperation.UniversalIdentifier != UniversalIdentifiers.CKey)
             {
                 throw new OperationNotSupportedException(retrieveOperation);
             }
 
-            Type type = RaftRing.TypeResolver.ResolveType(retrieveOperation.NamespaceQualifiedTypeName);
+            Type type = TypeResolver.ResolveType(retrieveOperation.NamespaceQualifiedTypeName);
             object result = type.Construct();
             foreach (RaftLogEntry entry in LocalRepository.RaftLogEntriesWhere(c => c.CompositeKey == retrieveOperation.Identifier))
             {
@@ -216,7 +220,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public IEnumerable<object> Query(QueryOperation queryOperation)
         {
-            Type type = RaftRing.TypeResolver.ResolveType(queryOperation.NamespaceQualifiedTypeName);
+            Args.ThrowIfNull(queryOperation, "queryOperation");
+            
+            Type type = TypeResolver.ResolveType(queryOperation.NamespaceQualifiedTypeName);
             QueryFilter queryFilter = null;
             foreach (DataPropertyFilter filter in queryOperation.PropertyFilters)
             {

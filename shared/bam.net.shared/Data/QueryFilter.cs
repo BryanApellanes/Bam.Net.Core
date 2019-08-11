@@ -30,13 +30,7 @@ namespace Bam.Net.Data
             this.ColumnName = columnName;
         }
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return string.IsNullOrWhiteSpace(ColumnName) && this._filters.Count == 0;
-            }
-        }
+        public bool IsEmpty => string.IsNullOrWhiteSpace(ColumnName) && this._filters.Count == 0;
 
         public static QueryFilter FromDynamic(dynamic query)
         {
@@ -67,13 +61,7 @@ namespace Bam.Net.Data
 
         protected internal string ColumnName { get; set; }
 
-        public IEnumerable<IFilterToken> Filters
-        {
-            get
-            {
-                return this._filters;
-            }
-        }
+        public IEnumerable<IFilterToken> Filters => this._filters;
         IEnumerable<IParameterInfo> parameters;
         public virtual IParameterInfo[] Parameters
         {
@@ -90,10 +78,7 @@ namespace Bam.Net.Data
 
                 return temp.ToArray();
             }
-            set
-            {
-                parameters = value;
-            }
+            set => parameters = value;
         }
 
         /// <summary>
@@ -145,6 +130,18 @@ namespace Bam.Net.Data
             return this;
         }
 
+        public QueryFilter DoesntStartWith(object value)
+        {
+            this.Add(new DoesntStartWithComparison(this.ColumnName, value));
+            return this;
+        }
+
+        public QueryFilter DoesntContain(object value)
+        {
+            this.Add(new DoesntContainComparison(this.ColumnName, value));
+            return this;
+        }
+        
         public QueryFilter EndsWith(object value)
         {
             this.Add(new EndsWithComparison(this.ColumnName, value));

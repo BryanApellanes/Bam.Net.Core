@@ -26,7 +26,7 @@ namespace Bam.Net.Services.DataReplication.Data
         public static UpdateOperation For(object toUpdate)
         {
             UpdateOperation operation = For<UpdateOperation>(toUpdate.GetType());
-            operation.Properties = GetData(toUpdate);
+            operation.Properties = GetDataProperties(toUpdate);
             return operation;
         }        
     }

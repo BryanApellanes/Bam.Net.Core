@@ -31,6 +31,110 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 
 
+	public class DataPointOriginQueryContext
+	{
+			public DataPointOriginCollection Where(WhereDelegate<DataPointOriginColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Where(where, db);
+			}
+		   
+			public DataPointOriginCollection Where(WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Where(where, orderBy, db);
+			}
+
+			public DataPointOrigin OneWhere(WhereDelegate<DataPointOriginColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.OneWhere(where, db);
+			}
+
+			public static DataPointOrigin GetOneWhere(WhereDelegate<DataPointOriginColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.GetOneWhere(where, db);
+			}
+		
+			public DataPointOrigin FirstOneWhere(WhereDelegate<DataPointOriginColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.FirstOneWhere(where, db);
+			}
+
+			public DataPointOriginCollection Top(int count, WhereDelegate<DataPointOriginColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Top(count, where, db);
+			}
+
+			public DataPointOriginCollection Top(int count, WhereDelegate<DataPointOriginColumns> where, OrderBy<DataPointOriginColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<DataPointOriginColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPointOrigin.Count(where, db);
+			}
+	}
+
+	static DataPointOriginQueryContext _dataPointOrigins;
+	static object _dataPointOriginsLock = new object();
+	public static DataPointOriginQueryContext DataPointOrigins
+	{
+		get
+		{
+			return _dataPointOriginsLock.DoubleCheckLock<DataPointOriginQueryContext>(ref _dataPointOrigins, () => new DataPointOriginQueryContext());
+		}
+	}
+	public class DataPointQueryContext
+	{
+			public DataPointCollection Where(WhereDelegate<DataPointColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Where(where, db);
+			}
+		   
+			public DataPointCollection Where(WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Where(where, orderBy, db);
+			}
+
+			public DataPoint OneWhere(WhereDelegate<DataPointColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.OneWhere(where, db);
+			}
+
+			public static DataPoint GetOneWhere(WhereDelegate<DataPointColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.GetOneWhere(where, db);
+			}
+		
+			public DataPoint FirstOneWhere(WhereDelegate<DataPointColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.FirstOneWhere(where, db);
+			}
+
+			public DataPointCollection Top(int count, WhereDelegate<DataPointColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Top(count, where, db);
+			}
+
+			public DataPointCollection Top(int count, WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<DataPointColumns> where, Database db = null)
+			{
+				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Count(where, db);
+			}
+	}
+
+	static DataPointQueryContext _dataPoints;
+	static object _dataPointsLock = new object();
+	public static DataPointQueryContext DataPoints
+	{
+		get
+		{
+			return _dataPointsLock.DoubleCheckLock<DataPointQueryContext>(ref _dataPoints, () => new DataPointQueryContext());
+		}
+	}
 	public class DataPropertyFilterQueryContext
 	{
 			public DataPropertyFilterCollection Where(WhereDelegate<DataPropertyFilterColumns> where, Database db = null)
@@ -289,58 +393,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		get
 		{
 			return _dataPropertiesLock.DoubleCheckLock<DataPropertyQueryContext>(ref _dataProperties, () => new DataPropertyQueryContext());
-		}
-	}
-	public class DataPointQueryContext
-	{
-			public DataPointCollection Where(WhereDelegate<DataPointColumns> where, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Where(where, db);
-			}
-		   
-			public DataPointCollection Where(WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy = null, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Where(where, orderBy, db);
-			}
-
-			public DataPoint OneWhere(WhereDelegate<DataPointColumns> where, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.OneWhere(where, db);
-			}
-
-			public static DataPoint GetOneWhere(WhereDelegate<DataPointColumns> where, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.GetOneWhere(where, db);
-			}
-		
-			public DataPoint FirstOneWhere(WhereDelegate<DataPointColumns> where, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.FirstOneWhere(where, db);
-			}
-
-			public DataPointCollection Top(int count, WhereDelegate<DataPointColumns> where, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Top(count, where, db);
-			}
-
-			public DataPointCollection Top(int count, WhereDelegate<DataPointColumns> where, OrderBy<DataPointColumns> orderBy, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Top(count, where, orderBy, db);
-			}
-
-			public long Count(WhereDelegate<DataPointColumns> where, Database db = null)
-			{
-				return Bam.Net.Services.DataReplication.Data.Dao.DataPoint.Count(where, db);
-			}
-	}
-
-	static DataPointQueryContext _dataPoints;
-	static object _dataPointsLock = new object();
-	public static DataPointQueryContext DataPoints
-	{
-		get
-		{
-			return _dataPointsLock.DoubleCheckLock<DataPointQueryContext>(ref _dataPoints, () => new DataPointQueryContext());
 		}
 	}
 	public class DataRelationshipQueryContext

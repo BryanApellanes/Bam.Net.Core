@@ -14,6 +14,13 @@ namespace Bam.Net.Data.Dynamic
             _assemblies = new List<Assembly>(AppDomain.CurrentDomain.GetAssemblies());
         }
 
+        static TypeResolver _defaultTypeResolver;
+        static readonly object _defaultLock = new object();
+        public static TypeResolver Default
+        {
+            get { return _defaultLock.DoubleCheckLock(ref _defaultTypeResolver, () => new TypeResolver()); }
+        }
+        
         List<Assembly> _assemblies;
         public Assembly[] Assemblies
         {

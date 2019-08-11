@@ -17,9 +17,6 @@ namespace Bam.Net.Services.DataReplication
         DoesntEndWith,
         Contains,
         DoesntContain,
-        OpenParen,
-        CloseParen,
-        AND,
-        OR
+        In
     }
 }

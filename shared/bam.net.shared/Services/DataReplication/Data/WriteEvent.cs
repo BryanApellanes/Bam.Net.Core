@@ -22,6 +22,6 @@ namespace Bam.Net.Services.DataReplication.Data
         /// <summary>
         /// The properties that were written
         /// </summary>
-        public List<DataProperty> Properties { get; set; }        
+        public virtual List<DataProperty> Properties { get; set; }        
     }
 }

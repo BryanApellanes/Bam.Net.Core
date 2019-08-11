@@ -14,7 +14,6 @@ using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 using Bam.Net.Services.DataReplication.Data;
-using Bam.Net.Services.DataReplication.Data.Dao.Repository;
 using CsQuery.ExtensionMethods;
 using MongoDB.Driver.Core.WireProtocol.Messages.Encoders.JsonEncoders;
 using UnityEngine.SocialPlatforms;
@@ -30,7 +29,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
     /// </summary>
     public class RaftRing : Ring<RaftNode>, IDistributedRepository
     {
-        public RaftRing(DataReplicationRepository dataReplicationRepository, RaftConsensusRepository raftConsensusRepository, IRaftReplicationLogSyncManager replicationLogSyncManager = null, TypeMap typeMap = null, IRaftLogEntryPropertyHandler raftLogEntryPropertyHandler = null, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null, ILogger logger = null)
+        public RaftRing(IRepository dataReplicationRepository, RaftConsensusRepository raftConsensusRepository, IRaftReplicationLogSyncManager replicationLogSyncManager = null, TypeMap typeMap = null, IRaftLogEntryPropertyHandler raftLogEntryPropertyHandler = null, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null, ILogger logger = null)
         {
             DataReplicationRepository = dataReplicationRepository;
             RaftConsensusRepository = raftConsensusRepository;
@@ -81,7 +80,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftConsensusRepository RaftConsensusRepository { get; set; }
         
-        public DataReplicationRepository DataReplicationRepository { get; set; }
+        public IRepository DataReplicationRepository { get; set; }
         
         /// <summary>
         /// The event that fires when a RaftRequest is received.  Handlers of this event
@@ -299,7 +298,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             BroadcastVoteRequest(election.Term);
         }
 
-        object _latestElectionLock = new object();
+        readonly object _latestElectionLock = new object();
         /// <summary>
         /// Thread safe way of accessing the latest election.
         /// </summary>
@@ -347,13 +346,18 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return CompositeKeyHashProvider.GetStringKeyHash(value);
         }
 
-        public RaftConsensusRepository LocalRepository
+        public RaftConsensusRepository LocalRepository => LocalNode.LocalRepository;
+
+        public void WriteValue(SaveOperation saveOperation)
         {
-            get { return LocalNode.LocalRepository; }
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromWriteOperation(saveOperation))
+            {
+                WriteValue(writeRequest);
+            }
         }
         
         /// <summary>
-        /// Write the specified key value pair by delegating to the local node.  This request is distributed to the other nodes in the raft.
+        /// Write the specified data by delegating to the local node.  This request is distributed to the other nodes in the raft.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -895,7 +899,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
         // delegate read operations to the LocalNode, if no values are found delegate to leader if leader is known otherwise broadcast read request
         public object Save(SaveOperation saveOperation)
         {
+            Expect.AreEqual(OperationIntent.Save, saveOperation.Intent);
             // this should use WriteValue
+            WriteValue(saveOperation);
+            
             throw new NotImplementedException();
         }
 

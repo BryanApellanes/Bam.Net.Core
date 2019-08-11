@@ -9,7 +9,7 @@ using Newtonsoft.Json.Converters;
 namespace Bam.Net.Services.DataReplication
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum UniversalIdentifier
+    public enum UniversalIdentifiers
     {
         Uuid,
         Cuid,

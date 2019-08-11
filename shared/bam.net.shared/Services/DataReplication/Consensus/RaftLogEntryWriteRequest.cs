@@ -25,7 +25,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public static IEnumerable<RaftLogEntryWriteRequest> FromWriteOperation(WriteOperation writeOperation)
         {
-            throw new NotImplementedException();
+            foreach (DataProperty dataProperty in writeOperation.Properties)
+            {
+                yield return new RaftLogEntryWriteRequest()
+                {
+                    LogEntry = RaftLogEntry.FromDataProperty(dataProperty)
+                };
+            }
         }
         
         public RaftLogEntry LogEntry { get; set; }

@@ -591,6 +591,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\RaftProtocolServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\DataPointOrigin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\DataPropertyFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\CreateOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\CreateOperationCollection.cs" />
@@ -601,6 +602,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointOrigin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointOriginCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointOriginColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointOriginPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointOriginQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointOriginWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\Generated_Dao\DataPointWrapper.cs" />
