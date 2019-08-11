@@ -913,6 +913,17 @@ namespace Bam.Net.Services.DataReplication.Consensus
             
         }
 
+        public object Update(UpdateOperation updateOperation)
+        {
+            // transform the operation into an appropriate RaftWriteRequest
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(DeleteOperation deleteOperation)
+        {
+            return LocalNode.Delete(deleteOperation);
+        }
+
         public IEnumerable<object> QueryLocal(QueryOperation queryOperation)
         {
             return LocalNode.Query(queryOperation);
@@ -942,17 +953,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
             }
 
             return retrieved;
-        }
-
-        public object Update(UpdateOperation updateOperation)
-        {
-            // transform the operation into an appropriate RaftWriteRequest
-            throw new NotImplementedException();
-        }
-
-        public bool Delete(DeleteOperation deleteOperation)
-        {
-            return LocalNode.Delete(deleteOperation);
         }
 
         public void ForEachQueryResult(QueryOperation query, Action<object> action)
