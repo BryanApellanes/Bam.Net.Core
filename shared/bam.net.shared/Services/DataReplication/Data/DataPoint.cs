@@ -13,7 +13,7 @@ namespace Bam.Net.Services.DataReplication.Data
     /// </summary>
     /// <seealso cref="Bam.Net.Data.Repositories.AuditRepoData" />
     [Serializable]
-    public class DataPoint: AuditRepoData
+    public class DataPoint: KeyedAuditRepoData
     {
         public DataPoint()
         {
@@ -32,10 +32,17 @@ namespace Bam.Net.Services.DataReplication.Data
         public ulong DataPointOriginId { get; set; }
         public virtual DataPointOrigin DataPointOrigin { get; set; }
         
+        [CompositeKey]
         public string TypeNamespace { get; set; }
+        
+        [CompositeKey]
         public string TypeName { get; set; }
+        
+        [CompositeKey]
         public string AssemblyPath { get; set; }
         public string Description { get; set; }
+        
+        [CompositeKey]
         public string InstanceIdentifier { get; set; }
         public string DataProperties
         {
@@ -62,6 +69,26 @@ namespace Bam.Net.Services.DataReplication.Data
             return new DataPoint { InstanceIdentifier = RepoData.GetInstanceId(instance)?.ToString(), TypeNamespace = instanceType?.Namespace, TypeName = instanceType?.Name, AssemblyPath = instanceType?.Assembly?.GetFilePath(), Description = $"{instanceType.Namespace}.{instanceType.Name}", DataPropertySet = DataPropertySet.FromInstance(instance) };
         }
 
+        public static DataPoint FromSaveOperation(SaveOperation saveOperation)
+        {
+            Args.ThrowIfNull(saveOperation, "saveOperation");
+            
+            return new DataPoint{InstanceIdentifier = saveOperation.GetInstanceIdentifier(), TypeNamespace = saveOperation.GetTypeNamespace(), TypeName = saveOperation.GetTypeName(), DataPropertySet = DataPropertySet.FromSaveOperation(saveOperation)};
+        }
+
+        public static DataPoint FromWriteOperation(WriteOperation writeOperation)
+        {
+            Args.ThrowIfNull(writeOperation, "writeOperation");
+            return new DataPoint{InstanceIdentifier = writeOperation.GetInstanceIdentifier(), TypeNamespace = writeOperation.GetTypeNamespace(), TypeName = writeOperation.GetTypeName(), DataPropertySet = DataPropertySet.FromWriteOperation(writeOperation)};
+        }
+
+        public static DataPoint FromCreateOperation(CreateOperation createOperation)
+        {
+            Args.ThrowIfNull(createOperation, "createOperation");
+            
+            return new DataPoint{ TypeNamespace = createOperation.GetTypeNamespace(), TypeName = createOperation.GetTypeName(), DataPropertySet = DataPropertySet.FromCreateOperation(createOperation)};
+        }
+        
         public T ToInstance<T>() where T: class, new()
         {
             T result = new T();

@@ -91,5 +91,18 @@ namespace Bam.Net.Services.DataReplication.Consensus.Data
             }
             throw new InvalidOperationException("Unable to parse dataProperty.InstanceIdentifier, expected ulong");
         }
+
+        public static IEnumerable<RaftLogEntry> FromSaveOperation(SaveOperation saveOperation)
+        {
+            return FromWriteOperation(saveOperation);
+        }
+        
+        public static IEnumerable<RaftLogEntry> FromWriteOperation(WriteOperation writeOperation)
+        {
+            foreach (DataProperty dataProperty in writeOperation.Properties)
+            {
+                yield return RaftLogEntry.FromDataProperty(dataProperty);
+            }
+        }
     }
 }

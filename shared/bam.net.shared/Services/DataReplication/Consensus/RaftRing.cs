@@ -347,14 +347,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
 
         public RaftConsensusRepository LocalRepository => LocalNode.LocalRepository;
-
-        public void WriteValue(SaveOperation saveOperation)
-        {
-            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromWriteOperation(saveOperation))
-            {
-                WriteValue(writeRequest);
-            }
-        }
         
         /// <summary>
         /// Write the specified data by delegating to the local node.  This request is distributed to the other nodes in the raft.
@@ -894,23 +886,42 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
             return commit.Seq;
         }
-
+        
+        public void WriteValue(CreateOperation createOperation)
+        {
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromCreateOperation(
+                createOperation))
+            {
+                WriteValue(writeRequest);
+            }
+        }
+        
+        public void WriteValue(SaveOperation saveOperation)
+        {
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromSaveOperation(saveOperation))
+            {
+                WriteValue(writeRequest);
+            }
+        }
+        
         // delegate write operations to RaftRing.WriteValue
         // delegate read operations to the LocalNode, if no values are found delegate to leader if leader is known otherwise broadcast read request
         public object Save(SaveOperation saveOperation)
         {
             Expect.AreEqual(OperationIntent.Save, saveOperation.Intent);
-            // this should use WriteValue
-            WriteValue(saveOperation);
             
-            throw new NotImplementedException();
+            WriteValue(saveOperation);
+
+            return DataPoint.FromSaveOperation(saveOperation);
         }
 
         public object Create(CreateOperation createOperation)
         {
-            // this should use WriteValue
-            throw new NotImplementedException();
+            Expect.AreEqual(OperationIntent.Create, createOperation.Intent);
             
+            WriteValue(createOperation);
+
+            return DataPoint.FromCreateOperation(createOperation);
         }
 
         public object Update(UpdateOperation updateOperation)

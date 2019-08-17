@@ -90,6 +90,32 @@ namespace Bam.Net.Services.DataReplication
             return result;
         }
 
+        public static DataPropertySet FromSaveOperation(SaveOperation saveOperation)
+        {
+            return FromWriteOperation(saveOperation);
+        }
+
+        public static DataPropertySet FromWriteOperation(WriteOperation writeOperation)
+        {
+            return FromDataProperties(writeOperation.Properties);
+        }
+
+        public static DataPropertySet FromCreateOperation(CreateOperation createOperation)
+        {
+            return FromDataProperties(createOperation.Properties);
+        }
+        
+        public static DataPropertySet FromDataProperties(IEnumerable<DataProperty> dataProperties)
+        {
+            DataPropertySet result = new DataPropertySet();
+            foreach (DataProperty dataProperty in dataProperties)
+            {
+                result.Add(dataProperty);
+            }
+
+            return result;
+        }
+        
         public T ToInstanceOf<T>() where T: class, new()
         {
             T result = new T();
