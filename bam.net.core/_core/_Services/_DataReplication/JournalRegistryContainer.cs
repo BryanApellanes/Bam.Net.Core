@@ -11,7 +11,6 @@ using Bam.Net.Logging;
 using Bam.Net.Data;
 using Bam.Net.ServiceProxy.Secure;
 using Bam.Net.CoreServices.Files;
-using Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository;
 using Bam.Net.CoreServices.ServiceRegistration.Data.Dao.Repository;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.CoreServices;

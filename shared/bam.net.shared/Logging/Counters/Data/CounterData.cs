@@ -6,7 +6,7 @@ using System.Text;
 namespace Bam.Net.Logging.Counters.Data
 {
     [Serializable]
-    public class CounterData : KeyHashRepoData
+    public class CounterData : CompositeKeyRepoData
     {
         public CounterData() { }
 

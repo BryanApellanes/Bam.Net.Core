@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.Data.Dynamic
+namespace Bam.Net
 {
     public class TypeResolver : ITypeResolver
     {
@@ -38,7 +38,7 @@ namespace Bam.Net.Data.Dynamic
             }
         }
 
-        public Type ResolveType(string typeName)
+        public virtual Type ResolveType(string typeName)
         {
             Type type = Type.GetType(typeName);
             if(type == null && ScanAssemblies)
@@ -60,7 +60,7 @@ namespace Bam.Net.Data.Dynamic
             return type;
         }
 
-        public Type ResolveType(string nameSpace, string typeName)
+        public virtual Type ResolveType(string nameSpace, string typeName)
         {
             return ResolveType($"{nameSpace}.{typeName}");
         }

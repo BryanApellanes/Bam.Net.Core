@@ -6,13 +6,13 @@ using System.Text;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class KeyHashRepoThrowsData : KeyHashRepoData
+    public class CompositeKeyRepoThrowsData : CompositeKeyRepoData
     {
 
     }
 
     [Serializable]
-    public class KeyHashRepoTestData : KeyHashRepoData
+    public class CompositeKeyRepoTestData : CompositeKeyRepoData
     {
         [CompositeKey]
         public string Name { get; set; }

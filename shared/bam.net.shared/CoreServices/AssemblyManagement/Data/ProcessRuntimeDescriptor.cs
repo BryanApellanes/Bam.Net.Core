@@ -16,7 +16,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data
     /// during the execution of a process
     /// </summary>
     [Serializable]
-    public class ProcessRuntimeDescriptor: KeyHashRepoData
+    public class ProcessRuntimeDescriptor: CompositeKeyRepoData
     {
         public ProcessRuntimeDescriptor()
         {

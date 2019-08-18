@@ -1,7 +1,6 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Configuration;
 using Bam.Net.CoreServices;
-using Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository;
 using Bam.Net.CoreServices.ServiceRegistration.Data.Dao.Repository;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;

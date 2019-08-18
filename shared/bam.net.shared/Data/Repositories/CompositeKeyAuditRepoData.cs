@@ -15,7 +15,7 @@ namespace Bam.Net.Data.Repositories
     /// <seealso cref="Bam.Net.Data.Repositories.AuditRepoData" />
     /// <seealso cref="Bam.Net.Data.Repositories.IHasKeyHash" />
     [Serializable]
-    public abstract class CompositeKeyAuditRepoData : AuditRepoData, IHasKeyHash
+    public abstract class CompositeKeyAuditRepoData : AuditRepoData, IHasKeyHash, IHasKey
     {
         public CompositeKeyAuditRepoData()
         {
@@ -72,6 +72,11 @@ namespace Bam.Net.Data.Repositories
             set { _compositeKey = value; }
         }
 
+        public ulong Key()
+        {
+            return CompositeKeyId;
+        }
+        
         public bool ExistsIn<T>(IRepository repository) where T : CompositeKeyAuditRepoData, new()
         {
             return ExistsIn<T>(repository, out T ignore);

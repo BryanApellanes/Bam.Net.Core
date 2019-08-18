@@ -469,13 +469,38 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IHasRequiredProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InvalidIHasRequiredPropertiesImplementationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\RequiredPropertiesNotSetException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\AssemblyQualifiedTypeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\AssemblyRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyManagementContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyManagementRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyQualifiedTypeDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyQualifiedTypeDescriptorCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyQualifiedTypeDescriptorColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyQualifiedTypeDescriptorPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyQualifiedTypeDescriptorQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyQualifiedTypeDescriptorWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestColumns.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRequestWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\PropertyDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\PropertyDescriptorCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\PropertyDescriptorColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\PropertyDescriptorPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\PropertyDescriptorQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\PropertyDescriptorWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\TypeDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\TypeDescriptorCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\TypeDescriptorColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\TypeDescriptorPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\TypeDescriptorQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\TypeDescriptorWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\PropertyDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\TypeDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\ITypeIdResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\TypeIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ApplicationServiceHostResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ServiceHostResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\DnsServerDescriptorClient.cs" />
@@ -487,6 +512,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\AndFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseCredentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IHasKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlJavaScriptSqlProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\RelationalDatabaseTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
@@ -980,8 +1006,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRevisionPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRevisionQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyRevisionWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyServiceContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyServiceRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\ProcessRuntimeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\ProcessRuntimeDescriptorCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\ProcessRuntimeDescriptorColumns.cs" />
@@ -1499,7 +1523,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyAuditRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyHashProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyHashRepoData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\CompositeKeyRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Meta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\MetaId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\MetaProperty.cs" />
@@ -3104,6 +3128,9 @@
     <Content Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\ln.node.js" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\README.md" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\GenerationConfig.yaml" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regen_dao_repo.sh" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regen_dao_repo.cmd" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\root-servers.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

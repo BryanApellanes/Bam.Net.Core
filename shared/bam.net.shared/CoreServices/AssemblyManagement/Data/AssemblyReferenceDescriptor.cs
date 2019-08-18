@@ -8,7 +8,7 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Net.CoreServices.AssemblyManagement.Data
 {
     [Serializable]
-    public class AssemblyReferenceDescriptor: KeyHashRepoData
+    public class AssemblyReferenceDescriptor: CompositeKeyRepoData
     {
         internal string ReferencerName { get; set; }
         internal string ReferencedName { get; set; }

@@ -29,7 +29,7 @@ namespace Bam.Net.Services.DataReplication.Data
         /// </summary>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public string GetInstanceIdentifier()
+        public virtual string GetInstanceIdentifier()
         {
             EnsurePropertiesExist();
 
@@ -39,7 +39,7 @@ namespace Bam.Net.Services.DataReplication.Data
             {
                 throw new InvalidOperationException($"DataProperty.InstanceIdentifier mismatch found: {instanceId} != {invalid.InstanceIdentifier}");
             }
-
+            Args.ThrowIfNullOrEmpty(instanceId, "InstanceIdentifier");
             return instanceId;
         }
 
@@ -59,7 +59,7 @@ namespace Bam.Net.Services.DataReplication.Data
             {
                 throw new InvalidOperationException($"DataProperty.TypeNamespace mismatch found: {typeNamespace} != {invalid.TypeNamespace}");
             }
-
+            Args.ThrowIfNullOrEmpty(typeNamespace, "TypeNamespace");
             return typeNamespace;
         }
 
@@ -73,7 +73,7 @@ namespace Bam.Net.Services.DataReplication.Data
             {
                 throw new InvalidOperationException($"DataProperty.TypeName mismatch found: {typeName} != {invalid.TypeName}");
             }
-
+            Args.ThrowIfNullOrEmpty(typeName, "TypeName");
             return typeName;
         }
         

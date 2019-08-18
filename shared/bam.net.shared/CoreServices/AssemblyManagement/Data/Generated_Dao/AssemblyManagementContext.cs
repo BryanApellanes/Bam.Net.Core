@@ -11,14 +11,14 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 {
-	// schema = AssemblyService
-    public static class AssemblyServiceContext
+	// schema = AssemblyManagement
+    public static class AssemblyManagementContext
     {
 		public static string ConnectionName
 		{
 			get
 			{
-				return "AssemblyService";
+				return "AssemblyManagement";
 			}
 		}
 
@@ -31,6 +31,58 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		}
 
 
+	public class AssemblyQualifiedTypeDescriptorQueryContext
+	{
+			public AssemblyQualifiedTypeDescriptorCollection Where(WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.Where(where, db);
+			}
+		   
+			public AssemblyQualifiedTypeDescriptorCollection Where(WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, OrderBy<AssemblyQualifiedTypeDescriptorColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.Where(where, orderBy, db);
+			}
+
+			public AssemblyQualifiedTypeDescriptor OneWhere(WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.OneWhere(where, db);
+			}
+
+			public static AssemblyQualifiedTypeDescriptor GetOneWhere(WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.GetOneWhere(where, db);
+			}
+		
+			public AssemblyQualifiedTypeDescriptor FirstOneWhere(WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.FirstOneWhere(where, db);
+			}
+
+			public AssemblyQualifiedTypeDescriptorCollection Top(int count, WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.Top(count, where, db);
+			}
+
+			public AssemblyQualifiedTypeDescriptorCollection Top(int count, WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, OrderBy<AssemblyQualifiedTypeDescriptorColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<AssemblyQualifiedTypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.AssemblyQualifiedTypeDescriptor.Count(where, db);
+			}
+	}
+
+	static AssemblyQualifiedTypeDescriptorQueryContext _assemblyQualifiedTypeDescriptors;
+	static object _assemblyQualifiedTypeDescriptorsLock = new object();
+	public static AssemblyQualifiedTypeDescriptorQueryContext AssemblyQualifiedTypeDescriptors
+	{
+		get
+		{
+			return _assemblyQualifiedTypeDescriptorsLock.DoubleCheckLock<AssemblyQualifiedTypeDescriptorQueryContext>(ref _assemblyQualifiedTypeDescriptors, () => new AssemblyQualifiedTypeDescriptorQueryContext());
+		}
+	}
 	public class AssemblyRequestQueryContext
 	{
 			public AssemblyRequestCollection Where(WhereDelegate<AssemblyRequestColumns> where, Database db = null)
@@ -81,6 +133,110 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		get
 		{
 			return _assemblyRequestsLock.DoubleCheckLock<AssemblyRequestQueryContext>(ref _assemblyRequests, () => new AssemblyRequestQueryContext());
+		}
+	}
+	public class PropertyDescriptorQueryContext
+	{
+			public PropertyDescriptorCollection Where(WhereDelegate<PropertyDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.Where(where, db);
+			}
+		   
+			public PropertyDescriptorCollection Where(WhereDelegate<PropertyDescriptorColumns> where, OrderBy<PropertyDescriptorColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.Where(where, orderBy, db);
+			}
+
+			public PropertyDescriptor OneWhere(WhereDelegate<PropertyDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.OneWhere(where, db);
+			}
+
+			public static PropertyDescriptor GetOneWhere(WhereDelegate<PropertyDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.GetOneWhere(where, db);
+			}
+		
+			public PropertyDescriptor FirstOneWhere(WhereDelegate<PropertyDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.FirstOneWhere(where, db);
+			}
+
+			public PropertyDescriptorCollection Top(int count, WhereDelegate<PropertyDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.Top(count, where, db);
+			}
+
+			public PropertyDescriptorCollection Top(int count, WhereDelegate<PropertyDescriptorColumns> where, OrderBy<PropertyDescriptorColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<PropertyDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.PropertyDescriptor.Count(where, db);
+			}
+	}
+
+	static PropertyDescriptorQueryContext _propertyDescriptors;
+	static object _propertyDescriptorsLock = new object();
+	public static PropertyDescriptorQueryContext PropertyDescriptors
+	{
+		get
+		{
+			return _propertyDescriptorsLock.DoubleCheckLock<PropertyDescriptorQueryContext>(ref _propertyDescriptors, () => new PropertyDescriptorQueryContext());
+		}
+	}
+	public class TypeDescriptorQueryContext
+	{
+			public TypeDescriptorCollection Where(WhereDelegate<TypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.Where(where, db);
+			}
+		   
+			public TypeDescriptorCollection Where(WhereDelegate<TypeDescriptorColumns> where, OrderBy<TypeDescriptorColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.Where(where, orderBy, db);
+			}
+
+			public TypeDescriptor OneWhere(WhereDelegate<TypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.OneWhere(where, db);
+			}
+
+			public static TypeDescriptor GetOneWhere(WhereDelegate<TypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.GetOneWhere(where, db);
+			}
+		
+			public TypeDescriptor FirstOneWhere(WhereDelegate<TypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.FirstOneWhere(where, db);
+			}
+
+			public TypeDescriptorCollection Top(int count, WhereDelegate<TypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.Top(count, where, db);
+			}
+
+			public TypeDescriptorCollection Top(int count, WhereDelegate<TypeDescriptorColumns> where, OrderBy<TypeDescriptorColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<TypeDescriptorColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.AssemblyManagement.Data.Dao.TypeDescriptor.Count(where, db);
+			}
+	}
+
+	static TypeDescriptorQueryContext _typeDescriptors;
+	static object _typeDescriptorsLock = new object();
+	public static TypeDescriptorQueryContext TypeDescriptors
+	{
+		get
+		{
+			return _typeDescriptorsLock.DoubleCheckLock<TypeDescriptorQueryContext>(ref _typeDescriptors, () => new TypeDescriptorQueryContext());
 		}
 	}
 	public class AssemblyDescriptorQueryContext

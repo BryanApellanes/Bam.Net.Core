@@ -66,7 +66,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftRing RaftRing { get; set; }
 
-        public ITypeResolver TypeResolver => RaftRing?.TypeResolver ?? Bam.Net.Data.Dynamic.TypeResolver.Default;
+        public ITypeResolver TypeResolver => RaftRing?.TypeResolver ?? Bam.Net.TypeResolver.Default;
 
         public RaftNodeIdentifier Identifier { get; set; }
         

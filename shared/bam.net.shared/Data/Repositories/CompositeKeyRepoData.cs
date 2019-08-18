@@ -14,9 +14,9 @@ namespace Bam.Net.Data.Repositories
     /// <seealso cref="Bam.Net.Data.Repositories.RepoData" />
     /// <seealso cref="Bam.Net.Data.Repositories.IHasKeyHash" />
     [Serializable]
-    public abstract class KeyHashRepoData : RepoData, IHasKeyHash // TODO: rename this to CompositeKeyRepoData
+    public abstract class CompositeKeyRepoData : RepoData, IHasKeyHash, IHasKey 
     {
-        public KeyHashRepoData()
+        public CompositeKeyRepoData()
         {
             PropertyDelimiter = "\r\n";
         }
@@ -78,7 +78,7 @@ namespace Bam.Net.Data.Repositories
 
         public override bool Equals(object obj)
         {
-            if (obj is KeyHashRepoData o)
+            if (obj is CompositeKeyRepoData o)
             {
                 return o.GetHashCode().Equals(GetHashCode());
             }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Bam.Net.Logging;
-using Repo = Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository;
 using Bam.Net.CoreServices.Files;
 using Bam.Net.CoreServices.AssemblyManagement.Data;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace Bam.Net.CoreServices
     [Proxy("assemblySvc")]
     public class AssemblyService : ApplicationProxyableService, IAssemblyService
     {
-        public AssemblyService(IDataDirectoryProvider dataDirectoryProvider, IFileService fileService, Repo.AssemblyServiceRepository repo, IApplicationNameProvider appNameProvider)
+        public AssemblyService(IDataDirectoryProvider dataDirectoryProvider, IFileService fileService, Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository.AssemblyManagementRepository repo, IApplicationNameProvider appNameProvider)
         {
             DataDirectoryProvider = dataDirectoryProvider;
             FileService = fileService;
@@ -48,7 +47,7 @@ namespace Bam.Net.CoreServices
             }
         }
         public IFileService FileService { get; set; }
-        public Repo.AssemblyServiceRepository AssemblyManagementRepository { get; set; }    
+        public Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository.AssemblyManagementRepository AssemblyManagementRepository { get; set; }    
 
         public virtual List<AssemblyDescriptor> GetDescriptors(string assemblyFulName)
         {

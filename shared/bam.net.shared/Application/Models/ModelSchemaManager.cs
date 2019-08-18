@@ -26,15 +26,14 @@ namespace Bam.Net.Application.Models
         
         public ModelSchema ModelSchema{ get; set; }
 
-        public SchemaDefinition ConvertModelDefinition()
+        public SchemaDefinition ConvertModelSchema()
         {
-            return ConvertModelDefinition(ModelSchema);
+            return ConvertModelSchema(ModelSchema);
         }
 
-        public SchemaDefinition ConvertModelDefinition(ModelSchema modelSchema)
+        public SchemaDefinition ConvertModelSchema(ModelSchema modelSchema)
         {
-            SchemaDefinition schemaDefinition = new SchemaDefinition();
-            schemaDefinition.Name = modelSchema.Name;
+            SchemaDefinition schemaDefinition = new SchemaDefinition {Name = modelSchema.Name};
             foreach (ModelDefinition definition in modelSchema.Definitions)
             {
                 AddTable(definition.Name);
@@ -70,18 +69,18 @@ namespace Bam.Net.Application.Models
             return schemaDefinition;
         }
 
-        public ModelSchema LoadModelDefinition(string filePath)
+        public ModelSchema LoadModelSchema(string filePath)
         {
             ModelSchema = new FileInfo(filePath).FullName.FromJsonFile<ModelSchema>();
             return ModelSchema;
         }
 
-        public void SaveModelDefinition(string path)
+        public void SaveModelSchema(string path)
         {
-            SaveModelDefinition(ModelSchema, path);
+            SaveModelSchema(ModelSchema, path);
         }
         
-        public static void SaveModelDefinition(ModelSchema modelSchema, string path)
+        public static void SaveModelSchema(ModelSchema modelSchema, string path)
         {
             modelSchema.ToJsonFile(path);
         }

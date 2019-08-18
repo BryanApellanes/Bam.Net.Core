@@ -25,7 +25,6 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
         public static IEnumerable<RaftLogEntryWriteRequest> FromCreateOperation(CreateOperation createOperation)
         {
-            // TODO: deal with instance identifier differently, must set it based on createOperation.IdentifierType
             return FromWriteOperation(createOperation); 
         }
         
