@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
+using Bam.Net.Logging;
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 
 namespace Bam.Net.Services.DataReplication.Data
@@ -68,6 +69,8 @@ namespace Bam.Net.Services.DataReplication.Data
 
         private string GetKey(object data)
         {
+            Args.ThrowIfNull(data, "data");
+            
             if (data is IHasKeyHash keyHash)
             {
                 return keyHash.GetULongKeyHash().ToString();
@@ -82,7 +85,24 @@ namespace Bam.Net.Services.DataReplication.Data
             {
                 return repoData.Cuid;
             }
-            
+
+            Log.Warn("The specified data doesn't implement {0} or {1}, and it doesn't extend {2}.  Checking for Cuid or Uuid property.", nameof(IHasKeyHash), nameof(IHasKey), nameof(RepoData));
+            string key = data.Property<string>("Cuid", false);
+            if (!string.IsNullOrEmpty(key))
+            {
+                Log.Info("Found Cuid property on specified data {0}", data.ToString());
+                return key;
+            }
+            key = data.Property<string>("Uuid", false);
+            if (!string.IsNullOrEmpty(key))
+            {
+                Log.Info("Found Uuid property on specified data {0}", data.ToString());
+                return key;
+            }
+            if (data is Net.Data.Dao dao)
+            {
+                Args.Throw<InvalidOperationException>("Cannot resolve key for specified Dao instance; Did you mean to specify a RepoData instance instead?  Make sure that the type of the specified data implements either {0} or {1}; alternatively extend {2} to use the Cuid as the instance key.", nameof(IHasKeyHash), nameof(IHasKey), nameof(RepoData));
+            }
             Args.Throw<InvalidOperationException>("Cannot resolve key for specified data.  Make sure that the type of the specified data implements either {0} or {1}; alternatively extend {2} to use the Cuid as the instance key.", nameof(IHasKeyHash), nameof(IHasKey), nameof(RepoData));
             return string.Empty;
         }

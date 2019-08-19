@@ -56,34 +56,6 @@ namespace Bam.Net.Data
             Initialize();
         }
 
-        static volatile Incubator _proxyTypeProvider;
-        static object _proxyTypeProviderLock = new object();
-
-        [Obsolete("There is no known logical use for this and it should be removed unless one can be identified.")]
-        public static Incubator ProxyTypeProvider
-        {
-            get
-            {
-                if (_proxyTypeProvider == null)
-                {
-                    lock (_proxyTypeProviderLock)
-                    {
-                        if (_proxyTypeProvider == null)
-                        {
-                            _proxyTypeProvider = Incubator.Default;
-                        }
-                    }
-                }
-
-                return _proxyTypeProvider;
-            }
-
-            set
-            {
-                _proxyTypeProvider = value;
-            }
-        }
-
         public static SchemaManagerResult GenerateAssembly(FileInfo dbJs, DirectoryInfo compileTo, DirectoryInfo tempSourceDir)
         {
             SchemaManager schemaManager = new UuidSchemaManager();
@@ -200,18 +172,8 @@ namespace Bam.Net.Data
         Action<Dao> _initializer;
         public Action<Dao> Initializer
         {
-            get
-            {
-                if (_initializer == null)
-                {
-                    return GlobalInitializer;
-                }
-                return _initializer;
-            }
-            set
-            {
-                _initializer = value;
-            }
+            get => _initializer ?? GlobalInitializer;
+            set => _initializer = value;
         }
 
         static Action<Dao> _globalInitializer;
@@ -219,29 +181,15 @@ namespace Bam.Net.Data
         {
             get
             {
-                if (_globalInitializer == null)
-                {
-                    return (dao) => { };
-                }
-                return _globalInitializer;
+                return _globalInitializer ?? ((dao) => { });
             }
-            set
-            {
-                _globalInitializer = value;
-            }
+            set => _globalInitializer = value;
         }
 
         public override int GetHashCode()
         {
             ulong id = IdValue.GetValueOrDefault();
-            if (id > 0)
-            {
-                return id.GetHashCode();
-            }
-            else
-            {
-                return base.GetHashCode();
-            }
+            return id > 0 ? id.GetHashCode() : base.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -456,7 +404,7 @@ namespace Bam.Net.Data
 
         /// <summary>
         /// If true, any references to the current
-        /// record will be deleted prior to deleting
+        /// record are deleted prior to deleting
         /// the current record when Delete() is called, as long as
         /// those references were hydrated on
         /// the current instance.
@@ -1566,13 +1514,13 @@ namespace Bam.Net.Data
             object val = GetCurrentValue(columnName);
             if (val != null && val != DBNull.Value)
             {
-                if (val is double)
+                if (val is double d)
                 {
-                    return ((double)val).ToDateTime();
+                    return d.ToDateTime();
                 }
-                else if (val is string)
+                else if (val is string s)
                 {
-                    return DateTime.Parse((string)val);
+                    return DateTime.Parse(s);
                 }
                 else
                 {

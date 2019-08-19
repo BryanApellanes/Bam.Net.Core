@@ -889,8 +889,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public void WriteValue(CreateOperation createOperation)
         {
-            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromCreateOperation(
-                createOperation))
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromCreateOperation(createOperation))
             {
                 WriteValue(writeRequest);
             }

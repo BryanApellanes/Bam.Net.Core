@@ -5,6 +5,9 @@ using Bam.Net.Logging;
 
 namespace Bam.Net.Data
 {
+    /// <summary>
+    /// Provides hydration mechanism for Dao instances; loads child collections on hydrate.
+    /// </summary>
     public class Hydrator : IHydrator
     {
         static Hydrator()

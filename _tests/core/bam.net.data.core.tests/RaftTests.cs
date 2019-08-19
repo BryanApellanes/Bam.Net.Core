@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Bam.Net.CoreServices.AssemblyManagement.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Services.DataReplication.Data;
 using Bam.Net.Testing;
@@ -33,9 +35,16 @@ namespace Bam.Net.Data.Tests
                 OutLine(prop.ToJson(true), ConsoleColor.Yellow);
             }
         }
-        
-/*        [UnitTest]
+
+        [UnitTest]
         [TestGroup("Raft")]
-        public void Can*/
+        public void CreateOperationForSetsKeys()
+        {
+            AssemblyQualifiedTypeDescriptor typeDescriptor = new AssemblyQualifiedTypeDescriptor();
+            CreateOperation createOperation = CreateOperation.For(typeDescriptor);
+            Expect.IsGreaterThan(createOperation.Properties.Count, 0, "Property count should have been greater than 0");
+            Expect.IsFalse(createOperation.Properties.Any(p => string.IsNullOrEmpty(p.InstanceIdentifier)));
+            createOperation.Properties.All(p=> p.InstanceIdentifier.Equals(typeDescriptor.Key().ToString())).IsTrue("The keys set did not match the expected value");
+        }
     }
 }
