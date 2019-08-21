@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace Bam.Net.Services.Catalog.Data
 {
     [Serializable]
-    public class CatalogItem: RepoData
+    public class CatalogItem: KeyedAuditRepoData
     {
-        public string CatalogCuid { get; set; }
-        public string ItemCuid { get; set; }
+        public ulong CatalogKey { get; set; }
+        public ulong ItemKey { get; set; }
     }
 }

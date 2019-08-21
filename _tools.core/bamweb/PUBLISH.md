@@ -1,6 +1,7 @@
 ﻿# Bdb.exe
 
-Bam Database (bdb.exe) is a high level data access component which provides a client gateway to multiple data persistence layers including various rdbms systems such as Microsoft Sql, MySql, Postgres and SQLite as well as no sql solutions such as mongo and its own internal data repository system.
+The Bam Web Server hosts an HTTP server that serves content 
+from the directory specified in the config file by the key "ContentRoot".
 
 ## Windows
 dotnet publish -c Release -r win10-x64 [-o <outputpath>]

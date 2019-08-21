@@ -549,6 +549,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\Data\ItemOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftConsensusContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftConsensusRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftFollowerWriteLog.cs" />

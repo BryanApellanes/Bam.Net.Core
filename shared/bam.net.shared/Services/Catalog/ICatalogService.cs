@@ -9,18 +9,18 @@ namespace Bam.Net.Services
 {
     public interface ICatalogService
     {
+        CatalogDefinition GetDefaultCatalog();
         CatalogDefinition CreateCatalog(string name);
         CatalogDefinition FindCatalog(string name);
-        CatalogDefinition RenameCatalog(string catalogCuid, string name);
-        CatalogDefinition GetCatalog(string catalogCuid);
-        bool DeleteCatalog(string catalogCuid);
-
+        CatalogDefinition RenameCatalog(ulong catalogKey, string name);
+        CatalogDefinition GetCatalog(ulong catalogKey);
+        bool DeleteCatalog(ulong catalogKey);
         ItemDefinition CreateItem(string name);
-        ItemDefinition AddItem(string catalogCuid, string itemCuid);
-        bool RemoveItem(string catalogCuid, string itemCuid);
-        ItemDefinition RenameItem(string itemCuid, string name);
-        ItemDefinition GetItem(string itemCuid);
-        bool DeleteItem(string itemCuid);
-        string[] FindItemCatalogs(string itemCuid);
+        ItemDefinition AddItem(ulong catalogKey, ulong itemKey);
+        bool RemoveItem(ulong catalogKey, ulong itemKey);
+        ItemDefinition RenameItem(ulong itemKey, string name);
+        ItemDefinition GetItem(ulong itemKey);
+        bool DeleteItem(ulong itemKey);
+        ulong[] FindItemCatalogs(ulong itemKey);
     }
 }

@@ -1,6 +1,6 @@
 # BamRpc
 
-Use Bamrpc to expose a class definition as a web service.
+Use `bamrpc` to expose a class definition as a web service.  Alternatively, use `bamrpc` to expose classes in a registry, or set of registries, as web services. 
 
 # TL;DR
 Serve services:	
@@ -30,10 +30,10 @@ ServiceProxySystem.Register<Echo>();
 
 ### Web Service Clients
 In addition to automatically exposing any class that you choose as a
-web service, BamRpc will also automatically generate clients.
+web service, `bamrpc` will also automatically generate clients.
 
 #### C# Clients
-To obtain C# client code simply download the code from a running BamRpc server using the following path:
+To obtain C# client code simply download the code from a running `bamrpc` server using the following path:
 
 ```
 /ServiceProxy/CSharpProxies
@@ -46,17 +46,17 @@ You may also specify an optional namespace that the clients are defined in
 ```
 
 #### JavaScript Clients
-The BamRpc also generates JavaScript clients, which
-are downloaded in a similar way as the C# clients.  But, the recommended way
+`bamrpc` also generates JavaScript clients, which
+are downloaded in a similar way as the C# clients.  The recommended way
 of acquiring JavaScript clients would be to include a script tag in your pages
 with the src attribute set to the JavaScript proxies path:
 
 ```html
-<script src="/ServiceProxy/JSProxies"></script>
+<script src="/serviceproxy/proxies.js"></script>
 ```
 
 ## Service Registries
-Some class models are very complex and require dependency injection to function properly.  To support these scenarios you can define a ServiceRegistry container and serve types from it.
+Some class models are very complex and require dependency injection to function properly.  To support these scenarios, define a ServiceRegistry container and serve types from it.
 
 To define a ServiceRegistry container do the following:
 
@@ -78,5 +78,5 @@ public class YourClassName
 To serve your registry do the following:
 
 ```
-brpc /serve:YourRegistryName
+bamrpc /serve:YourRegistryName
 ```

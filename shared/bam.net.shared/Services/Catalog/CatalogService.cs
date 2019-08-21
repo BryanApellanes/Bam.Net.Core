@@ -29,6 +29,11 @@ namespace Bam.Net.Services
             return svc;
         }
 
+        public virtual CatalogDefinition GetDefaultCatalog()
+        {
+            throw new NotImplementedException();
+        }
+        
         public CatalogDefinition CreateCatalog(string name)
         {
             CatalogDefinition catalog = new CatalogDefinition { Name = name };
@@ -41,17 +46,17 @@ namespace Bam.Net.Services
             return Repository.Retrieve<CatalogDefinition>(catalog.Uuid);
         }
 
-        public CatalogDefinition RenameCatalog(string catalogCuid, string name)
+        public CatalogDefinition RenameCatalog(ulong catalogKey, string name)
         {
-            CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { Cuid = catalogCuid }).FirstOrDefault();
-            Args.ThrowIf(catalog == null, "Catalog ({0}) was not found", catalogCuid);
+            CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { Key = catalogKey }).FirstOrDefault();
+            Args.ThrowIf(catalog == null, "Catalog ({0}) was not found", catalogKey);
             catalog.Name = name;
             return Repository.Save(catalog);
         }
 
-        public CatalogDefinition GetCatalog(string catalogCuid)
+        public CatalogDefinition GetCatalog(ulong catalogKey)
         {
-            CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { Cuid = catalogCuid }).FirstOrDefault();
+            CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { Key = catalogKey }).FirstOrDefault();
             if(catalog != null)
             {
                 catalog = Repository.Retrieve<CatalogDefinition>(catalog.Uuid);
@@ -65,7 +70,7 @@ namespace Bam.Net.Services
         {
             foreach(CatalogItem ci in Repository.Query<CatalogItem>(new { CatalogCuid = catalogCuid }))
             {
-                ItemDefinition item = Repository.Query<ItemDefinition>(new { Cuid = ci.ItemCuid }).FirstOrDefault();
+                ItemDefinition item = Repository.Query<ItemDefinition>(new { Cuid = ci.ItemKey }).FirstOrDefault();
                 if(item != null)
                 {
                     ItemDefinition result = Repository.Retrieve<ItemDefinition>(item.Uuid);
@@ -80,9 +85,9 @@ namespace Bam.Net.Services
             return Repository.Query<ItemProperty>(new { ItemDefinitionCuid = itemCuid });
         }
 
-        public bool DeleteCatalog(string catalogCuid)
+        public bool DeleteCatalog(ulong catalogKey)
         {
-            return Repository.DeleteWhere(typeof(CatalogDefinition), new { Cuid = catalogCuid });
+            return Repository.DeleteWhere(typeof(CatalogDefinition), new { Key = catalogKey });
         }
 
         public ItemDefinition CreateItem(string name)
@@ -90,22 +95,22 @@ namespace Bam.Net.Services
             return Repository.Create(new ItemDefinition { Name = name });
         }
 
-        public ItemDefinition AddItem(string catalogCuid, string itemCuid)
+        public ItemDefinition AddItem(ulong catalogKey, ulong itemKey)
         {
-            CatalogDefinition catalog = GetCatalog(catalogCuid);
-            Args.ThrowIf(catalog == null, "Catalog not found ({0})", catalogCuid);
-            ItemDefinition item = GetItem(itemCuid);
-            Args.ThrowIf(item == null, "Item not found ({0})", itemCuid);
-            CatalogItem xref = new CatalogItem { CatalogCuid = catalogCuid, ItemCuid = itemCuid };
+            CatalogDefinition catalog = GetCatalog(catalogKey);
+            Args.ThrowIf(catalog == null, "Catalog not found ({0})", catalogKey);
+            ItemDefinition item = GetItem(itemKey);
+            Args.ThrowIf(item == null, "Item not found ({0})", itemKey);
+            CatalogItem xref = new CatalogItem { CatalogKey = catalogKey, ItemKey = itemKey };
             Repository.Save(xref);
             return item;
         }
 
-        public bool RemoveItem(string catalogCuid, string itemCuid)
+        public bool RemoveItem(ulong catalogKey, ulong itemKey)
         {
             try
             {
-                CatalogItem xref = Repository.Query<CatalogItem>(new { CatalogCuid = catalogCuid, ItemCuid = itemCuid }).FirstOrDefault();
+                CatalogItem xref = Repository.Query<CatalogItem>(new { CatalogKey = catalogKey, ItemKey = itemKey }).FirstOrDefault();
                 if(xref != null)
                 {
                     Repository.Delete(xref);
@@ -114,21 +119,21 @@ namespace Bam.Net.Services
             }
             catch (Exception ex)
             {
-                Logger.AddEntry("Error removing item ({0}) from catalog ({1})", ex, itemCuid, catalogCuid);
+                Logger.AddEntry("Error removing item ({0}) from catalog ({1})", ex, itemKey.ToString(), catalogKey.ToString());
                 return false;
             }
         }
 
-        public ItemDefinition RenameItem(string itemCuid, string name)
+        public ItemDefinition RenameItem(ulong itemKey, string name)
         {
-            ItemDefinition item = GetItem(itemCuid);
+            ItemDefinition item = GetItem(itemKey);
             item.Name = name;
             return Repository.Save(item);
         }
 
-        public ItemDefinition GetItem(string itemCuid)
+        public ItemDefinition GetItem(ulong itemKey)
         {
-            ItemDefinition item = Repository.Query<ItemDefinition>(new { Cuid = itemCuid }).FirstOrDefault();
+            ItemDefinition item = Repository.Query<ItemDefinition>(new { Key = itemKey }).FirstOrDefault();
             if(item != null)
             {
                 return Repository.Retrieve<ItemDefinition>(item.Uuid);
@@ -136,14 +141,14 @@ namespace Bam.Net.Services
             return null;
         }
 
-        public bool DeleteItem(string itemCuid)
+        public bool DeleteItem(ulong itemKey)
         {
-            return Repository.DeleteWhere<ItemDefinition>(new { Cuid = itemCuid });
+            return Repository.DeleteWhere<ItemDefinition>(new { Key = itemKey });
         }
 
-        public string[] FindItemCatalogs(string itemCuid)
+        public ulong[] FindItemCatalogs(ulong itemKey)
         {
-            return Repository.Query<CatalogItem>(new { ItemCuid = itemCuid }).Select(x=> x.CatalogCuid).ToArray();
+            return Repository.Query<CatalogItem>(new { CatalogKey = itemKey }).Select(x=> x.CatalogKey).ToArray();
         }
     }
 }
