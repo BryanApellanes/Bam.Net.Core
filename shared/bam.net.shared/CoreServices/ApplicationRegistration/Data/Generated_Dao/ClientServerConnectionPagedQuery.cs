@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class ClientServerConnectionPagedQuery: PagedQuery<ClientServerConnectionColumns, ClientServerConnection>
     { 
-		public ClientServerConnectionPagedQuery(ClientServerConnectionColumns orderByColumn, ClientServerConnectionQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ClientServerConnectionPagedQuery(ClientServerConnectionColumns orderByColumn,ClientServerConnectionQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

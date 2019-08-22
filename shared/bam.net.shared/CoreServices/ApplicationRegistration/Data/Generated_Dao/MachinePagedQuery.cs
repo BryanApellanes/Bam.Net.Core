@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class MachinePagedQuery: PagedQuery<MachineColumns, Machine>
     { 
-		public MachinePagedQuery(MachineColumns orderByColumn, MachineQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public MachinePagedQuery(MachineColumns orderByColumn,MachineQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

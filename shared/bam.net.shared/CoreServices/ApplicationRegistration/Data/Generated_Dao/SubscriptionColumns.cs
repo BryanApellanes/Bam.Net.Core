@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public SubscriptionColumns Id
         {
             get
@@ -105,6 +104,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new SubscriptionColumns("Created");
             }
         }
+
 
         public SubscriptionColumns UserId
         {

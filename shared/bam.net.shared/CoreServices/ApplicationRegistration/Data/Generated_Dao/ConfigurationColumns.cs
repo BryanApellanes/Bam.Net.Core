@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ConfigurationColumns Id
         {
             get
@@ -47,6 +46,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
             get
             {
                 return new ConfigurationColumns("Name");
+            }
+        }
+        public ConfigurationColumns ApplicationKey
+        {
+            get
+            {
+                return new ConfigurationColumns("ApplicationKey");
             }
         }
         public ConfigurationColumns CreatedBy
@@ -84,6 +90,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ConfigurationColumns("Created");
             }
         }
+
 
         public ConfigurationColumns ApplicationId
         {

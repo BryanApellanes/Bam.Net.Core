@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ApplicationMachineColumns Id
         {
             get
@@ -35,6 +34,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ApplicationMachineColumns("Uuid");
             }
         }
+
 
         public ApplicationMachineColumns ApplicationId
         {

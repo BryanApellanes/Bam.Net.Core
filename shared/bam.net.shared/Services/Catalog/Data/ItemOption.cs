@@ -4,6 +4,9 @@ namespace Bam.Net.Services.Catalog.Data
 {
     public class ItemOption: KeyedAuditRepoData
     {
+        public ulong CatalogItemId { get; set; }
+        public virtual CatalogItem CatalogItem { get; set; }
+        
         [CompositeKey]
         public ulong ItemKey { get; set; }
         [CompositeKey]

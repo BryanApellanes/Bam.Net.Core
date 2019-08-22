@@ -140,7 +140,48 @@ namespace Bam.Net.Data.Repositories
             repo = Repository;
             return IsPersisted;
         }
-
+        
+        /// <summary>
+        /// Ensure the current RepoData instance has been 
+        /// persisted to the specified repo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repo"></param>
+        /// <returns></returns>
+        public T EnsurePersisted<T>(IRepository repo) where T: RepoData, new()
+        {
+            T instance = repo.Retrieve<T>(Cuid);
+            if(instance == null)
+            {
+                instance = repo.Save((T)this);
+            }
+            return instance;
+        }
+        
+        /// <summary>
+        /// Ensures that an instance of the current RepoData
+        /// has been saved to the specified repo where the 
+        /// specified properties equal the values of those
+        /// properties on this instance.  Will cause the 
+        /// Id of this instance to be reset if a representative
+        /// value is not found in the repo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repo"></param>
+        /// <param name="modifiedBy"></param>
+        /// <param name="propertyNames"></param>
+        /// <returns></returns>
+        public T EnsureSingle<T>(IRepository repo, string modifiedBy, params string[] propertyNames) where T: RepoData, new()
+        {
+            T instance = QueryFirstOrDefault<T>(repo, propertyNames);
+            if (instance == null) // wasn't saved/found, should reset Id so the repo will Create
+            {
+                Id = 0;
+                instance = repo.Save((T)this);
+            }
+            return instance;
+        }
+        
         protected void ValidatePropertyNamesOrDie(params string[] propertyNames)
         {
             propertyNames.Each(new { Instance = this }, (ctx, pn) =>

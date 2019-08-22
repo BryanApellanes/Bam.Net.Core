@@ -10,11 +10,15 @@ using Bam.Net.ServiceProxy.Secure;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class ApiKey: AuditRepoData
+    public class ApiKey: KeyedAuditRepoData
     {
-        public long ApplicationId { get; set; }
+        [CompositeKey]
+        public ulong ApplicationKey { get; set; }
+        public ulong ApplicationId { get; set; }
         public virtual Application Application { get; set; }
-        public string ClientId { get; set; }
+        
+        [CompositeKey]
+        public string ClientIdentifier { get; set; }
         public string SharedSecret { get; set; }
         public DateTime? Confirmed { get; set; }
         public bool Disabled { get; set; }
@@ -24,7 +28,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
         {
             ApiKey key = new ApiKey()
             {
-                ClientId = info.ApplicationClientId,
+                ClientIdentifier = info.ApplicationClientId,
                 SharedSecret = info.ApiKey
             };
             return key;
@@ -34,7 +38,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
         {
             return new ApiKeyInfo
             {
-                ApplicationClientId = ClientId,
+                ApplicationClientId = ClientIdentifier,
                 ApiKey = SharedSecret,
                 ApplicationNameProvider = new StaticApplicationNameProvider(Application.Name)
             };

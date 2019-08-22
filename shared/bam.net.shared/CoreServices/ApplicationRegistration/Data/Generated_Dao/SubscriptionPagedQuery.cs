@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class SubscriptionPagedQuery: PagedQuery<SubscriptionColumns, Subscription>
     { 
-		public SubscriptionPagedQuery(SubscriptionColumns orderByColumn, SubscriptionQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public SubscriptionPagedQuery(SubscriptionColumns orderByColumn,SubscriptionQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

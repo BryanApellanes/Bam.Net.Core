@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Bam.Net.Data.Repositories
@@ -28,6 +29,24 @@ namespace Bam.Net.Data.Repositories
             {
                 key = value;
             }
+        }
+
+        readonly object _saveLock = new object();
+        /// <summary>
+        /// Save the current instance to the specified repository, first checking if an instance with the same key is already saved.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T Save<T>(IRepository repository) where T : KeyedAuditRepoData, new()
+        {
+            T result = default(T);
+            lock (_saveLock)
+            {
+                T existing = repository.Query<T>(new {Key = Key}).FirstOrDefault();
+                result = existing != null ? repository.Save<T>((T)existing.CopyProperties(this)) : repository.Save<T>((T)this);
+            }
+            return result;
         }
     }
 }

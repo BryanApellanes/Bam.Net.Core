@@ -8,7 +8,7 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class User: AuditRepoData
+    public class User: KeyedAuditRepoData
     {
         public User()
         {
@@ -16,6 +16,8 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
             Subscriptions = new Subscription[] { };
         }
         public virtual List<Organization> Organizations { get; set; }
+        
+        [CompositeKey]
         public string Email { get; set; }
         public string UserName { get; set; }
         public virtual Subscription[] Subscriptions { get; set; }

@@ -26,7 +26,7 @@ namespace Bam.Net.Data.Repositories
 			}
 
 			builder.AppendLine();
-			builder.AppendFormat("\t{0}", compilationEx.Message);
+			builder.AppendFormat("\t{0}", compilationEx?.Message ?? "[CompilationEx is null]");
 
 			return builder.ToString();
 		}

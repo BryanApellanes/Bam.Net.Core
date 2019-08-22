@@ -12,8 +12,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     {
         public ulong MachineId { get; set; }
         public virtual Machine Machine { get; set; }
+        
+        [CompositeKey]
         public string IpAddress { get; set; }
+        [CompositeKey]
         public string AddressFamily { get; set; }
+        [CompositeKey]
         public string HostName { get; set; }
     }
 }

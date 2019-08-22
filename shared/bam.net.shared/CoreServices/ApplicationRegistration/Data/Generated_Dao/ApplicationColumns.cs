@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ApplicationColumns Id
         {
             get
@@ -54,6 +53,34 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
             get
             {
                 return new ApplicationColumns("Description");
+            }
+        }
+        public ApplicationColumns OrganizationKey
+        {
+            get
+            {
+                return new ApplicationColumns("OrganizationKey");
+            }
+        }
+        public ApplicationColumns Key
+        {
+            get
+            {
+                return new ApplicationColumns("Key");
+            }
+        }
+        public ApplicationColumns CompositeKeyId
+        {
+            get
+            {
+                return new ApplicationColumns("CompositeKeyId");
+            }
+        }
+        public ApplicationColumns CompositeKey
+        {
+            get
+            {
+                return new ApplicationColumns("CompositeKey");
             }
         }
         public ApplicationColumns CreatedBy
@@ -91,6 +118,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ApplicationColumns("Created");
             }
         }
+
 
         public ApplicationColumns OrganizationId
         {

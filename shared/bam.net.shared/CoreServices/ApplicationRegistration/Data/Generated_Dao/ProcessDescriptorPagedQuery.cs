@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class ProcessDescriptorPagedQuery: PagedQuery<ProcessDescriptorColumns, ProcessDescriptor>
     { 
-		public ProcessDescriptorPagedQuery(ProcessDescriptorColumns orderByColumn, ProcessDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ProcessDescriptorPagedQuery(ProcessDescriptorColumns orderByColumn,ProcessDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

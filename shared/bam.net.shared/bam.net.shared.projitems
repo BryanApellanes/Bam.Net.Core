@@ -469,6 +469,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IHasRequiredProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InvalidIHasRequiredPropertiesImplementationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\RequiredPropertiesNotSetException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\ApplicationHostDomain.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\ApplicationHostDomainCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\ApplicationHostDomainColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\ApplicationHostDomainPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\ApplicationHostDomainQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\AssemblyQualifiedTypeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\AssemblyRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\Generated_Dao\AssemblyManagementContext.cs" />
@@ -543,6 +548,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlSchemaExtractor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlSqlStringBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsWrapperModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyedRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\NamedAuditRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\RenderableData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
@@ -908,11 +914,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostAddressQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostAddressWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomain.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainApplication.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainApplicationCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainApplicationColumns.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainApplicationPagedQuery.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainApplicationQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainColumns.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\Generated_Dao\HostDomainPagedQuery.cs" />

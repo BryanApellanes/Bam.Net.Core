@@ -15,30 +15,36 @@ using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class ProcessDescriptor : AuditRepoData
+    public class ProcessDescriptor : KeyedAuditRepoData
     {
         public ProcessDescriptor()
         {
-            LocalMachine = Machine.Current;
+            Machine = Machine.Current;
         }
         #region client relevant
         public long ApplicationId { get; set; }
         public virtual Application Application { get; set; }
         public string InstanceIdentifier { get; set; }
         #endregion
-        public long MachineId { get; set; }
+        public ulong MachineId { get; set; }
         [JsonIgnore]
-        public virtual Machine LocalMachine { get; set; }
+        public virtual Machine Machine { get; set; }
         public virtual Client LocalClient { get; set; }
         public string HashAlgorithm { get; set; }
         public string Hash { get; set; }
+        [CompositeKey]
         public string MachineName { get; set; }
+        [CompositeKey]
         public int ProcessId { get; set; }
         public DateTime StartTime { get; set; }
         public bool HasExited { get; set; }
         public DateTime ExitTime { get; set; }
         public int? ExitCode { get; set; }
+        
+        [CompositeKey]
         public string FilePath { get; set; }
+        
+        [CompositeKey]
         public string CommandLine { get; set; }
 
         public override int GetHashCode()

@@ -7,6 +7,7 @@ using Bam.Net.CoreServices;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Server;
 using Bam.Net.Services.Catalog.Data;
+using GraphQL;
 
 namespace Bam.Net.Services
 {
@@ -19,6 +20,7 @@ namespace Bam.Net.Services
             Repository = catalogRepo;
             DaoRepository.WarningsAsErrors = false;
             DaoRepository.AddReferenceAssemblies(typeof(CoreExtensions).Assembly);
+            AddCatalogTypes();
         }
 
         public override object Clone()
@@ -29,21 +31,45 @@ namespace Bam.Net.Services
             return svc;
         }
 
-        public virtual CatalogDefinition GetDefaultCatalog()
+        protected void AddCatalogTypes()
         {
-            throw new NotImplementedException();
+            string nameSpace = typeof(CatalogDefinition).Namespace;
+            Repository.AddNamespace(typeof(CatalogDefinition).Assembly, nameSpace, type => type.ExtendsType<RepoData>());
         }
         
+        public virtual CatalogDefinition GetDefaultCatalog()
+        {
+            return CatalogDefinition.GetDefault(Repository);
+        }
+        
+        /// <summary>
+        /// Creates a catalog with the specified name or returns the existing catalog if one exists with the specified name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public CatalogDefinition CreateCatalog(string name)
         {
-            CatalogDefinition catalog = new CatalogDefinition { Name = name };
-            return Repository.Save(catalog);
+            Args.ThrowIfNullOrEmpty(name, "name");
+            
+            CatalogDefinition catalog = FindCatalog(name);
+            if (catalog == null)
+            {
+                catalog = new CatalogDefinition
+                    {OrganizationKey = ClientOrganization.Key, ApplicationKey = ClientApplication.Key, Name = name};
+                return catalog.Save<CatalogDefinition>(Repository);
+            }
+            throw new InvalidOperationException($"A catalog named ({name}) already exists (Org={ClientOrganization.Name}, App={ClientApplication.Name})");
         }
 
         public CatalogDefinition FindCatalog(string name)
         {
-            CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { Name = name }).FirstOrDefault();
-            return Repository.Retrieve<CatalogDefinition>(catalog.Uuid);
+            CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { OrganizationKey = ClientOrganization.Key, ApplicationKey = ClientApplication.Key, Name = name }).FirstOrDefault();
+            if (catalog != null)
+            {
+                return Repository.Retrieve<CatalogDefinition>(catalog.Uuid);
+            }
+
+            return null;
         }
 
         public CatalogDefinition RenameCatalog(ulong catalogKey, string name)

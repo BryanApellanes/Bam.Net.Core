@@ -231,7 +231,7 @@ namespace Bam.Net.CoreServices.Tests
         public void ProcessDescriptorHasMachine()
         {
             ProcessDescriptor process = ProcessDescriptor.Current;
-            Expect.IsNotNull(process.LocalMachine, $"{nameof(process.LocalMachine)} was null");
+            Expect.IsNotNull(process.Machine, $"{nameof(process.Machine)} was null");
         }
 
         [UnitTest]

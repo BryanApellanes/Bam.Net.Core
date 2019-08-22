@@ -60,7 +60,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
                     Message = "{0}:\r\nStackTrace: {1}"._Format(Message, ex.StackTrace);
                 }
 
-                FireGenerateDaoAssemblyFailed();
+                FireGenerateDaoAssemblyFailed(ex);
                 return false;
             }
         }

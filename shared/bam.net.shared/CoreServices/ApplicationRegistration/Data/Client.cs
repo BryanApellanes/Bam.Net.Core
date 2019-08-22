@@ -13,7 +13,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     /// Persistable Client data.
     /// </summary>
     [Serializable]
-    public class Client: AuditRepoData
+    public class Client: KeyedAuditRepoData
     {
         public Client()
         {
@@ -33,11 +33,29 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
                 MachineName = _machine?.Name;                
             }
         }
+        [CompositeKey]
+        public ulong ApplicationKey { get; set; }
         public ulong ApplicationId { get; set; }
         public virtual Application Application { get; set; }
+        
+        [CompositeKey]
         public string ApplicationName { get; set; }
+        
+        /// <summary>
+        /// The name of the machine hosting the client.
+        /// </summary>
+        [CompositeKey]
         public string MachineName { get; set; }        
+        
+        /// <summary>
+        /// The name of the server that this is a client of.
+        /// </summary>
+        [CompositeKey]
         public string ServerHost { get; set; }
+        
+        /// <summary>
+        /// The port used to communicate with the ServerHost.
+        /// </summary>
         public int Port { get; set; }
         public string Secret { get; set; }
         public override string ToString()

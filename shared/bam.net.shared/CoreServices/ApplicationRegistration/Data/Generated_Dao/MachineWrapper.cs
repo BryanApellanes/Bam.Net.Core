@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 		public MachineWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -46,14 +46,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 			}
 		}
 
-System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration> _configurations;
+        System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration> _configurations;
 		public override System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration> Configurations
 		{
 			get
 			{
 				if (_configurations == null)
 				{
-					_configurations = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration>(this).ToList();
+					_configurations = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration>(this).ToList();
 				}
 				return _configurations;
 			}
@@ -61,14 +61,14 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 			{
 				_configurations = value;
 			}
-		}System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.HostAddress> _hostAddresses;
+		}        System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.HostAddress> _hostAddresses;
 		public override System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.HostAddress> HostAddresses
 		{
 			get
 			{
 				if (_hostAddresses == null)
 				{
-					_hostAddresses = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.HostAddress>(this).ToList();
+					_hostAddresses = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.HostAddress>(this).ToList();
 				}
 				return _hostAddresses;
 			}
@@ -76,14 +76,14 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 			{
 				_hostAddresses = value;
 			}
-		}System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor> _processes;
+		}        System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor> _processes;
 		public override System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor> Processes
 		{
 			get
 			{
 				if (_processes == null)
 				{
-					_processes = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor>(this).ToList();
+					_processes = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor>(this).ToList();
 				}
 				return _processes;
 			}
@@ -91,14 +91,14 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 			{
 				_processes = value;
 			}
-		}System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Nic> _networkInterfaces;
+		}        System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Nic> _networkInterfaces;
 		public override System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Nic> NetworkInterfaces
 		{
 			get
 			{
 				if (_networkInterfaces == null)
 				{
-					_networkInterfaces = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.Nic>(this).ToList();
+					_networkInterfaces = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.Nic>(this).ToList();
 				}
 				return _networkInterfaces;
 			}
@@ -106,14 +106,14 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 			{
 				_networkInterfaces = value;
 			}
-		}System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Client> _clients;
+		}        System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Client> _clients;
 		public override System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Data.Client> Clients
 		{
 			get
 			{
 				if (_clients == null)
 				{
-					_clients = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.Client>(this).ToList();
+					_clients = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Machine, Bam.Net.CoreServices.ApplicationRegistration.Data.Client>(this).ToList();
 				}
 				return _clients;
 			}
@@ -124,8 +124,9 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 		}
 
 
-// Xref property: Left -> Application ; Right -> Machine
+        // right xref
 
+// Right Xref property: Left -> Application ; Right -> Machine
 		List<Bam.Net.CoreServices.ApplicationRegistration.Data.Application> _applications;
 		public override List<Bam.Net.CoreServices.ApplicationRegistration.Data.Application> Applications
 		{
@@ -133,8 +134,8 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 			{
 				if(_applications == null || _applications.Count == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationMachine, Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Application>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationMachine, Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Application>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_applications = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.ApplicationRegistration.Data.Application>().ToList();
 					SetUpdatedXrefCollectionProperty("Applications", this.GetType().GetProperty("Applications"));					
 				}
@@ -146,6 +147,8 @@ System.Collections.Generic.List<Bam.Net.CoreServices.ApplicationRegistration.Dat
 				_applications = value;
 				SetUpdatedXrefCollectionProperty("Applications", this.GetType().GetProperty("Applications"));
 			}
-		}	}
+		}
+
+	}
 	// -- generated
 }																								

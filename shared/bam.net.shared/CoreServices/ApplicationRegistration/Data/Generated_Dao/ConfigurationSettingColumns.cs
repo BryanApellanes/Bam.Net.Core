@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ConfigurationSettingColumns Id
         {
             get
@@ -54,6 +53,20 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
             get
             {
                 return new ConfigurationSettingColumns("Value");
+            }
+        }
+        public ConfigurationSettingColumns CompositeKeyId
+        {
+            get
+            {
+                return new ConfigurationSettingColumns("CompositeKeyId");
+            }
+        }
+        public ConfigurationSettingColumns CompositeKey
+        {
+            get
+            {
+                return new ConfigurationSettingColumns("CompositeKey");
             }
         }
         public ConfigurationSettingColumns CreatedBy
@@ -91,6 +104,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ConfigurationSettingColumns("Created");
             }
         }
+
 
         public ConfigurationSettingColumns ConfigurationId
         {

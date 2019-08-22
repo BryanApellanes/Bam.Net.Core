@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,12 +55,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -73,7 +75,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -87,7 +89,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -101,7 +103,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:InstanceIdentifier, columnName:InstanceIdentifier	
+	// property:InstanceIdentifier, columnName: InstanceIdentifier	
 	[Bam.Net.Data.Column(Name="InstanceIdentifier", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string InstanceIdentifier
 	{
@@ -115,7 +117,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:HashAlgorithm, columnName:HashAlgorithm	
+	// property:HashAlgorithm, columnName: HashAlgorithm	
 	[Bam.Net.Data.Column(Name="HashAlgorithm", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string HashAlgorithm
 	{
@@ -129,7 +131,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Hash, columnName:Hash	
+	// property:Hash, columnName: Hash	
 	[Bam.Net.Data.Column(Name="Hash", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Hash
 	{
@@ -143,7 +145,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:MachineName, columnName:MachineName	
+	// property:MachineName, columnName: MachineName	
 	[Bam.Net.Data.Column(Name="MachineName", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string MachineName
 	{
@@ -157,7 +159,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:ProcessId, columnName:ProcessId	
+	// property:ProcessId, columnName: ProcessId	
 	[Bam.Net.Data.Column(Name="ProcessId", DbDataType="Int", MaxLength="10", AllowNull=true)]
 	public int? ProcessId
 	{
@@ -171,7 +173,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:StartTime, columnName:StartTime	
+	// property:StartTime, columnName: StartTime	
 	[Bam.Net.Data.Column(Name="StartTime", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? StartTime
 	{
@@ -185,7 +187,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:HasExited, columnName:HasExited	
+	// property:HasExited, columnName: HasExited	
 	[Bam.Net.Data.Column(Name="HasExited", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? HasExited
 	{
@@ -199,7 +201,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:ExitTime, columnName:ExitTime	
+	// property:ExitTime, columnName: ExitTime	
 	[Bam.Net.Data.Column(Name="ExitTime", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? ExitTime
 	{
@@ -213,7 +215,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:ExitCode, columnName:ExitCode	
+	// property:ExitCode, columnName: ExitCode	
 	[Bam.Net.Data.Column(Name="ExitCode", DbDataType="Int", MaxLength="10", AllowNull=true)]
 	public int? ExitCode
 	{
@@ -227,7 +229,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:FilePath, columnName:FilePath	
+	// property:FilePath, columnName: FilePath	
 	[Bam.Net.Data.Column(Name="FilePath", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string FilePath
 	{
@@ -241,7 +243,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:CommandLine, columnName:CommandLine	
+	// property:CommandLine, columnName: CommandLine	
 	[Bam.Net.Data.Column(Name="CommandLine", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string CommandLine
 	{
@@ -255,7 +257,49 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:CreatedBy, columnName:CreatedBy	
+	// property:Key, columnName: Key	
+	[Bam.Net.Data.Column(Name="Key", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? Key
+	{
+		get
+		{
+			return GetULongValue("Key");
+		}
+		set
+		{
+			SetValue("Key", value);
+		}
+	}
+
+	// property:CompositeKeyId, columnName: CompositeKeyId	
+	[Bam.Net.Data.Column(Name="CompositeKeyId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? CompositeKeyId
+	{
+		get
+		{
+			return GetULongValue("CompositeKeyId");
+		}
+		set
+		{
+			SetValue("CompositeKeyId", value);
+		}
+	}
+
+	// property:CompositeKey, columnName: CompositeKey	
+	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string CompositeKey
+	{
+		get
+		{
+			return GetStringValue("CompositeKey");
+		}
+		set
+		{
+			SetValue("CompositeKey", value);
+		}
+	}
+
+	// property:CreatedBy, columnName: CreatedBy	
 	[Bam.Net.Data.Column(Name="CreatedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string CreatedBy
 	{
@@ -269,7 +313,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:ModifiedBy, columnName:ModifiedBy	
+	// property:ModifiedBy, columnName: ModifiedBy	
 	[Bam.Net.Data.Column(Name="ModifiedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string ModifiedBy
 	{
@@ -283,7 +327,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Modified, columnName:Modified	
+	// property:Modified, columnName: Modified	
 	[Bam.Net.Data.Column(Name="Modified", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Modified
 	{
@@ -297,7 +341,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Deleted, columnName:Deleted	
+	// property:Deleted, columnName: Deleted	
 	[Bam.Net.Data.Column(Name="Deleted", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Deleted
 	{
@@ -311,7 +355,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Created, columnName:Created	
+	// property:Created, columnName: Created	
 	[Bam.Net.Data.Column(Name="Created", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Created
 	{
@@ -326,14 +370,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 	}
 
 
-
 	// start ApplicationId -> ApplicationId
 	[Bam.Net.Data.ForeignKey(
         Table="ProcessDescriptor",
-		Name="ApplicationId", 
-		DbDataType="BigInt", 
+		Name="ApplicationId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="Application",
 		Suffix="1")]
@@ -349,7 +392,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	Application _applicationOfApplicationId;
+    Application _applicationOfApplicationId;
 	public Application ApplicationOfApplicationId
 	{
 		get
@@ -361,14 +404,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _applicationOfApplicationId;
 		}
 	}
-	
+
 	// start MachineId -> MachineId
 	[Bam.Net.Data.ForeignKey(
         Table="ProcessDescriptor",
-		Name="MachineId", 
-		DbDataType="BigInt", 
+		Name="MachineId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="Machine",
 		Suffix="2")]
@@ -384,7 +427,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	Machine _machineOfMachineId;
+    Machine _machineOfMachineId;
 	public Machine MachineOfMachineId
 	{
 		get
@@ -396,16 +439,18 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _machineOfMachineId;
 		}
 	}
-	
-				
-		
+
+
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -416,32 +461,32 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			{
 				var colFilter = new ProcessDescriptorColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the ProcessDescriptor table.
-		/// </summary>
+        /// Return every record in the ProcessDescriptor table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static ProcessDescriptorCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<ProcessDescriptor>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<ProcessDescriptor>();
-			var results = new ProcessDescriptorCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<ProcessDescriptor>();
+            var results = new ProcessDescriptorCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<ProcessDescriptor>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<ProcessDescriptor>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -457,21 +502,21 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<ProcessDescriptor>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<ProcessDescriptorColumns> where, Action<IEnumerable<ProcessDescriptor>> batchProcessor, Database database = null)
 		{
@@ -483,27 +528,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ProcessDescriptorColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<ProcessDescriptor>> batchProcessor, Bam.Net.Data.OrderBy<ProcessDescriptorColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<ProcessDescriptorColumns> where, Action<IEnumerable<ProcessDescriptor>> batchProcessor, Bam.Net.Data.OrderBy<ProcessDescriptorColumns> orderBy, Database database = null)
 		{
@@ -514,13 +559,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ProcessDescriptorColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		public static ProcessDescriptor GetById(uint id, Database database = null)
@@ -559,7 +604,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static ProcessDescriptorCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<ProcessDescriptorColumns> whereDelegate = (c) => filter;
@@ -567,9 +612,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A Func delegate that recieves a ProcessDescriptorColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -580,27 +625,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			database = database ?? Db.For<ProcessDescriptor>();
 			return new ProcessDescriptorCollection(database.GetQuery<ProcessDescriptorColumns, ProcessDescriptor>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static ProcessDescriptorCollection Where(WhereDelegate<ProcessDescriptorColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<ProcessDescriptor>();
 			var results = new ProcessDescriptorCollection(database, database.GetQuery<ProcessDescriptorColumns, ProcessDescriptor>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -610,7 +655,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static ProcessDescriptorCollection Where(WhereDelegate<ProcessDescriptorColumns> where, OrderBy<ProcessDescriptorColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<ProcessDescriptor>();
 			var results = new ProcessDescriptorCollection(database, database.GetQuery<ProcessDescriptorColumns, ProcessDescriptor>(where, orderBy), true);
 			return results;
@@ -618,9 +663,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;ProcessDescriptorColumns&gt;.
+		/// WhereDelegate`ProcessDescriptorColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -629,9 +674,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			var results = new ProcessDescriptorCollection(database, Select<ProcessDescriptorColumns>.From<ProcessDescriptor>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -649,8 +694,8 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -663,7 +708,29 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ProcessDescriptorColumns> where, Database database = null)
+		{
+			SetOneWhere(where, out ProcessDescriptor ignore, database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ProcessDescriptorColumns> where, out ProcessDescriptor result, Database database = null)
+		{
+			result = GetOneWhere(where, database);
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -676,7 +743,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			if(result == null)
 			{
 				ProcessDescriptorColumns c = new ProcessDescriptorColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -685,11 +752,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single ProcessDescriptor instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -700,12 +767,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<ProcessDescriptorColumns>.
+		/// WhereDelegate`ProcessDescriptorColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -716,10 +783,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -737,12 +804,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -764,7 +831,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -786,14 +853,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -810,10 +877,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -827,10 +894,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		public static ProcessDescriptorCollection Top(int count, WhereDelegate<ProcessDescriptorColumns> where, OrderBy<ProcessDescriptorColumns> orderBy, Database database = null)
 		{
 			ProcessDescriptorColumns c = new ProcessDescriptorColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<ProcessDescriptor>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<ProcessDescriptor>(count);
 			query.Where(filter);
 
@@ -857,10 +924,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -914,10 +981,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -936,7 +1003,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Return the count of ProcessDescriptors
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -953,7 +1020,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns 
+		/// <param name="where">A WhereDelegate that recieves a ProcessDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ProcessDescriptorColumns and other values
 		/// </param>
@@ -967,26 +1034,26 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<ProcessDescriptor>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<ProcessDescriptor>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<ProcessDescriptor>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<ProcessDescriptor>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static ProcessDescriptor CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<ProcessDescriptor>();			
+			Database db = database ?? Db.For<ProcessDescriptor>();
 			var dao = new ProcessDescriptor();
 			filter.Parameters.Each(p=>
 			{
@@ -995,7 +1062,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static ProcessDescriptor OneOrThrow(ProcessDescriptorCollection c)
 		{
 			if(c.Count == 1)
@@ -1011,4 +1078,4 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 	}
-}																								
+}

@@ -10,9 +10,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     [Serializable]
     public class Configuration: AuditRepoData
     {
+        [CompositeKey]
         public string Name { get; set; }
         public virtual ulong MachineId { get; set; }
-        public virtual Machine Machine { get; set; } 
+        public virtual Machine Machine { get; set; }
+        
+        [CompositeKey]
+        public ulong ApplicationKey { get; set; }
         public virtual ulong ApplicationId { get; set; }
         public virtual Application Application { get; set; }
         public virtual List<ConfigurationSetting> Settings { get; set; }

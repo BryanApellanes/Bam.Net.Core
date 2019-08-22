@@ -31,22 +31,6 @@ namespace Bam.Net.Data.Repositories
         public string ModifiedBy { get; set; }
         public DateTime? Modified { get; set; }
         public DateTime? Deleted { get; set; }
-        /// <summary>
-        /// Ensure the current RepoData instance has been 
-        /// persisted to the specified repo
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="repo"></param>
-        /// <returns></returns>
-        public T EnsurePersisted<T>(IRepository repo) where T: AuditRepoData, new()
-        {
-            T instance = repo.Retrieve<T>(Cuid);
-            if(instance == null)
-            {
-                instance = repo.Save((T)this);
-            }
-            return instance;
-        }
 
         /// <summary>
         /// Ensures that an instance of the current RepoData
@@ -61,7 +45,7 @@ namespace Bam.Net.Data.Repositories
         /// <param name="modifiedBy"></param>
         /// <param name="propertyNames"></param>
         /// <returns></returns>
-        public T EnsureSingle<T>(IRepository repo, string modifiedBy, params string[] propertyNames) where T: AuditRepoData, new()
+        public T EnsureSingle<T>(IRepository repo, string modifiedBy, params string[] propertyNames)  where T: AuditRepoData, new()
         {
             T instance = QueryFirstOrDefault<T>(repo, propertyNames);
             if (instance == null) // wasn't saved/found, should reset Id so the repo will Create

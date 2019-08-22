@@ -8,7 +8,7 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class Nic: RepoData
+    public class Nic: KeyedRepoData
     {
         public ulong MachineId { get; set; }
         public virtual Machine Machine { get; set; }

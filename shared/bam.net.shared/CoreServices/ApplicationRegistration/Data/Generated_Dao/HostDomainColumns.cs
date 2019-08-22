@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public HostDomainColumns Id
         {
             get
@@ -70,6 +69,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new HostDomainColumns("Authorized");
             }
         }
+        public HostDomainColumns Key
+        {
+            get
+            {
+                return new HostDomainColumns("Key");
+            }
+        }
+        public HostDomainColumns CompositeKeyId
+        {
+            get
+            {
+                return new HostDomainColumns("CompositeKeyId");
+            }
+        }
+        public HostDomainColumns CompositeKey
+        {
+            get
+            {
+                return new HostDomainColumns("CompositeKey");
+            }
+        }
         public HostDomainColumns CreatedBy
         {
             get
@@ -105,6 +125,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new HostDomainColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

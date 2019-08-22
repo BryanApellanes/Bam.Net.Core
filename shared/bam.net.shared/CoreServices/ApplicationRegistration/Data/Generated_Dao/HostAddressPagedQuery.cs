@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class HostAddressPagedQuery: PagedQuery<HostAddressColumns, HostAddress>
     { 
-		public HostAddressPagedQuery(HostAddressColumns orderByColumn, HostAddressQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public HostAddressPagedQuery(HostAddressColumns orderByColumn,HostAddressQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

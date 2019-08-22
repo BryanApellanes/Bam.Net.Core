@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 		public HostDomainWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -48,8 +48,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 
 
-// Xref property: Left -> HostDomain ; Right -> Application
 
+        // right xref
+
+// Right Xref property: Left -> Application ; Right -> HostDomain
 		List<Bam.Net.CoreServices.ApplicationRegistration.Data.Application> _applications;
 		public override List<Bam.Net.CoreServices.ApplicationRegistration.Data.Application> Applications
 		{
@@ -57,8 +59,8 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 			{
 				if(_applications == null || _applications.Count == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication,  Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Application>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain, Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Application>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_applications = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.ApplicationRegistration.Data.Application>().ToList();
 					SetUpdatedXrefCollectionProperty("Applications", this.GetType().GetProperty("Applications"));					
 				}
@@ -71,6 +73,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 				SetUpdatedXrefCollectionProperty("Applications", this.GetType().GetProperty("Applications"));
 			}
 		}
+
 	}
 	// -- generated
 }																								

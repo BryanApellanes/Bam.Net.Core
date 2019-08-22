@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 		public ProcessDescriptorWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -47,14 +47,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 		}
 
 
-Bam.Net.CoreServices.ApplicationRegistration.Data.Application _application;
+        Bam.Net.CoreServices.ApplicationRegistration.Data.Application _application;
 		public override Bam.Net.CoreServices.ApplicationRegistration.Data.Application Application
 		{
 			get
 			{
 				if (_application == null)
 				{
-					_application = (Bam.Net.CoreServices.ApplicationRegistration.Data.Application)Repository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.Application));
+					_application = (Bam.Net.CoreServices.ApplicationRegistration.Data.Application)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.Application));
 				}
 				return _application;
 			}
@@ -62,7 +62,23 @@ Bam.Net.CoreServices.ApplicationRegistration.Data.Application _application;
 			{
 				_application = value;
 			}
+		}        Bam.Net.CoreServices.ApplicationRegistration.Data.Machine _machine;
+		public override Bam.Net.CoreServices.ApplicationRegistration.Data.Machine Machine
+		{
+			get
+			{
+				if (_machine == null)
+				{
+					_machine = (Bam.Net.CoreServices.ApplicationRegistration.Data.Machine)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.Machine));
+				}
+				return _machine;
+			}
+			set
+			{
+				_machine = value;
+			}
 		}
+
 
 	}
 	// -- generated

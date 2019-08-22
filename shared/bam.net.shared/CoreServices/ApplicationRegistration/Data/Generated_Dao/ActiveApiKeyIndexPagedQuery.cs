@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class ActiveApiKeyIndexPagedQuery: PagedQuery<ActiveApiKeyIndexColumns, ActiveApiKeyIndex>
     { 
-		public ActiveApiKeyIndexPagedQuery(ActiveApiKeyIndexColumns orderByColumn, ActiveApiKeyIndexQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ActiveApiKeyIndexPagedQuery(ActiveApiKeyIndexColumns orderByColumn,ActiveApiKeyIndexQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ClientServerConnectionColumns Id
         {
             get
@@ -91,6 +90,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ClientServerConnectionColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType
