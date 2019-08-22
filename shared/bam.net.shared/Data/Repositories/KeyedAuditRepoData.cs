@@ -48,12 +48,18 @@ namespace Bam.Net.Data.Repositories
             T result = default(T);
             lock (_saveLock)
             {
-                T existing = LoadByKey<T>(repository);
+                T existing = LoadExisting<T>(repository);
                 result = existing != null ? repository.Save<T>((T)existing.CopyProperties(this)) : repository.Save<T>((T)this);
             }
             return result;
         }
 
+        /// <summary>
+        /// Query for the KeyedAuditRepoData with the key matching the current instance then load it by its Uuid if it is found.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T LoadByKey<T>(IRepository repository) where T : KeyedAuditRepoData, new()
         {
             T queryResult = repository.Query<T>(new {Key = Key}).FirstOrDefault();
@@ -63,6 +69,18 @@ namespace Bam.Net.Data.Repositories
             }
 
             return null;
+        }
+        
+        private T LoadExisting<T>(IRepository repository) where T : KeyedAuditRepoData, new()
+        {
+            T existing = LoadByKey<T>(repository);
+            if (existing != null)
+            {
+                this.Uuid = existing.Uuid;
+                this.Cuid = existing.Cuid;
+            }
+
+            return existing;
         }
     }
 }
