@@ -10,7 +10,10 @@ namespace Bam.Net.Services.Catalog.Data
     [Serializable]
     public class CatalogItem: KeyedAuditRepoData
     {
+        [CompositeKey]
         public ulong CatalogKey { get; set; }
+        
+        [CompositeKey]
         public ulong ItemKey { get; set; }
         
         public virtual List<ItemOption> ItemOptions { get; set; }

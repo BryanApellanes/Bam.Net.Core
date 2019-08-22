@@ -15,8 +15,8 @@ namespace Bam.Net.Services
         CatalogDefinition RenameCatalog(ulong catalogKey, string name);
         CatalogDefinition GetCatalog(ulong catalogKey);
         bool DeleteCatalog(ulong catalogKey);
-        ItemDefinition CreateItem(string name);
-        ItemDefinition AddItem(ulong catalogKey, ulong itemKey);
+        ItemDefinition AddItem(ulong catalogKey, string itemName);
+        ItemDefinition AddItem(ulong catalogKey, string itemName, out CatalogItem catalogItem);
         bool RemoveItem(ulong catalogKey, ulong itemKey);
         ItemDefinition RenameItem(ulong itemKey, string name);
         ItemDefinition GetItem(ulong itemKey);

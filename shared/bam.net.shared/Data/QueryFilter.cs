@@ -40,7 +40,12 @@ namespace Bam.Net.Data
             bool first = true;
             foreach(PropertyInfo prop in properties)
             {
-                QueryFilter next = Query.Where(prop.Name) == prop.GetValue(query);
+                object propValue = prop.GetValue(query);
+                if (propValue is ulong ulongPropValue)
+                {
+                    propValue = Dao.MapUlongToLong(ulongPropValue);
+                }
+                QueryFilter next = Query.Where(prop.Name) == propValue;
                 if (first) // trying to do filter == null will invoke implicit operator rather than doing an actual null comparison
                 {
                     first = false;

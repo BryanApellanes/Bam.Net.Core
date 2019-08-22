@@ -12,6 +12,9 @@ namespace Bam.Net.Services.Catalog.Data
         public virtual CatalogDefinition CatalogDefinition { get; set; }
         
         [CompositeKey]
+        public ulong CatalogKey { get; set; }
+        
+        [CompositeKey]
         public string Name { get; set; }
         public string Description { get; set; }
         public virtual List<ItemProperty> Properties { get; set; }

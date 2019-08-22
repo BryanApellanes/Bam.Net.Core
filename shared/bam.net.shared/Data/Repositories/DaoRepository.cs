@@ -1143,7 +1143,12 @@ namespace Bam.Net.Data.Repositories
             {
                 queryParameters.Keys.Rest(1, property =>
                 {
-                    filter.And(new QueryFilter(property) == queryParameters[property]);
+	                object propertyValue = queryParameters[property];
+	                if (propertyValue is ulong ulongPropertyValue)
+	                {
+		                propertyValue = Dao.MapUlongToLong(ulongPropertyValue);
+	                }
+                    filter.And(new QueryFilter(property) == propertyValue);
                 });
             }
             return filter;

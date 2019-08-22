@@ -5,6 +5,11 @@ namespace Bam.Net.Data.Repositories
 {
     public class KeyedRepoData : CompositeKeyRepoData
     {
+        public static implicit operator ulong(KeyedRepoData repoData)
+        {
+            return repoData.Key;
+        }
+        
         private ulong key = Convert.ToUInt64(0);
         public ulong Key
         {
@@ -21,7 +26,7 @@ namespace Bam.Net.Data.Repositories
         }
 
         object _saveLock = new object();
-        public T Save<T>(IRepository repository) where T : KeyedRepoData, new()
+        public T SaveByKey<T>(IRepository repository) where T : KeyedRepoData, new()
         {
             lock (_saveLock)
             {

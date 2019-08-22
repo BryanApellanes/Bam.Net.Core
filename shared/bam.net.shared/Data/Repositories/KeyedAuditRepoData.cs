@@ -14,6 +14,11 @@ namespace Bam.Net.Data.Repositories
     [Serializable]
     public abstract class KeyedAuditRepoData : CompositeKeyAuditRepoData
     {
+        public static implicit operator ulong(KeyedAuditRepoData repoData)
+        {
+            return repoData.Key;
+        }
+        
         ulong key = Convert.ToUInt64(0);
         public ulong Key
         {
@@ -38,15 +43,26 @@ namespace Bam.Net.Data.Repositories
         /// <param name="repository"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Save<T>(IRepository repository) where T : KeyedAuditRepoData, new()
+        public T SaveByKey<T>(IRepository repository) where T : KeyedAuditRepoData, new()
         {
             T result = default(T);
             lock (_saveLock)
             {
-                T existing = repository.Query<T>(new {Key = Key}).FirstOrDefault();
+                T existing = LoadByKey<T>(repository);
                 result = existing != null ? repository.Save<T>((T)existing.CopyProperties(this)) : repository.Save<T>((T)this);
             }
             return result;
+        }
+
+        public T LoadByKey<T>(IRepository repository) where T : KeyedAuditRepoData, new()
+        {
+            T queryResult = repository.Query<T>(new {Key = Key}).FirstOrDefault();
+            if (queryResult != null)
+            {
+                return repository.Retrieve<T>(queryResult.Uuid);
+            }
+
+            return null;
         }
     }
 }
