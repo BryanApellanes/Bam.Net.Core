@@ -14,7 +14,7 @@ namespace Bam.Net.Services.Catalog.Data
         public ulong CatalogKey { get; set; }
         
         [CompositeKey]
-        public ulong ItemDefinitionKey { get; set; }
+        public ulong ItemKey { get; set; }
         
         public virtual List<ItemOption> ItemOptions { get; set; }
     }

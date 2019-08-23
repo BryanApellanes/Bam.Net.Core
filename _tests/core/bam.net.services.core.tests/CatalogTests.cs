@@ -210,7 +210,6 @@ namespace Bam.Net.Services.Tests
 
         [UnitTest]
         [TestGroup("Catalog")]
-        [TestGroup("AdHoc")]
         public void CanAddItemProperties()
         {
             string testCatalogName = nameof(CanAddItemProperties);
@@ -223,6 +222,62 @@ namespace Bam.Net.Services.Tests
             Expect.AreEqual(2, properties.Count);
             Expect.AreEqual("5", properties.First(p=> p.Name.Equals("TailCount")).Value);
             Expect.AreEqual("True", properties.First(p=> p.Name.Equals("FallopianTubes")).Value);
+        }
+
+        [UnitTest]
+        [TestGroup("Catalog")]
+        public void CanAddItemToCatalog()
+        {
+            string testCatalogName = nameof(CanAddItemToCatalog);
+            string testItemName = "testItem_".RandomLetters(6);
+            CatalogService svc = GetTestCatalogService(testCatalogName);
+
+            CatalogDefinition catalogDefinition = svc.FindCatalog(testCatalogName);
+            ItemDefinition item = svc.AddItem(catalogDefinition, testItemName);
+            catalogDefinition = svc.GetCatalog(catalogDefinition.Key);
+            Expect.AreEqual(1, catalogDefinition.Items.Count);
+            Expect.AreEqual(testItemName, catalogDefinition.Items[0].Name);
+        }
+
+        [UnitTest]
+        [TestGroup("Catalog")]
+        [TestGroup("AdHoc")]
+        public void CanRemoveItemFromCatalogWithoutDeletingItem()
+        {
+            string testCatalogName = nameof(CanRemoveItemFromCatalogWithoutDeletingItem);
+            string testItemName = "testItem_".RandomLetters(4);
+            CatalogService svc = GetTestCatalogService(testCatalogName);
+
+            CatalogDefinition catalogDefinition = svc.FindCatalog(testCatalogName);
+            ItemDefinition item = svc.AddItem(catalogDefinition, testItemName);
+            catalogDefinition = svc.GetCatalog(catalogDefinition);
+            Expect.AreEqual(1, catalogDefinition.Items.Count);
+            svc.RemoveItem(catalogDefinition, item);
+            catalogDefinition = svc.GetCatalog(catalogDefinition);
+            Expect.AreEqual(0, catalogDefinition.Items.Count);
+
+            item = svc.GetItem(item);
+            Expect.IsNotNull(item);
+        }
+        
+        [UnitTest]
+        [TestGroup("Catalog")]
+        public void SaveByKeySavesChanges()
+        {
+            CatalogService svc = GetTestCatalogService(nameof(SaveByKeySavesChanges), out DaoRepository daoRepository);
+            string name = "part of the composite key so it must not change";
+            string originalValue = "original value";
+            string updatedValue = "updated value";
+            ItemDefinition itemDefinition = new ItemDefinition() {Name = name, Description = originalValue};
+            itemDefinition = itemDefinition.SaveByKey<ItemDefinition>(daoRepository);
+            Expect.AreEqual(originalValue, itemDefinition.Description);
+            Expect.AreEqual(name, itemDefinition.Name);
+
+            itemDefinition.Description = updatedValue;
+            itemDefinition = itemDefinition.SaveByKey<ItemDefinition>(daoRepository);
+            
+            Expect.AreEqual(updatedValue, itemDefinition.Description);
+            Expect.AreEqual(name, itemDefinition.Name);
         }
         
         private CatalogService GetTestCatalogService(string databaseName, out DaoRepository daoRepository)

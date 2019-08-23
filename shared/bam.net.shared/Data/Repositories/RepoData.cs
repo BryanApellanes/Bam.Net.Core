@@ -92,7 +92,7 @@ namespace Bam.Net.Data.Repositories
 
         /// <summary>
         /// Does a query for an instance of the specified
-        /// generic type T having properties who's values
+        /// generic type T having the specified properties who's values
         /// match those of the current instance; may return null
         /// </summary>
         /// <typeparam name="T"></typeparam>
