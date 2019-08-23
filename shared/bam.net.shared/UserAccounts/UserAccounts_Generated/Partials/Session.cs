@@ -243,7 +243,7 @@ namespace Bam.Net.UserAccounts.Data
         {
             get
             {
-                SessionState state = this.SessionStatesBySessionId.Where(ss => ss.Name == key).FirstOrDefault();
+                SessionState state = this.SessionStatesBySessionId.FirstOrDefault(ss => ss.Name == key);
                 if (state != null)
                 {
                     if (state.ValueType.EndsWith(".json"))
@@ -260,7 +260,7 @@ namespace Bam.Net.UserAccounts.Data
             }
             set
             {
-                SessionState state = this.SessionStatesBySessionId.Where(ss => ss.Name == key).FirstOrDefault();
+                SessionState state = this.SessionStatesBySessionId.FirstOrDefault(ss => ss.Name == key);
                 if (state == null)
                 {
                     state = this.SessionStatesBySessionId.AddNew();

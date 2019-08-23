@@ -39,6 +39,7 @@ namespace Bam.Net.Data.Repositories
         readonly object _saveLock = new object();
         /// <summary>
         /// Save the current instance to the specified repository, first checking if an instance with the same key is already saved.
+        /// If an instance already exists it is updated with the current state.
         /// </summary>
         /// <param name="repository"></param>
         /// <typeparam name="T"></typeparam>
@@ -62,18 +63,12 @@ namespace Bam.Net.Data.Repositories
         /// <returns></returns>
         public T LoadByKey<T>(IRepository repository) where T : KeyedAuditRepoData, new()
         {
-            T queryResult = repository.Query<T>(new {Key = Key}).FirstOrDefault();
-            if (queryResult != null)
-            {
-                return repository.Retrieve<T>(queryResult.Uuid);
-            }
-
-            return null;
+            return LoadExisting<T>(repository);
         }
         
         private T LoadExisting<T>(IRepository repository) where T : KeyedAuditRepoData, new()
         {
-            T existing = LoadByKey<T>(repository);
+            T existing = repository.LoadByKey<T>(this);
             if (existing != null)
             {
                 this.Uuid = existing.Uuid;

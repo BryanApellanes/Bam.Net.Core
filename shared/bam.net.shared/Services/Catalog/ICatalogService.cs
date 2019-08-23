@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data.Repositories;
+using Bam.Net.ServiceProxy;
 using Bam.Net.Services.Catalog.Data;
 
 namespace Bam.Net.Services
 {
-    public interface ICatalogService
+    public interface ICatalogService : IContextCloneable
     {
+        IRepository Repository { get; }
         CatalogDefinition GetDefaultCatalog();
         CatalogDefinition CreateCatalog(string name);
         CatalogDefinition FindCatalog(string name);

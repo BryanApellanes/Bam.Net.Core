@@ -257,6 +257,17 @@ namespace Bam.Net.Data.Repositories
 	        return result;
         }
 
+        public virtual T LoadByKey<T>(ulong key) where T: KeyedAuditRepoData, new()
+        {
+	        T queryResult = Query<T>(new {Key = key}).FirstOrDefault();
+	        if (queryResult != null)
+	        {
+		        return Retrieve<T>(queryResult.Uuid);
+	        }
+
+	        return null;
+        }
+        
         public virtual T LoadByCompositeKey<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
         {
 	        return RetrieveByCompositeKey<T>(compositeKey);

@@ -34,6 +34,17 @@ namespace Bam.Net.Testing
 
         protected static MethodInfo DefaultMethod { get; set; }
 
+        public static void ExecuteMain(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        {
+            AddSwitches();
+            AddConfigurationSwitches();
+            Initialize(args, parseErrorHandler);
+            if (Arguments.Length > 0 && !Arguments.Contains("i"))
+            {
+                ExecuteSwitches(false, new ConsoleLogger());
+            }
+        }
+        
         /// <summary>
         /// Prepares commandline arguments for reading.
         /// </summary>

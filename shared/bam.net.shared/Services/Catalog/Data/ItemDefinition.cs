@@ -13,6 +13,7 @@ namespace Bam.Net.Services.Catalog.Data
         [CompositeKey]
         public string Name { get; set; }
         public string Description { get; set; }
+        public decimal BasePrice { get; set; }
         public virtual List<ItemProperty> Properties { get; set; }
         public ItemDefinition Set(string propertyName, string value)
         {

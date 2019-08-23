@@ -160,7 +160,7 @@ namespace Bam.Net.Services
             {
                 ItemProperty itemProperty = new ItemProperty
                 {
-                    ItemDefinitionId = itemDefinition.Id, ItemDefinitionKey = itemDefinition.Key, Name = propertyName,
+                    ItemDefinitionId = itemDefinition.Id, ItemKey = itemDefinition.Key, Name = propertyName,
                     Value = properties[propertyName]
                 };
                 itemProperty = itemProperty.SaveByKey<ItemProperty>(Repository);
@@ -215,7 +215,7 @@ namespace Bam.Net.Services
         
         protected IEnumerable<ItemProperty> GetItemProperties(ulong itemKey)
         {
-            return Repository.Query<ItemProperty>(new { ItemDefinitionKey = itemKey });
+            return Repository.Query<ItemProperty>(new { ItemKey = itemKey });
         }
     }
 }

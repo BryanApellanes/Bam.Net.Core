@@ -37,5 +37,7 @@ namespace Bam.Net.Data.Repositories
         bool DeleteWhere(Type type, dynamic filter);
 
         bool TryHydrate(RepoData data);
+
+        T LoadByKey<T>(ulong key) where T : KeyedAuditRepoData, new();
     }
 }

@@ -131,6 +131,19 @@ namespace Bam.Net.CoreServices
         
         [Exclude]
         public abstract object Clone();
+
+        [Exclude]
+        public object Clone(IHttpContext context)
+        {
+            object clone = Clone();
+            if (clone is IRequiresHttpContext requiresHttpContext)
+            {
+                requiresHttpContext.HttpContext = context;
+                return requiresHttpContext;
+            }
+
+            return clone;
+        }
         
         [Exclude]
         public ILogger Logger { get; set; }

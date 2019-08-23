@@ -10,7 +10,7 @@ namespace Bam.Net.Services.Catalog.Data
         [CompositeKey]
         public ulong CatalogKey { get; set; }
         [CompositeKey]
-        public ulong ItemDefinitionKey { get; set; }
+        public ulong ItemKey { get; set; }
         [CompositeKey]
         public string Name { get; set; }
         

@@ -292,6 +292,7 @@ namespace Bam.Net.Services.Tests
             {
                 ApplicationRegistrationRepository = applicationRegistrationRepository
             };
+            
             daoRepository.DeleteAll<CatalogDefinition>();
             daoRepository.DeleteAll<CatalogItem>();
             daoRepository.DeleteAll<ItemDefinition>();
