@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Bam.Net.Application.Verbs;
 using Bam.Net.CommandLine;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
@@ -172,6 +174,55 @@ namespace Bam.Net.Services.Tests
             Expect.AreEqual(2, retrievedCatalog.Items.Count);
             retrievedCatalog.Items.Contains(itemOne).IsTrue();
             retrievedCatalog.Items.Contains(itemTwo).IsTrue();
+        }
+
+        [UnitTest]
+        [TestGroup("Catalog")]
+        public void CanDeleteCatalog()
+        {
+            string testCatalogName = nameof(CanDeleteCatalog);
+            CatalogService svc = GetTestCatalogService(testCatalogName);
+            CatalogDefinition catalogDefinition = svc.FindCatalog(testCatalogName);
+            Expect.IsNotNull(catalogDefinition);
+
+            svc.DeleteCatalog(catalogDefinition);
+
+            catalogDefinition = svc.FindCatalog(testCatalogName);
+            
+            Expect.IsNull(catalogDefinition);
+        }
+
+        [UnitTest]
+        [TestGroup("Catalog")]
+        public void CanCreateAndGetItem()
+        {
+            string testCatalogName = nameof(CanCreateAndGetItem);
+            string testItemName = "testItem_".RandomLetters(6);
+            CatalogService svc = GetTestCatalogService(testCatalogName);
+            ItemDefinition itemDefinition = svc.CreateItem(testItemName);
+            Expect.AreEqual(testItemName, itemDefinition.Name);
+            Expect.IsNotNullOrEmpty(itemDefinition.Uuid);
+            Expect.IsNotNullOrEmpty(itemDefinition.Cuid);
+            ItemDefinition retrieved = svc.GetItem(itemDefinition);
+            
+            Expect.AreEqual(itemDefinition, retrieved);
+        }
+
+        [UnitTest]
+        [TestGroup("Catalog")]
+        [TestGroup("AdHoc")]
+        public void CanAddItemProperties()
+        {
+            string testCatalogName = nameof(CanAddItemProperties);
+            string testItemName = "testItem_".RandomLetters(6);
+            CatalogService svc = GetTestCatalogService(testCatalogName);
+
+            CatalogDefinition catalogDefinition = svc.FindCatalog(testCatalogName);
+            ItemDefinition item = svc.AddItem(catalogDefinition, testItemName);
+            List<ItemProperty> properties = svc.AddItemProperties(item, new {TailCount = 5, FallopianTubes = true}).ToList();
+            Expect.AreEqual(2, properties.Count);
+            Expect.AreEqual("5", properties.First(p=> p.Name.Equals("TailCount")).Value);
+            Expect.AreEqual("True", properties.First(p=> p.Name.Equals("FallopianTubes")).Value);
         }
         
         private CatalogService GetTestCatalogService(string databaseName, out DaoRepository daoRepository)

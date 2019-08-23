@@ -8,14 +8,13 @@ namespace Bam.Net.Services.Catalog.Data
     [Serializable]
     public class ItemDefinition: KeyedAuditRepoData
     {
-        public ulong CatalogDefinitionId { get; set; }
-        public virtual List<CatalogDefinition> CatalogDefinition { get; set; }
+        public virtual List<CatalogDefinition> CatalogDefinitions { get; set; }
         
         [CompositeKey]
         public string Name { get; set; }
         public string Description { get; set; }
         public virtual List<ItemProperty> Properties { get; set; }
-        public ItemDefinition Set(string propertyName, object value)
+        public ItemDefinition Set(string propertyName, string value)
         {
             Properties.Add(new ItemProperty { Name = propertyName, Value = value });
             return this;

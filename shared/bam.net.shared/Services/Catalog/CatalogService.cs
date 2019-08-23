@@ -64,12 +64,7 @@ namespace Bam.Net.Services
         public CatalogDefinition FindCatalog(string name)
         {
             CatalogDefinition catalog = Repository.Query<CatalogDefinition>(new { OrganizationKey = ClientOrganization.Key, ApplicationKey = ClientApplication.Key, Name = name }).FirstOrDefault();
-            if (catalog != null)
-            {
-                return Repository.Retrieve<CatalogDefinition>(catalog.Uuid);
-            }
-
-            return null;
+            return catalog != null ? Repository.Retrieve<CatalogDefinition>(catalog.Uuid) : null;
         }
 
         public CatalogDefinition RenameCatalog(ulong catalogKey, string name)
@@ -91,7 +86,7 @@ namespace Bam.Net.Services
             }
             return null;
         }
-
+        
         protected IEnumerable<ItemDefinition> GetCatalogItems(ulong catalogKey)
         {
             foreach(CatalogItem ci in Repository.Query<CatalogItem>(new { CatalogKey = catalogKey }))
@@ -106,16 +101,17 @@ namespace Bam.Net.Services
             }
         }
 
-        protected IEnumerable<ItemProperty> GetItemProperties(ulong itemKey)
+        protected ItemDefinition GetItemDefinition(ulong itemDefinitionKey)
         {
-            return Repository.Query<ItemProperty>(new { ItemDefinitionKey = itemKey });
+            ItemDefinition itemDefinition = Repository.Query<ItemDefinition>(new {Key = itemDefinitionKey}).FirstOrDefault();
+            return itemDefinition != null ? Repository.Retrieve<ItemDefinition>(itemDefinition.Uuid) : null;
         }
-
+        
         public bool DeleteCatalog(ulong catalogKey)
         {
             return Repository.DeleteWhere(typeof(CatalogDefinition), new { Key = catalogKey });
         }
-
+        
         public ItemDefinition AddItem(ulong catalogKey, string itemName)
         {
             return AddItem(catalogKey, itemName, out CatalogItem ignore);
@@ -125,15 +121,51 @@ namespace Bam.Net.Services
         {
             CatalogDefinition catalog = GetCatalog(catalogKey);
             Args.ThrowIf(catalog == null, "Catalog not found ({0})", catalogKey);
+            var item = CreateItem(itemName);
+
+            CatalogItem xref = new CatalogItem { CatalogKey = catalogKey, ItemDefinitionKey = item.Key };
+            catalogItem = Repository.Save(xref);
+            return item;
+        }
+
+        public ItemDefinition CreateItem(string itemName)
+        {
             ItemDefinition item = new ItemDefinition()
             {
                 Name = itemName
             };
             item = item.LoadByKey<ItemDefinition>(Repository) ?? item.SaveByKey<ItemDefinition>(Repository);
-
-            CatalogItem xref = new CatalogItem { CatalogKey = catalogKey, ItemDefinitionKey = item.Key };
-            catalogItem = Repository.Save(xref);
             return item;
+        }
+
+        public IEnumerable<ItemProperty> AddItemProperties(ulong itemKey, object properties)
+        {
+            Dictionary<string, string> propDictionary = properties.ToDictionary<string>(o => o.ToString());
+            return AddItemProperties(itemKey, propDictionary);
+        }
+
+        public IEnumerable<ItemProperty> AddItemProperties(ulong itemKey, Dictionary<string, string> properties)
+        {
+            ItemDefinition itemDefinition = GetItemDefinition(itemKey);
+            Args.ThrowIf(itemDefinition == null, "ItemDefinition not found ({0})", itemKey);
+            foreach (ItemProperty itemProperty in AddItemProperties(itemDefinition, properties))
+            {
+                yield return itemProperty;
+            }
+        }
+
+        protected IEnumerable<ItemProperty> AddItemProperties(ItemDefinition itemDefinition, Dictionary<string, string> properties)
+        {
+            foreach (string propertyName in properties.Keys)
+            {
+                ItemProperty itemProperty = new ItemProperty
+                {
+                    ItemDefinitionId = itemDefinition.Id, ItemDefinitionKey = itemDefinition.Key, Name = propertyName,
+                    Value = properties[propertyName]
+                };
+                itemProperty = itemProperty.SaveByKey<ItemProperty>(Repository);
+                yield return itemProperty;
+            }
         }
 
         public bool RemoveItem(ulong catalogKey, ulong itemKey)
@@ -179,6 +211,11 @@ namespace Bam.Net.Services
         public ulong[] FindItemCatalogs(ulong itemKey)
         {
             return Repository.Query<CatalogItem>(new { CatalogKey = itemKey }).Select(x=> x.CatalogKey).ToArray();
+        }
+        
+        protected IEnumerable<ItemProperty> GetItemProperties(ulong itemKey)
+        {
+            return Repository.Query<ItemProperty>(new { ItemDefinitionKey = itemKey });
         }
     }
 }

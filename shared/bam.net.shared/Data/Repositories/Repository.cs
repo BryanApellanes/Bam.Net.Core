@@ -327,12 +327,12 @@ namespace Bam.Net.Data.Repositories
 		public abstract IEnumerable<object> Query(Type type, Func<object, bool> predicate);
 		public virtual IEnumerable<T> Query<T>(dynamic query) where T : class, new()
         {
-            IEnumerable<object> results = Query(typeof(T), Bam.Net.Extensions.ToDictionary(query));
+            IEnumerable<object> results = Query(typeof(T), QueryFilter.FromDynamic(query));
             return results.CopyAs<T>();
         }
         public virtual IEnumerable<object> Query(Type type, dynamic query)
         {
-            return Query(type, Extensions.ToDictionary(query));
+            return Query(type, QueryFilter.FromDynamic(query));
         }
 		public abstract T Update<T>(T toUpdate) where T : new();
 		public abstract object Update(object toUpdate);
