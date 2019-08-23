@@ -96,7 +96,7 @@ namespace Bam.Net.Services
         {
             foreach(CatalogItem ci in Repository.Query<CatalogItem>(new { CatalogKey = catalogKey }))
             {
-                ItemDefinition item = Repository.Query<ItemDefinition>(new { Key = ci.ItemKey }).FirstOrDefault();
+                ItemDefinition item = Repository.Query<ItemDefinition>(new { Key = ci.ItemDefinitionKey }).FirstOrDefault();
                 if(item != null)
                 {
                     ItemDefinition result = Repository.Retrieve<ItemDefinition>(item.Uuid);
@@ -127,12 +127,11 @@ namespace Bam.Net.Services
             Args.ThrowIf(catalog == null, "Catalog not found ({0})", catalogKey);
             ItemDefinition item = new ItemDefinition()
             {
-                CatalogKey = catalogKey,
                 Name = itemName
             };
             item = item.LoadByKey<ItemDefinition>(Repository) ?? item.SaveByKey<ItemDefinition>(Repository);
 
-            CatalogItem xref = new CatalogItem { CatalogKey = catalogKey, ItemKey = item.Key };
+            CatalogItem xref = new CatalogItem { CatalogKey = catalogKey, ItemDefinitionKey = item.Key };
             catalogItem = Repository.Save(xref);
             return item;
         }

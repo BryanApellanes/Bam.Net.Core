@@ -4,6 +4,7 @@ using Bam.Net.CommandLine;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.Data;
+using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Server;
@@ -17,7 +18,6 @@ namespace Bam.Net.Services.Tests
     public class CatalogTests : CommandLineTestInterface
     {
         [UnitTest]
-        [TestGroup("AdHoc")]
         [TestGroup("Catalog")]
         public void CanSaveCatalog()
         {
@@ -186,6 +186,11 @@ namespace Bam.Net.Services.Tests
             {
                 ApplicationRegistrationRepository = applicationRegistrationRepository
             };
+            daoRepository.DeleteAll<CatalogDefinition>();
+            daoRepository.DeleteAll<CatalogItem>();
+            daoRepository.DeleteAll<ItemDefinition>();
+            daoRepository.DeleteAll<ItemOption>();
+            daoRepository.DeleteAll<ItemProperty>();
             return svc;
         }
         

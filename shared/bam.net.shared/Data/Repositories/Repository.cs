@@ -173,6 +173,20 @@ namespace Bam.Net.Data.Repositories
         /// </summary>
         public event EventHandler Created;
 
+        public T Save<T>(KeyedRepoData repoData) where T : KeyedRepoData, new()
+        {
+	        return repoData.SaveByKey<T>(this);
+        }
+
+        public T Save<T>(KeyedAuditRepoData repoData) where T : KeyedAuditRepoData, new()
+        {
+	        return repoData.SaveByKey<T>(this);
+        }
+
+        public T Save<T>(CompositeKeyRepoData repoData) where T : RepoData, new()
+        {
+	        return repoData.Save<T>(this);
+        }
         /// <summary>
         /// Calls update for the specified object toSave if
         /// it has Id greater than 0 otherwise calls Create
@@ -327,6 +341,12 @@ namespace Bam.Net.Data.Repositories
 		public abstract bool Delete(object toDelete);
         public abstract bool Delete(Type type, object toDelete);
 		#endregion
+
+		public virtual bool DeleteAll<T>()
+		{
+			return DeleteWhere<T>(Filter.Where("Id") != null);
+		}
+		
         public virtual bool DeleteWhere<T>(dynamic filter)
         {
             return DeleteWhere(typeof(T), filter);

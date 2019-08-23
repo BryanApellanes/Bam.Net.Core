@@ -9,10 +9,7 @@ namespace Bam.Net.Services.Catalog.Data
     public class ItemDefinition: KeyedAuditRepoData
     {
         public ulong CatalogDefinitionId { get; set; }
-        public virtual CatalogDefinition CatalogDefinition { get; set; }
-        
-        [CompositeKey]
-        public ulong CatalogKey { get; set; }
+        public virtual List<CatalogDefinition> CatalogDefinition { get; set; }
         
         [CompositeKey]
         public string Name { get; set; }

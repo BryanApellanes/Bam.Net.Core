@@ -10,6 +10,6 @@ namespace Bam.Net.Data
     public interface IHydrator
     {
         bool TryHydrate(Dao dao, Database database = null);
-        void Hydrate(Dao dao, Database databse = null);
+        void Hydrate(Dao dao, Database database = null);
     }
 }

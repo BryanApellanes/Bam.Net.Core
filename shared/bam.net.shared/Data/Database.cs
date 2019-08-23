@@ -283,7 +283,7 @@ namespace Bam.Net.Data
             ExecuteSql(sprocName, CommandType.StoredProcedure, dbParameters);
         }
 
-        public virtual void ExecutSql(string sqlStatement, object dbParameters)
+        public virtual void ExecuteSql(string sqlStatement, object dbParameters)
         {
             ExecuteSql(sqlStatement, dbParameters.ToDbParameters(this).ToArray());
         }

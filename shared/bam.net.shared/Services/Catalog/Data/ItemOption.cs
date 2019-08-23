@@ -8,7 +8,9 @@ namespace Bam.Net.Services.Catalog.Data
         public virtual CatalogItem CatalogItem { get; set; }
         
         [CompositeKey]
-        public ulong ItemKey { get; set; }
+        public ulong CatalogKey { get; set; }
+        [CompositeKey]
+        public ulong ItemDefinitionKey { get; set; }
         [CompositeKey]
         public string Name { get; set; }
         
