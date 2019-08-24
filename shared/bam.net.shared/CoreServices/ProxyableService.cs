@@ -72,6 +72,9 @@ namespace Bam.Net.CoreServices
         public IDatabaseProvider DatabaseProvider { get; set; }
         public IRepositoryResolver RepositoryResolver { get; set; }
         
+        /// <summary>
+        /// The UserName for the current request context.
+        /// </summary>
         public string UserName => CurrentUser.UserName;
 
         protected void IsLoggedInOrDie()
@@ -143,6 +146,12 @@ namespace Bam.Net.CoreServices
             }
 
             return clone;
+        }
+
+        [Exclude]
+        public object CloneInContext()
+        {
+            return Clone(HttpContext);
         }
         
         [Exclude]
