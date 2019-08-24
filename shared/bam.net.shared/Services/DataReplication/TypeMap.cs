@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace Bam.Net.Services.DataReplication
 {
     /// <summary>
-    /// A class that provides a mapping between numeric (long) id values and Types.
+    /// A class that provides a universal mapping between numeric (long) id values and Types.
+    /// The id of a type uniquely identifies a type by its fully qualified namespace name.
     /// </summary>
     public partial class TypeMap
     {
@@ -152,6 +153,8 @@ namespace Bam.Net.Services.DataReplication
         public static long GetTypeId(Type type, out string name)
         {
             name = NormalizeName(type);
+            // TODO: change this implementation to account for property definitions, this allows definitions to be valid across updates to type schemas
+            // TODO: define TypeMigration mapping old Type to new Type after change of schema
             return name.ToSha256Long();
         }
 
@@ -164,6 +167,16 @@ namespace Bam.Net.Services.DataReplication
         {
             name = NormalizeName(prop);
             return name.ToSha256Long();
+        }
+
+        public static long GetTypeId(string typeNamespace, string typeName)
+        {
+            return $"{typeNamespace}.{typeName}".ToSha256Long();
+        }
+
+        public static long GetPropertyId(string typeNamespace, string typeName, string propertyName)
+        {
+            return $"{typeNamespace}.{typeName}.{propertyName}__object".ToSha256Long();
         }
 
         private static string NormalizeName(Type type)

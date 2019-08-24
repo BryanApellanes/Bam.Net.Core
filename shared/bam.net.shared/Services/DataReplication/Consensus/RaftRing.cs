@@ -29,18 +29,28 @@ namespace Bam.Net.Services.DataReplication.Consensus
     /// </summary>
     public class RaftRing : Ring<RaftNode>, IDistributedRepository
     {
-        public RaftRing(RaftConsensusRepository raftConsensusRepository, IRaftReplicationLogSyncManager replicationLogSyncManager = null, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null)
+        public RaftRing(IRepository dataReplicationRepository, RaftConsensusRepository raftConsensusRepository, IRaftReplicationLogSyncManager replicationLogSyncManager = null, TypeMap typeMap = null, IRaftLogEntryPropertyHandler raftLogEntryPropertyHandler = null, int port = RaftNodeIdentifier.DefaultPort, AppConf appConf = null, ILogger logger = null)
         {
+            DataReplicationRepository = dataReplicationRepository;
             RaftConsensusRepository = raftConsensusRepository;
             HeartbeatTimeout = 75;
-            Logger = Log.Default;
+            Logger = logger ?? Log.Default;
+            TypeMap = typeMap ?? new TypeMap();
             AppConf = appConf ?? AppConf.FromConfig();
             EventSource = new RaftEventSource(raftConsensusRepository, AppConf, Logger);
             ProtocolServer = new RaftProtocolServer(this, port);
             ReplicationLogSyncManager = replicationLogSyncManager ?? new RaftReplicationLogSyncManager(this);
+            RaftLogEntryPropertyHandler = raftLogEntryPropertyHandler ?? new RaftLogEntryPropertyHandler()
+            {
+                TypeMap = TypeMap,
+                Logger = Logger
+            };
         }
         
-        public IRaftReplicationLogSyncManager ReplicationLogSyncManager { get; set; }
+        protected internal IRaftLogEntryPropertyHandler RaftLogEntryPropertyHandler { get; set; }
+        protected internal TypeMap TypeMap { get; private set; }
+        protected internal ITypeResolver TypeResolver { get; private set; }
+        protected internal IRaftReplicationLogSyncManager ReplicationLogSyncManager { get; set; }
         public RaftProtocolServer ProtocolServer { get; set; }
 
         RaftNode _raftNode;
@@ -69,6 +79,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public ILogger Logger { get; }
         
         public RaftConsensusRepository RaftConsensusRepository { get; set; }
+        
+        public IRepository DataReplicationRepository { get; set; }
         
         /// <summary>
         /// The event that fires when a RaftRequest is received.  Handlers of this event
@@ -107,7 +119,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public static RaftRing FromConfig(RaftConfig config)
         {
-            RaftRing result = new RaftRing(new RaftConsensusRepository());
+            RaftRing result = new RaftRing(null, new RaftConsensusRepository());
             HashSet<RaftNodeIdentifier> nodeIdentifiers = new HashSet<RaftNodeIdentifier>();
             if (config.IncludeLocalNode)
             {
@@ -286,7 +298,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             BroadcastVoteRequest(election.Term);
         }
 
-        object _latestElectionLock = new object();
+        readonly object _latestElectionLock = new object();
         /// <summary>
         /// Thread safe way of accessing the latest election.
         /// </summary>
@@ -334,13 +346,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return CompositeKeyHashProvider.GetStringKeyHash(value);
         }
 
-        public RaftConsensusRepository LocalRepository
-        {
-            get { return LocalNode.LocalRepository; }
-        }
+        public RaftConsensusRepository LocalRepository => LocalNode.LocalRepository;
         
         /// <summary>
-        /// Write the specified key value pair by delegating to the local node.  This request is distributed to the other nodes in the raft.
+        /// Write the specified data by delegating to the local node.  This request is distributed to the other nodes in the raft.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -404,7 +413,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
 
         /// <summary>
-        /// Write the specified value to the local repo if we are the leader.
+        /// Write the specified value to the local repo if we are the leader for the term specified in the request, otherwise become a
+        /// follower and write the value as a follower.
         /// </summary>
         /// <param name="request"></param>
         protected virtual void LeaderWriteValue(RaftRequest request)
@@ -527,7 +537,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             RaftNode leaderNode = GetLeaderNode();
             if (leaderNode != null)
             {
-                RaftProtocolClient raftProtocolClient = GetLeaderNode().GetClient();
+                RaftProtocolClient raftProtocolClient = leaderNode.GetClient();
                 Task.Run(() => raftProtocolClient.ForwardWriteRequestToLeader(writeRequest.LeaderCopy()));
             }
             else
@@ -807,7 +817,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         protected internal RaftNode GetLeaderNode()
         {
             return FirstArcWhere(a => a.GetTypedServiceProvider().NodeState == RaftNodeState.Leader)
-                .GetTypedServiceProvider();
+                ?.GetTypedServiceProvider();
         }
 
         protected internal List<RaftNode> GetFollowers()
@@ -876,44 +886,83 @@ namespace Bam.Net.Services.DataReplication.Consensus
 
             return commit.Seq;
         }
-
+        
+        public void WriteValue(CreateOperation createOperation)
+        {
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromCreateOperation(createOperation))
+            {
+                WriteValue(writeRequest);
+            }
+        }
+        
+        public void WriteValue(SaveOperation saveOperation)
+        {
+            foreach (RaftLogEntryWriteRequest writeRequest in RaftLogEntryWriteRequest.FromSaveOperation(saveOperation))
+            {
+                WriteValue(writeRequest);
+            }
+        }
+        
         // delegate write operations to RaftRing.WriteValue
         // delegate read operations to the LocalNode, if no values are found delegate to leader if leader is known otherwise broadcast read request
-        public object Save(SaveOperation value)
+        public object Save(SaveOperation saveOperation)
         {
-            // this should use WriteValue
-            throw new NotImplementedException();
-        }
-
-        public object Create(CreateOperation value)
-        {
-            // this should use WriteValue
-            throw new NotImplementedException();
+            Expect.AreEqual(OperationIntent.Save, saveOperation.Intent);
             
+            WriteValue(saveOperation);
+
+            return DataPoint.FromSaveOperation(saveOperation);
         }
 
-        public object Retrieve(RetrieveOperation value)
+        public object Create(CreateOperation createOperation)
         {
-            object retrieved = LocalNode.Retrieve(value);
-            if (retrieved == null)
-            {
-                // request from leader 
-                
-                // if leader is not known broadcast request
-            }
+            Expect.AreEqual(OperationIntent.Create, createOperation.Intent);
+            
+            WriteValue(createOperation);
 
-            return retrieved;
+            return DataPoint.FromCreateOperation(createOperation);
         }
 
-        public object Update(UpdateOperation value)
+        public object Update(UpdateOperation updateOperation)
         {
             // transform the operation into an appropriate RaftWriteRequest
             throw new NotImplementedException();
         }
 
-        public bool Delete(DeleteOperation value)
+        public bool Delete(DeleteOperation deleteOperation)
         {
-            return LocalNode.Delete(value);
+            return LocalNode.Delete(deleteOperation);
+        }
+
+        public IEnumerable<object> QueryLocal(QueryOperation queryOperation)
+        {
+            return LocalNode.Query(queryOperation);
+        }
+        
+        public object RetrieveLocal(RetrieveOperation retrieveOperation)
+        {
+            return LocalNode.Retrieve(retrieveOperation);
+        }
+        
+        public object Retrieve(RetrieveOperation retrieveOperation)
+        {
+            object retrieved = RetrieveLocal(retrieveOperation);
+            if (retrieved == null)
+            {
+                // request from leader 
+                RaftProtocolClient leaderClient = GetLeaderNode()?.GetClient();
+                if (leaderClient != null)
+                {
+                    retrieved = leaderClient.SendRetrieveRequest(retrieveOperation);
+                }
+                else
+                {
+                    // if leader is not known broadcast request
+                    retrieved = BroadcastRetrieveRequest(retrieveOperation);
+                }
+            }
+
+            return retrieved;
         }
 
         public void ForEachQueryResult(QueryOperation query, Action<object> action)
@@ -922,14 +971,14 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Task.Run(() => Parallel.ForEach(BroadcastQuery(query), action));
         }
         
-        public IEnumerable<object> Query(QueryOperation query)
+        public IEnumerable<object> Query(QueryOperation queryOperation)
         {
-            foreach (object localObject in LocalQuery(query))
+            foreach (object localObject in LocalQuery(queryOperation))
             {
                 yield return localObject;
             }
 
-            foreach (object broadcastResponse in BroadcastQuery(query))
+            foreach (object broadcastResponse in BroadcastQuery(queryOperation))
             {
                 yield return broadcastResponse;
             }
@@ -940,6 +989,30 @@ namespace Bam.Net.Services.DataReplication.Consensus
             return LocalNode.Query(query);
         }
 
+        private object BroadcastRetrieveRequest(RetrieveOperation retrieveOperation)
+        {
+            object firstResponse = null;
+            if (Exec.TakesTooLong(() =>
+            {
+                AutoResetEvent resetEvent = new AutoResetEvent(false);
+                foreach (RaftNode raftNode in GetAllOtherNodes())
+                {
+                    Task.Run(() =>
+                    {
+                        firstResponse = raftNode.GetClient()?.SendRetrieveRequest(retrieveOperation);
+                        resetEvent.Set();
+                    });
+                }
+
+                resetEvent.WaitOne();
+            }, 3000))
+            {
+                Logger.Warning("BroadcastRetrieveRequest timed out for RetrieveOperation ({0})", retrieveOperation.Cuid);
+            }
+
+            return firstResponse;
+        }
+        
         private IEnumerable<object> BroadcastQuery(QueryOperation query)
         {
             throw new NotImplementedException();

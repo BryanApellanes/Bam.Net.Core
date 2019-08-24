@@ -72,13 +72,10 @@ namespace Bam.Net.CoreServices
         public IDatabaseProvider DatabaseProvider { get; set; }
         public IRepositoryResolver RepositoryResolver { get; set; }
         
-        public string UserName
-        {
-            get
-            {
-                return CurrentUser.UserName;
-            }
-        }
+        /// <summary>
+        /// The UserName for the current request context.
+        /// </summary>
+        public string UserName => CurrentUser.UserName;
 
         protected void IsLoggedInOrDie()
         {
@@ -137,6 +134,25 @@ namespace Bam.Net.CoreServices
         
         [Exclude]
         public abstract object Clone();
+
+        [Exclude]
+        public object Clone(IHttpContext context)
+        {
+            object clone = Clone();
+            if (clone is IRequiresHttpContext requiresHttpContext)
+            {
+                requiresHttpContext.HttpContext = context;
+                return requiresHttpContext;
+            }
+
+            return clone;
+        }
+
+        [Exclude]
+        public object CloneInContext()
+        {
+            return Clone(HttpContext);
+        }
         
         [Exclude]
         public ILogger Logger { get; set; }
@@ -179,42 +195,19 @@ namespace Bam.Net.CoreServices
         }
 
         [Exclude]
-        public string ClientIpAddress
-        {
-            get
-            {
-                return HttpContext?.Request?.Headers["X-Forwarded-For"]
-                        .Or(HttpContext?.Request?.Headers["Remote-Addr"])
-                        .Or(HttpContext?.Request?.UserHostAddress);
-            }
-        }
+        public string ClientIpAddress =>
+            HttpContext?.Request?.Headers["X-Forwarded-For"]
+                .Or(HttpContext?.Request?.Headers["Remote-Addr"])
+                .Or(HttpContext?.Request?.UserHostAddress);
 
         [Exclude]
-        public U.Session Session
-        {
-            get
-            {
-                return U.Session.Init(HttpContext);
-            }
-        }
+        public U.Session Session => U.Session.Init(HttpContext);
 
         [Exclude]
-        public SecureSession SecureSession
-        {
-            get
-            {
-                return SecureSession.Init(HttpContext);
-            }
-        }
+        public SecureSession SecureSession => SecureSession.Init(HttpContext);
 
         [Exclude]
-        public U.User CurrentUser
-        {
-            get
-            {                
-                return UserManager.GetUser(HttpContext);
-            }
-        }
+        public U.User CurrentUser => UserManager.GetUser(HttpContext);
 
         IUserManager _userManager;
         [Exclude]

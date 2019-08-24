@@ -20,7 +20,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 		}	
 
-				
         public DeleteOperationColumns Id
         {
             get
@@ -63,6 +62,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DeleteOperationColumns("TypeName");
             }
         }
+        public DeleteOperationColumns AssemblyPath
+        {
+            get
+            {
+                return new DeleteOperationColumns("AssemblyPath");
+            }
+        }
         public DeleteOperationColumns CreatedBy
         {
             get
@@ -98,6 +104,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DeleteOperationColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

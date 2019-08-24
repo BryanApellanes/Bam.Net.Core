@@ -72,7 +72,7 @@ namespace Bam.Net.Data.Repositories
 	}
 
     /// <summary>
-    /// Provides meta data about peristed or persistable objects.
+    /// Provides meta data about persisted or persistable objects.
     /// </summary>
     /// <seealso cref="Bam.Net.Data.Repositories.Meta" />
     [Serializable]

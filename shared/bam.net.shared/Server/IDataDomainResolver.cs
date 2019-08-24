@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Bam.Net.Server
 {
+    /// <summary>
+    /// When implemented, resolves subdomains for an application given that application's AppConf.
+    /// </summary>
     public interface IDataDomainResolver
     {
         string PrimaryHostName { get; set; }

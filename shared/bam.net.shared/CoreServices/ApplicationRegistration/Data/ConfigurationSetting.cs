@@ -8,18 +8,19 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class ConfigurationSetting: AuditRepoData
+    public class ConfigurationSetting: KeyedAuditRepoData
     {
-        public virtual long ConfigurationId { get; set; }
+        [CompositeKey]
+        public virtual ulong ConfigurationId { get; set; }
         public virtual Configuration Configuration { get; set; }
 
+        [CompositeKey]
         public string Key { get; set; }
         public string Value { get; set; }
 
         public override bool Equals(object obj)
         {
-            ConfigurationSetting conf = obj as ConfigurationSetting;
-            if(conf == null)
+            if(!(obj is ConfigurationSetting conf))
             {
                 return false;
             }

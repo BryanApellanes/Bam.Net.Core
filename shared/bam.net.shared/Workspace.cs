@@ -7,6 +7,9 @@ using Bam.Net.Presentation.Handlebars;
 
 namespace Bam.Net
 {
+    /// <summary>
+    /// Provides an interface to a specific place in the filesystem for an application.
+    /// </summary>
     public class Workspace
     {
         public IApplicationNameProvider ApplicationNameProvider { get; set; }

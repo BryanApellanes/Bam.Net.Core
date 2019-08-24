@@ -116,6 +116,11 @@ namespace Bam.Net.Data.Repositories
 			AddTypes(assembly.GetTypes().Where(t => t.Namespace != null && t.Namespace.Equals(nameSpace) && !t.IsAbstract));
 		}
 
+        public void AddNamespace(Assembly assembly, string nameSpace, Func<Type, bool> predicate)
+        {
+	        AddTypes(assembly.GetTypes().Where(t => t.Namespace != null && t.Namespace.Equals(nameSpace) && !t.IsAbstract && predicate(t)));
+        }
+        
         public Task<T> SaveAsync<T>(T toSave) where T : class, new()
         {
             return Task.Run(() => Save<T>(toSave));
@@ -168,6 +173,20 @@ namespace Bam.Net.Data.Repositories
         /// </summary>
         public event EventHandler Created;
 
+        public T Save<T>(KeyedRepoData repoData) where T : KeyedRepoData, new()
+        {
+	        return repoData.SaveByKey<T>(this);
+        }
+
+        public T Save<T>(KeyedAuditRepoData repoData) where T : KeyedAuditRepoData, new()
+        {
+	        return repoData.SaveByKey<T>(this);
+        }
+
+        public T Save<T>(CompositeKeyRepoData repoData) where T : RepoData, new()
+        {
+	        return repoData.Save<T>(this);
+        }
         /// <summary>
         /// Calls update for the specified object toSave if
         /// it has Id greater than 0 otherwise calls Create
@@ -238,6 +257,17 @@ namespace Bam.Net.Data.Repositories
 	        return result;
         }
 
+        public virtual T LoadByKey<T>(ulong key) where T: KeyedAuditRepoData, new()
+        {
+	        T queryResult = Query<T>(new {Key = key}).FirstOrDefault();
+	        if (queryResult != null)
+	        {
+		        return Retrieve<T>(queryResult.Uuid);
+	        }
+
+	        return null;
+        }
+        
         public virtual T LoadByCompositeKey<T>(ulong compositeKey) where T : CompositeKeyAuditRepoData, new()
         {
 	        return RetrieveByCompositeKey<T>(compositeKey);
@@ -308,12 +338,12 @@ namespace Bam.Net.Data.Repositories
 		public abstract IEnumerable<object> Query(Type type, Func<object, bool> predicate);
 		public virtual IEnumerable<T> Query<T>(dynamic query) where T : class, new()
         {
-            IEnumerable<object> results = Query(typeof(T), Bam.Net.Extensions.ToDictionary(query));
+            IEnumerable<object> results = Query(typeof(T), QueryFilter.FromDynamic(query));
             return results.CopyAs<T>();
         }
         public virtual IEnumerable<object> Query(Type type, dynamic query)
         {
-            return Query(type, Extensions.ToDictionary(query));
+            return Query(type, QueryFilter.FromDynamic(query));
         }
 		public abstract T Update<T>(T toUpdate) where T : new();
 		public abstract object Update(object toUpdate);
@@ -322,6 +352,12 @@ namespace Bam.Net.Data.Repositories
 		public abstract bool Delete(object toDelete);
         public abstract bool Delete(Type type, object toDelete);
 		#endregion
+
+		public virtual bool DeleteAll<T>()
+		{
+			return DeleteWhere<T>(Filter.Where("Id") != null);
+		}
+		
         public virtual bool DeleteWhere<T>(dynamic filter)
         {
             return DeleteWhere(typeof(T), filter);

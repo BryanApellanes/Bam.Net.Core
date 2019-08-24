@@ -30,13 +30,7 @@ namespace Bam.Net.Data
             this.ColumnName = columnName;
         }
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return string.IsNullOrWhiteSpace(ColumnName) && this._filters.Count == 0;
-            }
-        }
+        public bool IsEmpty => string.IsNullOrWhiteSpace(ColumnName) && this._filters.Count == 0;
 
         public static QueryFilter FromDynamic(dynamic query)
         {
@@ -46,7 +40,12 @@ namespace Bam.Net.Data
             bool first = true;
             foreach(PropertyInfo prop in properties)
             {
-                QueryFilter next = Query.Where(prop.Name) == prop.GetValue(query);
+                object propValue = prop.GetValue(query);
+                if (propValue is ulong ulongPropValue)
+                {
+                    propValue = Dao.MapUlongToLong(ulongPropValue);
+                }
+                QueryFilter next = Query.Where(prop.Name) == propValue;
                 if (first) // trying to do filter == null will invoke implicit operator rather than doing an actual null comparison
                 {
                     first = false;
@@ -67,13 +66,7 @@ namespace Bam.Net.Data
 
         protected internal string ColumnName { get; set; }
 
-        public IEnumerable<IFilterToken> Filters
-        {
-            get
-            {
-                return this._filters;
-            }
-        }
+        public IEnumerable<IFilterToken> Filters => this._filters;
         IEnumerable<IParameterInfo> parameters;
         public virtual IParameterInfo[] Parameters
         {
@@ -90,10 +83,7 @@ namespace Bam.Net.Data
 
                 return temp.ToArray();
             }
-            set
-            {
-                parameters = value;
-            }
+            set => parameters = value;
         }
 
         /// <summary>
@@ -145,6 +135,18 @@ namespace Bam.Net.Data
             return this;
         }
 
+        public QueryFilter DoesntStartWith(object value)
+        {
+            this.Add(new DoesntStartWithComparison(this.ColumnName, value));
+            return this;
+        }
+
+        public QueryFilter DoesntContain(object value)
+        {
+            this.Add(new DoesntContainComparison(this.ColumnName, value));
+            return this;
+        }
+        
         public QueryFilter EndsWith(object value)
         {
             this.Add(new EndsWithComparison(this.ColumnName, value));

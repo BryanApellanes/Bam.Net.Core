@@ -10,7 +10,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     [Serializable]
     public class Subscription: AuditRepoData
     {
-        public long UserId { get; set; }
+        public ulong UserId { get; set; }
         public virtual User User { get; set; }
         public string SubscriptionLevel { get; set; }
         public int MaxOrganizations { get; set; }

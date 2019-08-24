@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class OrganizationPagedQuery: PagedQuery<OrganizationColumns, Organization>
     { 
-		public OrganizationPagedQuery(OrganizationColumns orderByColumn, OrganizationQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public OrganizationPagedQuery(OrganizationColumns orderByColumn,OrganizationQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

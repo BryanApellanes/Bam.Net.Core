@@ -127,7 +127,7 @@ namespace Bam.Net.Services.Tests
         private AssemblyService GetAssemblyService(Database db)
         {
             FileService fmSvc = GetFileService(db);
-            AssemblyServiceRepository assManRepo = new AssemblyServiceRepository() { Database = db };
+            AssemblyManagementRepository assManRepo = new AssemblyManagementRepository() { Database = db };
             return new AssemblyService(DataProvider.Instance, fmSvc, assManRepo, DefaultConfigurationApplicationNameProvider.Instance);
         }
 

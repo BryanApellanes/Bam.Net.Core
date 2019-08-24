@@ -58,8 +58,8 @@ namespace Bam.Net.Services.Tests
         [UnitTest]        
         public void GetHashThrowsIfNoKeyProperties()
         {
-            Expect.Throws(() => new KeyHashRepoThrowsData().GetHashCode(), (ex) => OutLineFormat("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
-            Expect.Throws(() => new KeyHashRepoThrowsData().GetLongKeyHash(), (ex) => OutLineFormat("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
+            Expect.Throws(() => new CompositeKeyRepoThrowsData().GetHashCode(), (ex) => OutLineFormat("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
+            Expect.Throws(() => new CompositeKeyRepoThrowsData().GetLongKeyHash(), (ex) => OutLineFormat("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
         }
 
         [UnitTest]
@@ -67,9 +67,9 @@ namespace Bam.Net.Services.Tests
         {
             string name = 16.RandomLetters();
             string otherProp = 32.RandomLetters();
-            KeyHashRepoTestData one = new KeyHashRepoTestData { Name = name, SomeOtherUniqueProperty = otherProp };
-            KeyHashRepoTestData two = new KeyHashRepoTestData { Name = name, SomeOtherUniqueProperty = otherProp };
-            KeyHashRepoTestData three = new KeyHashRepoTestData { Name = name, SomeOtherUniqueProperty = "different" };
+            CompositeKeyRepoTestData one = new CompositeKeyRepoTestData { Name = name, SomeOtherUniqueProperty = otherProp };
+            CompositeKeyRepoTestData two = new CompositeKeyRepoTestData { Name = name, SomeOtherUniqueProperty = otherProp };
+            CompositeKeyRepoTestData three = new CompositeKeyRepoTestData { Name = name, SomeOtherUniqueProperty = "different" };
             Expect.IsFalse(one == two);
             Expect.AreEqual(one.GetHashCode(), two.GetHashCode());
             Expect.AreEqual(one.GetLongKeyHash(), two.GetLongKeyHash());

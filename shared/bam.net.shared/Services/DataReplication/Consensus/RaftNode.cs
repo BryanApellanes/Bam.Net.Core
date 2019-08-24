@@ -5,12 +5,12 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Bam.Net.CoreServices;
 using Bam.Net.Data;
+using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 using Bam.Net.Services.DataReplication.Data;
-using Lucene.Net.Index;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RaftLogEntry = Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry;
 using RaftLogEntryCommit = Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit;
@@ -30,6 +30,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
             
             LocalRepository = new RaftConsensusRepository();
             RaftReplicationLog = new RaftReplicationLog() {SourceNode = ring.LocalNode.Identifier};
+            Identifier = RaftNodeIdentifier.ForCurrentProcess();
         }
 
         public static RaftNode ForCurrentProcess(RaftRing ring)
@@ -65,10 +66,12 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftRing RaftRing { get; set; }
 
+        public ITypeResolver TypeResolver => RaftRing?.TypeResolver ?? Bam.Net.TypeResolver.Default;
+
         public RaftNodeIdentifier Identifier { get; set; }
         
         /// <summary>
-        /// Get a RaftClient for the current node.  
+        /// Get a RaftProtocolClient for the current node.  
         /// </summary>
         /// <returns></returns>
         public virtual RaftProtocolClient GetClient()
@@ -178,34 +181,62 @@ namespace Bam.Net.Services.DataReplication.Consensus
         }
         
         // -- IDistributedRepository methods
-        public object Save(SaveOperation value)
+        public object Save(SaveOperation saveOperation)
         {
             throw new NotImplementedException();
         }
 
-        public object Create(CreateOperation value)
+        public object Create(CreateOperation createOperation)
         {
             throw new NotImplementedException();
         }
 
-        public object Retrieve(RetrieveOperation value)
+        public object Retrieve(RetrieveOperation retrieveOperation)
+        {
+            if (retrieveOperation.UniversalIdentifier != UniversalIdentifiers.CKey)
+            {
+                throw new OperationNotSupportedException(retrieveOperation);
+            }
+
+            Type type = TypeResolver.ResolveType(retrieveOperation.NamespaceQualifiedTypeName);
+            object result = type.Construct();
+            foreach (RaftLogEntry entry in LocalRepository.RaftLogEntriesWhere(c => c.CompositeKey == retrieveOperation.Identifier))
+            {
+                RaftRing.RaftLogEntryPropertyHandler.DecodeProperty(entry, type, result);
+            }
+
+            return result;
+        }
+
+        public object Update(UpdateOperation updateOperation)
         {
             throw new NotImplementedException();
         }
 
-        public object Update(UpdateOperation value)
+        public bool Delete(DeleteOperation deleteOperation)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete(DeleteOperation value)
+        public IEnumerable<object> Query(QueryOperation queryOperation)
         {
-            throw new NotImplementedException();
-        }
+            Args.ThrowIfNull(queryOperation, "queryOperation");
+            
+            Type type = TypeResolver.ResolveType(queryOperation.NamespaceQualifiedTypeName);
+            QueryFilter queryFilter = null;
+            foreach (DataPropertyFilter filter in queryOperation.PropertyFilters)
+            {
+                if (queryFilter != null)
+                {
+                    queryFilter.And(filter.ToQueryFilter());
+                }
+                else
+                {
+                    queryFilter = filter.ToQueryFilter();
+                }
+            }
 
-        public IEnumerable<object> Query(QueryOperation query)
-        {
-            throw new NotImplementedException();
+            return LocalRepository.Query(queryFilter).CopyAs(type);
         }
 
         public ReplicationOperation Replicate(ReplicationOperation operation)

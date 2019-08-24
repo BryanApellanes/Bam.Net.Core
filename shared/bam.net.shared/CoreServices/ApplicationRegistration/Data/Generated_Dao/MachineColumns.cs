@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public MachineColumns Id
         {
             get
@@ -56,32 +55,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new MachineColumns("DnsName");
             }
         }
-        public MachineColumns CreatedBy
+        public MachineColumns Key
         {
             get
             {
-                return new MachineColumns("CreatedBy");
-            }
-        }
-        public MachineColumns ModifiedBy
-        {
-            get
-            {
-                return new MachineColumns("ModifiedBy");
-            }
-        }
-        public MachineColumns Modified
-        {
-            get
-            {
-                return new MachineColumns("Modified");
-            }
-        }
-        public MachineColumns Deleted
-        {
-            get
-            {
-                return new MachineColumns("Deleted");
+                return new MachineColumns("Key");
             }
         }
         public MachineColumns Created
@@ -91,6 +69,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new MachineColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

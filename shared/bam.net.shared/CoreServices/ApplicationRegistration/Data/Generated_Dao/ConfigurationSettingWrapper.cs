@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 		public ConfigurationSettingWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -47,14 +47,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 		}
 
 
-Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration _configuration;
+        Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration _configuration;
 		public override Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration Configuration
 		{
 			get
 			{
 				if (_configuration == null)
 				{
-					_configuration = (Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration)Repository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration));
+					_configuration = (Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration));
 				}
 				return _configuration;
 			}
@@ -63,6 +63,7 @@ Bam.Net.CoreServices.ApplicationRegistration.Data.Configuration _configuration;
 				_configuration = value;
 			}
 		}
+
 
 	}
 	// -- generated

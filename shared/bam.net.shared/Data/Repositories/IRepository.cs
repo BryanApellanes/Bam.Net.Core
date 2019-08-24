@@ -18,6 +18,7 @@ namespace Bam.Net.Data.Repositories
 		void AddType(Type type);
         void AddNamespace(Type type);
         void AddNamespace(Assembly assembly, string ns);
+        void AddNamespace(Assembly assembly, string ns, Func<Type, bool> predicate);
 		void AddTypes(IEnumerable<Type> types);
 		void AddType<T>();
         object Save(Type type, object toSave);        
@@ -36,5 +37,7 @@ namespace Bam.Net.Data.Repositories
         bool DeleteWhere(Type type, dynamic filter);
 
         bool TryHydrate(RepoData data);
+
+        T LoadByKey<T>(ulong key) where T : KeyedAuditRepoData, new();
     }
 }

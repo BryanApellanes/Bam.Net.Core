@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,17 +55,19 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
-	public long? Id
+
+
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
+	public ulong? Id
 	{
 		get
 		{
-			return GetLongValue("Id");
+			return GetULongValue("Id");
 		}
 		set
 		{
@@ -73,7 +75,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -88,14 +90,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 	}
 
 
-
 	// start ApplicationId -> ApplicationId
 	[Bam.Net.Data.ForeignKey(
         Table="ApplicationMachine",
-		Name="ApplicationId", 
-		DbDataType="BigInt", 
+		Name="ApplicationId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=false, 
+		AllowNull=false,
 		ReferencedKey="Id",
 		ReferencedTable="Application",
 		Suffix="1")]
@@ -111,7 +112,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	Application _applicationOfApplicationId;
+    Application _applicationOfApplicationId;
 	public Application ApplicationOfApplicationId
 	{
 		get
@@ -123,14 +124,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _applicationOfApplicationId;
 		}
 	}
-	
+
 	// start MachineId -> MachineId
 	[Bam.Net.Data.ForeignKey(
         Table="ApplicationMachine",
-		Name="MachineId", 
-		DbDataType="BigInt", 
+		Name="MachineId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=false, 
+		AllowNull=false,
 		ReferencedKey="Id",
 		ReferencedTable="Machine",
 		Suffix="2")]
@@ -146,7 +147,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	Machine _machineOfMachineId;
+    Machine _machineOfMachineId;
 	public Machine MachineOfMachineId
 	{
 		get
@@ -158,16 +159,18 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _machineOfMachineId;
 		}
 	}
-	
-				
-		
+
+
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -178,32 +181,32 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			{
 				var colFilter = new ApplicationMachineColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the ApplicationMachine table.
-		/// </summary>
+        /// Return every record in the ApplicationMachine table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static ApplicationMachineCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<ApplicationMachine>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<ApplicationMachine>();
-			var results = new ApplicationMachineCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<ApplicationMachine>();
+            var results = new ApplicationMachineCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<ApplicationMachine>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<ApplicationMachine>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -219,21 +222,21 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<ApplicationMachine>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<ApplicationMachineColumns> where, Action<IEnumerable<ApplicationMachine>> batchProcessor, Database database = null)
 		{
@@ -245,27 +248,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ApplicationMachineColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<ApplicationMachine>> batchProcessor, Bam.Net.Data.OrderBy<ApplicationMachineColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<ApplicationMachineColumns> where, Action<IEnumerable<ApplicationMachine>> batchProcessor, Bam.Net.Data.OrderBy<ApplicationMachineColumns> orderBy, Database database = null)
 		{
@@ -276,13 +279,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ApplicationMachineColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		public static ApplicationMachine GetById(uint id, Database database = null)
@@ -321,7 +324,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static ApplicationMachineCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<ApplicationMachineColumns> whereDelegate = (c) => filter;
@@ -329,9 +332,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A Func delegate that recieves a ApplicationMachineColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -342,27 +345,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			database = database ?? Db.For<ApplicationMachine>();
 			return new ApplicationMachineCollection(database.GetQuery<ApplicationMachineColumns, ApplicationMachine>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static ApplicationMachineCollection Where(WhereDelegate<ApplicationMachineColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<ApplicationMachine>();
 			var results = new ApplicationMachineCollection(database, database.GetQuery<ApplicationMachineColumns, ApplicationMachine>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -372,7 +375,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static ApplicationMachineCollection Where(WhereDelegate<ApplicationMachineColumns> where, OrderBy<ApplicationMachineColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<ApplicationMachine>();
 			var results = new ApplicationMachineCollection(database, database.GetQuery<ApplicationMachineColumns, ApplicationMachine>(where, orderBy), true);
 			return results;
@@ -380,9 +383,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;ApplicationMachineColumns&gt;.
+		/// WhereDelegate`ApplicationMachineColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -391,9 +394,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			var results = new ApplicationMachineCollection(database, Select<ApplicationMachineColumns>.From<ApplicationMachine>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -411,8 +414,8 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -425,7 +428,29 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ApplicationMachineColumns> where, Database database = null)
+		{
+			SetOneWhere(where, out ApplicationMachine ignore, database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ApplicationMachineColumns> where, out ApplicationMachine result, Database database = null)
+		{
+			result = GetOneWhere(where, database);
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -438,7 +463,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			if(result == null)
 			{
 				ApplicationMachineColumns c = new ApplicationMachineColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -447,11 +472,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single ApplicationMachine instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -462,12 +487,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<ApplicationMachineColumns>.
+		/// WhereDelegate`ApplicationMachineColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -478,10 +503,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -499,12 +524,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -526,7 +551,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -548,14 +573,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -572,10 +597,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -589,10 +614,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		public static ApplicationMachineCollection Top(int count, WhereDelegate<ApplicationMachineColumns> where, OrderBy<ApplicationMachineColumns> orderBy, Database database = null)
 		{
 			ApplicationMachineColumns c = new ApplicationMachineColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<ApplicationMachine>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<ApplicationMachine>(count);
 			query.Where(filter);
 
@@ -619,10 +644,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -676,10 +701,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -698,7 +723,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Return the count of ApplicationMachines
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -715,7 +740,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApplicationMachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApplicationMachineColumns and other values
 		/// </param>
@@ -729,26 +754,26 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<ApplicationMachine>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<ApplicationMachine>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<ApplicationMachine>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<ApplicationMachine>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static ApplicationMachine CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<ApplicationMachine>();			
+			Database db = database ?? Db.For<ApplicationMachine>();
 			var dao = new ApplicationMachine();
 			filter.Parameters.Each(p=>
 			{
@@ -757,7 +782,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static ApplicationMachine OneOrThrow(ApplicationMachineCollection c)
 		{
 			if(c.Count == 1)
@@ -773,4 +798,4 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 	}
-}																								
+}

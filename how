@@ -1,0 +1,1222 @@
+[33mcommit 0844097b2b94442d39537aadc01075550d9c26b3[m[33m ([m[1;36mHEAD -> [m[1;32mbam-net-core[m[33m, [m[1;31morigin/bam-net-core[m[33m)[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Aug 11 11:29:37 2019 -0700
+
+    reorder methods
+
+[33mcommit 0a41ee55627c68d55621c844d0e8a6fa0ca15fca[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Aug 11 11:28:42 2019 -0700
+
+    regenerated datareplication repo data
+
+[33mcommit e609176afe742f890a6d485becb2bc0dfdf00515[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Aug 11 11:25:07 2019 -0700
+
+    datapoint handling by raft
+
+[33mcommit 9ff14b66cc5c76d995390ac0fd52740928d5c0b0[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Aug 10 11:25:59 2019 -0700
+
+    RaftRing.Retrieve implemented needs testing
+
+[33mcommit 9a01736bf790ec49207e7bc513fe07caebba5720[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Aug 8 21:15:13 2019 -0700
+
+    raft reading wip
+
+[33mcommit a1c082a762a8a859a35c645151d6ef29c9d833b7[m
+Merge: e3fe20d a848644
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Thu Aug 8 19:57:26 2019 -0700
+
+    Merge pull request #8 from BryanApellanes/bam-net-core-work
+    
+    Bam net core work
+
+[33mcommit a848644eff1e22fcf8d65a3d5555269d4f5388b1[m[33m ([m[1;31morigin/bam-net-core-work[m[33m, [m[1;32mbam-net-core-work[m[33m)[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Thu Aug 8 08:44:51 2019 -0700
+
+    enable sql passthrough in bamdb; wip
+
+[33mcommit cba981a5b0ff8248446efe63832fa56afa7c1b81[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Aug 6 12:31:29 2019 -0700
+
+    dto assembly compilation
+
+[33mcommit e3fe20d49fbad26c020476520fa8b36ce8ae69ed[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Aug 5 17:50:35 2019 -0700
+
+    dto stubs
+
+[33mcommit c8b45582d53bf8a39266d8d79d2abfef9985ef4c[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Aug 4 12:05:42 2019 -0700
+
+    raft reading implementation; wip
+
+[33mcommit 86a74c2b1d49898a4c0bfe8a57f74127206df188[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Aug 3 11:47:36 2019 -0700
+
+    wip
+
+[33mcommit e52d84285b6a36a26d7730889bd4469514466293[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Aug 3 11:40:57 2019 -0700
+
+    commit and log sync handling; wip
+
+[33mcommit 627bcd468b40dab9817ce1215f5302361488f426[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Aug 3 09:24:53 2019 -0700
+
+    Bam.Net.Testing: testgroup support
+
+[33mcommit 942cee4e7f8c8d67d4c09c94fee722669a889bff[m
+Merge: 4f85294 82276c0
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Sat Aug 3 08:14:23 2019 -0700
+
+    Merge pull request #7 from BryanApellanes/bam-net-core-work
+    
+    dynamic database updates
+
+[33mcommit 82276c0970f9d441b0ac9206ae96a1f163a5fbf5[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Sat Aug 3 08:07:20 2019 -0700
+
+    dynamic database updates
+
+[33mcommit 4f8529471483df59f5146d10c6f323d8bea78a5b[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Aug 2 07:53:31 2019 -0700
+
+    minor renames
+
+[33mcommit d0b66cc3c8f2e8cd9aa4bca91f4252edba7dfa9b[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Wed Jul 31 06:55:19 2019 -0700
+
+    fix typoe
+
+[33mcommit 6fa89ab1363a240ff9b76587f5f58dce89e78d7b[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jul 28 12:09:44 2019 -0700
+
+    update leader and follower tracking
+
+[33mcommit 1f8920ab9ca51d48b45bc30f796d684e93bfd877[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 27 11:31:37 2019 -0700
+
+    Bam.Net.Data: handle leader election, handle starting a raftring
+
+[33mcommit 25b5c8c635e16df0ec6ad6ef5c8885c73f06e15e[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 27 07:50:52 2019 -0700
+
+     minor refactor/cleanup
+
+[33mcommit 8c95d6254369c0d8a2ef3db2f46588ba0ccc4df0[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 20 23:23:37 2019 -0700
+
+    check for existing compositekey data
+
+[33mcommit 9301384fed4cc3ce45dd59806e496adb130c72a9[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 20 23:14:45 2019 -0700
+
+    wip
+
+[33mcommit 5ac9481e5cbaa3f457e6bc11037802a2d7f9c1cf[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jul 14 19:17:39 2019 -0700
+
+    refactor compositekey properties; continue raft impl; wip
+
+[33mcommit baae8df7525c4159028b05d53f2fa1c100934513[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jul 14 12:02:53 2019 -0700
+
+    delete old generated code
+
+[33mcommit e1e02b3cc5fd99bb71f282ec4b9c6bd623064887[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jul 14 12:02:25 2019 -0700
+
+    repo compositekey handling; raft election wip;
+
+[33mcommit dcc90cac1519956230c1b3500fb97e5b5c854bb9[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 13 11:38:10 2019 -0700
+
+    fix schemarepository generator handlebars templates; gen raftconsensus repo and data wrappers
+
+[33mcommit e1d3413c6a2dc8c770b08113eb14a45c73202e04[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 13 10:11:54 2019 -0700
+
+    fix schemarepository generation handlebars templates and models
+
+[33mcommit dcff81888797c2e64264628f0ce28d5efd7dffa6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Jul 12 20:50:02 2019 -0700
+
+    db configs; bamdb gen fix; consensus wip
+
+[33mcommit 0fa64cd3015c479f903dfcba704b7a7edd968269[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Jul 12 10:34:54 2019 -0700
+
+    wip
+
+[33mcommit 6a0b588fe3f5fbaac4786294fb8cf90448ea2089[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jul 7 11:37:36 2019 -0700
+
+    raft log replication implementatin complete; untested
+
+[33mcommit f7137a322bf8bbcebc282d80af72314a834f82bf[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jul 6 11:43:57 2019 -0700
+
+    raft wip; value write, leader write, follower write, leader commit
+
+[33mcommit 6b91855d8a4901da4d4f9fff5a32f65e12ea38ab[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Jul 4 11:18:37 2019 -0700
+
+    raft wip
+
+[33mcommit bab7a3029552fbe48098a6f2a2c0b9c4f57e447e[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 30 11:09:37 2019 -0700
+
+    wip: consensus
+
+[33mcommit 693d50520614ee9bee456b9cf8cd4df1c5065698[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 30 07:57:50 2019 -0700
+
+    move dns related classes to coreservices.nameresolution
+
+[33mcommit 934dd8e69e6d67b8c938c01aa4a110f80e2246c8[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 29 10:58:16 2019 -0700
+
+    metadata reference resolution
+
+[33mcommit 79c4bebb768782c741249694dbcd4cc8ae7cd808[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 23 11:08:44 2019 -0700
+
+    process mode handling
+
+[33mcommit b39108a4437faa691d857b1c225e248df0f0a048[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 23 08:54:36 2019 -0700
+
+    fix compile error
+
+[33mcommit 27471df40e974450a339870a621462d1c99ec013[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 23 08:49:30 2019 -0700
+
+    add install.sh and install-toolkit.sh download endpoints
+
+[33mcommit 3196d04ed6be1c9ee02892c4fbe6c6f628ddcccc[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 22 12:09:36 2019 -0700
+
+    not implemented message
+
+[33mcommit 682b54382f31b1d379372ca9c5898e7709b5e366[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 22 11:30:43 2019 -0700
+
+    File copy handlers
+
+[33mcommit 5c2861bacfcef2f40ff5b7761c406b2d841018eb[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 16 11:22:03 2019 -0700
+
+    remove the removes
+
+[33mcommit 9a514e1366d3f10d8eeacafc15047ba1e405e7b2[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 16 11:16:10 2019 -0700
+
+    specify adhoc runtime
+
+[33mcommit 4803b3c89e4a9b3697fe354ff27c17fa355e580d[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 16 10:53:47 2019 -0700
+
+    adhoc handling
+
+[33mcommit 0d8b65f1c8f19d9994b6c08d4f63ca50cec9fa93[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 16 10:30:02 2019 -0700
+
+    add adhoc
+
+[33mcommit 23fd8ebbd106fa034012baaeffb9409f4441b1c3[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 16 10:08:54 2019 -0700
+
+    minor cleanup and refactor
+
+[33mcommit 14abfbc9bba1fa0d75d9da5d5b07f12a61bc27f1[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 15 11:45:17 2019 -0700
+
+    fix compilation error
+
+[33mcommit b67fcf04d84144b5ae51aa665a4cee8017e247cd[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 15 11:39:20 2019 -0700
+
+    initial badns implementation
+
+[33mcommit 1b04d5845d0d282c14e81d3324d614bd72ae5443[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 15 10:15:17 2019 -0700
+
+    wip: bamdns
+
+[33mcommit 5c69f8d744c755594f48148f02d7b0852f4e454d[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 15 08:09:42 2019 -0700
+
+    remove extra console details from ConsoleLogger
+
+[33mcommit 0309911447675ef484796c86bb8dc935cf156315[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Jun 14 19:39:18 2019 -0700
+
+    random little bits
+
+[33mcommit d799086bcf0abcdba7be388cd003d42f6c774cab[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Jun 12 18:12:43 2019 -0700
+
+    bamweb: check for null useragent on download
+
+[33mcommit 5aad7ae8ed28c283f2f1b1230753feffa04ca0aa[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Jun 10 18:48:36 2019 -0700
+
+    BamTest: Assembly.LoadFile instead of load
+
+[33mcommit 7bb56db73fb926022beb7c1edc1a28b0ac954ef9[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 9 11:10:38 2019 -0700
+
+    pre test message
+
+[33mcommit 73ea2ca48b664fab5efa13faa3be0438443230fd[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 9 11:04:38 2019 -0700
+
+    only try to load dlls or exes
+
+[33mcommit 9f5c7dfd5b2f0cfcfd9311e7ea784f34accf7ef9[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 9 10:59:26 2019 -0700
+
+    add test group test; try catch load test assembly
+
+[33mcommit 67359e1aaffe62665788526f87bceff867788364[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 9 10:40:27 2019 -0700
+
+    minor tweak
+
+[33mcommit 7733af4fb78f62c1fed6b8e33e55d628805711bf[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 9 09:09:38 2019 -0700
+
+    use expression body properties
+
+[33mcommit 40219ba3bb74f1ce9b0b66db75f2d96bdb143b3f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 8 21:16:52 2019 -0700
+
+    delete unused jsonschema classes in favor of json.nett schema; add ModelSchemaManager
+
+[33mcommit dc169e4e193e81665e6de7beda8655426fecf794[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Jun 8 10:34:23 2019 -0700
+
+    shell delegation definition and readme
+
+[33mcommit 802fc7301dc0b6b17285e82159905e83964a82c6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Jun 5 18:41:15 2019 -0700
+
+    toolkit downloads
+
+[33mcommit 75eb71c8ee9f496907b5e26b8b8526f5406c2eed[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Jun 5 17:18:08 2019 -0700
+
+    scp; and log
+
+[33mcommit cb2b4dd70efb9eac78cc7043c0abee7db3e9c8b5[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Jun 4 21:11:44 2019 -0700
+
+    fix recipe suffix
+
+[33mcommit 2c9ecf99ab88341427a0ee8ac379d604bd964148[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Jun 4 21:10:15 2019 -0700
+
+    allow no value for recipePerProject
+
+[33mcommit e007e0e648f9acdb8cf237913b7a04df601716cc[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Jun 4 21:05:02 2019 -0700
+
+    write recipes perProjectFile command line arg
+
+[33mcommit 4cac5b15871902dd22e388f1dcee8677905d8673[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Jun 4 16:36:03 2019 -0700
+
+    scanning remote file handler
+
+[33mcommit ba9c42df16193aabc214b5eda970fee3386714ac[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Jun 4 16:25:20 2019 -0700
+
+    test groups
+
+[33mcommit eb55bdfe76256821101c26cc3c82b0979f4bc788[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Jun 4 09:37:46 2019 -0700
+
+    refactor host scanning structure
+
+[33mcommit 25f1df5c8de17abc1f7b9d7632798341fb240c57[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Jun 3 15:16:21 2019 -0700
+
+    wip; remote file handlers
+
+[33mcommit 919cef1d06a5911034eb5ba88799bd2878d23882[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Jun 3 09:46:42 2019 -0700
+
+    wip; remote file handling
+
+[33mcommit 9c5a2d7a57edf657b5e8786464f128d54e0ece7f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 2 21:50:37 2019 -0700
+
+    add verbs
+
+[33mcommit e863055cb1798aef224ca45cfaa731037ab2ad4f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 2 21:07:07 2019 -0700
+
+    minor refactor
+
+[33mcommit 4ee7fc4201e3db4438e35c41adb1739b10bb3c34[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 2 21:06:50 2019 -0700
+
+    Add os specific downloads
+
+[33mcommit 1f961457188a988a1e0fd8e1dcb88b4842effe3b[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 2 10:41:08 2019 -0700
+
+    refactor dao generation
+
+[33mcommit 4247282a6fdfda157fdb85f6e86183df89b08213[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Jun 2 08:57:52 2019 -0700
+
+    refactor data responders
+
+[33mcommit a4765296b765bea90b919577701f2ddea28fc2c2[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed May 29 21:29:59 2019 -0700
+
+    download handler
+
+[33mcommit 847ab81d70798dd47bf4c5bab331ca3bc0412377[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue May 28 20:55:40 2019 -0700
+
+    minor tweaks
+
+[33mcommit 8c6680d0d3d204127e205194af7004ded96cb89b[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue May 28 19:58:41 2019 -0700
+
+    Bam.Net.Server: fix handling of home page
+
+[33mcommit a21b65d33643140d496087067b11241fd8173bee[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon May 27 10:59:20 2019 -0700
+
+    Bam.Net.Server: correct page handling and home resolution
+
+[33mcommit 7cbe4500dfd1238c3a0532309eb21fb7e5163e80[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon May 27 09:39:53 2019 -0700
+
+    Bam.Net.Data: rename KeyHashAuditRepoData to CompositeKeyAuditRepoData
+
+[33mcommit 17f7d4af02ee47045a619862e748ea82f06f43fa[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun May 26 10:37:00 2019 -0700
+
+    bake: use existing outputdirectory, buildconfig and osname if recipe exists
+
+[33mcommit 889f2c32a65b8634af6c478684078543084c05ae[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 25 12:20:54 2019 -0700
+
+    no b64
+
+[33mcommit b7b621634216501087f99dd1eb62bac6ed3b9bd2[m[33m ([m[1;33mtag: v0.0.1[m[33m, [m[1;33mtag: 0.0.1[m[33m)[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 25 11:32:58 2019 -0700
+
+    bake output
+
+[33mcommit 5a5bb44acab16b85234b7696dfefb09252038b1a[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 25 11:14:36 2019 -0700
+
+    base64 zip
+
+[33mcommit 3f5bf46c7f87affaa1853caae858f24889d86a99[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 25 11:01:25 2019 -0700
+
+    typeo
+
+[33mcommit 732449d477242e18a69a99723347b5db3b562b8f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 25 10:52:38 2019 -0700
+
+    bake: add zipRecipe option
+
+[33mcommit e0f3679101b9e00f2b9ca7cff5497df41a966e8a[m[33m ([m[1;32mmaster[m[33m)[m
+Merge: 66e0715 9af205e
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Sat May 25 09:40:13 2019 -0700
+
+    Merge pull request #6 from BryanApellanes/bam-net-core
+    
+    Bam net core
+
+[33mcommit 9af205e469a9656c70d4dd1b3ea4b7bffef7704a[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 25 08:45:05 2019 -0700
+
+    minor refactor
+
+[33mcommit eb57eb3c4b6781d7f97a60f53410f62ee46755ae[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue May 21 20:33:46 2019 -0700
+
+    update csproj files with nuget package info
+
+[33mcommit 40dbf4fd11ef2f4b24ee417f813753b1ca0ceb18[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun May 19 18:04:47 2019 -0700
+
+    build scripts
+
+[33mcommit 1b7b7a1f6b856f3d2637d930783bd295e3f699e6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun May 19 11:12:17 2019 -0700
+
+    remove unused arg
+
+[33mcommit b9ca693d0adfe8cccf006080275edc28c2d5e426[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun May 19 11:11:12 2019 -0700
+
+    bake updates and minor refactorings
+
+[33mcommit c3ec3a14a6c70ba828a862a4ad81a62598972981[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 18 10:23:33 2019 -0700
+
+    build tools
+
+[33mcommit ea442d9515c75731e2d30c2f45fe5efb941ee4b0[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 18 08:08:47 2019 -0700
+
+    fix build
+
+[33mcommit 6a65fbd80270d248445208155d8308370a99f466[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun May 12 10:29:59 2019 -0700
+
+    refactor to accomodate pagerenderer concept
+
+[33mcommit 9c9da217f48c177c716a9817ec881f48aa91f6d6[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri May 10 13:27:15 2019 -0700
+
+    postgres schemaextractor; really this time
+
+[33mcommit 07e1ca10710eb28ea093581df0b824cfae87fee4[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri May 10 13:20:09 2019 -0700
+
+    postgres schemaextractor
+
+[33mcommit 96ff79be3137184b6a5a99a046e02f34d09ae83c[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue May 7 20:12:56 2019 -0700
+
+    pagerenderer wip
+
+[33mcommit 5a2690657014f75f61c17cdbb9ade231ecce0cf0[m
+Merge: 0470e6d 2dd0cbe
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue May 7 13:35:34 2019 -0700
+
+    Merge branch 'bam-net-core' of https://github.com/BryanApellanes/Bam.Net.Core into bam-net-core
+
+[33mcommit 0470e6da84709c70691fde5fdd90cf1c308821f3[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue May 7 13:35:28 2019 -0700
+
+    npgsql schema extractor
+
+[33mcommit 2dd0cbee358b1ce177459a4a8f6d3bec09d2ee09[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon May 6 20:19:22 2019 -0700
+
+    pagerenderer; wip
+
+[33mcommit c4b463e6a6e2e4523077f9aaa444f147ea4c4c46[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun May 5 09:52:42 2019 -0700
+
+    page and home routing; wip
+
+[33mcommit 2f51f59ed14d6ba323b915ca29e4fbbb5d1aec84[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 4 21:26:49 2019 -0700
+
+    add pagerenderer interface; wip
+
+[33mcommit 532752aae44c61d1e31ae2272c0b002c1de415ae[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat May 4 12:13:45 2019 -0700
+
+    layout handling
+
+[33mcommit 7c37c24f05ffc520a182d7512b9de201554996c5[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Apr 28 10:51:00 2019 -0700
+
+    encrypted configuration handling
+
+[33mcommit a46cf013742b8f4014edddefb6b60e5fdfe30adf[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 27 09:58:47 2019 -0700
+
+    serviceregistry handling
+
+[33mcommit 66e07159703765e5c79b6849712cdac87a38f036[m
+Merge: d9711c3 f12515a
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Wed Apr 24 20:32:30 2019 -0700
+
+    Merge pull request #3 from BryanApellanes/bam-net-core
+    
+    bam command line tool
+
+[33mcommit f12515a5456463ae6608e5bff14e8dd137345b73[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Apr 24 20:30:58 2019 -0700
+
+    fix memory leak in config file watcher
+
+[33mcommit 05e901fe9467c0811d8855beeb54cf336a105260[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Apr 23 21:32:26 2019 -0700
+
+    only monitor for config changes if not prod
+
+[33mcommit 3c55facbdc9e7ccf18964392aa18ed638c6c77a2[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Apr 23 21:29:42 2019 -0700
+
+    remove application service discovery
+
+[33mcommit 79da4e19c7b8df975e99762aea5489f9331d66ef[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Apr 22 21:18:36 2019 -0700
+
+    fix zipfolderworker output message
+
+[33mcommit a15ec8dcc8d7406f0715fa19004ab2cb409fbf1d[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Apr 21 13:06:42 2019 -0700
+
+    Bam.Shell: can set bam config settings from the commandline
+
+[33mcommit a0baa7c52b497c80f8b4b954860c98b2641fb8a7[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 20 20:19:50 2019 -0700
+
+    reload changed files
+
+[33mcommit 7bd2d39a2aeb56a8f488537b82a5acbc8401d395[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 20 19:21:25 2019 -0700
+
+    minor refactor
+
+[33mcommit 3abd52b39711dfa0029ec56a424e44c55ff4cdb0[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 20 19:20:48 2019 -0700
+
+    Bam.Net.Caching: correct handling of zipped file content
+
+[33mcommit d1763cbdbf2e6f6d8705f56ad14f1f9d8a366ea4[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 20 12:47:30 2019 -0700
+
+    intuitive ToString implementations
+
+[33mcommit 71a3f8fcc9c46c9ba6fbaf987c33683ee82af0b3[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 20 10:30:39 2019 -0700
+
+    move BoneSoft.CSS dependency to separate project
+
+[33mcommit 803a7c401f68400ea1359da77fe047c95ba4d77b[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 20 08:50:09 2019 -0700
+
+    process name provider default instead of unknown
+
+[33mcommit f8a927fed13ddfc767be06ce9992fc914692e1e6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Apr 19 21:52:54 2019 -0700
+
+    update shell providers
+
+[33mcommit 685d647dce37fab09a8c80fdd84acce6c7cf91b6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Apr 18 20:42:40 2019 -0700
+
+    generated packageprovider cli delegator
+
+[33mcommit 463d389846f2e9c187563a48002dba9688abd18f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Apr 17 20:40:24 2019 -0700
+
+    Bam.Net.Data: ensure identity column is specified when writing schema scripts
+
+[33mcommit ffda1a529774cbe926e92dee0f73ddf69fbe41a6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Apr 16 22:11:44 2019 -0700
+
+    DaoRepo generation fixed
+
+[33mcommit 08d0c4822d91eaf6e7d131e77f0a0d4ce3c71a58[m
+Merge: 728c770 6415814
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Apr 15 21:23:38 2019 -0700
+
+    Merge branch 'bam-net-core' of https://github.com/BryanApellanes/Bam.Net.Core into bam-net-core
+
+[33mcommit 728c770d01ffad0ec4158a82fec60a57b78910ab[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Apr 15 21:23:32 2019 -0700
+
+    Bam.Net: fixing HandlebarsTypeDaoGenerator; wip
+
+[33mcommit 6415814c211bf5f48652fabadc257e630fabf15f[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Mon Apr 15 08:38:13 2019 -0700
+
+    Bam.Net.Data: fix hascuid handling
+
+[33mcommit f2cb965fd38f47e74696a686efab8078d4eba33f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Apr 14 20:50:43 2019 -0700
+
+    Bam.Shell: shellgen wip
+
+[33mcommit 0ec86a3e293b4256bbe0f81a3e46976550e22a78[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Apr 14 11:49:00 2019 -0700
+
+    bam: shell provider generator wip
+
+[33mcommit e602b4b1bd29d687a2993abdd58977ef5d9e3a94[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 13 10:21:00 2019 -0700
+
+    CoreServices: delete old data classes
+
+[33mcommit 2baed5c88d93ed5230e1066631a11d0f7450abd6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 13 10:19:17 2019 -0700
+
+    CoreServices: regenerated AssemblyService data
+
+[33mcommit afe56442adfd5f070edacd521650eb921d56f640[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 13 09:06:09 2019 -0700
+
+    fix broken generated files
+
+[33mcommit 814b476febec106a4d384d2ee2a327a2c3613596[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 13 08:42:58 2019 -0700
+
+    assembly descriptor data updates
+
+[33mcommit cbecf0f8f6f7b3a0e51907c80b277f3e6814e5c5[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Apr 10 21:33:27 2019 -0700
+
+    bambot wip
+
+[33mcommit 263950e2e25bbd9a80d50e8b2dd4f80666aa7955[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Apr 9 20:52:58 2019 -0700
+
+    Bam.Net.Automation: add ScriptWorker
+
+[33mcommit 0c294f7526e90323b1487dbad335b633f2786b27[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Apr 7 13:10:56 2019 -0700
+
+    minor cleanup
+
+[33mcommit e2a790045e6046051d08876e43c1425ddce24eff[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Apr 6 12:29:24 2019 -0700
+
+    graphql generator implemented
+
+[33mcommit f7a6a6176211a3575623e4c173b28ea5f653f033[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Apr 5 21:39:49 2019 -0700
+
+    gendir, wip
+
+[33mcommit 189dc22702f31ca87f95bca0f9efeb2b577a2bae[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Apr 4 21:29:07 2019 -0700
+
+    compiler assemlby resolution for graphql gen; wip
+
+[33mcommit 4e1eb3ef72bccd4a894ae1ee048ed43515badb7b[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Apr 3 21:11:36 2019 -0700
+
+    shell handling; graphql wip
+
+[33mcommit 785739e09a1f1af4581df37ac93a873f835e37af[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Apr 2 21:52:02 2019 -0700
+
+    wip
+
+[33mcommit c4beea17d846634357c04267a2b00a32245202c3[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Apr 2 07:11:41 2019 -0700
+
+    IsUnix fix
+
+[33mcommit 8ac7793f262470a9232ff573229ab96f9ce3820a[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Apr 1 21:28:47 2019 -0700
+
+    graphql type generation; wip
+
+[33mcommit 3c524948f13a68b02dae213bc8f617cc44f5c993[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Mon Apr 1 08:36:47 2019 -0700
+
+    graphql wip
+
+[33mcommit 6f2e5418152e3672b6e3f1ab3475d44c62b2481e[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 31 20:42:17 2019 -0700
+
+    graphql example for generation
+
+[33mcommit 7327aa9990943da70b9a2404971c32ec0f66fe65[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 31 10:51:25 2019 -0700
+
+    code generation; db cli delegator
+
+[33mcommit 1263cd4fa220567568fe7d9bf703c28ecb7435be[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Mar 30 12:04:33 2019 -0700
+
+    CSharpScriptContext
+
+[33mcommit 3cd76da958f98c2c2c86e771c014bf345ab9b38a[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Mar 30 08:42:20 2019 -0700
+
+    worker refactoring; this is taking way too long
+
+[33mcommit ca353c78ff1a32c648cba286a883c347dfc52d9e[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Mar 30 07:28:38 2019 -0700
+
+    fix masuco
+
+[33mcommit d9711c372c8f623dce5946f8944a1b3238b4cb57[m
+Merge: 0eaba44 e762890
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Sat Mar 30 07:14:11 2019 -0700
+
+    Merge pull request #2 from BryanApellanes/bam-net-core
+    
+    Bam net core
+
+[33mcommit e762890ce254d467bc89b1dd5327b470c48159ea[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Mar 29 22:24:58 2019 -0700
+
+    workers
+
+[33mcommit 88047e9c372bdc234f2d1f41ac09a700b5281843[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Mar 29 07:56:19 2019 -0700
+
+    providers and resolver stubs
+
+[33mcommit d3a3f2826888f77ed2a185c1efc4a8663f4abcac[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Mar 28 21:01:28 2019 -0700
+
+    updated workers
+
+[33mcommit b6472176420e960031b97f2156280401cd898012[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Thu Mar 28 09:10:49 2019 -0700
+
+    begin refactor of BuildWorker into FullBuildWorker and smaller workers
+
+[33mcommit 8b5ba45ae025ff7cc5c480fd3e5297e749c8aa67[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Mar 27 21:39:59 2019 -0700
+
+    new workers and property handling
+
+[33mcommit 84c5b1fc7d7771a08d1866f6b4b947c34cc07dfd[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Mar 25 21:29:00 2019 -0700
+
+    workstate handling
+
+[33mcommit 34284d173b18cca46e9e0a4b484d64a319f6a9e8[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Mon Mar 25 18:44:14 2019 -0700
+
+    shell handling
+
+[33mcommit c33703315d08751a7a0f08823b46583c0e5456b0[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 24 20:58:44 2019 -0700
+
+    bake automation accepts output directory
+
+[33mcommit e78de02a9358e930f2df734839ba51c4bfc6fef7[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 24 13:21:47 2019 -0700
+
+    bam shell: handle jobs
+
+[33mcommit fc56288466f5be24c46f785cd5fa663b6543dc35[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Mar 23 12:41:33 2019 -0700
+
+    bam.exe shell hadnling
+
+[33mcommit da4b29b53086fa2a040bc5030ea2aa0fcd5421d2[m
+Merge: 842af99 f737897
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Mar 22 22:10:54 2019 -0700
+
+    Merge branch 'bam-net-core' of https://github.com/BryanApellanes/Bam.Net.Core into bam-net-core
+
+[33mcommit 842af992c7e58438b020b4c33a6b90423ce303b7[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Mar 22 22:10:46 2019 -0700
+
+    wip: bam jobs
+
+[33mcommit f7378979c30938ec8ca37c0798c2215f1382d152[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Thu Mar 21 07:59:16 2019 -0700
+
+    start aws project
+
+[33mcommit 5bd33a3f95f7f086ff81c6a547d90f2ffaa08cde[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Thu Mar 21 07:57:17 2019 -0700
+
+    config handling
+
+[33mcommit e246cb4843d7223ce2f395e08e2b30e3dc6f4abd[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Mar 20 21:28:00 2019 -0700
+
+    bam argzero
+
+[33mcommit 0575339e1947e851dc4a3849c8374132bf26d909[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Wed Mar 20 07:51:49 2019 -0700
+
+    workspace writeline
+
+[33mcommit db0f1f35f4252b333d98a13b6a3bd1774ad263d6[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Tue Mar 19 21:11:58 2019 -0700
+
+    bam switches
+
+[33mcommit afc88f0fc6f8f14b97d64e1878cf094e51c16dec[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 19 08:03:20 2019 -0700
+
+    words
+
+[33mcommit 8f6bc9d0cd17630254fe8dbdd0b7d5ec7bc4b5cc[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Mar 18 21:46:29 2019 -0700
+
+    fix broke proj file
+
+[33mcommit cc0a7dd45342bf0b6533fd765e471d60810d9a9c[m
+Merge: af217fc 3084279
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Mar 18 21:33:10 2019 -0700
+
+    Merge branch 'bam-net-core' of https://github.com/BryanApellanes/Bam.Net.Core into bam-net-core
+
+[33mcommit af217fc899879ac0876013a91a95b7195e15941f[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Mar 18 21:28:30 2019 -0700
+
+    build and workspace and config
+
+[33mcommit 3084279d80398f151257db28d18c5f06caf0b880[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Mon Mar 18 14:33:59 2019 -0700
+
+    thread safe workspace
+
+[33mcommit f52f47a2813a7770af03abe59b46a40907feca89[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Mon Mar 18 06:56:57 2019 -0700
+
+    renamed DefaultDataProvider to DataProvider
+
+[33mcommit 35e5ee27a8f908e3dbb68dcd4e3b45d70f2a9bf1[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 17 21:13:12 2019 -0700
+
+    updated bake build
+
+[33mcommit ec7506be56a8067ff360957c477f8793c009140d[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 17 12:59:43 2019 -0700
+
+    partial refactor path handling; start bambot.cs
+
+[33mcommit 6587a4dcf3ad5ae6ae6e2c66492ba18ec4c5faae[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sat Mar 16 12:18:36 2019 -0700
+
+    refactored path and config handling
+
+[33mcommit 355f6d83dc93d752af62284cf659eb499ee1d384[m
+Merge: 054911f 9563ff7
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Mar 15 21:11:41 2019 -0700
+
+    Merge branch 'bam-net-core' of https://github.com/BryanApellanes/Bam.Net.Core into bam-net-core
+
+[33mcommit 054911f60ed36e5e14499c3bad26b14d4e11dbeb[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Fri Mar 15 21:11:29 2019 -0700
+
+    brpc, bhrt: updated to handle configs
+
+[33mcommit 9563ff7065b82584d6ebb01bb460971bc83c6dae[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Mar 15 14:44:18 2019 -0700
+
+    templates
+
+[33mcommit fc5eb5d17e765c3307ce1956847c5f3f4a6bb46f[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Mar 15 14:43:00 2019 -0700
+
+    templates
+
+[33mcommit a14a6915116fda43a77e8537fe09e7bac7bc9793[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Mar 14 21:52:21 2019 -0700
+
+    bambot proj
+
+[33mcommit cfb4f5ecb59ccbd034333f9fcfe7663a33e1d5c0[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Mar 14 21:52:10 2019 -0700
+
+    prepping for bambot cs implementation
+
+[33mcommit d229e8c9b5a5c01aca9f68a37c76ebf13fd6c644[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Mar 14 21:11:54 2019 -0700
+
+    refactor data providers
+
+[33mcommit f6d2e7d1bd344a960a5106fd01211f1193faf5b4[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Mar 13 21:31:28 2019 -0700
+
+    bake and docs
+
+[33mcommit 38dc12ee083a6a9be9e243dc2ea4977896add854[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Wed Mar 13 07:23:13 2019 -0700
+
+    move 3rdParty
+
+[33mcommit 0817792f9df005f536463d48314fe313443beb89[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Wed Mar 13 07:11:43 2019 -0700
+
+    metro 4
+
+[33mcommit cfbdc81cef9ecf0bfdd120c81ca2e1012482dffc[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Wed Mar 13 07:04:07 2019 -0700
+
+    appserviceregistry
+
+[33mcommit b7f58b4d872e9fdcec52797fa1244020f2a1b40e[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 12 10:23:21 2019 -0700
+
+    refactor dataprovider
+
+[33mcommit 120625192aedf4798787a82cba34039c73bafda9[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 12 09:18:55 2019 -0700
+
+    fix aspnet service handling
+
+[33mcommit f29fa6ddaebd09c239d46424ebafd008fb994915[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Mon Mar 11 21:44:09 2019 -0700
+
+    continued rector of bam tool; wip
+
+[33mcommit dfa355a826c38ff0c63233c8852a21dc7b7e36dc[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Mon Mar 11 08:07:12 2019 -0700
+
+    path handling
+
+[33mcommit 66e5a9710dd96da3e1acfc42a71ed8d51d94096c[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Sun Mar 10 19:52:06 2019 -0700
+
+    updated webserver
+
+[33mcommit 7cae38ea6679a59ff5e98b6aa978374e6bd67515[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Mar 8 20:06:25 2019 -0800
+
+    newtonsoft
+
+[33mcommit 113e99caa8cbc1d71843da9783242a7a8058e548[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Fri Mar 8 12:55:41 2019 -0800
+
+    tags
+
+[33mcommit 52e10acc6e1d40d6afcc2afdbbb428ba555ae3e2[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Thu Mar 7 21:30:57 2019 -0800
+
+    tags
+
+[33mcommit 197d73418e028db80d64d1c9c30732220bde0932[m
+Author: Bryan Apellanes <bryan@threeheadz.com>
+Date:   Wed Mar 6 21:19:41 2019 -0800
+
+    clean up busted ms stuff
+
+[33mcommit 0eaba441621385b2e3b899c9ebd266304c2e6e08[m
+Merge: 04707da f2b6be9
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Wed Mar 6 20:15:42 2019 -0800
+
+    Merge pull request #1 from BryanApellanes/bam-net-core
+    
+    Bam net core
+
+[33mcommit f2b6be9b6de68d67d9a57e41f184abfd15cb289a[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Wed Mar 6 09:35:00 2019 -0800
+
+    manual merge of fx into core
+
+[33mcommit fd636b43af02f0bd35137e130e1b1fc58d62160c[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 5 09:00:38 2019 -0800
+
+    data handling; wip
+
+[33mcommit 03ea85fdc0cb5d50b86d3d2064b0229d3425c3e5[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 5 08:26:49 2019 -0800
+
+    chunker and bits
+
+[33mcommit 04707daba177773fe22a23c91e9131bafcad21ab[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 5 07:43:18 2019 -0800
+
+    add debug loggers
+
+[33mcommit d391d3b0d7523fb16cd8644a936ba2900de9a908[m
+Author: Bryan Apellanes <bapellanes@vimly.com>
+Date:   Tue Mar 5 07:33:28 2019 -0800
+
+    core only bam.net
+
+[33mcommit f5b8b9b4cd3986fd3119d9f54444597a78764f43[m
+Author: Bryan <bryan.apellanes@gmail.com>
+Date:   Tue Mar 5 07:17:00 2019 -0800
+
+    Initial commit

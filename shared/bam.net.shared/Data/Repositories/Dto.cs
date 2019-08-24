@@ -71,7 +71,7 @@ namespace Bam.Net.Data.Repositories
         static object _genLock = new object();
         /// <summary>
         /// Generates an assembly containing Dto's that represent all the 
-        /// Dao's found in the sepecified daoAssembly.  A Dto or (DTO) is
+        /// Dao's found in the specified daoAssembly.  A Dto or (DTO) is
         /// a Data Transfer Object and represents only the properties of 
         /// a Dao.  A Dao or (DAO) is a Data Access Object that represents
         /// both properties and methods to create, retrieve, update and delete. 

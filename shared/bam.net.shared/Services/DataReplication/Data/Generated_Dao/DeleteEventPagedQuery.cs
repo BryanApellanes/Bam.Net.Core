@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class DeleteEventPagedQuery: PagedQuery<DeleteEventColumns, DeleteEvent>
     { 
-		public DeleteEventPagedQuery(DeleteEventColumns orderByColumn, DeleteEventQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public DeleteEventPagedQuery(DeleteEventColumns orderByColumn,DeleteEventQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
     public class NicPagedQuery: PagedQuery<NicColumns, Nic>
     { 
-		public NicPagedQuery(NicColumns orderByColumn, NicQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public NicPagedQuery(NicColumns orderByColumn,NicQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

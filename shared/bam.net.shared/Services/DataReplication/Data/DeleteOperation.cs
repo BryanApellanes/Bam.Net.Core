@@ -17,7 +17,7 @@ namespace Bam.Net.Services.DataReplication.Data
             Intent = OperationIntent.Delete;
         }
 
-        public UniversalIdentifier UniversalIdentifier { get; set; }
+        public UniversalIdentifiers UniversalIdentifier { get; set; }
         public string Identifier { get; set; }
 
         public override object Execute(IDistributedRepository repository)
@@ -26,7 +26,7 @@ namespace Bam.Net.Services.DataReplication.Data
             return base.Execute(repository);
         }
 
-        public static DeleteOperation For(object toDelete, UniversalIdentifier identifier = UniversalIdentifier.Cuid)
+        public static DeleteOperation For(object toDelete, UniversalIdentifiers identifier = UniversalIdentifiers.Cuid)
         {
             DeleteOperation operation = For<DeleteOperation>(toDelete.GetType());
             operation.Identifier = toDelete.Property<string>(identifier.ToString());

@@ -14,10 +14,10 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 {
-	// schema = AssemblyService
-	// connection Name = AssemblyService
+	// schema = AssemblyManagement
+	// connection Name = AssemblyManagement
 	[Serializable]
-	[Bam.Net.Data.Table("AssemblyDescriptorAssemblyReferenceDescriptor", "AssemblyService")]
+	[Bam.Net.Data.Table("AssemblyDescriptorAssemblyReferenceDescriptor", "AssemblyManagement")]
 	public partial class AssemblyDescriptorAssemblyReferenceDescriptor: Bam.Net.Data.Dao
 	{
 		public AssemblyDescriptorAssemblyReferenceDescriptor():base()
@@ -385,7 +385,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		/// This method is intended to respond to client side Qi queries.
 		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;AssemblyDescriptorAssemblyReferenceDescriptorColumns&gt;.
+		/// WhereDelegate`AssemblyDescriptorAssemblyReferenceDescriptorColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -492,7 +492,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		/// This method is intended to respond to client side Qi queries.
 		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<AssemblyDescriptorAssemblyReferenceDescriptorColumns>.
+		/// WhereDelegate`AssemblyDescriptorAssemblyReferenceDescriptorColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>

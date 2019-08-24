@@ -14,10 +14,11 @@ namespace Bam.Net.Services.DataReplication.Data
             return repository.Save(this);
         }
 
-        public static SaveOperation For(object toCreate)
+        public static SaveOperation For(object toSave)
         {
-            List<DataProperty> data = GetData(toCreate);
-            SaveOperation result = For<SaveOperation>(toCreate.GetType());
+            Args.ThrowIfNull(toSave, "toSave");
+            List<DataProperty> data = GetDataProperties(toSave);
+            SaveOperation result = For<SaveOperation>(toSave.GetType());
             result.Properties = data;
             return result;
         }

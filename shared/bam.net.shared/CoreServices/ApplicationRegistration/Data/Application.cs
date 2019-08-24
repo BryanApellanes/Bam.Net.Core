@@ -8,10 +8,13 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class Application: AuditRepoData
+    public class Application: KeyedAuditRepoData
     {
+        [CompositeKey]
         public string Name { get; set; }
         public string Description { get; set; }
+        [CompositeKey]
+        public ulong OrganizationKey { get; set; }
         public ulong OrganizationId { get; set; }
         public virtual Organization Organization { get; set; }        
         public virtual List<HostDomain> HostDomains { get; set; }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data.Dynamic;
+using Bam.Net.Logging;
+using Bam.Net.Services.DataReplication;
 
 namespace Bam.Net.Data.Repositories
 {
@@ -89,7 +92,7 @@ namespace Bam.Net.Data.Repositories
 
         /// <summary>
         /// Does a query for an instance of the specified
-        /// generic type T having properties who's values
+        /// generic type T having the specified properties who's values
         /// match those of the current instance; may return null
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -137,7 +140,48 @@ namespace Bam.Net.Data.Repositories
             repo = Repository;
             return IsPersisted;
         }
-
+        
+        /// <summary>
+        /// Ensure the current RepoData instance has been 
+        /// persisted to the specified repo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repo"></param>
+        /// <returns></returns>
+        public T EnsurePersisted<T>(IRepository repo) where T: RepoData, new()
+        {
+            T instance = repo.Retrieve<T>(Cuid);
+            if(instance == null)
+            {
+                instance = repo.Save((T)this);
+            }
+            return instance;
+        }
+        
+        /// <summary>
+        /// Ensures that an instance of the current RepoData
+        /// has been saved to the specified repo where the 
+        /// specified properties equal the values of those
+        /// properties on this instance.  Will cause the 
+        /// Id of this instance to be reset if a representative
+        /// value is not found in the repo
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="repo"></param>
+        /// <param name="modifiedBy"></param>
+        /// <param name="propertyNames"></param>
+        /// <returns></returns>
+        public T EnsureSingle<T>(IRepository repo, string modifiedBy, params string[] propertyNames) where T: RepoData, new()
+        {
+            T instance = QueryFirstOrDefault<T>(repo, propertyNames);
+            if (instance == null) // wasn't saved/found, should reset Id so the repo will Create
+            {
+                Id = 0;
+                instance = repo.Save((T)this);
+            }
+            return instance;
+        }
+        
         protected void ValidatePropertyNamesOrDie(params string[] propertyNames)
         {
             propertyNames.Each(new { Instance = this }, (ctx, pn) =>
@@ -148,5 +192,51 @@ namespace Bam.Net.Data.Repositories
         
         protected internal bool IsPersisted { get; set; }
         protected internal IRepository Repository { get; set; } // gets set by Repository.Save
+
+        public static object GetInstanceId(object instance, UniversalIdentifiers universalIdentifier = UniversalIdentifiers.Cuid)
+        {
+            Args.ThrowIfNull(instance);
+            if (!(instance is RepoData repoData))
+            {
+                Log.Warn("Getting instance id but specified object instance is not of type {0}: {1}", nameof(RepoData),
+                    instance.ToString());
+            }
+
+            switch (universalIdentifier)
+            {
+                case UniversalIdentifiers.Uuid:
+                    if (instance.HasProperty("Uuid"))
+                    {
+                        return instance.Property("Uuid");
+                    }
+                    break;
+                case UniversalIdentifiers.Cuid:
+                    if (instance.HasProperty("Cuid"))
+                    {
+                        return instance.Property("Cuid");
+                    }
+                    break;
+                case UniversalIdentifiers.CKey:
+                    if (instance.HasProperty("CompositeKeyId"))
+                    {
+                        if (!(instance is CompositeKeyAuditRepoData))
+                        {
+                            Log.Warn("Getting CompositeKeyId as instance id but specified object instance is not of type {0}: {1}", nameof(CompositeKeyAuditRepoData), instance.ToString());
+                        }
+                        return instance.Property("CompositeKey");
+                    }else if (instance.HasProperty("Key"))
+                    {
+                        if (!(instance is KeyedAuditRepoData))
+                        {
+                            Log.Warn("Getting Key property as instance id but specified object instance is not of type {0}: {1}", nameof(KeyedAuditRepoData), instance.ToString());
+                        }
+
+                        return instance.Property("Key");
+                    }
+                    break;
+            }
+            
+            return null;
+        }
     }
 }

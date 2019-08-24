@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Bam.Net.Testing
 {
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class TestGroupAttribute : Attribute
     {
         public TestGroupAttribute(params string[] groups)

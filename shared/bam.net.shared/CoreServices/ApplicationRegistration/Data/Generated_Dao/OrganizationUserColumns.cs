@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public OrganizationUserColumns Id
         {
             get
@@ -35,6 +34,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new OrganizationUserColumns("Uuid");
             }
         }
+
 
         public OrganizationUserColumns OrganizationId
         {

@@ -7,7 +7,7 @@ using System.Text;
 namespace Bam.Net.Logging.Http.Data
 {
     [Serializable]
-    public class CookieData: KeyHashRepoData
+    public class CookieData: CompositeKeyRepoData
     {
         public DateTime TimeStamp { get; set; }
         public bool Secure { get; set; }

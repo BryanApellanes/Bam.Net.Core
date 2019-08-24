@@ -15,6 +15,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
         JoinRaft,
         
         LogSyncRequest,
-        LogSyncResponse
+        LogSyncResponse,
+        
+        RetrieveRequest, // blocking operation, response sent in RaftResponse
+        
+        QueryRequest // blocking operation, response sent in RaftResponse
     }
 }

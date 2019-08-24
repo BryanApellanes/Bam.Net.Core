@@ -83,7 +83,7 @@ namespace Bam.Net.CoreServices
                 throw new InvalidOperationException("Application not registered");
             }
             AddApiKey(ApplicationRegistrationRepository, app, out CoreServices.ApplicationRegistration.Data.ApiKey key);
-            return new ApiKeyInfo { ApplicationClientId = key.ClientId, ApiKey = key.SharedSecret, ApplicationName = ApplicationName };
+            return new ApiKeyInfo { ApplicationClientId = key.ClientIdentifier, ApiKey = key.SharedSecret, ApplicationName = ApplicationName };
         }
 
         [ApiKeyRequired]
@@ -96,10 +96,10 @@ namespace Bam.Net.CoreServices
         public virtual ApiKeyInfo SetActiveApiKeyIndex(IApplicationNameProvider nameProvider, int index)
         {
             string clientId = GetApplicationClientId(nameProvider);
-            ActiveApiKeyIndex apiKeyIndex = ApplicationRegistrationRepository.OneActiveApiKeyIndexWhere(c => c.ApplicationCuid == clientId);
+            ActiveApiKeyIndex apiKeyIndex = ApplicationRegistrationRepository.OneActiveApiKeyIndexWhere(c => c.ApplicationIdentifier == clientId);
             if(apiKeyIndex == null)
             {
-                apiKeyIndex = new ActiveApiKeyIndex { ApplicationCuid = clientId };
+                apiKeyIndex = new ActiveApiKeyIndex { ApplicationIdentifier = clientId };
             }
 
             if (Application?.ApiKeys.Count - 1 > index || index < 0)
@@ -119,7 +119,7 @@ namespace Bam.Net.CoreServices
         public virtual int GetActiveApiKeyIndex(IApplicationNameProvider nameProvider)
         {
             string clientId = GetApplicationClientId(nameProvider);
-            ActiveApiKeyIndex apiKeyIndex = ApplicationRegistrationRepository.OneActiveApiKeyIndexWhere(c => c.ApplicationCuid == clientId);
+            ActiveApiKeyIndex apiKeyIndex = ApplicationRegistrationRepository.OneActiveApiKeyIndexWhere(c => c.ApplicationIdentifier == clientId);
             if (apiKeyIndex != null)
             {
                 return apiKeyIndex.Value;

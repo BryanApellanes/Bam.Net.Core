@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ApiKeyColumns Id
         {
             get
@@ -42,11 +41,18 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ApiKeyColumns("Cuid");
             }
         }
-        public ApiKeyColumns ClientId
+        public ApiKeyColumns ApplicationKey
         {
             get
             {
-                return new ApiKeyColumns("ClientId");
+                return new ApiKeyColumns("ApplicationKey");
+            }
+        }
+        public ApiKeyColumns ClientIdentifier
+        {
+            get
+            {
+                return new ApiKeyColumns("ClientIdentifier");
             }
         }
         public ApiKeyColumns SharedSecret
@@ -75,6 +81,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
             get
             {
                 return new ApiKeyColumns("DisabledBy");
+            }
+        }
+        public ApiKeyColumns Key
+        {
+            get
+            {
+                return new ApiKeyColumns("Key");
+            }
+        }
+        public ApiKeyColumns CompositeKeyId
+        {
+            get
+            {
+                return new ApiKeyColumns("CompositeKeyId");
+            }
+        }
+        public ApiKeyColumns CompositeKey
+        {
+            get
+            {
+                return new ApiKeyColumns("CompositeKey");
             }
         }
         public ApiKeyColumns CreatedBy
@@ -112,6 +139,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ApiKeyColumns("Created");
             }
         }
+
 
         public ApiKeyColumns ApplicationId
         {

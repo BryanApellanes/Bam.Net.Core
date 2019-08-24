@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public NicColumns Id
         {
             get
@@ -63,6 +62,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new NicColumns("MacAddress");
             }
         }
+        public NicColumns Key
+        {
+            get
+            {
+                return new NicColumns("Key");
+            }
+        }
         public NicColumns Created
         {
             get
@@ -70,6 +76,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new NicColumns("Created");
             }
         }
+
 
         public NicColumns MachineId
         {

@@ -25,11 +25,11 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 
 		public QueryOperationWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -46,6 +46,22 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 			}
 		}
 
+        System.Collections.Generic.List<Bam.Net.Services.DataReplication.Data.DataPropertyFilter> _propertyFilters;
+		public override System.Collections.Generic.List<Bam.Net.Services.DataReplication.Data.DataPropertyFilter> PropertyFilters
+		{
+			get
+			{
+				if (_propertyFilters == null)
+				{
+					_propertyFilters = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.Services.DataReplication.Data.QueryOperation, Bam.Net.Services.DataReplication.Data.DataPropertyFilter>(this).ToList();
+				}
+				return _propertyFilters;
+			}
+			set
+			{
+				_propertyFilters = value;
+			}
+		}
 
 
 

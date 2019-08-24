@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public UserColumns Id
         {
             get
@@ -54,6 +53,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
             get
             {
                 return new UserColumns("UserName");
+            }
+        }
+        public UserColumns Key
+        {
+            get
+            {
+                return new UserColumns("Key");
+            }
+        }
+        public UserColumns CompositeKeyId
+        {
+            get
+            {
+                return new UserColumns("CompositeKeyId");
+            }
+        }
+        public UserColumns CompositeKey
+        {
+            get
+            {
+                return new UserColumns("CompositeKey");
             }
         }
         public UserColumns CreatedBy
@@ -91,6 +111,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new UserColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

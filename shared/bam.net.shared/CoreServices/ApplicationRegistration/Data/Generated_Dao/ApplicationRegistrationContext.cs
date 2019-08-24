@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 {
-	// schema = ApplicationRegistration 
+	// schema = ApplicationRegistration
     public static class ApplicationRegistrationContext
     {
 		public static string ConnectionName
@@ -83,56 +83,56 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _activeApiKeyIndexsLock.DoubleCheckLock<ActiveApiKeyIndexQueryContext>(ref _activeApiKeyIndexs, () => new ActiveApiKeyIndexQueryContext());
 		}
 	}
-	public class HostDomainQueryContext
+	public class ApiKeyQueryContext
 	{
-			public HostDomainCollection Where(WhereDelegate<HostDomainColumns> where, Database db = null)
+			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Where(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Where(where, db);
 			}
 		   
-			public HostDomainCollection Where(WhereDelegate<HostDomainColumns> where, OrderBy<HostDomainColumns> orderBy = null, Database db = null)
+			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy = null, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Where(where, orderBy, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Where(where, orderBy, db);
 			}
 
-			public HostDomain OneWhere(WhereDelegate<HostDomainColumns> where, Database db = null)
+			public ApiKey OneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.OneWhere(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.OneWhere(where, db);
 			}
 
-			public static HostDomain GetOneWhere(WhereDelegate<HostDomainColumns> where, Database db = null)
+			public static ApiKey GetOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.GetOneWhere(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.GetOneWhere(where, db);
 			}
 		
-			public HostDomain FirstOneWhere(WhereDelegate<HostDomainColumns> where, Database db = null)
+			public ApiKey FirstOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.FirstOneWhere(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.FirstOneWhere(where, db);
 			}
 
-			public HostDomainCollection Top(int count, WhereDelegate<HostDomainColumns> where, Database db = null)
+			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Top(count, where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Top(count, where, db);
 			}
 
-			public HostDomainCollection Top(int count, WhereDelegate<HostDomainColumns> where, OrderBy<HostDomainColumns> orderBy, Database db = null)
+			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Top(count, where, orderBy, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Top(count, where, orderBy, db);
 			}
 
-			public long Count(WhereDelegate<HostDomainColumns> where, Database db = null)
+			public long Count(WhereDelegate<ApiKeyColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Count(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Count(where, db);
 			}
 	}
 
-	static HostDomainQueryContext _hostDomains;
-	static object _hostDomainsLock = new object();
-	public static HostDomainQueryContext HostDomains
+	static ApiKeyQueryContext _apiKeys;
+	static object _apiKeysLock = new object();
+	public static ApiKeyQueryContext ApiKeys
 	{
 		get
 		{
-			return _hostDomainsLock.DoubleCheckLock<HostDomainQueryContext>(ref _hostDomains, () => new HostDomainQueryContext());
+			return _apiKeysLock.DoubleCheckLock<ApiKeyQueryContext>(ref _apiKeys, () => new ApiKeyQueryContext());
 		}
 	}
 	public class ApplicationQueryContext
@@ -185,58 +185,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		get
 		{
 			return _applicationsLock.DoubleCheckLock<ApplicationQueryContext>(ref _applications, () => new ApplicationQueryContext());
-		}
-	}
-	public class ApiKeyQueryContext
-	{
-			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Where(where, db);
-			}
-		   
-			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy = null, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Where(where, orderBy, db);
-			}
-
-			public ApiKey OneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.OneWhere(where, db);
-			}
-
-			public static ApiKey GetOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.GetOneWhere(where, db);
-			}
-		
-			public ApiKey FirstOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.FirstOneWhere(where, db);
-			}
-
-			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Top(count, where, db);
-			}
-
-			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Top(count, where, orderBy, db);
-			}
-
-			public long Count(WhereDelegate<ApiKeyColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApiKey.Count(where, db);
-			}
-	}
-
-	static ApiKeyQueryContext _apiKeys;
-	static object _apiKeysLock = new object();
-	public static ApiKeyQueryContext ApiKeys
-	{
-		get
-		{
-			return _apiKeysLock.DoubleCheckLock<ApiKeyQueryContext>(ref _apiKeys, () => new ApiKeyQueryContext());
 		}
 	}
 	public class ProcessDescriptorQueryContext
@@ -393,6 +341,58 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		get
 		{
 			return _clientsLock.DoubleCheckLock<ClientQueryContext>(ref _clients, () => new ClientQueryContext());
+		}
+	}
+	public class HostDomainQueryContext
+	{
+			public HostDomainCollection Where(WhereDelegate<HostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Where(where, db);
+			}
+		   
+			public HostDomainCollection Where(WhereDelegate<HostDomainColumns> where, OrderBy<HostDomainColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Where(where, orderBy, db);
+			}
+
+			public HostDomain OneWhere(WhereDelegate<HostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.OneWhere(where, db);
+			}
+
+			public static HostDomain GetOneWhere(WhereDelegate<HostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.GetOneWhere(where, db);
+			}
+		
+			public HostDomain FirstOneWhere(WhereDelegate<HostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.FirstOneWhere(where, db);
+			}
+
+			public HostDomainCollection Top(int count, WhereDelegate<HostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Top(count, where, db);
+			}
+
+			public HostDomainCollection Top(int count, WhereDelegate<HostDomainColumns> where, OrderBy<HostDomainColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<HostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomain.Count(where, db);
+			}
+	}
+
+	static HostDomainQueryContext _hostDomains;
+	static object _hostDomainsLock = new object();
+	public static HostDomainQueryContext HostDomains
+	{
+		get
+		{
+			return _hostDomainsLock.DoubleCheckLock<HostDomainQueryContext>(ref _hostDomains, () => new HostDomainQueryContext());
 		}
 	}
 	public class MachineQueryContext
@@ -603,58 +603,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _nicsLock.DoubleCheckLock<NicQueryContext>(ref _nics, () => new NicQueryContext());
 		}
 	}
-	public class UserSettingQueryContext
-	{
-			public UserSettingCollection Where(WhereDelegate<UserSettingColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Where(where, db);
-			}
-		   
-			public UserSettingCollection Where(WhereDelegate<UserSettingColumns> where, OrderBy<UserSettingColumns> orderBy = null, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Where(where, orderBy, db);
-			}
-
-			public UserSetting OneWhere(WhereDelegate<UserSettingColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.OneWhere(where, db);
-			}
-
-			public static UserSetting GetOneWhere(WhereDelegate<UserSettingColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.GetOneWhere(where, db);
-			}
-		
-			public UserSetting FirstOneWhere(WhereDelegate<UserSettingColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.FirstOneWhere(where, db);
-			}
-
-			public UserSettingCollection Top(int count, WhereDelegate<UserSettingColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Top(count, where, db);
-			}
-
-			public UserSettingCollection Top(int count, WhereDelegate<UserSettingColumns> where, OrderBy<UserSettingColumns> orderBy, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Top(count, where, orderBy, db);
-			}
-
-			public long Count(WhereDelegate<UserSettingColumns> where, Database db = null)
-			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Count(where, db);
-			}
-	}
-
-	static UserSettingQueryContext _userSettings;
-	static object _userSettingsLock = new object();
-	public static UserSettingQueryContext UserSettings
-	{
-		get
-		{
-			return _userSettingsLock.DoubleCheckLock<UserSettingQueryContext>(ref _userSettings, () => new UserSettingQueryContext());
-		}
-	}
 	public class ClientServerConnectionQueryContext
 	{
 			public ClientServerConnectionCollection Where(WhereDelegate<ClientServerConnectionColumns> where, Database db = null)
@@ -863,56 +811,108 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _subscriptionsLock.DoubleCheckLock<SubscriptionQueryContext>(ref _subscriptions, () => new SubscriptionQueryContext());
 		}
 	}
-	public class HostDomainApplicationQueryContext
+	public class UserSettingQueryContext
 	{
-			public HostDomainApplicationCollection Where(WhereDelegate<HostDomainApplicationColumns> where, Database db = null)
+			public UserSettingCollection Where(WhereDelegate<UserSettingColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.Where(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Where(where, db);
 			}
 		   
-			public HostDomainApplicationCollection Where(WhereDelegate<HostDomainApplicationColumns> where, OrderBy<HostDomainApplicationColumns> orderBy = null, Database db = null)
+			public UserSettingCollection Where(WhereDelegate<UserSettingColumns> where, OrderBy<UserSettingColumns> orderBy = null, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.Where(where, orderBy, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Where(where, orderBy, db);
 			}
 
-			public HostDomainApplication OneWhere(WhereDelegate<HostDomainApplicationColumns> where, Database db = null)
+			public UserSetting OneWhere(WhereDelegate<UserSettingColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.OneWhere(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.OneWhere(where, db);
 			}
 
-			public static HostDomainApplication GetOneWhere(WhereDelegate<HostDomainApplicationColumns> where, Database db = null)
+			public static UserSetting GetOneWhere(WhereDelegate<UserSettingColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.GetOneWhere(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.GetOneWhere(where, db);
 			}
 		
-			public HostDomainApplication FirstOneWhere(WhereDelegate<HostDomainApplicationColumns> where, Database db = null)
+			public UserSetting FirstOneWhere(WhereDelegate<UserSettingColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.FirstOneWhere(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.FirstOneWhere(where, db);
 			}
 
-			public HostDomainApplicationCollection Top(int count, WhereDelegate<HostDomainApplicationColumns> where, Database db = null)
+			public UserSettingCollection Top(int count, WhereDelegate<UserSettingColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.Top(count, where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Top(count, where, db);
 			}
 
-			public HostDomainApplicationCollection Top(int count, WhereDelegate<HostDomainApplicationColumns> where, OrderBy<HostDomainApplicationColumns> orderBy, Database db = null)
+			public UserSettingCollection Top(int count, WhereDelegate<UserSettingColumns> where, OrderBy<UserSettingColumns> orderBy, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.Top(count, where, orderBy, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Top(count, where, orderBy, db);
 			}
 
-			public long Count(WhereDelegate<HostDomainApplicationColumns> where, Database db = null)
+			public long Count(WhereDelegate<UserSettingColumns> where, Database db = null)
 			{
-				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostDomainApplication.Count(where, db);
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.UserSetting.Count(where, db);
 			}
 	}
 
-	static HostDomainApplicationQueryContext _hostDomainApplications;
-	static object _hostDomainApplicationsLock = new object();
-	public static HostDomainApplicationQueryContext HostDomainApplications
+	static UserSettingQueryContext _userSettings;
+	static object _userSettingsLock = new object();
+	public static UserSettingQueryContext UserSettings
 	{
 		get
 		{
-			return _hostDomainApplicationsLock.DoubleCheckLock<HostDomainApplicationQueryContext>(ref _hostDomainApplications, () => new HostDomainApplicationQueryContext());
+			return _userSettingsLock.DoubleCheckLock<UserSettingQueryContext>(ref _userSettings, () => new UserSettingQueryContext());
+		}
+	}
+	public class ApplicationHostDomainQueryContext
+	{
+			public ApplicationHostDomainCollection Where(WhereDelegate<ApplicationHostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.Where(where, db);
+			}
+		   
+			public ApplicationHostDomainCollection Where(WhereDelegate<ApplicationHostDomainColumns> where, OrderBy<ApplicationHostDomainColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.Where(where, orderBy, db);
+			}
+
+			public ApplicationHostDomain OneWhere(WhereDelegate<ApplicationHostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.OneWhere(where, db);
+			}
+
+			public static ApplicationHostDomain GetOneWhere(WhereDelegate<ApplicationHostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.GetOneWhere(where, db);
+			}
+		
+			public ApplicationHostDomain FirstOneWhere(WhereDelegate<ApplicationHostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.FirstOneWhere(where, db);
+			}
+
+			public ApplicationHostDomainCollection Top(int count, WhereDelegate<ApplicationHostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.Top(count, where, db);
+			}
+
+			public ApplicationHostDomainCollection Top(int count, WhereDelegate<ApplicationHostDomainColumns> where, OrderBy<ApplicationHostDomainColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<ApplicationHostDomainColumns> where, Database db = null)
+			{
+				return Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ApplicationHostDomain.Count(where, db);
+			}
+	}
+
+	static ApplicationHostDomainQueryContext _applicationHostDomains;
+	static object _applicationHostDomainsLock = new object();
+	public static ApplicationHostDomainQueryContext ApplicationHostDomains
+	{
+		get
+		{
+			return _applicationHostDomainsLock.DoubleCheckLock<ApplicationHostDomainQueryContext>(ref _applicationHostDomains, () => new ApplicationHostDomainQueryContext());
 		}
 	}
 	public class ApplicationMachineQueryContext
@@ -1018,5 +1018,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		{
 			return _organizationUsersLock.DoubleCheckLock<OrganizationUserQueryContext>(ref _organizationUsers, () => new OrganizationUserQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

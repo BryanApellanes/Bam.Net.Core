@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data;
+using Bam.Net.Data.Repositories;
 using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication
@@ -67,7 +68,7 @@ namespace Bam.Net.Services.DataReplication
             DataProperty result = this.FirstOrDefault(dp => dp.Name.Equals(name));
             if (result == null)
             {
-                result = new Data.DataProperty { Name = name, Value = value };
+                result = new DataProperty { Name = name, Value = value };
                 Add(result);
                 return result;
             }
@@ -85,10 +86,36 @@ namespace Bam.Net.Services.DataReplication
         public static DataPropertySet FromInstance(object instance)
         {
             DataPropertySet result = new DataPropertySet();
-            instance.EachDataProperty((pi, obj) => new DataProperty { Name = pi.Name, Value = obj }).Each(dp => result.Add(dp));
+            instance.EachDataProperty((pi, obj) => new DataProperty { InstanceIdentifier = RepoData.GetInstanceId(instance)?.ToString(), Name = pi.Name, Value = obj }).Each(dp => result.Add(dp));
             return result;
         }
 
+        public static DataPropertySet FromSaveOperation(SaveOperation saveOperation)
+        {
+            return FromWriteOperation(saveOperation);
+        }
+
+        public static DataPropertySet FromWriteOperation(WriteOperation writeOperation)
+        {
+            return FromDataProperties(writeOperation.Properties);
+        }
+
+        public static DataPropertySet FromCreateOperation(CreateOperation createOperation)
+        {
+            return FromDataProperties(createOperation.Properties);
+        }
+        
+        public static DataPropertySet FromDataProperties(IEnumerable<DataProperty> dataProperties)
+        {
+            DataPropertySet result = new DataPropertySet();
+            foreach (DataProperty dataProperty in dataProperties)
+            {
+                result.Add(dataProperty);
+            }
+
+            return result;
+        }
+        
         public T ToInstanceOf<T>() where T: class, new()
         {
             T result = new T();

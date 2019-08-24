@@ -34,7 +34,7 @@ namespace Bam.Net.CoreServices
         public IApplicationNameProvider ApplicationNameProvider { get; set; }
 
         /// <summary>
-        /// Gets the name of the server application.
+        /// Gets the name of the server application.  This is the logical name provided by ApplicationNameProvider.
         /// </summary>
         /// <value>
         /// The name of the server application.
@@ -55,7 +55,7 @@ namespace Bam.Net.CoreServices
         /// Gets the name of the client application.
         /// </summary>
         /// <value>
-        /// The name of the client application.
+        /// The name of the client application.  This value comes from the custom HTTP header "X-Bam-AppName".
         /// </value>
         public string ClientApplicationName
         {
@@ -79,27 +79,67 @@ namespace Bam.Net.CoreServices
         }
 
         /// <summary>
-        /// The application representing what the server thinks it is
+        /// The organization that is owner of the server application.
+        /// </summary>
+        public ApplicationRegistration.Data.Organization ServerOrganization => ServerApplication?.Organization ?? Organization.Public;
+
+        private ApplicationRegistration.Data.Application _serverApplication;
+        private readonly object _serverApplicationLock = new object();
+        /// <summary>
+        /// The application representing what the server thinks it is.
         /// </summary>
         public ApplicationRegistration.Data.Application ServerApplication
         {
             get
             {
-                return ApplicationRegistrationRepository.GetOneApplicationWhere(c => c.Name == ServerApplicationName);
+                return _serverApplicationLock.DoubleCheckLock(ref _serverApplication,
+                    () => ApplicationRegistrationRepository.GetOneApplicationWhere(c =>
+                        c.Name == ServerApplicationName));
             }
         }
 
+        private ApplicationRegistration.Data.User _serverApplicationUser;
+        private readonly object _serverApplicationUserLock = new object();
+        public ApplicationRegistration.Data.User ServerApplicationUser
+        {
+            get
+            {
+                return _serverApplicationUserLock.DoubleCheckLock(ref _serverApplicationUser,
+                    () => ApplicationRegistrationRepository.GetOneUserWhere(c => c.Email == CurrentUser.Email));
+            }
+        }
+
+        public ApplicationRegistration.Data.Organization ClientOrganization => ClientApplication?.Organization ?? Organization.Public;
+
+        private ApplicationRegistration.Data.Application _clientApplication;
+        private readonly object _clientApplicationLock = new object();
         /// <summary>
-        /// The application representing what the client requested
+        /// The application that the client requested.
         /// </summary>
         public ApplicationRegistration.Data.Application ClientApplication
         {
             get
             {
-                return ApplicationRegistrationRepository.GetOneApplicationWhere(c => c.Name == ClientApplicationName);
+                return _clientApplicationLock.DoubleCheckLock(ref _clientApplication,
+                    () => ApplicationRegistrationRepository.GetOneApplicationWhere(c =>
+                        c.Name == ClientApplicationName));
             }
         }
 
+        private ApplicationRegistration.Data.User _clientApplicationUser;
+        private readonly object _clientApplicationUserLock = new object();
+        /// <summary>
+        /// Contains information about the user and their organizational relationships; for security, see CurrentUser.
+        /// </summary>
+        public ApplicationRegistration.Data.User ClientApplicationUser
+        {
+            get
+            {
+                return _clientApplicationUserLock.DoubleCheckLock(ref _clientApplicationUser,
+                    () => ApplicationRegistrationRepository.GetOneUserWhere(c => c.Email == CurrentUser.Email));
+            }
+        }
+        
         /// <summary>
         /// Returns true if the ApplicationNameProvider returns the same 
         /// ApplicationName as is specified by the request headers

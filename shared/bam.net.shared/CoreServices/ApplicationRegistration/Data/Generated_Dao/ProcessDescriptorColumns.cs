@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ProcessDescriptorColumns Id
         {
             get
@@ -119,6 +118,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ProcessDescriptorColumns("CommandLine");
             }
         }
+        public ProcessDescriptorColumns Key
+        {
+            get
+            {
+                return new ProcessDescriptorColumns("Key");
+            }
+        }
+        public ProcessDescriptorColumns CompositeKeyId
+        {
+            get
+            {
+                return new ProcessDescriptorColumns("CompositeKeyId");
+            }
+        }
+        public ProcessDescriptorColumns CompositeKey
+        {
+            get
+            {
+                return new ProcessDescriptorColumns("CompositeKey");
+            }
+        }
         public ProcessDescriptorColumns CreatedBy
         {
             get
@@ -154,6 +174,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ProcessDescriptorColumns("Created");
             }
         }
+
 
         public ProcessDescriptorColumns ApplicationId
         {

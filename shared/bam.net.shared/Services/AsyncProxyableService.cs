@@ -44,7 +44,7 @@ namespace Bam.Net.Services
         {
             CallbackService = callbackService;
             _proxyFactory = new ProxyFactory();
-            DefaultResponseHandler = ((r) => { Logger.Info("AsyncResponseRecieved: {0}", r.PropertiesToString()); });
+            DefaultResponseHandler = ((r) => { Logger.Info("AsyncResponseReceived: {0}", r.PropertiesToString()); });
             AsyncWaitTimeout = 1000 * 60 * 5; // 5 minutes
         }
 

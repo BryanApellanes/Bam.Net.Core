@@ -65,7 +65,7 @@ namespace Bam.Net.CoreServices
             logger = logger ?? Log.Default;
             DaoRepository repo = dataProvider.GetSysDaoRepository(logger, nameof(FileService));
             FileService fileService = new FileService(repo);
-            AssemblyServiceRepository assRepo = new AssemblyServiceRepository();
+            AssemblyManagementRepository assRepo = new AssemblyManagementRepository();
             assRepo.Database = dataProvider.GetSysDatabaseFor(assRepo);
             assRepo.EnsureDaoAssemblyAndSchema();
             AssemblyService assemblyService = new AssemblyService(DataProvider.Current, fileService, assRepo, appNameProvider);

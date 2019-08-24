@@ -20,7 +20,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 		}	
 
-				
         public DataPropertyColumns Id
         {
             get
@@ -42,11 +41,25 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DataPropertyColumns("Cuid");
             }
         }
-        public DataPropertyColumns InstanceCuid
+        public DataPropertyColumns TypeNamespace
         {
             get
             {
-                return new DataPropertyColumns("InstanceCuid");
+                return new DataPropertyColumns("TypeNamespace");
+            }
+        }
+        public DataPropertyColumns TypeName
+        {
+            get
+            {
+                return new DataPropertyColumns("TypeName");
+            }
+        }
+        public DataPropertyColumns InstanceIdentifier
+        {
+            get
+            {
+                return new DataPropertyColumns("InstanceIdentifier");
             }
         }
         public DataPropertyColumns Name
@@ -54,6 +67,27 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
             get
             {
                 return new DataPropertyColumns("Name");
+            }
+        }
+        public DataPropertyColumns Key
+        {
+            get
+            {
+                return new DataPropertyColumns("Key");
+            }
+        }
+        public DataPropertyColumns CompositeKeyId
+        {
+            get
+            {
+                return new DataPropertyColumns("CompositeKeyId");
+            }
+        }
+        public DataPropertyColumns CompositeKey
+        {
+            get
+            {
+                return new DataPropertyColumns("CompositeKey");
             }
         }
         public DataPropertyColumns CreatedBy
@@ -92,6 +126,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
             }
         }
 
+
         public DataPropertyColumns CreateOperationId
         {
             get
@@ -111,13 +146,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
             get
             {
                 return new DataPropertyColumns("DeleteOperationId");
-            }
-        }
-        public DataPropertyColumns QueryOperationId
-        {
-            get
-            {
-                return new DataPropertyColumns("QueryOperationId");
             }
         }
         public DataPropertyColumns SaveOperationId

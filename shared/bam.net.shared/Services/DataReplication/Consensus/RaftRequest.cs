@@ -1,5 +1,6 @@
 using System;
 using Bam.Net.Services.DataReplication.Consensus.Data;
+using Bam.Net.Services.DataReplication.Data;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -50,6 +51,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public RaftVote VoteResponse { get; set; }
         
         public RaftReplicationLog LogSyncResponse { get; set; }
+        
+        public Operation Operation { get; set; }
         
         public ulong? CommitSeq { get; set; }
         

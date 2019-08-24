@@ -10,7 +10,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     [Serializable]
     public class ActiveApiKeyIndex: AuditRepoData
     {
-        public string ApplicationCuid { get; set; }
+        public string ApplicationIdentifier { get; set; }
         public int Value { get; set; }
     }
 }

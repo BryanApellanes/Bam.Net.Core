@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public ActiveApiKeyIndexColumns Id
         {
             get
@@ -42,11 +41,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ActiveApiKeyIndexColumns("Cuid");
             }
         }
-        public ActiveApiKeyIndexColumns ApplicationCuid
+        public ActiveApiKeyIndexColumns ApplicationIdentifier
         {
             get
             {
-                return new ActiveApiKeyIndexColumns("ApplicationCuid");
+                return new ActiveApiKeyIndexColumns("ApplicationIdentifier");
             }
         }
         public ActiveApiKeyIndexColumns Value
@@ -91,6 +90,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new ActiveApiKeyIndexColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

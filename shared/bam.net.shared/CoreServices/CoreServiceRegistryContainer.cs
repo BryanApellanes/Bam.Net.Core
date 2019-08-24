@@ -115,7 +115,7 @@ namespace Bam.Net.CoreServices
 
             DaoRoleProvider daoRoleProvider = new DaoRoleProvider(userMgr.Database);
             RoleService coreRoleService = new RoleService(daoRoleProvider, conf);
-            AssemblyServiceRepository assSvcRepo = new AssemblyServiceRepository();
+            AssemblyManagementRepository assSvcRepo = new AssemblyManagementRepository();
             assSvcRepo.Database = dataSettings.GetSysDatabaseFor(assSvcRepo);
             assSvcRepo.EnsureDaoAssemblyAndSchema();
 
@@ -153,7 +153,7 @@ namespace Bam.Net.CoreServices
                 .For<IStorableTypesProvider>().Use<NamespaceRepositoryStorableTypesProvider>()
                 .For<FileService>().Use<FileService>()
                 .For<IFileService>().Use<FileService>()
-                .For<AssemblyServiceRepository>().Use(assSvcRepo)
+                .For<AssemblyManagementRepository>().Use(assSvcRepo)
                 .For<IAssemblyService>().Use<AssemblyService>()
                 .For<ServiceRegistryRepository>().Use(serviceRegistryRepo)
                 .For<ServiceRegistryService>().Use<ServiceRegistryService>()

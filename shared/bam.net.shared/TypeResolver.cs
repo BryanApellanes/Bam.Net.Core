@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.Data.Dynamic
+namespace Bam.Net
 {
     public class TypeResolver : ITypeResolver
     {
@@ -14,6 +14,13 @@ namespace Bam.Net.Data.Dynamic
             _assemblies = new List<Assembly>(AppDomain.CurrentDomain.GetAssemblies());
         }
 
+        static TypeResolver _defaultTypeResolver;
+        static readonly object _defaultLock = new object();
+        public static TypeResolver Default
+        {
+            get { return _defaultLock.DoubleCheckLock(ref _defaultTypeResolver, () => new TypeResolver()); }
+        }
+        
         List<Assembly> _assemblies;
         public Assembly[] Assemblies
         {
@@ -31,7 +38,7 @@ namespace Bam.Net.Data.Dynamic
             }
         }
 
-        public Type ResolveType(string typeName)
+        public virtual Type ResolveType(string typeName)
         {
             Type type = Type.GetType(typeName);
             if(type == null && ScanAssemblies)
@@ -53,7 +60,7 @@ namespace Bam.Net.Data.Dynamic
             return type;
         }
 
-        public Type ResolveType(string nameSpace, string typeName)
+        public virtual Type ResolveType(string nameSpace, string typeName)
         {
             return ResolveType($"{nameSpace}.{typeName}");
         }

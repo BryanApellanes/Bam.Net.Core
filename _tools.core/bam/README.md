@@ -2,7 +2,7 @@
 
 Bam.exe is a tool used to manage BamFramework features and functionality.
 
-TL;DR
+TL;DR (see as code reference ./Shell/LifeCycleProvider.cs)
 
 - bam /config
 - bam /init

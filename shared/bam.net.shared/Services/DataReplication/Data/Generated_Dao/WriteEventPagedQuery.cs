@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class WriteEventPagedQuery: PagedQuery<WriteEventColumns, WriteEvent>
     { 
-		public WriteEventPagedQuery(WriteEventColumns orderByColumn, WriteEventQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public WriteEventPagedQuery(WriteEventColumns orderByColumn,WriteEventQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

@@ -132,7 +132,7 @@ namespace Bam.Net.Data.Repositories
         }
 
         /// <summary>
-        /// If true query results will be wrapped
+        /// If true query results are wrapped
         /// to enable lazy loading of child collections;
         /// the default is true.  Can cause a performance
         /// hit for large result sets.
@@ -191,7 +191,7 @@ namespace Bam.Net.Data.Repositories
             set
             {
                 _daoAssembly = value;
-                NullifyDaoAssemblyOnTypeAdd = false;
+                NullifyDaoAssemblyOnAddType = false;
             }
         }
         
@@ -202,7 +202,7 @@ namespace Bam.Net.Data.Repositories
         /// false.  This can be set to false if the DaoAssembly
         /// has already been set and you wish for it not to be reset.
         /// </summary>
-        protected bool NullifyDaoAssemblyOnTypeAdd { get; set; }
+        protected bool NullifyDaoAssemblyOnAddType { get; set; }
 
         protected EnsureSchemaStatus SchemaStatus { get; set; }
         /// <summary>
@@ -325,12 +325,12 @@ namespace Bam.Net.Data.Repositories
 			{
 				throw new NoIdPropertyException(type);
 			}
-            if(StorableTypes.Count() == 0)
+            if(!StorableTypes.Any())
             {
                 SetDaoNamespace(type);
             }
 			base.AddType(type);
-            if (NullifyDaoAssemblyOnTypeAdd)
+            if (NullifyDaoAssemblyOnAddType)
             {
                 _daoAssembly = null;
             }
@@ -1143,7 +1143,12 @@ namespace Bam.Net.Data.Repositories
             {
                 queryParameters.Keys.Rest(1, property =>
                 {
-                    filter.And(new QueryFilter(property) == queryParameters[property]);
+	                object propertyValue = queryParameters[property];
+	                if (propertyValue is ulong ulongPropertyValue)
+	                {
+		                propertyValue = Dao.MapUlongToLong(ulongPropertyValue);
+	                }
+                    filter.And(new QueryFilter(property) == propertyValue);
                 });
             }
             return filter;
@@ -1205,7 +1210,7 @@ namespace Bam.Net.Data.Repositories
                 FireEvent(GenerateDaoAssemblySucceeded, args);
             };
 
-            NullifyDaoAssemblyOnTypeAdd = true;
+            NullifyDaoAssemblyOnAddType = true;
             WrapByDefault = true;
             WarningsAsErrors = true;
             Logger = Log.Default;

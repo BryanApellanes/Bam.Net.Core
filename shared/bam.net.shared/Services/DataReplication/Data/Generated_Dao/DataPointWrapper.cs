@@ -25,11 +25,11 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 
 		public DataPointWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -47,6 +47,22 @@ namespace Bam.Net.Services.DataReplication.Data.Wrappers
 		}
 
 
+        Bam.Net.Services.DataReplication.Data.DataPointOrigin _dataPointOrigin;
+		public override Bam.Net.Services.DataReplication.Data.DataPointOrigin DataPointOrigin
+		{
+			get
+			{
+				if (_dataPointOrigin == null)
+				{
+					_dataPointOrigin = (Bam.Net.Services.DataReplication.Data.DataPointOrigin)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.Services.DataReplication.Data.DataPointOrigin));
+				}
+				return _dataPointOrigin;
+			}
+			set
+			{
+				_dataPointOrigin = value;
+			}
+		}
 
 
 	}

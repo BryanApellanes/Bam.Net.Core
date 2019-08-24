@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 		public SubscriptionWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -47,14 +47,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 		}
 
 
-Bam.Net.CoreServices.ApplicationRegistration.Data.User _user;
+        Bam.Net.CoreServices.ApplicationRegistration.Data.User _user;
 		public override Bam.Net.CoreServices.ApplicationRegistration.Data.User User
 		{
 			get
 			{
 				if (_user == null)
 				{
-					_user = (Bam.Net.CoreServices.ApplicationRegistration.Data.User)Repository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.User));
+					_user = (Bam.Net.CoreServices.ApplicationRegistration.Data.User)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.ApplicationRegistration.Data.User));
 				}
 				return _user;
 			}
@@ -63,6 +63,7 @@ Bam.Net.CoreServices.ApplicationRegistration.Data.User _user;
 				_user = value;
 			}
 		}
+
 
 	}
 	// -- generated

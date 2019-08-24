@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 
 		public OrganizationWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -46,14 +46,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Wrappers
 			}
 		}
 
-Bam.Net.CoreServices.ApplicationRegistration.Data.Application[] _applications;
+        Bam.Net.CoreServices.ApplicationRegistration.Data.Application[] _applications;
 		public override Bam.Net.CoreServices.ApplicationRegistration.Data.Application[] Applications
 		{
 			get
 			{
 				if (_applications == null)
 				{
-					_applications = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Organization, Bam.Net.CoreServices.ApplicationRegistration.Data.Application>(this).ToArray();
+					_applications = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.ApplicationRegistration.Data.Organization, Bam.Net.CoreServices.ApplicationRegistration.Data.Application>(this).ToArray();
 				}
 				return _applications;
 			}
@@ -63,8 +63,9 @@ Bam.Net.CoreServices.ApplicationRegistration.Data.Application[] _applications;
 			}
 		}
 
-// Xref property: Left -> Organization ; Right -> User
+        // left xref
 
+// Left Xref property: Left -> Organization ; Right -> User
 		Bam.Net.CoreServices.ApplicationRegistration.Data.User[] _users;
 		public override Bam.Net.CoreServices.ApplicationRegistration.Data.User[] Users
 		{
@@ -72,8 +73,8 @@ Bam.Net.CoreServices.ApplicationRegistration.Data.Application[] _applications;
 			{
 				if(_users == null || _users.Length == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.OrganizationUser,  Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.User>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.OrganizationUser, Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.User>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_users = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.ApplicationRegistration.Data.User>().ToArray();
 					SetUpdatedXrefCollectionProperty("Users", this.GetType().GetProperty("Users"));					
 				}
@@ -86,6 +87,8 @@ Bam.Net.CoreServices.ApplicationRegistration.Data.Application[] _applications;
 				SetUpdatedXrefCollectionProperty("Users", this.GetType().GetProperty("Users"));
 			}
 		}
+
+
 	}
 	// -- generated
 }																								

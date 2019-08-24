@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class Machine: AuditRepoData
+    public class Machine: KeyedRepoData
     {
         public Machine()
         {
@@ -49,7 +49,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
                 _hostAddresses = value;
             }
         }
+        
+        [CompositeKey]
         public string Name { get; set; }
+        
+        [CompositeKey]
         public string DnsName { get; set; }
         public virtual List<ProcessDescriptor> Processes { get; set; }
 

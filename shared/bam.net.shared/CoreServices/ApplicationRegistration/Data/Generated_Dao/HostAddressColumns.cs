@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			}
 		}	
 
-				
         public HostAddressColumns Id
         {
             get
@@ -70,6 +69,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
                 return new HostAddressColumns("Created");
             }
         }
+
 
         public HostAddressColumns MachineId
         {

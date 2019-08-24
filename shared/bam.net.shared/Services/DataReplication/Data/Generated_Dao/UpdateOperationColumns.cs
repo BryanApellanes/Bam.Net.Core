@@ -20,7 +20,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 		}	
 
-				
         public UpdateOperationColumns Id
         {
             get
@@ -54,6 +53,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
             get
             {
                 return new UpdateOperationColumns("TypeName");
+            }
+        }
+        public UpdateOperationColumns AssemblyPath
+        {
+            get
+            {
+                return new UpdateOperationColumns("AssemblyPath");
             }
         }
         public UpdateOperationColumns CreatedBy
@@ -91,6 +97,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new UpdateOperationColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

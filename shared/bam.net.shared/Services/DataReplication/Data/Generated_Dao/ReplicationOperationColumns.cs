@@ -20,7 +20,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			}
 		}	
 
-				
         public ReplicationOperationColumns Id
         {
             get
@@ -98,6 +97,13 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new ReplicationOperationColumns("TypeName");
             }
         }
+        public ReplicationOperationColumns AssemblyPath
+        {
+            get
+            {
+                return new ReplicationOperationColumns("AssemblyPath");
+            }
+        }
         public ReplicationOperationColumns CreatedBy
         {
             get
@@ -133,6 +139,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new ReplicationOperationColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

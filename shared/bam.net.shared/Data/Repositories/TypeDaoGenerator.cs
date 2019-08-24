@@ -489,7 +489,7 @@ namespace Bam.Net.Data.Repositories
                     Message = "{0}:\r\nStackTrace: {1}"._Format(Message, ex.StackTrace);
                 }
                 compilationEx = ex;
-                FireGenerateDaoAssemblyFailed();
+                FireGenerateDaoAssemblyFailed(ex);
                 return false;
             }
         }
@@ -499,9 +499,9 @@ namespace Bam.Net.Data.Repositories
             FireEvent(GenerateDaoAssemblySucceeded, args);
         }
         
-        protected void FireGenerateDaoAssemblyFailed()
+        protected void FireGenerateDaoAssemblyFailed(Exception ex = null)
         {
-            FireEvent(GenerateDaoAssemblyFailed, EventArgs.Empty);
+            FireEvent(GenerateDaoAssemblyFailed, new GenerateDaoAssemblyEventArgs(ex));
         }
         
         protected internal CompilerResults GenerateAndCompile(string assemblyNameToCreate, string writeSourceTo)

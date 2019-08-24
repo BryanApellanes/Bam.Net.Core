@@ -100,7 +100,7 @@ namespace Bam.Net.Services.Tests
         [UnitTest]
         public void SaveDescriptorDoesntDuplicate()
         {
-            AssemblyServiceRepository repo = GetTestRepo(nameof(SaveDescriptorDoesntDuplicate));
+            AssemblyManagementRepository repo = GetTestRepo(nameof(SaveDescriptorDoesntDuplicate));
 
             AssemblyDescriptor descriptor = new AssemblyDescriptor(Assembly.GetExecutingAssembly());
 
@@ -134,7 +134,7 @@ namespace Bam.Net.Services.Tests
         [UnitTest]
         public void SaveDescriptorSavesReferences()
         {
-            AssemblyServiceRepository repo = GetAssemblyManagementRepository(GetConsoleLogger(), nameof(SaveDescriptorSavesReferences));
+            AssemblyManagementRepository repo = GetAssemblyManagementRepository(GetConsoleLogger(), nameof(SaveDescriptorSavesReferences));
             repo.Database.TryEnsureSchema<Dao.AssemblyDescriptor>();
             AssemblyDescriptor[] descriptors = AssemblyDescriptor.GetCurrentAppDomainDescriptors().ToArray();
 
@@ -159,7 +159,7 @@ namespace Bam.Net.Services.Tests
         [ConsoleAction]
         public void ProcessRuntimeDescriptorSaveTest()
         {
-            AssemblyServiceRepository repo = GetAssemblyManagementRepository(GetConsoleLogger(), nameof(ProcessRuntimeDescriptorSaveTest));
+            AssemblyManagementRepository repo = GetAssemblyManagementRepository(GetConsoleLogger(), nameof(ProcessRuntimeDescriptorSaveTest));
             repo.SetDaoNamespace<ProcessRuntimeDescriptor>();
             repo.Database.TryEnsureSchema<Dao.AssemblyDescriptor>();
             List<AssemblyDescriptor> descriptors = AssemblyDescriptor.GetCurrentAppDomainDescriptors().ToList();
@@ -188,7 +188,7 @@ namespace Bam.Net.Services.Tests
         [IntegrationTest]
         public void LoadAndRestoreCurrentRuntimeTestAsync()
         {
-            AssemblyServiceRepository assManRepo = GetTestRepo(nameof(LoadAndRestoreCurrentRuntimeTestAsync));
+            AssemblyManagementRepository assManRepo = GetTestRepo(nameof(LoadAndRestoreCurrentRuntimeTestAsync));
             DaoRepository fileRepo = new DaoRepository()
             {
                 Database = assManRepo.Database
@@ -237,14 +237,14 @@ namespace Bam.Net.Services.Tests
             return logger;
         }
 
-        private static AssemblyServiceRepository GetAssemblyManagementRepository(ConsoleLogger logger = null, string databaseName = null, Assembly daoAssembly = null)
+        private static AssemblyManagementRepository GetAssemblyManagementRepository(ConsoleLogger logger = null, string databaseName = null, Assembly daoAssembly = null)
         {
-            return new AssemblyServiceRepository() { Logger = logger, Database = new SQLiteDatabase(".", databaseName ?? "AssemblyManagementServiceTest_DaoRepoData") };
+            return new AssemblyManagementRepository() { Logger = logger, Database = new SQLiteDatabase(".", databaseName ?? "AssemblyManagementServiceTest_DaoRepoData") };
         }
 
-        private AssemblyServiceRepository GetTestRepo(string databaseName)
+        private AssemblyManagementRepository GetTestRepo(string databaseName)
         {
-            AssemblyServiceRepository repo = GetAssemblyManagementRepository(GetConsoleLogger(), databaseName);
+            AssemblyManagementRepository repo = GetAssemblyManagementRepository(GetConsoleLogger(), databaseName);
             repo.SetDaoNamespace<ProcessRuntimeDescriptor>();
             repo.Database.TryEnsureSchema<Dao.AssemblyDescriptor>();
             Dao.AssemblyDescriptor.LoadAll(repo.Database).Delete(repo.Database);

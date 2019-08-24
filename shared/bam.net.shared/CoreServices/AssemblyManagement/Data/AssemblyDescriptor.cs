@@ -12,7 +12,7 @@ using Bam.Net.CoreServices.AssemblyManagement.Data;
 namespace Bam.Net.CoreServices.AssemblyManagement.Data
 {
     [Serializable]
-    public class AssemblyDescriptor: KeyHashRepoData
+    public class AssemblyDescriptor: CompositeKeyRepoData
     {
         public AssemblyDescriptor()
         { }

@@ -8,7 +8,7 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class Organization: AuditRepoData
+    public class Organization: KeyedAuditRepoData
     {
         static Organization _public;
         static object _publicLock = new object();
@@ -20,6 +20,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
             }
         }
 
+        [CompositeKey]
         public string Name { get; set; }
         public virtual Application[] Applications { get; set; }
         public virtual User[] Users { get; set; }

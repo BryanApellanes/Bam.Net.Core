@@ -35,12 +35,16 @@ namespace Bam.Net.Services.DataReplication
 
         public void DecodeProperty<T>(RaftLogEntry raftLogEntry, T setOn)
         {
+            DecodeProperty(raftLogEntry, typeof(T), setOn);
+        }
+        
+        public void DecodeProperty(RaftLogEntry raftLogEntry, Type type, object setOn)
+        {
             try
             {
                 Args.ThrowIfNull(raftLogEntry, "raftLogEntry");
                 Args.ThrowIfNull(setOn, "setOn");
                 
-                Type type = typeof(T);
                 string propertyName = TypeMap.GetPropertyShortName(raftLogEntry.PropertyId);
                 long requestedTypeId = TypeMap.GetTypeId(type);
                 Expect.AreEqual(raftLogEntry.TypeId, requestedTypeId, "Types don't match");

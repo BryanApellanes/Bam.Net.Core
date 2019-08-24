@@ -35,9 +35,7 @@ namespace Bam.Net.Testing.Unit
 
         public static List<UnitTestMethod> FromAssembly(Assembly assembly, string testGroup)
         {
-            return FromAssembly(assembly).Where(utm => utm.Method.HasCustomAttributeOfType<TestGroupAttribute>(
-                                                           out TestGroupAttribute testGroupAttribute)
-                                                       && testGroupAttribute.Groups.Contains(testGroup)).ToList();
+            return FromAssembly(assembly).Where(utm =>utm.Method.GetCustomAttributes<TestGroupAttribute>().FirstOrDefault(attr => attr.Groups.Contains(testGroup)) != null).ToList();
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -56,15 +56,17 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		private void SetChildren()
 		{
 
+
 			if(_database != null)
 			{
-				this.ChildCollections.Add("ConfigurationSetting_ConfigurationId", new ConfigurationSettingCollection(Database.GetQuery<ConfigurationSettingColumns, ConfigurationSetting>((c) => c.ConfigurationId == GetULongValue("Id")), this, "ConfigurationId"));				
-			}						
-		}
+				this.ChildCollections.Add("ConfigurationSetting_ConfigurationId", new ConfigurationSettingCollection(Database.GetQuery<ConfigurationSettingColumns, ConfigurationSetting>((c) => c.ConfigurationId == GetULongValue("Id")), this, "ConfigurationId"));
+			}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -77,7 +79,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -91,7 +93,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -105,7 +107,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Name, columnName:Name	
+	// property:Name, columnName: Name	
 	[Bam.Net.Data.Column(Name="Name", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Name
 	{
@@ -119,7 +121,21 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:CreatedBy, columnName:CreatedBy	
+	// property:ApplicationKey, columnName: ApplicationKey	
+	[Bam.Net.Data.Column(Name="ApplicationKey", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? ApplicationKey
+	{
+		get
+		{
+			return GetULongValue("ApplicationKey");
+		}
+		set
+		{
+			SetValue("ApplicationKey", value);
+		}
+	}
+
+	// property:CreatedBy, columnName: CreatedBy	
 	[Bam.Net.Data.Column(Name="CreatedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string CreatedBy
 	{
@@ -133,7 +149,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:ModifiedBy, columnName:ModifiedBy	
+	// property:ModifiedBy, columnName: ModifiedBy	
 	[Bam.Net.Data.Column(Name="ModifiedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string ModifiedBy
 	{
@@ -147,7 +163,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Modified, columnName:Modified	
+	// property:Modified, columnName: Modified	
 	[Bam.Net.Data.Column(Name="Modified", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Modified
 	{
@@ -161,7 +177,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Deleted, columnName:Deleted	
+	// property:Deleted, columnName: Deleted	
 	[Bam.Net.Data.Column(Name="Deleted", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Deleted
 	{
@@ -175,7 +191,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	// property:Created, columnName:Created	
+	// property:Created, columnName: Created	
 	[Bam.Net.Data.Column(Name="Created", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Created
 	{
@@ -190,14 +206,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 	}
 
 
-
 	// start ApplicationId -> ApplicationId
 	[Bam.Net.Data.ForeignKey(
         Table="Configuration",
-		Name="ApplicationId", 
-		DbDataType="BigInt", 
+		Name="ApplicationId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="Application",
 		Suffix="1")]
@@ -213,7 +228,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	Application _applicationOfApplicationId;
+    Application _applicationOfApplicationId;
 	public Application ApplicationOfApplicationId
 	{
 		get
@@ -225,14 +240,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _applicationOfApplicationId;
 		}
 	}
-	
+
 	// start MachineId -> MachineId
 	[Bam.Net.Data.ForeignKey(
         Table="Configuration",
-		Name="MachineId", 
-		DbDataType="BigInt", 
+		Name="MachineId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="Machine",
 		Suffix="2")]
@@ -248,7 +263,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 	}
 
-	Machine _machineOfMachineId;
+    Machine _machineOfMachineId;
 	public Machine MachineOfMachineId
 	{
 		get
@@ -260,8 +275,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return _machineOfMachineId;
 		}
 	}
-	
-				
+
 
 	[Bam.Net.Exclude]	
 	public ConfigurationSettingCollection ConfigurationSettingsByConfigurationId
@@ -286,14 +300,16 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return c;
 		}
 	}
-			
+	
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -304,32 +320,32 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			{
 				var colFilter = new ConfigurationColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the Configuration table.
-		/// </summary>
+        /// Return every record in the Configuration table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static ConfigurationCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<Configuration>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<Configuration>();
-			var results = new ConfigurationCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<Configuration>();
+            var results = new ConfigurationCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<Configuration>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<Configuration>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -345,21 +361,21 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<Configuration>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<ConfigurationColumns> where, Action<IEnumerable<Configuration>> batchProcessor, Database database = null)
 		{
@@ -371,27 +387,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ConfigurationColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<Configuration>> batchProcessor, Bam.Net.Data.OrderBy<ConfigurationColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<ConfigurationColumns> where, Action<IEnumerable<Configuration>> batchProcessor, Bam.Net.Data.OrderBy<ConfigurationColumns> orderBy, Database database = null)
 		{
@@ -402,13 +418,13 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ConfigurationColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		public static Configuration GetById(uint id, Database database = null)
@@ -447,7 +463,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static ConfigurationCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<ConfigurationColumns> whereDelegate = (c) => filter;
@@ -455,9 +471,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a ConfigurationColumns 
+		/// <param name="where">A Func delegate that recieves a ConfigurationColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -468,27 +484,27 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			database = database ?? Db.For<Configuration>();
 			return new ConfigurationCollection(database.GetQuery<ConfigurationColumns, Configuration>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static ConfigurationCollection Where(WhereDelegate<ConfigurationColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<Configuration>();
 			var results = new ConfigurationCollection(database, database.GetQuery<ConfigurationColumns, Configuration>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -498,7 +514,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static ConfigurationCollection Where(WhereDelegate<ConfigurationColumns> where, OrderBy<ConfigurationColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<Configuration>();
 			var results = new ConfigurationCollection(database, database.GetQuery<ConfigurationColumns, Configuration>(where, orderBy), true);
 			return results;
@@ -506,9 +522,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;ConfigurationColumns&gt;.
+		/// WhereDelegate`ConfigurationColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -517,9 +533,9 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			var results = new ConfigurationCollection(database, Select<ConfigurationColumns>.From<Configuration>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -537,8 +553,8 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -551,7 +567,29 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ConfigurationColumns> where, Database database = null)
+		{
+			SetOneWhere(where, out Configuration ignore, database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ConfigurationColumns> where, out Configuration result, Database database = null)
+		{
+			result = GetOneWhere(where, database);
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -564,7 +602,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			if(result == null)
 			{
 				ConfigurationColumns c = new ConfigurationColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -573,11 +611,11 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single Configuration instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -588,12 +626,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<ConfigurationColumns>.
+		/// WhereDelegate`ConfigurationColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -604,10 +642,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -625,12 +663,12 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -652,7 +690,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -674,14 +712,14 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -698,10 +736,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -715,10 +753,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		public static ConfigurationCollection Top(int count, WhereDelegate<ConfigurationColumns> where, OrderBy<ConfigurationColumns> orderBy, Database database = null)
 		{
 			ConfigurationColumns c = new ConfigurationColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<Configuration>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<Configuration>(count);
 			query.Where(filter);
 
@@ -745,10 +783,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -802,10 +840,10 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -824,7 +862,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 		/// <summary>
-		/// Return the count of Configurations
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -841,7 +879,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns 
+		/// <param name="where">A WhereDelegate that recieves a ConfigurationColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ConfigurationColumns and other values
 		/// </param>
@@ -855,26 +893,26 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<Configuration>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<Configuration>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<Configuration>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<Configuration>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static Configuration CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<Configuration>();			
+			Database db = database ?? Db.For<Configuration>();
 			var dao = new Configuration();
 			filter.Parameters.Each(p=>
 			{
@@ -883,7 +921,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static Configuration OneOrThrow(ConfigurationCollection c)
 		{
 			if(c.Count == 1)
@@ -899,4 +937,4 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		}
 
 	}
-}																								
+}

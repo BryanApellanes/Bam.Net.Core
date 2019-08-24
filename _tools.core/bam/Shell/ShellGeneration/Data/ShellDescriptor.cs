@@ -3,7 +3,7 @@ using Bam.Net.Data.Repositories;
 
 namespace Bam.Shell.ShellGeneration.Data
 {
-    public class ShellDescriptor : KeyHashRepoData
+    public class ShellDescriptor : CompositeKeyRepoData
     {
         public ShellDescriptor()
         {

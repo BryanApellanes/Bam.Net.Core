@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 namespace Bam.Net.CoreServices.ApplicationRegistration.Data
 {
     [Serializable]
-    public class UserSetting: AuditRepoData
+    public class UserSetting: KeyedAuditRepoData
     {
+        [CompositeKey]
         public string Email { get; set; }
+        [CompositeKey]
         public string Name { get; set; }
         public string Value { get; set; }
     }

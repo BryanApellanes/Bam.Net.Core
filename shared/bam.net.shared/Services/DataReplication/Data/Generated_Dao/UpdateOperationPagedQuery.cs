@@ -12,6 +12,6 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 {
     public class UpdateOperationPagedQuery: PagedQuery<UpdateOperationColumns, UpdateOperation>
     { 
-		public UpdateOperationPagedQuery(UpdateOperationColumns orderByColumn, UpdateOperationQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public UpdateOperationPagedQuery(UpdateOperationColumns orderByColumn,UpdateOperationQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

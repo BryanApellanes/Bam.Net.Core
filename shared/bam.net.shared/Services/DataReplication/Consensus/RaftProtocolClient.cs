@@ -1,9 +1,12 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Bam.Net.Server.Streaming;
 using Bam.Net.Services.DataReplication.Consensus.Data;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
+using Bam.Net.Services.DataReplication.Data;
+using DNS.Protocol;
 
 namespace Bam.Net.Services.DataReplication.Consensus
 {
@@ -35,6 +38,16 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public StreamingClient<RaftRequest, RaftResponse> StreamingClient { get; set; }
 
+        public object SendRetrieveRequest(RetrieveOperation retrieveOperation)
+        {
+            Args.ThrowIfNull(retrieveOperation, "retrieveOperation");
+            StreamingResponse<RaftResponse> response =
+                StreamingClient.SendRequest(CreateRetrieveRequest(retrieveOperation));
+
+            Task.Run(() => ResponseHandler?.Invoke(response));
+            return response?.Body?.Data;
+        }
+        
         public void SendFollowerWriteRequest(RaftLogEntryWriteRequest writeRequest)
         {
             Args.ThrowIfNull(writeRequest, "writeRequest");
@@ -42,7 +55,8 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Uncommitted, "RaftLogEntry already committed");
             Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerWriteRequest));
 
-            StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.WriteValue));
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.WriteValue));
+            ResponseHandler?.Invoke(response);
         }
 
         public void SendFollowerCommitRequest(RaftLogEntryWriteRequest writeRequest)
@@ -52,7 +66,9 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIf(writeRequest.LogEntry.State != RaftLogEntryState.Committed, "RaftLogEntry not committed");
             Args.ThrowIf(writeRequest.TargetNodeState != RaftNodeState.Follower, "{0} called for RaftLogEntryWriteRequest not intended for follower.", nameof(SendFollowerCommitRequest));
 
-            StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.NotifyFollowerLeaderValueCommitted));
+            StreamingResponse<RaftResponse> response = StreamingClient.SendRequest(CreateRaftRequest(writeRequest, RaftRequestType.NotifyFollowerLeaderValueCommitted));
+
+            ResponseHandler?.Invoke(response);
         }
 
         public void ForwardWriteRequestToLeader(RaftLogEntryWriteRequest writeRequest)
@@ -165,6 +181,13 @@ namespace Bam.Net.Services.DataReplication.Consensus
                 RequestType = requestType,
                 WriteRequest = writeRequest
             };
+        }
+
+        protected RaftRequest CreateRetrieveRequest(RetrieveOperation retrieveOperation)
+        {
+            RaftRequest request = CreateRaftRequest(null, RaftRequestType.RetrieveRequest);
+            request.Operation = retrieveOperation;
+            return request;
         }
         
         /// <summary>
