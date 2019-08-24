@@ -14,4 +14,4 @@ FROM microsoft/dotnet:aspnetcore-runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
 ENV ASPNETCORE_ENVIRONMENT=Development
-ENTRYPOINT ["bamweb.exe", "/s"]
+ENTRYPOINT ["bamweb.exe", "/S", "/content:/bam/content", "/verbose"]

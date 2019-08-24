@@ -12,7 +12,7 @@ bake /discover:.\path_to__tools.core\
 To build discovered csproj files:
 
 ```
-bake /toolkit:.\recipe.json
+bake /recipe:.\recipe.json
 ```
 
 To discover and build in one command:

@@ -1,19 +1,22 @@
 {
   "ProjectRoot": "\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\",
   "ProjectFilePaths": [
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bake\\bake.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bam\\bam.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamd\\bamd.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bdb\\bdb.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bhrt\\bhrt.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\breve\\breve.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamrpc\\bamrpc.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamsdo\\bamsdo.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamtest\\bamtest.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamweb\\bamweb.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bambits\\bambits.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\laotze\\laotze.csproj",
-    "C:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\masuco\\masuco.csproj"
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bake\\bake.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bam\\bam.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bambot\\bambot.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamd\\bamd.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamdb\\bamdb.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamheart\\bamheart.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamrpc\\bamrpc.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamsdo\\bamsdo.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamtest\\bamtest.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\bamweb\\bamweb.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\breve\\breve.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\chunkr\\chunkr.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\laotze\\laotze.csproj",
+    "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\masuco\\masuco.csproj"
   ],
-  "OutputDirectory": "%HOMEDRIVE%%HOMEPATH%\\.bam\\toolkit"
+  "OutputDirectory": "C:\\Users\\bryan.THREEHEADZ\\.bam\\toolkit",
+  "BuildConfig": "Debug",
+  "OsName": "Windows"
 }
