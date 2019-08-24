@@ -25,6 +25,11 @@ namespace Bam.Net.Application
         public string[] ProjectFilePaths { get; set; }
         public string OutputDirectory { get; set; }
         
+        /// <summary>
+        /// The directory to output nuget packages to.
+        /// </summary>
+        public string NugetDirectory { get; set; }
+        
         [JsonConverter(typeof(StringEnumConverter))]
         public BuildConfig BuildConfig { get; set; }
         

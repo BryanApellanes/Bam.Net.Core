@@ -118,13 +118,7 @@ namespace Bam.Net.Application
                 recipe.OutputDirectory = GetArgument("output");
             }
             BamSettings settings = BamSettings.Load();
-            string outputDirectory = recipe.OutputDirectory;
-            if (outputDirectory.StartsWith("C:"))
-            {
-                outputDirectory = outputDirectory.TruncateFront(2);
-            }
-
-            outputDirectory.Replace("\\", "/");
+            string outputDirectory = GetOutputDirectory(recipe);
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
                 string projectName = Path.GetFileNameWithoutExtension(projectFile);
@@ -137,6 +131,31 @@ namespace Bam.Net.Application
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
                 OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, outputDirectory);
+            }
+        }
+
+        [ConsoleAction("pack", "pack the specified recipe")]
+        public void PackRecipe()
+        {
+            Recipe recipe = GetRecipe();
+            if (Arguments.Contains("outputNuget"))
+            {
+                recipe.NugetDirectory = GetArgument("outputNuget");
+            }
+            BamSettings settings = BamSettings.Load();
+            string nugetDirectory = GetNugetDirectory(recipe);
+            foreach (string projectFile in recipe.ProjectFilePaths)
+            {
+                string projectName = Path.GetFileNameWithoutExtension(projectFile);
+                if (projectName.Equals("bake"))
+                {
+                    continue;
+                }
+
+                string dotNetArgs = $"pack {projectFile} -c {recipe.BuildConfig} -o {recipe.NugetDirectory}";
+                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
+                startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
+                OutLineFormat("pack command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, nugetDirectory);
             }
         }
 
@@ -176,6 +195,29 @@ namespace Bam.Net.Application
             Thread.Sleep(300);
         }
         
+        private static string GetOutputDirectory(Recipe recipe)
+        {
+            string outputDirectory = recipe.OutputDirectory;
+            return CleanDirectoryPath(outputDirectory);
+        }
+
+        private static string GetNugetDirectory(Recipe recipe)
+        {
+            string nugetDirectory = recipe.NugetDirectory;
+            return CleanDirectoryPath(nugetDirectory);
+        }
+        
+        private static string CleanDirectoryPath(string outputDirectory)
+        {
+            if (outputDirectory.StartsWith("C:"))
+            {
+                outputDirectory = outputDirectory.TruncateFront(2);
+            }
+
+            outputDirectory.Replace("\\", "/");
+            return outputDirectory;
+        }
+
         private static List<string> GetProjectFilePaths(DirectoryInfo rootDir)
         {
             List<string> projectFilePaths = new List<string>();
@@ -251,6 +293,11 @@ namespace Bam.Net.Application
             if (Arguments.Contains("zipRecipe"))
             {
                 recipePath = GetArgument("zipRecipe", "ZIP: Please enter the path to the zip file to use");
+            }
+
+            if (Arguments.Contains("pack"))
+            {
+                recipePath = GetArgument("pack", "PACK: please enter the path to the recipe file to use");
             }
             if (!File.Exists(recipePath))
             {

@@ -17,6 +17,7 @@
     "c:\\bam\\src\\BamFrameworkCore\\Bam.Net\\_tools.core\\masuco\\masuco.csproj"
   ],
   "OutputDirectory": "C:\\Users\\bryan.THREEHEADZ\\.bam\\toolkit",
+  "NugetDirectory": "//core/share/nuget/internal",
   "BuildConfig": "Debug",
   "OsName": "Windows"
 }
