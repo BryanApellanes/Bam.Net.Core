@@ -276,9 +276,7 @@ namespace Bam.Net.Server
             if (loggerType == null)
             {
                 loggerType = typeof(ConsoleLogger);
-                ConsoleLogger tmp = new ConsoleLogger();
-                tmp.AddDetails = false;
-                tmp.UseColors = true;
+                ConsoleLogger tmp = new ConsoleLogger {AddDetails = false, UseColors = true};
                 logger = tmp;
             }
             else

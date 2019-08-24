@@ -1,4 +1,4 @@
-﻿# Bdb.exe
+﻿# Bamweb.exe
 
 The Bam Web Server hosts an HTTP server that serves content 
 from the directory specified in the config file by the key "ContentRoot".
