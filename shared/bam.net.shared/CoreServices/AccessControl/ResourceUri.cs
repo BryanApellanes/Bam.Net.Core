@@ -12,23 +12,26 @@ namespace Bam.Net.CoreServices.AccessControl
             Parse();
         }
 
-        public string Value { get; }
+        public ResourceUri(Uri uri) : this(uri.ToString())
+        {
+        }
 
-        public string Scheme { get; set; }
+        private string Value { get; }
 
-        public string Host { get; set; }
-        public string Path { get; set; }
-        public string QueryString { get; set; }
+        public override string ToString()
+        {
+            return Value;
+        }
+
+        public string Scheme { get; private set; }
+
+        public string Host { get; private set; }
+        public string Path { get; private set; }
+        public string QueryString { get; private set; }
 
         string[] _pathSegments;
-        public string[] PathSegments
-        {
-            get
-            {
-                return _pathSegments;
-            }
-        }
-        public Dictionary<string, string> QueryParams { get; set; }
+        public string[] PathSegments => _pathSegments;
+        public Dictionary<string, object> QueryParams { get; private set; }
 
         private void Parse()
         {

@@ -13,7 +13,7 @@ namespace Bam.Net.CoreServices.AccessControl.Data
     {
         [CompositeKey]
         public ulong ResourceHostId { get; set; }
-        public virtual ResourceHost Host { get; set; }
+        public virtual ResourceHost ResourceHost { get; set; }
 
         [CompositeKey]
         public ulong ParentId { get; set; }
@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices.AccessControl.Data
         public string Name { get; set; }
 
         [CompositeKey]
-        public string FullPath { get; set; }
+        public string Uri { get; set; }
 
         HashSet<PermissionSpecification> _permissions;
         public virtual List<PermissionSpecification> Permissions
@@ -71,7 +71,7 @@ namespace Bam.Net.CoreServices.AccessControl.Data
         {
             return new ResourceInfo
             {
-                Uri = FullPath,
+                Uri = Uri,
                 Path = GetPath(repo),
                 Permissions = Permissions.Select(p => p.ToInfo(repo)).ToList()
             };

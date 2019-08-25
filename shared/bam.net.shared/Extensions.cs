@@ -1031,18 +1031,38 @@ namespace Bam.Net
             return results;
         }
 
-        public static Dictionary<string, string> FromQueryString(this string queryString)
+        public static Dictionary<string, object> FromQueryString(this string queryString)
         {
             return QueryStringToDictionary(queryString);
         }
 
-        public static Dictionary<string, string> QueryStringToDictionary(this string queryString)
+        public static Dictionary<string, object> QueryStringToDictionary(this string queryString)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            Dictionary<string, object> result = new Dictionary<string, object>();
             queryString.DelimitSplit("?", "&").Each(nvp =>
             {
                 string[] nvps = nvp.DelimitSplit("=");
-                result.Add(nvps[0], nvps[1]);
+                string key = nvps[0];
+                string value = nvps[1];
+                if (result.ContainsKey(key))
+                {
+                    object currentValue = result[key];
+                    List<string> list = new List<string>();
+                    if (currentValue is List<string> existingList)
+                    {
+                        list = existingList; // use the existing list
+                    }
+                    else
+                    {
+                        list.Add((string)currentValue); // add the current value to the new list
+                        result[key] = list;
+                    }
+                    list.Add(value);
+                }
+                else
+                {
+                    result.Add(key, value);
+                }
             });
             return result;
         }
