@@ -4,7 +4,7 @@ Core services are common to all bam applications and are hosted at bamapps.net.
 
 ## UserRegistryService
 
-The UserRegistryService manages user accounts for a bam application.  It implements Bam.Net.UserAccounts.IUserManagerwhich is 
+The UserRegistryService manages user accounts for a bam application.  It implements Bam.Net.UserAccounts.IUserManager which is 
 useful for signing up and messaging new users.
 
 ## ApplicationRegistrationService

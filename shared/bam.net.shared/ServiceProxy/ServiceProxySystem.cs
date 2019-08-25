@@ -69,7 +69,7 @@ namespace Bam.Net.ServiceProxy
 
         /// <summary>
         /// Searches the specified folder for assemblies that contain types 
-        /// addorned with the specified attribute and registers each as
+        /// adorned with the specified attribute and registers each as
         /// services
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -85,7 +85,7 @@ namespace Bam.Net.ServiceProxy
 
         /// <summary>
         /// Searches the specified folder for assemblies that contain types 
-        /// addorned with the specified attribute and registers each as
+        /// adorned with the specified attribute and registers each as
         /// services
         /// </summary>
         /// <typeparam name="T"></typeparam>

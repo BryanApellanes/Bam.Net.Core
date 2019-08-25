@@ -17,7 +17,7 @@ using Bam.Net.Web;
 
 namespace Bam.Net.CoreServices
 {
-    public partial class ApplicationRegistrationService // core
+    public partial class ApplicationRegistryService // core
     {
     }
 }

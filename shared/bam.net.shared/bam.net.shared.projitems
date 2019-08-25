@@ -857,7 +857,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationNameNotSpecifiedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationProxyableService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\ApplicationRegistrationResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\ApplicationRegistrationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\ApplicationRegistryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\ApplicationRegistrationStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\ClientApplicationFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\Data\ActiveApiKeyIndex.cs" />
@@ -2276,7 +2276,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\ConfigurationServiceCredentialProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreAsyncProxyableService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreClientInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\HeartClientInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreLoggerClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\CoreProxyableService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Clients\IHasCoreClient.cs" />

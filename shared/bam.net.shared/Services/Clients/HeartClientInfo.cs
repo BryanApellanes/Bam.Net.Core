@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Services.Clients
 {
-    public class CoreClientInfo
+    public class HeartClientInfo
     {
-        public CoreClientInfo()
+        public HeartClientInfo()
         {
-            CoreHostName = "core.bamapps.net";
-            CorePort = 80;
+            HeartHostName = "heart.bamapps.net";
+            HeartPort = 80;
             ContentRoot = "/bam/content";
         }
-        public string CoreHostName { get; set; }
-        public int CorePort { get; set; }
+        public string HeartHostName { get; set; }
+        public int HeartPort { get; set; }
         public string ContentRoot { get; set; }
     }
 }

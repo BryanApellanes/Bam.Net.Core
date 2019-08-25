@@ -39,7 +39,7 @@ namespace Bam.Net.CoreServices
 
         public override CoreServiceResponse<Organization> LimitNotReachedAction()
         {
-            Organization org = User.Organizations.Where(c => c.Name == OrganizationName).FirstOrDefault();
+            Organization org = User.Organizations.FirstOrDefault(c => c.Name == OrganizationName);
             if (org == null)
             {
                 org = ApplicationRegistryRepository.OneOrganizationWhere(c => c.Name == OrganizationName);

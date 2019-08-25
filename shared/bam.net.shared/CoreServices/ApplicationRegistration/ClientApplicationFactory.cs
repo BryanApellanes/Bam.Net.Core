@@ -10,9 +10,9 @@ namespace Bam.Net.CoreServices
 {
     public class ClientApplicationFactory : MaximumLimitEnforcer<CoreServiceResponse<CoreServices.ApplicationRegistration.Data.Application>>
     {
-        public ClientApplicationFactory(ApplicationRegistrationService service, User user, string organizationName, ProcessDescriptor processDescriptor)
+        public ClientApplicationFactory(ApplicationRegistryService service, User user, string organizationName, ProcessDescriptor processDescriptor)
         {
-            CoreApplicationRegistryService = service;
+            ApplicationRegistryService = service;
             User = user;
             ApplicationRegistrationRepository = service.ApplicationRegistrationRepository;
             OrganizationName = organizationName;
@@ -21,9 +21,9 @@ namespace Bam.Net.CoreServices
             HostName = service.HostName;
         }
 
-        public ClientApplicationFactory(ApplicationRegistrationService service, User user)
+        public ClientApplicationFactory(ApplicationRegistryService service, User user)
         {
-            CoreApplicationRegistryService = service;
+            ApplicationRegistryService = service;
             User = user;
             ApplicationRegistrationRepository = service.ApplicationRegistrationRepository;
             OrganizationName = Organization.Public.Name;
@@ -41,7 +41,7 @@ namespace Bam.Net.CoreServices
 
         public ApplicationRegistrationRepository ApplicationRegistrationRepository { get; set; }
 
-        public ApplicationRegistrationService CoreApplicationRegistryService { get; set; } // TODO: rename this to CoreApplicationRegistrationService and test
+        public ApplicationRegistryService ApplicationRegistryService { get; set; }
 
         public override int GetMaximumLimit()
         {
@@ -83,7 +83,7 @@ namespace Bam.Net.CoreServices
                 ProcessDescriptor instance = new ProcessDescriptor { InstanceIdentifier = $"{ClientIpAddress}-{app.Name}-{app.Cuid}" };
                 app.Instances.Add(instance);
                 app.Machines.Add(new Machine { Name = HostName });
-                app = CoreApplicationRegistryService.AddApiKey(ApplicationRegistrationRepository, app);
+                app = ApplicationRegistryService.AddApiKey(ApplicationRegistrationRepository, app);
                 return new CoreServiceResponse<ApplicationRegistration.Data.Application>(app) { Success = true, Message = $"Application {applicationName} created" };
             }
             else

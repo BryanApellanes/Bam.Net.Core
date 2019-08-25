@@ -16,13 +16,13 @@ namespace Bam.Net.CoreServices
 	using Bam.Net.UserAccounts;
 
     
-    public class ApplicationRegistrationServiceClient: SecureServiceProxyClient<Bam.Net.CoreServices.Contracts.IApplicationRegistrationService>, Bam.Net.CoreServices.Contracts.IApplicationRegistrationService
+    public class ApplicationRegistryServiceClient: SecureServiceProxyClient<Bam.Net.CoreServices.Contracts.IApplicationRegistryService>, Bam.Net.CoreServices.Contracts.IApplicationRegistryService
     {
-        public ApplicationRegistrationServiceClient(): base(DefaultConfiguration.GetAppSetting("ApplicationRegistrationServiceUrl", "http://core.bamapps.net/"))
+        public ApplicationRegistryServiceClient(): base(DefaultConfiguration.GetAppSetting("ApplicationRegistrationServiceUrl", "http://core.bamapps.net/"))
         {
         }
 
-        public ApplicationRegistrationServiceClient(string baseAddress): base(baseAddress)
+        public ApplicationRegistryServiceClient(string baseAddress): base(baseAddress)
         {
         }
         
@@ -111,7 +111,7 @@ namespace Bam.Net.CoreServices.Contracts
 	using Bam.Net.UserAccounts;
 
     
-        public interface IApplicationRegistrationService
+        public interface IApplicationRegistryService
         {
 			ApiKeyInfo[] ListApiKeys();
 			ApiKeyInfo AddApiKey();
@@ -147,17 +147,17 @@ namespace Bam.Net.CoreServices
 	using System.Collections.Generic;
 	using Bam.Net.UserAccounts;
 
-	public class ApplicationRegistrationServiceProxy: ApplicationRegistrationService, IProxy 
+	public class ApplicationRegistryServiceProxy: ApplicationRegistryService, IProxy 
 	{
-		ApplicationRegistrationServiceClient _proxyClient;
-		public ApplicationRegistrationServiceProxy()
+		ApplicationRegistryServiceClient _proxyClient;
+		public ApplicationRegistryServiceProxy()
 		{
-			_proxyClient = new ApplicationRegistrationServiceClient();
+			_proxyClient = new ApplicationRegistryServiceClient();
 		}
 
-		public ApplicationRegistrationServiceProxy(string baseUrl)
+		public ApplicationRegistryServiceProxy(string baseUrl)
 		{
-			_proxyClient = new ApplicationRegistrationServiceClient(baseUrl);
+			_proxyClient = new ApplicationRegistryServiceClient(baseUrl);
 		}
 
 		public ServiceProxyClient Client
@@ -172,7 +172,7 @@ namespace Bam.Net.CoreServices
 		{
 			get
 			{
-				return typeof(ApplicationRegistrationService);
+				return typeof(ApplicationRegistryService);
 			}
 		}
 

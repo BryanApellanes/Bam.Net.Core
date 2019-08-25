@@ -38,14 +38,14 @@ namespace Bam.Net.CoreServices
         Dictionary<Type, List<ServiceRegistryContainerRegistrationResult>> _scanResults;
         protected ServiceRegistryService() { }
         public ServiceRegistryService(
-            IFileService fileservice, 
+            IFileService fileService, 
             IAssemblyService assemblyService, 
             ServiceRegistryRepository repo, 
             DaoRepository daoRepo, 
             AppConf appConf,
             DataProvider dataSettings = null) : base(daoRepo, appConf)
         {
-            FileService = fileservice;
+            FileService = fileService;
             ServiceRegistryRepository = repo;
             AssemblyService = assemblyService;
             DataDirectorySettings = dataSettings ?? DataProvider.Current;

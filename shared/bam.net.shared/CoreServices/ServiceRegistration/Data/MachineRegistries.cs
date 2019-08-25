@@ -8,7 +8,7 @@ using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.CoreServices.ServiceRegistration.Data
 {
-    public class MachineRegistries: AuditRepoData
+    public class MachineRegistries: KeyedAuditRepoData
     {
         public MachineRegistries()
         {

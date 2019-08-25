@@ -20,14 +20,14 @@ namespace Bam.Net.CoreServices
     [Proxy("appRegistrationSvc")]
     [Encrypt]
     [ServiceSubdomain("appregistration")]
-    public partial class ApplicationRegistrationService : ApplicationProxyableService, IApiKeyResolver, IApiKeyProvider, IApplicationNameProvider
+    public partial class ApplicationRegistryService : ApplicationProxyableService, IApiKeyResolver, IApiKeyProvider, IApplicationNameProvider
     {
         CacheManager _cacheManager;
         ApiKeyResolver _apiKeyResolver;
 
-        protected ApplicationRegistrationService() { }
+        protected ApplicationRegistryService() { }
 
-        public ApplicationRegistrationService(DataProvider dataSettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
+        public ApplicationRegistryService(DataProvider dataSettings, AppConf conf, ApplicationRegistrationRepository coreRepo, ILogger logger)
         {
             ApplicationRegistrationRepository = coreRepo;
             ApplicationRegistrationRepository.WarningsAsErrors = false;
@@ -183,7 +183,7 @@ namespace Bam.Net.CoreServices
             }
             catch (Exception ex)
             {
-                Logger.AddEntry("Exception occurred in {0}", ex, nameof(ApplicationRegistrationService.RegisterApplicationProcess));
+                Logger.AddEntry("Exception occurred in {0}", ex, nameof(ApplicationRegistryService.RegisterApplicationProcess));
                 return new CoreServiceResponse { Success = false, Message = ex.Message };
             }
         }
@@ -206,7 +206,7 @@ namespace Bam.Net.CoreServices
         [Exclude]
         public override object Clone()
         {
-            ApplicationRegistrationService result = new ApplicationRegistrationService(DataSettings, AppConf, ApplicationRegistrationRepository, Logger);
+            ApplicationRegistryService result = new ApplicationRegistryService(DataSettings, AppConf, ApplicationRegistrationRepository, Logger);
             result.CopyProperties(this);
             result.CopyEventHandlers(this);
             return result;
@@ -284,13 +284,13 @@ namespace Bam.Net.CoreServices
         [Exclude]
         public void SetKeyToken(NameValueCollection headers, string stringToHash)
         {
-            throw new InvalidOperationException($"It isn't appropriate for this service to be used for this purpose: {nameof(ApplicationRegistrationService)}.{nameof(ApplicationRegistrationService.SetKeyToken)}");
+            throw new InvalidOperationException($"It isn't appropriate for this service to be used for this purpose: {nameof(ApplicationRegistryService)}.{nameof(ApplicationRegistryService.SetKeyToken)}");
         }
 
         [Exclude]
         public void SetKeyToken(HttpWebRequest request, string stringToHash)
         {
-            throw new InvalidOperationException($"It isn't appropriate for this service to be used for this purpose: {nameof(ApplicationRegistrationService)}.{nameof(ApplicationRegistrationService.SetKeyToken)}");
+            throw new InvalidOperationException($"It isn't appropriate for this service to be used for this purpose: {nameof(ApplicationRegistryService)}.{nameof(ApplicationRegistryService.SetKeyToken)}");
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace Bam.Net.CoreServices
             }
             catch (Exception ex)
             {
-                return HandleException(ex, nameof(ApplicationRegistrationService.RegisterClient));
+                return HandleException(ex, nameof(ApplicationRegistryService.RegisterClient));
             }
         }
 

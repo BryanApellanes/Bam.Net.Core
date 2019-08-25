@@ -37,7 +37,7 @@ namespace Bam.Net.CoreServices.Files.Data
         /// </summary>
         public long StreamIndex { get; set; }
 
-        public byte[] GetData(FileService fileService)
+        public byte[] GetData(IFileService fileService)
         {
             return fileService.GetChunkData(ChunkHash).Data.FromBase64();
         }
