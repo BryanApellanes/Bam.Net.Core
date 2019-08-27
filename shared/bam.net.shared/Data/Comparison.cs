@@ -22,6 +22,7 @@ namespace Bam.Net.Data
             {
                 value = DBNull.Value;
             }
+           
             this.Value = value;
             if (number != null)
             {

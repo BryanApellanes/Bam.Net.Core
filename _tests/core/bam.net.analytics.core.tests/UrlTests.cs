@@ -27,12 +27,13 @@ namespace Bam.Net.Analytics.Tests
         public void ShouldNotCreateDupeUrl()
         {
             SQLiteRegistrar.Register(Dao.ConnectionName(typeof(Url)));
+            Db.For<Url>().ExecuteSql("DELETE FROM URL");
             Db.TryEnsureSchema<Url>();
 
             string uri = "http://www.funnycatpix.com/";
             Url funnycatpix = Url.FromUri(uri, true);
             Url check = Url.FromUri(uri, true);
-            Expect.AreEqual(funnycatpix, check);
+            Expect.AreEqual(funnycatpix.ToString(), check.ToString());
             Expect.AreEqual(funnycatpix.Id, check.Id);
         }
 

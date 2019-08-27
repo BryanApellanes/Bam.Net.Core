@@ -529,6 +529,20 @@ namespace Bam.Net.Data
             return c;
         }
 
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, ulong value)
+        {
+            Comparison comp = new Comparison(c.ColumnName, "<>", Dao.MapUlongToLong(value));
+            c.Add(comp);
+            return c;
+        }
+
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, ulong value)
+        {
+            Comparison comp = new Comparison(c.ColumnName, "=", Dao.MapUlongToLong(value));
+            c.Add(comp);
+            return c;
+        }
+        
         public static QueryFilter<C> operator !=(QueryFilter<C> c, object value)
         {
             Comparison comp = new Comparison(c.ColumnName, "<>", value);
