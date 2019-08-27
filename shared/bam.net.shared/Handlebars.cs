@@ -41,12 +41,13 @@ namespace Bam.Net
 
         private static void EnsureTemplatesAreLoaded()
         {
+            Args.ThrowIf(HandlebarsDirectory == null && HandlebarsEmbeddedResources == null, "Must specify at least one of Handlebars.HandlebarsDirectory or Handlebars.EmbeddedResources");
             if (HandlebarsDirectory != null && !HandlebarsDirectory.IsLoaded)
             {
                 HandlebarsDirectory.Reload();
             }
 
-            if (!HandlebarsEmbeddedResources.IsLoaded)
+            if (HandlebarsEmbeddedResources != null && !HandlebarsEmbeddedResources.IsLoaded)
             {
                 HandlebarsEmbeddedResources.Reload();
             }

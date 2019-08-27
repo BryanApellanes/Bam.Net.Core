@@ -1210,6 +1210,10 @@ File Version: {1}
             AddValidArgument(name, false, description: description);
         }
 
+        /// <summary>
+        /// Finds all ConsoleMethod actions in the entry assembly that have a CommandLineSwitch defined,
+        /// and adds each as a valid command line argument, ensuring they can be executed directly.
+        /// </summary>
         public static void AddSwitches()
         {
             foreach (Type type in Assembly.GetEntryAssembly().GetTypes())

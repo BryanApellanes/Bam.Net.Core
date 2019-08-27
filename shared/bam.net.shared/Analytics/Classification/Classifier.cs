@@ -99,7 +99,7 @@ namespace Bam.Net.Analytics.Classification
 
         public string[] Categories()
         {
-            CategoryCollection all = Category.Where(c => c.Id != null);
+            CategoryCollection all = Category.Where(c => c.Id != Dao.Null);
             return all.Select(c => c.Value).ToArray();
         }
 
@@ -109,7 +109,7 @@ namespace Bam.Net.Analytics.Classification
         /// <returns></returns>
         public long DocumentCount()
         {
-            CategoryCollection all = Category.Where(c => c.Id != null);
+            CategoryCollection all = Category.Where(c => c.Id != Dao.Null);
             return (long)all.Select(c => c.DocumentCount).Sum();
         }
 

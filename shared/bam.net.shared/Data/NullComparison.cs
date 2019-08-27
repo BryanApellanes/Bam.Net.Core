@@ -16,7 +16,7 @@ namespace Bam.Net.Data
 
         public override string ToString()
         {
-            return string.Format("{0} {1} NULL", ColumnName, this.Operator);
+            return $"{ColumnName} {this.Operator} NULL";
         }
     }
 }

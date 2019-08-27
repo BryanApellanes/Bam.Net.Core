@@ -176,6 +176,8 @@ namespace Bam.Net.Data
             set => _initializer = value;
         }
 
+        public static DBNull Null => DBNull.Value;
+        
         static Action<Dao> _globalInitializer;
         public static Action<Dao> GlobalInitializer
         {

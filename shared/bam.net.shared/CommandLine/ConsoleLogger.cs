@@ -42,6 +42,7 @@ namespace Bam.Net.CommandLine
             }
         }
 
+        // TODO: try to fix the output race conditioning by adding a lock around CommitLogEvent operations
         public override void CommitLogEvent(LogEvent logEvent)
         {
             if (UseColors)

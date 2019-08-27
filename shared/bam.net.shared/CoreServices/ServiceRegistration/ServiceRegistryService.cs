@@ -494,7 +494,7 @@ namespace Bam.Net.CoreServices
         [Local]
         public bool IsLocked(string name, out ServiceRegistryLock theLock)
         {
-            theLock = ServiceRegistryRepository.OneServiceRegistryLockWhere(c => c.Name == name && c.Deleted == null);
+            theLock = ServiceRegistryRepository.OneServiceRegistryLockWhere(c => c.Name == name && c.Deleted == Dao.Null);
             return theLock != null;
         }
 

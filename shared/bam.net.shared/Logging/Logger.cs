@@ -14,11 +14,11 @@ namespace Bam.Net.Logging
 {
     public abstract class Logger : ILogger, IHasRequiredProperties
     {
-        ConcurrentQueue<LogEvent> _logEventQueue;
+        readonly ConcurrentQueue<LogEvent> _logEventQueue;
         Thread _loggingThread;
-        AutoResetEvent _waitForEnqueueLogEvent;
+        readonly AutoResetEvent _waitForEnqueueLogEvent;
 
-        List<string> requiredProperties;
+        readonly List<string> requiredProperties;
         public Logger()
         {
             AppDomain.CurrentDomain.DomainUnload += new EventHandler(OnDomainUnload);
