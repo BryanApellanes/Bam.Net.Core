@@ -531,7 +531,7 @@ namespace Bam.Net.CoreServices
             string localAssemblyPath = Path.Combine(DataDirectorySettings.GetSysAssemblyDirectory().FullName, typeIdentifier.AssemblyName);
             FileInfo assemblyFile = FileService.RestoreFile(typeIdentifier.AssemblyFileHash, localAssemblyPath);
             Assembly assembly = Assembly.LoadFile(localAssemblyPath);
-            Type result = assembly.GetTypes().Where(t => t.Name.Equals(typeIdentifier.TypeName) && t.Namespace.Equals(typeIdentifier.Namespace)).FirstOrDefault();
+            Type result = assembly.GetTypes().FirstOrDefault(t => t.Name.Equals(typeIdentifier.TypeName) && t.Namespace.Equals(typeIdentifier.Namespace));
             return result;
         }
 

@@ -19,5 +19,10 @@ namespace Bam.Net.Data
         {
             return new QueryFilter(columnName);
         }
+
+        public static QueryFilterValue Value(object value)
+        {
+            return new QueryFilterValue(value);
+        }
     }
 }

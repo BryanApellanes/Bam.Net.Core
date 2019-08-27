@@ -519,6 +519,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseCredentials.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IHasKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlJavaScriptSqlProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\QueryFilterValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\RelationalDatabaseTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicDataSaveResult.cs" />
