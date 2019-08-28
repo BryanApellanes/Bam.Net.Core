@@ -126,7 +126,7 @@ namespace Bam.Net.Data
 
         private static QueryFilter GetFilterForExpression(QueryFilter column, ExpressionType expressionType, object v)
         {
-            QueryFilterValue value = Query.Value(v);
+            QueryValue value = Query.Value(v);
             switch (expressionType)
             {
                 case ExpressionType.NotEqual:

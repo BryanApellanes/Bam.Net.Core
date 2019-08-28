@@ -16,9 +16,9 @@ namespace Bam.Net.Data
     /// </summary>
     public static class Query
 	{
-        public static QueryFilterValue Value(object value)
+        public static QueryValue Value(object value)
         {
-            return new QueryFilterValue(value);
+            return new QueryValue(value);
         }
         /// <summary>
         /// Convenience entry point to

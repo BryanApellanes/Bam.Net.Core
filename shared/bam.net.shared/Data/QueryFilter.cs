@@ -253,7 +253,7 @@ namespace Bam.Net.Data
             return ParenConcat(one, " OR ", two);
         }
 
-        public static QueryFilter operator ==(QueryFilter c, QueryFilterValue value)
+        public static QueryFilter operator ==(QueryFilter c, QueryValue value)
         {
             if(value.IsNull())
             {
@@ -266,7 +266,7 @@ namespace Bam.Net.Data
             return c;
         }
 
-        public static QueryFilter operator !=(QueryFilter c, QueryFilterValue value)
+        public static QueryFilter operator !=(QueryFilter c, QueryValue value)
         {
             if(value.IsNull())
             {
@@ -305,25 +305,25 @@ namespace Bam.Net.Data
             return c;
         }
 
-        public static QueryFilter operator <(QueryFilter c, QueryFilterValue value)
+        public static QueryFilter operator <(QueryFilter c, QueryValue value)
         {
             c.Add(new Comparison(c.ColumnName, "<", value.GetValue()));
             return c;   
         }
 
-        public static QueryFilter operator >(QueryFilter c, QueryFilterValue value)
+        public static QueryFilter operator >(QueryFilter c, QueryValue value)
         {
             c.Add(new Comparison(c.ColumnName, ">", value.GetValue()));
             return c;
         }
         
-        public static QueryFilter operator <=(QueryFilter c, QueryFilterValue value)
+        public static QueryFilter operator <=(QueryFilter c, QueryValue value)
         {
             c.Add(new Comparison(c.ColumnName, "<", value.GetValue()));
             return c;   
         }
 
-        public static QueryFilter operator >=(QueryFilter c, QueryFilterValue value)
+        public static QueryFilter operator >=(QueryFilter c, QueryValue value)
         {
             c.Add(new Comparison(c.ColumnName, ">", value.GetValue()));
             return c;
@@ -940,9 +940,9 @@ namespace Bam.Net.Data
             return false;
         }
 
-        public static QueryFilterValue Value(object value)
+        public static QueryValue Value(object value)
         {
-            return new QueryFilterValue(value);
+            return new QueryValue(value);
         }
         
         private static QueryFilter ParenConcat(QueryFilter one, string middle, QueryFilter two)
@@ -1159,7 +1159,35 @@ namespace Bam.Net.Data
         {
             c.Add(new NullComparison(c.ColumnName, "IS NOT"));
             return c;
-        }     
+        }
+
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, DaoId daoId)
+        {
+            if (c.ColumnName.Equals(daoId.IdentifierName))
+            {
+                c.Add(new Comparison(c.ColumnName, "=", daoId.GetValue()));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", daoId.GetValue(true)));
+            }
+
+            return c;
+        }
+        
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, DaoId daoId)
+        {
+            if (c.ColumnName.Equals(daoId.IdentifierName))
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", daoId.GetValue()));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", daoId.GetValue(true)));
+            }
+
+            return c;
+        }
         
         public static QueryFilter<C> operator !=(QueryFilter<C> c, ulong value)
         {

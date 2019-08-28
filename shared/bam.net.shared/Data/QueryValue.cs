@@ -2,9 +2,12 @@ using System;
 
 namespace Bam.Net.Data
 {
-    public class QueryFilterValue
+    /// <summary>
+    /// Represents a value used in a QueryFilter.
+    /// </summary>
+    public class QueryValue
     {
-        public QueryFilterValue(object value)
+        public QueryValue(object value)
         {
             if (value == null)
             {
@@ -20,9 +23,14 @@ namespace Bam.Net.Data
         public Type Type { get; set; }
         public object Value { get; set; }
 
-        public object GetValue()
+        public virtual object GetValue()
         {
-            return Type == typeof(ulong) ? Dao.MapUlongToLong((ulong)Value) : Value;
+            return GetValue(true);
+        }
+        
+        public virtual object GetValue(bool mapUlongToLong)
+        {
+            return (Type == typeof(ulong) && mapUlongToLong) ? Dao.MapUlongToLong((ulong)Value) : Value;
         }
 
         public bool IsNull()
