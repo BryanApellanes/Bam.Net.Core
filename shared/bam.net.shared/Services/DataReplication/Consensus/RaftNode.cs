@@ -223,10 +223,10 @@ namespace Bam.Net.Services.DataReplication.Consensus
             Args.ThrowIfNull(queryOperation, "queryOperation");
             
             Type type = TypeResolver.ResolveType(queryOperation.NamespaceQualifiedTypeName);
-            QueryFilter queryFilter = null;
+            QueryFilter queryFilter = new QueryFilter();
             foreach (DataPropertyFilter filter in queryOperation.PropertyFilters)
             {
-                if (queryFilter != null)
+                if (!queryFilter.IsEmpty)
                 {
                     queryFilter.And(filter.ToQueryFilter());
                 }

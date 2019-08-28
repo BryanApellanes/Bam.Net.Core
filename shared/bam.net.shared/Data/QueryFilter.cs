@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
+using GraphQL;
 
 namespace Bam.Net.Data
 {
@@ -40,12 +41,7 @@ namespace Bam.Net.Data
             bool first = true;
             foreach(PropertyInfo prop in properties)
             {
-                object propValue = prop.GetValue(query);
-                if (propValue is ulong ulongPropValue)
-                {
-                    propValue = Dao.MapUlongToLong(ulongPropValue);
-                }
-                QueryFilter next = Query.Where(prop.Name) == propValue;
+                QueryFilter next = Query.Where(prop.Name) == Query.Value(prop.GetValue(query));
                 if (first) // trying to do filter == null will invoke implicit operator rather than doing an actual null comparison
                 {
                     first = false;
@@ -218,13 +214,35 @@ namespace Bam.Net.Data
             DaoExpressionFilter expressionFilter = new DaoExpressionFilter();
             return Or(expressionFilter.Where<T>(expression));
         }
-
+        
         public QueryFilter And<T>(Expression<Func<T, bool>> expression)
         {
             DaoExpressionFilter expressionFilter = new DaoExpressionFilter();
             return And(expressionFilter.Where<T>(expression));
         }
 
+        public QueryFilter IsEqualTo(object value)
+        {
+            object compareTo = value;
+            if (value is ulong ulongVal)
+            {
+                compareTo = Dao.MapUlongToLong(ulongVal);
+            }
+
+            return this == Query.Value(compareTo);
+        }
+
+        public QueryFilter IsNotEqualTo(object value)
+        {
+            object compareTo = value;
+            if (value is ulong ulongVal)
+            {
+                compareTo = Dao.MapUlongToLong(ulongVal);
+            }
+
+            return this == Query.Value(compareTo);
+        }
+        
         public static QueryFilter operator &(QueryFilter one, QueryFilter two)
         {
             return ParenConcat(one, " AND ", two);
@@ -234,7 +252,33 @@ namespace Bam.Net.Data
         {
             return ParenConcat(one, " OR ", two);
         }
-            
+
+        public static QueryFilter operator ==(QueryFilter c, QueryFilterValue value)
+        {
+            if(value.IsNull())
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, QueryFilterValue value)
+        {
+            if(value.IsNull())
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+        
         public static QueryFilter operator ==(QueryFilter c, int value)
         {
             if(value == null)
@@ -261,6 +305,30 @@ namespace Bam.Net.Data
             return c;
         }
 
+        public static QueryFilter operator <(QueryFilter c, QueryFilterValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value.GetValue()));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, QueryFilterValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value.GetValue()));
+            return c;
+        }
+        
+        public static QueryFilter operator <=(QueryFilter c, QueryFilterValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value.GetValue()));
+            return c;   
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, QueryFilterValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value.GetValue()));
+            return c;
+        }
+        
         public static QueryFilter operator <(QueryFilter c, int value)
         {
             c.Add(new Comparison(c.ColumnName, "<", value));
@@ -334,7 +402,33 @@ namespace Bam.Net.Data
             c.Add(new Comparison(c.ColumnName, ">=", value));
             return c;
         }
-            
+        
+        public static QueryFilter operator ==(QueryFilter c, bool value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, bool value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+        
         public static QueryFilter operator ==(QueryFilter c, ulong value)
         {
             if(value == null)
@@ -1438,7 +1532,7 @@ namespace Bam.Net.Data
             }
             else
             {
-                c.Add(new Comparison(c.ColumnName, "=", value));
+                c.Add(new Comparison(c.ColumnName, "=", Dao.MapUlongToLong(value.Value)));
             }
             return c;
         }
@@ -1451,7 +1545,7 @@ namespace Bam.Net.Data
             }
             else
             {
-                c.Add(new Comparison(c.ColumnName, "<>", value));
+                c.Add(new Comparison(c.ColumnName, "<>", Dao.MapUlongToLong(value.Value)));
             }
             return c;
         }

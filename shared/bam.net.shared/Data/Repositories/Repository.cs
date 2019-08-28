@@ -355,7 +355,7 @@ namespace Bam.Net.Data.Repositories
 
 		public virtual bool DeleteAll<T>()
 		{
-			return DeleteWhere<T>(Filter.Where("Id") != null);
+			return DeleteWhere<T>(Filter.Where("Id").IsNotNull());
 		}
 		
         public virtual bool DeleteWhere<T>(dynamic filter)

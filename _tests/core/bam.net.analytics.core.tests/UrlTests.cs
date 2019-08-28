@@ -55,7 +55,6 @@ namespace Bam.Net.Analytics.Tests
         }
 
         [ConsoleAction("write", "write operators")]
-        [UnitTest]
         public void WriteOperators()
         {
             ConsoleLogger logger = new ConsoleLogger();

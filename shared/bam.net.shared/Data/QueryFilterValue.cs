@@ -24,5 +24,10 @@ namespace Bam.Net.Data
         {
             return Type == typeof(ulong) ? Dao.MapUlongToLong((ulong)Value) : Value;
         }
+
+        public bool IsNull()
+        {
+            return Value == null || Type == typeof(DBNull) || Value?.GetType() == typeof(DBNull);
+        }
     }
 }
