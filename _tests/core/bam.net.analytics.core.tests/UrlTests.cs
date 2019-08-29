@@ -28,6 +28,7 @@ namespace Bam.Net.Analytics.Tests
         }
         
         [UnitTest("Should not create dupe")]
+        [TestGroup("AdHoc")]
         public void ShouldNotCreateDupeUrl()
         {
             SQLiteRegistrar.Register(Dao.ConnectionName(typeof(Url)));

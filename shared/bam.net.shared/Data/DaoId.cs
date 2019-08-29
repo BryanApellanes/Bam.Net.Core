@@ -14,9 +14,14 @@ namespace Bam.Net.Data
         /// </summary>
         public string IdentifierName { get; set; }
 
+        public override object GetStoredValue()
+        {
+            return GetRawValue();
+        }
+
         public override object GetValue()
         {
-            return base.GetValue(false);
+            return GetRawValue();
         }
     }
 }

@@ -1,13 +1,12 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using Bam.Net.Data;
-using GraphQL;
 
 namespace Bam.Net.Data
 {
@@ -59,7 +58,7 @@ namespace Bam.Net.Data
         {
             return Query.Where(columnName);
         }
-
+        
         protected internal string ColumnName { get; set; }
 
         public IEnumerable<IFilterToken> Filters => this._filters;
@@ -221,7 +220,7 @@ namespace Bam.Net.Data
             return And(expressionFilter.Where<T>(expression));
         }
 
-        public QueryFilter IsEqualTo(object value)
+        public virtual QueryFilter IsEqualTo(object value)
         {
             object compareTo = value;
             if (value is ulong ulongVal)
@@ -232,7 +231,7 @@ namespace Bam.Net.Data
             return this == Query.Value(compareTo);
         }
 
-        public QueryFilter IsNotEqualTo(object value)
+        public virtual QueryFilter IsNotEqualTo(object value)
         {
             object compareTo = value;
             if (value is ulong ulongVal)
@@ -240,7 +239,7 @@ namespace Bam.Net.Data
                 compareTo = Dao.MapUlongToLong(ulongVal);
             }
 
-            return this == Query.Value(compareTo);
+            return this != Query.Value(compareTo);
         }
         
         public static QueryFilter operator &(QueryFilter one, QueryFilter two)
@@ -261,7 +260,7 @@ namespace Bam.Net.Data
             }
             else
             {
-                c.Add(new Comparison(c.ColumnName, "=", value));
+                c.Add(new Comparison(c.ColumnName, "=", value.GetValue()));
             }
             return c;
         }
@@ -274,7 +273,7 @@ namespace Bam.Net.Data
             }
             else
             {
-                c.Add(new Comparison(c.ColumnName, "<>", value));
+                c.Add(new Comparison(c.ColumnName, "<>", value.GetValue()));
             }
             return c;
         }
@@ -1004,6 +1003,16 @@ namespace Bam.Net.Data
             return this;
         }
 
+        internal QueryValue ToQueryValue(ulong value)
+        {
+            QueryFilter keyColumnFilter = this.Property<QueryFilter>("KeyColumn"); 
+            if ((keyColumnFilter?.ColumnName?.Equals(ColumnName)).Value)
+            {
+                return new DaoId(value){IdentifierName = keyColumnFilter.ColumnName};
+            }
+            return new QueryValue(value);
+        }
+        
         internal QueryFilter<C> AddRange(IEnumerable<IFilterToken> filters)
         {
             this._filters.AddRange(filters);
@@ -1052,6 +1061,18 @@ namespace Bam.Net.Data
             return this;
         }
 
+        public override QueryFilter IsEqualTo(object value)
+        {
+            this.Add(new Comparison(ColumnName, "=", Query.Value(value).GetValue()));
+            return this;
+        }
+        
+        public override QueryFilter IsNotEqualTo(object value)
+        {
+            this.Add(new Comparison(ColumnName, "<>", Query.Value(value).GetValue()));
+            return this;
+        }
+        
         /// <summary>
         /// Adds an InComparison only if the specified object array is not empty
         /// </summary>
@@ -1165,13 +1186,12 @@ namespace Bam.Net.Data
         {
             if (c.ColumnName.Equals(daoId.IdentifierName))
             {
-                c.Add(new Comparison(c.ColumnName, "=", daoId.GetValue()));
+                c.Add(new Comparison(c.ColumnName, "=", daoId.GetRawValue()));
             }
             else
             {
                 c.Add(new Comparison(c.ColumnName, "=", daoId.GetValue(true)));
             }
-
             return c;
         }
         
@@ -1179,7 +1199,7 @@ namespace Bam.Net.Data
         {
             if (c.ColumnName.Equals(daoId.IdentifierName))
             {
-                c.Add(new Comparison(c.ColumnName, "<>", daoId.GetValue()));
+                c.Add(new Comparison(c.ColumnName, "<>", daoId.GetRawValue()));
             }
             else
             {
@@ -1191,14 +1211,14 @@ namespace Bam.Net.Data
         
         public static QueryFilter<C> operator !=(QueryFilter<C> c, ulong value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "<>", Dao.MapUlongToLong(value));
+            Comparison comp = new Comparison(c.ColumnName, "<>", c.ToQueryValue(value).GetValue());
             c.Add(comp);
             return c;
         }
 
         public static QueryFilter<C> operator ==(QueryFilter<C> c, ulong value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "=", Dao.MapUlongToLong(value));
+            Comparison comp = new Comparison(c.ColumnName, "=", c.ToQueryValue(value).GetValue());
             c.Add(comp);
             return c;
         }
@@ -1560,7 +1580,7 @@ namespace Bam.Net.Data
             }
             else
             {
-                c.Add(new Comparison(c.ColumnName, "=", Dao.MapUlongToLong(value.Value)));
+                c.Add(new Comparison(c.ColumnName, "=", c.ToQueryValue(value.Value).GetValue()));
             }
             return c;
         }
@@ -1573,32 +1593,32 @@ namespace Bam.Net.Data
             }
             else
             {
-                c.Add(new Comparison(c.ColumnName, "<>", Dao.MapUlongToLong(value.Value)));
+                c.Add(new Comparison(c.ColumnName, "<>", c.ToQueryValue(value.Value).GetValue()));
             }
             return c;
         }
 
         public static QueryFilter<C> operator <(QueryFilter<C> c, ulong? value)
         {
-            c.Add(new Comparison(c.ColumnName, "<", value));
+            c.Add(new Comparison(c.ColumnName, "<", c.ToQueryValue(value.Value).GetValue()));
             return c;   
         }
 
         public static QueryFilter<C> operator >(QueryFilter<C> c, ulong? value)
         {
-            c.Add(new Comparison(c.ColumnName, ">", value));
+            c.Add(new Comparison(c.ColumnName, ">", c.ToQueryValue(value.Value).GetValue()));
             return c;
         }
 
         public static QueryFilter<C> operator <=(QueryFilter<C> c, ulong? value)
         {
-            c.Add(new Comparison(c.ColumnName, "<=", value));
+            c.Add(new Comparison(c.ColumnName, "<=", c.ToQueryValue(value.Value).GetValue()));
             return c;
         }
 
         public static QueryFilter<C> operator >=(QueryFilter<C> c, ulong? value)
         {
-            c.Add(new Comparison(c.ColumnName, ">=", value));
+            c.Add(new Comparison(c.ColumnName, ">=", c.ToQueryValue(value.Value).GetValue()));
             return c;
         }
             
