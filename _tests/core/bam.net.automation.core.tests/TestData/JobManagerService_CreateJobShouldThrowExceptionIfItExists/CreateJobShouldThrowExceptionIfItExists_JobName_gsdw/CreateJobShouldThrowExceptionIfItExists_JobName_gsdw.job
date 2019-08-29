@@ -1,6 +1,0 @@
-{
-  "Name": "CreateJobShouldThrowExceptionIfItExists_JobName_gsdw",
-  "WorkerConfs": {},
-  "WorkerFiles": [],
-  "JobDirectory": "/Users/bapellanes/src/BamFrameworkCore/Bam.Net/_tests/core/bam.net.automation.core.tests/TestData/JobManagerService_CreateJobShouldThrowExceptionIfItExists/CreateJobShouldThrowExceptionIfItExists_JobName_gsdw"
-}

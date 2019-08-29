@@ -1,5 +1,0 @@
-WorkerTypeName: Bam.Net.Automation.Tests.JobManagerUnitTests+StepTestWorker, bam.net.automation.core.tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-StepNumber: 1
-Name: StepTestWorker
-Properties:
-  RequiredProperties: '[]'
