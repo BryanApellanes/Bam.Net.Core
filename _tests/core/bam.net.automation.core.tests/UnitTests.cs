@@ -20,28 +20,13 @@ namespace Bam.Net.Automation.Tests
     public class UnitTests: CommandLineTestInterface
     {
         [UnitTest]
+        [TestGroup("AdHoc")]
         public void CanCompileCustomScriptContext()
         {
             CSharpScriptContext ctx = new CSharpScriptContext();
             ctx.Script = "System.Console.WriteLine(\"monkey\");";
-            ctx.Execute(//typeof(Object).Assembly.GetFilePath(),
-                @"C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.2.0\ref\netcoreapp2.2\System.Runtime.dll",
+            ctx.Execute(typeof(Object).Assembly.GetFilePath(),
                 typeof(Console).Assembly.GetFilePath());
-        }
-        
-        [UnitTest]
-        public void CanFindGitRepo()
-        {
-            DirectoryInfo dir = new DirectoryInfo("C:\\bam\\src\\Bam.Net\\Bam.Net\\bin\\Debug");
-
-            DirectoryInfo gitRepo = dir.UpToGitRoot();
-            Expect.IsNotNull(gitRepo);
-            Expect.AreEqual("C:\\bam\\src\\Bam.Net", gitRepo.FullName);
-            OutLineFormat(gitRepo.FullName);
-
-            dir = new DirectoryInfo("C:\\windows\\system32");
-            gitRepo = dir.UpToGitRoot();
-            Expect.IsNull(gitRepo);            
         }
 
         [UnitTest]
@@ -76,7 +61,7 @@ namespace Bam.Net.Automation.Tests
         [UnitTest]
         public void UnzipResourceTest()
         {
-            string extractTo = ".\\Unzip";
+            string extractTo = "./Unzip";
             if (System.IO.Directory.Exists(extractTo))
             {
                 System.IO.Directory.Delete(extractTo, true);
@@ -270,7 +255,7 @@ an empty string")]
             WorkerConf conf = CreateTestConf();
 
             conf.Save();
-            string fileName = ".\\{0}_WorkerConf.json"._Format(conf.Name);
+            string fileName = "./{0}_WorkerConf.json"._Format(conf.Name);
             Expect.IsTrue(File.Exists(fileName));
             File.Delete(fileName);
         }

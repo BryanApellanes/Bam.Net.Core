@@ -13,6 +13,8 @@ namespace Bam.Net
 {
     public static partial class RuntimeSettings
     {
+        public const string SystemRuntime = "System.Runtime.dll";
+        
         public static RuntimeConfig GetConfig()
         {
             string fileName = "runtime-config.yaml";
@@ -51,6 +53,11 @@ namespace Bam.Net
             }
         }
 
+        public static string GetSystemRuntimePath()
+        {
+            return Path.Combine(GetConfig().ReferenceAssembliesDir, SystemRuntime);
+        }
+        
         public static string ReferenceAssembliesDir
         {
             get { return Path.Combine(BinDir, "ReferenceAssemblies"); }

@@ -18,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.8.166" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>

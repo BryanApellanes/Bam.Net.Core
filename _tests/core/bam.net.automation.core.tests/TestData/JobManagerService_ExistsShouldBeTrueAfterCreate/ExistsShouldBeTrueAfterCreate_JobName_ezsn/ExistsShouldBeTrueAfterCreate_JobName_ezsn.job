@@ -1,0 +1,6 @@
+{
+  "Name": "ExistsShouldBeTrueAfterCreate_JobName_ezsn",
+  "WorkerConfs": {},
+  "WorkerFiles": [],
+  "JobDirectory": "/Users/bapellanes/src/BamFrameworkCore/Bam.Net/_tests/core/bam.net.automation.core.tests/TestData/JobManagerService_ExistsShouldBeTrueAfterCreate/ExistsShouldBeTrueAfterCreate_JobName_ezsn"
+}

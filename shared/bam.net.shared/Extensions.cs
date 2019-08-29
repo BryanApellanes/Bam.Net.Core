@@ -442,7 +442,16 @@ namespace Bam.Net
 
         public static FileInfo GetFileInfo(this Assembly assembly)
         {
-            return new FileInfo(assembly.CodeBase.Replace("file:///", ""));//.Replace("/", "\\"));
+            switch (OSInfo.Current)
+            {
+                case OSNames.OSX:
+                case OSNames.Linux:
+                    return new FileInfo(assembly.CodeBase.TruncateFront("file://".Length));
+                case OSNames.Windows:
+                default:
+                    return new FileInfo(assembly.CodeBase.TruncateFront("file:///".Length));
+            }
+            return new FileInfo(assembly.CodeBase.TruncateFront("file:///".Length));
         }
 
         public static string GetFilePath(this Assembly assembly)

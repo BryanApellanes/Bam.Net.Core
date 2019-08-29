@@ -1,0 +1,6 @@
+{
+  "Name": "GetJobShouldReturnExistingJob",
+  "WorkerConfs": {},
+  "WorkerFiles": [],
+  "JobDirectory": "/Users/bapellanes/src/BamFrameworkCore/Bam.Net/_tests/core/bam.net.automation.core.tests/TestData/JobManagerService_GetJobShouldReturnExistingJob/GetJobShouldReturnExistingJob"
+}

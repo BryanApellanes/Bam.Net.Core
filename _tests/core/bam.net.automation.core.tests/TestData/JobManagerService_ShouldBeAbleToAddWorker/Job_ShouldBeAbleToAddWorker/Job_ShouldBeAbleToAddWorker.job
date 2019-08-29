@@ -1,0 +1,17 @@
+{
+  "Name": "Job_ShouldBeAbleToAddWorker",
+  "WorkerConfs": {
+    "worker_1": {
+      "WorkerTypeName": "Bam.Net.Automation.Tests.JobManagerUnitTests+TestWorker, bam.net.automation.core.tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "StepNumber": 0,
+      "Name": "worker_1",
+      "Properties": {
+        "RequiredProperties": "[]"
+      }
+    }
+  },
+  "WorkerFiles": [
+    "/Users/bapellanes/src/BamFrameworkCore/Bam.Net/_tests/core/bam.net.automation.core.tests/TestData/JobManagerService_ShouldBeAbleToAddWorker/Job_ShouldBeAbleToAddWorker/worker_1.yaml"
+  ],
+  "JobDirectory": "/Users/bapellanes/src/BamFrameworkCore/Bam.Net/_tests/core/bam.net.automation.core.tests/TestData/JobManagerService_ShouldBeAbleToAddWorker/Job_ShouldBeAbleToAddWorker"
+}
