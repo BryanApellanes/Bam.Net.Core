@@ -11,21 +11,21 @@ namespace Bam.Net
     {
         public CodeDomCompiler(Assembly[] referenceAssemblies)
         {
-            ReferenceAssemblies = referenceAssemblies;
+            AssembliesToReference = referenceAssemblies;
         }
 
-        public Assembly[] ReferenceAssemblies { get; set; }
+        public Assembly[] AssembliesToReference { get; set; }
 
         public Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo)
         {
-            CompilerResults results = AdHocCSharpCompiler.CompileDirectory(directoryInfo, assemblyFileName, ReferenceAssemblies, Path.GetExtension(assemblyFileName).EndsWith("exe"));
+            CompilerResults results = AdHocCSharpCompiler.CompileDirectory(directoryInfo, assemblyFileName, AssembliesToReference, Path.GetExtension(assemblyFileName).EndsWith("exe"));
             ThrowIfErrors(results);
             return results.CompiledAssembly;
         }
 
         public Assembly CompileAssembly(string assemblyFileName, FileInfo[] files)
         {
-            CompilerResults results = AdHocCSharpCompiler.CompileFiles(files, assemblyFileName, ReferenceAssemblies, Path.GetExtension(assemblyFileName).EndsWith("exe"));
+            CompilerResults results = AdHocCSharpCompiler.CompileFiles(files, assemblyFileName, AssembliesToReference, Path.GetExtension(assemblyFileName).EndsWith("exe"));
             ThrowIfErrors(results);
             return results.CompiledAssembly;
         }
@@ -38,7 +38,7 @@ namespace Bam.Net
         
         public byte[] Compile(string assemblyFileName, string sourceCode)
         {
-            CompilerResults results = AdHocCSharpCompiler.CompileSource(sourceCode, assemblyFileName, ReferenceAssemblies, Path.GetExtension(assemblyFileName).EndsWith("exe"));
+            CompilerResults results = AdHocCSharpCompiler.CompileSource(sourceCode, assemblyFileName, AssembliesToReference, Path.GetExtension(assemblyFileName).EndsWith("exe"));
             ThrowIfErrors(results);
             return File.ReadAllBytes(results.CompiledAssembly.GetFilePath());
         }

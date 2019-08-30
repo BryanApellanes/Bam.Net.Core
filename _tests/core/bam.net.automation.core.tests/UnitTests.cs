@@ -10,12 +10,9 @@ using Bam.Net.Testing.Unit;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Automation.Scripting;
-using Microsoft.CodeAnalysis;
-using Microsoft.Extensions.DependencyModel;
 
 namespace Bam.Net.Automation.Tests
 {
@@ -26,19 +23,9 @@ namespace Bam.Net.Automation.Tests
         [TestGroup("AdHoc")]
         public void CanCompileCustomScriptContext()
         {
-            var references = from l in DependencyContext.Default.CompileLibraries
-                            from r in l.ResolveReferencePaths()
-                            select MetadataReference.CreateFromFile(r);
-
-            foreach (var r in references)
-            {
-                Console.WriteLine(r.FilePath);
-            }
-            
             CSharpScriptContext ctx = new CSharpScriptContext();
             ctx.Script = "System.Console.WriteLine(\"monkey\");";
-            ctx.Execute(typeof(Object).Assembly.GetFilePath(),
-                typeof(Console).Assembly.GetFilePath());
+            ctx.Execute(new Type[]{typeof(BamInfo)}, new Type[]{typeof(Console)});
         }
 
         [UnitTest]

@@ -8,7 +8,7 @@ namespace Bam.Net
 {
     public interface ICompiler
     {
-        Assembly[] ReferenceAssemblies { get; set; }
+        Assembly[] AssembliesToReference { get; set; }
 
         Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo);
         Assembly CompileAssembly(string assemblyFileName, FileInfo[] files);

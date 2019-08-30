@@ -12,11 +12,11 @@ namespace Bam.Net.Data.Dynamic
     {
         protected void SetReferenceAssemblies()
         {
-            List<Assembly> assemblies = new List<Assembly>(Compiler.ReferenceAssemblies)
+            List<Assembly> assemblies = new List<Assembly>(Compiler.AssembliesToReference)
             {
                 typeof(ActionResult).Assembly
             };
-            Compiler.ReferenceAssemblies = assemblies.ToArray();
+            Compiler.AssembliesToReference = assemblies.ToArray();
         }
     }
 }
