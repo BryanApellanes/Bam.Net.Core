@@ -5,7 +5,11 @@ using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection.Metadata;
 using System.Text;
+using Bam.Net.CommandLine;
+using Bam.Net.Presentation.Handlebars;
 
 namespace Bam.Net.Analytics.Tests
 {
@@ -24,6 +28,7 @@ namespace Bam.Net.Analytics.Tests
         }
         
         [UnitTest("Should not create dupe")]
+        [TestGroup("AdHoc")]
         public void ShouldNotCreateDupeUrl()
         {
             SQLiteRegistrar.Register(Dao.ConnectionName(typeof(Url)));
@@ -48,6 +53,22 @@ namespace Bam.Net.Analytics.Tests
 
             OutLineFormat("No Query: {0}", new Uri("http://test.com/path").Query);
             OutLineFormat("No Query w/ Question Mark: {0}", new Uri("http://test.com/path?").Query);
+        }
+
+        [ConsoleAction("write", "write operators")]
+        public void WriteOperators()
+        {
+            ConsoleLogger logger = new ConsoleLogger();
+            Handlebars.HandlebarsDirectory = new HandlebarsDirectory("./Templates", logger);
+            string fileName = "./tmp.txt";
+            foreach(string dataType in new string[]{"int", "uint", "ulong", "long", "decimal", "int?", "uint?", "ulong?", "decimal?", "string", "DateTime", "DateTime?"})
+            {
+                string result = Handlebars.Render("operators", new {DataType = dataType});
+                result.SafeAppendToFile("./operators.txt");
+                result = Handlebars.Render("generic-operators", new {DataType = dataType});
+                result.SafeAppendToFile("./generic-operators.txt");
+                OutLineFormat("Wrote file {0}", new FileInfo(fileName).FullName);
+            }
         }
     }
 }

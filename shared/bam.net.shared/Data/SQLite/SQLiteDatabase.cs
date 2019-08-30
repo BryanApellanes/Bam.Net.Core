@@ -33,7 +33,7 @@ namespace Bam.Net.Data.SQLite
 
         /// <summary>
         /// Instantiate a new SQLiteDatabase instance where the database
-        /// file will be placed into the specified directoryPath using the
+        /// file is placed into the specified directoryPath using the
         /// specified connectionName as the file name
         /// </summary>
         /// <param name="directoryPath"></param>

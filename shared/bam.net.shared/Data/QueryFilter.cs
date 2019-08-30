@@ -1,12 +1,12 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using Bam.Net.Data;
 
 namespace Bam.Net.Data
 {
@@ -40,12 +40,7 @@ namespace Bam.Net.Data
             bool first = true;
             foreach(PropertyInfo prop in properties)
             {
-                object propValue = prop.GetValue(query);
-                if (propValue is ulong ulongPropValue)
-                {
-                    propValue = Dao.MapUlongToLong(ulongPropValue);
-                }
-                QueryFilter next = Query.Where(prop.Name) == propValue;
+                QueryFilter next = Query.Where(prop.Name) == Query.Value(prop.GetValue(query));
                 if (first) // trying to do filter == null will invoke implicit operator rather than doing an actual null comparison
                 {
                     first = false;
@@ -63,7 +58,7 @@ namespace Bam.Net.Data
         {
             return Query.Where(columnName);
         }
-
+        
         protected internal string ColumnName { get; set; }
 
         public IEnumerable<IFilterToken> Filters => this._filters;
@@ -191,6 +186,16 @@ namespace Bam.Net.Data
             return this;
         }
 
+        public QueryFilter IsNull()
+        {
+            return this.Add(new NullComparison(ColumnName, "IS"));
+        }
+
+        public QueryFilter IsNotNull()
+        {
+            return this.Add(new NullComparison(ColumnName, "IS NOT"));
+        }
+        
         public QueryFilter And(QueryFilter c)
         {
             return this.Add(new LiteralFilterToken(" AND "))
@@ -208,13 +213,35 @@ namespace Bam.Net.Data
             DaoExpressionFilter expressionFilter = new DaoExpressionFilter();
             return Or(expressionFilter.Where<T>(expression));
         }
-
+        
         public QueryFilter And<T>(Expression<Func<T, bool>> expression)
         {
             DaoExpressionFilter expressionFilter = new DaoExpressionFilter();
             return And(expressionFilter.Where<T>(expression));
         }
 
+        public virtual QueryFilter IsEqualTo(object value)
+        {
+            object compareTo = value;
+            if (value is ulong ulongVal)
+            {
+                compareTo = Dao.MapUlongToLong(ulongVal);
+            }
+
+            return this == Query.Value(compareTo);
+        }
+
+        public virtual QueryFilter IsNotEqualTo(object value)
+        {
+            object compareTo = value;
+            if (value is ulong ulongVal)
+            {
+                compareTo = Dao.MapUlongToLong(ulongVal);
+            }
+
+            return this != Query.Value(compareTo);
+        }
+        
         public static QueryFilter operator &(QueryFilter one, QueryFilter two)
         {
             return ParenConcat(one, " AND ", two);
@@ -225,84 +252,682 @@ namespace Bam.Net.Data
             return ParenConcat(one, " OR ", two);
         }
 
-        public static QueryFilter operator ==(QueryFilter c, object value)
+        public static QueryFilter operator ==(QueryFilter c, QueryValue value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "=", value);
-            if (value == null || value == DBNull.Value)
+            if(value.IsNull())
             {
-                comp = new NullComparison(c.ColumnName, "IS");
+                c.Add(new NullComparison(c.ColumnName, "IS"));
             }
-            c.Add(comp);
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value.GetValue()));
+            }
             return c;
         }
 
-        public static QueryFilter operator !=(QueryFilter c, object value)
+        public static QueryFilter operator !=(QueryFilter c, QueryValue value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "<>", value);
-            if (value == null || value == DBNull.Value)
+            if(value.IsNull())
             {
-                comp = new NullComparison(c.ColumnName, "IS NOT");
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
             }
-            c.Add(comp);
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value.GetValue()));
+            }
+            return c;
+        }
+        
+        public static QueryFilter operator ==(QueryFilter c, int value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
             return c;
         }
 
-        public static QueryFilter operator <(QueryFilter c, object value)
+        public static QueryFilter operator !=(QueryFilter c, int value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, QueryValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value.GetValue()));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, QueryValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value.GetValue()));
+            return c;
+        }
+        
+        public static QueryFilter operator <=(QueryFilter c, QueryValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value.GetValue()));
+            return c;   
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, QueryValue value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value.GetValue()));
+            return c;
+        }
+        
+        public static QueryFilter operator <(QueryFilter c, int value)
         {
             c.Add(new Comparison(c.ColumnName, "<", value));
-            return c;
+            return c;   
         }
 
-        public static QueryFilter operator >(QueryFilter c, object value)
+        public static QueryFilter operator >(QueryFilter c, int value)
         {
             c.Add(new Comparison(c.ColumnName, ">", value));
             return c;
         }
 
-        public static QueryFilter operator <=(QueryFilter c, object value)
+        public static QueryFilter operator <=(QueryFilter c, int value)
         {
             c.Add(new Comparison(c.ColumnName, "<=", value));
             return c;
         }
 
-        public static QueryFilter operator >=(QueryFilter c, object value)
+        public static QueryFilter operator >=(QueryFilter c, int value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, uint value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, uint value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+        
+        public static QueryFilter operator ==(QueryFilter c, bool value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, bool value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+        
+        public static QueryFilter operator ==(QueryFilter c, ulong value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, ulong value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, long value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, long value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, decimal value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, decimal value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, int? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, int? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, uint? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, uint? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, ulong? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, ulong? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, decimal? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, decimal? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, string value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, string value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, DateTime value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, DateTime value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter operator ==(QueryFilter c, DateTime? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator !=(QueryFilter c, DateTime? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter operator <(QueryFilter c, DateTime? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter operator >(QueryFilter c, DateTime? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter operator <=(QueryFilter c, DateTime? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter operator >=(QueryFilter c, DateTime? value)
         {
             c.Add(new Comparison(c.ColumnName, ">=", value));
             return c;
         }
 
-        public static QueryFilter operator ==(QueryFilter c, DateTime dateTime)
-        {
-            c.Add(new Comparison(c.ColumnName, "=", dateTime));
-            return c;
-        }
-        public static QueryFilter operator !=(QueryFilter c, DateTime dateTime)
-        {
-            c.Add(new Comparison(c.ColumnName, "<>", dateTime));
-            return c;
-        }
-        public static QueryFilter operator <(QueryFilter c, DateTime dateTime)
-        {
-            c.Add(new Comparison(c.ColumnName, "<", dateTime));
-            return c;
-        }
-        
-        public static QueryFilter operator >(QueryFilter c, DateTime dateTime)
-        {
-            c.Add(new Comparison(c.ColumnName, ">", dateTime));
-            return c;
-        }
-        public static QueryFilter operator <=(QueryFilter c, DateTime dateTime)
-        {
-            c.Add(new Comparison(c.ColumnName, "<=", dateTime));
-            return c;
-        }
-
-        public static QueryFilter operator >=(QueryFilter c, DateTime dateTime)
-        {
-            c.Add(new Comparison(c.ColumnName, ">=", dateTime));
-            return c;
-        }
 
         public static bool operator true(QueryFilter e)
         {
@@ -314,6 +939,11 @@ namespace Bam.Net.Data
             return false;
         }
 
+        public static QueryValue Value(object value)
+        {
+            return new QueryValue(value);
+        }
+        
         private static QueryFilter ParenConcat(QueryFilter one, string middle, QueryFilter two)
         {
             QueryFilter newBuilder = new QueryFilter();
@@ -373,6 +1003,16 @@ namespace Bam.Net.Data
             return this;
         }
 
+        internal QueryValue ToQueryValue(ulong value)
+        {
+            QueryFilter keyColumnFilter = this.Property<QueryFilter>("KeyColumn"); 
+            if ((keyColumnFilter?.ColumnName?.Equals(ColumnName)).Value)
+            {
+                return new DaoId(value){IdentifierName = keyColumnFilter.ColumnName};
+            }
+            return new QueryValue(value);
+        }
+        
         internal QueryFilter<C> AddRange(IEnumerable<IFilterToken> filters)
         {
             this._filters.AddRange(filters);
@@ -421,6 +1061,18 @@ namespace Bam.Net.Data
             return this;
         }
 
+        public override QueryFilter IsEqualTo(object value)
+        {
+            this.Add(new Comparison(ColumnName, "=", Query.Value(value).GetValue()));
+            return this;
+        }
+        
+        public override QueryFilter IsNotEqualTo(object value)
+        {
+            this.Add(new Comparison(ColumnName, "<>", Query.Value(value).GetValue()));
+            return this;
+        }
+        
         /// <summary>
         /// Adds an InComparison only if the specified object array is not empty
         /// </summary>
@@ -518,42 +1170,184 @@ namespace Bam.Net.Data
             return ParenConcat(one, " OR ", two);
         }
 
-        public static QueryFilter<C> operator ==(QueryFilter<C> c, object value)
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, DBNull value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "=", value);
-            if (value == null || value == DBNull.Value)
-            {
-                comp = new NullComparison(c.ColumnName, "IS");
-            }
-            c.Add(comp);
+            c.Add(new NullComparison(c.ColumnName, "IS"));
             return c;
         }
 
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, DBNull value)
+        {
+            c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            return c;
+        }
+
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, DaoId daoId)
+        {
+            if (c.ColumnName.Equals(daoId.IdentifierName))
+            {
+                c.Add(new Comparison(c.ColumnName, "=", daoId.GetRawValue()));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", daoId.GetValue(true)));
+            }
+            return c;
+        }
+        
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, DaoId daoId)
+        {
+            if (c.ColumnName.Equals(daoId.IdentifierName))
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", daoId.GetRawValue()));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", daoId.GetValue(true)));
+            }
+
+            return c;
+        }
+        
         public static QueryFilter<C> operator !=(QueryFilter<C> c, ulong value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "<>", Dao.MapUlongToLong(value));
+            Comparison comp = new Comparison(c.ColumnName, "<>", c.ToQueryValue(value).GetValue());
             c.Add(comp);
             return c;
         }
 
         public static QueryFilter<C> operator ==(QueryFilter<C> c, ulong value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "=", Dao.MapUlongToLong(value));
+            Comparison comp = new Comparison(c.ColumnName, "=", c.ToQueryValue(value).GetValue());
             c.Add(comp);
             return c;
         }
-        
-        public static QueryFilter<C> operator !=(QueryFilter<C> c, object value)
+                    
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, int value)
         {
-            Comparison comp = new Comparison(c.ColumnName, "<>", value);
-            if (value == null || value == DBNull.Value)
+            if(value == null)
             {
-                comp = new NullComparison(c.ColumnName, "IS NOT");
+                c.Add(new NullComparison(c.ColumnName, "IS"));
             }
-            c.Add(comp);
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
             return c;
         }
 
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, int value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, int value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, int value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, int value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, int value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, uint value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, uint value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, uint value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", Dao.MapUlongToLong(value)));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", Dao.MapUlongToLong(value)));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", Dao.MapUlongToLong(value)));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, ulong value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", Dao.MapUlongToLong(value)));
+            return c;
+        }
+       
         public static QueryFilter<C> operator <(QueryFilter<C> c, object value)
         {
             c.Add(new Comparison(c.ColumnName, "<", value));
@@ -573,6 +1367,456 @@ namespace Bam.Net.Data
         }
 
         public static QueryFilter<C> operator >=(QueryFilter<C> c, object value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+        
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, long value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, long value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, long value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, decimal value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, decimal value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, decimal value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, int? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, int? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, int? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, uint? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, uint? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, uint? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, ulong? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", c.ToQueryValue(value.Value).GetValue()));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, ulong? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", c.ToQueryValue(value.Value).GetValue()));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", c.ToQueryValue(value.Value).GetValue()));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", c.ToQueryValue(value.Value).GetValue()));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", c.ToQueryValue(value.Value).GetValue()));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, ulong? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", c.ToQueryValue(value.Value).GetValue()));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, decimal? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, decimal? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, decimal? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, string value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, string value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, string value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, DateTime value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, DateTime value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, DateTime value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">=", value));
+            return c;
+        }
+            
+        public static QueryFilter<C> operator ==(QueryFilter<C> c, DateTime? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "=", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator !=(QueryFilter<C> c, DateTime? value)
+        {
+            if(value == null)
+            {
+                c.Add(new NullComparison(c.ColumnName, "IS NOT"));
+            }
+            else
+            {
+                c.Add(new Comparison(c.ColumnName, "<>", value));
+            }
+            return c;
+        }
+
+        public static QueryFilter<C> operator <(QueryFilter<C> c, DateTime? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<", value));
+            return c;   
+        }
+
+        public static QueryFilter<C> operator >(QueryFilter<C> c, DateTime? value)
+        {
+            c.Add(new Comparison(c.ColumnName, ">", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator <=(QueryFilter<C> c, DateTime? value)
+        {
+            c.Add(new Comparison(c.ColumnName, "<=", value));
+            return c;
+        }
+
+        public static QueryFilter<C> operator >=(QueryFilter<C> c, DateTime? value)
         {
             c.Add(new Comparison(c.ColumnName, ">=", value));
             return c;
@@ -605,10 +1849,9 @@ namespace Bam.Net.Data
         {
             if (obj != null)
             {
-                QueryFilter<C> o = obj as QueryFilter<C>;
-                if (o != null)
+                if (obj is QueryFilter<C> queryFilter)
                 {
-                    return o.Parse().Equals(this.Parse());
+                    return queryFilter.Parse().Equals(this.Parse());
                 }
                 else
                 {

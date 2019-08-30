@@ -124,8 +124,9 @@ namespace Bam.Net.Data
             return info.Name;
         }
 
-        private static QueryFilter GetFilterForExpression(QueryFilter column, ExpressionType expressionType, object value)
+        private static QueryFilter GetFilterForExpression(QueryFilter column, ExpressionType expressionType, object v)
         {
+            QueryValue value = Query.Value(v);
             switch (expressionType)
             {
                 case ExpressionType.NotEqual:

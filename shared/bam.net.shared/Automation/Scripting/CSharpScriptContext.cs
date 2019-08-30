@@ -21,7 +21,7 @@ namespace Bam.Net.Automation.Scripting
 
         public virtual void ExecuteScript()
         {
-            Warn("Base ExecutScript method was called, specify 'Script' text to execute custom script code");
+            Warn("Base ExecuteScript method was called, specify 'Script' text to execute custom script code");
         }
         
         public CSharpScriptContextModel Model { get; set; }

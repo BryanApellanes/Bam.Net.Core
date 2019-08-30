@@ -10,6 +10,7 @@ using System.Runtime;
 using System.Text;
 using Bam.Net.Logging;
 using CsQuery.ExtensionMethods;
+using GraphQL;
 
 namespace Bam.Net
 {
@@ -170,6 +171,7 @@ namespace Bam.Net
         private MetadataReference[] GetMetaDataReferences()
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
+            metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetSystemRuntimePath()));
             metadataReferences.AddRange(ReferencePaths.Select(p => MetadataReference.CreateFromFile(p)));
             metadataReferences.AddRange(ReferenceAssemblies.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());
             return metadataReferences.ToArray();

@@ -1138,7 +1138,7 @@ namespace Bam.Net.Data.Repositories
             Args.ThrowIf<ArgumentException>(queryParameters.Count == 0, "No query parameters specified");
 
             string first = queryParameters.Keys.First();
-            QueryFilter filter = new QueryFilter(first) == queryParameters[first];
+            QueryFilter filter = new QueryFilter(first) == Filter.Value(queryParameters[first]);
             if (queryParameters.Keys.Count > 1)
             {
                 queryParameters.Keys.Rest(1, property =>
@@ -1148,7 +1148,7 @@ namespace Bam.Net.Data.Repositories
 	                {
 		                propertyValue = Dao.MapUlongToLong(ulongPropertyValue);
 	                }
-                    filter.And(new QueryFilter(property) == propertyValue);
+                    filter.And(new QueryFilter(property) == Filter.Value(propertyValue));
                 });
             }
             return filter;

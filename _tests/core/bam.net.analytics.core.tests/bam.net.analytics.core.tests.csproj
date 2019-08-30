@@ -15,4 +15,9 @@
     <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Templates\generic-operators.hbs" />
+    <Content Include="Templates\operators.hbs" />
+  </ItemGroup>
+
 </Project>

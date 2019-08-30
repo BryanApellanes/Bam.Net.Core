@@ -32,12 +32,9 @@ namespace Bam.Net.Automation.Tests
         }
 
         [UnitTest("JobManager:: Should Create JobConf")]
-        public void JobConductorShouldCreaetJobConf()
+        public void JobConductorShouldCreateJobConf()
         {
-            JobManagerService jc = new JobManagerService()
-            {
-                JobsDirectory = new DirectoryInfo(MethodBase.GetCurrentMethod().Name).FullName
-            };
+            JobManagerService jc = GetTestJobConductor(nameof(JobConductorShouldCreateJobConf));
             string name = "JobConfTest_".RandomLetters(4);
             JobConf conf = jc.CreateJob(name);
             string path = Path.Combine(jc.JobsDirectory, conf.Name, conf.Name + ".job");
@@ -54,9 +51,9 @@ namespace Bam.Net.Automation.Tests
             Expect.IsTrue(jc.JobExists(testJobName));
         }
 
-        private static JobManagerService GetTestJobConductor(string jobConductorName)
+        private static JobManagerService GetTestJobConductor(string jobManagerName)
         {
-            DirectoryInfo dir = new DirectoryInfo("JobConductor_" + jobConductorName);
+            DirectoryInfo dir = new DirectoryInfo(Path.Combine("./TestData", $"{nameof(JobManagerService)}_{jobManagerName}"));
             if (dir.Exists)
             {
                 dir.Delete(true);
@@ -80,7 +77,7 @@ namespace Bam.Net.Automation.Tests
         }
 
         [UnitTest("JobManager:: JobDirectory should be set on JobConf")]
-        public void JobConductorShouldCreateJobConfWithJobDirectorySet()
+        public void JobManagerShouldCreateJobConfWithJobDirectorySet()
         {
             string name = MethodBase.GetCurrentMethod().Name;
             JobManagerService foreman = GetTestJobConductor(name);

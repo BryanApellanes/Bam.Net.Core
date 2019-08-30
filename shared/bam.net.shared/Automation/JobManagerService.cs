@@ -188,6 +188,7 @@ namespace Bam.Net.Automation
 
         public virtual JobConf CreateJob(string name)
         {
+            Args.ThrowIf<InvalidOperationException>(JobExists(name), "A job with the specified name already exists: ({0})", name);
             return CreateJobConf(name);
         }
 
