@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
+    <Content Include="Templates\generic-operators.hbs" />
+    <Content Include="Templates\operators.hbs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Templates\generic-operators.hbs" />
-    <Content Include="Templates\operators.hbs" />
+    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
 </Project>

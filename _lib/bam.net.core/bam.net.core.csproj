@@ -63,8 +63,8 @@
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />
   </ItemGroup>
 
-  <Import Project="..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
+  <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 
-  <Import Project="..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
+  <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
 
 </Project>
