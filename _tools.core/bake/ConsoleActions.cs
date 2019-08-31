@@ -297,7 +297,7 @@ namespace Bam.Net.Application
 
             if (Arguments.Contains("pack"))
             {
-                recipePath = GetArgument("pack", "PACK: please enter the path to the recipe file to use");
+                recipePath = GetArgument("nuget", "NUGET: please enter the path to the recipe file to use");
             }
             if (!File.Exists(recipePath))
             {
