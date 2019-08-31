@@ -8,7 +8,7 @@ namespace Bam.Net.Server
 {
     /// <summary>
     /// Attribute used to adorn a static method that returns a byte[]
-    /// and takes IHttpContext and Fs as arguments.  The method will be
+    /// and takes IHttpContext and Fs as arguments.  The method is
     /// registered as a content handler during content handler scanning
     /// done by AppContentResponder instances.
     /// </summary>

@@ -31,7 +31,7 @@ namespace Bam.Net.Server
         }
         public string UserName { get; set; }
         /// <summary>
-        /// Continue the handling of the upload
+        /// Continue the handling of the upload.  If set to false on FileUploading the upload is canceled.
         /// </summary>
         public bool Continue { get; set; }
     }
