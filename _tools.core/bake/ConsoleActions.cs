@@ -295,7 +295,7 @@ namespace Bam.Net.Application
                 recipePath = GetArgument("zipRecipe", "ZIP: Please enter the path to the zip file to use");
             }
 
-            if (Arguments.Contains("pack"))
+            if (Arguments.Contains("nuget"))
             {
                 recipePath = GetArgument("nuget", "NUGET: please enter the path to the recipe file to use");
             }
