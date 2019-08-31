@@ -18,11 +18,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
-    <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Bam-Windows.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -276,7 +271,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="bam.net.core" Version="1.0.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
   </ItemGroup>
 
 

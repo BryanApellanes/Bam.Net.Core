@@ -16,27 +16,17 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Build\**" />
-    <EmbeddedResource Remove="Build\**" />
-    <None Remove="Build\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="troo.ico" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <Content Include="troo.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="bam.net.core" Version="1.0.3" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
     <ProjectReference Include="..\bam\bam.csproj" />
   </ItemGroup>
 
