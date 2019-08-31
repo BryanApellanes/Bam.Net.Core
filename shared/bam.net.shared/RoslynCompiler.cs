@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
+using Bam.Net.CoreServices.AssemblyManagement;
 using Bam.Net.Logging;
 using CsQuery.ExtensionMethods;
 using GraphQL;
@@ -18,27 +19,34 @@ namespace Bam.Net
     {
         public RoslynCompiler()
         {
-            _referencePaths = new HashSet<string>();
-            _referenceAssemblies = new HashSet<Assembly>();
+            _referenceAssemblyPaths = new HashSet<string>();
+            _assembliesToReference = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
-            ReferenceAssemblies = DefaultReferenceAssemblies;
+            AssembliesToReference = DefaultAssembliesToReference;
         }
 
-        HashSet<Assembly> _referenceAssemblies;
-        public Assembly[] ReferenceAssemblies
+        public RoslynCompiler(IReferenceAssemblyResolver referenceAssemblyResolver) : this()
         {
-            get { return _referenceAssemblies.ToArray(); }
+            ReferenceAssemblyResolver = referenceAssemblyResolver;
+        }
+        
+        public IReferenceAssemblyResolver ReferenceAssemblyResolver { get; set; }
+        
+        HashSet<Assembly> _assembliesToReference;
+        public Assembly[] AssembliesToReference
+        {
+            get { return _assembliesToReference.ToArray(); }
             set
             {
-                _referenceAssemblies.Clear();
-                value.ForEach(a => _referenceAssemblies.Add(a));
+                _assembliesToReference.Clear();
+                value.ForEach(a => _assembliesToReference.Add(a));
             }
         }
 
-        HashSet<string> _referencePaths;
-        public string[] ReferencePaths
+        HashSet<string> _referenceAssemblyPaths;
+        public string[] ReferenceAssemblyPaths
         {
-            get { return _referencePaths.ToArray(); }
+            get { return _referenceAssemblyPaths.ToArray(); }
         }
         
         public OutputKind OutputKind { get; set; }
@@ -50,19 +58,19 @@ namespace Bam.Net
 
         public RoslynCompiler AddAssemblyReference(Assembly assembly)
         {
-            _referenceAssemblies.Add(assembly);
+            _assembliesToReference.Add(assembly);
             return this;
         }
         
         public RoslynCompiler AddAssemblyReference(string path)
         {
-            _referencePaths.Add(path);
+            _referenceAssemblyPaths.Add(path);
             return this;
         }
         
         public RoslynCompiler AddAssemblyReference(FileInfo assemblyFile)
         {
-            _referenceAssemblies.Add(Assembly.Load(assemblyFile.FullName));
+            _assembliesToReference.Add(Assembly.Load(assemblyFile.FullName));
             return this;
         }
         
@@ -106,9 +114,10 @@ namespace Bam.Net
         public byte[] Compile(string assemblyName, Func<MetadataReference[]> getMetaDataReferences, params SyntaxTree[] syntaxTrees)
         {
             getMetaDataReferences = getMetaDataReferences ?? GetMetaDataReferences;
+            MetadataReference[] metaDataReferences = getMetaDataReferences();
             CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
                 .WithOptions(new CSharpCompilationOptions(this.OutputKind))
-                .AddReferences(getMetaDataReferences())
+                .AddReferences(metaDataReferences)
                 .AddSyntaxTrees(syntaxTrees);
             
             using(MemoryStream stream = new MemoryStream())
@@ -122,12 +131,12 @@ namespace Bam.Net
             }
         }
 
-        static Assembly[] _defaultReferenceAssemblies = new Assembly[] { };
-        public static Assembly[] DefaultReferenceAssemblies
+        static Assembly[] _defaultAssembliesToReference = new Assembly[] { };
+        public static Assembly[] DefaultAssembliesToReference
         {
             get
             {
-                if (_defaultReferenceAssemblies.Length == 0)
+                if (_defaultAssembliesToReference.Length == 0)
                 {
                     List<Assembly> defaultAssemblies = new List<Assembly>
                     {
@@ -137,43 +146,24 @@ namespace Bam.Net
                         typeof(object).Assembly,
                         Assembly.GetExecutingAssembly()
                     };
-                    AddCommonReferenceAssemblies(defaultAssemblies);
-                    _defaultReferenceAssemblies = defaultAssemblies.ToArray();
+                    _defaultAssembliesToReference = defaultAssemblies.ToArray();
                 }
                 
-                return _defaultReferenceAssemblies;
-            }
-        }
-
-        private static void AddCommonReferenceAssemblies(List<Assembly> defaultAssemblies)
-        {
-            RuntimeConfig config = RuntimeSettings.GetConfig();
-            DirectoryInfo commonAssemblies = new DirectoryInfo(config.ReferenceAssembliesDir);
-            if (commonAssemblies.Exists)
-            {
-                foreach (FileInfo file in commonAssemblies.GetFiles())
-                {
-                    if (file.HasExtension(".dll") || file.HasExtension(".exe"))
-                    {
-                        try
-                        {
-                            defaultAssemblies.Add(Assembly.LoadFile(file.FullName));
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Warn("Exception loading reference assembly {0}: {1}", file.FullName, ex.Message);
-                        }
-                    }
-                }
+                return _defaultAssembliesToReference;
             }
         }
 
         private MetadataReference[] GetMetaDataReferences()
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
-            metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetSystemRuntimePath()));
-            metadataReferences.AddRange(ReferencePaths.Select(p => MetadataReference.CreateFromFile(p)));
-            metadataReferences.AddRange(ReferenceAssemblies.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());
+            metadataReferences.Add(MetadataReference.CreateFromFile(ReferenceAssemblyResolver.ResolveSystemRuntimePath()));
+            if (OSInfo.Current == OSNames.Windows)
+            {
+                metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetMsCoreLibPath()));
+            }
+            metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetBamAssemblyPath()));
+            metadataReferences.AddRange(ReferenceAssemblyPaths.Select(p => MetadataReference.CreateFromFile(p)));
+            metadataReferences.AddRange(AssembliesToReference.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());
             return metadataReferences.ToArray();
         }
     }
