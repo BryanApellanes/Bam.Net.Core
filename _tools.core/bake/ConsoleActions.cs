@@ -153,6 +153,12 @@ namespace Bam.Net.Application
                 }
 
                 string dotNetArgs = $"pack {projectFile} -c {recipe.BuildConfig} -o {recipe.NugetOutputDirectory}";
+                if (Arguments.Contains("packageVersion"))
+                {
+                    string packageVersion = Arguments["packageVersion"];
+                    dotNetArgs = $"{dotNetArgs} -p:PackageVersion={packageVersion}";
+                }
+
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
                 OutLineFormat("pack command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, nugetDirectory);

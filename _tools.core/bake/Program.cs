@@ -27,6 +27,7 @@ namespace Bam.Net
             AddValidArgument("recipePerProject", true, false, "On /discover, Specifies that all discovered projects have their own recipe written.");
             AddValidArgument("zipRecipe", false, false, "On /zip, Specify the recipe whose 'OutputDirectory' setting is zipped.");
             AddValidArgument("nugetOutput", "On /nuget, Specify the directory where nuget packages are output.");
+            AddValidArgument("packageVersion", false, false, "On /nuget, Specify the package version to set.");
         }
 
         #region do not modify
