@@ -70,6 +70,10 @@ namespace Bam.Net
 
         public static string[] ToolkitSegments => new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
 
+        public static string NugetOutputPath => Path.Combine(NugetOutputSegments);
+        
+        public static string[] NugetOutputSegments => new List<string>() {UserHome, ".bam", "nupkg"}.ToArray();
+        
         /// <summary>
         /// The path where third party tools are found, including sysinternals and opencover.
         /// </summary>

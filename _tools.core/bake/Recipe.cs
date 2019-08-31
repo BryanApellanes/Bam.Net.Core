@@ -14,8 +14,9 @@ namespace Bam.Net.Application
         {
             ProjectRoot = "_tools.core";
             OsName = OSInfo.Current;
-            OutputDirectory = Path.Combine(BamPaths.ToolkitPath, OsName.ToString());
             OsName = OSNames.Windows;
+            OutputDirectory = Path.Combine(BamPaths.ToolkitPath, OsName.ToString());
+            NugetOutputDirectory = Path.Combine(BamPaths.NugetOutputPath, OsName.ToString());
         }
         /// <summary>
         /// Gets or sets the root directory where the bam toolkit
@@ -28,7 +29,7 @@ namespace Bam.Net.Application
         /// <summary>
         /// The directory to output nuget packages to.
         /// </summary>
-        public string NugetDirectory { get; set; }
+        public string NugetOutputDirectory { get; set; }
         
         [JsonConverter(typeof(StringEnumConverter))]
         public BuildConfig BuildConfig { get; set; }

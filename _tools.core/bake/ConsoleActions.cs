@@ -134,13 +134,13 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("pack", "pack the specified recipe")]
+        [ConsoleAction("nuget", "pack the specified recipe")]
         public void PackRecipe()
         {
             Recipe recipe = GetRecipe();
-            if (Arguments.Contains("outputNuget"))
+            if (Arguments.Contains("nugetOutput"))
             {
-                recipe.NugetDirectory = GetArgument("outputNuget");
+                recipe.NugetOutputDirectory = GetArgument("nugetOutput");
             }
             BamSettings settings = BamSettings.Load();
             string nugetDirectory = GetNugetDirectory(recipe);
@@ -152,7 +152,7 @@ namespace Bam.Net.Application
                     continue;
                 }
 
-                string dotNetArgs = $"pack {projectFile} -c {recipe.BuildConfig} -o {recipe.NugetDirectory}";
+                string dotNetArgs = $"pack {projectFile} -c {recipe.BuildConfig} -o {recipe.NugetOutputDirectory}";
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
                 OutLineFormat("pack command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, nugetDirectory);
@@ -203,7 +203,7 @@ namespace Bam.Net.Application
 
         private static string GetNugetDirectory(Recipe recipe)
         {
-            string nugetDirectory = recipe.NugetDirectory;
+            string nugetDirectory = recipe.NugetOutputDirectory;
             return CleanDirectoryPath(nugetDirectory);
         }
         
