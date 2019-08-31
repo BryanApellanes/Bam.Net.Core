@@ -52,7 +52,17 @@ namespace Bam.Net
                                   );
             }
         }
+        
+        public static string GetBamAssemblyPath()
+        {
+            return Path.Combine(RuntimeSettings.GetConfig().ReferenceAssembliesDir, "bam.net.core.dll");
+        }
 
+        public static string GetMsCoreLibPath()
+        {
+            return Path.Combine(GetConfig().ReferenceAssembliesDir, "mscorlib.dll");
+        }
+        
         public static string GetSystemRuntimePath()
         {
             return Path.Combine(GetConfig().ReferenceAssembliesDir, SystemRuntime);
@@ -60,7 +70,7 @@ namespace Bam.Net
         
         public static string ReferenceAssembliesDir
         {
-            get { return Path.Combine(BinDir, "ReferenceAssemblies"); }
+            get { return Path.Combine(BinDir, OSInfo.Current.ToString(), "ReferenceAssemblies"); }
         }
 
         public static string GenDir

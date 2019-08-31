@@ -25,7 +25,7 @@ namespace Bam.Net.Automation.Tests
         {
             CSharpScriptContext ctx = new CSharpScriptContext();
             ctx.Script = "System.Console.WriteLine(\"monkey\");";
-            ctx.Execute(new Type[]{typeof(BamInfo)}, new Type[]{typeof(Console)});
+            ctx.Execute(new Type[]{}, new Type[]{typeof(Console)});
         }
 
         [UnitTest]

@@ -22,7 +22,7 @@ namespace Bam.Net
             _referenceAssemblyPaths = new HashSet<string>();
             _assembliesToReference = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
-            AssembliesToReference = new Assembly[]{};
+            AssembliesToReference = DefaultAssembliesToReference;
         }
 
         public RoslynCompiler(IReferenceAssemblyResolver referenceAssemblyResolver) : this()
@@ -114,9 +114,10 @@ namespace Bam.Net
         public byte[] Compile(string assemblyName, Func<MetadataReference[]> getMetaDataReferences, params SyntaxTree[] syntaxTrees)
         {
             getMetaDataReferences = getMetaDataReferences ?? GetMetaDataReferences;
+            MetadataReference[] metaDataReferences = getMetaDataReferences();
             CSharpCompilation compilation = CSharpCompilation.Create(assemblyName)
                 .WithOptions(new CSharpCompilationOptions(this.OutputKind))
-                .AddReferences(getMetaDataReferences())
+                .AddReferences(metaDataReferences)
                 .AddSyntaxTrees(syntaxTrees);
             
             using(MemoryStream stream = new MemoryStream())
@@ -131,7 +132,7 @@ namespace Bam.Net
         }
 
         static Assembly[] _defaultAssembliesToReference = new Assembly[] { };
-        public static Assembly[] DefaultAssembliesToToReference
+        public static Assembly[] DefaultAssembliesToReference
         {
             get
             {
@@ -155,8 +156,12 @@ namespace Bam.Net
         private MetadataReference[] GetMetaDataReferences()
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
-            //ReferenceAssemblyResolver.ResolveReferenceAssemblyPath()
             metadataReferences.Add(MetadataReference.CreateFromFile(ReferenceAssemblyResolver.ResolveSystemRuntimePath()));
+            if (OSInfo.Current == OSNames.Windows)
+            {
+                metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetMsCoreLibPath()));
+            }
+            metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetBamAssemblyPath()));
             metadataReferences.AddRange(ReferenceAssemblyPaths.Select(p => MetadataReference.CreateFromFile(p)));
             metadataReferences.AddRange(AssembliesToReference.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());
             return metadataReferences.ToArray();
