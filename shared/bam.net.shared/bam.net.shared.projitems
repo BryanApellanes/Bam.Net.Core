@@ -3085,9 +3085,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)CoreServices\Templates\Proxy.tmpl" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)CoreServices\Templates\ProxyMethod.tmpl" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\WebHooks\regen_webhooks_dao.cmd" />
-    <None Include="$(MSBuildThisFileDirectory)Data\Dynamic\dynamic_type_data_gen_config.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="$(MSBuildThisFileDirectory)Data\Dynamic\dynamic_type_data_gen_config.yaml" />
     <None Include="$(MSBuildThisFileDirectory)Data\Dynamic\regen_data_dynamic_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)Data\README.md" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Repositories\Templates\ChildPrimaryKeyProperty.tmpl" />
