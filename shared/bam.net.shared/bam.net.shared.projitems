@@ -762,8 +762,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Hosts\HostClientServiceRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
-    <Folder Include="$(MSBuildThisFileDirectory)Server\Dns" />
-    <Folder Include="$(MSBuildThisFileDirectory)Unix" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsFileExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsRemoteFileHandler.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />
