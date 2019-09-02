@@ -3,17 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
-    <PackageId>breve.exe</PackageId>
-    <Version>0.0.1</Version>
-    <Authors>Bryan Apellanes</Authors>
-    <Company>ThreeHeadz</Company>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="breveTest_cs.js" />
-    <None Remove="breveTest_java.js" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="breveTest_cs.js">
@@ -25,44 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\bam.net.core\bam.net.core.csproj" />
+    <PackageReference Include="bam.net.core" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\breve.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\breve.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\breve.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\breve.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\breve.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\breve.dll.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\breve.application" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\breve.pdb" />
-    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\breve.dll" />
   </ItemGroup>
 
 </Project>

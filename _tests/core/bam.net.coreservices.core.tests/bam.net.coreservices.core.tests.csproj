@@ -10,11 +10,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />   
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
+    <PackageReference Include="bam.net.core" Version="1.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\bam.net.serviceproxy.core.tests\bam.net.serviceproxy.core.tests.csproj" />
   </ItemGroup>
 

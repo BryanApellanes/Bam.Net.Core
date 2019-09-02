@@ -1,7 +1,7 @@
 ﻿# BAM Application Management Daemon
 
 The Bam Application Management Daemon (Bamd) is a service used to run and
-monitor processes defined in BamDaemonProcess.json.  
+monitor processes defined in DaemonProcess.json.  
 
 ## DaemonProcesses.json
 

@@ -7,17 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.1" />
+    <PackageReference Include="bam.net.core" Version="1.0.3" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Templates\generic-operators.hbs" />
     <Content Include="Templates\operators.hbs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,40 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\bam.net.core\bam.net.core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\bam.net.services.core.tests.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.dll.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.application" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bam.net.services.core.tests.pdb" />
-    <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\bam.net.services.core.tests.dll" />
+    <PackageReference Include="bam.net.core" Version="1.0.3" />
   </ItemGroup>
 
   <Import Project="..\..\shared\bam.net.tests.shared\bam.net.tests.shared.projitems" Label="Shared" />
