@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,6 +12,41 @@
 
   <ItemGroup>
     <PackageReference Include="bam.net.core" Version="1.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\bam.net.useraccounts.core.tests.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bam.net.useraccounts.core.tests.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.dll.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.useraccounts.core.tests.application" />
   </ItemGroup>
 
 </Project>

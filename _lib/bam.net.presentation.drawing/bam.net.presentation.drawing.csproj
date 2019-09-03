@@ -11,5 +11,33 @@
     <ItemGroup>
         <PackageReference Include="bam.net.core" Version="1.0.3" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\bam.net.presentation.drawing.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.presentation.drawing.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.presentation.drawing.dll" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.presentation.drawing.pdb" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.presentation.drawing.dll" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\Native.bam.net.presentation.drawing.manifest" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.presentation.drawing.application" />
+    </ItemGroup>
 
 </Project>
