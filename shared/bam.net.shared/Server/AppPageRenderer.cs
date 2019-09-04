@@ -7,13 +7,13 @@ using Lucene.Net.Support;
 
 namespace Bam.Net.Server
 {
-    public class BamPageRenderer : PageRenderer
+    public class AppPageRenderer : PageRenderer
     {
-        public BamPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager) : base(appContentResponder, commonTemplateManager)
+        public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager) : base(appContentResponder, commonTemplateManager)
         {
         }
 
-        public BamPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager,
+        public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager,
             IApplicationTemplateManager applicationTemplateManager) : base(appContentResponder, commonTemplateManager, applicationTemplateManager)
         {
         }

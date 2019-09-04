@@ -351,7 +351,7 @@ namespace Bam.Net.Server
                 IApplicationTemplateManager applicationTemplateManager =
                     ApplicationServiceRegistry.Construct<AppHandlebarsRenderer>(responder);
                 responder.Initialize();
-                responder.PageRenderer = new BamPageRenderer(responder, 
+                responder.PageRenderer = new AppPageRenderer(responder, 
                         ApplicationServiceRegistry.Get<ITemplateManager>(), 
                         applicationTemplateManager
                     );

@@ -572,7 +572,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\RenderableData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppServerConf.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\HostProcessInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
