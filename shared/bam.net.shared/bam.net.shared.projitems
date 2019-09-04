@@ -567,12 +567,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsWrapperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyedRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\NamedAuditRepoData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\RenderableData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\AppServerConf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\HostProcessInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\ServerKinds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IContextCloneable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\CatalogRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\CatalogService.cs" />

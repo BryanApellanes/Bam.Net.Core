@@ -44,6 +44,7 @@ namespace Bam.Net.Server
 			DefaultPage = DefaultPageConst;
 			ServiceSearchPattern = new string[] { "*Services.dll", "*Proxyables.dll" };
             ProcessMode = ProcessModes.Dev.ToString();
+            ServerConf = new AppServerConf(ServerKinds.Bam);
             Name = ApplicationNameProvider.Default.GetApplicationName();
         }
 
@@ -171,6 +172,8 @@ namespace Bam.Net.Server
 
         public string ProcessMode { get; set; } 
 
+        public AppServerConf ServerConf { get; set; }
+        
         List<HostPrefix> _bindings;
         object _bindingsLock = new object();
         public HostPrefix[] Bindings

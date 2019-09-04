@@ -334,11 +334,11 @@ namespace Bam.Net.Server
             {
                 ProcessMode.Current.Mode.ToString()
             };
-            configs.Where(c=> configured.Contains(c.ProcessMode)).Each(ac =>
+            configs.Where(c=> configured.Contains(c.ProcessMode)).Each(appConf =>
             {
-                OnAppContentResponderInitializing(ac);
+                OnAppContentResponderInitializing(appConf);
                 Logger.RestartLoggingThread();
-                AppContentResponder responder = new AppContentResponder(this, ac)
+                AppContentResponder responder = new AppContentResponder(this, appConf)
                 {
                     Logger = Logger
                 };
@@ -347,7 +347,7 @@ namespace Bam.Net.Server
                     logger.RestartLoggingThread();
                     responder.Subscribe(logger);
                 });
-                string appName = ac.Name.ToLowerInvariant();
+                string appName = appConf.Name.ToLowerInvariant();
                 IApplicationTemplateManager applicationTemplateManager =
                     ApplicationServiceRegistry.Construct<AppHandlebarsRenderer>(responder);
                 responder.Initialize();
@@ -364,8 +364,8 @@ namespace Bam.Net.Server
                 ApplicationServiceRegistry.SetInjectionProperties(responder);
                 AppContentResponders[appName] = responder;
 
-                WriteHostProcessInfo(ac);
-                OnAppContentResponderInitialized(ac);
+                WriteHostProcessInfo(appConf);
+                OnAppContentResponderInitialized(appConf);
             });
         }
         #region IResponder Members
@@ -373,7 +373,7 @@ namespace Bam.Net.Server
         private void WriteHostProcessInfo(AppConf appConf)
         {
             HostProcessInfo processInfo = new HostProcessInfo(){ProcessMode = ProcessMode.Current};
-            string relativeFilePath = "~/bam-web-host.json";
+            string relativeFilePath = "~/web-host.json";
             if (appConf.AppRoot.FileExists(out string fullPath, relativeFilePath))
             {
                 File.Delete(fullPath);
