@@ -47,4 +47,8 @@
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamweb.application" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="tests" />
+  </ItemGroup>
 </Project>

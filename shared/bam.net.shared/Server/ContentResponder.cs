@@ -364,13 +364,23 @@ namespace Bam.Net.Server
                 ApplicationServiceRegistry.SetInjectionProperties(responder);
                 AppContentResponders[appName] = responder;
 
+                WriteHostProcessInfo(ac);
                 OnAppContentResponderInitialized(ac);
             });
         }
-
-
         #region IResponder Members
 
+        private void WriteHostProcessInfo(AppConf appConf)
+        {
+            HostProcessInfo processInfo = new HostProcessInfo(){ProcessMode = ProcessMode.Current};
+            string relativeFilePath = "~/bam-web-host.json";
+            if (appConf.AppRoot.FileExists(out string fullPath, relativeFilePath))
+            {
+                File.Delete(fullPath);
+            }
+            appConf.AppRoot.WriteFile(relativeFilePath, processInfo.ToJson(true));
+        }
+        
         /// <summary>
         /// If true, TryRespond will send 404 and close the connection
         /// if no content is found.  Otherwise, nothing will be done
