@@ -14,7 +14,6 @@ namespace Bam.Net.Application
         {
             ProjectRoot = "_tools.core";
             OsName = OSInfo.Current;
-            OsName = OSNames.Windows;
             OutputDirectory = Path.Combine(BamPaths.ToolkitPath, OsName.ToString());
             NugetOutputDirectory = Path.Combine(BamPaths.NugetOutputPath, OsName.ToString());
         }

@@ -43,7 +43,7 @@ namespace Bam.Net
                 }
                 else
                 {
-                    return Environment.GetEnvironmentVariable("$HOME");
+                    return Environment.GetEnvironmentVariable("HOME");
                 }
             }
         }
