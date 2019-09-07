@@ -52,4 +52,8 @@
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="test.csproj" />
+  </ItemGroup>
 </Project>

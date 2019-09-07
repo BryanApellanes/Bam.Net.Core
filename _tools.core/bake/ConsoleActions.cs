@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
 using Bam.Net.CoreServices;
 
 namespace Bam.Net.Application
@@ -165,6 +166,25 @@ namespace Bam.Net.Application
             }
         }
 
+        [ConsoleAction("ref","update project file references to bam.net.core, value may be either 'Project' or 'Package-Version'")]
+        public void UpdateReferences()
+        {
+            Recipe recipe = GetRecipe();
+            ReferenceKind referenceKind = ReferenceKind.Project;
+            string version = "1.0.0";
+            string projectOrPackage = GetArgument("ref", "REF: Please specify 'Project' or 'Package-{Version}'");
+            if (projectOrPackage.StartsWith("Package"))
+            {
+                referenceKind = ReferenceKind.Package;
+                version = !projectOrPackage.Contains("-") ? Prompt("Please specify what package version to reference.") : projectOrPackage.Split("-", 2)[1];
+            }
+
+            foreach (string projectFile in recipe.UnixProjectFilePaths)
+            {
+                UpdateReference(projectFile, referenceKind, version);
+            }
+        }
+        
         [ConsoleAction("zip", "Zip the OutputDirectory specified by a recipe")]
         public void ZipRecipe()
         {
@@ -199,6 +219,29 @@ namespace Bam.Net.Application
             ZipFile.CreateFromDirectory(recipe.OutputDirectory, outputFile.FullName);
             OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(300);
+        }
+
+        private static void UpdateReference(string projectFile, ReferenceKind referenceKind, string version = "1.0.0")
+        {
+            Project project = projectFile.FromXmlFile<Project>();
+            foreach (ProjectItemGroup itemGroup in project.ItemGroup)
+            {
+                if (itemGroup.PackageReference != null && itemGroup.PackageReference.Length > 0)
+                {
+                    foreach (ProjectItemGroupPackageReference packageReference in itemGroup.PackageReference)
+                    {
+                        OutLineFormat("Package: {0}, Version {1}", ConsoleColor.Blue, packageReference.Include, packageReference.Version);
+                    }
+                }
+
+                if (itemGroup.ProjectReference != null && itemGroup.ProjectReference.Length > 0)
+                {
+                    foreach (ProjectItemGroupProjectReference projectReference in itemGroup.ProjectReference)
+                    {
+                        OutLineFormat("Project: {0}", ConsoleColor.Cyan, projectReference.Include);
+                    }
+                }
+            }
         }
         
         private static string GetOutputDirectory(Recipe recipe)
