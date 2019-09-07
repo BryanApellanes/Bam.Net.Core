@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Concurrent;
+using Bam.Net.Logging;
 
 namespace Bam.Net
 {
@@ -90,7 +91,14 @@ namespace Bam.Net
             directoryPath = directoryPath.ToLowerInvariant();
             if (!_watchers.ContainsKey(directoryPath))
             {
-                _watchers.TryAdd(directoryPath, new FileSystemWatcher { Path = directoryPath, EnableRaisingEvents = true, IncludeSubdirectories = true });
+                try
+                {
+                    _watchers.TryAdd(directoryPath, new FileSystemWatcher { Path = directoryPath, EnableRaisingEvents = true, IncludeSubdirectories = true });
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Exception occurred trying to watch config directory ({0}): {1}", directoryPath, ex.Message);
+                }
             }
             return _watchers[directoryPath];
         }
