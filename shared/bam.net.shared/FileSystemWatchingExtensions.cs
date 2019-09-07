@@ -97,7 +97,7 @@ namespace Bam.Net
                 }
                 catch (Exception ex)
                 {
-                    Log.Warn("Exception occurred trying to watch config directory ({0}): {1}", directoryPath, ex.Message);
+                    Log.Trace("Exception occurred trying to watch config directory ({0}): {1}", directoryPath, ex.Message);
                 }
             }
             return _watchers[directoryPath];
