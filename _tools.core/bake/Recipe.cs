@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using Bam.Net.Automation;
+using Bam.Net.Bake;
 using Bam.Net.CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using YamlDotNet.Serialization;
 
-namespace Bam.Net.Application
+namespace Bam.Net.Bake
 {
     public class Recipe
     {
@@ -20,6 +21,24 @@ namespace Bam.Net.Application
             OsName = OSInfo.Current;
             OutputDirectory = Path.Combine(BamPaths.ToolkitPath, OsName.ToString());
             NugetOutputDirectory = Path.Combine(BamPaths.NugetOutputPath, OsName.ToString());
+        }
+
+        /// <summary>
+        /// Create a recipe containing a single project.
+        /// </summary>
+        /// <param name="projectFilePath"></param>
+        /// <param name="outputDirectory"></param>
+        /// <returns></returns>
+        public static Recipe FromProject(string projectFilePath, string outputDirectory = "./baked-goods")
+        {
+            FileInfo project = new FileInfo(projectFilePath);
+            return new Recipe()
+            {
+                ProjectRoot = project.DirectoryName,
+                ProjectFilePaths = new string[]{projectFilePath},
+                OutputDirectory =  outputDirectory,
+                NugetOutputDirectory =  Path.Combine(outputDirectory, "nupkg")
+            };
         }
         /// <summary>
         /// Gets or sets the root directory where the bam toolkit
@@ -44,65 +63,73 @@ namespace Bam.Net.Application
         [XmlIgnore]
         [JsonIgnore]
         [Exclude]
-        public string[] UnixProjectFilePaths
+        public string[] UnixProjectFilePaths => ProjectFilePaths.Select(ToUnixPath).ToArray();
+
+        public bool ReferencesPackage(string projectFilePath, string referencedProjectName)
         {
-            get { return ProjectFilePaths.Select(path => ToUnixPath(path)).ToArray(); }
+            ProjectInfo projectInfo = GetProjectByPath(projectFilePath);
+            return projectInfo.ReferencesPackage(referencedProjectName);
         }
 
-        public static void SetPackageReference(string projectFilePath, string projectName)
+        public bool ReferencesProject(string projectFilePath, string referencedProjectName)
         {
-            // find the project reference
-            // remove it
-            // replace with package reference
-        }
-
-        public static void SetProjectReference(string projectFilePath, string projectName)
-        {
-            // find packageReference
-            // remove it
-            // replace with project reference
+            ProjectInfo projectInfo = GetProjectByPath(projectFilePath);
+            return projectInfo.ReferencesProject(referencedProjectName);
         }
         
-        public static ReferenceInfo[] GetReferenceInfo(string projectFilePath)
+        protected ProjectInfo[] ProjectInfos => UnixProjectFilePaths.Select(ProjectInfo.FromProjectFilePath).ToArray();
+        
+        protected ProjectInfo GetProjectByPath(string projectPath)
         {
-            Project project = projectFilePath.FromXmlFile<Project>();
-            List<ReferenceInfo> results = new List<ReferenceInfo>();
-            if (project.ItemGroup != null && project.ItemGroup.Length > 0)
-            {
-                foreach (ProjectItemGroup itemGroup in project.ItemGroup)
-                {
-                    if (itemGroup.PackageReference != null && itemGroup.PackageReference.Length > 0)
-                    {
-                        foreach (ProjectItemGroupPackageReference packageReference in itemGroup.PackageReference)
-                        {
-                            results.Add(new ReferenceInfo()
-                            {
-                                Kind = ReferenceKind.Project, 
-                                Name = packageReference.Include,
-                                Version = packageReference.Version,
-                                PackageReference = packageReference,
-                                Project = project
-                            });
-                        }
-                    }
+            return UnixProjectFilePaths
+                .Where(p => p.Equals(projectPath, StringComparison.InvariantCultureIgnoreCase))
+                .Select(ProjectInfo.FromProjectFilePath)
+                .FirstOrDefault();
+        }
+        
+        protected ProjectInfo GetProjectByName(string projectName)
+        {
+            return UnixProjectFilePaths
+                .Where(p => projectName.Equals(Path.GetFileNameWithoutExtension(p)))
+                .Select(ProjectInfo.FromProjectFilePath)
+                .FirstOrDefault();
+        }
 
-                    if (itemGroup.ProjectReference != null && itemGroup.ProjectReference.Length > 0)
-                    {
-                        foreach (ProjectItemGroupProjectReference projectReference in itemGroup.ProjectReference)
-                        {
-                            results.Add(new ReferenceInfo()
-                            {
-                                Kind = ReferenceKind.Project,
-                                Name = projectReference.Include,
-                                ProjectReference = projectReference,
-                                Project = project
-                            });
-                        }
-                    }
-                }
-            }
-            
-            return results.ToArray();
+        /// <summary>
+        /// For all the projects in this recipe, reference the specified project as a package.
+        /// </summary>
+        /// <param name="projectName"></param>
+        public void SetPackageReference(string projectName)
+        {
+            ProjectInfos.Each(pi => pi.ReferenceAsPackage(projectName));
+        }
+
+        /// <summary>
+        /// For all the project in this recipe, reference the specified project as a project.
+        /// </summary>
+        /// <param name="projectName"></param>
+        /// <param name="referenceProjectDirectory"></param>
+        public void SetProjectReference(string projectName, string referenceProjectDirectory = "")
+        {
+            ProjectInfos.Each(pi => pi.ReferenceAsProject(projectName, referenceProjectDirectory));
+        }
+        
+        /// <summary>
+        /// Ensure that the specified projectFilePath references the project specified by projectName as a
+        /// package and not a project.  Uses "(1.0.3,)" (any version higher than 1.0.3) as the default version value.
+        /// </summary>
+        /// <param name="projectPathToModify"></param>
+        /// <param name="projectName"></param>
+        public void SetPackageReference(string projectPathToModify, string projectName)
+        {
+            ProjectInfo projectInfo = GetProjectByPath(projectPathToModify);
+            projectInfo.ReferenceAsPackage(projectName);
+        }
+
+        public void SetProjectReference(string projectPathToModify, string projectName, string referenceProjectDirectory)
+        {
+            ProjectInfo projectInfo = GetProjectByPath(projectPathToModify);
+            projectInfo.ReferenceAsProject(projectName, referenceProjectDirectory);
         }
         
         private string ToUnixPath(string filePath)

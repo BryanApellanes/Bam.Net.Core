@@ -1,17 +1,14 @@
-﻿using Bam.Net.CommandLine;
-using Bam.Net.Testing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Xml.Linq;
-using Bam.Net.CoreServices;
+using Bam.Net.Application;
+using Bam.Net.CommandLine;
+using Bam.Net.Testing;
 
-namespace Bam.Net.Application
+namespace Bam.Net.Bake
 {
     [Serializable]
     public class ConsoleActions : CommandLineTestInterface

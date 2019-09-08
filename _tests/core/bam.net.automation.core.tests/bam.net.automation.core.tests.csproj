@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <None Remove="Test.zip" />
+    <None Update="bake.csproj.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
+    <ProjectReference Include="..\..\..\_tools.core\bake\bake.csproj" />
   </ItemGroup>  
 
 </Project>

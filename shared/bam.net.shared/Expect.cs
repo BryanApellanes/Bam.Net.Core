@@ -50,12 +50,12 @@ namespace Bam.Net
             Expect.IsTrue(File.Exists(filePath), message);
         }
 
-        public static void IsFalse(bool boolToCheck)
+        public static void IsFalse(this bool boolToCheck)
         {
             IsFalse(boolToCheck, string.Empty);
         }
 
-        public static void IsFalse(bool boolToCheck, string message)
+        public static void IsFalse(this bool boolToCheck, string message)
         {
             if (boolToCheck)
             {

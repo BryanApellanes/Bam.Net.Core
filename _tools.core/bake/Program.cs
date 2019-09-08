@@ -3,7 +3,7 @@ using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
 
-namespace Bam.Net
+namespace Bam.Net.Bake
 {
     [Serializable]
     class Program : CommandLineTestInterface
