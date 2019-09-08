@@ -53,7 +53,7 @@ namespace Bam.Net.Bake
             }
             return packageReferenceInfo != null;
         }
-
+        
         public bool ReferencesProject(string projectPath)
         {
             return ReferencesProject(projectPath, out ReferenceInfo ignore);
@@ -156,6 +156,7 @@ namespace Bam.Net.Bake
                                 Kind = ReferenceKind.Package, 
                                 Include = packageReference.Include,
                                 Version = packageReference.Version,
+                                Name = packageReference.Include,
                                 PackageReference = packageReference,
                                 ItemGroup = itemGroup,
                                 Project = project,
@@ -173,6 +174,7 @@ namespace Bam.Net.Bake
                                 Kind = ReferenceKind.Project,
                                 Include = projectReference.Include,
                                 ProjectReference = projectReference,
+                                Name = Path.GetFileNameWithoutExtension(projectReference.Include),
                                 ItemGroup = itemGroup,
                                 Project = project,
                                 ProjectPath = ProjectFilePath

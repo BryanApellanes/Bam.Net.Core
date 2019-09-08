@@ -73,8 +73,13 @@ namespace Bam.Net.Bake
 
         public bool ReferencesProject(string projectFilePath, string referencedProjectName)
         {
+            return ReferencesProject(projectFilePath, referencedProjectName, out ReferenceInfo ignore);
+        }
+        
+        public bool ReferencesProject(string projectFilePath, string referencedProjectName, out ReferenceInfo referenceInfo)
+        {
             ProjectInfo projectInfo = GetProjectByPath(projectFilePath);
-            return projectInfo.ReferencesProject(referencedProjectName);
+            return projectInfo.References(referencedProjectName, out referenceInfo);
         }
         
         protected ProjectInfo[] ProjectInfos => UnixProjectFilePaths.Select(ProjectInfo.FromProjectFilePath).ToArray();
