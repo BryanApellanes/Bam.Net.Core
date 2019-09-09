@@ -13,8 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!--<PackageReference Include="bam.net.core" Version="1.0.3" />-->
-        <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
+        <PackageReference Include="bam.net.core" Version="1.0.3" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     </ItemGroup>
 

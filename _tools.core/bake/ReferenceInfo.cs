@@ -18,7 +18,7 @@ namespace Bam.Net
         protected internal ProjectItemGroup ItemGroup { get; set; }
         protected internal Project Project { get; set; }
         
-        protected internal string ProjectPath { get; set; }
+        protected internal string ParentProjectPath { get; set; }
 
         protected internal ProjectItemGroupPackageReference ToPackageReference(string version = null)
         {
@@ -29,7 +29,7 @@ namespace Bam.Net
             }
             return new ProjectItemGroupPackageReference()
             {
-                Include = Include,
+                Include = Name,
                 Version = version
             };
         }

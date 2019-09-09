@@ -6,12 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Test.zip" />
-    <None Update="bake.csproj.xml">
+    <None Update="test_project-package.csproj.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  <ItemGroup>
+    <None Update="test_package-project.csproj.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Test.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

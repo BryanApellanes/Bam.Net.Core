@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Bam.Net.Testing;
 
 namespace Bam.Net.Bake
 {
@@ -54,15 +56,15 @@ namespace Bam.Net.Bake
             return packageReferenceInfo != null;
         }
         
-        public bool ReferencesProject(string projectPath)
+        public bool ReferencesAsProject(string projectOrPackageName)
         {
-            return ReferencesProject(projectPath, out ReferenceInfo ignore);
+            return ReferencesAsProject(projectOrPackageName, out ReferenceInfo ignore);
         }
         
-        public bool ReferencesProject(string projectPath, out ReferenceInfo projectReferenceInfo)
+        public bool ReferencesAsProject(string projectOrPackageName, out ReferenceInfo projectReferenceInfo)
         {
-            projectReferenceInfo = ProjectReferences.FirstOrDefault(ri => !string.IsNullOrEmpty(ri.ProjectPath) && ri.ProjectPath.Equals(projectPath));
-            return projectReferenceInfo != null;
+            bool result = References(projectOrPackageName, out projectReferenceInfo);
+            return result && projectReferenceInfo.Kind == ReferenceKind.Project;
         }
 
         public bool References(string name)
@@ -71,14 +73,14 @@ namespace Bam.Net.Bake
         }
         
         /// <summary>
-        /// Determines if the current project references a package or project by the specified name.
+        /// Determines if the current project references a package or project of the specified name.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="referenceInfo"></param>
         /// <returns></returns>
         public bool References(string name, out ReferenceInfo referenceInfo)
         {
-            referenceInfo = ReferenceInfos.FirstOrDefault(ri => Path.GetFileNameWithoutExtension(ri.ProjectPath).Equals(name) || ri.Include.Equals(name));
+            referenceInfo = ReferenceInfos.FirstOrDefault(ri => ri.Name.Equals(name) || ri.Include.Equals(name));
             return referenceInfo != null;
         }
 
@@ -88,17 +90,8 @@ namespace Bam.Net.Bake
             {
                 if (referenceInfo.Kind != ReferenceKind.Project)
                 {
-                    ProjectItemGroup projectItemGroup = referenceInfo.ItemGroup;
-                    List<ProjectItemGroupPackageReference> packageReferences = new List<ProjectItemGroupPackageReference>(projectItemGroup.PackageReference);
-                    packageReferences.Remove(referenceInfo.PackageReference);
-                    projectItemGroup.PackageReference = packageReferences.ToArray();
-                    
-                    ProjectItemGroupProjectReference projectReference = referenceInfo.ToProjectReference(projectDirectory);
-                    List<ProjectItemGroupProjectReference> projectReferences = new List<ProjectItemGroupProjectReference>(projectItemGroup.ProjectReference)
-                    {
-                        projectReference
-                    };
-                    projectItemGroup.ProjectReference = projectReferences.ToArray();
+                    RemovePackageReference(name);
+                    AddProjectReference(Path.Combine(projectDirectory, $"{name}.csproj"));
                     Save();
                 }
             }
@@ -116,22 +109,86 @@ namespace Bam.Net.Bake
             {
                 if (referenceInfo.Kind != ReferenceKind.Package)
                 {
-                    ProjectItemGroup projectItemGroup = referenceInfo.ItemGroup;
-                    List<ProjectItemGroupProjectReference> projectReferences = new List<ProjectItemGroupProjectReference>(projectItemGroup.ProjectReference);
-                    projectReferences.Remove(referenceInfo.ProjectReference);
-                    projectItemGroup.ProjectReference = projectReferences.ToArray();
-
-                    ProjectItemGroupPackageReference packageReference = referenceInfo.ToPackageReference(version);
-                    List<ProjectItemGroupPackageReference> packageReferences = new List<ProjectItemGroupPackageReference>(projectItemGroup.PackageReference)
-                    {
-                        packageReference
-                    };
-                    projectItemGroup.PackageReference = packageReferences.ToArray();
+                    RemoveProjectReference(referenceInfo.Include);
+                    AddPackageReference(name, version);
                     Save();
                 }
             }
 
             return this;
+        }
+
+        public void AddPackageReference(string packageName, string version = "1.0.0")
+        {
+            ProjectItemGroup itemGroup = new ProjectItemGroup();
+            ProjectItemGroupPackageReference packageReference = new ProjectItemGroupPackageReference{Include = packageName, Version = version ?? ReferenceInfo.DefaultVersion};
+            itemGroup.PackageReference = new ProjectItemGroupPackageReference[]{packageReference};
+            Project.ItemGroup = new List<ProjectItemGroup>(Project.ItemGroup) {itemGroup}.ToArray();
+        }
+        
+        public void RemovePackageReference(string packageName)
+        {
+            List<ProjectItemGroup> itemGroups = new List<ProjectItemGroup>();
+            foreach (ProjectItemGroup itemGroup in Project.ItemGroup)
+            {
+                if (itemGroup.PackageReference == null)
+                {
+                    itemGroups.Add(itemGroup);
+                    continue;
+                }
+                List<ProjectItemGroupPackageReference> packageReferences = new List<ProjectItemGroupPackageReference>();
+                foreach (ProjectItemGroupPackageReference packageReference in itemGroup.PackageReference)
+                {
+                    if (!packageReference.Include.Equals(packageName))
+                    {
+                        packageReferences.Add(packageReference);
+                    }
+                }
+
+                if (packageReferences.Count > 0)
+                {
+                    itemGroup.PackageReference = packageReferences.ToArray();
+                    itemGroups.Add(itemGroup);
+                }
+            }
+
+            Project.ItemGroup = itemGroups.ToArray();
+        }
+
+        public void AddProjectReference(string projectPath)
+        {
+            ProjectItemGroup itemGroup = new ProjectItemGroup();
+            ProjectItemGroupProjectReference projectReference = new ProjectItemGroupProjectReference{Include = projectPath};
+            itemGroup.ProjectReference = new ProjectItemGroupProjectReference[] {projectReference};
+            Project.ItemGroup = new List<ProjectItemGroup>(Project.ItemGroup) {itemGroup}.ToArray();
+        }
+        
+        public void RemoveProjectReference(string projectPath)
+        {
+            List<ProjectItemGroup> itemGroups = new List<ProjectItemGroup>();
+            foreach (ProjectItemGroup itemGroup in Project.ItemGroup)
+            {
+                if (itemGroup.ProjectReference == null)
+                {
+                    itemGroups.Add(itemGroup);
+                    continue;
+                }
+                List<ProjectItemGroupProjectReference> projectReferences = new List<ProjectItemGroupProjectReference>();
+                foreach (ProjectItemGroupProjectReference projectReference in itemGroup.ProjectReference)
+                {
+                    if (!projectReference.Include.Equals(projectPath))
+                    {
+                        projectReferences.Add(projectReference);
+                    }
+                }
+                if (projectReferences.Count > 0)
+                {
+                    itemGroup.ProjectReference = projectReferences.ToArray();
+                    itemGroups.Add(itemGroup);
+                }
+            }
+
+            Project.ItemGroup = itemGroups.ToArray();
         }
         
         public void Save()
@@ -160,7 +217,7 @@ namespace Bam.Net.Bake
                                 PackageReference = packageReference,
                                 ItemGroup = itemGroup,
                                 Project = project,
-                                ProjectPath = ProjectFilePath
+                                ParentProjectPath = ProjectFilePath
                             });
                         }
                     }
@@ -169,15 +226,16 @@ namespace Bam.Net.Bake
                     {
                         foreach (ProjectItemGroupProjectReference projectReference in itemGroup.ProjectReference)
                         {
+                            FileInfo referencedProject = new FileInfo(projectReference.Include.Replace("\\", "/"));
                             results.Add(new ReferenceInfo()
                             {
                                 Kind = ReferenceKind.Project,
                                 Include = projectReference.Include,
                                 ProjectReference = projectReference,
-                                Name = Path.GetFileNameWithoutExtension(projectReference.Include),
+                                Name = Path.GetFileNameWithoutExtension(referencedProject.Name),
                                 ItemGroup = itemGroup,
                                 Project = project,
-                                ProjectPath = ProjectFilePath
+                                ParentProjectPath = ProjectFilePath
                             });
                         }
                     }

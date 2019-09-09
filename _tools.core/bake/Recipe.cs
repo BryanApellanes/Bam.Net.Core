@@ -71,15 +71,15 @@ namespace Bam.Net.Bake
             return projectInfo.ReferencesPackage(referencedProjectName);
         }
 
-        public bool ReferencesProject(string projectFilePath, string referencedProjectName)
+        public bool ReferencesAsProject(string projectFilePath, string projectOrPackageName)
         {
-            return ReferencesProject(projectFilePath, referencedProjectName, out ReferenceInfo ignore);
+            return ReferencesAsProject(projectFilePath, projectOrPackageName, out ReferenceInfo ignore);
         }
         
-        public bool ReferencesProject(string projectFilePath, string referencedProjectName, out ReferenceInfo referenceInfo)
+        public bool ReferencesAsProject(string projectFilePath, string projectOrPackageName, out ReferenceInfo referenceInfo)
         {
             ProjectInfo projectInfo = GetProjectByPath(projectFilePath);
-            return projectInfo.References(referencedProjectName, out referenceInfo);
+            return projectInfo.ReferencesAsProject(projectOrPackageName, out referenceInfo);
         }
         
         protected ProjectInfo[] ProjectInfos => UnixProjectFilePaths.Select(ProjectInfo.FromProjectFilePath).ToArray();
@@ -104,9 +104,9 @@ namespace Bam.Net.Bake
         /// For all the projects in this recipe, reference the specified project as a package.
         /// </summary>
         /// <param name="projectName"></param>
-        public void SetPackageReference(string projectName)
+        public void ReferenceAsPackage(string projectName, string version = null)
         {
-            ProjectInfos.Each(pi => pi.ReferenceAsPackage(projectName));
+            ProjectInfos.Each(pi => pi.ReferenceAsPackage(projectName, version));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Bam.Net.Bake
         /// </summary>
         /// <param name="projectName"></param>
         /// <param name="referenceProjectDirectory"></param>
-        public void SetProjectReference(string projectName, string referenceProjectDirectory = "")
+        public void ReferenceAsProject(string projectName, string referenceProjectDirectory = "")
         {
             ProjectInfos.Each(pi => pi.ReferenceAsProject(projectName, referenceProjectDirectory));
         }
