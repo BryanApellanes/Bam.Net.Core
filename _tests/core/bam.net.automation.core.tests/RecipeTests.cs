@@ -22,11 +22,11 @@ namespace Bam.Net.Automation.Tests
             string testProjectFileName = $"./test_{6.RandomLetters()}_project-package.csproj";
             File.Copy("./test_project-package.csproj.xml", testProjectFileName);
             Recipe recipe = Recipe.FromProject(testProjectFileName);
-            recipe.ReferencesAsProject(testProjectFileName, "bam.net.core").IsTrue();
+            recipe.ReferencesProject(testProjectFileName, "bam.net.core").IsTrue();
             
             recipe.ReferenceAsPackage("bam.net.core");
             
-            recipe.ReferencesAsProject(testProjectFileName, "bam.net.core").IsFalse();
+            recipe.ReferencesProject(testProjectFileName, "bam.net.core").IsFalse();
             recipe.ReferencesPackage(testProjectFileName, "bam.net.core").IsTrue();
             
             File.Delete(testProjectFileName);
@@ -44,7 +44,7 @@ namespace Bam.Net.Automation.Tests
             recipe.ReferenceAsProject("bam.net.core", "../some/path/");
             
             recipe.ReferencesPackage(testProjectFileName, "bam.net.core").IsFalse();
-            recipe.ReferencesAsProject(testProjectFileName, "../some/path/bam.net.core.csproj");
+            recipe.ReferencesProject(testProjectFileName, "../some/path/bam.net.core.csproj");
             
             File.Delete(testProjectFileName);
         }

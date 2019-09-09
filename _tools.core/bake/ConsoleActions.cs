@@ -13,8 +13,7 @@ namespace Bam.Net.Bake
     [Serializable]
     public class ConsoleActions : CommandLineTestInterface
     {
-        [ConsoleAction("discover",
-            "Read a specified directory and discover csproj files in the child directories therein, writing a recipe for all projects found.")]
+        [ConsoleAction("discover","Read a specified directory and discover csproj files in the child directories therein, writing a recipe for all projects found.")]
         public bool Discover()
         {
             string directoryPath = GetArgument("discover", "Please enter the path to the root of the projects folder");
@@ -167,18 +166,15 @@ namespace Bam.Net.Bake
         public void UpdateReferences()
         {
             Recipe recipe = GetRecipe();
-            ReferenceKind referenceKind = ReferenceKind.Project;
-            string version = "1.0.0";
             string projectOrPackage = GetArgument("ref", "REF: Please specify 'Project' or 'Package-{Version}'");
             if (projectOrPackage.StartsWith("Package"))
             {
-                referenceKind = ReferenceKind.Package;
-                version = !projectOrPackage.Contains("-") ? Prompt("Please specify what package version to reference.") : projectOrPackage.Split("-", 2)[1];
+                string version = !projectOrPackage.Contains("-") ? Prompt("Please specify what package version to reference.") : projectOrPackage.Split("-", 2)[1];
+                recipe.ReferenceAsPackage("bam.net.core", version);
             }
-
-            foreach (string projectFile in recipe.UnixProjectFilePaths)
+            else
             {
-                UpdateReference(projectFile, referenceKind, version);
+                recipe.ReferenceAsProject("bam.net.core", "../../_lib/bam.net.core/");
             }
         }
         
@@ -218,29 +214,6 @@ namespace Bam.Net.Bake
             Thread.Sleep(300);
         }
 
-        private static void UpdateReference(string projectFile, ReferenceKind referenceKind, string version = "1.0.0")
-        {
-            Project project = projectFile.FromXmlFile<Project>();
-            foreach (ProjectItemGroup itemGroup in project.ItemGroup)
-            {
-                if (itemGroup.PackageReference != null && itemGroup.PackageReference.Length > 0)
-                {
-                    foreach (ProjectItemGroupPackageReference packageReference in itemGroup.PackageReference)
-                    {
-                        OutLineFormat("Package: {0}, Version {1}", ConsoleColor.Blue, packageReference.Include, packageReference.Version);
-                    }
-                }
-
-                if (itemGroup.ProjectReference != null && itemGroup.ProjectReference.Length > 0)
-                {
-                    foreach (ProjectItemGroupProjectReference projectReference in itemGroup.ProjectReference)
-                    {
-                        OutLineFormat("Project: {0}", ConsoleColor.Cyan, projectReference.Include);
-                    }
-                }
-            }
-        }
-        
         private static string GetOutputDirectory(Recipe recipe)
         {
             string outputDirectory = recipe.OutputDirectory;

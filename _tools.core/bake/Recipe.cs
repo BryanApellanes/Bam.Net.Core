@@ -71,12 +71,12 @@ namespace Bam.Net.Bake
             return projectInfo.ReferencesPackage(referencedProjectName);
         }
 
-        public bool ReferencesAsProject(string projectFilePath, string projectOrPackageName)
+        public bool ReferencesProject(string projectFilePath, string projectOrPackageName)
         {
-            return ReferencesAsProject(projectFilePath, projectOrPackageName, out ReferenceInfo ignore);
+            return ReferencesProject(projectFilePath, projectOrPackageName, out ReferenceInfo ignore);
         }
         
-        public bool ReferencesAsProject(string projectFilePath, string projectOrPackageName, out ReferenceInfo referenceInfo)
+        public bool ReferencesProject(string projectFilePath, string projectOrPackageName, out ReferenceInfo referenceInfo)
         {
             ProjectInfo projectInfo = GetProjectByPath(projectFilePath);
             return projectInfo.ReferencesAsProject(projectOrPackageName, out referenceInfo);
