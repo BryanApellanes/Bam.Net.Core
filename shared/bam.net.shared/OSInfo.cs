@@ -37,12 +37,11 @@ namespace Bam.Net
             }
         }
 
-        public static string CoreVersion
-        {
-            get { return Config.Current["CoreVersion"].Or(DefaultCoreVersion); }
-        }
-        
-        private static Dictionary<OSNames, string> _referenceRuntimeNames = new Dictionary<OSNames, string>
+        public static bool IsUnix => Current != OSNames.Windows;
+
+        public static string CoreVersion => Config.Current["CoreVersion"].Or(DefaultCoreVersion);
+
+        private static readonly Dictionary<OSNames, string> _referenceRuntimeNames = new Dictionary<OSNames, string>
         {
             {OSNames.Invalid, "win-x64"},
             {OSNames.Windows, "win-x64"},
@@ -50,12 +49,9 @@ namespace Bam.Net
             {OSNames.OSX, "osx-x64"}
         };
 
-        public static string ReferenceRuntime
-        {
-            get { return _referenceRuntimeNames[Current]; }
-        }
-        
-        static Dictionary<OSNames, string> _buildRuntimeNames = new Dictionary<OSNames, string>
+        public static string ReferenceRuntime => _referenceRuntimeNames[Current];
+
+        static readonly Dictionary<OSNames, string> _buildRuntimeNames = new Dictionary<OSNames, string>
         {
             {OSNames.Invalid, "win10-x64"},
             {OSNames.Windows, "win10-x64"},
@@ -63,14 +59,11 @@ namespace Bam.Net
             {OSNames.OSX, "osx-x64"}
         };
         
-        public static string BuildRuntimeName
-        {
-            get { return _buildRuntimeNames[Current]; }
-        }
-        
+        public static string BuildRuntimeName => _buildRuntimeNames[Current];
+
         public static string DefaultToolPath(string fileName)
         {
-            return $"/bam/tools/{fileName}";
+            return $"/opt/bam/tools/{fileName}";
         }
         
         public static bool TryGetPath(string fileName, out string path)

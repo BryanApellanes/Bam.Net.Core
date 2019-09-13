@@ -23,6 +23,7 @@ using Bam.Net.Data.Repositories;
 using Bam.Net.Configuration;
 using Bam.Net.Presentation;
 using Bam.Net.Services;
+using Lucene.Net.Analysis.Hunspell;
 
 namespace Bam.Net.Server
 {
@@ -691,7 +692,33 @@ namespace Bam.Net.Server
                 }
             }
             temp.ToJsonFile(jsonFile);
-            HostAppMappings = temp.ToDictionary(ham => ham.Host);
+            Dictionary<string, HostAppMap> mappings = new Dictionary<string, HostAppMap>();
+            foreach (HostAppMap hostAppMap in temp)
+            {
+                mappings.Add(GetNextKey(hostAppMap.Host, mappings), hostAppMap);
+            }
+
+            HostAppMappings = mappings;
+        }
+
+        private string GetNextKey(string key, Dictionary<string, HostAppMap> mappings)
+        {
+            string result = key;
+            int num = 0;
+            bool log = false;
+            while (mappings.ContainsKey(result))
+            {
+                log = true;
+                num++;
+                result = $"{Path.GetFileNameWithoutExtension(result)}{num}";
+            }
+
+            if (log)
+            {
+                Logger.Warning("Multiple applications configured to use hostname ({0}): AppName=({1}) will use ({2}) for this process", key, mappings[key].AppName, result);
+            }
+
+            return result;
         }
     }
 }

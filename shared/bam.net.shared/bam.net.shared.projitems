@@ -3161,6 +3161,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Dao.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Qi.js" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Javascript\json2.js" />
     <Content Include="$(MSBuildThisFileDirectory)Presentation\Emoji.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Presentation\Html\Js\DataSet.js" />
     <Content Include="$(MSBuildThisFileDirectory)Presentation\Html\Js\spin.js" />

@@ -299,7 +299,7 @@ namespace Bam.Net.Server
             if (relativePath.StartsWith("~"))
             {
                 relativePath = relativePath.Substring(1, relativePath.Length - 1);
-                string path = CleanPath(string.Format("{0}{1}", Root, relativePath));
+                string path = CleanPath($"{Root}{relativePath}");
                 result = path;
             }
             else
@@ -309,15 +309,28 @@ namespace Bam.Net.Server
 
             return CleanPath(result);
         }
+        
 		public static string CleanPath(string path)
 		{
-			string[] pathSegments = path.Split('\\', '/');
-			if (pathSegments[0].EndsWith(":")) // C:
-			{
-				pathSegments[0] = pathSegments[0] + Path.DirectorySeparatorChar;
-			}
+            string[] pathSegments = path.Split('\\', '/');
+            if (OSInfo.IsUnix)
+            {
+                if (path.StartsWith("/"))
+                {
+                    return $"/{Path.Combine(pathSegments)}";
+                }
 
-			return Path.Combine(pathSegments);			
+                return Path.Combine(pathSegments);
+            }
+            else
+            {
+                if (pathSegments[0].EndsWith(":")) // C:
+                {
+                    pathSegments[0] = pathSegments[0] + Path.DirectorySeparatorChar;
+                }
+
+                return Path.Combine(pathSegments);
+            }			
 		}
     }
 
