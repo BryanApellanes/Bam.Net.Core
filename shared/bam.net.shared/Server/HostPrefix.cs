@@ -34,7 +34,7 @@ namespace Bam.Net.Server
         public override string ToString()
         {
             string protocol = Ssl ? "https://": "http://";
-            return string.Format("{0}{1}:{2}/", protocol, HostName, Port);
+            return $"{protocol}{HostName}:{Port}/";
         }
 
         public override bool Equals(object obj)

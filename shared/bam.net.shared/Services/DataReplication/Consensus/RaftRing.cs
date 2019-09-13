@@ -188,7 +188,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public void StartLeaderHeartbeat()
         {
             _stopLeaderHeartbeat = false;
-            LeaderHeartBeat = Task.Run(LeaderHeartbeatLoop);
+            LeaderHeartBeat = Task.Run((Action)LeaderHeartbeatLoop);
         }
 
         public void StopLeaderHeartbeat()
@@ -237,7 +237,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         public void StartFollowerHeartbeatCheck()
         {
             _stopFollowerHeartbeatCheck = false;
-            FollowerHeartbeatCheck = Task.Run(FollowerHeartbeatCheckLoop);
+            FollowerHeartbeatCheck = Task.Run((Action)FollowerHeartbeatCheckLoop);
         }
 
         public void RestartFollowerHeartbeatCheck()

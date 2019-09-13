@@ -117,7 +117,16 @@ namespace Bam.Net.Server
             _listening.TryAdd(hp, this);
             string path = hp.ToString();
             _logger.AddEntry("HttpServer: {0}", path);
-            _listener.Prefixes.Add(path);
+
+            if (!OSInfo.IsUnix)
+            {
+                _listener.Prefixes.Add(path);
+            }
+            else
+            {
+                string protocol = hp.Ssl ? "https" : "http";
+                _listener.Prefixes.Add($"{protocol}://*:{hp.Port}/");
+            }
             FireEvent(HostPrefixAdded, new HttpServerEventArgs { HostPrefixes = new HostPrefix[] { hp } });
         }
 

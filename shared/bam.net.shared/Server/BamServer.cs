@@ -502,14 +502,10 @@ namespace Bam.Net.Server
         public HostPrefix[] GetHostPrefixes()
         {
             BamConf serverConfig = GetCurrentConf(false);
-            HashSet<HostPrefix> results = new HashSet<HostPrefix>
-            {
-                DefaultHostPrefix
-            };
-            serverConfig.AppConfigs.Each(appConf =>
-            {
-                appConf.Bindings.Each(hp => results.Add(hp));
-            });
+            HashSet<HostPrefix> results = new HashSet<HostPrefix>();
+            results.Add(DefaultHostPrefix);
+            serverConfig.AppConfigs.Each(appConf => { appConf.Bindings.Each(hp => results.Add(hp)); });
+
             return results.ToArray();
         }
 
