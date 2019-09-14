@@ -184,8 +184,15 @@ namespace Bam.Net.Bake
             Recipe recipe = GetRecipe();
             if (!Directory.Exists(recipe.OutputDirectory))
             {
-                OutLineFormat("Output directory does not exist: {0}", recipe.OutputDirectory);
-                Exit(1);
+                try
+                {
+                    Directory.CreateDirectory(recipe.OutputDirectory);
+                }
+                catch (Exception ex)
+                {
+                    OutLineFormat("Failed to create output directory ({0}), directory does not exist: {1}", recipe.OutputDirectory, ex.Message);
+                    Exit(1);
+                }
             }
             DirectoryInfo dirInfo = new DirectoryInfo(recipe.OutputDirectory);
             string fileName = $"{dirInfo.Name}.zip";
@@ -282,6 +289,11 @@ namespace Bam.Net.Bake
                     ProjectFilePaths = new string[]{projectFilePath} 
                 };
 
+                if (Arguments.Contains("output"))
+                {
+                    recipe.OutputDirectory = GetArgument("output");
+                }
+                
                 string projectName = Path.GetFileNameWithoutExtension(projectFilePath);
                 string recipeFilePath = Path.Combine("recipes", $"{projectName}-{fileNameSuffix}.json");
                 FileInfo recipeFile = ReadRecipe(recipeFilePath, recipe);
