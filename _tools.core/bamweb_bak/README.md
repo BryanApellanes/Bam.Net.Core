@@ -3,7 +3,7 @@
 #TL;DR
 
 ```
-bamweb /S /content:c:/bam/content [/verbose]
+bamweb /S /content:/opt/bam/content [/verbose]
 ```
 
 The Bam Web Server hosts an HTTP server that serves content 
