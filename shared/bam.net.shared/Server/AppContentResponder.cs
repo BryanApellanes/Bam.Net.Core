@@ -299,10 +299,7 @@ namespace Bam.Net.Server
         IPageRenderer _pageRenderer;
         public IPageRenderer PageRenderer
         {
-            get
-            {
-                return _pageRenderer;
-            }
+            get => _pageRenderer;
             set
             {
                 _pageRenderer = value;

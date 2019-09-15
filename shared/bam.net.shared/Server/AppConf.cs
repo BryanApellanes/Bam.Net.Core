@@ -220,22 +220,16 @@ namespace Bam.Net.Server
 		/// </summary>
 		public string DefaultPage
 		{
-			get
-			{
-				return _defaultPage.Or(DefaultPageConst);
-			}
-			set
-			{
-				_defaultPage = value.Or(DefaultPageConst);
-			}
-		}
+			get => _defaultPage.Or(DefaultPageConst);
+            set => _defaultPage = value.Or(DefaultPageConst);
+        }
 
         string _defaultHtmlDir;
 
         public string HtmlDir
         {
-            get { return _defaultHtmlDir.Or(DefaultHtmlDirConst); }
-            set { _defaultHtmlDir = value.Or(DefaultHtmlDirConst); }
+            get => _defaultHtmlDir.Or(DefaultHtmlDirConst);
+            set => _defaultHtmlDir = value.Or(DefaultHtmlDirConst);
         }
 		
         public bool GenerateDao { get; set; }
@@ -249,27 +243,15 @@ namespace Bam.Net.Server
         List<string> _serviceTypeNames;
         public string[] ServiceTypeNames
         {
-            get
-            {
-                return _serviceTypeNames.ToArray();
-            }
-            set
-            {
-                _serviceTypeNames = new List<string>(value);
-            }
+            get => _serviceTypeNames.ToArray();
+            set => _serviceTypeNames = new List<string>(value);
         }
 
         List<SchemaInitializer> _schemaInitializers;
         public SchemaInitializer[] SchemaInitializers
         {
-            get
-            {
-                return _schemaInitializers.ToArray();
-            }
-            set
-            {
-                _schemaInitializers = new List<SchemaInitializer>(value);
-            }
+            get => _schemaInitializers.ToArray();
+            set => _schemaInitializers = new List<SchemaInitializer>(value);
         }
 
         /// <summary>

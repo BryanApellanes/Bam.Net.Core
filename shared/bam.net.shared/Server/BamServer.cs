@@ -510,7 +510,7 @@ namespace Bam.Net.Server
         }
 
         HostPrefix _defaultHostPrefix;
-        object _defaultHostPrefixLock = new object();
+        readonly object _defaultHostPrefixLock = new object();
         public HostPrefix DefaultHostPrefix
         {
             get
@@ -541,10 +541,7 @@ namespace Bam.Net.Server
         string _contentRoot;
         public string ContentRoot
         {
-            get
-            {
-                return _contentRoot;
-            }
+            get => _contentRoot;
             set
             {
                 _contentRoot = new Fs(value).Root;
@@ -959,7 +956,7 @@ namespace Bam.Net.Server
         }
 
         Action<IHttpContext> _responderNotFoundHandler;
-        object _responderNotFoundHandlerLock = new object();
+        readonly object _responderNotFoundHandlerLock = new object();
         /// <summary>
         /// Get or set the default handler used when no appropriate
         /// responder is found for a given request.  This is the 
@@ -972,14 +969,11 @@ namespace Bam.Net.Server
             {
                 return _responderNotFoundHandlerLock.DoubleCheckLock(ref _responderNotFoundHandler, () => HandleResponderNotFound);
             }
-            set
-            {
-                _responderNotFoundHandler = value;
-            }
+            set => _responderNotFoundHandler = value;
         }
 
         Action<IHttpContext, Exception> _exceptionHandler;
-        object _exceptionHandlerLock = new object();
+        readonly object _exceptionHandlerLock = new object();
         /// <summary>
         /// Get or set the default exception handler.  This is the
         /// Action responsible for responding with a 500 status code
@@ -992,10 +986,7 @@ namespace Bam.Net.Server
             {
                 return _exceptionHandlerLock.DoubleCheckLock(ref _exceptionHandler, () => HandleException);
             }
-            set
-            {
-                _exceptionHandler = value;
-            }
+            set => _exceptionHandler = value;
         }
 
         public Task HandleRequestAsync(IHttpContext context)

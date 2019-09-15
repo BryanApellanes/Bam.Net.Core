@@ -349,13 +349,9 @@ namespace Bam.Net.Server
                     responder.Subscribe(logger);
                 });
                 string appName = appConf.Name.ToLowerInvariant();
-                IApplicationTemplateManager applicationTemplateManager =
-                    ApplicationServiceRegistry.Construct<AppHandlebarsRenderer>(responder);
+                IApplicationTemplateManager applicationTemplateManager = ApplicationServiceRegistry.Construct<AppHandlebarsRenderer>(responder);
                 responder.Initialize();
-                responder.PageRenderer = new AppPageRenderer(responder, 
-                        ApplicationServiceRegistry.Get<ITemplateManager>(), 
-                        applicationTemplateManager
-                    );
+                responder.PageRenderer = new AppPageRenderer(responder, ApplicationServiceRegistry.Get<ITemplateManager>(), applicationTemplateManager);
                 responder.FileUploading += (o, a) => FileUploading?.Invoke(o, a);
                 responder.FileUploaded += (o, a) => FileUploaded?.Invoke(o, a);
                 responder.Responded += (r, context) => OnResponded(context);
