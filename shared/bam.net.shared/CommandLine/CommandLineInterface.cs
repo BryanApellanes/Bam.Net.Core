@@ -275,7 +275,7 @@ namespace Bam.Net.CommandLine
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Exception trying to kill proces ({0}): {1}", pid, ex.Message);
+                        Console.WriteLine("Exception trying to kill process ({0}): {1}", pid, ex.Message);
                     }
                 }
                 else

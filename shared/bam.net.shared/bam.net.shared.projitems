@@ -443,6 +443,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\IInfoAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ParsedArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandLine\PidFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ProcessExitEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ProcessOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ProcessOutputCollector.cs" />
