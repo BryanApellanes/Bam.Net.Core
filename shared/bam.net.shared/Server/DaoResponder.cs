@@ -521,7 +521,7 @@ namespace Bam.Net.Server
             //      compile into ~a:/dao/bin
             dbJsFiles.Each(dbJs =>
             {
-                string path = dbJs.FullName.ToLowerInvariant();
+                string path = dbJs.FullName;
                 FileContentHash currentHash = new FileContentHash(path);
 
                 if (!hashes.Contains(currentHash) && appConf.CheckDaoHashes)
