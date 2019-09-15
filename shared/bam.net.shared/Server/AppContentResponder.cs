@@ -60,6 +60,7 @@ namespace Bam.Net.Server
             {
                 try
                 {
+                    // TODO: change this to check 'ContentHandlersSearchPattern' from the process config
                     string[] assemblySearchPatterns = DefaultConfiguration.GetAppSetting("AssemblySearchPattern", "*ContentHandlers.dll").DelimitSplit(",", true);
                     DirectoryInfo entryDir = Assembly.GetEntryAssembly().GetFileInfo().Directory;
                     DirectoryInfo sysAssemblies = DataSettings.GetSysAssemblyDirectory();
@@ -175,7 +176,7 @@ namespace Bam.Net.Server
                 {
                     query = query.TruncateFront(1);
                 }
-                return RenderLayout(ctx.Response, request.Url.AbsolutePath, query);
+                return RenderLayout(request, ctx.Response, query);
             });
         }
 
@@ -280,10 +281,7 @@ namespace Bam.Net.Server
         IApplicationTemplateManager _appTemplateManager;
         public IApplicationTemplateManager AppTemplateManager
         {
-            get
-            {
-                return _appTemplateManager;
-            }
+            get => _appTemplateManager;
             internal set
             {
                 _appTemplateManager = value;
@@ -326,13 +324,7 @@ namespace Bam.Net.Server
             AppInitialized?.Invoke(this);
         }
 
-        public string ApplicationName
-        {
-            get
-            {
-                return AppConf.Name;
-            }
-        }
+        public string ApplicationName => AppConf.Name;
 
         public User GetUser(IHttpContext context)
         {
@@ -376,8 +368,7 @@ namespace Bam.Net.Server
         }
 
         /// <summary>
-        /// Initializes the file system from the embedded zip resource
-        /// that represents a bare bones app.
+        /// Writes the current application configuration to the file system.
         /// </summary>
         public override void Initialize()
         {
@@ -437,10 +428,10 @@ namespace Bam.Net.Server
                         }
                         else
                         {
-                            content = RenderLayout(response, path);
+                            content = RenderLayout(request, response);
                         }
 
-                        handled = true;
+                        handled = content.Length > 0; // content was rendered and should be written to the output
                     }
                 }
 
@@ -517,7 +508,7 @@ namespace Bam.Net.Server
         [Verbosity(LogEventType.Information)]
         public new event EventHandler FileUploaded;
 
-        public virtual void HandleUpload(IHttpContext context, HttpPostedFile file)
+        protected virtual void HandleUpload(IHttpContext context, HttpPostedFile file)
         {
             string userName = GetUser(context).UserName;
             FileUploadEventArgs args = new FileUploadEventArgs(context, file, ApplicationName) {UserName = userName};
@@ -539,8 +530,9 @@ namespace Bam.Net.Server
             }
         }
 
+        // TODO: extract layout related handling methods into separate (LayoutPageRenderer : PageRenderer)
         ConcurrentDictionary<string, LayoutModel> _layoutModelsByPath;
-        object _layoutsByPathSync = new object();
+        readonly object _layoutsByPathSync = new object();
         protected internal ConcurrentDictionary<string, LayoutModel> LayoutModelsByPath
         {
             get
@@ -598,8 +590,9 @@ namespace Bam.Net.Server
             return layoutModel;
         }
 
-        private byte[] RenderLayout(IResponse response, string path, string queryString = null)
+        private byte[] RenderLayout(IRequest request, IResponse response, string queryString = null)
         {
+            string path = request.Url.AbsolutePath;
             AppTemplateManager.SetContentType(response);
             MemoryStream ms = new MemoryStream();
             LayoutModel layoutModel = GetLayoutModelForPath(path);

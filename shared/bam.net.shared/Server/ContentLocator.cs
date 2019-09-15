@@ -167,14 +167,8 @@ namespace Bam.Net.Server
         List<SearchRule> _searchRules;
         public SearchRule[] SearchRules
         {
-            get
-            {
-                return _searchRules.ToArray();
-            }
-            set
-            {
-                _searchRules = new List<SearchRule>(value);
-            }
+            get => _searchRules.ToArray();
+            set => _searchRules = new List<SearchRule>(value);
         }
     }
 }

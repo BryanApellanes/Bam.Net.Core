@@ -11,24 +11,20 @@ namespace Bam.Net.Server
     {
         public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager) : base(appContentResponder, commonTemplateManager)
         {
+            InitializeDefaultRenderers();
         }
 
         public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager,
             IApplicationTemplateManager applicationTemplateManager) : base(appContentResponder, commonTemplateManager, applicationTemplateManager)
         {
+            InitializeDefaultRenderers();
         }
         
         public IApplicationTemplateManager TemplateManager { get; set; }
 
-        public Fs AppRoot
-        {
-            get { return AppContentResponder.AppRoot; }
-        }
+        public Fs AppRoot => AppContentResponder.AppRoot;
 
-        public AppConf AppConf
-        {
-            get { return AppContentResponder.AppConf; }
-        }
+        public AppConf AppConf => AppContentResponder.AppConf;
 
         public override byte[] RenderPage(IRequest request, IResponse response)
         {
@@ -51,13 +47,37 @@ namespace Bam.Net.Server
                 }
             }
 
-            string notFoundHtml = $@"<!DOCTYPE html>
+            return RenderNotFound(request, response);
+        }
+
+        public override byte[] RenderDefault(int statusCode, IRequest request, IResponse response)
+        {
+            if (response.StatusCode != statusCode)
+            {
+                response.StatusCode = statusCode;
+            }
+
+            return DefaultRenderers.ContainsKey(statusCode) ? DefaultRenderers[statusCode](request, response) : new byte[]{};
+        }
+
+        protected virtual void InitializeDefaultRenderers()
+        {
+            DefaultRenderers.Add(404, (request, response) =>
+            {
+                string notFoundHtml = $@"<!DOCTYPE html>
 <html>
 <body>
-<h2>404 Not Found: {request.Url}</h2>
+<h2>404 Page Not Found: {request.Url}</h2>
 </body>
 </html>";
-            return Encoding.UTF8.GetBytes(notFoundHtml);
+                response.StatusCode = 404;
+                return Encoding.UTF8.GetBytes(notFoundHtml);
+            });
+        }
+        
+        private byte[] RenderNotFound(IRequest request, IResponse response)
+        {
+            return RenderDefault(404, request, response);
         }
     }
 }
