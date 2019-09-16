@@ -29,7 +29,22 @@ namespace Bam.Net.CommandLine
         {
         }
 
-        public ParsedArguments(string[] args, ArgumentInfo[] validArgumentInfos)
+        public ParsedArguments(string[] args, ArgumentInfo[] validArgumentInfos) : this(DefaultArgPrefix, args, validArgumentInfos)
+        {
+        }
+
+        /// <summary>
+        /// Instantiate a ParsedArguments from the command line args specified to the current process.
+        /// </summary>
+        public ParsedArguments() : this(Environment.GetCommandLineArgs())
+        {
+        }
+        
+        public ParsedArguments(string[] args) : this(DefaultArgPrefix, args, ArgumentInfo.FromArgs(args))
+        {
+        }
+        
+        public ParsedArguments(string argPrefix, string[] args, ArgumentInfo[] validArgumentInfos)
         {
             this.OriginalStrings = args;
             this.parsedArguments = new Dictionary<string, string>();
@@ -45,7 +60,7 @@ namespace Bam.Net.CommandLine
             {
                 string arg = argument.Trim();
 
-                if (!arg.StartsWith("/") || !(arg.Length > 1))
+                if (!arg.StartsWith(argPrefix) || !(arg.Length > 1))
                 {
                     Message = "Unrecognized argument format: " + arg;
                     Status = ArgumentParseStatus.Error;
@@ -55,7 +70,9 @@ namespace Bam.Net.CommandLine
                     string[] nameValue = arg.Substring(1, arg.Length - 1).Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                     string name = string.Empty;
                     if (nameValue.Length > 0)
+                    {
                         name = nameValue[0];
+                    }
 
                     // allow ":" in arg value
                     if (nameValue.Length > 2)
@@ -87,9 +104,13 @@ namespace Bam.Net.CommandLine
                         else
                         {
                             if (parsedArguments.ContainsKey(name))
+                            {
                                 parsedArguments[name] = nameValue[1];
+                            }
                             else
+                            {
                                 parsedArguments.Add(name, nameValue[1]);
+                            }
                         }
                     }
 
@@ -97,7 +118,9 @@ namespace Bam.Net.CommandLine
             }
 
             if (Status != ArgumentParseStatus.Error)
+            {
                 Status = ArgumentParseStatus.Success;
+            }
         }
 
 		public void EnsureArgumentValue(string argument, string message = "Required argument value not specified")
@@ -119,33 +142,19 @@ namespace Bam.Net.CommandLine
         public string Message { get; set; }
         public ArgumentParseStatus Status { get; set; }
         public string[] OriginalStrings { get; private set; }
-        Dictionary<string, string> parsedArguments;
+        readonly Dictionary<string, string> parsedArguments;
         public string this[string name]
         {
-            get
-            {
-                if (parsedArguments.ContainsKey(name))
-                    return parsedArguments[name];
-
-                return null;
-            }
-            set { parsedArguments[name] = value; }
+            get => parsedArguments.ContainsKey(name) ? parsedArguments[name] : null;
+            set => parsedArguments[name] = value;
         }
 
-        public string[] Keys
-        {
-            get
-            {
-                return parsedArguments.Keys.ToArray();
-            }
-        }
+        public string[] Keys => parsedArguments.Keys.ToArray();
 
-		public int Length
-		{
-			get
-			{
-				return parsedArguments.Count;
-			}
-		}
+        public int Length => parsedArguments.Count;
+
+        private static ParsedArguments _current;
+        static readonly object _currentLock = new object();
+        public static ParsedArguments Current => _currentLock.DoubleCheckLock(ref _current, () => new ParsedArguments());
     }
 }

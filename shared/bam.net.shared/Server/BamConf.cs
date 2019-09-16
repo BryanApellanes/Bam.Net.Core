@@ -18,8 +18,10 @@ using Bam.Net.UserAccounts.Data;
 using Bam.Net.UserAccounts;
 using System.IO;
 using System.Reflection;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Server
 {
@@ -360,9 +362,49 @@ namespace Bam.Net.Server
         /// Represents the configs for each application found in ~s:/apps 
         /// (where each subdirectory is assumed to be a Bam application)
         /// </summary>
+        [YamlIgnore]
+        [XmlIgnore]
         [JsonIgnore]
+        [Exclude]
         public AppConf[] AppConfigs => _appConfigsLock.DoubleCheckLock(ref _appConfigs, InitializeAppConfigs).ToArray();
 
+        /// <summary>
+        /// Represents the array of AppConf instances that will be served when the server is started with the current config.
+        /// The AppsToServe are determined by comparing the process modes specified in the BamConf with the process mode specified in the AppConf.
+        /// Furthermore, app names may be specified on the command line further reducing the AppsToServe.  For example: /apps:bamapp,admin
+        /// </summary>
+        [YamlIgnore]
+        [XmlIgnore]
+        [JsonIgnore]
+        [Exclude]
+        public AppConf[] AppsToServe
+        {
+            get
+            {
+                HashSet<string> configured = new HashSet<string>(ProcessModes.Select(m => m.ToString()))
+                {
+                    ProcessMode.Current.Mode.ToString()
+                };
+                ParsedArguments arguments = ParsedArguments.Current;
+                HashSet<String> apps = new HashSet<string>();
+                if (arguments.Contains("apps"))
+                {
+                    string appsArg = arguments["apps"];
+                    appsArg.DelimitSplit(",", ";").Each(app => apps.Add(app));
+                }
+
+                return AppConfigs.Where(c =>
+                {
+                    if (apps.Count == 0)
+                    {
+                        return configured.Contains(c.ProcessMode);
+                    }
+
+                    return configured.Contains(c.ProcessMode) && apps.Contains(c.Name);
+                }).ToArray();
+            }
+        }
+        
         protected internal AppConf[] ReloadAppConfigs()
         {
             lock (_appConfigsLock)

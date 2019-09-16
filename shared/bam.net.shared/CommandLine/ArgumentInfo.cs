@@ -38,5 +38,33 @@ namespace Bam.Net.CommandLine
 
             return retVal.ToArray();
         }
+
+        public static ArgumentInfo[] FromArgs(string[] args, bool allowNulls = true)
+        {
+            return FromArgs(ParsedArguments.DefaultArgPrefix, args, allowNulls);
+        }
+
+        /// <summary>
+        /// Creates a default set of ArgumentInfo instances from the specified args array.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static ArgumentInfo[] FromArgs(string prefix, string[] args, bool allowNulls)
+        {
+            List<ArgumentInfo> results = new List<ArgumentInfo>();
+            foreach (string arg in args)
+            {
+                if (!arg.StartsWith(prefix))
+                {
+                    CommandLineInterface.OutLineFormat("Unrecognized argument: {0}", ConsoleColor.Yellow, arg);
+                    continue;
+                }
+
+                string name = arg.TruncateFront(prefix.Length).ReadUntil(':');
+                results.Add(new ArgumentInfo(name, allowNulls));
+            }
+
+            return results.ToArray();
+        }
     }
 }

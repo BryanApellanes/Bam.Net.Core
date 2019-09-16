@@ -18,12 +18,14 @@ using Bam.Net.ServiceProxy.Secure;
 using Bam.Net.UserAccounts.Data;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using Bam.Net.CommandLine;
 using Bam.Net.Server.Meta;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Configuration;
 using Bam.Net.Presentation;
 using Bam.Net.Services;
 using Lucene.Net.Analysis.Hunspell;
+using Lucene.Net.Support;
 
 namespace Bam.Net.Server
 {
@@ -161,6 +163,8 @@ namespace Bam.Net.Server
                 _appConfs = value;
             }
         }
+
+        public AppConf[] AppsToServe => BamConf?.AppsToServe;
 
         Dictionary<string, AppContentResponder> _appContentResponders;
         public Dictionary<string, AppContentResponder> AppContentResponders
@@ -316,7 +320,7 @@ namespace Bam.Net.Server
                 if (!IsAppsInitialized)
                 {
                     InitializeHostAppMap(ContentRoot, AppConfigs ?? BamConf.AppConfigs);
-                    InitializeAppResponders(AppConfigs ?? BamConf.AppConfigs);
+                    InitializeAppResponders(AppsToServe);
                     AppConfigs = AppConfigs ?? BamConf.AppConfigs;
                     IsAppsInitialized = true;
                 }
@@ -331,11 +335,7 @@ namespace Bam.Net.Server
         
         private void InitializeAppResponders(AppConf[] configs)
         {
-            HashSet<string> configured = new HashSet<string>(BamConf.ProcessModes.Select(m => m.ToString()))
-            {
-                ProcessMode.Current.Mode.ToString()
-            };
-            configs.Where(c=> configured.Contains(c.ProcessMode)).Each(appConf =>
+            configs.Each(appConf =>
             {
                 OnAppContentResponderInitializing(appConf);
                 Logger.RestartLoggingThread();

@@ -504,7 +504,7 @@ namespace Bam.Net.Server
             BamConf serverConfig = GetCurrentConf(false);
             HashSet<HostPrefix> results = new HashSet<HostPrefix>();
             results.Add(DefaultHostPrefix);
-            serverConfig.AppConfigs.Each(appConf => { appConf.Bindings.Each(hp => results.Add(hp)); });
+            serverConfig.AppsToServe.Each(appConf => { appConf.Bindings.Each(hp => results.Add(hp)); });
 
             return results.ToArray();
         }
@@ -1004,6 +1004,7 @@ namespace Bam.Net.Server
             ResponderList responder = new ResponderList(_conf, _responders);
             try
             {
+                
                 if (!responder.Respond(context))
                 {
                     NotResponded?.Invoke(this, request);
