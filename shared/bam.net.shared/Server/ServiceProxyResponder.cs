@@ -21,6 +21,7 @@ using Bam.Net.Configuration;
 
 using System.Threading.Tasks;
 using Bam.Net.Presentation;
+using Bam.Net.Schema.Org.Things;
 using Bam.Net.Server.Meta;
 using Bam.Net.Services;
 
@@ -45,6 +46,7 @@ namespace Bam.Net.Server
             _clientProxyGenerators = new Dictionary<string, IClientProxyGenerator>();
             RendererFactory = new WebRendererFactory(logger);
             ExecutionRequestResolver = new ExecutionRequestResolver();
+            ServiceResolver = new ServiceResolver();
 
             AddCommonService(_commonSecureChannel);
             AddClientProxyGenerator(new CsClientProxyGenerator(), "proxies.cs", "csproxies", "csharpproxies");
@@ -70,18 +72,12 @@ namespace Bam.Net.Server
                 AppSecureChannels[appName].ServiceProvider.Set(type, instance, false);
             };
         }
-
-        public IExecutionRequestResolver ExecutionRequestResolver
-        {
-            get;
-            set;
-        }
-
-        public ContentResponder ContentResponder
-        {
-            get;
-            set;
-        }
+        
+        public IExecutionRequestResolver ExecutionRequestResolver { get; set; }
+        
+        public IServiceResolver ServiceResolver { get; set; }
+        
+        public ContentResponder ContentResponder { get; set; }
 
         Incubator _commonServiceProvider;
         /// <summary>
@@ -368,6 +364,40 @@ namespace Bam.Net.Server
         {
             return true;
         }
+
+        [Verbosity(VerbosityLevel.Warning)]
+        public event EventHandler ServiceCompilationException;
+
+        [Verbosity(VerbosityLevel.Information)]
+        public event EventHandler ServiceCompiled;
+        
+        public void CompileProxiedClasses()
+        {
+            BamConf.AppsToServe.Each(appConf =>
+            {
+                AppServiceAssembly appServiceAssembly = null;
+                try
+                {
+                    appServiceAssembly = ServiceResolver.CompileAppServices(appConf);
+                    if (appServiceAssembly != null)
+                    {
+                        DirectoryInfo binDir = ServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                        if (!binDir.Exists)
+                        {
+                            binDir.Create();
+                        }
+                        File.WriteAllBytes(Path.Combine(binDir.FullName, $"{appConf.Name}.Services.dll"), appServiceAssembly);
+                    }
+
+                    FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {AppServiceAssembly = appServiceAssembly, AppConf = appConf});
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Error compiling application services for ({0}): {1}", appConf.Name, ex.Message);
+                    FireEvent(ServiceCompilationException, this, new ServiceCompilationEventArgs{Exception = ex, AppServiceAssembly = appServiceAssembly, AppConf = appConf});
+                }
+            });
+        }
         
         public void RegisterProxiedClasses()
         {
@@ -378,14 +408,13 @@ namespace Bam.Net.Server
                 this.AddCommonService(type, type.Construct());
             });
 
-            BamConf.AppConfigs.Each(appConf =>
+            BamConf.AppsToServe.Each(appConf =>
             {
                 string name = appConf.Name.ToLowerInvariant();
-                Incubator serviceProvider = new Incubator();
 
                 AppServiceProviders[name] = new Incubator();
 
-                DirectoryInfo appServicesDir = new DirectoryInfo(appConf.AppRoot.GetAbsolutePath(serviceProxyRelativePath));
+                DirectoryInfo appServicesDir = ServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
                 if (appServicesDir.Exists)
                 {
                     Action<Type> serviceAdder = (type) =>
@@ -406,7 +435,7 @@ namespace Bam.Net.Server
                 AddConfiguredServiceProxyTypes(appConf);
             });
         }
-
+        
         private void AddConfiguredServiceProxyTypes(AppConf appConf)
         {
             appConf.ServiceTypeNames.Each(typeName =>
@@ -431,6 +460,7 @@ namespace Bam.Net.Server
             }
         }
 
+        // TODO: deprecate the use of these methods in favor of ServiceResolver
         private void ForEachProxiedClass(Action<Type> doForEachProxiedType)
         {
             string serviceProxyRelativePath = ServiceProxyRelativePath;
@@ -461,30 +491,11 @@ namespace Bam.Net.Server
             }
         }
 
-        private void ForEachProxiedClass(string searchPattern, DirectoryInfo ctrlrDir, Action<Type> doForEachProxiedType)
+        private void ForEachProxiedClass(string searchPattern, DirectoryInfo serviceDir, Action<Type> doForEachProxiedType)
         {
-            if (ctrlrDir.Exists)
-            {
-                FileInfo[] files = ctrlrDir.GetFiles(searchPattern);
-                int ol = files.Length;
-                for (int i = 0; i < ol; i++)
-                {
-                    FileInfo file = files[i];
-                    Assembly.LoadFrom(file.FullName)
-                        .GetTypes()
-                        .Where(type => type.HasCustomAttributeOfType<ProxyAttribute>())
-                        .Each(t =>
-                        {
-                            ProxyAttribute attr = t.GetCustomAttributeOfType<ProxyAttribute>();
-                            if (!string.IsNullOrEmpty(attr.VarName))
-                            {
-                                BamConf.AddProxyAlias(attr.VarName, t);
-                            }
-                            doForEachProxiedType(t);
-                        });
-                }
-            }
+            Bam.Net.ServiceProxy.ServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
         }
+        // -- end deprecate
         
         public override bool TryRespond(IHttpContext context)
         {
@@ -573,6 +584,7 @@ namespace Bam.Net.Server
                 lock (_initializeLock)
                 {
                     AddCommonService(new AppMetaManager(BamConf));
+                    CompileProxiedClasses();
                     RegisterProxiedClasses();
                 }
             }

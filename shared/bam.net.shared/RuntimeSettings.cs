@@ -55,7 +55,7 @@ namespace Bam.Net
         
         public static string GetBamAssemblyPath()
         {
-            return Path.Combine(RuntimeSettings.GetConfig().ReferenceAssembliesDir, "bam.net.core.dll");
+            return typeof(BamPaths).Assembly.GetFilePath();
         }
 
         public static string GetMsCoreLibPath()

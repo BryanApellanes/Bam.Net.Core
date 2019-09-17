@@ -31,11 +31,11 @@ namespace Bam.Net
         }
         
         public IReferenceAssemblyResolver ReferenceAssemblyResolver { get; set; }
-        
-        HashSet<Assembly> _assembliesToReference;
+
+        readonly HashSet<Assembly> _assembliesToReference;
         public Assembly[] AssembliesToReference
         {
-            get { return _assembliesToReference.ToArray(); }
+            get => _assembliesToReference.ToArray();
             set
             {
                 _assembliesToReference.Clear();
@@ -91,8 +91,7 @@ namespace Bam.Net
         
         public byte[] Compile(string assemblyFileName, params FileInfo[] sourceFiles)
         {
-            return Compile(assemblyFileName,
-                sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray());
+            return Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray());
         }
 
         public Assembly CompileAssembly(string assemblyName, string sourceCode)
@@ -156,7 +155,8 @@ namespace Bam.Net
         private MetadataReference[] GetMetaDataReferences()
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
-            metadataReferences.Add(MetadataReference.CreateFromFile(ReferenceAssemblyResolver.ResolveSystemRuntimePath()));
+            IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
+            metadataReferences.Add(MetadataReference.CreateFromFile(referenceAssemblyResolver.ResolveSystemRuntimePath()));
             if (OSInfo.Current == OSNames.Windows)
             {
                 metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetMsCoreLibPath()));

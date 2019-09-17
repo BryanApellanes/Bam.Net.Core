@@ -23,6 +23,8 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             }
         }
 
+        public static IReferenceAssemblyResolver Current => ReferenceAssemblyResolvers[OSInfo.Current];
+
         public virtual Assembly ResolveReferenceAssembly(Type type)
         {
             return Assembly.Load(ResolveReferenceAssemblyPath(type));

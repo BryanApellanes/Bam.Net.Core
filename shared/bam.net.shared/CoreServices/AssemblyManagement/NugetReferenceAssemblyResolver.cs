@@ -95,6 +95,12 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             {
                 return typeof(object).Assembly.GetFilePath();
             }
+            string netCoreDir = new FileInfo(typeof(object).Assembly.GetFilePath()).Directory.FullName;
+            string systemRuntime = Path.Combine(netCoreDir, "System.Runtime.dll");
+            if (File.Exists(systemRuntime))
+            {
+                return systemRuntime;
+            }
             
             string packageDirectoryRoot = ResolvePackageRootDirectory("System", "Runtime");
             
