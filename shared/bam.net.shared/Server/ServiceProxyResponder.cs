@@ -392,7 +392,7 @@ namespace Bam.Net.Server
                         {
                             binDir.Create();
                         }
-                        File.WriteAllBytes(Path.Combine(binDir.FullName, $"{appConf.Name}.Services.dll"), appServiceAssembly);
+                        File.WriteAllBytes(Path.Combine(binDir.FullName, $"{appConf.Name}.services.dll"), appServiceAssembly);
                     }
 
                     FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {AppServiceAssembly = appServiceAssembly, AppConf = appConf});
