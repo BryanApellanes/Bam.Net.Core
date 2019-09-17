@@ -578,11 +578,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ServerKinds.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ApplicationServiceRegistryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\AppServiceAssembly.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IApplicationServiceRegistryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ServiceCompilationEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ServiceResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\AppServiceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IContextCloneable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IServiceResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IAppServiceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\CatalogRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\CatalogService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\Data\CatalogDefinition.cs" />

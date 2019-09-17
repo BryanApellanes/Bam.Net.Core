@@ -48,7 +48,7 @@ namespace Bam.Net.Services
             return this;
         }
 
-        public static WebServiceRegistry ForCurrentApplication(ApplicationServiceRegistry applicationServiceRegistry)
+        public static WebServiceRegistry ForApplicationServiceRegistry(ApplicationServiceRegistry applicationServiceRegistry)
         {
             WebServiceRegistry fromAssembly = FromEntryAssembly(applicationServiceRegistry);
             return fromAssembly.CopyWebServices(applicationServiceRegistry);

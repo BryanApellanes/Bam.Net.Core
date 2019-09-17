@@ -4,7 +4,7 @@ using Bam.Net.Server;
 
 namespace Bam.Net.ServiceProxy
 {
-    public interface IServiceResolver
+    public interface IAppServiceResolver
     {
         AppServiceAssembly CompileAppServices(AppConf appConf);
         DirectoryInfo GetAppServicesDirectory(AppConf appConf);

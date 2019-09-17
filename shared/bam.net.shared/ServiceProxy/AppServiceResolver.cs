@@ -8,9 +8,9 @@ using Bam.Net.Server;
 namespace Bam.Net.ServiceProxy
 {
     /// <summary>
-    /// Responsible for resolving paths where proxyable services are found.
+    /// Responsible for resolving paths where proxyable services are found for an application .
     /// </summary>
-    public class ServiceResolver : IServiceResolver
+    public class AppServiceResolver : IAppServiceResolver
     {
         private const string ServicesRelativePath = "~/services";
 

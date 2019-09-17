@@ -46,7 +46,8 @@ namespace Bam.Net.Server
             _clientProxyGenerators = new Dictionary<string, IClientProxyGenerator>();
             RendererFactory = new WebRendererFactory(logger);
             ExecutionRequestResolver = new ExecutionRequestResolver();
-            ServiceResolver = new ServiceResolver();
+            AppServiceResolver = new AppServiceResolver();
+            ApplicationServiceRegistryResolver = new ApplicationServiceRegistryResolver();
 
             AddCommonService(_commonSecureChannel);
             AddClientProxyGenerator(new CsClientProxyGenerator(), "proxies.cs", "csproxies", "csharpproxies");
@@ -73,9 +74,14 @@ namespace Bam.Net.Server
             };
         }
         
+        [Inject]
         public IExecutionRequestResolver ExecutionRequestResolver { get; set; }
         
-        public IServiceResolver ServiceResolver { get; set; }
+        [Inject]
+        public IAppServiceResolver AppServiceResolver { get; set; }
+        
+        [Inject]
+        public IApplicationServiceRegistryResolver ApplicationServiceRegistryResolver { get; set; }
         
         public ContentResponder ContentResponder { get; set; }
 
@@ -378,10 +384,10 @@ namespace Bam.Net.Server
                 AppServiceAssembly appServiceAssembly = null;
                 try
                 {
-                    appServiceAssembly = ServiceResolver.CompileAppServices(appConf);
+                    appServiceAssembly = AppServiceResolver.CompileAppServices(appConf);
                     if (appServiceAssembly != null)
                     {
-                        DirectoryInfo binDir = ServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                        DirectoryInfo binDir = AppServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
                         if (!binDir.Exists)
                         {
                             binDir.Create();
@@ -412,14 +418,23 @@ namespace Bam.Net.Server
             {
                 string name = appConf.Name.ToLowerInvariant();
 
-                AppServiceProviders[name] = new Incubator();
+                WebServiceRegistry webServiceRegistry = WebServiceRegistry.ForApplicationServiceRegistry(ApplicationServiceRegistryResolver.ResolveApplicationServiceRegistry(appConf));
+                AppServiceProviders[name] = webServiceRegistry;
 
-                DirectoryInfo appServicesDir = ServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                DirectoryInfo appServicesDir = AppServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
                 if (appServicesDir.Exists)
                 {
                     Action<Type> serviceAdder = (type) =>
                     {
-                        if (type.TryConstruct(out object instance, ex => Logger.AddEntry("RegisterProxiedClasses: Unable to construct instance of type {0}: {1}", ex, type.Name, ex.Message)))
+                        object instance = webServiceRegistry.Get(type);
+                        if (instance == null)
+                        {
+                            type.TryConstruct(out instance,
+                                ex => Logger.AddEntry(
+                                    "RegisterProxiedClasses: Unable to construct instance of type {0}: {1}", ex,
+                                    type.Name, ex.Message));
+                        }
+                        if(instance != null)
                         {
                             SubscribeIfLoggable(instance);
                             AddAppService(appConf.Name, instance);
@@ -493,7 +508,7 @@ namespace Bam.Net.Server
 
         private void ForEachProxiedClass(string searchPattern, DirectoryInfo serviceDir, Action<Type> doForEachProxiedType)
         {
-            Bam.Net.ServiceProxy.ServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
+            Bam.Net.ServiceProxy.AppServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
         }
         // -- end deprecate
         

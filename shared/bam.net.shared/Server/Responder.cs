@@ -50,6 +50,9 @@ namespace Bam.Net.Server
             this.Logger = logger;
         }
 
+        /// <summary>
+        /// Registry resolved by the server.
+        /// </summary>
         public ApplicationServiceRegistry ApplicationServiceRegistry { get; set; }
 
         ILogger _logger;
