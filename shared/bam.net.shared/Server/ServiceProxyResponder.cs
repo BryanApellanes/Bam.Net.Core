@@ -48,10 +48,12 @@ namespace Bam.Net.Server
             ExecutionRequestResolver = new ExecutionRequestResolver();
             AppServiceResolver = new AppServiceResolver();
             ApplicationServiceRegistryResolver = new ApplicationServiceRegistryResolver();
+            ServiceCompilationExceptionReporter = new ServiceCompilationExceptionReporter();
 
             AddCommonService(_commonSecureChannel);
             AddClientProxyGenerator(new CsClientProxyGenerator(), "proxies.cs", "csproxies", "csharpproxies");
             AddClientProxyGenerator(new JsClientProxyGenerator(), "proxies.js", "jsproxies", "javascriptproxies");
+            AddClientProxyGenerator(new JsWebServiceProxyGenerator(), "webservices.js", "webservices", "webproxies.js", "webproxies");
 
             CommonServiceAdded += (type, obj) =>
             {
@@ -82,6 +84,9 @@ namespace Bam.Net.Server
         
         [Inject]
         public IApplicationServiceRegistryResolver ApplicationServiceRegistryResolver { get; set; }
+        
+        [Inject]
+        public IServiceCompilationExceptionReporter ServiceCompilationExceptionReporter { get; set; }
         
         public ContentResponder ContentResponder { get; set; }
 
@@ -392,7 +397,13 @@ namespace Bam.Net.Server
                         {
                             binDir.Create();
                         }
-                        File.WriteAllBytes(Path.Combine(binDir.FullName, $"{appConf.Name}.services.dll"), appServiceAssembly);
+
+                        string serviceAssemblyFile = Path.Combine(binDir.FullName, $"{appConf.Name}.services.dll");
+                        if (File.Exists(serviceAssemblyFile))
+                        {
+                            File.Delete(serviceAssemblyFile);
+                        }
+                        File.WriteAllBytes(serviceAssemblyFile, appServiceAssembly);
                     }
 
                     FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {AppServiceAssembly = appServiceAssembly, AppConf = appConf});
@@ -418,24 +429,18 @@ namespace Bam.Net.Server
             {
                 string name = appConf.Name.ToLowerInvariant();
 
-                WebServiceRegistry webServiceRegistry = WebServiceRegistry.ForApplicationServiceRegistry(ApplicationServiceRegistryResolver.ResolveApplicationServiceRegistry(appConf));
-                AppServiceProviders[name] = webServiceRegistry;
+                Incubator serviceContainer = new Incubator();
+                serviceContainer.For<AppConf>().Use(appConf);
+                AppServiceProviders[name] = serviceContainer;
 
                 DirectoryInfo appServicesDir = AppServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
                 if (appServicesDir.Exists)
                 {
                     Action<Type> serviceAdder = (type) =>
                     {
-                        object instance = webServiceRegistry.Get(type);
-                        if (instance == null)
+                        if(type.TryConstruct(out object instance, ex => Logger.AddEntry("RegisterProxiedClasses: Unable to construct instance of type {0}: {1}", ex, type.Name, ex.Message)))
                         {
-                            type.TryConstruct(out instance,
-                                ex => Logger.AddEntry(
-                                    "RegisterProxiedClasses: Unable to construct instance of type {0}: {1}", ex,
-                                    type.Name, ex.Message));
-                        }
-                        if(instance != null)
-                        {
+                            serviceContainer.SetInjectionProperties(instance);
                             SubscribeIfLoggable(instance);
                             AddAppService(appConf.Name, instance);
                         }
@@ -475,7 +480,6 @@ namespace Bam.Net.Server
             }
         }
 
-        // TODO: deprecate the use of these methods in favor of ServiceResolver
         private void ForEachProxiedClass(Action<Type> doForEachProxiedType)
         {
             string serviceProxyRelativePath = ServiceProxyRelativePath;
@@ -510,7 +514,6 @@ namespace Bam.Net.Server
         {
             Bam.Net.ServiceProxy.AppServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
         }
-        // -- end deprecate
         
         public override bool TryRespond(IHttpContext context)
         {
@@ -528,16 +531,10 @@ namespace Bam.Net.Server
 
                     if (path.StartsWith("/{0}"._Format(ResponderSignificantName.ToLowerInvariant())))
                     {
-                        if (path.StartsWith(MethodFormPrefixFormat._Format(ResponderSignificantName).ToLowerInvariant()))
-                        {
-                            responded = SendMethodForm(context);
-                        }
-                        else
-                        {
-                            responded = SendProxyCode(context);
-                        }
+                        responded = path.StartsWith(MethodFormPrefixFormat._Format(ResponderSignificantName).ToLowerInvariant()) ? SendMethodForm(context) : SendProxyCode(context);
                     }
-                    else
+                    
+                    if(!responded)
                     {
                         ExecutionRequest execRequest = ResolveExecutionRequest(context, appName);
                         responded = execRequest.Execute();

@@ -15,12 +15,17 @@ namespace Bam.Net.ServiceProxy
             IResponse response = context.Response;
             response.ContentType = "application/javascript";
         }
+        
         public override string GetProxyCode(Incubator serviceProvider, IHttpContext context)
         {
-            IRequest request = context.Request;
-            bool includeLocalMethods = request.UserHostAddress.StartsWith("127.0.0.1");
+            return ServiceProxySystem.GenerateJsProxyScript(serviceProvider, serviceProvider.ClassNames, ShouldIncludeLocalMethods(context), context.Request).ToString();
+        }
 
-            return ServiceProxySystem.GenerateJsProxyScript(serviceProvider, serviceProvider.ClassNames, includeLocalMethods, context.Request).ToString();
+        protected bool ShouldIncludeLocalMethods(IHttpContext context)
+        {
+            Args.ThrowIfNull(context, "context");
+
+            return context.Request.UserHostAddress.StartsWith("127.0.0.1");
         }
     }
 }

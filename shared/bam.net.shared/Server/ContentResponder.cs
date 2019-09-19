@@ -380,7 +380,7 @@ namespace Bam.Net.Server
         
         /// <summary>
         /// If true, TryRespond will send 404 and close the connection
-        /// if no content is found.  Otherwise, nothing will be done
+        /// if no content is found.  Otherwise, nothing is done
         /// explicitly to close the connection or end the request.
         /// </summary>
         public bool EndResponse { get; set; }

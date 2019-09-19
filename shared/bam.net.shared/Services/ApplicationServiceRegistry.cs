@@ -87,9 +87,16 @@ namespace Bam.Net.Services
             }
             return Configure(a => { });
         }
-        
+
+
         [ServiceRegistryLoader]
         public static ApplicationServiceRegistry Configure(Action<ApplicationServiceRegistry> configure, bool setConfigurer = true)
+        {
+            return Configure(null, configure, setConfigurer);
+        }
+        
+        [ServiceRegistryLoader]
+        public static ApplicationServiceRegistry Configure(AppConf appConf, Action<ApplicationServiceRegistry> configure, bool setConfigurer = true)
         {
             if (setConfigurer && Configurer != configure)
             {
@@ -98,13 +105,15 @@ namespace Bam.Net.Services
             ApplicationServiceRegistry appRegistry = new ApplicationServiceRegistry();
             appRegistry.CombineWith(CoreClientServiceRegistryContainer.Current);
             appRegistry
+                .For<ApplicationServiceRegistry>().Use(appRegistry)
+                .For<AppConf>().Use(appConf)
                 .For<IRepositoryResolver>().Use<DefaultRepositoryResolver>()
                 .For<IApplicationNameProvider>().Use<DefaultConfigurationApplicationNameProvider>()
                 .For<IIncludesResolver>().Use<IncludesResolver>()
                 .For<IViewModelProvider>().Use<DefaultViewModelProvider>()
                 .For<IPersistenceModelProvider>().Use<DefaultPersistenceModelProvider>()
                 .For<IExecutionRequestResolver>().Use<ExecutionRequestResolver>()
-                .For<ApplicationModel>().Use<ApplicationModel>(() => new ApplicationModel(appRegistry));
+                .For<ApplicationModel>().Use<ApplicationModel>();
 
             configure(appRegistry);
             appRegistry.CoreClient = appRegistry.Get<CoreClient>();

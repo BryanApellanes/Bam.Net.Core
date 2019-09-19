@@ -240,6 +240,11 @@ namespace Bam.Net.Server
 
 		public string[] ServiceSearchPattern { get; set; }
 
+        /// <summary>
+        /// An array of net core assembly names that must be referenced in order to compile application services.
+        /// </summary>
+        public string[] ServiceReferences { get; set; }
+        
         List<string> _serviceTypeNames;
         public string[] ServiceTypeNames
         {

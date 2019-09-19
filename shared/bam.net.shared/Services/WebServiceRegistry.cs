@@ -27,22 +27,7 @@ namespace Bam.Net.Services
                 object instance = registry.Get(className, out Type type);
                 if (type.HasCustomAttributeOfType<ProxyAttribute>())
                 {
-                    CopyTypeFrom(type, registry);
-                    List<object> ctorArgs = registry.GetCtorParams(type, out ConstructorInfo ctor);
-                    if (ctor == null)
-                    {
-                        throw new InvalidOperationException($"Unable to get the appropriate arguments to construct the class {className}");
-                    }
-                    ParameterInfo[] parameters = ctor.GetParameters();
-                    if (ctorArgs.Count != parameters.Length)
-                    {
-                        throw new InvalidOperationException($"Unable to get the correct number of constructor arguments for class {className}");
-                    }
-                    for (int i = 0; i < parameters.Length; i++)
-                    {
-                        ParameterInfo parameterInfo = parameters[i];
-                        SetCtorParam(type, parameterInfo.Name, ctorArgs[i]);
-                    }
+                    Set(type, () => registry.Get(type));
                 }
             }
             return this;
@@ -63,7 +48,7 @@ namespace Bam.Net.Services
             {
                 if (serviceRegistry != null)
                 {
-                    webServiceRegistry.Set(type, serviceRegistry.Get(type));
+                    webServiceRegistry.Set(type, () => serviceRegistry.Get(type));
                 }
                 else
                 {

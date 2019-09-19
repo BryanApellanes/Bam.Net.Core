@@ -1003,8 +1003,7 @@ namespace Bam.Net.Server
             IResponse response = context.Response;
             ResponderList responder = new ResponderList(_conf, _responders);
             try
-            {
-                
+            {   
                 if (!responder.Respond(context))
                 {
                     NotResponded?.Invoke(this, request);
@@ -1171,8 +1170,16 @@ namespace Bam.Net.Server
 
         protected void SetServiceProxyResponder()
         {
-            _serviceProxyResponder = new ServiceProxyResponder(GetCurrentConf(true), MainLogger);
-            _serviceProxyResponder.ContentResponder = ContentResponder;
+            _serviceProxyResponder = new ServiceProxyResponder(GetCurrentConf(true), MainLogger)
+            {
+                ContentResponder = ContentResponder
+            };
+            
+            _serviceProxyResponder.ServiceCompilationExceptionReporter.Reporter = (o, args) =>
+            {
+                // TODO: report compilation failures in a logical actionable way
+                
+            };
             AddResponder(_serviceProxyResponder);
         }
 

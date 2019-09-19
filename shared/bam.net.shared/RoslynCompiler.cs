@@ -23,6 +23,7 @@ namespace Bam.Net
             _assembliesToReference = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
             AssembliesToReference = DefaultAssembliesToReference;
+            ReferenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
         }
 
         public RoslynCompiler(IReferenceAssemblyResolver referenceAssemblyResolver) : this()
@@ -61,6 +62,11 @@ namespace Bam.Net
             _assembliesToReference.Add(assembly);
             return this;
         }
+
+        public RoslynCompiler AddResolvedAssemblyReference(string assemblyName)
+        {
+            return AddAssemblyReference(ReferenceAssemblyResolver.ResolveReferenceAssemblyPath(assemblyName));
+        } 
         
         public RoslynCompiler AddAssemblyReference(string path)
         {
@@ -73,7 +79,7 @@ namespace Bam.Net
             _assembliesToReference.Add(Assembly.Load(assemblyFile.FullName));
             return this;
         }
-        
+
         public Assembly CompileAssembly(string assemblyFileName, DirectoryInfo directoryInfo)
         {
             return CompileAssembly(assemblyFileName, directoryInfo.GetFiles("*.cs").ToArray());
@@ -143,6 +149,9 @@ namespace Bam.Net
                         typeof(System.Xml.XmlDocument).Assembly,
                         typeof(System.Data.DataTable).Assembly,
                         typeof(object).Assembly,
+                        typeof(Newtonsoft.Json.JsonWriter).Assembly,
+                        typeof(FileInfo).Assembly,
+                        typeof(System.Linq.Enumerable).Assembly,
                         Assembly.GetExecutingAssembly()
                     };
                     _defaultAssembliesToReference = defaultAssemblies.ToArray();
@@ -156,11 +165,14 @@ namespace Bam.Net
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
             IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
-            metadataReferences.Add(MetadataReference.CreateFromFile(referenceAssemblyResolver.ResolveSystemRuntimePath()));
+
             if (OSInfo.Current == OSNames.Windows)
             {
                 metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetMsCoreLibPath()));
             }
+
+            metadataReferences.Add(MetadataReference.CreateFromFile(referenceAssemblyResolver.ResolveSystemRuntimePath()));
+            metadataReferences.Add(MetadataReference.CreateFromFile(referenceAssemblyResolver.ResolveNetStandardPath()));
             metadataReferences.Add(MetadataReference.CreateFromFile(RuntimeSettings.GetBamAssemblyPath()));
             metadataReferences.AddRange(ReferenceAssemblyPaths.Select(p => MetadataReference.CreateFromFile(p)));
             metadataReferences.AddRange(AssembliesToReference.Select(ass => MetadataReference.CreateFromFile(ass.Location)).ToArray());

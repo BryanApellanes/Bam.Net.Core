@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 
 namespace Bam.Net.CoreServices.AssemblyManagement
@@ -26,6 +27,17 @@ namespace Bam.Net.CoreServices.AssemblyManagement
         public string ResolveSystemRuntimePath()
         {
             return typeof(object).Assembly.GetFilePath();
+        }
+        
+        public string ResolveNetStandardPath()
+        {
+            return ReferenceAssemblyResolver.ResolveNetStandardPath(ResolveSystemRuntimePath());
+        }
+        
+        public string ResolveReferenceAssemblyPath(string assemblyName)
+        {
+            FileInfo runtime = new FileInfo(ResolveSystemRuntimePath());
+            return Path.Combine(runtime.Directory.FullName, assemblyName);
         }
     }
 }

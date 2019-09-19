@@ -285,15 +285,18 @@ namespace Bam.Net.ServiceProxy
         {
             if (path.ToLowerInvariant().StartsWith("/get"))
             {
-                path = path.TruncateFront(4);
+                path = path.TruncateFront("/get".Length);
             }
             else if (path.ToLowerInvariant().StartsWith("/post"))
             {
-                path = path.TruncateFront(5);
+                path = path.TruncateFront("/post".Length);
+            }
+            else if (path.ToLowerInvariant().StartsWith("/serviceproxy"))
+            {
+                path = path.TruncateFront("/serviceproxy".Length);
             }
 
             return ExecutionTargetInfo.ResolveExecutionTarget(path, serviceProvider, proxyAliases);
-
         }
 
         string _className;

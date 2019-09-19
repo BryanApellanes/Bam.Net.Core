@@ -21,7 +21,11 @@ namespace Bam.Net.ServiceProxy
             {
                 DirectoryInfo binDir = GetServicesBinDirectory(appConf.AppRoot);
                 RoslynCompiler compiler = new RoslynCompiler();
-                string assemblyName = $"{appConf.Name}.Services";
+                foreach (string referenceAssembly in appConf.ServiceReferences)
+                {
+                    compiler.AddResolvedAssemblyReference(referenceAssembly);
+                }
+                string assemblyName = $"{appConf.Name}.services";
                 return new AppServiceAssembly()
                 {
                     AssemblyData = compiler.Compile(assemblyName, sourceDir.GetFiles("*.cs", SearchOption.AllDirectories)),

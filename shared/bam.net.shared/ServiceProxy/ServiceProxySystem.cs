@@ -14,6 +14,7 @@ using System.Web;
 
 using System.Reflection;
 using System.IO;
+using System.Reflection.Metadata;
 using Bam.Net.ServiceProxy.Secure;
 using Org.BouncyCastle.Security;
 
@@ -436,8 +437,18 @@ namespace {0}
             code.AppendFormat(NameSpaceFormat, contractNamespace, usingStatements, interfaces.ToString());
             return code;
         }
+
+        internal static StringBuilder GenerateWebServiceProxyScript(Incubator incubator, string[] classes, bool includeLocal = false, IRequest request = null)
+        {
+            return GenerateJsProxyScript(incubator, classes, (mi) => mi.WillProxyWebService(includeLocal), includeLocal, request);
+        }
         
         internal static StringBuilder GenerateJsProxyScript(Incubator incubator, string[] classes, bool includeLocal = false, IRequest request = null)
+        {
+            return GenerateJsProxyScript(incubator, classes, (mi) => mi.WillProxy(includeLocal), includeLocal, request);
+        }
+
+        internal static StringBuilder GenerateJsProxyScript(Incubator incubator, string[] classes,  Func<MethodInfo, bool> methodFilter, bool includeLocal = false, IRequest request = null)
         {
             string daoNs = request?.QueryString?["daoNs"] ?? "dao";
             string bamNs = request?.QueryString?["bamNs"] ?? "bam";
@@ -450,7 +461,7 @@ namespace {0}
             {
                 Type type = incubator[className];
                 string varName = GetVarName(type);
-                string var = string.Format("\tb.{0}", className);
+                string var = $"\tb.{className}";
                 stringBuilder.Append(var);
                 stringBuilder.Append(" = {};\r\n");
                 stringBuilder.Append(var);
@@ -475,7 +486,7 @@ namespace {0}
 
                 foreach (MethodInfo method in type.GetMethods())
                 {
-                    if (method.WillProxy(includeLocal))
+                    if (methodFilter(method))//method.WillProxy(includeLocal))
                     {
                         stringBuilder.AppendLine(GetJsMethodCall(type, method));
                     }

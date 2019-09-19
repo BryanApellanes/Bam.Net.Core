@@ -1,7 +1,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Bam.Net.CoreServices.AssemblyManagement
 {
@@ -48,6 +50,28 @@ namespace Bam.Net.CoreServices.AssemblyManagement
         public static string GetReferenceAssemblyPath(Type type)
         {
             return ReferenceAssemblyResolvers[OSInfo.Current].ResolveReferenceAssemblyPath(type);
+        }
+
+        public string ResolveNetStandardPath()
+        {
+            return ResolveNetStandardPath(ResolveSystemRuntimePath());
+        }
+
+        public string ResolveReferenceAssemblyPath(string assemblyName)
+        {
+            FileInfo runtime = new FileInfo(ResolveSystemRuntimePath());
+            return Path.Combine(runtime.Directory.FullName, assemblyName);
+        }
+
+        protected internal static string ResolveNetStandardPath(string systemRuntimePath = "")
+        {
+            if (string.IsNullOrEmpty(systemRuntimePath))
+            {
+                systemRuntimePath = ReferenceAssemblyResolvers[OSInfo.Current].ResolveSystemRuntimePath();
+            }
+
+            FileInfo systemRuntime = new FileInfo(systemRuntimePath);
+            return Path.Combine(systemRuntime.Directory.FullName, "netstandard.dll");
         }
     }
 }

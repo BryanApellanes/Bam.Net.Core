@@ -9,6 +9,17 @@ namespace Bam.Net.ServiceProxy
 {
     public static class Method
     {
+        /// <summary>
+        /// Returns true if the specified method will proxy AND it is adorned with the WebServiceAttribute.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="includeLocal"></param>
+        /// <returns></returns>
+        public static bool WillProxyWebService(this MethodInfo method, bool includeLocal = false)
+        {
+            return WillProxy(method, includeLocal) && method.HasCustomAttributeOfType<WebServiceAttribute>();
+        }
+        
         public static bool WillProxy(this MethodInfo method, bool includeLocal = false)
         {
             bool baseCheck = !method.Name.StartsWith("remove_") &&
@@ -24,7 +35,7 @@ namespace Bam.Net.ServiceProxy
             }
             else
             {
-                result = hasExcludeAttribute ? false : baseCheck;
+                result = !hasExcludeAttribute && baseCheck;
             }
             return result;
         }

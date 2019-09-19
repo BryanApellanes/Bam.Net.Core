@@ -118,6 +118,17 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             return packagePath;
         }
 
+        public string ResolveNetStandardPath()
+        {
+            return ReferenceAssemblyResolver.ResolveNetStandardPath();
+        }
+
+        public string ResolveReferenceAssemblyPath(string assemblyName)
+        {
+            FileInfo runtime = new FileInfo(ResolveSystemRuntimePath());
+            return Path.Combine(runtime.Directory.FullName, assemblyName);
+        }
+
         public string ResolvePackageRootDirectory(Type type)
         {
             DirectoryInfo nugetRoot = new DirectoryInfo(NugetFallbackRoot);

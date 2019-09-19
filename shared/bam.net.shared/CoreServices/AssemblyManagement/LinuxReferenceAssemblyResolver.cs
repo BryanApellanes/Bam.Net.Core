@@ -1,6 +1,7 @@
 
 using System;
 using System.Reflection;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace Bam.Net.CoreServices.AssemblyManagement
 {
@@ -22,6 +23,16 @@ namespace Bam.Net.CoreServices.AssemblyManagement
         }
 
         public string ResolveSystemRuntimePath()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ResolveNetStandardPath()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ResolveReferenceAssemblyPath(string assemblyName)
         {
             throw new NotImplementedException();
         }
