@@ -54,6 +54,12 @@ namespace Bam.Net.ServiceProxy
             return GetServicesBinDirectory(bamConf.Fs);
         }
 
+        public FileInfo GetAppServicesAssemblyFile(AppConf appConf)
+        {
+            Args.ThrowIfNull(appConf, "appConf");
+            return new FileInfo(Path.Combine(GetAppServicesBinDirectory(appConf).FullName, $"{appConf.Name}.services.dll"));
+        }
+
         public DirectoryInfo GetServicesBinDirectory(Fs fsRoot)
         {
             return new DirectoryInfo(Path.Combine(fsRoot.GetAbsolutePath(ServicesRelativePath), "bin"));

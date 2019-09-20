@@ -87,7 +87,7 @@ namespace Bam.Net.Server
         
         [Inject]
         public IServiceCompilationExceptionReporter ServiceCompilationExceptionReporter { get; set; }
-        
+
         public ContentResponder ContentResponder { get; set; }
 
         Incubator _commonServiceProvider;
@@ -415,6 +415,50 @@ namespace Bam.Net.Server
                 }
             });
         }
+
+        /// <summary>
+        /// For All BamConf.AppsToServe, call the Startup.Execute(AppConf) method in parallel.
+        /// </summary>
+        public void ExecuteStartup()
+        {
+            Parallel.ForEach(BamConf.AppsToServe, (appConf) =>
+            { 
+                FileInfo appServiceAssemblyFile = AppServiceResolver.GetAppServicesAssemblyFile(appConf);
+                if (appServiceAssemblyFile.Exists)
+                {
+                    Assembly appServiceAssembly = Assembly.LoadFile(appServiceAssemblyFile.FullName);
+                    if (appServiceAssembly == null)
+                    {
+                        Logger.Warning("[{0}]::Failed to load services assembly for Startup execution ({1})", appConf.Name, appServiceAssemblyFile.FullName);
+                    }
+                    else
+                    {
+                        appServiceAssembly
+                            .GetTypes()
+                            .Where(type => type.ImplementsInterface<IApplicationStartupHandler>() || type.Name.Equals("Startup"))
+                            .Each(type =>
+                            {
+                                try
+                                {
+                                    object instance = type.Construct();
+                                    if (instance == null)
+                                    {
+                                        Logger.Warning("[{0}]::Failed to instantiate Startup type ({1})", appConf.Name, type.AssemblyQualifiedName);
+                                    }
+                                    else
+                                    {
+                                        instance.TryInvoke("Execute", (ex) => Logger.AddEntry("[{0}]::Exception executing Startup type ({1}): {2}", ex, appConf.Name, type.AssemblyQualifiedName, ex.Message), appConf);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.AddEntry("[{0}]::Exception constructing and executing Startup: {1}", ex, appConf.Name, ex.Message);
+                                }
+                            });
+                    }
+                }
+            });
+        }
         
         public void RegisterProxiedClasses()
         {
@@ -597,6 +641,7 @@ namespace Bam.Net.Server
                 {
                     AddCommonService(new AppMetaManager(BamConf));
                     CompileProxiedClasses();
+                    ExecuteStartup();
                     RegisterProxiedClasses();
                 }
             }

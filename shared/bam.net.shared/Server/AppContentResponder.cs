@@ -34,7 +34,7 @@ namespace Bam.Net.Server
             {
                 conf.BamConf = commonResponder.BamConf;
             }
-            DataSettings = dataSettings ?? DataProvider.Current;
+            DataProvider = dataSettings ?? DataProvider.Current;
             ContentResponder = commonResponder;
             ServerRoot = commonResponder.ServerRoot;
             AppConf = conf;
@@ -63,7 +63,7 @@ namespace Bam.Net.Server
                     // TODO: change this to check 'ContentHandlersSearchPattern' from the process config
                     string[] assemblySearchPatterns = DefaultConfiguration.GetAppSetting("AssemblySearchPattern", "*ContentHandlers.dll").DelimitSplit(",", true);
                     DirectoryInfo entryDir = Assembly.GetEntryAssembly().GetFileInfo().Directory;
-                    DirectoryInfo sysAssemblies = DataSettings.GetSysAssemblyDirectory();
+                    DirectoryInfo sysAssemblies = DataProvider.GetSysAssemblyDirectory();
                     List<FileInfo> files = new List<FileInfo>();
                     foreach(string assemblySearchPattern in assemblySearchPatterns)
                     {
@@ -127,7 +127,7 @@ namespace Bam.Net.Server
             }
         }
 
-        public DataProvider DataSettings { get; }
+        public DataProvider DataProvider { get; }
 
         public ContentLocator AppContentLocator
         {

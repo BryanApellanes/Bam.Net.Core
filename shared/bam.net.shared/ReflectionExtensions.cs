@@ -181,6 +181,21 @@ namespace Bam.Net
             }
         }
 
+        public static bool TryInvoke(this object instance, string methodName, Action<Exception> exceptionHandler, params object[] args)
+        {
+            try
+            {
+                Invoke(instance, methodName, args);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                exceptionHandler(ex);
+            }
+
+            return false;
+        }
+        
         /// <summary>
         /// Invoke the specified method on the specified instance 
         /// using the specified arguments
