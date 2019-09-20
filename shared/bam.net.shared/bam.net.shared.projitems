@@ -191,6 +191,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationDiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationNameProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Activity\ActivityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppDataModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppDataPropertyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppKind.cs" />
@@ -3194,6 +3195,7 @@
     <Content Include="$(MSBuildThisFileDirectory)UserAccounts\UserAccounts.db.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Application\Activity\Data" />
     <Folder Include="$(MSBuildThisFileDirectory)Presentation\Components\Templates\" />
   </ItemGroup>
 </Project>

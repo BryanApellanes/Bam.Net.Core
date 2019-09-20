@@ -62,6 +62,12 @@
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\shared\bam.net.shared\Application\Activity\Data\ActivityDescriptor.cs">
+      <Link>bam.net.shared\Application\Activity\Data\ActivityDescriptor.cs</Link>
+    </Compile>
+  </ItemGroup>
   
   <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 
