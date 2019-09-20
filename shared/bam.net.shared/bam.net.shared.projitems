@@ -191,7 +191,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationDiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationNameProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Application\Activity\ActivityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppDataModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppDataPropertyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppKind.cs" />
