@@ -20,6 +20,7 @@ using Bam.Net.Presentation.Html;
 using Bam.Net.Configuration;
 
 using System.Threading.Tasks;
+using Bam.Net.Application;
 using Bam.Net.Presentation;
 using Bam.Net.Schema.Org.Things;
 using Bam.Net.Server.Meta;
@@ -416,6 +417,7 @@ namespace Bam.Net.Server
             });
         }
 
+        // TODO: move this method to AppContentResponder and call from its Initialize()
         /// <summary>
         /// For All BamConf.AppsToServe, call the Startup.Execute(AppConf) method in parallel.
         /// </summary>

@@ -208,6 +208,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\NmapScan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\IApplicationStartupHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelSchema.cs" />
@@ -583,7 +584,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ApplicationServiceRegistryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\AppServiceAssembly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IApplicationServiceRegistryResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IApplicationStartupHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IServiceCompilationExceptionReporter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\JsWebServiceProxyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ServiceCompilationEventArgs.cs" />
