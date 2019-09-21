@@ -23,8 +23,11 @@ namespace Bam.Net.Server
         private void Init()
         {
             _renderers = new HashSet<AppPageRenderer>();
-            AddPageRenderer(new StaticContentPageRenderer(AppContentResponder, TemplateManager, ApplicationTemplateManager));
+            DefaultPageRenderer = new StaticContentPageRenderer(AppContentResponder, TemplateManager, ApplicationTemplateManager);
+            AddPageRenderer(DefaultPageRenderer);
         }
+        
+        public StaticContentPageRenderer DefaultPageRenderer { get; private set; }
         
         private HashSet<AppPageRenderer> _renderers;
         public AppPageRenderer[] Renderers
@@ -68,7 +71,8 @@ namespace Bam.Net.Server
             }
             else
             {
-                FireEvent(RendererNotResolved, new RendererResolvedEventArgs {AppConf = AppConf, Request = request});
+                renderer = DefaultPageRenderer;
+                FireEvent(RendererNotResolved, new RendererResolvedEventArgs {AppConf = AppConf, Request = request, AppPageRenderer = renderer});
             }
             return renderer;
         }

@@ -29,7 +29,7 @@ namespace Bam.Net.Server
         public string FileExtension { get; protected set; }
         public int Order { get; set; }
 
-        public string DefaultFilePath => Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}.{FileExtension}");
+        public string DefaultFilePath => Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}{FileExtension}");
 
         public override byte[] RenderDefault(int statusCode, IRequest request, IResponse response)
         {
