@@ -6,14 +6,8 @@ namespace Bam.Net.Presentation.Html
 
         public string TagName
         {
-            get
-            {
-                return _tagName;
-            }
-            set
-            {
-                _tagName = value?.Trim()?.PascalCase();
-            }
+            get => _tagName;
+            set => _tagName = value?.Trim()?.PascalCase();
         }
 
         public string TagNameLowercased => TagName.ToLowerInvariant();

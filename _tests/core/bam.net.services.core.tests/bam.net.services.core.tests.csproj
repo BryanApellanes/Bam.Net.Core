@@ -42,6 +42,10 @@
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.services.core.tests.application" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+  </ItemGroup>
+
   <Import Project="..\..\shared\bam.net.tests.shared\bam.net.tests.shared.projitems" Label="Shared" />
 
 </Project>

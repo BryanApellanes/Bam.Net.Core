@@ -48,7 +48,7 @@ namespace Bam.Net.Server
         public abstract byte[] RenderDefault(int statusCode, IRequest request, IResponse response);
 
         readonly Dictionary<string, RouteInfo> _routeInfos;
-
+        
         protected RouteInfo GetRouteInfo(IRequest request)
         {
             string url = request.Url?.ToString();
