@@ -117,10 +117,10 @@ namespace Bam.Net.Application
             };
         }
         
-        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "StandardOut: {ConsoleMessage}")]
+        [Verbosity(VerbosityLevel.Information, MessageFormat = "StandardOut: {ConsoleMessage}")]
         public event EventHandler StandardOut;
 
-        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "ErrorOut: {ConsoleMessage}")]
+        [Verbosity(VerbosityLevel.Information, MessageFormat = "ErrorOut: {ConsoleMessage}")]
         public event EventHandler ErrorOut;        
 
         string _name;
