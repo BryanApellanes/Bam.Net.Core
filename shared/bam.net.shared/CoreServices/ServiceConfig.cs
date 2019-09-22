@@ -13,32 +13,14 @@ namespace Bam.Net.Server
 {
     public static class ServiceConfig
     {
-        public static string ContentRoot
-        {
-            get
-            {
-                return DefaultConfiguration.GetAppSetting("ContentRoot").Or(BamPaths.ContentPath);
-            }
-        }
+        public static string ContentRoot => DefaultConfiguration.GetAppSetting("ContentRoot").Or(BamPaths.ContentPath);
 
-        public static string LogRoot
-        {
-            get
-            {
-                return Path.Combine(ContentRoot, "logs");
-            }
-        }
+        public static string LogRoot => Path.Combine(ContentRoot, "logs");
 
         /// <summary>
         /// A logical identifier for the current process
         /// </summary>
-        public static string ProcessName
-        {
-            get
-            {
-                return DefaultConfiguration.GetAppSetting("ProcessName").Or(DefaultConfiguration.DefaultProcessName);
-            }
-        }
+        public static string ProcessName => DefaultConfiguration.GetAppSetting("ProcessName").Or(DefaultConfiguration.DefaultProcessName);
 
         public static Database GetConfiguredDatabase()
         {

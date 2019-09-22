@@ -33,11 +33,7 @@ namespace Bam.Net.Server
     {
         protected void ProcessRequest(HttpListenerContext context)
         {
-            HttpListenerRequest request = context.Request;
-            HttpListenerResponse response = context.Response;
-
-            IHttpContext wrapper = new HttpContextWrapper(context);
-            HandleRequestAsync(wrapper);
+            HandleRequestAsync(new HttpContextWrapper(context));
         }
 
         private void HandleException(IHttpContext context, Exception ex)
@@ -58,16 +54,14 @@ namespace Bam.Net.Server
 <h1>Internal Server Exception</h1>
 <p>" + description + "</p></body></html>");
                     sw.Flush();
-
                 }
-
             }
             MainLogger.AddEntry("An error occurred handling the request: ({0})\r\n*** Request Details {1}***\r\n{2}\r\n\r\n{3}",
                     ex,
                     request.GetClientIp(),
                     ex.Message,
                     request.TryPropertiesToString(),
-                    Args.GetMessageAndStackTrace(ex));
+                    ex.GetMessageAndStackTrace());
         }
 
         private void HandleResponderNotFound(IHttpContext context)

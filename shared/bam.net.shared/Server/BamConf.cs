@@ -46,7 +46,7 @@ namespace Bam.Net.Server
             this.LoggerPaths = new string[] { "." };
             this.LoggerSearchPattern = "*Logging.dll";
             this.ServiceSearchPattern = "*Services.dll,*Proxyables.dll";
-            this.ServerEventListenerSearchPath = "/bam/content/server-listeners,/bam/content/server-listeners-temp";
+            this.ServerEventListenerSearchPath = "/opt/bam/content/server-listeners,/opt/bam/content/server-listeners-temp";
             this.ServerEventListenerAssemblySearchPattern = "*ServerListeners.dll,*ServerEventListeners.dll";
             this.MainLoggerName = "ConsoleLogger";
 
@@ -369,7 +369,7 @@ namespace Bam.Net.Server
         public AppConf[] AppConfigs => _appConfigsLock.DoubleCheckLock(ref _appConfigs, InitializeAppConfigs).ToArray();
 
         /// <summary>
-        /// Represents the array of AppConf instances that will be served when the server is started with the current config.
+        /// Represents the array of AppConf instances that are served when the server is started with the current config.
         /// The AppsToServe are determined by comparing the process modes specified in the BamConf with the process mode specified in the AppConf.
         /// Furthermore, app names may be specified on the command line further reducing the AppsToServe.  For example: /apps:bamapp,admin
         /// </summary>
@@ -400,9 +400,27 @@ namespace Bam.Net.Server
                         return configured.Contains(c.ProcessMode);
                     }
 
-                    return configured.Contains(c.ProcessMode) && apps.Contains(c.Name);
+                    bool shouldServe = true;
+                    if (c.ServerConf != null)
+                    {
+                        shouldServe = c.ServerConf.ServerKind == ServerKinds.Bam;
+                    }
+                    
+                    return configured.Contains(c.ProcessMode) && apps.Contains(c.Name) && shouldServe;
                 }).ToArray();
             }
+        }
+
+        /// <summary>
+        /// Represents the array of AppConf instances that are served by an external process as determined by "ServerConf.ServerKind = External".
+        /// </summary>
+        [YamlIgnore]
+        [XmlIgnore]
+        [JsonIgnore]
+        [Exclude]
+        public AppConf[] AppsServedExternally
+        {
+            get { return AppConfigs.Where(c => c.ServerConf?.ServerKind == ServerKinds.External).ToArray(); }
         }
         
         protected internal AppConf[] ReloadAppConfigs()
@@ -545,7 +563,7 @@ namespace Bam.Net.Server
         {
             BamConf config = null;
 
-            string jsonConfig = Path.Combine(contentRootDir, string.Format("{0}.json", typeof(BamConf).Name));
+            string jsonConfig = Path.Combine(contentRootDir, $"{typeof(BamConf).Name}.json");
 
             if (File.Exists(jsonConfig))
             {

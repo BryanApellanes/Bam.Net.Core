@@ -18,10 +18,11 @@ namespace Bam.Net.Application
             MaxLogSizeInBytes = 1048576;
             Process = process;
             FlushLineCount = 25;
-            FlushTimeout = 5000;
+            FlushTimeout = 3000;
+            MaxRetries = 3;
             OutLogName = Path.Combine(ServiceConfig.LogRoot, $"{Process.Name}_out.txt");
             ErrorLogName = Path.Combine(ServiceConfig.LogRoot, $"{Process.Name}_err.txt");
-            Logger.AddEntry("Outlog for {0} is {1}", Process.Name, OutLogName);
+            Logger.AddEntry("OutLog for {0} is {1}", Process.Name, OutLogName);
             Logger.AddEntry("ErrorLog for {0} is {1}", Process.Name, ErrorLogName);
             StandardOutLog = new FileInfo(OutLogName);
             ErrorOutLog = new FileInfo(ErrorLogName);
@@ -34,8 +35,8 @@ namespace Bam.Net.Application
             logger = logger ?? Log.Default;
             logger.AddEntry("Monitoring {0}", process.Name);
             DaemonProcessMonitor result = new DaemonProcessMonitor(process, logger);
-            process.StandardOut += (o, a) => logger.Info(((DaemonProcessEventArgs)a).Message);
-            process.ErrorOut += (o, a) => logger.Warning(((DaemonProcessEventArgs)a).Message);
+            process.StandardOut += (o, a) => logger.Info(((DaemonProcessEventArgs)a).ConsoleMessage);
+            process.ErrorOut += (o, a) => logger.Warning(((DaemonProcessEventArgs)a).ConsoleMessage);
             process.Start(result.TryRestart);
             return result;
         }

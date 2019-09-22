@@ -60,14 +60,8 @@ namespace Bam.Net.Server
         [Exclude]
         public string Root
         {
-            get
-            {
-                return CleanPath(RootDir.FullName) + Path.DirectorySeparatorChar;
-            }
-			set
-			{
-				this.RootDir = new DirectoryInfo(value);
-			}
+            get => CleanPath(RootDir.FullName) + Path.DirectorySeparatorChar;
+            set => this.RootDir = new DirectoryInfo(value);
         }
 
         string _currentDirectory;
@@ -83,10 +77,7 @@ namespace Bam.Net.Server
 
                 return _currentDirectory;
             }
-            set
-            {
-                _currentDirectory = value;
-            }
+            set => _currentDirectory = value;
         }
 
         public string AppName { get; set; }

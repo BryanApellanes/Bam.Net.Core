@@ -105,7 +105,7 @@ namespace Bam.Net.Logging
 
                         if (shouldSubscribe)
                         {
-                            if (eventInfo.EventHandlerType.Equals(typeof(EventHandler)))
+                            if (eventInfo.EventHandlerType == typeof(EventHandler))
                             {
                                 eventInfo.AddEventHandler(this, (EventHandler)((s, a) =>
                                 {

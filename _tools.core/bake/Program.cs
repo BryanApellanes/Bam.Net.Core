@@ -10,7 +10,6 @@ namespace Bam.Net.Bake
     {
         static void Main(string[] args)
         {
-            Console.Write(args.Length);
             AddArguments();
             
             DefaultMethod = typeof(Program).GetMethod("Start");

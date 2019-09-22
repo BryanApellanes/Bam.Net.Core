@@ -12,10 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Bam.Net.Testing;
 
 namespace Bam.Net.Application
 {
-    public class DaemonService
+    public class DaemonService : CommandLineTestInterface
     { 
         static DaemonServer _server;
         static object _serverLock = new object();
@@ -28,8 +29,8 @@ namespace Bam.Net.Application
                     ILogger logger = GetDaemonServiceLogger();
                     try
                     {
-                        ProcessMonitorService = new DaemonProcessMonitorService(logger);
-                        DaemonServer server = new DaemonServer(BamConf.Load(ServiceConfig.ContentRoot), ProcessMonitorService, logger)
+                        ProcessMonitorService = ResolveProcessMonitorService(logger);
+                        DaemonServer server = new DaemonServer(BamConf, ProcessMonitorService, logger)
                         {
                             HostPrefixes = new HashSet<HostPrefix>(GetConfiguredHostPrefixes()),
                             MonitorDirectories = DefaultConfiguration.GetAppSetting("MonitorDirectories").DelimitSplit(",", ";")
@@ -45,8 +46,7 @@ namespace Bam.Net.Application
                 });
             }
         }
-
-        public static DaemonProcessMonitorService ProcessMonitorService { get; set; }
+        
         public static void Start()
         {
             try
@@ -82,10 +82,37 @@ namespace Bam.Net.Application
         }
 
         static ILogger _daemonServiceLogger;
-        static object _daemonServiceLoggerLock = new object();
+        static readonly object _daemonServiceLoggerLock = new object();
         private static ILogger GetDaemonServiceLogger()
         {
             return _daemonServiceLoggerLock.DoubleCheckLock(ref _daemonServiceLogger, () => ServiceConfig.GetMultiTargetLogger(Log.CreateLogger("Console")));
         }
+        private static BamConf _bamConf;
+        private static readonly object _bamConfLock = new object();
+
+        private static BamConf BamConf
+        {
+            get { return _bamConfLock.DoubleCheckLock(ref _bamConf, () => BamConf.Load(ServiceConfig.ContentRoot)); }
+        }
+
+        private static DaemonProcessMonitorService _daemonProcessMonitorService;
+        private static readonly object _daemonProcessMonitorServiceLock = new object();
+
+        private static DaemonProcessMonitorService ResolveProcessMonitorService(ILogger logger)
+        {
+            if (ParsedArguments.Current.Contains("conf"))
+            {
+                FileInfo configFile = new FileInfo(ParsedArguments.Current["conf"]);
+                if (!configFile.Exists)
+                {
+                    OutLineFormat("Specified conf file does not exist ({0})", ConsoleColor.Red, configFile.FullName);
+                    Exit(1);
+                }
+                return _daemonProcessMonitorServiceLock.DoubleCheckLock(ref _daemonProcessMonitorService, () => DaemonProcessMonitorService.Start(logger, configFile));
+            }
+            return _daemonProcessMonitorServiceLock.DoubleCheckLock<DaemonProcessMonitorService>(ref _daemonProcessMonitorService, () => DaemonProcessMonitorService.For(BamConf, logger));
+        }
+
+        private static DaemonProcessMonitorService ProcessMonitorService { get; set; }
     }
 }

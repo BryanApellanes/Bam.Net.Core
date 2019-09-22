@@ -37,10 +37,7 @@ namespace Bam.Net
                     return _appDataFolder;
                 });
             }
-            set
-            {
-                _appDataFolder = value;
-            }
+            set => _appDataFolder = value;
         }
     }
 }

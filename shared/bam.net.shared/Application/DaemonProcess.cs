@@ -4,9 +4,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Server;
 
 namespace Bam.Net.Application
 {
@@ -14,20 +16,21 @@ namespace Bam.Net.Application
     {
         public DaemonProcess()
         {
+            _arguments = string.Empty;
             WorkingDirectory = "./";
             StandardOutSoFar = string.Empty;
             StandardErrorSoFar = string.Empty;
             StandardOut += (o, a) =>
             {
                 DaemonProcessEventArgs args = (DaemonProcessEventArgs)a;
-                StandardOutSoFar += $"\r\n{args.Message}";
+                StandardOutSoFar += $"\r\n{args.ConsoleMessage}";
                 StandardOutLineCount++;
             };
 
             ErrorOut += (o, a) =>
             {
                 DaemonProcessEventArgs args = (DaemonProcessEventArgs)a;
-                StandardErrorSoFar += $"\r\n{args.Message}";
+                StandardErrorSoFar += $"\r\n{args.ConsoleMessage}";
                 ErrorOutLineCount++;
             };
         }
@@ -42,29 +45,121 @@ namespace Bam.Net.Application
             }
         }
 
-        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "StandardOut: {Message}")]
+        public DaemonProcess(string command, params string[] args) : this()
+        {
+            FileName = command;
+            ArgumentsArray = args;
+        }
+
+        public static FileInfo DefaultConfig
+        {
+            get
+            {
+                string configRoot = Path.Combine(ServiceConfig.ContentRoot, "conf");
+                string fileName = $"{nameof(DaemonProcess).Pluralize()}.json";
+                return new FileInfo(Path.Combine(configRoot, fileName));
+            }
+        }
+
+        public static void SaveDefaultConfig(BamConf bamConf)
+        {
+            ForBamConf(bamConf).ToArray().ToJson(true).SafeWriteToFile(DefaultConfig.FullName, true);
+        }
+        
+        public static DaemonProcess[] FromDefaultConfig()
+        {
+            return DefaultConfig.FullName.FromJsonFile<DaemonProcess[]>() ?? new DaemonProcess[] { };
+        }
+
+        public static DaemonProcess[] FromBamConf(BamConf bamConf)
+        {
+            SaveDefaultConfig(bamConf);
+            return ForBamConf(bamConf).ToArray();
+        }
+        
+        public static IEnumerable<DaemonProcess> ForBamConf(BamConf bamConf)
+        {
+            Args.ThrowIfNull(bamConf, "bamConf");
+
+            yield return ForDefaultServerConf();
+
+            foreach (DaemonProcess externallyServedApp in ForExternallyServedApps(bamConf))
+            {
+                yield return externallyServedApp;
+            }
+        }
+
+        public static DaemonProcess ForDefaultServerConf()
+        {
+            return AppServerConf.Default.ToDaemonProcess(Path.Combine(BamPaths.CurrentRuntimeToolkitPath, "bamweb"));
+        }
+        
+        public static DaemonProcess[] ForExternallyServedApps(BamConf bamConf)
+        {
+            Args.ThrowIfNull(bamConf, "bamConf");
+
+            return bamConf.AppsServedExternally.Select(ToServe).ToArray();
+        }
+        
+        /// <summary>
+        /// Return a DaemonProcess configured to mirror the ServerConf section of the specified AppConf.
+        /// </summary>
+        /// <param name="appConf"></param>
+        /// <returns></returns>
+        public static DaemonProcess ToServe(AppConf appConf)
+        {
+            Args.ThrowIfNull(appConf.ServerConf, "appConf.ServerConf");
+            
+            AppServerConf serverConf = appConf.ServerConf;
+            return new DaemonProcess(serverConf.Command, serverConf.Arguments)
+            {
+                WorkingDirectory = appConf.AppRoot.Root
+            };
+        }
+        
+        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "StandardOut: {ConsoleMessage}")]
         public event EventHandler StandardOut;
 
-        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "ErrorOut: {Message}")]
+        [Verbosity(VerbosityLevel.Information, SenderMessageFormat = "ErrorOut: {ConsoleMessage}")]
         public event EventHandler ErrorOut;        
 
         string _name;
         public string Name
         {
-            get
-            {
-                return _name ?? FileName;
-            }
-            set
-            {
-                _name = value;
-            }
+            get => _name ?? FileName;
+            set => _name = value;
         }
 
         public string FileName { get; set; }
-        public string Arguments { get; set; }
+
+        private string _arguments;
+
+        public string Arguments
+        {
+            get => _arguments;
+            set
+            {
+                _arguments = value;
+                ArgumentsArray = _arguments.DelimitSplit(" ");
+            }
+        }
         public string WorkingDirectory { get; set; }
 
+        private string[] _argumentsArray;
+        protected string[] ArgumentsArray
+        {
+            get => _argumentsArray;
+            set
+            {
+                _argumentsArray = value;
+                string argsTemp = string.Join(' ',_argumentsArray.Select(arg => arg.Contains(" ") ? $"\"{arg}\"" : arg).ToArray());
+                if (!_arguments.Equals(argsTemp))
+                {
+                    _arguments = argsTemp;
+                }
+            }
+        }
+        
         [JsonIgnore]
         public ProcessOutput ProcessOutput { get; set; }
 
@@ -88,13 +183,13 @@ namespace Bam.Net.Application
                 Log.AddEntry("Starting {0} working directory: {1}", FileName, WorkingDirectory);
                 startInfo.RedirectStandardOutput = true;
                 startInfo.RedirectStandardError = true;
-                ProcessOutputCollector collector = new ProcessOutputCollector((data) => FireEvent(StandardOut, new DaemonProcessEventArgs { DaemonProcess = this, Message = data }), (error) => FireEvent(ErrorOut, new DaemonProcessEventArgs { DaemonProcess = this, Message = error }));
+                ProcessOutputCollector collector = new ProcessOutputCollector((data) => FireEvent(StandardOut, new DaemonProcessEventArgs { DaemonProcess = this, ConsoleMessage = data }), (error) => FireEvent(ErrorOut, new DaemonProcessEventArgs { DaemonProcess = this, ConsoleMessage = error }));
                 ProcessOutput = startInfo.Run(ExitHandler, collector);
                 return ProcessOutput;
             }
             catch (Exception ex)
             {
-                FireEvent(ErrorOut, new DaemonProcessEventArgs { DaemonProcess = this, Message = ex.Message });
+                FireEvent(ErrorOut, new DaemonProcessEventArgs { DaemonProcess = this, ConsoleMessage = ex.Message });
                 return null;
             }
         }

@@ -10,6 +10,6 @@ namespace Bam.Net.Application
     public class DaemonProcessEventArgs: EventArgs
     {
         public DaemonProcess DaemonProcess { get; set; }
-        public string Message { get; set; }
+        public string ConsoleMessage { get; set; }
     }
 }

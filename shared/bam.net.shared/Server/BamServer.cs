@@ -159,7 +159,7 @@ namespace Bam.Net.Server
         /// </summary>
         public event Action<BamServer> Stopped;        
 
-        private string ServerWorkspace { get { return Path.Combine("common", "workspace"); } }
+        private string ServerWorkspace => Path.Combine("common", "workspace");
 
         protected void BindEventListeners(BamConf conf)
         {
@@ -483,10 +483,7 @@ namespace Bam.Net.Server
             }
             set
             {
-                if (_logger != null)
-                {
-                    _logger.StopLoggingThread();
-                }
+                _logger?.StopLoggingThread();
 
                 _logger = value;
                 _logger.RestartLoggingThread();
@@ -718,18 +715,12 @@ namespace Bam.Net.Server
 
         public void SubscribeToResponded(ResponderEventHandler subscriber)
         {
-            Responders.Each(r =>
-            {
-                r.Responded += subscriber;
-            });
+            Responders.Each(r => r.Responded += subscriber);
         }
 
         public void SubscribeToNotResponded(ResponderEventHandler subscriber)
         {
-            Responders.Each(r =>
-            {
-                r.NotResponded += subscriber;
-            });
+            Responders.Each(r => r.NotResponded += subscriber);
         }
         
         public void Start()
@@ -991,10 +982,7 @@ namespace Bam.Net.Server
 
         public Task HandleRequestAsync(IHttpContext context)
         {
-            return Task.Run(() =>
-            {
-                HandleRequest(context);
-            });
+            return Task.Run(() => HandleRequest(context));
         }
 
         public void HandleRequest(IHttpContext context)
