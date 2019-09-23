@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using Bam.Net.Analytics;
 using Bam.Net.CommandLine;
 using Bam.Net.Configuration;
+using Bam.Net.CoreServices.AssemblyManagement;
 using Bam.Net.Data.Schema;
 using Bam.Net.Logging;
 using Bam.Net.Services;

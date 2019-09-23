@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Bam.Net.CoreServices.AssemblyManagement;
+using Bam.Net.Services;
 using Bam.Net.Testing;
 using GraphQL;
 using Newtonsoft.Json;
@@ -21,6 +23,9 @@ namespace Bam.Net.Data.Repositories.Handlebars
             TypeSchemaGenerator = typeSchemaGenerator;
             WrapperGenerator = new HandlebarsWrapperGenerator(WrapperNamespace, DaoNamespace);
         }
+
+        [Inject]
+        public IReferenceAssemblyResolver ReferenceAssemblyResolver { get; set; }
 
         protected internal override bool GenerateDaoAssembly(TypeSchema typeSchema, out CompilationException compilationEx)
         {
@@ -67,17 +72,20 @@ namespace Bam.Net.Data.Repositories.Handlebars
 
         protected override HashSet<string> GetDefaultReferenceAssemblies()
         {
-            return new HashSet<string>()
+            IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
+            
+            HashSet<string> result = new HashSet<string>()
             {
                 typeof(JsonConvert).Assembly.GetFilePath(),
                 typeof(MarshalByValueComponent).Assembly.GetFilePath(),
                 typeof(System.Linq.Enumerable).Assembly.GetFilePath(),
                 typeof(System.Object).Assembly.GetFilePath(),
-                Path.Combine(Path.Combine(BamPaths.ReferenceRuntimeSegments), "System.Collections.dll"),
-                Path.Combine(Path.Combine(BamPaths.ReferenceRuntimeSegments), "netstandard.dll"),
+                referenceAssemblyResolver.ResolveReferenceAssemblyPath("System.Collections.dll"),
+                referenceAssemblyResolver.ResolveReferenceAssemblyPath("netstandard.dll"),
                 typeof(Attribute).Assembly.GetFilePath(),
-                BamPaths.SystemRuntime
+                referenceAssemblyResolver.ResolveSystemRuntimePath()
             };
+            return result;
         }
 
         private byte[] Compile(string assemblyNameToCreate, string sourcePath)

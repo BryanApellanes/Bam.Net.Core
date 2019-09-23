@@ -48,4 +48,8 @@
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.data.repositories.core.tests.application" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+  </ItemGroup>
+
 </Project>

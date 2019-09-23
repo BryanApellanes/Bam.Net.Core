@@ -23,6 +23,13 @@ namespace Bam.Net
             CommandLine = Environment.CommandLine;
         }
 
+        private static ProcessInfo _current;
+        static readonly object _currentLock = new object();
+        public static ProcessInfo Current
+        {
+            get { return _currentLock.DoubleCheckLock(ref _current, () => new ProcessInfo()); }
+        }
+        
         public string MachineName { get; set; }
         public int ProcessId { get; set; }
         public DateTime StartTime { get; set; }
