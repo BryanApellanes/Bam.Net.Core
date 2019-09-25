@@ -1,15 +1,20 @@
 ﻿using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Bam.Net
 {
     public class RoslynCompilationException: Exception
     {
-        public RoslynCompilationException(IEnumerable<Diagnostic> diagnostics) : base($"Compilation exception: {GetMessage(diagnostics)}")
-        { }
+        public RoslynCompilationException(IEnumerable<Diagnostic> diagnostics) : base($"Compilation exception::\r\n{GetMessage(diagnostics)}")
+        {
+            Diagnostics = diagnostics.ToArray();
+        }
 
+        public Diagnostic[] Diagnostics { get; }
+        
         internal static string GetMessage(IEnumerable<Diagnostic> diagnostics)
         {
             StringBuilder builder = new StringBuilder();
@@ -22,8 +27,8 @@ namespace Bam.Net
 
         internal static string GetMessage(Diagnostic diagnostic)
         {
-            return $"{diagnostic.Descriptor?.Title ?? "[no title]" }::{diagnostic.ToString() ?? "[no description]"}::";
+            return diagnostic.ToString();
         }
-
+        
     }
 }

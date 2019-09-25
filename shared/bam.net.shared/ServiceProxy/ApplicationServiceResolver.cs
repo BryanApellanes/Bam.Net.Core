@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Bam.Net.Logging;
 using Bam.Net.Server;
 
 namespace Bam.Net.ServiceProxy
@@ -10,11 +11,14 @@ namespace Bam.Net.ServiceProxy
     /// <summary>
     /// Responsible for resolving paths where proxyable services are found for an application .
     /// </summary>
-    public class AppServiceResolver : IAppServiceResolver
+    public class ApplicationServiceResolver : Loggable, IApplicationServiceResolver
     {
         private const string ServicesRelativePath = "~/services";
 
-        public AppServiceAssembly CompileAppServices(AppConf appConf)
+        [Verbosity(VerbosityLevel.Error)]
+        public event EventHandler CompilationException;
+        
+        public ApplicationServiceAssembly CompileAppServices(AppConf appConf)
         {
             DirectoryInfo sourceDir = GetAppServicesSourceDirectory(appConf);
             if (sourceDir.Exists)
@@ -26,11 +30,20 @@ namespace Bam.Net.ServiceProxy
                     compiler.AddResolvedAssemblyReference(referenceAssembly);
                 }
                 string assemblyName = $"{appConf.Name}.services";
-                return new AppServiceAssembly()
+
+                try
                 {
-                    AssemblyData = compiler.Compile(assemblyName, sourceDir.GetFiles("*.cs", SearchOption.AllDirectories)),
-                    Name = assemblyName
-                };
+                    return new ApplicationServiceAssembly()
+                    {
+                        AppConf = appConf,
+                        AssemblyData = compiler.Compile(assemblyName, sourceDir.GetFiles("*.cs", SearchOption.AllDirectories)),
+                        Name = assemblyName
+                    };
+                }
+                catch (RoslynCompilationException rce)
+                {
+                    FireEvent(CompilationException, new RoslynCompilationExceptionEventArgs(appConf, rce));
+                }
             }
 
             return null;

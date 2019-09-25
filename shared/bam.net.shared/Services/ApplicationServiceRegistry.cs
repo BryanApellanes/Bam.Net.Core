@@ -98,6 +98,12 @@ namespace Bam.Net.Services
         [ServiceRegistryLoader]
         public static ApplicationServiceRegistry Configure(AppConf appConf, Action<ApplicationServiceRegistry> configure, bool setConfigurer = true)
         {
+            IApplicationNameProvider applicationNameProvider = new DefaultConfigurationApplicationNameProvider();
+            if (appConf != null)
+            {
+                applicationNameProvider = appConf;
+            }
+            
             if (setConfigurer && Configurer != configure)
             {
                 Configurer = configure;
@@ -108,7 +114,7 @@ namespace Bam.Net.Services
                 .For<ApplicationServiceRegistry>().Use(appRegistry)
                 .For<AppConf>().Use(appConf)
                 .For<IRepositoryResolver>().Use<DefaultRepositoryResolver>()
-                .For<IApplicationNameProvider>().Use<DefaultConfigurationApplicationNameProvider>()
+                .For<IApplicationNameProvider>().Use(applicationNameProvider)
                 .For<IIncludesResolver>().Use<IncludesResolver>()
                 .For<IViewModelProvider>().Use<DefaultViewModelProvider>()
                 .For<IPersistenceModelProvider>().Use<DefaultPersistenceModelProvider>()
@@ -118,6 +124,7 @@ namespace Bam.Net.Services
             configure(appRegistry);
             appRegistry.CoreClient = appRegistry.Get<CoreClient>();
             Current = appRegistry;
+            SetAppRegistry(applicationNameProvider.GetApplicationName(), appRegistry);
             return appRegistry;
         }
 
@@ -140,6 +147,22 @@ namespace Bam.Net.Services
             catch (Exception ex)
             {
                 Log.Warn("Exception loading file for service discovery {0}: {1}", ex, file.FullName, ex.Message);
+            }
+        }
+
+        private static readonly object _lockAppRegistry = new object();
+        private static void SetAppRegistry(string applicationName, ApplicationServiceRegistry applicationServiceRegistry)
+        {
+            lock (_lockAppRegistry)
+            {
+                if (_appRegistries.ContainsKey(applicationName))
+                {
+                    _appRegistries[applicationName] = applicationServiceRegistry;
+                }
+                else
+                {
+                    _appRegistries.Add(applicationName, applicationServiceRegistry);
+                }
             }
         }
     }

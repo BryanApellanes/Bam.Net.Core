@@ -18,10 +18,14 @@ namespace Bam.Net.Presentation
     [Singleton]
     public class ApplicationModel
     {
-        public ApplicationModel(AppConf appConf)
+        public ApplicationModel(AppConf appConf): this(appConf, ApplicationServiceRegistry.Current)
+        {            
+        }
+        
+        public ApplicationModel(AppConf appConf, ApplicationServiceRegistry applicationServiceRegistry)
         {
             AppConf = appConf;
-            ApplicationServiceRegistry = ApplicationServiceRegistry.Current;
+            ApplicationServiceRegistry = applicationServiceRegistry;
             Log = ApplicationServiceRegistry.Get<ILog>();
             ApplicationServiceRegistry.Get("Startup", out Type startupType);
             if(startupType != null)
@@ -29,7 +33,7 @@ namespace Bam.Net.Presentation
                 ApplicationNameSpace = startupType.Namespace;
             }
             WebServiceRegistry = ApplicationServiceRegistry.Get<WebServiceRegistry>();
-            ApplicationName = ApplicationServiceRegistry.Get<IApplicationNameProvider>().GetApplicationName();
+            ApplicationName = appConf.Name;
             ApplicationServiceRegistry.SetInjectionProperties(this);
             RepositoryProviderResolver = ApplicationServiceRegistry.Get<IRepositoryResolver>();
             ApplicationNameProvider = new StaticApplicationNameProvider(appConf.Name);

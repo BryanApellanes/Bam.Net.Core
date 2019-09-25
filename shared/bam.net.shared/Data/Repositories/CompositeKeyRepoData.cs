@@ -32,10 +32,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _compositeKeyProperties;
             }
-            set
-            {
-                _compositeKeyProperties = value;
-            }
+            set => _compositeKeyProperties = value;
         }
         
         public override string ToString()

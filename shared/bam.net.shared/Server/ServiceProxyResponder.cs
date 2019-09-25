@@ -47,7 +47,7 @@ namespace Bam.Net.Server
             _clientProxyGenerators = new Dictionary<string, IClientProxyGenerator>();
             RendererFactory = new WebRendererFactory(logger);
             ExecutionRequestResolver = new ExecutionRequestResolver();
-            AppServiceResolver = new AppServiceResolver();
+            ApplicationServiceResolver = new ApplicationServiceResolver();
             ApplicationServiceRegistryResolver = new ApplicationServiceRegistryResolver();
             ServiceCompilationExceptionReporter = new ServiceCompilationExceptionReporter();
 
@@ -76,62 +76,63 @@ namespace Bam.Net.Server
                 AppSecureChannels[appName].ServiceProvider.Set(type, instance, false);
             };
         }
+
+        protected virtual void HandleCompilationException(object sender, RoslynCompilationExceptionEventArgs args)
+        {
+            AppConf appConf = args.AppConf;
+            CompilationExceptionInfo info = new CompilationExceptionInfo(args.Exception);
+            DirectoryInfo sourceDirectory = ApplicationServiceResolver.GetAppServicesSourceDirectory(appConf);
+            FileInfo svcCompilationErrors = new FileInfo(Path.Combine(sourceDirectory.FullName, "_logs", $"CompilationErrors-{info.ProcessInfo.ProcessId}.txt"));
+            if (!svcCompilationErrors.Directory.Exists)
+            {
+                svcCompilationErrors.Directory.Create();
+            }
+            info.ToYaml().SafeWriteToFile(svcCompilationErrors.FullName);
+        }
         
         [Inject]
         public IExecutionRequestResolver ExecutionRequestResolver { get; set; }
-        
+
+        private IApplicationServiceResolver _applicationServiceResolver;
         [Inject]
-        public IAppServiceResolver AppServiceResolver { get; set; }
-        
+        public IApplicationServiceResolver ApplicationServiceResolver
+        {
+            get => _applicationServiceResolver;
+            set
+            {
+                _applicationServiceResolver = value;
+                _applicationServiceResolver.SubscribeOnce( nameof(_applicationServiceResolver.CompilationException),(o, a) => HandleCompilationException(o, (RoslynCompilationExceptionEventArgs) a));
+            }
+        }
+
         [Inject]
         public IApplicationServiceRegistryResolver ApplicationServiceRegistryResolver { get; set; }
         
         [Inject]
         public IServiceCompilationExceptionReporter ServiceCompilationExceptionReporter { get; set; }
 
+        [Verbosity(VerbosityLevel.Error)]
+        public event EventHandler CompilationException;
+        
         public ContentResponder ContentResponder { get; set; }
-
+        
         Incubator _commonServiceProvider;
         /// <summary>
         /// Services available to all applications
         /// </summary>
-        public Incubator CommonServiceProvider
-        {
-            get
-            {
-                return _commonServiceProvider;
-            }
-        }
+        public Incubator CommonServiceProvider => _commonServiceProvider;
 
         SecureChannel _commonSecureChannel;
-        public SecureChannel CommonSecureChannel
-        {
-            get
-            {
-                return _commonSecureChannel;
-            }
-        }
+        public SecureChannel CommonSecureChannel => _commonSecureChannel;
 
         Dictionary<string, Incubator> _appServiceProviders;
         /// <summary>
         /// Incubators keyed by application name
         /// </summary>
-        public Dictionary<string, Incubator> AppServiceProviders
-        {
-            get
-            {
-                return _appServiceProviders;
-            }
-        }
+        public Dictionary<string, Incubator> AppServiceProviders => _appServiceProviders;
 
         Dictionary<string, SecureChannel> _appSecureChannels;
-        public Dictionary<string, SecureChannel> AppSecureChannels
-        {
-            get
-            {
-                return _appSecureChannels;
-            }
-        }
+        public Dictionary<string, SecureChannel> AppSecureChannels => _appSecureChannels;
 
         public void SetCommonWebServices(WebServiceRegistry webServiceRegistry)
         {
@@ -387,13 +388,13 @@ namespace Bam.Net.Server
         {
             BamConf.AppsToServe.Each(appConf =>
             {
-                AppServiceAssembly appServiceAssembly = null;
+                ApplicationServiceAssembly applicationServiceAssembly = null;
                 try
                 {
-                    appServiceAssembly = AppServiceResolver.CompileAppServices(appConf);
-                    if (appServiceAssembly != null)
+                    applicationServiceAssembly = ApplicationServiceResolver.CompileAppServices(appConf);
+                    if (applicationServiceAssembly != null)
                     {
-                        DirectoryInfo binDir = AppServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                        DirectoryInfo binDir = ApplicationServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
                         if (!binDir.Exists)
                         {
                             binDir.Create();
@@ -404,20 +405,19 @@ namespace Bam.Net.Server
                         {
                             File.Delete(serviceAssemblyFile);
                         }
-                        File.WriteAllBytes(serviceAssemblyFile, appServiceAssembly);
+                        File.WriteAllBytes(serviceAssemblyFile, applicationServiceAssembly);
                     }
 
-                    FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {AppServiceAssembly = appServiceAssembly, AppConf = appConf});
+                    FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {ApplicationServiceAssembly = applicationServiceAssembly, AppConf = appConf});
                 }
                 catch (Exception ex)
                 {
                     Logger.Error("Error compiling application services for ({0}): {1}", appConf.Name, ex.Message);
-                    FireEvent(ServiceCompilationException, this, new ServiceCompilationEventArgs{Exception = ex, AppServiceAssembly = appServiceAssembly, AppConf = appConf});
+                    FireEvent(ServiceCompilationException, this, new ServiceCompilationEventArgs{Exception = ex, ApplicationServiceAssembly = applicationServiceAssembly, AppConf = appConf});
                 }
             });
         }
 
-        // TODO: move this method to AppContentResponder and call from its Initialize()
         /// <summary>
         /// For All BamConf.AppsToServe, call the Startup.Execute(AppConf) method in parallel.
         /// </summary>
@@ -425,7 +425,7 @@ namespace Bam.Net.Server
         {
             Parallel.ForEach(BamConf.AppsToServe, (appConf) =>
             { 
-                FileInfo appServiceAssemblyFile = AppServiceResolver.GetAppServicesAssemblyFile(appConf);
+                FileInfo appServiceAssemblyFile = ApplicationServiceResolver.GetAppServicesAssemblyFile(appConf);
                 if (appServiceAssemblyFile.Exists)
                 {
                     Assembly appServiceAssembly = Assembly.LoadFile(appServiceAssemblyFile.FullName);
@@ -479,7 +479,7 @@ namespace Bam.Net.Server
                 serviceContainer.For<AppConf>().Use(appConf);
                 AppServiceProviders[name] = serviceContainer;
 
-                DirectoryInfo appServicesDir = AppServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                DirectoryInfo appServicesDir = ApplicationServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
                 if (appServicesDir.Exists)
                 {
                     Action<Type> serviceAdder = (type) =>
@@ -558,7 +558,7 @@ namespace Bam.Net.Server
 
         private void ForEachProxiedClass(string searchPattern, DirectoryInfo serviceDir, Action<Type> doForEachProxiedType)
         {
-            Bam.Net.ServiceProxy.AppServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
+            Bam.Net.ServiceProxy.ApplicationServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
         }
         
         public override bool TryRespond(IHttpContext context)

@@ -97,7 +97,7 @@ namespace Bam.Net
         
         public byte[] Compile(string assemblyFileName, params FileInfo[] sourceFiles)
         {
-            return Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText())).ToArray());
+            return Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText(), CSharpParseOptions.Default, f.FullName)).ToArray());
         }
 
         public Assembly CompileAssembly(string assemblyName, string sourceCode)
