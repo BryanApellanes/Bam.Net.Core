@@ -8,10 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Bam.Net.ServiceProxy.Secure;
 
 namespace Bam.Net.Application
 {
     [Serializable]
+    [ApiKeyRequired]
     [Proxy("processMonitor")]
     public class DaemonProcessMonitorService : ProxyableService
     {
@@ -21,6 +23,12 @@ namespace Bam.Net.Application
             Logger = logger;
         }
 
+        private readonly FileInfo _daemonProcessConfig;
+        public DaemonProcessMonitorService(ILogger logger, FileInfo daemonProcessConfig): this(logger)
+        {
+            _daemonProcessConfig = daemonProcessConfig;
+        }
+        
         public override object Clone()
         {
             DaemonProcessMonitorService clone = new DaemonProcessMonitorService(Logger);
@@ -28,28 +36,42 @@ namespace Bam.Net.Application
             clone.CopyEventHandlers(this);
             return clone;
         }
-
+        
         public void Start()
         {
-            string configRoot = Path.Combine(ServiceConfig.ContentRoot, "conf");
-            string fileName = $"{nameof(DaemonProcess).Pluralize()}.json";
-            ConfigFile = new FileInfo(Path.Combine(configRoot, fileName));
+            ConfigFile = GetDaemonProcessConfigFilePath();
             if (!ConfigFile.Exists)
             {
-                Logger.AddEntry("{0} not found: {1}", fileName, ConfigFile.FullName);
+                Logger.AddEntry("{0} not found: {1}", ConfigFile.Name, ConfigFile.FullName);
             }
             else
             {
-                Processes = ConfigFile.FullName.FromJsonFile<DaemonProcess[]>() ?? new DaemonProcess[] { };
-                Expect.IsNotNull(Processes, $"No processes defined in {fileName}");
-                Logger.AddEntry("{0} processes in {1}", Processes.Length.ToString(), fileName);
-                Parallel.ForEach(Processes, (process) =>
-                {
-                    StartProcess(process);
-                });
-            }            
+                Start(ConfigFile);
+            }
         }
 
+        public void Start(FileInfo configFile)
+        {
+            Processes = configFile.FullName.FromJsonFile<DaemonProcess[]>() ?? new DaemonProcess[] { };
+            Expect.IsNotNull(Processes, $"No processes defined in {configFile.Name}");
+            Logger.AddEntry("{0} processes in {1}", Processes.Length.ToString(), configFile.Name);
+            Parallel.ForEach(Processes, StartProcess);
+        }
+
+        public static DaemonProcessMonitorService For(BamConf bamConf, ILogger logger = null)
+        {
+            logger = logger ?? bamConf.GetMainLogger(out Type ignore);
+            DaemonProcess.SaveDefaultConfig(bamConf);
+            return Start(logger, DaemonProcess.DefaultConfig);
+        }
+        
+        public static DaemonProcessMonitorService Start(ILogger logger, FileInfo daemonProcessConfigFile)
+        {
+            DaemonProcessMonitorService svc = new DaemonProcessMonitorService(logger, daemonProcessConfigFile);
+            svc.Start();
+            return svc;
+        }
+        
         public void Stop()
         {
             Parallel.ForEach(_monitors.Keys, (key) =>
@@ -111,18 +133,11 @@ namespace Bam.Net.Application
             }
         }
 
-        public List<DaemonProcessMonitor> MonitoredProcesses
-        {
-            get
-            {
-                return _monitors.Values?.ToList() ?? new List<DaemonProcessMonitor>();
-            }
-        }
-
+        public List<DaemonProcessMonitor> MonitoredProcesses => _monitors.Values?.ToList() ?? new List<DaemonProcessMonitor>();
 
         public DaemonProcess[] Processes { get; set; }
 
-        Dictionary<string, DaemonProcessMonitor> _monitors;
+        readonly Dictionary<string, DaemonProcessMonitor> _monitors;
         private void StartProcess(DaemonProcess process)
         {
             try
@@ -136,6 +151,18 @@ namespace Bam.Net.Application
             {
                 Logger.AddEntry("Error starting process {0}: {1}", ex, process?.ToString(), ex.Message);
             }
+        }
+        
+        private FileInfo GetDaemonProcessConfigFilePath()
+        {
+            if (_daemonProcessConfig == null)
+            {
+                string configRoot = Path.Combine(ServiceConfig.ContentRoot, "conf");
+                string fileName = $"{nameof(DaemonProcess).Pluralize()}.json";
+                return new FileInfo(Path.Combine(configRoot, fileName));
+            }
+
+            return _daemonProcessConfig;
         }
     }
 }

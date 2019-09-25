@@ -12,13 +12,7 @@ namespace Bam.Net.CoreServices
     {
         protected ServiceRegistry ServiceRegistry { get; set; }
 
-        public ProcessDescriptor ProcessDescriptor
-        {
-            get
-            {
-                return ProcessDescriptor.Current;
-            }
-        }
+        public ProcessDescriptor ProcessDescriptor => ProcessDescriptor.Current;
 
         public string[] Assemblies
         {

@@ -7,7 +7,6 @@ using System.ComponentModel;
 
 namespace Bam.Net.Presentation.Html
 {
-    // TODO: this class contains some horrendous copy and paste code that should be cleaned up 
     // or replaced.
     /// <summary>
     /// Used to build input forms for specified 
@@ -34,14 +33,8 @@ namespace Bam.Net.Presentation.Html
 
         public Type InvocationType
         {
-            get
-            {
-                return this.invocationType;
-            }
-            set
-            {
-                this.invocationType = value;
-            }
+            get => this.invocationType;
+            set => this.invocationType = value;
         }
         
         Func<ParameterInfo, Tag> _numberTagProvider;
@@ -49,17 +42,9 @@ namespace Bam.Net.Presentation.Html
         {
             get
             {
-                if (_numberTagProvider == null)
-                {
-                    _numberTagProvider = (p) => InputProvider.CreateInput(InputTypes.Number, p);
-                }
-
-                return _numberTagProvider;
+                return _numberTagProvider ?? (_numberTagProvider = (p) => InputProvider.CreateInput(InputTypes.Number, p));
             }
-            set
-            {
-                _numberTagProvider = value;
-            }
+            set => _numberTagProvider = value;
         }
 
         Func<ParameterInfo, Tag> _textTagProvider;
@@ -67,17 +52,9 @@ namespace Bam.Net.Presentation.Html
         {
             get
             {
-                if (_textTagProvider == null)
-                {
-                    _textTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Text, pi);
-                }
-
-                return _textTagProvider;
+                return _textTagProvider ?? (_textTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Text, pi));
             }
-            set
-            {
-                _textTagProvider = value;
-            }
+            set => _textTagProvider = value;
         }
 
         Func<ParameterInfo, Tag> _dateTimeTagProvider;
@@ -85,18 +62,11 @@ namespace Bam.Net.Presentation.Html
         {
             get
             {
-                if (_dateTimeTagProvider == null)
-                {
-                    _dateTimeTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Text, pi)
-                        .DataSet("plugin", "datepicker");
-                }
-                
-                return _dateTimeTagProvider;
+                return _dateTimeTagProvider ?? (_dateTimeTagProvider = (pi) => InputProvider
+                           .CreateInput(InputTypes.Text, pi)
+                           .DataSet("plugin", "datepicker"));
             }
-            set
-            {
-                _dateTimeTagProvider = value;
-            }
+            set => _dateTimeTagProvider = value;
         }
 
         Func<ParameterInfo, Tag> _booleanTagProvider;
@@ -104,18 +74,10 @@ namespace Bam.Net.Presentation.Html
         {
             get
             {
-                if (_booleanTagProvider == null)
-                {
-                    _booleanTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Checkbox, pi);
-                }
-
-                return _booleanTagProvider;
+                return _booleanTagProvider ?? (_booleanTagProvider = (pi) => InputProvider.CreateInput(InputTypes.Checkbox, pi));
             }
 
-            set
-            {
-                _booleanTagProvider = value;
-            }
+            set => _booleanTagProvider = value;
         }
 
         public string LabelCssClass
@@ -137,10 +99,7 @@ namespace Bam.Net.Presentation.Html
         ParameterLayouts layout;
         public ParameterLayouts Layout
         {
-            get
-            {
-                return layout;
-            }
+            get => layout;
             set
             {
                 if (value == ParameterLayouts.BreakAfterLabels)
@@ -388,20 +347,9 @@ namespace Bam.Net.Presentation.Html
         {
             get
             {
-                if (_propertyInclusionPredicate == null)
-                {
-                    _propertyInclusionPredicate = (p) =>
-                    {
-                        return !p.HasCustomAttributeOfType<ExcludeAttribute>();
-                    };
-                }
-
-                return _propertyInclusionPredicate;
+                return _propertyInclusionPredicate ?? (_propertyInclusionPredicate = (p) => !p.HasCustomAttributeOfType<ExcludeAttribute>());
             }
-            set
-            {
-                _propertyInclusionPredicate = value;
-            }
+            set => _propertyInclusionPredicate = value;
         }
 
         /// <summary>
@@ -529,7 +477,6 @@ namespace Bam.Net.Presentation.Html
             AppendInputsFor(paramType, defaultValues, container, 0);
         }
 
-        // TODO: this code is horrendous; should be cleaned up or deleted
         internal protected void AppendInputsFor(Type paramType, object defaultValues, Tag container, int recursionThusFar)
         {
             List<PropertyInfo> properties = new List<PropertyInfo>(paramType.GetProperties());

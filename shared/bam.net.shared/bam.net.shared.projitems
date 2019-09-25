@@ -451,7 +451,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ProcessOutputEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompilationException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CompilationExceptionInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConfigChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\CompositeConfigurationProvider.cs" />
@@ -601,7 +600,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\RazorPageModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\RenderableData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\ViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRendererManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppServerConf.cs" />
@@ -610,18 +608,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RendererResolvedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\FileExtensionPageRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\HandlebarsPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ServerKinds.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ApplicationServiceRegistryResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ApplicationServiceAssembly.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\AppServiceAssembly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IApplicationServiceRegistryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IServiceCompilationExceptionReporter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\JsWebServiceProxyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ServiceCompilationEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ApplicationServiceResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\AppServiceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IContextCloneable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IApplicationServiceResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\IAppServiceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceProxy\ServiceCompilationExceptionReporter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\CatalogRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\CatalogService.cs" />

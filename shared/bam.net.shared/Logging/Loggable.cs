@@ -78,7 +78,7 @@ namespace Bam.Net.Logging
         /// as an EventHandler.  This method 
         /// will also take into account the 
         /// current value of LogVerbosity if
-        /// the events found are addorned with the 
+        /// the events found are adorned with the 
         /// Verbosity attribute
         /// </summary>
         /// <param name="logger"></param>
@@ -105,7 +105,7 @@ namespace Bam.Net.Logging
 
                         if (shouldSubscribe)
                         {
-                            if (eventInfo.EventHandlerType.Equals(typeof(EventHandler)))
+                            if (eventInfo.EventHandlerType == typeof(EventHandler))
                             {
                                 eventInfo.AddEventHandler(this, (EventHandler)((s, a) =>
                                 {
@@ -116,21 +116,15 @@ namespace Bam.Net.Logging
                                     }
                                     else
                                     {
-                                        string senderMessage = string.Empty;
-                                        string argsMessage = string.Empty;
+                                        string message = string.Empty;
                                         if (verbosity != null)
                                         {
-                                            verbosity.TryGetSenderMessage(s, out senderMessage);
-                                            verbosity.TryGetEventArgsMessage(a, out argsMessage);
+                                            message = verbosity.GetMessage(s, a);
                                         }
 
-                                        if (!string.IsNullOrEmpty(senderMessage))
+                                        if (!string.IsNullOrEmpty(message))
                                         {
-                                            logger.AddEntry(senderMessage, (int)logEventType);
-                                        }
-                                        else if (!string.IsNullOrEmpty(argsMessage))
-                                        {
-                                            logger.AddEntry(argsMessage, (int)logEventType);
+                                            logger.AddEntry(message, (int)logEventType);
                                         }
                                         else
                                         {

@@ -26,10 +26,7 @@ namespace Bam.Net.Logging
                 }
                 return _debug.Value;
             }
-            set
-            {
-                _debug = value;
-            }
+            set => _debug = value;
         }
 
         static bool? _trace;
@@ -43,28 +40,19 @@ namespace Bam.Net.Logging
                 }
                 return _trace.Value;
             }
-            set
-            {
-                _trace = value;
-            }
+            set => _trace = value;
         }
 
         static ILogger _defaultLogger;
-		static object _defaultLoggerLock = new object();
+		static readonly object _defaultLoggerLock = new object();
         /// <summary>
         /// Gets or sets the default logger.  Default is determined by the configuration 
         /// file.
         /// </summary>
         public static ILogger Default
         {
-            get
-            {
-				return _defaultLoggerLock.DoubleCheckLock(ref _defaultLogger, GetDefaultLogger);
-            }
-			set
-			{
-				_defaultLogger = value;				
-			}
+            get => _defaultLoggerLock.DoubleCheckLock(ref _defaultLogger, GetDefaultLogger);
+            set => _defaultLogger = value;
         }
 
         public static void WarnIf(bool condition, string messageSignature, params object[] args)

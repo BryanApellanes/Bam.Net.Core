@@ -7,7 +7,7 @@ using Lucene.Net.Support;
 
 namespace Bam.Net.Server
 {
-    public class AppPageRenderer : PageRenderer
+    public abstract class AppPageRenderer : PageRenderer
     {
         public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager) : base(appContentResponder, commonTemplateManager)
         {
@@ -26,29 +26,10 @@ namespace Bam.Net.Server
 
         public AppConf AppConf => AppContentResponder.AppConf;
 
-        public override byte[] RenderPage(IRequest request, IResponse response)
-        {
-            string path = request.Url.AbsolutePath;
-            string relativePath = Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}.html");
-            RouteInfo routeInfo = GetRouteInfo(request);
-            if (routeInfo.IsHomeRequest)
-            {
-                if (AppRoot.FileExists(relativePath, out string locatedPath))
-                {
-                    return AppContentResponder.GetContent(locatedPath, request, response);
-                }
-            }
-            else 
-            {
-                string absolutePath = AppRoot.GetAbsolutePath(relativePath);
-                if (File.Exists(absolutePath))
-                {
-                    return AppContentResponder.GetContent(absolutePath, request, response);
-                }
-            }
+        public string FileExtension { get; protected set; }
+        public int Order { get; set; }
 
-            return RenderNotFound(request, response);
-        }
+        public string DefaultFilePath => Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}{FileExtension}");
 
         public override byte[] RenderDefault(int statusCode, IRequest request, IResponse response)
         {
@@ -60,6 +41,36 @@ namespace Bam.Net.Server
             return DefaultRenderers.ContainsKey(statusCode) ? DefaultRenderers[statusCode](request, response) : new byte[]{};
         }
 
+        protected virtual PageModel CreatePageModel(IRequest request)
+        {
+            return new PageModel(request, AppContentResponder);
+        }
+        
+        /// <summary>
+        /// Determines if a file exists for the specified request with the extension of the current renderer.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        protected internal bool FileExists(IRequest request)
+        {
+            return GetRequestInfo(request).FileExists(AppConf);
+        }
+
+        protected bool FileExists(IRequest request, out string absolutePath)
+        {
+            return GetRequestInfo(request).FileExists(AppConf, out absolutePath);
+        }
+        
+        protected RequestInfo GetRequestInfo(IRequest request)
+        {
+            return new RequestInfo
+            {
+                RequestPath = request.Url.AbsolutePath,
+                RelativePath = Path.Combine("~/", AppConf.HtmlDir, $"{request.Url.AbsolutePath}.{FileExtension}"),
+                RouteInfo =  GetRouteInfo(request)
+            };
+        }
+        
         protected virtual void InitializeDefaultRenderers()
         {
             DefaultRenderers.Add(404, (request, response) =>
@@ -75,7 +86,7 @@ namespace Bam.Net.Server
             });
         }
         
-        private byte[] RenderNotFound(IRequest request, IResponse response)
+        protected byte[] RenderNotFound(IRequest request, IResponse response)
         {
             return RenderDefault(404, request, response);
         }

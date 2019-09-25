@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Crypto.Engines;
 
 namespace Bam.Net.Presentation
 {
+    public class ViewModel<AP> : ViewModel
+    {
+        public new AP ActionProvider { get; set; }
+    }
+    
     public class ViewModel
     {
         public string Name { get; set; }
@@ -21,5 +27,15 @@ namespace Bam.Net.Presentation
         /// The action provider.
         /// </value>
         public dynamic ActionProvider { get; set; }
+
+        public void Execute(string methodName)
+        {
+            Execute(methodName, State.ToArray());
+        }
+        
+        public void Execute(string methodName, params object[] args)
+        {
+            ActionProvider?.Invoke(methodName, args);
+        }
     }
 }

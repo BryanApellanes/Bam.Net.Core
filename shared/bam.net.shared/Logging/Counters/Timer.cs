@@ -33,19 +33,10 @@ namespace Bam.Net.Logging.Counters
                 }
                 return _duration;
             }
-            set
-            {
-                _duration = value;
-            }
+            set => _duration = value;
         }
         
-        public bool Ended
-        {
-            get
-            {
-                return EndTime != null;
-            }
-        }
+        public bool Ended => EndTime != null;
 
         public static int Time(Action action)
         {
@@ -68,7 +59,7 @@ namespace Bam.Net.Logging.Counters
         /// <summary>
         /// Ends this instance by setting the EndTime and Duration.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Duration in milliseconds</returns>
         public int End()
         {
             if(EndTime == null)

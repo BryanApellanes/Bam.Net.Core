@@ -49,6 +49,8 @@ namespace Bam.Net
             {OSNames.OSX, "osx-x64"}
         };
 
+        public static string CurrentRuntime => BuildRuntimeName;
+
         public static string ReferenceRuntime => _referenceRuntimeNames[Current];
 
         static readonly Dictionary<OSNames, string> _buildRuntimeNames = new Dictionary<OSNames, string>

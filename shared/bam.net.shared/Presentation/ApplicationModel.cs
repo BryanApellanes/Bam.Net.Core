@@ -41,6 +41,8 @@ namespace Bam.Net.Presentation
 
         protected IRepositoryResolver RepositoryProviderResolver { get; set; }
         protected IApplicationNameProvider ApplicationNameProvider { get; set; }
+        
+        public OrganizationModel OrganizationModel { get; }
         public AppConf AppConf { get; set; }
         public string ApplicationNameSpace { get; set; }
         public string ApplicationName { get; set; }

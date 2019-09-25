@@ -70,6 +70,9 @@ namespace Bam.Net
 
         public static string[] ToolkitSegments => new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
 
+        public static string CurrentRuntimeToolkitPath => Path.Combine(CurrentRuntimeToolkitSegments);
+        public static string[] CurrentRuntimeToolkitSegments => new List<string>(ToolkitSegments) {OSInfo.CurrentRuntime}.ToArray();
+        
         public static string NugetOutputPath => Path.Combine(NugetOutputSegments);
         
         public static string[] NugetOutputSegments => new List<string>() {UserHome, ".bam", "nupkg"}.ToArray();

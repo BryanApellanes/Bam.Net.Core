@@ -24,47 +24,39 @@ namespace Bam.Net.Application
     {
         static void Main(string[] args)
         {
+            Resolver.Register();
             TryWritePid(true);
-            
-                IsolateMethodCalls = false;
-                Resolver.Register();
-                AddConfigurationSwitches();
 
-                Initialize(args, (a) =>
-                {
-                    OutLineFormat("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
-                    Environment.Exit(1);
-                });
-                if (Arguments.Contains("singleProcess"))
-                {
-                    KillExistingProcess();
-                }
-                if (Arguments.Contains("i"))
-                {
-                    Interactive();
-                }            
+            IsolateMethodCalls = false;
+            AddValidArgument("conf", "Specify an alternate config file to use.  Should be a json file containing an array of DaemonProcess definitions.");
+            
+            ExecuteMain(args, (a) =>
+            {
+                OutLineFormat("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
+                Environment.Exit(1);
+            });
         }
 
-        [ConsoleAction("S", "Start default server")]
-        public static void StartDefaultServer()
+        [ConsoleAction("S", "Start bam daemon server")]
+        public static void StartDaemonServer()
         {
             DaemonService.Start();
-            Pause("Default server started");
+            Pause("Daemon server started");
         }
 
-        [ConsoleAction("K", "Stop (Kill) default server")]
-        public static void StopDefaultServer()
+        [ConsoleAction("K", "Stop (Kill) bam daemon server")]
+        public static void StopDaemonServer()
         {
             DaemonService.Stop();
-            Pause("Default server stopped");
+            Pause("Daemon server stopped");
         }
 
-        [ConsoleAction("R", "Restart default server")]
-        public static void RestartDefaultServer()
+        [ConsoleAction("R", "Restart bam daemon server")]
+        public static void RestartDaemonServer()
         {
             DaemonService.Stop();            
             DaemonService.Start();
-            Pause("Default server re-started");
+            Pause("Daemon server re-started");
         }
     }
 }

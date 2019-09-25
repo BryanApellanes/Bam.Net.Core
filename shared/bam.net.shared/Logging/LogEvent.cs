@@ -23,50 +23,50 @@ namespace Bam.Net.Logging
 
         public string Source
         {
-            get { return this.source; }
-            set { this.source = value; }
+            get => this.source;
+            set => this.source = value;
         }
 
         public string Message
         {
-            get { return this.message; }
-            set { this.message = value; }
+            get => this.message;
+            set => this.message = value;
         }
 
         public string Computer
         {
-            get { return this.computer; }
-            set { this.computer = value; }
+            get => this.computer;
+            set => this.computer = value;
         }
 
         public LogEventType Severity
         {
-            get { return type; }
-            set { type = value; }
+            get => type;
+            set => type = value;
         }
         
         public string Category
         {
-            get { return this.category; }
-            set { this.category = value; }
+            get => this.category;
+            set => this.category = value;
         }
 
         public int EventID
         {
-            get { return this.eventid; }
-            set { this.eventid = value; }
+            get => this.eventid;
+            set => this.eventid = value;
         }
 
         public string User
         {
-            get { return this.user; }
-            set { this.user = value; }
+            get => this.user;
+            set => this.user = value;
         }
 
         public DateTime Time
         {
-            get { return this.timeOccurred; }
-            set { this.timeOccurred = value; }
+            get => this.timeOccurred;
+            set => this.timeOccurred = value;
         }
 
         public string MessageSignature { get; set; }

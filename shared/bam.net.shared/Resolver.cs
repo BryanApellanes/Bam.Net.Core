@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using Bam.Net.CoreServices;
+using Bam.Net.Logging;
 
 namespace Bam.Net
 {
@@ -16,8 +17,17 @@ namespace Bam.Net
         {
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
-                WriteLog($"Resolving assembly {args.Name}");
-                return Assembly.Load(ResolveAssembly(args));
+                try
+                {
+                    WriteLog($"Resolving assembly {args.Name}");
+                    return Assembly.Load(ResolveAssembly(args));
+                }
+                catch (Exception ex)
+                {
+                    WriteLog($"Exception resolving assembly ({args?.Name ?? "null"}): {ex.Message}");
+                }
+
+                return null;
             };
         }
         

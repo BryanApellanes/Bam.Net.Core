@@ -60,4 +60,8 @@
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamd.application" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
+  </ItemGroup>
+
 </Project>

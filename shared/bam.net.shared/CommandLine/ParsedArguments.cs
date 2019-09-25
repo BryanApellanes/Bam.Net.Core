@@ -17,7 +17,7 @@ namespace Bam.Net.CommandLine
 
     /// <summary>
     /// Class used to parse command line arguments.  All arguments are 
-    /// assumed to be in the format /&lt;name&gt;:&lt;value&gt; or an ArgumentException will be thrown 
+    /// assumed to be in the format /&lt;name&gt;:&lt;value&gt; or an ArgumentException is thrown 
     /// during parsing.
     /// </summary>
     public class ParsedArguments

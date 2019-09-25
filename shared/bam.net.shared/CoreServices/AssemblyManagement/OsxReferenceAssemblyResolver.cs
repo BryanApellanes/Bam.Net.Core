@@ -14,8 +14,8 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             RuntimeSettingsConfigReferenceAssemblyResolver = new RuntimeSettingsConfigReferenceAssemblyResolver();
         }
 
-        protected NugetReferenceAssemblyResolver NugetReferenceAssemblyResolver { get; set; }
-        protected RuntimeSettingsConfigReferenceAssemblyResolver RuntimeSettingsConfigReferenceAssemblyResolver { get; set; }
+        private NugetReferenceAssemblyResolver NugetReferenceAssemblyResolver { get; set; }
+        private RuntimeSettingsConfigReferenceAssemblyResolver RuntimeSettingsConfigReferenceAssemblyResolver { get; set; }
 
         public Assembly ResolveReferenceAssembly(Type type)
         {

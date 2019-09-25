@@ -1,5 +1,9 @@
 using System;
+using System.IO;
+using Bam.Net.Application;
 using Bam.Net.CoreServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Bam.Net.Server
 {
@@ -10,10 +14,24 @@ namespace Bam.Net.Server
             ServerKind = serverKind;
             Init();
         }
+
+        private static AppServerConf _default;
+        private static readonly object _defaultLock = new object();
+        public static AppServerConf Default
+        {
+            get { return _defaultLock.DoubleCheckLock(ref _default, () => new AppServerConf(ServerKinds.Bam)); }
+        }
+        
+        [JsonConverter(typeof(StringEnumConverter))]
         public ServerKinds ServerKind { get; set; }
         public string Command { get; set; }
         public string[] Arguments { get; set; }
 
+        public DaemonProcess ToDaemonProcess(string workingDirectory = "./")
+        {
+            return new DaemonProcess(Path.Combine(workingDirectory, Command), Arguments) {WorkingDirectory = workingDirectory};
+        }
+        
         private void Init()
         {
             switch (ServerKind)

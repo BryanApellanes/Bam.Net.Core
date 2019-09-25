@@ -10,14 +10,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Bam.Net.Presentation
 {
-    public class BamPageModel: Microsoft.AspNetCore.Mvc.RazorPages.PageModel
+    public class RazorPageModel: Microsoft.AspNetCore.Mvc.RazorPages.PageModel
     {
-        public BamPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel applicationModel) : 
+        public RazorPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel applicationModel) : 
             this(hostingEnvironment, applicationModel, "json", "yaml", "xml", "csv", "txt")
         {
         }
 
-        public BamPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel applicationModel, params string[] extensionsToLoad)
+        public RazorPageModel(IHostingEnvironment hostingEnvironment, ApplicationModel applicationModel, params string[] extensionsToLoad)
         {
             CoreClient = new CoreClient();
             ApplicationModel = applicationModel;
