@@ -381,9 +381,9 @@ namespace Bam.Net.Server
         {
             get
             {
-                HashSet<string> configured = new HashSet<string>(ProcessModes.Select(m => m.ToString()))
+                HashSet<ProcessModes> configured = new HashSet<ProcessModes>(ProcessModes.Select(m => m))
                 {
-                    ProcessMode.Current.Mode.ToString()
+                    ProcessMode.Current.Mode
                 };
                 ParsedArguments arguments = ParsedArguments.Current;
                 HashSet<String> apps = new HashSet<string>();

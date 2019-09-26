@@ -65,6 +65,11 @@ namespace Bam.Net.Presentation
 
         public Dictionary<string, FileInfo> CsvFiles => CsvDirectory?.GetFiles("*.csv", SearchOption.TopDirectoryOnly).ToDictionary(f => Path.GetFileNameWithoutExtension(f.Name));
 
+        public FileInfo[] GetDataFiles(string searchPattern = "*.*")
+        {
+            return DataDirectory?.GetFiles(searchPattern) ?? new FileInfo[] { };
+        }
+        
         /// <summary>
         /// Get a FileInfo instance for the specified path.  The file may not exist, check the Exists property.
         /// </summary>

@@ -43,7 +43,7 @@ namespace Bam.Net.Server
 			DefaultLayout = DefaultLayoutConst;
 			DefaultPage = DefaultPageConst;
 			ServiceSearchPattern = new string[] { "*Services.dll", "*Proxyables.dll" };
-            ProcessMode = ProcessModes.Dev.ToString();
+            ProcessMode = ProcessModes.Dev;
             ServerConf = new AppServerConf(ServerKinds.Bam);
             Name = ApplicationNameProvider.Default.GetApplicationName();
         }
@@ -144,10 +144,7 @@ namespace Bam.Net.Server
 
                 return _displayName;
             }
-            set 
-            {
-                _displayName = value;
-            }
+            set => _displayName = value;
         }
         
         public Workspace GetAppWorkspace()
@@ -163,14 +160,19 @@ namespace Bam.Net.Server
         [JsonIgnore]
         [XmlIgnore]
         [YamlIgnore]
-        public bool IsProd => ProcessMode.Equals("Prod");
+        public bool IsProd => ProcessMode == ProcessModes.Prod;
         
         [JsonIgnore]
         [XmlIgnore]
         [YamlIgnore]
-        public bool IsTest => ProcessMode.Equals("Test");
+        public bool IsTest => ProcessMode == ProcessModes.Test;
+        
+        [JsonIgnore]
+        [XmlIgnore]
+        [YamlIgnore]
+        public bool IsDev => ProcessMode == ProcessModes.Dev;
 
-        public string ProcessMode { get; set; } 
+        public ProcessModes ProcessMode { get; set; } 
 
         public AppServerConf ServerConf { get; set; }
         

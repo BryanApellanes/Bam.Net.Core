@@ -462,7 +462,7 @@ namespace Bam.Net.Server
         {
             byte[] content;
             string foundExt = Path.GetExtension(locatedPath);
-            if (FileCachesByExtension.ContainsKey(foundExt))
+            if (FileCachesByExtension.ContainsKey(foundExt) && !AppConf.IsDev)
             {
                 FileCache cache = FileCachesByExtension[foundExt];
                 if (ShouldZip(request))
