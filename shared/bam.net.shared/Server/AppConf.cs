@@ -43,6 +43,7 @@ namespace Bam.Net.Server
 			DefaultLayout = DefaultLayoutConst;
 			DefaultPage = DefaultPageConst;
 			ServiceSearchPattern = new string[] { "*Services.dll", "*Proxyables.dll" };
+            ServiceReferences = new string[] { };
             ProcessMode = ProcessModes.Dev;
             ServerConf = new AppServerConf(ServerKinds.Bam);
             Name = ApplicationNameProvider.Default.GetApplicationName();
