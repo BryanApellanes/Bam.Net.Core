@@ -18,11 +18,21 @@ namespace Bam.Net.Server
             get;
         }
 
+        public string ResolveTemplateName(ITemplateable templateable)
+        {
+            return templateable.TemplateName;
+        }
+
         public string ResolveTemplateName(object toBeTemplated)
         {
             if(toBeTemplated == null)
             {
                 return TemplateAttribute.DefaultTemplateName;
+            }
+
+            if (toBeTemplated is ITemplateable templateable)
+            {
+                return ResolveTemplateName(templateable);
             }
             Type type = toBeTemplated.GetType();
             if(type.HasCustomAttributeOfType(out TemplateAttribute attr))

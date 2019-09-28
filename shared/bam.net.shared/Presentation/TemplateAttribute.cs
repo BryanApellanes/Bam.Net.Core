@@ -11,7 +11,7 @@ namespace Bam.Net.Presentation
         {
             Name = DefaultTemplateName;
         }
-        public static string DefaultTemplateName { get { return "Default"; } }
+        public static string DefaultTemplateName => "Default";
         public string DirectoryPath { get; set; }
 
         public string Name { get; set; }

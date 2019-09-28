@@ -8,6 +8,8 @@ namespace Bam.Net.Server
     {
         Invalid,
         Bam,
+        Node,
+        Python,
         External
     }
 }

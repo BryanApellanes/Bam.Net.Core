@@ -608,6 +608,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\HostProcessInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\ITemplateable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RendererResolvedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\Renderers\FileExtensionPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\SchemaPrefixDataDomainResolver.cs" />

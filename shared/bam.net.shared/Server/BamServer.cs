@@ -205,6 +205,7 @@ namespace Bam.Net.Server
         {
             SchemaInitializing?.Invoke(this, initializer);
         }
+        
         protected void OnSchemaInitialized(SchemaInitializer initializer)
         {
             SchemaInitialized?.Invoke(this, initializer);
@@ -260,7 +261,7 @@ namespace Bam.Net.Server
         }
         protected internal void InitializeApps()
         {
-            InitializeApps(_conf.AppConfigs);
+            InitializeApps(_conf.AppsToServe);
         }
 
         private void InitializeApps(AppConf[] configs)

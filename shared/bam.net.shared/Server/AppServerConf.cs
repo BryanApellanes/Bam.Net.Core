@@ -41,6 +41,14 @@ namespace Bam.Net.Server
                     Command = "bamweb";
                     Arguments = new string[] {"/S", $"/content:{GetContentPath()}", "/verbose"};
                     break;
+                case ServerKinds.Node:
+                    Command = "node";
+                    Arguments = new string[] {"server.js"};
+                    break;
+                case ServerKinds.Python:
+                    Command = "python";
+                    Arguments = new string[] {"server.py"};
+                    break;
                 case ServerKinds.External:
                     Command = String.Empty;
                     Arguments = new string[] { };

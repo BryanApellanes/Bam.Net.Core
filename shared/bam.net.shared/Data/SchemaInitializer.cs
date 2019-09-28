@@ -60,15 +60,14 @@ namespace Bam.Net.Data
             ex = null;
             try
             {
-                Assembly assembly;
                 Type context;
                 if (!string.IsNullOrEmpty(SchemaAssemblyPath))
                 {
-                    assembly = Assembly.LoadFrom(SchemaAssemblyPath);
+                    Assembly assembly = Assembly.LoadFrom(SchemaAssemblyPath);
                     context = assembly.GetType(SchemaContext); 
                     if (context == null)
                     {
-                        context = assembly.GetTypes().Where(t => t.AssemblyQualifiedName.Equals(SchemaContext)).FirstOrDefault();
+                        context = assembly.GetTypes().FirstOrDefault(t => t.AssemblyQualifiedName.Equals(SchemaContext));
                     }
                 }
                 else
@@ -79,13 +78,13 @@ namespace Bam.Net.Data
                 Args.ThrowIf<ArgumentException>(context == null, "The specified SchemaContext ({0}) was not found", SchemaContext);
 
                 PropertyInfo prop = context.GetProperty("ConnectionName");
-                Args.ThrowIf<ArgumentException>(prop == null, "{0}.ConnectionName property was not found, make sure you're using the latest Bam.Net.Data.Schema.dll", context.Name);                
+                Args.ThrowIf<ArgumentException>(prop == null, "{0}.ConnectionName property was not found, make sure you're using the latest BamFramework.", context.Name);                
 
                 SchemaName = (string)prop.GetValue(null);
 
                 RegistrarCallerFactory registrarFactory = new RegistrarCallerFactory();
                 IRegistrarCaller registrarCaller = registrarFactory.CreateRegistrarCaller(RegistrarCaller);
-                Args.ThrowIf<ArgumentException>(registrarCaller == null, "Unable to instanciate IRegistrarCaller of type ({0})", RegistrarCaller);
+                Args.ThrowIf<ArgumentException>(registrarCaller == null, "Unable to instantiate IRegistrarCaller of type ({0})", RegistrarCaller);
 
                 registrarCaller.Register(SchemaName);
 
