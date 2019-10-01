@@ -24,37 +24,18 @@ namespace Bam.Net.Automation
             _deserializers = new Dictionary<string, Func<string, WorkerConf>>();
             _serializers = new Dictionary<string, Action<string, WorkerConf>>();
             
-            _deserializers[".yaml"] = (path) =>
-            {
-                return path.SafeReadFile().FromYaml<WorkerConf>();
-            };
+            _deserializers[".yaml"] = (path) => path.SafeReadFile().FromYaml<WorkerConf>();
             _deserializers[".yml"] = _deserializers[".yaml"];
             
-            _deserializers[".json"] = (path) =>
-            {
-                return path.SafeReadFile().FromJson<WorkerConf>();
-            };
+            _deserializers[".json"] = (path) => path.SafeReadFile().FromJson<WorkerConf>();
             
-            _deserializers[".xml"] = (path) =>
-            {
-                return path.SafeReadFile().FromXml<WorkerConf>();
-            };
+            _deserializers[".xml"] = (path) => path.SafeReadFile().FromXml<WorkerConf>();
 
-            _serializers[".yaml"] = (path, conf) =>
-            {
-                conf.ToYamlFile(path);
-            };
+            _serializers[".yaml"] = (path, conf) => conf.ToYamlFile(path);
             _serializers[".yml"] = _serializers[".yaml"];
-            
-            _serializers[".json"] = (path, conf) =>
-            {
-                conf.ToJsonFile(path);
-            };
-            
-            _serializers[".xml"] = (path, conf) =>
-            {
-                conf.ToXmlFile(path);
-            };
+
+            _serializers[".json"] = (path, conf) => conf.ToJsonFile(path);
+            _serializers[".xml"] = (path, conf) => conf.ToXmlFile(path);
         }
 
         public WorkerConf()
@@ -110,7 +91,7 @@ namespace Bam.Net.Automation
             Worker result = WorkerType.Construct<Worker>();
             result.Name = this.Name;
             result.StepNumber = this.StepNumber;
-            result.Configure(this);
+            result.TryConfigure(this, ex => Bam.Net.Logging.Log.Error("Exception configuring worker ({0}): {1}", ex, Name, ex.Message));
             if (job != null)
             {
                 result.Job = job;
@@ -172,8 +153,8 @@ namespace Bam.Net.Automation
         Dictionary<string, string> _properties;
         public Dictionary<string, string> Properties
         {
-            get { return _properties; }
-            set { _properties = value; }
+            get => _properties;
+            set => _properties = value;
         }
 
         public virtual void Save()

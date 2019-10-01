@@ -23,7 +23,7 @@ namespace Bam.Net.Automation.Scripting
         
         protected IReferenceAssemblyResolver ReferenceAssemblyResolver { get;  }
         
-        // TODO: memcache the resulting assembly keyed by the source code.  Explore assembly management service to determine fitness for incorporation there.
+        // TODO: memcache the resulting assembly keyed by the source code hash.  Explore assembly management service to determine fitness for incorporation there.
         /// <summary>
         /// Valid csharp code that will replace the body of the ExecuteScript method.
         /// Compiled to an extender of CSharpScriptContext.

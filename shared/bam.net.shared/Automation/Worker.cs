@@ -112,6 +112,18 @@ namespace Bam.Net.Automation
             }
         }
 
+        public void TryConfigure(WorkerConf conf, Action<Exception> exceptionHandler = null)
+        {
+            try
+            {
+                Configure(conf);
+            }
+            catch (Exception ex)
+            {
+                (exceptionHandler ?? (Action<Exception>)((e) => { }))(ex);
+            }
+        }
+        
         public void Configure(WorkerConf conf)
         {
             Type workerType = this.GetType();

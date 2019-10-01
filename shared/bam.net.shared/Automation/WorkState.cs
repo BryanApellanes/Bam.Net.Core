@@ -28,13 +28,7 @@ namespace Bam.Net.Automation
 
         public T Data { get; set; }
 
-        public override bool HasValue
-        {
-            get
-            {
-                return Data != null;
-            }
-        }
+        public override bool HasValue => Data != null;
     }
 
     /// <summary>

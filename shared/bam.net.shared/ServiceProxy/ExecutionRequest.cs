@@ -856,6 +856,20 @@ namespace Bam.Net.ServiceProxy
             Executing?.Invoke(this, target);
         }
 
+        public event Action<ExecutionRequest, object> AnyExecutionException;
+
+        protected void OnAnyExecutionException(object target)
+        {
+            AnyExecutionException?.Invoke(this, target);
+        }
+        
+        public event Action<ExecutionRequest, object> ExecutionException;
+
+        protected void OnExecutionException(object target)
+        {
+            ExecutionException?.Invoke(this, target);
+        }
+        
         public event Action<ExecutionRequest, object> Executed;
         protected void OnExecuted(object target)
         {
@@ -912,8 +926,11 @@ namespace Bam.Net.ServiceProxy
                 }
                 catch (Exception ex)
                 {
-                    Result = ex.GetInnerException().Message;
+                    string resultMessage = $"{ex.GetInnerException().Message} \r\n\r\n\t{ex.GetInnerException()?.StackTrace}";
+                    Result = resultMessage;
                     result = false;
+                    OnExecutionException(target);
+                    OnAnyExecutionException(target);
                 }
             }
 
