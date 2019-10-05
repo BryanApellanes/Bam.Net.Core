@@ -82,10 +82,7 @@ namespace Bam.Net.Server
         {
             get
             {
-                return _appRootLock.DoubleCheckLock(ref _appRoot, () =>
-                {
-                    return new Fs(Path.Combine(BamConf.ContentRoot, "apps", Name));
-                });
+                return _appRootLock.DoubleCheckLock(ref _appRoot, () => new Fs(Path.Combine(BamConf.ContentRoot, "apps", Name)));
             }
         }
 
@@ -96,7 +93,7 @@ namespace Bam.Net.Server
 
         public void AddServices(Incubator incubator)
         {
-            BamConf.Server.AddAppServies(Name, incubator);
+            BamConf.Server.AddAppServices(Name, incubator);
         }
 
         /// <summary>
@@ -204,10 +201,7 @@ namespace Bam.Net.Server
                     return result;
                 }).ToArray();
             }
-            set
-            {
-                _bindings = new List<HostPrefix>(value);
-            }
+            set => _bindings = new List<HostPrefix>(value);
         }
 
         public AppSetting[] AppSettings { get; set; }
@@ -286,29 +280,14 @@ namespace Bam.Net.Server
         UserManagerConfig _userManagerConfig;
         public UserManagerConfig UserManagerConfig
         {
-            get
-            {
-                if (_userManagerConfig == null)
-                {
-                    _userManagerConfig = new UserManagerConfig();
-                }
-
-                return _userManagerConfig;
-            }
-            set
-            {
-                _userManagerConfig = value;
-            }
+            get => _userManagerConfig ?? (_userManagerConfig = new UserManagerConfig());
+            set => _userManagerConfig = value;
         }
 
         UserManager _userManager;
         public UserManager GetUserManager()
         {
-            if(_userManager == null)
-            {
-                _userManager = UserManagerConfig.Create(Logger);
-            }
-            return _userManager;
+            return _userManager ?? (_userManager = UserManagerConfig.Create(Logger));
         }
 
         public string Setting(string settingName, string insteadIfNullOrEmpty)
@@ -357,20 +336,7 @@ namespace Bam.Net.Server
             set;
         }
 
-        internal ILogger Logger
-        {
-            get
-            {
-                if (BamConf != null &&
-                    BamConf.Server != null &&
-                    BamConf.Server.MainLogger != null)
-                {
-                    return BamConf.Server.MainLogger;
-                }
-
-                return new NullLogger();
-            }
-        }
+        internal ILogger Logger => BamConf?.Server?.MainLogger ?? Log.Default;
 
         static Dictionary<string, string> _appNamesByDomAppId;
         static object _domAppIdsSync = new object();

@@ -119,6 +119,13 @@ namespace Bam.Net.Server
             }
         }
 
+        /// <summary>
+        /// Write the specified content to the file at the specified path.  If overwrite is false
+        /// and the file exists the attempt to write fails with an InvalidOperationException.
+        /// </summary>
+        /// <param name="relativeFilePath"></param>
+        /// <param name="contentToWrite"></param>
+        /// <param name="overwrite"></param>
         public void Write(string relativeFilePath, string contentToWrite, bool overwrite = true)
         {
             string path = EnsurePath(relativeFilePath);
@@ -214,7 +221,7 @@ namespace Bam.Net.Server
         {
             if (!relativePath.StartsWith("~"))
             {
-                relativePath = string.Format("~{0}", relativePath);
+                relativePath = $"~{relativePath}";
             }
             return relativePath;
         }

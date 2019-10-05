@@ -386,27 +386,27 @@ namespace Bam.Net.Server
                     ProcessMode.Current.Mode
                 };
                 ParsedArguments arguments = ParsedArguments.Current;
-                HashSet<String> apps = new HashSet<string>();
+                HashSet<String> appsRequestedOnCommandLine = new HashSet<string>();
                 if (arguments.Contains("apps"))
                 {
                     string appsArg = arguments["apps"];
-                    appsArg.DelimitSplit(",", ";").Each(app => apps.Add(app));
+                    appsArg.DelimitSplit(",", ";").Each(app => appsRequestedOnCommandLine.Add(app));
                 }
 
                 return AppConfigs.Where(c =>
                 {
-                    if (apps.Count == 0)
-                    {
-                        return configured.Contains(c.ProcessMode);
-                    }
-
                     bool shouldServe = true;
                     if (c.ServerConf != null)
                     {
                         shouldServe = c.ServerConf.ServerKind == ServerKinds.Bam;
                     }
                     
-                    return configured.Contains(c.ProcessMode) && apps.Contains(c.Name) && shouldServe;
+                    if (appsRequestedOnCommandLine.Count == 0)
+                    {
+                        return configured.Contains(c.ProcessMode) && shouldServe;
+                    }
+                    
+                    return configured.Contains(c.ProcessMode) && appsRequestedOnCommandLine.Contains(c.Name) && shouldServe;
                 }).ToArray();
             }
         }

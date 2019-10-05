@@ -246,19 +246,15 @@ namespace Bam.Net.Server
         public event Action<BamServer, AppConf> AppInitializing;
         protected void OnAppInitializing(AppConf conf)
         {
-            if (AppInitializing != null)
-            {
-                AppInitializing(this, conf);
-            }
+            AppInitializing?.Invoke(this, conf);
         }
+        
         public event Action<BamServer, AppConf> AppInitialized;
         protected void OnAppInitialized(AppConf conf)
         {
-            if (AppInitialized != null)
-            {
-                AppInitialized(this, conf);
-            }
+            AppInitialized?.Invoke(this, conf);
         }
+        
         protected internal void InitializeApps()
         {
             InitializeApps(_conf.AppsToServe);
@@ -778,29 +774,11 @@ namespace Bam.Net.Server
             return server;
         }
 
-        public Incubator CommonServiceProvider
-        {
-            get
-            {
-                return ServiceProxyResponder.CommonServiceProvider;
-            }
-        }
+        public Incubator CommonServiceProvider => ServiceProxyResponder.CommonServiceProvider;
 
-        public Dictionary<string, Incubator> AppServiceProviders
-        {
-            get
-            {
-                return ServiceProxyResponder.AppServiceProviders;
-            }
-        }
+        public Dictionary<string, Incubator> AppServiceProviders => ServiceProxyResponder.AppServiceProviders;
 
-        public Dictionary<string, AppContentResponder> AppContentResponders
-        {
-            get
-            {
-                return ContentResponder.AppContentResponders;
-            }
-        }
+        public Dictionary<string, AppContentResponder> AppContentResponders => ContentResponder.AppContentResponders;
 
         public Dictionary<string, UserManager> AppUserManagers
         {
@@ -816,13 +794,7 @@ namespace Bam.Net.Server
         }
 
         string _workspace;
-        public string Workspace
-        {
-            get
-            {
-                return Fs.CleanPath(_workspace);
-            }
-        }
+        public string Workspace => Fs.CleanPath(_workspace);
 
         public void AddCommonDaoFromDirectory(DirectoryInfo daoDir)
         {
@@ -873,7 +845,7 @@ namespace Bam.Net.Server
             ServiceProxyResponder.AddAppService(appName, type, instanciator);
         }
 
-        public void AddAppServies(string appName, Incubator incubator)
+        public void AddAppServices(string appName, Incubator incubator)
         {
             ServiceProxyResponder.AddAppServices(appName, incubator);
         }
@@ -1090,10 +1062,7 @@ namespace Bam.Net.Server
             AdditionalLoggers = loggers;
         }
 
-        protected HttpServer HttpServer
-        {
-            get { return _server; }
-        }
+        protected HttpServer HttpServer => _server;
 
         bool _enableDao;
         /// <summary>
@@ -1109,10 +1078,7 @@ namespace Bam.Net.Server
         /// </summary>
         protected bool EnableDao
         {
-            get
-            {
-                return _enableDao;
-            }
+            get => _enableDao;
             set
             {
                 _enableDao = value;
@@ -1128,15 +1094,12 @@ namespace Bam.Net.Server
         /// <summary>
         /// If true will cause the initialization of the
         /// ServiceProxyResponder which will register
-        /// all classes addorned with the Proxy attribute
+        /// all classes adorned with the Proxy attribute
         /// as service proxy executors
         /// </summary>
         protected bool EnableServiceProxy
         {
-            get
-            {
-                return _enableServiceProxy;
-            }
+            get => _enableServiceProxy;
             set
             {
                 _enableServiceProxy = value;
@@ -1161,14 +1124,18 @@ namespace Bam.Net.Server
         {
             _serviceProxyResponder = new ServiceProxyResponder(GetCurrentConf(true), MainLogger)
             {
-                ContentResponder = ContentResponder
+                ContentResponder = ContentResponder,
+                ServiceCompilationExceptionReporter =
+                {
+                    Reporter = (o, args) =>
+                    {
+                        Args.ThrowIfNull(args, "args");
+                        Args.ThrowIfNull(args.AppConf, "args.AppConf");
+                        args.AppConf.AppRoot.Write("~/services/bin/logs.txt", args.Exception.GetMessageAndStackTrace());
+                    }
+                }
             };
-            
-            _serviceProxyResponder.ServiceCompilationExceptionReporter.Reporter = (o, args) =>
-            {
-                // TODO: report compilation failures in a logical actionable way
-                
-            };
+
             AddResponder(_serviceProxyResponder);
         }
 

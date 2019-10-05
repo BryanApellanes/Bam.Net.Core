@@ -9,10 +9,13 @@ namespace Bam.Net.Server
 {
     public class AppServerConf
     {
+        public AppServerConf()
+        {
+        }
+        
         public AppServerConf(ServerKinds serverKind)
         {
             ServerKind = serverKind;
-            Init();
         }
 
         private static AppServerConf _default;
@@ -21,9 +24,19 @@ namespace Bam.Net.Server
         {
             get { return _defaultLock.DoubleCheckLock(ref _default, () => new AppServerConf(ServerKinds.Bam)); }
         }
-        
+
+        private ServerKinds _serverKind;
         [JsonConverter(typeof(StringEnumConverter))]
-        public ServerKinds ServerKind { get; set; }
+        public ServerKinds ServerKind 
+        {
+            get => _serverKind;
+            set
+            {
+                _serverKind = value;
+                Init();
+            }
+        }
+        
         public string Command { get; set; }
         public string[] Arguments { get; set; }
 
