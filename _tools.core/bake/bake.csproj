@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <!--<PackageReference Include="bam.net.core" Version="1.0.3" />-->
+    <PackageReference Include="YamlDotNet" Version="7.0.0" />
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
@@ -51,9 +52,5 @@
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="test.csproj" />
   </ItemGroup>
 </Project>
