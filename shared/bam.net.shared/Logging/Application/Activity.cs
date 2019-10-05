@@ -41,7 +41,7 @@ namespace Bam.Net.Logging.Application
             }
         }
 
-        public static IEnumerable<ActivityDescriptor> RetrieveDescriptors(string activityName)
+        public static IEnumerable<ActivityDescriptor> Retrieve(string activityName)
         {
             return ActivityRepository.Query<ActivityDescriptor>(new {Name = activityName});
         }

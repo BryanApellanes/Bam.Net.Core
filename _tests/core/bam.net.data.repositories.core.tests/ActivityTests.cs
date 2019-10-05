@@ -20,7 +20,7 @@ namespace Bam.Net.Data.Repositories.Tests
             string testActivityName = "TestActivityName_".RandomLetters(8);
             Activity.Log(appConf, testActivityName, "This is a test message: {0}", "arg value" );
             Thread.Sleep(1500);
-            Expect.IsGreaterThan(Activity.RetrieveDescriptors(testActivityName).ToArray().Length, 0);
+            Expect.IsGreaterThan(Activity.Retrieve(testActivityName).ToArray().Length, 0);
         }
     }
 }
