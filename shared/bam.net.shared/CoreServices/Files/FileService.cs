@@ -172,6 +172,11 @@ namespace Bam.Net.CoreServices
             }
         }
 
+        public IEnumerable<ChunkedFileDescriptor> ListFiles(string originalDirectory)
+        {
+            return Repository.Query<ChunkedFileDescriptor>(Filter.Where(nameof(ChunkedFileDescriptor.OriginalDirectory)) == originalDirectory);
+        }
+
         [Exclude]
         public ChunkedFileWriter GetFileWriter(string fileHash)
         {

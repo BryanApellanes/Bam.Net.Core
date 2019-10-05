@@ -33,5 +33,6 @@ namespace Bam.Net.CoreServices.Files
         FileInfo WriteFileDataToDirectory(string fileNameOrHash, string directoryPath);
         void WriteFileToStream(string fileNameOrHash, Stream stream);
         IEnumerable<FileChunk> YieldFileChunks(string fileHash, int fromIndex, int batchSize);
+        IEnumerable<ChunkedFileDescriptor> ListFiles(string rootPath = ".");
     }
 }

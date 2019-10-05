@@ -632,6 +632,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\Data\ItemProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\ICatalogService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Catalog\KindsOfCatalogs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ChunkedFileInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftConsensusContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftConsensusRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\Generated_Dao\RaftFollowerWriteLog.cs" />
@@ -810,6 +811,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommandLineServiceInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DynamicTemplatedClassManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Hosts\HostClientServiceRegistry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebServiceAttribute.cs" />

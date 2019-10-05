@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>bam.aws</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\bam.net.core\bam.net.core.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -113,13 +113,7 @@ namespace Bam.Net.CoreServices.Files
         protected internal decimal WholeChunkCount { get; set; }
         protected internal long TailLength { get; set; }
         protected internal bool PartialTail { get; set; }
-        protected long TailStreamIndex
-        {
-            get
-            {
-                return (long)WholeChunkCount * ChunkLength;
-            }
-        }
+        protected long TailStreamIndex => (long)WholeChunkCount * ChunkLength;
 
         protected FileInfo File { get; set; }
         private byte[] ReadWholeFileSystemChunk(int chunkIndex, out long streamIndex)

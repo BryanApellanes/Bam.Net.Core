@@ -27,5 +27,15 @@ namespace Bam.Net.CoreServices.AssemblyManagement
 
             return filePath;
         }
+
+        /// <summary>
+        /// Resolves the specified package by reading the current RuntimeConfig
+        /// </summary>
+        /// <param name="packageName"></param>
+        /// <returns></returns>
+        public override string ResolveReferencePackage(string packageName)
+        {
+            return ResolveReferenceAssemblyPath(ResolveReferenceAssemblyPath(packageName, packageName));
+        }
     }
 }

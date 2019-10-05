@@ -11,5 +11,6 @@ namespace Bam.Net.CoreServices.AssemblyManagement
         string ResolveSystemRuntimePath();
         string ResolveNetStandardPath();
         string ResolveReferenceAssemblyPath(string assemblyName);
+        string ResolveReferencePackage(string packageName);
     }
 }

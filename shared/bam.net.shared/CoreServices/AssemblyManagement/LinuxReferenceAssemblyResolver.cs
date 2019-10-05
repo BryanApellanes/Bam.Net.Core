@@ -63,5 +63,10 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             FileInfo runtime = new FileInfo(ResolveSystemRuntimePath());
             return Path.Combine(runtime.Directory.FullName, assemblyName);
         }
+
+        public string ResolveReferencePackage(string packageName)
+        {
+            return NugetReferenceAssemblyResolver.ResolveReferencePackage(packageName);
+        }
     }
 }

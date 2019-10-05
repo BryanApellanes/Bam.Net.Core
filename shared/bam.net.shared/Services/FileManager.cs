@@ -10,10 +10,11 @@ using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Services
 {
-    public class FileManager
+    public class FileManager : IFileManager
     {
         public FileManager(IDataDirectoryProvider dataDirectorySettings, IFileService fileService)
         {
+            DataDirectorySettings = dataDirectorySettings;
             FileService = fileService;
         }
         public IDataDirectoryProvider DataDirectorySettings { get; set; }
@@ -36,6 +37,11 @@ namespace Bam.Net.Services
         public FileInfo RestoreFile(string fileNameOrHash)
         {
             return FileService.WriteFileDataToDirectory(fileNameOrHash, DataDirectorySettings.GetFilesDirectory().FullName);
+        }
+
+        public ChunkedFileInfo[] ListFiles(string originalDirectory)
+        {
+            return FileService.ListFiles(originalDirectory).CopyAs<ChunkedFileInfo>().ToArray();
         }
     }
 }

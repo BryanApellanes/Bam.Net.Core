@@ -10,7 +10,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement
     {
         public OsxReferenceAssemblyResolver()
         {
-            NugetReferenceAssemblyResolver = new NugetReferenceAssemblyResolver("/usr/local/share/dotnet/sdk/NugetFallbackFolder");
+            NugetReferenceAssemblyResolver = new ProfileReferenceAssemblyResolver();
             RuntimeSettingsConfigReferenceAssemblyResolver = new RuntimeSettingsConfigReferenceAssemblyResolver();
         }
 
@@ -66,7 +66,22 @@ namespace Bam.Net.CoreServices.AssemblyManagement
         public string ResolveReferenceAssemblyPath(string assemblyName)
         {
             FileInfo runtime = new FileInfo(ResolveSystemRuntimePath());
-            return Path.Combine(runtime.Directory.FullName, assemblyName);
+            string path = Path.Combine(runtime.Directory.FullName, assemblyName);
+            if (!File.Exists(path) && !File.Exists(path.ToLowerInvariant()))
+            {
+                path = NugetReferenceAssemblyResolver.ResolveReferenceAssemblyPath(assemblyName);
+                if (!File.Exists(path) && !File.Exists(path.ToLowerInvariant()))
+                {
+                    throw new ReferenceAssemblyNotFoundException(assemblyName);
+                }
+            }
+
+            return path;
+        }
+
+        public string ResolveReferencePackage(string packageName)
+        {
+            return NugetReferenceAssemblyResolver.ResolveReferencePackage(packageName);
         }
     }
 }

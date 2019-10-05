@@ -63,6 +63,8 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             return Path.Combine(runtime.Directory.FullName, assemblyName);
         }
 
+        public abstract string ResolveReferencePackage(string packageName);
+
         protected internal static string ResolveNetStandardPath(string systemRuntimePath = "")
         {
             if (string.IsNullOrEmpty(systemRuntimePath))

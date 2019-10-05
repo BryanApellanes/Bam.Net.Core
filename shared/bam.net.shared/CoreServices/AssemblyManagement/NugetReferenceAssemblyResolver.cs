@@ -1,23 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using Bam.Net.Logging;
 using GraphQL.Types;
 using Lucene.Net.Analysis.Hunspell;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis.Operations;
-using Org.BouncyCastle.Bcpg;
 
 namespace Bam.Net.CoreServices.AssemblyManagement
 {
+    public class NugetFallbackReferenceAssemblyResolver: NugetReferenceAssemblyResolver
+    {
+        public NugetFallbackReferenceAssemblyResolver() : base("/usr/local/share/dotnet/sdk/NugetFallbackFolder")
+        {
+        }
+    }
+    
     public class NugetReferenceAssemblyResolver : IReferenceAssemblyResolver
     {
-        public NugetReferenceAssemblyResolver(string nugetFallbackRoot)
+        public NugetReferenceAssemblyResolver(string nugetPackageRoot)
         {
-            NugetFallbackRoot = nugetFallbackRoot;
+            NugetPackageRoot = nugetPackageRoot;
             PackageVersionResolver = new PackageVersionResolver(this);
             NetStandardVersionResolver = new NetStandardVersionResolver();
+            Logger = Log.Default;
         }
 
         private static Dictionary<OSNames, NugetReferenceAssemblyResolver> _nugetReferenceAssemblyResolvers;
@@ -29,7 +38,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement
                 return _nugetReferenceAssemblyResolversLock.DoubleCheckLock(ref _nugetReferenceAssemblyResolvers, () => new Dictionary<OSNames, NugetReferenceAssemblyResolver>()
                 {
                     {OSNames.Windows, new ProfileReferenceAssemblyResolver()},
-                    {OSNames.OSX, new NugetReferenceAssemblyResolver("/usr/local/share/dotnet/sdk/NugetFallbackFolder")},
+                    {OSNames.OSX, new ProfileReferenceAssemblyResolver()},
                     {OSNames.Linux, new ProfileReferenceAssemblyResolver()}
                 });
             }
@@ -44,10 +53,12 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             return NugetReferenceAssemblyResolvers[os];
         }
         
-        protected string NugetFallbackRoot { get; set; }
+        protected string NugetPackageRoot { get; set; }
 
         protected IPackageVersionResolver PackageVersionResolver { get; set; }
         protected INetStandardVersionResolver NetStandardVersionResolver { get; set; }
+        
+        protected ILogger Logger { get; private set; }
         
         public Assembly ResolveReferenceAssembly(Type type)
         {
@@ -129,9 +140,21 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             return Path.Combine(runtime.Directory.FullName, assemblyName);
         }
 
+        public string ResolveReferencePackage(string packageName)
+        {
+            string packageRoot = Path.Combine(NugetPackageRoot, packageName);
+            if (Directory.Exists(packageRoot))
+            {
+                string version = SelectVersion(packageRoot);
+                
+            }
+            
+            throw new ReferenceAssemblyNotFoundException(packageName);
+        }
+
         public string ResolvePackageRootDirectory(Type type)
         {
-            DirectoryInfo nugetRoot = new DirectoryInfo(NugetFallbackRoot);
+            DirectoryInfo nugetRoot = new DirectoryInfo(NugetPackageRoot);
             string packageDirectoryRoot = Path.Combine(nugetRoot.FullName, $"{type.Namespace}".ToLowerInvariant());
 
             if (!Directory.Exists(packageDirectoryRoot))
@@ -149,7 +172,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement
 
         public string ResolvePackageRootDirectory(string typeNamespace, string typeName)
         {
-            DirectoryInfo nugetRoot = new DirectoryInfo(NugetFallbackRoot);
+            DirectoryInfo nugetRoot = new DirectoryInfo(NugetPackageRoot);
             string packageDirectoryRoot = Path.Combine(nugetRoot.FullName, $"{typeNamespace}");
 
             if (!Directory.Exists(packageDirectoryRoot))
@@ -165,7 +188,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             return packageDirectoryRoot;
         }
         
-        private string GetPackagePath(string packageDirectoryRoot, string packageVersion, string typeNamespace, string typeName)
+        protected string GetPackagePath(string packageDirectoryRoot, string packageVersion, string typeNamespace, string typeName)
         {
             string versionDirectoryRoot = Path.Combine(packageDirectoryRoot, packageVersion);
 
@@ -183,6 +206,19 @@ namespace Bam.Net.CoreServices.AssemblyManagement
             }
 
             return packagePath;
+        }
+
+        protected string SelectVersion(string packageRoot)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(packageRoot);
+            List<string> versions = new List<string>();
+            if (directoryInfo.Exists)
+            {
+                versions = directoryInfo.GetDirectories().Select(d => d.Name).ToList();
+                versions.Sort();
+            }
+
+            return versions.FirstOrDefault();
         }
     }
 }
