@@ -31,14 +31,19 @@ namespace Bam.Net.Bake
 
         public ReferenceInfo[] ProjectReferences => ReferenceInfos.Where(ri => ri.Kind == ReferenceKind.Project).ToArray();
 
+        public ProjectInfo SetToProjectReference(string projectOrPackageName, string projectDirectory)
+        {
+            return ReferenceAsProject(projectOrPackageName, projectDirectory);
+        }
+        
         /// <summary>
         /// If the current project references a project with the specified package name, change the reference to a package
         /// reference.
         /// </summary>
-        /// <param name="packageName"></param>
-        public void SetToPackageReference(string packageName)
+        /// <param name="projectOrPackageName"></param>
+        public ProjectInfo SetToPackageReference(string projectOrPackageName)
         {
-            
+            return ReferenceAsPackage(projectOrPackageName);
         }
         
         public bool ReferencesPackage(string packageName, string version = null)

@@ -28,9 +28,9 @@ namespace Bam.Net
             {
                 ReferenceAssembliesDir = ReferenceAssembliesDir,
                 GenDir = GenDir,
-                BamHomeDir = BamHomeDir,
+                BamProfileDir = BamProfileDir,
                 BamDir = BamDir,
-                ProcessHomeDir = ProcessHomeDir
+                ProcessProfileDir = ProcessProfileDir
             };
             config.ToYamlFile(configFile);
             return config;
@@ -68,89 +68,48 @@ namespace Bam.Net
             return Path.Combine(GetConfig().ReferenceAssembliesDir, SystemRuntime);
         }
         
-        public static string ReferenceAssembliesDir
-        {
-            get { return Path.Combine(BinDir, OSInfo.Current.ToString(), "ReferenceAssemblies"); }
-        }
+        public static string ReferenceAssembliesDir => Path.Combine(BinDir, OSInfo.Current.ToString(), "ReferenceAssemblies");
 
-        public static string GenDir
-        {
-            get { return Path.Combine(BinDir, "gen"); }
-        }
-        
-        public static string BinDir
-        {
-            get { return Path.Combine(BamHomeDir, "bin"); }
-        }
-        
-        public static string BamHomeDir
-        {
-            get
-            {
-                return Path.Combine(ProcessHomeDir, ".bam");
-            }
-        }
+        public static string GenDir => Path.Combine(BinDir, "gen");
 
-        public static string BamDir
-        {
-            get
-            {
-                return Path.Combine(Environment.CurrentDirectory, ".bam");
-            }
-        }
-
-        public static string ProcessHomeDir
-        {
-            get
-            {
-                return IsUnix ? Environment.GetEnvironmentVariable("HOME") : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-            }
-        }
-
-        public static bool IsWindows
-        {
-            get
-            {
-                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-            }
-        }
-
-        public static bool IsUnix
-        {
-            get
-            {
-                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-            }
-        }
-
-        public static bool IsLinux
-        {
-            get
-            {
-                return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-            }
-        }
+        public static string BinDir => Path.Combine(BamProfileDir, "bin");
 
         /// <summary>
-        /// Gets a vlaue indicating if the current runtime environment is a mac, same as IsOSX
+        /// The path to the '.bam' directory found in the home directory of the owner of the
+        /// current process.
         /// </summary>
-        public static bool IsMac
-        {
-            get
-            {
-                return IsOSX;
-            }
-        }
+        public static string BamProfileDir => Path.Combine(ProcessProfileDir, ".bam");
 
         /// <summary>
-        /// Gets a vlaue indicating if the current runtime environment is a mac, same as IsMac
+        /// The path to the the '.bam' directory found in the current working directory. 
         /// </summary>
-        public static bool IsOSX
-        {
-            get
-            {
-                return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-            }
-        }
+        public static string BamDir => Path.Combine(Environment.CurrentDirectory, ".bam");
+
+        /// <summary>
+        /// The path to the home directory of the user that owns the current process.
+        /// </summary>
+        public static string ProcessProfileDir => IsUnix ? Environment.GetEnvironmentVariable("HOME") : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+
+        /// <summary>
+        /// Gets a value indicating if the current process is running on Windows.
+        /// </summary>
+        public static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        /// <summary>
+        /// Gets a value indicating if the current process is running on a unix platform such as, Linux, BSD or Mac OSX.
+        /// </summary>
+        public static bool IsUnix => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+        public static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+        /// <summary>
+        /// Gets a value indicating if the current runtime environment is a mac, same as IsOSX
+        /// </summary>
+        public static bool IsMac => IsOSX;
+
+        /// <summary>
+        /// Gets a value indicating if the current runtime environment is a mac, same as IsMac
+        /// </summary>
+        public static bool IsOSX => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
     }
 }

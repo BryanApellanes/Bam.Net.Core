@@ -195,12 +195,12 @@ namespace Bam.Net.Bake
                 }
             }
             DirectoryInfo dirInfo = new DirectoryInfo(recipe.OutputDirectory);
-            string fileName = $"{dirInfo.Name}.zip";
+            string fileName = $"{recipe.Name}.zip";
             string output = $"./{fileName}";
             FileInfo outputFile = new FileInfo(output);
             if (Arguments.Contains("output"))
             {
-                output = GetArgument("output");
+                output = GetPathArgument("output");
                 outputFile = new FileInfo(output);
                 if (!outputFile.HasExtension(".zip"))
                 {
@@ -303,6 +303,10 @@ namespace Bam.Net.Bake
         
         private static void WriteRecipe(Recipe recipe, FileInfo file)
         {
+            if (recipe.NameIsDefault)
+            {
+                recipe.Name = file.Name;
+            }
             string json = recipe.ToJson(true);
             json.SafeWriteToFile(file.FullName, true);
             OutLine(json, ConsoleColor.Cyan);
@@ -336,7 +340,7 @@ namespace Bam.Net.Bake
                 Exit(1);
             }
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
-            return recipe;
+            return new ProcessProfileRecipe(recipe);
         }
 
         static Dictionary<OSNames, string> RuntimeNames

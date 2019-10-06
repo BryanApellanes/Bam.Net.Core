@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Bam.Net.Logging;
 using Bam.Net.Configuration;
 using System.Threading;
+using Bam.Net.Application;
 
 namespace Bam.Net.CommandLine
 {
@@ -489,6 +490,18 @@ namespace Bam.Net.CommandLine
             return value;
         }
 
+        /// <summary>
+        /// Resolves '~' to the home directory of the current user's profile if specified at the beginning of the argument value.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetPathArgument(string name)
+        {
+            string argumentValue = GetArgument(name);
+            ProcessHomeDirectoryResolver homeDirectoryResolver = new ProcessHomeDirectoryResolver();
+            return homeDirectoryResolver.GetHomePath(argumentValue);
+        }
+        
         /// <summary>
         /// Gets the command line argument with the specified name.
         /// </summary>

@@ -6,8 +6,8 @@ namespace Bam.Net
     {
         public string ReferenceAssembliesDir { get; set; }
         public string GenDir { get; set; }
-        public string BamHomeDir { get; set; }
+        public string BamProfileDir { get; set; }
         public string BamDir { get; set; }
-        public string ProcessHomeDir { get; set; }
+        public string ProcessProfileDir { get; set; }
     }
 }

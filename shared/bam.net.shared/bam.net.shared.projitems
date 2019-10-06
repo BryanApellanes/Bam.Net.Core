@@ -194,6 +194,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppDataModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppDataPropertyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppKind.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\ApplicationHomeDirectoryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\AppModuleModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DaemonInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DaemonProcess.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\NmapScan.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\IApplicationStartupHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\IHomeDirectoryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelSchema.cs" />
@@ -216,6 +218,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\CommandServiceClientRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\Remote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Network\ScpRemoteFileHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\ProcessHomeDirectoryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DeployInfo.cs" />

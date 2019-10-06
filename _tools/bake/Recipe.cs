@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Bam.Net.Application;
 using Bam.Net.Automation;
 using Bam.Net.Bake;
 using Bam.Net.CommandLine;
@@ -13,16 +14,71 @@ using YamlDotNet.Serialization;
 
 namespace Bam.Net.Bake
 {
+    /// <summary>
+    /// A Recipe that resolves '~' to the home directory of the owner of the current process.
+    /// </summary>
+    public class ProcessProfileRecipe: Recipe, IHomeDirectoryResolver
+    {
+        private ProcessHomeDirectoryResolver _homeDirectoryResolver;
+        public ProcessProfileRecipe(Recipe recipe)
+        {
+            _homeDirectoryResolver = new ProcessHomeDirectoryResolver();
+            OriginalRecipe = recipe;
+            this.CopyProperties(recipe);
+            ResolveRecipePaths();
+        }
+
+        /// <summary>
+        /// The kernels finest,... :) jk
+        /// </summary>
+        public Recipe OriginalRecipe { get; set; }
+        
+        public string ResolveHomeDirectory()
+        {
+            string result = _homeDirectoryResolver.ResolveHomeDirectory();
+            return result;
+        }
+
+        public string GetHomePath(string path)
+        {
+            string result = _homeDirectoryResolver.GetHomePath(path);
+            return result;
+        }
+
+        private void ResolveRecipePaths()
+        {
+            if (ProjectRoot.StartsWith("~"))
+            {
+                string path = ProjectRoot.TruncateFront(1);
+                ProjectRoot = GetHomePath(path);
+            }
+
+            if (OutputDirectory.StartsWith("~"))
+            {
+                string path = OutputDirectory.TruncateFront(1);
+                OutputDirectory = GetHomePath(path);
+            }
+
+            if (NugetOutputDirectory.StartsWith("~"))
+            {
+                string path = NugetOutputDirectory.TruncateFront(1);
+                NugetOutputDirectory = GetHomePath(path);
+            }
+        }
+    }
+    
     public class Recipe
     {
         public Recipe()
         {
-            ProjectRoot = "_tools.core";
+            Name = "Recipe_".RandomLetters(6);
+            NameIsDefault = true;
+            ProjectRoot = "_tools";
             OsName = OSInfo.Current;
             OutputDirectory = Path.Combine(BamPaths.ToolkitPath, OsName.ToString());
             NugetOutputDirectory = Path.Combine(BamPaths.NugetOutputPath, OsName.ToString());
         }
-
+        
         /// <summary>
         /// Create a recipe containing a single project.
         /// </summary>
@@ -40,6 +96,24 @@ namespace Bam.Net.Bake
                 NugetOutputDirectory =  Path.Combine(outputDirectory, "nupkg")
             };
         }
+
+        public bool NameIsDefault { get; set; }
+        private string _name;
+
+        /// <summary>
+        /// A logical name to refer to this recipe.
+        /// </summary>
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                NameIsDefault = false;
+            }
+        }
+        
+
         /// <summary>
         /// Gets or sets the root directory where the bam toolkit
         /// project directories are found.
