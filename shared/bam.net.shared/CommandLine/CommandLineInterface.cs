@@ -162,27 +162,25 @@ namespace Bam.Net.CommandLine
         /// Represents arguments after parsing with a call to ParseArgs.  Arguments should be 
         /// passed in on the command line in the format /&lt;name&gt;:&lt;value&gt;.
         /// </summary>
-        public static ParsedArguments Arguments { get { return arguments; } set { arguments = value; } }
+        public static ParsedArguments Arguments 
+        { 
+            get => arguments;
+            set => arguments = value;
+        }
 
         static List<ArgumentInfo> validArgumentInfo = new List<ArgumentInfo>();
 
         protected static List<ArgumentInfo> ValidArgumentInfo
         {
-            get { return validArgumentInfo; }
-            set { validArgumentInfo = value; }
+            get => validArgumentInfo;
+            set => validArgumentInfo = value;
         }
 
         protected static List<ConsoleMenu> otherMenus;
         protected static List<ConsoleMenu> OtherMenus
         {
-            get
-            {
-                return otherMenus;
-            }
-            set
-            {
-                otherMenus = value;
-            }
+            get => otherMenus;
+            set => otherMenus = value;
         }
 
         /// <summary>

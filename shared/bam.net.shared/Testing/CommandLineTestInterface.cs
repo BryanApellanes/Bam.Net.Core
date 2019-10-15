@@ -36,13 +36,23 @@ namespace Bam.Net.Testing
 
         public static void ExecuteMain(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
         {
+            ExecuteMain(args, () => { }, parseErrorHandler);
+        }
+        
+        public static void ExecuteMain(string[] args, Action preInit, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        {
             AddSwitches();
             AddConfigurationSwitches();
-            Initialize(args, parseErrorHandler);
+            Initialize(args, preInit, parseErrorHandler);
             if (Arguments.Length > 0 && !Arguments.Contains("i"))
             {
                 ExecuteSwitches(false, new ConsoleLogger());
             }
+        }
+
+        public static void Initialize(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        {
+            Initialize(args, () => { }, parseErrorHandler);
         }
         
         /// <summary>
@@ -50,7 +60,7 @@ namespace Bam.Net.Testing
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="parseErrorHandler">The parse error handler.</param>
-        public static void Initialize(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        public static void Initialize(string[] args, Action preInit, ConsoleArgsParsedDelegate parseErrorHandler = null)
 		{
             AssemblyResolve.Monitor(()=>
             {
@@ -65,11 +75,13 @@ namespace Bam.Net.Testing
 
             if(parseErrorHandler == null)
             {
-                parseErrorHandler = (a)=> throw new ArgumentException(a.Message);
+                parseErrorHandler = (a) => throw new ArgumentException(a.Message);
             }
 
-            ArgsParsedError += parseErrorHandler;            
+            ArgsParsedError += parseErrorHandler;
 
+            preInit();
+            
 			AddValidArgument("i", true, description: "Run interactively");
 			AddValidArgument("?", true, description: "Show usage");
 			AddValidArgument("t", true, description: "Run all unit tests");
