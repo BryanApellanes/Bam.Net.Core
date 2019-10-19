@@ -53,12 +53,24 @@ namespace Bam.Net.CoreServices
             clone.CopyEventHandlers(this);
             return clone;
         }
+
+        public FileService AddStorage(IChunkStorage storage)
+        {
+            ChunkStorage.AddStorage(storage);
+            return this;
+        }
+
+        public FileService ClearStorage()
+        {
+            ChunkStorage.ClearStorage();
+            return this;
+        }
         
         public Func<string, int, int, IEnumerable<ChunkDataDescriptor>> ChunkDataDescriptorRetriever;
         public string ChunkDirectory { get; internal set; }
         public int ChunkDataBatchSize { get; internal set; }
         public int ChunkLength { get; internal set; }
-        public CompositeChunkStorage ChunkStorage { get; set; }
+        protected CompositeChunkStorage ChunkStorage { get; set; }
         protected FileSystemChunkStorage FileSystemChunkStorage { get; set; }
         protected RepositoryChunkStorage RepositoryChunkStorage { get; set; }
         public virtual ChunkDataDescriptor SaveChunkDataDescriptor(ChunkDataDescriptor xref)
@@ -317,23 +329,17 @@ namespace Bam.Net.CoreServices
         {
             if (Repository is DaoRepository daoRepo)
             {
-                ChunkDataDescriptorRetriever = (fileHash, fromIndex, chunkDataBatchSize) =>
-                {
-                    return daoRepo.Top<ChunkDataDescriptor>(chunkDataBatchSize,
-                                    Filter.Where(nameof(ChunkDataDescriptor.FileHash)) == fileHash &&
-                                    Filter.Where(nameof(ChunkDataDescriptor.ChunkIndex)) > fromIndex);
-                };
+                ChunkDataDescriptorRetriever = (fileHash, fromIndex, chunkDataBatchSize) => daoRepo.Top<ChunkDataDescriptor>(chunkDataBatchSize,
+                    Filter.Where(nameof(ChunkDataDescriptor.FileHash)) == fileHash &&
+                    Filter.Where(nameof(ChunkDataDescriptor.ChunkIndex)) > fromIndex);
             }
             else
             {
                 Logger.Warning("{0}::FileService.Repository is not a DaoRepository but is a ({1}), good luck with that!", nameof(SetChunkDataDescriptorRetriever), Repository.GetType().Name);
-                ChunkDataDescriptorRetriever = (fileHash, fromIndex, chunkDataBatchSize) =>
-                {
-                    return Repository.Query<ChunkDataDescriptor>(
-                                        Filter.Where(nameof(ChunkDataDescriptor.FileHash)) == fileHash &&
-                                        Filter.Where(nameof(ChunkDataDescriptor.ChunkIndex)) > fromIndex)
-                                    .Take(chunkDataBatchSize);
-                };
+                ChunkDataDescriptorRetriever = (fileHash, fromIndex, chunkDataBatchSize) => Repository.Query<ChunkDataDescriptor>(
+                        Filter.Where(nameof(ChunkDataDescriptor.FileHash)) == fileHash &&
+                        Filter.Where(nameof(ChunkDataDescriptor.ChunkIndex)) > fromIndex)
+                    .Take(chunkDataBatchSize);
             }
         }
     }

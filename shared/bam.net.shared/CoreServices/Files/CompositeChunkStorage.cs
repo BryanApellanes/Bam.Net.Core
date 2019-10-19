@@ -24,6 +24,12 @@ namespace Bam.Net.CoreServices.Files
         {
             Secondary.Add(storage);
         }
+
+        public void ClearStorage()
+        {
+            Secondary.Clear();
+        }
+        
         public IChunk GetChunk(string hash)
         {
             IChunk chunk = Primary.GetChunk(hash);

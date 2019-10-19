@@ -209,6 +209,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\ManagedPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Data\NmapScan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Files\AppFileIdentifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Files\FileIdentifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Files\FileIdentifierKinds.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Files\HashFileIdentifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\Files\IFileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\IApplicationStartupHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\IHomeDirectoryResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\Models\ModelDefinition.cs" />

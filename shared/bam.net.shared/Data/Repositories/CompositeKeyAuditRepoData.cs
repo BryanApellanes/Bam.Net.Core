@@ -54,7 +54,7 @@ namespace Bam.Net.Data.Repositories
 
                 return _keyId;
             }
-            set { _keyId = value; }
+            set => _keyId = value;
         }
 
         string _compositeKey;
@@ -69,7 +69,7 @@ namespace Bam.Net.Data.Repositories
 
                 return _compositeKey;
             }
-            set { _compositeKey = value; }
+            set => _compositeKey = value;
         }
 
         public ulong Key()

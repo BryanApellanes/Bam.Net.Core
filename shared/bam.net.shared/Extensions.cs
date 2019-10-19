@@ -2075,6 +2075,12 @@ namespace Bam.Net
             return 0;
         }
         
+        /// <summary>
+        /// Convert text to a byte array using the specified encoding or UTF8.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
         public static byte[] ToBytes(this string text, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.UTF8;

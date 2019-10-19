@@ -94,19 +94,13 @@ namespace Bam.Net.Server
         public event FsEvent FileWritten;
         private void OnFileWritten(string path)
         {
-            if (FileWritten != null)
-            {
-                FileWritten(path);
-            }
+            FileWritten?.Invoke(path);
         }
 
         public event FsEvent FileAppendedTo;
         private void OnFileAppendedTo(string path)
         {
-            if (FileAppendedTo != null)
-            {
-                FileAppendedTo(path);
-            }
+            FileAppendedTo?.Invoke(path);
         }
 
         public void CreateDirectory(string directory)

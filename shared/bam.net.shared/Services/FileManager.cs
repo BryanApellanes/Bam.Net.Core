@@ -12,18 +12,22 @@ namespace Bam.Net.Services
 {
     public class FileManager : IFileManager
     {
-        public FileManager(IDataDirectoryProvider dataDirectorySettings, IFileService fileService)
+        public FileManager(IDataDirectoryProvider dataDirectoryProvider, IFileService fileService)
         {
-            DataDirectorySettings = dataDirectorySettings;
+            DataDirectoryProvider = dataDirectoryProvider;
             FileService = fileService;
         }
-        public IDataDirectoryProvider DataDirectorySettings { get; set; }
+        public IDataDirectoryProvider DataDirectoryProvider { get; set; }
         protected IFileService FileService { get; set; }
         public void StoreFiles(DirectoryInfo directory)
         {
             StoreFiles(directory.GetFiles("*", SearchOption.AllDirectories));
         }
 
+        /// <summary>
+        /// Stores the specified files as chunks using FileService.
+        /// </summary>
+        /// <param name="files"></param>
         public void StoreFiles(params FileInfo[] files)
         {
             StoreFiles(string.Empty, files);
@@ -36,7 +40,7 @@ namespace Bam.Net.Services
 
         public FileInfo RestoreFile(string fileNameOrHash)
         {
-            return FileService.WriteFileDataToDirectory(fileNameOrHash, DataDirectorySettings.GetFilesDirectory().FullName);
+            return FileService.WriteFileDataToDirectory(fileNameOrHash, DataDirectoryProvider.GetFilesDirectory().FullName);
         }
 
         public ChunkedFileInfo[] ListFiles(string originalDirectory)
