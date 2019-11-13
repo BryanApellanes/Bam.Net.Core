@@ -97,6 +97,10 @@ namespace Bam.Net.Bake
             };
         }
 
+        [YamlIgnore]
+        [XmlIgnore]
+        [JsonIgnore]
+        [Exclude]
         public bool NameIsDefault { get; set; }
         private string _name;
 
