@@ -496,8 +496,18 @@ namespace Bam.Net.CommandLine
         public static string GetPathArgument(string name)
         {
             string argumentValue = GetArgument(name);
-            ProcessHomeDirectoryResolver homeDirectoryResolver = new ProcessHomeDirectoryResolver();
-            return homeDirectoryResolver.GetHomePath(argumentValue);
+            if (argumentValue.StartsWith("~"))
+            {
+                ProcessHomeDirectoryResolver homeDirectoryResolver = new ProcessHomeDirectoryResolver();
+                return homeDirectoryResolver.GetHomePath(argumentValue);
+            }
+
+            if (argumentValue.StartsWith(".") && !argumentValue.StartsWith(".."))
+            {
+                return Path.Combine(Environment.CurrentDirectory, argumentValue.TruncateFront(1));
+            }
+
+            return argumentValue;
         }
         
         /// <summary>
