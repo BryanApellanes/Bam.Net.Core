@@ -201,12 +201,7 @@ namespace Bam.Net.Bake
             if (Arguments.Contains("output"))
             {
                 output = GetPathArgument("output");
-                outputFile = new FileInfo(output);
-                if (!outputFile.HasExtension(".zip"))
-                {
-                    dirInfo = new DirectoryInfo(output);
-                    outputFile = new FileInfo(Path.Combine(dirInfo.FullName, fileName));
-                }
+                outputFile = new FileInfo(Path.Combine(output, "..", fileName));
             }
 
             if (outputFile.Exists)
@@ -216,7 +211,7 @@ namespace Bam.Net.Bake
                 File.Delete(outputFile.FullName);
                 Thread.Sleep(300);
             }
-            ZipFile.CreateFromDirectory(recipe.OutputDirectory, outputFile.FullName);
+            ZipFile.CreateFromDirectory(new DirectoryInfo(recipe.OutputDirectory).FullName, outputFile.FullName);
             OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(300);
         }
@@ -305,7 +300,7 @@ namespace Bam.Net.Bake
         {
             if (recipe.NameIsDefault)
             {
-                recipe.Name = file.Name;
+                recipe.Name = Path.GetFileNameWithoutExtension(file.Name);
             }
             string json = recipe.ToJson(true);
             json.SafeWriteToFile(file.FullName, true);

@@ -23,9 +23,13 @@
     <_UnmanagedRegistrationCache Remove="obj\bake.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bake.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bake.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bake.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bake.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
   <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bake.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bake.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bake.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bake.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bake.csproj.ResolveComReference.cache" />
@@ -35,9 +39,13 @@
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bake.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bake.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bake.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bake.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bake.dll" />
   </ItemGroup>
 
   <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bake.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bake.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bake.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bake.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bake.pdb" />
@@ -47,17 +55,33 @@
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bake.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bake.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bake.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bake.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bake.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bake.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bake.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bake.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bake.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bake.dll.manifest" />
   </ItemGroup>
 
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bake.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClsidMap Remove="obj\Debug\netcoreapp2.2\bake.clsidmap" />
+    <ClsidMap Remove="obj\Debug\netcoreapp2.2\bake.clsidmap" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bake.X.manifest" />
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bake.X.manifest" />
   </ItemGroup>
 </Project>

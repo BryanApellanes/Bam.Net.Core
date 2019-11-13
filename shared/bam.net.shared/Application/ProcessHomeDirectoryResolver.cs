@@ -12,7 +12,7 @@ namespace Bam.Net.Application
 
         public string GetHomePath(string path)
         {
-            while (path.StartsWith("/") || path.StartsWith("~"))
+            while (path.StartsWith("~"))
             {
                 path = path.TruncateFront(1);
             }
