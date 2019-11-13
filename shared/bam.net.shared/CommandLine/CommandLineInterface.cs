@@ -504,7 +504,7 @@ namespace Bam.Net.CommandLine
 
             if (argumentValue.StartsWith(".") && !argumentValue.StartsWith(".."))
             {
-                return Path.Combine(Environment.CurrentDirectory, argumentValue.TruncateFront(1));
+                return Path.Combine(Environment.CurrentDirectory, argumentValue);
             }
 
             return argumentValue;
