@@ -131,7 +131,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement
 
         public string ResolveNetStandardPath()
         {
-            return ReferenceAssemblyResolver.ResolveNetStandardPath();
+            return ReferenceAssemblyResolver.ResolveNetStandardPath(RuntimeSettings.GetSystemRuntimePath());
         }
 
         public string ResolveReferenceAssemblyPath(string assemblyName)
