@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Bam.Net.Logging;
 
 namespace Bam.Net
 {
@@ -53,7 +54,7 @@ namespace Bam.Net
             }
             if (string.IsNullOrEmpty(DockerPath))
             {
-                DockerPath = GetPath("docker");
+                DockerPath = TryGetPath("docker");
             }
 
             StringBuilder message = new StringBuilder();
@@ -97,7 +98,7 @@ namespace Bam.Net
                     NpxPath = GetPath("npx"),
                     NodePath = GetPath("node"),
                     NpmPath = GetPath("npm"),
-                    DockerPath = GetPath("docker")
+                    DockerPath = TryGetPath("docker")
                 };
                 settings.ToYamlFile(path);
             }
@@ -120,6 +121,19 @@ namespace Bam.Net
             }
             this.ToYamlFile(path);
             return path;
+        }
+
+        public static string TryGetPath(string fileName)
+        {
+            try
+            {
+                return GetPath(fileName);
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Failed to get path for {0}: {1}", fileName, ex.Message);
+                return string.Empty;
+            }
         }
 
         public static string GetPath(string fileName)
