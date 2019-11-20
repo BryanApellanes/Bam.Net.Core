@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using Bam.Net.Logging;
 using Bam.Net.Logging.Application;
 using Bam.Net.Logging.Application.Data;
 using Bam.Net.Server;

@@ -61,18 +61,7 @@
     <EmbeddedResource Remove="Presentation\Html\Attributes\**" />
     <None Remove="Presentation\Html\Attributes\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Presentation\Html\Js\**" />
-    <Compile Remove="Presentation\Html\Attributes\**" />
-    <Compile Include="..\..\shared\bam.net.shared\Logging\Application\Activity.cs">
-      <Link>bam.net.shared\Logging\Application\Activity.cs</Link>
-    </Compile>
-    <Compile Include="..\..\shared\bam.net.shared\Logging\Application\Data\ActivityDescriptor.cs">
-      <Link>bam.net.shared\Logging\Activity\Data\ActivityDescriptor.cs</Link>
-    </Compile>
-  </ItemGroup>
-  
+ 
   <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 
   <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />

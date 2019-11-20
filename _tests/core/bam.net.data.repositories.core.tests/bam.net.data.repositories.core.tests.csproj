@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Compile Remove="Test_Generated\Qi\**" />
     <EmbeddedResource Remove="Test_Generated\Qi\**" />
@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
+    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,7 +49,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+    <ClsidMap Remove="obj\Debug\netcoreapp2.2\bam.net.data.repositories.core.tests.clsidmap" />
   </ItemGroup>
+
+  <ItemGroup>
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bam.net.data.repositories.core.tests.X.manifest" />
+  </ItemGroup>
+
+
 
 </Project>

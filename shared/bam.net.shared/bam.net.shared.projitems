@@ -580,6 +580,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\NamedAuditRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Application\Activity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Application\Data\ActivityDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\ApplicationModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\DataAccessModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\DefaultPersistenceModelProvider.cs" />
