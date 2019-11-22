@@ -270,6 +270,11 @@ namespace Bam.Net.Tests
             {
                 throw new NotImplementedException();
             }
+
+            public IEnumerable<ChunkedFileDescriptor> ListFiles(string rootPath = ".")
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [UnitTest]

@@ -5,7 +5,12 @@ using System.Text;
 
 namespace Bam.Net.Logging.Http.Data
 {
-    public class QueryStringData: RepoData
+    [Serializable]
+    public class QueryStringData: KeyedRepoData
     {
+        [CompositeKey]
+        public string Name { get; set; }
+        [CompositeKey]
+        public string Value { get; set; }
     }
 }

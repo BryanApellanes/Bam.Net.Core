@@ -30,7 +30,7 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
 			AddType<Bam.Net.Logging.Http.Data.RequestData>();﻿			
 			AddType<Bam.Net.Logging.Http.Data.UriData>();﻿			
 			AddType<Bam.Net.Logging.Http.Data.UserData>();﻿			
-			AddType<Bam.Net.Logging.Http.Data.UserHashData>();
+			AddType<Bam.Net.Logging.Http.Data.UserKeyData>();
 			DaoAssembly = typeof(HttpLoggingRepository).Assembly;
 		}
 
@@ -738,10 +738,10 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
-		public void SetOneUserHashDataWhere(WhereDelegate<UserHashDataColumns> where, out Bam.Net.Logging.Http.Data.UserHashData result)
+		public void SetOneUserHashDataWhere(WhereDelegate<UserHashDataColumns> where, out Bam.Net.Logging.Http.Data.UserKeyData result)
 		{
 			Bam.Net.Logging.Http.Data.Dao.UserHashData.SetOneWhere(where, out Bam.Net.Logging.Http.Data.Dao.UserHashData daoResult, Database);
-			result = daoResult.CopyAs<Bam.Net.Logging.Http.Data.UserHashData>();
+			result = daoResult.CopyAs<Bam.Net.Logging.Http.Data.UserKeyData>();
 		}
 
 		/// <summary>
@@ -750,10 +750,10 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
-		public Bam.Net.Logging.Http.Data.UserHashData GetOneUserHashDataWhere(WhereDelegate<UserHashDataColumns> where)
+		public Bam.Net.Logging.Http.Data.UserKeyData GetOneUserHashDataWhere(WhereDelegate<UserHashDataColumns> where)
 		{
-			Type wrapperType = GetWrapperType<Bam.Net.Logging.Http.Data.UserHashData>();
-			return (Bam.Net.Logging.Http.Data.UserHashData)Bam.Net.Logging.Http.Data.Dao.UserHashData.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+			Type wrapperType = GetWrapperType<Bam.Net.Logging.Http.Data.UserKeyData>();
+			return (Bam.Net.Logging.Http.Data.UserKeyData)Bam.Net.Logging.Http.Data.Dao.UserHashData.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
 		}
 
 		/// <summary>
@@ -765,10 +765,10 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UserHashDataColumns and other values
 		/// </param>
-		public Bam.Net.Logging.Http.Data.UserHashData OneUserHashDataWhere(WhereDelegate<UserHashDataColumns> where)
+		public Bam.Net.Logging.Http.Data.UserKeyData OneUserHashDataWhere(WhereDelegate<UserHashDataColumns> where)
         {
-            Type wrapperType = GetWrapperType<Bam.Net.Logging.Http.Data.UserHashData>();
-            return (Bam.Net.Logging.Http.Data.UserHashData)Bam.Net.Logging.Http.Data.Dao.UserHashData.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+            Type wrapperType = GetWrapperType<Bam.Net.Logging.Http.Data.UserKeyData>();
+            return (Bam.Net.Logging.Http.Data.UserKeyData)Bam.Net.Logging.Http.Data.Dao.UserHashData.OneWhere(where, Database)?.CopyAs(wrapperType, this);
         }
 
 		/// <summary>
@@ -778,9 +778,9 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.Logging.Http.Data.UserHashDataColumns and other values
 		/// </param>
-		public IEnumerable<Bam.Net.Logging.Http.Data.UserHashData> UserHashDatasWhere(WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy = null)
+		public IEnumerable<Bam.Net.Logging.Http.Data.UserKeyData> UserHashDatasWhere(WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy = null)
         {
-            return Wrap<Bam.Net.Logging.Http.Data.UserHashData>(Bam.Net.Logging.Http.Data.Dao.UserHashData.Where(where, orderBy, Database));
+            return Wrap<Bam.Net.Logging.Http.Data.UserKeyData>(Bam.Net.Logging.Http.Data.Dao.UserHashData.Where(where, orderBy, Database));
         }
 		
 		/// <summary>
@@ -796,9 +796,9 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UserHashDataColumns and other values
 		/// </param>
-		public IEnumerable<Bam.Net.Logging.Http.Data.UserHashData> TopUserHashDatasWhere(int count, WhereDelegate<UserHashDataColumns> where)
+		public IEnumerable<Bam.Net.Logging.Http.Data.UserKeyData> TopUserHashDatasWhere(int count, WhereDelegate<UserHashDataColumns> where)
         {
-            return Wrap<Bam.Net.Logging.Http.Data.UserHashData>(Bam.Net.Logging.Http.Data.Dao.UserHashData.Top(count, where, Database));
+            return Wrap<Bam.Net.Logging.Http.Data.UserKeyData>(Bam.Net.Logging.Http.Data.Dao.UserHashData.Top(count, where, Database));
         }
 
 		/// <summary>
@@ -821,19 +821,19 @@ namespace Bam.Net.Logging.Http.Data.Dao.Repository
             return Bam.Net.Logging.Http.Data.Dao.UserHashData.Count(where, Database);
         }
         
-        public async Task BatchQueryUserHashDatas(int batchSize, WhereDelegate<UserHashDataColumns> where, Action<IEnumerable<Bam.Net.Logging.Http.Data.UserHashData>> batchProcessor)
+        public async Task BatchQueryUserHashDatas(int batchSize, WhereDelegate<UserHashDataColumns> where, Action<IEnumerable<Bam.Net.Logging.Http.Data.UserKeyData>> batchProcessor)
         {
             await Bam.Net.Logging.Http.Data.Dao.UserHashData.BatchQuery(batchSize, where, (batch) =>
             {
-				batchProcessor(Wrap<Bam.Net.Logging.Http.Data.UserHashData>(batch));
+				batchProcessor(Wrap<Bam.Net.Logging.Http.Data.UserKeyData>(batch));
             }, Database);
         }
 		
-        public async Task BatchAllUserHashDatas(int batchSize, Action<IEnumerable<Bam.Net.Logging.Http.Data.UserHashData>> batchProcessor)
+        public async Task BatchAllUserHashDatas(int batchSize, Action<IEnumerable<Bam.Net.Logging.Http.Data.UserKeyData>> batchProcessor)
         {
             await Bam.Net.Logging.Http.Data.Dao.UserHashData.BatchAll(batchSize, (batch) =>
             {
-				batchProcessor(Wrap<Bam.Net.Logging.Http.Data.UserHashData>(batch));
+				batchProcessor(Wrap<Bam.Net.Logging.Http.Data.UserKeyData>(batch));
             }, Database);
         }
 	}

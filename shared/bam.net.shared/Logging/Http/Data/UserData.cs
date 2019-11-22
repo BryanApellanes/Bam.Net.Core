@@ -13,6 +13,6 @@ namespace Bam.Net.Logging.Http.Data
         /// converted to ulong.
         /// </summary>
         public ulong UserNameHash { get; set; }
-        public string RequestCuid { get; set; }
+        public string RequestKey { get; set; }
     }
 }

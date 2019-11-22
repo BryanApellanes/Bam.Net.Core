@@ -12,10 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bamsdo.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
@@ -41,6 +37,10 @@
 
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamsdo.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />

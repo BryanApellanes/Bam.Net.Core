@@ -16,14 +16,14 @@ namespace Bam.Net.Logging.Http.Data.Wrappers
 {
 	// generated
 	[Serializable]
-	public class UserHashDataWrapper: Bam.Net.Logging.Http.Data.UserHashData, IHasUpdatedXrefCollectionProperties
+	public class UserKeyDataWrapper: Bam.Net.Logging.Http.Data.UserKeyData, IHasUpdatedXrefCollectionProperties
 	{
-		public UserHashDataWrapper()
+		public UserKeyDataWrapper()
 		{
 			this.UpdatedXrefCollectionProperties = new Dictionary<string, PropertyInfo>();
 		}
 
-		public UserHashDataWrapper(DaoRepository repository) : this()
+		public UserKeyDataWrapper(DaoRepository repository) : this()
 		{
 			this.Repository = repository;
 		}

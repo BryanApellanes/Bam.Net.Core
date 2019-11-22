@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.net.encryption.core.tests.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
@@ -40,6 +36,10 @@
 
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.encryption.core.tests.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,9 @@ namespace Bam.Net.Logging.Application.Data
             ProcessInfo = Net.ProcessInfo.Current.ToYaml();
         }
         
+        [CompositeKey]
+        public ActivityType Type { get; set; }
+        
         /// <summary>
         /// A logical name to refer to the activity.
         /// </summary>

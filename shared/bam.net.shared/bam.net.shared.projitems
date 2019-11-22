@@ -580,8 +580,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\NamedAuditRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Logging\Application\Activity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Application\ActivityLog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Application\ActivityType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Application\Data\ActivityDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\ResponseData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\ApplicationModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\DataAccessModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\DefaultPersistenceModelProvider.cs" />
@@ -1222,13 +1224,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserHashDataColumns.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserHashDataPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserHashDataQuery.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserHashDataWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserKeyDataWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\HeaderData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\QueryStringData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\RequestData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\UriData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\UserData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\UserHashData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\UserKeyData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\RequestLog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\LogMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\WarningMessage.cs" />
@@ -3219,6 +3221,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Dao.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Qi.js" />
+    <Content Include="$(MSBuildThisFileDirectory)Logging\Http\GenerationConfig.yaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Javascript\json2.js" />
     <Content Include="$(MSBuildThisFileDirectory)Presentation\Emoji.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Presentation\Html\Js\DataSet.js" />

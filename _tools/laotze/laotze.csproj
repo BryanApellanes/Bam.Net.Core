@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\laotze.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
@@ -43,6 +39,10 @@
 
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\laotze.application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
 </Project>

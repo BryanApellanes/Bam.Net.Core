@@ -7,7 +7,7 @@
     <StartupObject>Bam.Net.Application.Program</StartupObject>
     <RootNamespace>Bam.Net.Application</RootNamespace>
 
-    <PackageId>bamdb.exe</PackageId>
+    <PackageId>bamdb</PackageId>
     <Version>0.0.1</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
@@ -22,11 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
     <ProjectReference Include="..\bam\bam.csproj" />
   </ItemGroup>
 
@@ -38,31 +38,56 @@
 
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bamdb.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bamdb.csproj.UnmanagedRegistration.cache" />
+    <_UnmanagedRegistrationCache Remove="obj\bamdb.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
   <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamdb.csproj.ResolveComReference.cache" />
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamdb.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamdb.csproj.ResolveComReference.cache" />
   </ItemGroup>
 
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
   </ItemGroup>
 
   <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamdb.pdb" />
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamdb.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamdb.pdb" />
   </ItemGroup>
 
   <ItemGroup>
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamdb.dll" />
   </ItemGroup>
 
   <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamdb.dll.manifest" />
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamdb.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamdb.dll.manifest" />
   </ItemGroup>
 
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamdb.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamdb.application" />
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamdb.application" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ClsidMap Remove="obj\Debug\netcoreapp2.2\bamdb.clsidmap" />
+    <ClsidMap Remove="obj\Debug\netcoreapp2.2\bamdb.clsidmap" />
+    <ClsidMap Remove="obj\Debug\netcoreapp2.2\bamdb.clsidmap" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bamdb.X.manifest" />
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bamdb.X.manifest" />
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bamdb.X.manifest" />
+  </ItemGroup>
 
 </Project>
