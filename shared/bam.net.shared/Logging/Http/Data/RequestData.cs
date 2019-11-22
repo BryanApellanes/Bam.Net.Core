@@ -21,7 +21,7 @@ namespace Bam.Net.Logging.Http.Data
         public string HttpMethod { get; set; }
         public byte[] InputStream { get; set; }
 
-        public ulong UrlId { get; set; }
+        public ulong UrlKey { get; set; }
         public virtual UriData Url { get; set; }
 
         public ulong UrlReferrerId { get; set; }
@@ -34,7 +34,7 @@ namespace Bam.Net.Logging.Http.Data
 
         public static RequestData FromRequest(IRequest request)
         {
-            RequestData data = new RequestData
+            RequestData requestData = new RequestData
             {
                 AcceptTypes = string.Join(",", request.AcceptTypes),
                 ContentEncoding = request.ContentEncoding.ToString(),
@@ -47,22 +47,22 @@ namespace Bam.Net.Logging.Http.Data
                 UserHostAddress = request.UserHostAddress,
                 UserHostName = request.UserHostName,
                 UserLanguages = string.Join(",", request.UserLanguages),
-                RawUrl = request.RawUrl
+                RawUrl = request.RawUrl,
+                Cookies = new List<CookieData>(),
+                Headers = new List<HeaderData>()
             };
-            data.Cookies = new List<CookieData>();
             foreach(Cookie cookie in request?.Cookies)
             {
-                data.Cookies.Add(CookieData.FromCookie(cookie));
+                requestData.Cookies.Add(CookieData.FromCookie(cookie));
             }
-            data.Headers = new List<HeaderData>();
             foreach(string key in request?.Headers.AllKeys)
             {
-                data.Headers.Add(new HeaderData { Name = key, Value = request.Headers[key] });
+                requestData.Headers.Add(new HeaderData { Name = key, Value = request.Headers[key] });
             }
             MemoryStream inputStream = new MemoryStream();
             request?.InputStream.CopyTo(inputStream);
-            data.InputStream = inputStream.ToArray();
-            return data;
+            requestData.InputStream = inputStream.ToArray();
+            return requestData;
         }
     }
 }

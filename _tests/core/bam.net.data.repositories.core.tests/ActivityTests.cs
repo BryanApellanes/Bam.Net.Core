@@ -19,9 +19,9 @@ namespace Bam.Net.Data.Repositories.Tests
         {
             AppConf appConf = new AppConf("TestApp");
             string testActivityName = "TestActivityName_".RandomLetters(8);
-            Activity.Log(appConf, testActivityName, "This is a test message: {0}", "arg value" );
+            ActivityLog.Log(appConf, testActivityName, "This is a test message: {0}", "arg value" );
             Thread.Sleep(1500);
-            Expect.IsGreaterThan(Activity.Retrieve(testActivityName).ToArray().Length, 0);
+            Expect.IsGreaterThan(ActivityLog.Retrieve(testActivityName).ToArray().Length, 0);
         }
     }
 }

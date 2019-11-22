@@ -6,10 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="bam.net.core" Version="1.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_UnmanagedRegistrationCache Remove="obj\masuco.csproj.UnmanagedRegistration.cache" />
     </ItemGroup>
 
@@ -35,6 +31,10 @@
 
     <ItemGroup>
       <DeployManifest Remove="obj\Debug\netcoreapp2.2\masuco.application" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bam.net.core" Version="1.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.net.services.core.tests.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 

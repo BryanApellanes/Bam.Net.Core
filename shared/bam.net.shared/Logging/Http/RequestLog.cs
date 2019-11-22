@@ -24,17 +24,61 @@ namespace Bam.Net.Logging.Http
         public IUserResolver UserResolver { get; }
         public HttpLoggingRepository HttpLoggingRepository { get; }
 
+        public void Add(IHttpContext context, IResponse response, string[] checkedPaths = null)
+        {
+            LogRequest(context);
+            LogResponse(context, response, checkedPaths);
+        }
+        
+        public void LogResponse(IHttpContext context, IResponse response, string[] checkedPaths = null)
+        {
+            try
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        ResponseData responseData = HttpLoggingRepository.Save(ResponseData.FromResponse(response));
+                        string userName = UserResolver.GetUser(context);
+                        ulong userKey = userName.ToSha512ULong();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn("Error logging response: {0}", ex.Message);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Error logging response: {0}", ex.Message);
+            }
+        }
+        
         public void LogRequest(IHttpContext context)
         {
-            Task.Run(() =>
+            try
             {
-                IRequest request = context.Request;
-                RequestData requestData = HttpLoggingRepository.Save(RequestData.FromRequest(request));
-                string userName = UserResolver.GetUser(context);
-                ulong userNameHash = userName.ToSha512ULong();
-                UserHashData dataMap = HttpLoggingRepository.GetOneUserHashDataWhere(uhd => uhd.UserName == userName && uhd.UserNameHash == userNameHash);
-                HttpLoggingRepository.SetOneUserDataWhere(ud => ud.UserNameHash == userNameHash && ud.RequestCuid == requestData.Cuid);
-            });
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        IRequest request = context.Request;
+                        RequestData requestData = HttpLoggingRepository.Save(RequestData.FromRequest(request));
+                        string userName = UserResolver.GetUser(context);
+                        ulong userKey = userName.ToSha512ULong();
+                        HttpLoggingRepository.SetOneUserHashDataWhere(uhd => uhd.UserName == userName && uhd.UserNameHash == userKey);
+                        HttpLoggingRepository.SetOneUserDataWhere(ud => ud.UserNameHash == userKey && ud.RequestCuid == requestData.Cuid);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn("Error logging request: {0}", ex.Message);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Error logging request: {0}", ex.Message);
+            }
         }
     }
 }

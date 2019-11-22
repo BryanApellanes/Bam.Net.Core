@@ -2623,12 +2623,7 @@ namespace Bam.Net
             Dictionary<string, object> result = new Dictionary<string, object>();
             Type type = value.GetType();
             PropertyInfo[] props = type.GetProperties();
-            foreach (PropertyInfo prop in props)
-            {
-                result.Add(prop.Name, prop.GetValue(value, null));
-            }
-
-            return result;
+            return PropertiesToDictionary(value, props);
         }
 
         /// <summary>
@@ -2711,6 +2706,118 @@ namespace Bam.Net
             return PropertiesToString(obj, properties, separator);
         }
 
+        public static Dictionary<string, object> PropertiesToDictionary(this object obj, PropertyInfo[] properties)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            try
+            {
+                foreach (PropertyInfo property in properties)
+                {
+                    try
+                    {
+                        if (property.PropertyType == typeof(string[]))
+                        {
+                            string[] values = ((string[])property.GetValue(obj, null)) ?? new string[] { };
+                            result.Add(property.Name, string.Join(", ", values));
+                        }
+#if NET472
+                        else if (property.PropertyType == typeof(HttpCookieCollection))
+                        {
+                            object value = property.GetValue(obj, null);
+                            if (value != null)
+                            {
+                                HttpCookieCollection values = (HttpCookieCollection)value;
+                                List<string> strings = new List<string>();
+                                foreach (HttpCookie cookie in values)
+                                {
+                                    strings.Add(string.Format("{0}={1}", cookie.Name, cookie.Value));
+                                }
+                                result.Add(property.Name, string.Join("\r\n\t", strings.ToArray()));
+                            }
+                            else
+                            {
+                                result.Add(property.Name, "[null]");
+                            }
+                        }
+#endif
+                        else if (property.PropertyType == typeof(System.Net.CookieCollection))
+                        {
+                            object value = property.GetValue(obj, null);
+                            if (value != null)
+                            {
+                                System.Net.CookieCollection values = (System.Net.CookieCollection)value;
+                                List<string> strings = new List<string>();
+                                foreach (System.Net.Cookie cookie in values)
+                                {
+                                    strings.Add($"{cookie.Name}={cookie.Value}");
+                                }
+                                result.Add(property.Name, string.Join("\r\n\t", strings.ToArray()));
+                            }
+                            else
+                            {
+                                result.Add(property.Name, "[null]");
+                            }
+                        }
+                        else if (property.PropertyType == typeof(NameValueCollection))
+                        {
+                            object value = property.GetValue(obj, null);
+                            if (value != null)
+                            {
+                                NameValueCollection values = (NameValueCollection)value;
+                                List<string> strings = new List<string>();
+                                foreach (string key in values.AllKeys)
+                                {
+                                    strings.Add($"{key}={values[key]}");
+                                }
+                                result.Add(property.Name, string.Join("\r\n\t", strings.ToArray()));
+                            }
+                            else
+                            {
+                                result.Add(property.Name, "[null]");
+                            }
+                        }
+                        else if (property.GetIndexParameters().Length == 0)
+                        {
+                            object value = property.GetValue(obj, null);
+                            string stringValue = "[null]";
+                            if (value != null)
+                            {
+                                if (value is IEnumerable values && !(value is string))
+                                {
+                                    List<string> strings = new List<string>();
+                                    foreach (object o in values)
+                                    {
+                                        strings.Add(o.ToString());
+                                    }
+                                    stringValue = string.Join("\r\n\t", strings.ToArray());
+                                }
+                                else
+                                {
+                                    stringValue = value.ToString();
+                                }
+                            }
+
+                            result.Add(property.Name, stringValue);
+                        }
+                        else if (property.GetIndexParameters().Length > 0)
+                        {
+                            result.Add($"Indexed({property.Name})", string.Empty);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        result.Add(property.Name, ex.Message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Add("EXCEPTION", ex.Message);
+            }
+            
+            return result;
+        }
+        
         public static string PropertiesToString(this object obj, PropertyInfo[] properties, string separator = "\r\n")
         {
             try

@@ -1,6 +1,6 @@
 ﻿# Bamdb
 
-Bam Database (bamdb.exe) is a high level data access component which provides a client gateway to multiple data persistence layers including various RDBM systems such as Microsoft Sql, MySql, Postgres and SQLite as well as no sql solutions such as mongo and its own internal data repository system.  It is also used to generate data access objects, data transfer objects and repositories from plain CLR classes.
+Bam Database (bamdb) is a high level data access component which provides a client gateway to multiple data persistence layers including various RDBM systems such as Microsoft Sql, MySql, Postgres and SQLite as well as no sql solutions such as mongo and its own internal data repository system.  It is also used to generate data access objects, data transfer objects and repositories from plain CLR classes.
 
 ## Code Generation
 
@@ -29,8 +29,8 @@ An example of a GenerationConfig.yaml file:
 
 ```yaml
 SchemaName: MyApplicationSchema
-WriteSourceTo: C:\tmp\MyApplicationSchema
-TypeAssembly: C:\bin\myapplication.dll
+WriteSourceTo: /tmp/MyApplicationSchema
+TypeAssembly: /tmp/bin/myapplication.dll
 FromNameSpace: My.Application.Data
 ToNameSpace: My.Appliction.Data.Dao
 ```
