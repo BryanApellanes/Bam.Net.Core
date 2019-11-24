@@ -11,12 +11,12 @@ namespace Bam.Net.Application
         public ITemplateRenderer TemplateRenderer { get; set; }
         public Stream Output { get; set; }
 
-        public string Render()
+        public virtual string Render()
         {
             return Render(this);
         }
 
-        object _renderLock = new object();
+        readonly object _renderLock = new object();
         public void Render(Stream output)
         {
             Args.ThrowIfNull(TemplateRenderer);

@@ -10,7 +10,7 @@ using System.Reflection;
 using System.IO;
 using Bam.Net.Logging;
 
-namespace Bam.Net.Drawing
+namespace Bam.Net.Presentation.Drawing
 {
     public static class ResourceImages
     {

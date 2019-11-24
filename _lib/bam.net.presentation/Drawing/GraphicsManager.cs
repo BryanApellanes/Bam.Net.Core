@@ -9,7 +9,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using Bam.Net.Drawing;
 
 namespace Bam.Net.Presentation.Drawing
 {

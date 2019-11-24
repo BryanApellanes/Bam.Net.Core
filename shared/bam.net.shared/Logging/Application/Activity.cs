@@ -11,9 +11,9 @@ using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Net.Logging.Application
 {
-    public class ActivityLog
+    public class Activity
     {
-        static ActivityLog()
+        static Activity()
         {
             if (Repository == null)
             {
@@ -35,40 +35,40 @@ namespace Bam.Net.Logging.Application
         public static void UserLog(User user, string activityName, string messageSignature, params object[] args)
         {
             string appName = ApplicationNameProvider.GetApplicationName();
-            Log(ActivityType.User, appName, appName, user.UserName, activityName, messageSignature, args);
+            Add(ActivityType.User, appName, appName, user.UserName, activityName, messageSignature, args);
         }
         
         public static void AppLog(string activityName, string messageSignature, params object[] args)
         {
             string appName = ApplicationNameProvider?.GetApplicationName();
-            Log(ActivityType.System, appName, appName, User.Anonymous.UserName, activityName, messageSignature, args);
+            Add(ActivityType.System, appName, appName, User.Anonymous.UserName, activityName, messageSignature, args);
         }
         
         public static void SysLog(string activityName, string messageSignature, params object[] args)
         {
             string appName = ApplicationNameProvider?.GetApplicationName();
-            Log(ActivityType.System, appName, appName, User.Anonymous.UserName, activityName, messageSignature, args);
+            Add(ActivityType.System, appName, appName, User.Anonymous.UserName, activityName, messageSignature, args);
         }
                 
-        public static void Log(AppConf appConf, string activityName, string messageSignature, params object[] args)
+        public static void Add(AppConf appConf, string activityName, string messageSignature, params object[] args)
         {
             string appName = appConf.Name;
             string displayName = appConf.DisplayName;
                 
-            Log(appName, displayName, activityName, messageSignature, args);
+            Add(appName, displayName, activityName, messageSignature, args);
         }
         
-        public static void Log(string appName, string appDisplayName, string activityName, string messageSignature, params object[] args)
+        public static void Add(string appName, string appDisplayName, string activityName, string messageSignature, params object[] args)
         {
-            Log(appName, appDisplayName, User.Anonymous.UserName, activityName, messageSignature, args);
+            Add(appName, appDisplayName, User.Anonymous.UserName, activityName, messageSignature, args);
         }
 
-        public static void Log(string appName, string appDisplayName, string userName, string activityName, string messageSignature, params object[] args)
+        public static void Add(string appName, string appDisplayName, string userName, string activityName, string messageSignature, params object[] args)
         {
-            Log(ActivityType.Application, appName, appDisplayName, userName, activityName, messageSignature, args);
+            Add(ActivityType.Application, appName, appDisplayName, userName, activityName, messageSignature, args);
         }
 
-        public static void Log(ActivityType activityType, string appName, string appDisplayName, string userName, string activityName, string messageSignature, params object[] args)
+        public static void Add(ActivityType activityType, string appName, string appDisplayName, string userName, string activityName, string messageSignature, params object[] args)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Bam.Net.Logging.Application
                 string[] formatArgs = args.Select(a => a.ToString()).ToArray();
                 (Logger ?? Bam.Net.Logging.Log.Default)?.AddEntry(signature, formatArgs);
 
-                Repository?.Save(new ActivityDescriptor()
+                Repository?.Save(new ActivityDescriptor
                 {
                     Type = activityType,
                     Name = activityName,

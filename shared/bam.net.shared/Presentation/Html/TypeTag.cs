@@ -5,7 +5,7 @@ namespace Bam.Net.Presentation.Html
 {
     public class TypeTag: Tag
     {
-        public TypeTag(Type type) : this(GetTagName(type), null, null)
+        public TypeTag(Type type) : this(GetTagName(type), new {}, null)
         {
             Type = type;
             AddClass(GetClassName(type));
@@ -16,6 +16,11 @@ namespace Bam.Net.Presentation.Html
         }
 
         public TypeTag(string tagName, string content) : base(tagName, content)
+        {
+        }
+
+        public TypeTag(string tagName, object attributes, Func<Tag> content) : base(tagName, attributes,
+            content().Render())
         {
         }
 

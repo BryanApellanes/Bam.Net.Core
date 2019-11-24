@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
-namespace Bam.Net.Drawing
+namespace Bam.Net.Presentation.Drawing
 {
     public abstract class RoundedRectangle
     {

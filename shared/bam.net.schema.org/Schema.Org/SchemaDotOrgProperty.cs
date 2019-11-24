@@ -17,10 +17,7 @@ namespace Bam.Net.Schema.Org
         string _expectedType;
         public string ExpectedType
         {
-            get
-            {
-                return _expectedType.PascalCase(!_expectedType.IsAllCaps());
-            }
+            get => _expectedType.PascalCase(!_expectedType.IsAllCaps());
             set
             {
                 _expectedType = value;

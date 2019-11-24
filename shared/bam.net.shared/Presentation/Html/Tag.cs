@@ -20,11 +20,15 @@ namespace Bam.Net.Presentation.Html
 
     public partial class Tag
     {
-        public Tag(string tagName) : this(tagName, new Dictionary<string, object>(), null)
+        public Tag(string tagName) : this(tagName, new Dictionary<string, object>(), new object())
         {
         }
 
         public Tag(string tagName, Func<Tag> content) : this(tagName, content().Render())
+        {
+        }
+
+        public Tag(string tagName, object attributes, Func<Tag> content = null) : this(tagName, attributes, content().Render())
         {
         }
         
@@ -33,7 +37,7 @@ namespace Bam.Net.Presentation.Html
         }
 
         public Tag(string tagName, object attributes = null, object content = null) : this(tagName,
-            attributes?.ToDictionary(), content)
+            attributes is Dictionary<string, object> ? (Dictionary<string, object>)attributes: attributes?.ToDictionary(), content)
         {
         }
 
@@ -143,7 +147,11 @@ namespace Bam.Net.Presentation.Html
         public Dictionary<string, object> Styles { get; private set; }
         public HashSet<string> Classes { get; set; }
         protected internal string Content { get; set; }
+        
+        public string InnerText => Content.HtmlEncode();
 
+        public string InnerHtml => Content;
+        
         public Tag Id(string id)
         {
             SetAttribute("id", id);
@@ -217,17 +225,7 @@ namespace Bam.Net.Presentation.Html
 
             return this;
         }
-        
-        public string InnerText
-        {
-            get { return Content.HtmlEncode(); }
-        }
 
-        public string InnerHtml
-        {
-            get { return Content; }
-        }
-        
         public Tag AddAttributes(object attributes)
         {
             Args.ThrowIfNull(attributes, "attributes");
@@ -254,9 +252,18 @@ namespace Bam.Net.Presentation.Html
 
             return this;
         }
-        
-        public bool SelfClosing { get; set; }
 
+        protected bool SelfClosing { get; set; }
+
+        public static Tag Of(string tagName)
+        {
+            return Of(tagName, new { }, string.Empty);
+        }
+        
+        public static Tag Of(string tagName, object attributes = null, Func<Tag> content = null)
+        {
+            return new Tag(tagName, attributes, content());
+        }
         public static Tag Of(string tagName, object attributes = null, string content = null)
         {
             return new Tag(tagName, attributes, content);

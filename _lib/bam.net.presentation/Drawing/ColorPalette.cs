@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Xml.Serialization;
 
-namespace Bam.Net.Drawing
+namespace Bam.Net.Presentation.Drawing
 {
     [Serializable]
     public class ColorPalette

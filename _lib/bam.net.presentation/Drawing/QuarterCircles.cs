@@ -10,7 +10,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using Bam.Net.Presentation.Drawing;
 
-namespace Bam.Net.Drawing
+namespace Bam.Net.Presentation.Drawing
 {
     public class QuarterCircles
     {

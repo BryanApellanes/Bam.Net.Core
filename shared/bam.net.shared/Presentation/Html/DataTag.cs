@@ -18,6 +18,14 @@ namespace Bam.Net.Presentation.Html
         {
         }
 
+        public DataTag(string tagName, object attributes, Func<Tag> content) : base(tagName, attributes, content)
+        {
+        }
+
+        public DataTag(string tagName, object attributes, string content) : base(tagName, attributes, content)
+        {
+        }
+
         public DataTag(string tagName, string content) : base(tagName, content)
         {
         }
@@ -40,6 +48,16 @@ namespace Bam.Net.Presentation.Html
                 _data = value;
                 Type = _data?.GetType();
             }
+        }
+
+        public static DataTag Of(string tagName, object attributes, object content)
+        {
+            return new DataTag(tagName, attributes, content);
+        }
+        
+        public static DataTag Of(string tagName, object attributes, Func<Tag> content)
+        {
+            return new DataTag(tagName, attributes, content);
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Drawing;
 using Bam.Net;
 //using dotless.Core;
 
-namespace Bam.Net.Drawing
+namespace Bam.Net.Presentation.Drawing
 {
     [Serializable]
     public class HexColor
