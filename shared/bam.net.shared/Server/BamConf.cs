@@ -136,14 +136,8 @@ namespace Bam.Net.Server
         /// </summary>
         public string ContentRoot
         {
-            get
-            {
-                return Fs.Root;
-            }
-            set
-            {
-                Fs.Root = value;
-            }
+            get => Fs.Root;
+            set => Fs.Root = value;
         }
 
         public DaoConf[] DaoConfigs
@@ -562,7 +556,7 @@ namespace Bam.Net.Server
         public static BamConf Load(string contentRootDir)
         {
             BamConf config = null;
-
+            contentRootDir = Net.Server.Fs.ResolveHome(contentRootDir);
             string jsonConfig = Path.Combine(contentRootDir, $"{typeof(BamConf).Name}.json");
 
             if (File.Exists(jsonConfig))

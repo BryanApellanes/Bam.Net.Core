@@ -309,10 +309,10 @@ namespace Bam.Net.Server
             {
                 if (path.StartsWith("/"))
                 {
-                    return $"/{Path.Combine(pathSegments)}";
+                    return ResolveHome($"/{Path.Combine(pathSegments)}");
                 }
 
-                return Path.Combine(pathSegments);
+                return ResolveHome(Path.Combine(pathSegments));
             }
             else
             {
@@ -324,6 +324,18 @@ namespace Bam.Net.Server
                 return Path.Combine(pathSegments);
             }			
 		}
+
+        public static string ResolveHome(string path)
+        {
+            if (path.Contains("~"))
+            {
+                string firstPart = path.ReadUntil('~', out string secondPart);
+                
+                return Path.Combine(BamPaths.UserHome, secondPart.RemainderAfter('/'));
+            }
+
+            return path;
+        }
     }
 
 }

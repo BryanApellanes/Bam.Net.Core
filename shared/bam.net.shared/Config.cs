@@ -85,7 +85,7 @@ namespace Bam.Net
         public string ApplicationName { get; private set; }
         
         static Config _current;
-        static object _currentLock = new object();
+        static readonly object _currentLock = new object();
         
         /// <summary>
         /// Config for the current process; may be overwritten.
@@ -93,7 +93,7 @@ namespace Bam.Net
         public static Config Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => new Config()); }
-            set { _current = value; }
+            set => _current = value;
         }
 
         public static Config For(string applicationName)

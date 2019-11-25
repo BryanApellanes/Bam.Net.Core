@@ -392,6 +392,21 @@ namespace Bam.Net
             return result.ToString();
         }
 
+        public static string RemainderAfter(this string toRead, char leadingChar)
+        {
+            int pos = 0;
+            foreach (char c in toRead)
+            {
+                if (!c.Equals(leadingChar))
+                {
+                    return toRead.Substring(pos);
+                }
+                ++pos;
+            }
+
+            return toRead;
+        }
+        
         /// <summary>
         /// Return a copy of the specified DateTime with milliseconds
         /// set to 0
