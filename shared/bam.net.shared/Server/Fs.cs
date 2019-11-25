@@ -14,6 +14,7 @@ using Bam.Net.ServiceProxy;
 
 using System.Web;
 using Bam.Net.Caching.File;
+using NLog.Targets;
 
 namespace Bam.Net.Server
 {
@@ -27,10 +28,10 @@ namespace Bam.Net.Server
             _cache = new BinaryFileCache();
 		}
         
-        public Fs(string appName): this()
+        public Fs(string specifiedPath): this()
         {
-			RootDir = new DirectoryInfo(appName);
-			AppName = appName;
+			RootDir = new DirectoryInfo(specifiedPath);
+			SpecifiedPath = specifiedPath;
         }
 
         public Fs(DirectoryInfo rootDir):this()
@@ -60,7 +61,7 @@ namespace Bam.Net.Server
         [Exclude]
         public string Root
         {
-            get => CleanPath(RootDir.FullName) + Path.DirectorySeparatorChar;
+            get => CleanAppPath(RootDir.FullName) + Path.DirectorySeparatorChar;
             set => this.RootDir = new DirectoryInfo(value);
         }
 
@@ -80,7 +81,7 @@ namespace Bam.Net.Server
             set => _currentDirectory = value;
         }
 
-        public string AppName { get; set; }
+        public string SpecifiedPath { get; set; }
         
         public event FsEvent DirectoryCreated;
         private void OnDirectoryCreated(string path)
@@ -291,7 +292,7 @@ namespace Bam.Net.Server
             if (relativePath.StartsWith("~"))
             {
                 relativePath = relativePath.Substring(1, relativePath.Length - 1);
-                string path = CleanPath($"{Root}{relativePath}");
+                string path = CleanAppPath($"{Root}{relativePath}");
                 result = path;
             }
             else
@@ -299,20 +300,36 @@ namespace Bam.Net.Server
                 result = relativePath;
             }
 
-            return CleanPath(result);
+            return CleanUserPath(result);
+        }
+
+        public string CleanUserPath(string path)
+        {
+            return CleanPath(path, ResolveUserHome);
+        }
+
+        public string CleanAppPath(string path)
+        {
+            return CleanPath(path, ResolveAppHome);
         }
         
-		public static string CleanPath(string path)
+        /// <summary>
+        /// Normalizes the specified path and resolves ~ anywhere in the path to the
+        /// users home directory.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+		public static string CleanPath(string path, Func<string, string> tildeResolver)
 		{
             string[] pathSegments = path.Split('\\', '/');
             if (OSInfo.IsUnix)
             {
                 if (path.StartsWith("/"))
                 {
-                    return ResolveHome($"/{Path.Combine(pathSegments)}");
+                    return tildeResolver($"/{Path.Combine(pathSegments)}");
                 }
 
-                return ResolveHome(Path.Combine(pathSegments));
+                return tildeResolver(Path.Combine(pathSegments));
             }
             else
             {
@@ -321,11 +338,23 @@ namespace Bam.Net.Server
                     pathSegments[0] = pathSegments[0] + Path.DirectorySeparatorChar;
                 }
 
-                return Path.Combine(pathSegments);
+                return tildeResolver(Path.Combine(pathSegments));
             }			
 		}
 
-        public static string ResolveHome(string path)
+        public string ResolveAppHome(string path)
+        {
+            if (path.Contains("~"))
+            {
+                string firstPart = path.ReadUntil('~', out string secondPart);
+
+                return Path.Combine(RootDir.FullName, secondPart.RemainderAfter('/'));
+            }
+
+            return path;
+        }
+        
+        public static string ResolveUserHome(string path)
         {
             if (path.Contains("~"))
             {

@@ -26,7 +26,7 @@ namespace Bam.Net.Data.Schema
         {
             PreColumnAugmentations = new List<SchemaManagerAugmentation>();
             PostColumnAugmentations = new List<SchemaManagerAugmentation>();
-            SchemaTempPathProvider = sd => Path.Combine(RuntimeSettings.AppDataFolder, "Schemas");
+            SchemaTempPathProvider = sd => Path.Combine(RuntimeSettings.ProcessDataFolder, "Schemas");
             AutoSave = autoSave;
         }
 

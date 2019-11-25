@@ -22,7 +22,7 @@ namespace Bam.Net.Logging
         {
             get
             {
-                return new SQLiteDatabase(RuntimeSettings.AppDataFolder, $"{DefaultConfiguration.GetAppSetting("ApplicationName", StaticApplicationNameProvider.DefaultApplicationName)}_Logs");
+                return new SQLiteDatabase(RuntimeSettings.ProcessDataFolder, $"{DefaultConfiguration.GetAppSetting("ApplicationName", StaticApplicationNameProvider.DefaultApplicationName)}_Logs");
             }
         }
     }

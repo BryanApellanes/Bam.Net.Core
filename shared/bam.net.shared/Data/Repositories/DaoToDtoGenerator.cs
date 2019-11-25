@@ -89,7 +89,7 @@ namespace Bam.Net.Data.Repositories
         public GeneratedAssemblyInfo GenerateDtoAssembly(string nameSpace, string fileName)
         {
             Type oneDao = DaoAssembly.GetTypes().FirstOrDefault(t => t.HasCustomAttributeOfType<TableAttribute>());
-            string writeSourceTo = Path.Combine(RuntimeSettings.AppDataFolder, "DtoTemp_{0}"._Format(Dao.ConnectionName(oneDao)));
+            string writeSourceTo = Path.Combine(RuntimeSettings.ProcessDataFolder, "DtoTemp_{0}"._Format(Dao.ConnectionName(oneDao)));
             DirectoryInfo sourceDir = SetSourceDir(writeSourceTo);
 
             WriteDtoSource(nameSpace, writeSourceTo);

@@ -208,7 +208,7 @@ namespace Bam.Net.Profiguration
         {
             get
             {
-                return Path.Combine(RuntimeSettings.AppDataFolder, ApplicationName, "App.prof");
+                return Path.Combine(RuntimeSettings.ProcessDataFolder, ApplicationName, "App.prof");
             }
         }
 

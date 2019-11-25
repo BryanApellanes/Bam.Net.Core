@@ -37,7 +37,7 @@ namespace Bam.Net
         }
         
         static string _appDataFolder;
-        static object _appDataFolderLock = new object();
+        static readonly object _appDataFolderLock = new object();
         
         public static Func<Type, bool> ClrTypeFilter
         {

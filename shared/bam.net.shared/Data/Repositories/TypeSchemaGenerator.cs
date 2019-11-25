@@ -22,7 +22,7 @@ namespace Bam.Net.Data.Repositories
         public TypeSchemaGenerator(ITypeTableNameProvider tableNameProvider = null, Func<SchemaDefinition, TypeSchema, string> schemaTempPathProvider = null)
         {
             DefaultDataTypeBehavior = DefaultDataTypeBehaviors.Exclude;
-            TypeSchemaTempPathProvider = schemaTempPathProvider ?? ((sd, ts) => RuntimeSettings.AppDataFolder);
+            TypeSchemaTempPathProvider = schemaTempPathProvider ?? ((sd, ts) => RuntimeSettings.ProcessDataFolder);
             SchemaManager = new CuidSchemaManager(false);            
             _tableNameProvider = tableNameProvider ?? new EchoTypeTableNameProvider();
         }

@@ -34,7 +34,7 @@ namespace Bam.Net
         internal IpcMessage(string name, Type messageType, string rootDir)
             : this(name, messageType)
         {
-            this.RootDirectory = rootDir ?? RuntimeSettings.AppDataFolder;
+            this.RootDirectory = rootDir ?? RuntimeSettings.ProcessDataFolder;
         }
         
         public static IpcMessage Get<T>(string name, string rootDirectory = null)
@@ -206,7 +206,7 @@ namespace Bam.Net
             {
                 return _rootDirectoryLock.DoubleCheckLock(ref _rootDirectory, () =>
                 {
-					return Path.Combine(RuntimeSettings.AppDataFolder, MessageType.Name);
+					return Path.Combine(RuntimeSettings.ProcessDataFolder, MessageType.Name);
                 });
             }
             set

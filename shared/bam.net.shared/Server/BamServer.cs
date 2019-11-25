@@ -496,8 +496,7 @@ namespace Bam.Net.Server
         public HostPrefix[] GetHostPrefixes()
         {
             BamConf serverConfig = GetCurrentConf(false);
-            HashSet<HostPrefix> results = new HashSet<HostPrefix>();
-            results.Add(DefaultHostPrefix);
+            HashSet<HostPrefix> results = new HashSet<HostPrefix> {DefaultHostPrefix};
             serverConfig.AppsToServe.Each(appConf => { appConf.Bindings.Each(hp => results.Add(hp)); });
 
             return results.ToArray();
@@ -511,10 +510,7 @@ namespace Bam.Net.Server
             {
                 return _defaultHostPrefixLock.DoubleCheckLock(ref _defaultHostPrefix, () => new HostPrefix("localhost", 8080));
             }
-            set
-            {
-                _defaultHostPrefix = value;
-            }
+            set => _defaultHostPrefix = value;
         }
 
         // config values here to ensure proper sync
@@ -542,6 +538,8 @@ namespace Bam.Net.Server
                 ContentResponder.BamConf = GetCurrentConf();
             }
         }
+
+        public Fs ContentRootFs => new Fs(ContentRoot);
 
         protected void OnLoadingConf()
         {
@@ -794,7 +792,7 @@ namespace Bam.Net.Server
         }
 
         string _workspace;
-        public string Workspace => Fs.CleanPath(_workspace);
+        public string Workspace => ContentRootFs.CleanAppPath(_workspace);
 
         public void AddCommonDaoFromDirectory(DirectoryInfo daoDir)
         {

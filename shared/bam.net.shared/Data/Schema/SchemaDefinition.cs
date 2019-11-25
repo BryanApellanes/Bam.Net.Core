@@ -28,7 +28,7 @@ namespace Bam.Net.Data.Schema
         public SchemaDefinition(string name): this()
         {
             Name = name;
-            File = $"{RuntimeSettings.AppDataFolder}\\{name}_schema_definition.json";
+            File = $"{RuntimeSettings.ProcessDataFolder}\\{name}_schema_definition.json";
         }
         /// <summary>
         /// Gets or sets the type of the database that this SchemaDefinition was
@@ -60,7 +60,7 @@ namespace Bam.Net.Data.Schema
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    _file = new FileInfo(Path.Combine(RuntimeSettings.AppDataFolder, this.Name));
+                    _file = new FileInfo(Path.Combine(RuntimeSettings.ProcessDataFolder, this.Name));
                 }
                 else
                 {

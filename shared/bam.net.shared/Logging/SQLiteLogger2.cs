@@ -10,7 +10,7 @@ namespace Bam.Net.Logging
 {
     public class SQLiteLogger2: DaoLogger2
     {
-        public SQLiteLogger2() : this(new SQLiteDatabase(RuntimeSettings.AppDataFolder, $"{DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName()}_Logs"))
+        public SQLiteLogger2() : this(new SQLiteDatabase(RuntimeSettings.ProcessDataFolder, $"{DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName()}_Logs"))
         { }
 
         public SQLiteLogger2(SQLiteDatabase database) : base(database)

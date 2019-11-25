@@ -74,7 +74,7 @@ namespace Bam.Net.Server
         }
 
         Fs _appRoot;
-        object _appRootLock = new object();
+        readonly object _appRootLock = new object();
         [JsonIgnore]
         [XmlIgnore]
         [YamlIgnore]
@@ -98,7 +98,7 @@ namespace Bam.Net.Server
 
         /// <summary>
         /// Add a service of the specified type to be 
-        /// instanciated by the specified function
+        /// instantiated by the specified function
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="serviceInstanciator"></param>

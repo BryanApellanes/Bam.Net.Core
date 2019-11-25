@@ -163,7 +163,7 @@ namespace Bam.Net.Logging
         /// </summary>
         protected static string GetAppDataFolder()
         {
-            return RuntimeSettings.AppDataFolder;
+            return RuntimeSettings.ProcessDataFolder;
         }
     }
 }

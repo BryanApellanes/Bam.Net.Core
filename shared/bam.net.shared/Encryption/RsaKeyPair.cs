@@ -58,7 +58,7 @@ namespace Bam.Net.Encryption
 
         private bool Exists(string fileName, string ext, out string filePath)
         {
-            filePath = Path.Combine(RuntimeSettings.AppDataFolder, string.Format("{0}.{1}", fileName, ext));
+            filePath = Path.Combine(RuntimeSettings.ProcessDataFolder, string.Format("{0}.{1}", fileName, ext));
             return File.Exists(filePath);
         }
 
@@ -67,7 +67,7 @@ namespace Bam.Net.Encryption
         
         public void Save(string fileName)
         {
-            Save(RuntimeSettings.AppDataFolder, fileName);
+            Save(RuntimeSettings.ProcessDataFolder, fileName);
         }
 
         public void Save(string directory, string fileName)

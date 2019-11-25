@@ -35,14 +35,14 @@ namespace Bam.Net.Server
 			}
             string ext = Path.GetExtension(relativePath).ToLowerInvariant();
             string foundPath = string.Empty;
-			string checkNext = Fs.CleanPath("~" + relativePath);
+			string checkNext = ContentRoot.CleanAppPath("~" + relativePath);
             Fs fs = ContentRoot;
             List<string> pathsChecked = new List<string>
             {
                 checkNext
             };
 
-            if (!fs.FileExists(checkNext, out foundPath))
+            if (!fs.FileExists(relativePath, out foundPath))
             {
 				foundPath = string.Empty;
                 SearchRule[] extRules = _searchRules.Where(sr => sr.Ext.ToLowerInvariant().Equals(ext)).ToArray();
@@ -54,10 +54,10 @@ namespace Bam.Net.Server
                         segments.AddRange(dir.RelativePath.DelimitSplit("/", "\\"));
                         segments.AddRange(relativePath.DelimitSplit("/", "\\"));
                         string subPath = Path.Combine(segments.ToArray());
-                        checkNext = Fs.CleanPath(subPath);
+                        checkNext = ContentRoot.CleanAppPath(subPath);
                         pathsChecked.Add(checkNext);
 
-                        if (fs.FileExists(checkNext, out foundPath))
+                        if (fs.FileExists(subPath, out foundPath))
                         {                         
                             return false; // stop the each loop
 						}

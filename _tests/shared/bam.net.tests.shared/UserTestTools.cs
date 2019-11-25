@@ -21,7 +21,7 @@ namespace Bam.Net.UserAccounts.Tests
         public static string TestUser = "TestUser";
         static UserTestTools()
         {
-            SQLiteDatabase db = new SQLiteDatabase(RuntimeSettings.AppDataFolder, "TestUsers");
+            SQLiteDatabase db = new SQLiteDatabase(RuntimeSettings.ProcessDataFolder, "TestUsers");
             Db.For<User>(db);
             SQLiteRegistrar.Register<User>();
             Db.TryEnsureSchema<User>();

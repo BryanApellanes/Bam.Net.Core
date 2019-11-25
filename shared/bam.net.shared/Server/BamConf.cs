@@ -38,7 +38,7 @@ namespace Bam.Net.Server
 
         public BamConf()
         {
-            this.Fs = new Fs(RuntimeSettings.AppDataFolder);
+            this.Fs = new Fs(BamPaths.BamHome);
             this.MaxThreads = 50;
             this.GenerateDao = true;
             this.DaoConfigs = new DaoConf[] { };
@@ -535,15 +535,12 @@ namespace Bam.Net.Server
         }
 
         static BamConf _default;
-        static object _defaultLock = new object();
-        public static BamConf Default
-        {
-            get { return _defaultLock.DoubleCheckLock(ref _default, Load); }
-        }
-        
+        static readonly object _defaultLock = new object();
+        public static BamConf Default => _defaultLock.DoubleCheckLock(ref _default, Load);
+
         public static BamConf Load()
         {
-            return Load(DefaultConfiguration.GetAppSetting(ContentRootConfigKey, RuntimeSettings.AppDataFolder));
+            return Load(DefaultConfiguration.GetAppSetting(ContentRootConfigKey, BamPaths.ContentPath));
         }
 
         /// <summary>
@@ -555,8 +552,8 @@ namespace Bam.Net.Server
         /// <returns></returns>
         public static BamConf Load(string contentRootDir)
         {
+            contentRootDir = Fs.ResolveUserHome(contentRootDir);
             BamConf config = null;
-            contentRootDir = Net.Server.Fs.ResolveHome(contentRootDir);
             string jsonConfig = Path.Combine(contentRootDir, $"{typeof(BamConf).Name}.json");
 
             if (File.Exists(jsonConfig))
@@ -567,7 +564,7 @@ namespace Bam.Net.Server
 
             if (config == null)
             {
-                string yamlConfig = Path.Combine(contentRootDir, string.Format("{0}.yaml", typeof(BamConf).Name));
+                string yamlConfig = Path.Combine(contentRootDir, $"{typeof(BamConf).Name}.yaml");
                 if (File.Exists(yamlConfig))
                 {
                     BamConf temp = LoadYamlConfig(yamlConfig);
@@ -577,7 +574,7 @@ namespace Bam.Net.Server
 
             if (config == null)
             {
-                string xmlConfig = Path.Combine(contentRootDir, string.Format("{0}.xml", typeof(BamConf).Name));
+                string xmlConfig = Path.Combine(contentRootDir, $"{typeof(BamConf).Name}.xml");
                 if (File.Exists(xmlConfig))
                 {
                     BamConf temp = LoadXmlConfig(xmlConfig);

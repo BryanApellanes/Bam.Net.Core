@@ -643,7 +643,7 @@ namespace Bam.Net.Data.Repositories
         private void SetTempPathProvider()
         {
             TypeSchemaTempPathProvider = (schemaDef, typeSchema) =>
-                System.IO.Path.Combine(RuntimeSettings.AppDataFolder, "DaoTemp_{0}"._Format(schemaDef.Name));
+                System.IO.Path.Combine(RuntimeSettings.ProcessDataFolder, "DaoTemp_{0}"._Format(schemaDef.Name));
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Bam.Net
         [Obsolete("Use BamPaths.BamHome instead")]
         public static string Root
         {
-            get { return _root; }
+            get => _root;
             set
             {
                 _root = value;
@@ -68,8 +68,8 @@ namespace Bam.Net
 
         public static string AppData
         {
-            get { return RuntimeSettings.AppDataFolder; }
-            set { RuntimeSettings.AppDataFolder = value; }
+            get { return RuntimeSettings.ProcessDataFolder; }
+            set { RuntimeSettings.ProcessDataFolder = value; }
         }
         
         public static string BamHome

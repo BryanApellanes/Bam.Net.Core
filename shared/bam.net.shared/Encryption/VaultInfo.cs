@@ -19,7 +19,7 @@ namespace Bam.Net.Encryption
         public VaultInfo(string name)
         {
             Name = name;
-            FilePath = new FileInfo(Path.Combine(RuntimeSettings.AppDataFolder, $"{name}.vault.sqlite")).FullName;
+            FilePath = new FileInfo(Path.Combine(RuntimeSettings.ProcessDataFolder, $"{name}.vault.sqlite")).FullName;
         }
 
         public VaultInfo(FileInfo siblingFile)

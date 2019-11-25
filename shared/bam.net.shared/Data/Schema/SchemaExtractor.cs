@@ -19,7 +19,7 @@ namespace Bam.Net.Data.Schema
         {
             NameMap = new SchemaNameMap();
             NameFormatter = new SchemaNameMapNameFormatter(NameMap);
-            SchemaTempPathProvider = sd => RuntimeSettings.AppDataFolder;
+            SchemaTempPathProvider = sd => RuntimeSettings.ProcessDataFolder;
             _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.LeadingUnderscore, (tableName, columnName, propertyName) => $"_{columnName}");
             _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.TrailingUnderscore, (tableName, columnName, propertyName) => $"{columnName}_");
             _namingCollisionHandlers.Add(SchemaExtractorNamingCollisionStrategy.TypePrefix, (tableName, columnName, propertyName) => $"{GetColumnDataType(tableName, columnName).ToString()}{columnName}");
@@ -174,7 +174,7 @@ namespace Bam.Net.Data.Schema
 
         protected virtual void SaveNameMap(SchemaManager schemaManager)
         {
-            NameMap.Save(Path.Combine(RuntimeSettings.AppDataFolder, "{0}_NameMap.json"._Format(schemaManager.CurrentSchema.Name)));
+            NameMap.Save(Path.Combine(RuntimeSettings.ProcessDataFolder, "{0}_NameMap.json"._Format(schemaManager.CurrentSchema.Name)));
         }
 
         protected HashSet<string> GetKeyWords()

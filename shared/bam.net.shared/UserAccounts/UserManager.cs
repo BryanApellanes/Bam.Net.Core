@@ -27,7 +27,7 @@ namespace Bam.Net.UserAccounts
     [Encrypt]
     [Proxy("user", MethodCase = MethodCase.Both)]
     [Serializable]
-    public class UserManager : Loggable, IRequiresHttpContext, IUserManager
+    public sealed class UserManager : Loggable, IRequiresHttpContext, IUserManager
     {
         static UserManager()
         {
@@ -46,7 +46,7 @@ namespace Bam.Net.UserAccounts
         public UserManager()
         {
             SmtpSettingsProvider = new SmtpSettingsProvider();
-            SmtpSettingsVaultPath = Path.Combine(Paths.AppData, "SmtpSettings.vault.sqlite");
+            SmtpSettingsVaultPath = Path.Combine(BamPaths.DataPath, "SmtpSettings.vault.sqlite");
             PasswordResetTokensExpireInThisManyMinutes = 15;
             LastException = new NullException();
         }
@@ -69,7 +69,8 @@ namespace Bam.Net.UserAccounts
 
         Incubator _serviceProvider;
         object _serviceProviderLock = new object();
-        protected internal Incubator ServiceProvider
+
+        internal Incubator ServiceProvider
         {
             get
             {
@@ -210,19 +211,19 @@ namespace Bam.Net.UserAccounts
             return SmtpSettingsProvider.CreateEmail(fromAddress, fromDisplayName);
         }
 
-        protected internal Email ComposeConfirmationEmail(string subject, object data)
+        internal Email ComposeConfirmationEmail(string subject, object data)
         {
             Email email = EmailComposer.Compose(subject, AccountConfirmationEmailName, data);
             return EmailComposer.SetSmtpHostSettings(SmtpSettingsVault, email);
         }
 
-        protected internal Email ComposePasswordResetEmail(string subject, object data)
+        internal Email ComposePasswordResetEmail(string subject, object data)
         {
             Email email = EmailComposer.Compose(subject, PasswordResetEmailName, data);
             return EmailComposer.SetSmtpHostSettings(SmtpSettingsVault, email);
         }
 
-        protected internal virtual void InitializeConfirmationEmail()
+        internal void InitializeConfirmationEmail()
         {
             if (!EmailComposer.TemplateExists(AccountConfirmationEmailName))
             {
@@ -273,7 +274,7 @@ namespace Bam.Net.UserAccounts
             }
         }
 
-        protected internal virtual void InitializePasswordResetEmail()
+        internal void InitializePasswordResetEmail()
         {
             if (!EmailComposer.TemplateExists(PasswordResetEmailName))
             {
@@ -345,7 +346,7 @@ namespace Bam.Net.UserAccounts
             }
         }
 
-        protected internal string GetConfirmationUrl(string token)
+        internal string GetConfirmationUrl(string token)
         {
             return GetConfirmationUrlFunction(token);
         }
@@ -371,7 +372,7 @@ namespace Bam.Net.UserAccounts
             }
         }
 
-        protected internal string GetPasswordResetUrl(string token)
+        internal string GetPasswordResetUrl(string token)
         {
             return GetPasswordResetUrlFunction(token);
         }

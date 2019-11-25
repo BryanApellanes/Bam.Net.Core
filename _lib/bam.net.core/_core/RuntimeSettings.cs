@@ -1,40 +1,41 @@
-﻿using Bam.Net.Configuration;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+using Bam.Net.Configuration;
 
 namespace Bam.Net
 {
     public static partial class RuntimeSettings
     {
 
-        public static string AppDataFolder
+        public static string ProcessDataFolder
         {
             get
             {
                 return _appDataFolderLock.DoubleCheckLock(ref _appDataFolder, () =>
                 {
-                    StringBuilder path = new StringBuilder();
-                    path.Append(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-                    if (!path.ToString().EndsWith("\\"))
+                    if (!OSInfo.IsUnix)
                     {
-                        path.Append("\\");
-                    }
+                        StringBuilder path = new StringBuilder();
+                        path.Append(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+                        if (!path.ToString().EndsWith("\\"))
+                        {
+                            path.Append("\\");
+                        }
 
-                    path.Append(DefaultConfiguration.GetAppSetting("ApplicationName", "UNKNOWN") + "\\");
-                    FileInfo fileInfo = new FileInfo(path.ToString());
-                    if (!Directory.Exists(fileInfo.Directory.FullName))
-                    {
-                        Directory.CreateDirectory(fileInfo.Directory.FullName);
+                        path.Append(DefaultConfiguration.GetAppSetting("ApplicationName", "UNKNOWN") + "\\");
+                        FileInfo fileInfo = new FileInfo(path.ToString());
+                        if (!Directory.Exists(fileInfo.Directory.FullName))
+                        {
+                            Directory.CreateDirectory(fileInfo.Directory.FullName);
+                        }
+                        _appDataFolder = path.ToString();
+                        return _appDataFolder;
                     }
-                    _appDataFolder = path.ToString();
-                    return _appDataFolder;
+                    else
+                    {
+                        return Path.Combine(BamPaths.DataPath, Config.Current?.ApplicationName ?? CoreServices.ApplicationRegistration.Data.Application.Unknown.Name);
+                    }
                 });
             }
             set => _appDataFolder = value;

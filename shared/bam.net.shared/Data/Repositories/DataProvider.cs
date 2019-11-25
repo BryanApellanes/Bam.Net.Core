@@ -121,7 +121,7 @@ namespace Bam.Net.Data.Repositories
 
         public void SetRuntimeAppDataDirectory(IApplicationNameProvider appNameProvider)
         {
-            RuntimeSettings.AppDataFolder = GetAppDataDirectory(appNameProvider).FullName;
+            RuntimeSettings.ProcessDataFolder = GetAppDataDirectory(appNameProvider).FullName;
         }
 
         public DirectoryInfo GetRootDataDirectory()
