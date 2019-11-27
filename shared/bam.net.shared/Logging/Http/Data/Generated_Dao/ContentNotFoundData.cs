@@ -117,6 +117,20 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
+	// property:ResponderName, columnName: ResponderName	
+	[Bam.Net.Data.Column(Name="ResponderName", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string ResponderName
+	{
+		get
+		{
+			return GetStringValue("ResponderName");
+		}
+		set
+		{
+			SetValue("ResponderName", value);
+		}
+	}
+
 	// property:RequestDataId, columnName: RequestDataId	
 	[Bam.Net.Data.Column(Name="RequestDataId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
 	public ulong? RequestDataId

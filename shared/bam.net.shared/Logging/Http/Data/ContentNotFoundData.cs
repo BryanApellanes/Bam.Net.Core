@@ -7,6 +7,8 @@ namespace Bam.Net.Logging.Http.Data
     {
         [CompositeKey]
         public string RequestId { get; set; }
+        [CompositeKey]
+        public string ResponderName { get; set; }
         
         public virtual ulong RequestDataId { get; set; }
         

@@ -48,6 +48,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new ContentNotFoundDataColumns("RequestId");
             }
         }
+        public ContentNotFoundDataColumns ResponderName
+        {
+            get
+            {
+                return new ContentNotFoundDataColumns("ResponderName");
+            }
+        }
         public ContentNotFoundDataColumns RequestDataId
         {
             get

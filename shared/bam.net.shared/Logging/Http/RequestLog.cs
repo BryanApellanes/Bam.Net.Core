@@ -39,6 +39,7 @@ namespace Bam.Net.Logging.Http
                         EnsureUserData(context);
                         ContentNotFoundData contentNotFoundData = new ContentNotFoundData
                         {
+                            ResponderName = responder.Name,
                             RequestId = requestData.RequestId,
                             RequestDataId = requestData.Id,
                             CheckedPaths = string.Join("\r\n\t", checkedPaths)
