@@ -446,14 +446,16 @@ namespace Bam.Net.Server
                 }
                 else
                 {
-                    OnNotResponded(context);
+                    LogContentNotFound(request.Url.AbsolutePath, ApplicationName, checkedPaths);
+                    OnContentNotFound(this, context, checkedPaths);
+                    OnDidNotRespond(context);
                 }
                 return handled;
             }
             catch (Exception ex)
             {
                 Logger.AddEntry("An error occurred in {0}.{1}: {2}", ex, this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
-                OnNotResponded(context);
+                OnDidNotRespond(context);
                 return false;
             }
         }

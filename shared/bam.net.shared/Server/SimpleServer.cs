@@ -110,7 +110,7 @@ namespace Bam.Net.Server
                 Server.Responder.FlushResponse(context);
                 Logger.AddEntry("*** ({0}) Responded ***\r\n{1}", LogEventType.Information, r.Name, context.Request.PropertiesToString());
             };
-            Responder.NotResponded += (r, context) =>
+            Responder.DidNotRespond += (r, context) =>
             {
                 Server.Responder.FlushResponse(context);
                 Logger.AddEntry("*** ({0}) Didn't Respond ***\r\n{1}", LogEventType.Warning, r.Name, context.Request.PropertiesToString());

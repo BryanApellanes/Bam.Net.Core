@@ -159,10 +159,7 @@ namespace Bam.Net.Server
         List<ProxyAlias> _proxyAliases = new List<ProxyAlias>();
         public ProxyAlias[] ProxyAliases
         {
-            get
-            {
-                return _proxyAliases.ToArray();
-            }
+            get => _proxyAliases.ToArray();
             set
             {
                 _proxyAliases = new List<ProxyAlias>();

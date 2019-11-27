@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bam.Net.Logging.Http;
 
 namespace Bam.Net.Server
 {
@@ -45,11 +46,7 @@ namespace Bam.Net.Server
             EnableServiceProxy = true;
 
             SQLiteRegistrar.RegisterFallback();
-            
-            AppDomain.CurrentDomain.DomainUnload += (s, a) =>
-            {
-                Stop();
-            };
+            AppDomain.CurrentDomain.DomainUnload += (s, a) => Stop();
             LoadApplicationServiceRegistry();
         }
 
@@ -65,7 +62,8 @@ namespace Bam.Net.Server
                     _appServiceRegistry
                         .For<ContentResponder>().Use(ContentResponder)
                         .For<ITemplateNameResolver>().Use<ContentTemplateNameResolver>()
-                        .For<ITemplateManager>().Use<CommonHandlebarsRenderer>();
+                        .For<ITemplateManager>().Use<CommonHandlebarsRenderer>()
+                        .For<Logging.Http.RequestLog>().Use(RequestLog);
 
                     _appServiceRegistry.SetInjectionProperties(ContentResponder);
                     ContentResponder.ApplicationServiceRegistry = _appServiceRegistry;
@@ -157,8 +155,16 @@ namespace Bam.Net.Server
         /// <summary>
         /// The event that fires when the server has stopped
         /// </summary>
-        public event Action<BamServer> Stopped;        
+        public event Action<BamServer> Stopped;
 
+        private object _requestLogLock = new object();
+        private RequestLog _requestLog;
+        public RequestLog RequestLog
+        {
+            get { return _requestLogLock.DoubleCheckLock(ref _requestLog, () => new RequestLog()); }
+            set { _requestLog = value; }
+        }
+        
         private string ServerWorkspace => Path.Combine("common", "workspace");
 
         protected void BindEventListeners(BamConf conf)
@@ -703,7 +709,7 @@ namespace Bam.Net.Server
             {
                 if (r is T responder)
                 {
-                    responder.NotResponded += subscriber;
+                    responder.DidNotRespond += subscriber;
                 }
             });
         }
@@ -715,7 +721,7 @@ namespace Bam.Net.Server
 
         public void SubscribeToNotResponded(ResponderEventHandler subscriber)
         {
-            Responders.Each(r => r.NotResponded += subscriber);
+            Responders.Each(r => r.DidNotRespond += subscriber);
         }
         
         public void Start()
@@ -909,13 +915,7 @@ namespace Bam.Net.Server
             }
         }
 
-        public IResponder[] Responders
-        {
-            get
-            {
-                return _responders.ToArray();
-            }
-        }
+        public IResponder[] Responders => _responders.ToArray();
 
         Action<IHttpContext> _responderNotFoundHandler;
         readonly object _responderNotFoundHandlerLock = new object();
@@ -1189,8 +1189,10 @@ namespace Bam.Net.Server
             _server = new HttpServer(MainLogger)
             {
                 HostPrefixes = GetHostPrefixes()
-            };            
+            };
+            _server.PreProcessRequest += PreProcessRequest;
             _server.ProcessRequest += ProcessRequest;
+            
             _subscribers.Each(l => _server.Subscribe(l));
         }
         

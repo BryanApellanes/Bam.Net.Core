@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,12 +55,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -73,7 +75,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -87,7 +89,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -101,7 +103,49 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Created, columnName:Created	
+	// property:Name, columnName: Name	
+	[Bam.Net.Data.Column(Name="Name", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string Name
+	{
+		get
+		{
+			return GetStringValue("Name");
+		}
+		set
+		{
+			SetValue("Name", value);
+		}
+	}
+
+	// property:Value, columnName: Value	
+	[Bam.Net.Data.Column(Name="Value", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string Value
+	{
+		get
+		{
+			return GetStringValue("Value");
+		}
+		set
+		{
+			SetValue("Value", value);
+		}
+	}
+
+	// property:Key, columnName: Key	
+	[Bam.Net.Data.Column(Name="Key", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? Key
+	{
+		get
+		{
+			return GetULongValue("Key");
+		}
+		set
+		{
+			SetValue("Key", value);
+		}
+	}
+
+	// property:Created, columnName: Created	
 	[Bam.Net.Data.Column(Name="Created", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Created
 	{
@@ -117,15 +161,16 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 
 
-				
-		
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -136,32 +181,32 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			{
 				var colFilter = new QueryStringDataColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the QueryStringData table.
-		/// </summary>
+        /// Return every record in the QueryStringData table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static QueryStringDataCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<QueryStringData>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<QueryStringData>();
-			var results = new QueryStringDataCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<QueryStringData>();
+            var results = new QueryStringDataCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<QueryStringData>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<QueryStringData>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -177,21 +222,21 @@ namespace Bam.Net.Logging.Http.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<QueryStringData>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<QueryStringDataColumns> where, Action<IEnumerable<QueryStringData>> batchProcessor, Database database = null)
 		{
@@ -203,27 +248,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (QueryStringDataColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<QueryStringData>> batchProcessor, Bam.Net.Data.OrderBy<QueryStringDataColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<QueryStringDataColumns> where, Action<IEnumerable<QueryStringData>> batchProcessor, Bam.Net.Data.OrderBy<QueryStringDataColumns> orderBy, Database database = null)
 		{
@@ -234,13 +279,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (QueryStringDataColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		public static QueryStringData GetById(uint id, Database database = null)
@@ -279,7 +324,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static QueryStringDataCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<QueryStringDataColumns> whereDelegate = (c) => filter;
@@ -287,9 +332,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A Func delegate that recieves a QueryStringDataColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -300,27 +345,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			database = database ?? Db.For<QueryStringData>();
 			return new QueryStringDataCollection(database.GetQuery<QueryStringDataColumns, QueryStringData>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static QueryStringDataCollection Where(WhereDelegate<QueryStringDataColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<QueryStringData>();
 			var results = new QueryStringDataCollection(database, database.GetQuery<QueryStringDataColumns, QueryStringData>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -330,7 +375,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static QueryStringDataCollection Where(WhereDelegate<QueryStringDataColumns> where, OrderBy<QueryStringDataColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<QueryStringData>();
 			var results = new QueryStringDataCollection(database, database.GetQuery<QueryStringDataColumns, QueryStringData>(where, orderBy), true);
 			return results;
@@ -338,9 +383,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;QueryStringDataColumns&gt;.
+		/// WhereDelegate`QueryStringDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -349,9 +394,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			var results = new QueryStringDataCollection(database, Select<QueryStringDataColumns>.From<QueryStringData>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -369,8 +414,8 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -383,7 +428,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -394,7 +439,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -405,7 +450,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -418,7 +463,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			if(result == null)
 			{
 				QueryStringDataColumns c = new QueryStringDataColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -427,11 +472,11 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single QueryStringData instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -442,12 +487,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<QueryStringDataColumns>.
+		/// WhereDelegate`QueryStringDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -458,10 +503,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -479,12 +524,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -506,7 +551,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -528,14 +573,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -552,10 +597,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -569,10 +614,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		public static QueryStringDataCollection Top(int count, WhereDelegate<QueryStringDataColumns> where, OrderBy<QueryStringDataColumns> orderBy, Database database = null)
 		{
 			QueryStringDataColumns c = new QueryStringDataColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<QueryStringData>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<QueryStringData>(count);
 			query.Where(filter);
 
@@ -599,10 +644,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -656,10 +701,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -678,7 +723,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Return the count of QueryStringDatas
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -695,7 +740,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a QueryStringDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between QueryStringDataColumns and other values
 		/// </param>
@@ -709,26 +754,26 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<QueryStringData>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<QueryStringData>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<QueryStringData>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<QueryStringData>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static QueryStringData CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<QueryStringData>();			
+			Database db = database ?? Db.For<QueryStringData>();
 			var dao = new QueryStringData();
 			filter.Parameters.Each(p=>
 			{
@@ -737,7 +782,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static QueryStringData OneOrThrow(QueryStringDataCollection c)
 		{
 			if(c.Count == 1)
@@ -753,4 +798,4 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 	}
-}																								
+}

@@ -6,12 +6,18 @@ using System.Text;
 using System.Linq;
 using System.Net;
 using System.IO;
+using Bam.Net.Server;
 
 namespace Bam.Net.Logging.Http.Data
 {
     [Serializable]
-    public class RequestData : RepoData
+    public class RequestData : KeyedRepoData
     {
+        /// <summary>
+        /// The value of the `x-request-id` header if present.
+        /// </summary>
+        [CompositeKey]
+        public string RequestId { get; set; }
         public string AcceptTypes { get; set; }
         public string ContentEncoding { get; set; }
         public long ContentLength { get; set; }
@@ -34,19 +40,22 @@ namespace Bam.Net.Logging.Http.Data
 
         public static RequestData FromRequest(IRequest request)
         {
+            Args.ThrowIfNull(request, "request");
+            
             RequestData requestData = new RequestData
             {
-                AcceptTypes = string.Join(",", request.AcceptTypes),
+                RequestId = request.GetRequestId(),
+                AcceptTypes = request.AcceptTypes == null ? string.Empty: string.Join(",",  request.AcceptTypes),
                 ContentEncoding = request.ContentEncoding.ToString(),
                 ContentLength = request.ContentLength64,
                 ContentType = request.ContentType,
                 HttpMethod = request.HttpMethod,
                 Url = UriData.FromUri(request.Url),
-                UrlReferrer = UriData.FromUri(request.UrlReferrer),
+                UrlReferrer = request.UrlReferrer == null ? null: UriData.FromUri(request.UrlReferrer),
                 UserAgent = request.UserAgent,
                 UserHostAddress = request.UserHostAddress,
                 UserHostName = request.UserHostName,
-                UserLanguages = string.Join(",", request.UserLanguages),
+                UserLanguages = request.UserLanguages == null ? string.Empty: string.Join(",", request.UserLanguages),
                 RawUrl = request.RawUrl,
                 Cookies = new List<CookieData>(),
                 Headers = new List<HeaderData>()
@@ -60,7 +69,7 @@ namespace Bam.Net.Logging.Http.Data
                 requestData.Headers.Add(new HeaderData { Name = key, Value = request.Headers[key] });
             }
             MemoryStream inputStream = new MemoryStream();
-            request?.InputStream.CopyTo(inputStream);
+            request?.InputStream?.CopyTo(inputStream);
             requestData.InputStream = inputStream.ToArray();
             return requestData;
         }

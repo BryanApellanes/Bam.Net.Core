@@ -20,7 +20,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 		}	
 
-				
         public QueryStringDataColumns Id
         {
             get
@@ -42,6 +41,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new QueryStringDataColumns("Cuid");
             }
         }
+        public QueryStringDataColumns Name
+        {
+            get
+            {
+                return new QueryStringDataColumns("Name");
+            }
+        }
+        public QueryStringDataColumns Value
+        {
+            get
+            {
+                return new QueryStringDataColumns("Value");
+            }
+        }
+        public QueryStringDataColumns Key
+        {
+            get
+            {
+                return new QueryStringDataColumns("Key");
+            }
+        }
         public QueryStringDataColumns Created
         {
             get
@@ -49,6 +69,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new QueryStringDataColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

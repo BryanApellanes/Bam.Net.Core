@@ -28,7 +28,7 @@ namespace Bam.Net.Logging.Http.Data
         public string Value { get; set; }
         public bool Discard { get; set; }
 
-        public ulong UriId { get; set; }
+        public virtual ulong UriId { get; set; }
         public virtual UriData Uri { get; set; }
         public string Comment { get; set; }
         public bool Expired { get; set; }
@@ -36,6 +36,12 @@ namespace Bam.Net.Logging.Http.Data
         [CompositeKey]
         public int Version { get; set; }
 
+        public virtual ulong ResponseDataId { get; set; }
+        public virtual ResponseData ResponseData { get; set; }
+        
+        public virtual ulong RequestDataId { get; set; }
+        public virtual RequestData RequestData { get; set; }
+       
         public static CookieData FromCookie(Cookie cookie)
         {
             return cookie.CopyAs<CookieData>();

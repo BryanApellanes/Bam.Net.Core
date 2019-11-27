@@ -602,14 +602,14 @@ namespace Bam.Net.Server
                 }
                 else
                 {
-                    OnNotResponded(context);
+                    OnDidNotRespond(context);
                 }
                 return responded;
             }
             catch (Exception ex)
             {
                 Logger.AddEntry("An error occurred in {0}.{1}: {2}", ex, this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
-                OnNotResponded(context);
+                OnDidNotRespond(context);
                 return false;
             }
         }

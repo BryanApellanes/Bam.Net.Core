@@ -25,11 +25,11 @@ namespace Bam.Net.Logging.Http.Data.Wrappers
 
 		public RequestDataWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -46,14 +46,14 @@ namespace Bam.Net.Logging.Http.Data.Wrappers
 			}
 		}
 
-System.Collections.Generic.List<Bam.Net.Logging.Http.Data.CookieData> _cookies;
+        System.Collections.Generic.List<Bam.Net.Logging.Http.Data.CookieData> _cookies;
 		public override System.Collections.Generic.List<Bam.Net.Logging.Http.Data.CookieData> Cookies
 		{
 			get
 			{
 				if (_cookies == null)
 				{
-					_cookies = Repository.ForeignKeyCollectionLoader<Bam.Net.Logging.Http.Data.RequestData, Bam.Net.Logging.Http.Data.CookieData>(this).ToList();
+					_cookies = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.Logging.Http.Data.RequestData, Bam.Net.Logging.Http.Data.CookieData>(this).ToList();
 				}
 				return _cookies;
 			}
@@ -61,14 +61,14 @@ System.Collections.Generic.List<Bam.Net.Logging.Http.Data.CookieData> _cookies;
 			{
 				_cookies = value;
 			}
-		}System.Collections.Generic.List<Bam.Net.Logging.Http.Data.HeaderData> _headers;
+		}        System.Collections.Generic.List<Bam.Net.Logging.Http.Data.HeaderData> _headers;
 		public override System.Collections.Generic.List<Bam.Net.Logging.Http.Data.HeaderData> Headers
 		{
 			get
 			{
 				if (_headers == null)
 				{
-					_headers = Repository.ForeignKeyCollectionLoader<Bam.Net.Logging.Http.Data.RequestData, Bam.Net.Logging.Http.Data.HeaderData>(this).ToList();
+					_headers = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.Logging.Http.Data.RequestData, Bam.Net.Logging.Http.Data.HeaderData>(this).ToList();
 				}
 				return _headers;
 			}
@@ -77,6 +77,7 @@ System.Collections.Generic.List<Bam.Net.Logging.Http.Data.CookieData> _cookies;
 				_headers = value;
 			}
 		}
+
 
 
 	}

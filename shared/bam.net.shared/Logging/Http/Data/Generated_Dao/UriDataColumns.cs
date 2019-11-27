@@ -20,7 +20,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 		}	
 
-				
         public UriDataColumns Id
         {
             get
@@ -189,6 +188,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new UriDataColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

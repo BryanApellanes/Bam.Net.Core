@@ -181,7 +181,7 @@ namespace Bam.Net.Server
                 else
                 {
                     handled = TryExecuteCrudRequest(chunks, context, handled, appName);
-                    OnNotResponded(context);
+                    OnDidNotRespond(context);
                 }
             }
 

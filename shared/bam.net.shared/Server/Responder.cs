@@ -14,18 +14,21 @@ using Bam.Net.Configuration;
 using System.IO.Compression;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using Bam.Net.Logging.Http;
 using Bam.Net.Services;
+using DefaultNamespace;
 
 namespace Bam.Net.Server
 {
     public abstract class Responder : Loggable, IResponder
     {
-        Dictionary<string, string> _contentTypes;        
+        readonly Dictionary<string, string> _contentTypes;        
         public Responder(BamConf conf)
         {
             BamConf = conf;
             Logger = Log.Default;
             ApplicationNameResolver = new UriApplicationNameResolver(conf);
+            RequestLog = new RequestLog();
 
             _contentTypes = new Dictionary<string, string>
             {
@@ -62,14 +65,12 @@ namespace Bam.Net.Server
             get
             {
                 return _loggerLock.DoubleCheckLock(ref _logger, () => Log.Default);
-
             }
-            internal set
-            {
-                _logger = value;
-            }
+            internal set => _logger = value;
         }
 
+        [Inject]
+        public RequestLog RequestLog { get; set; }
 
         public virtual void Initialize()
         {
@@ -91,12 +92,14 @@ namespace Bam.Net.Server
         /// <summary>
         /// The event that fires when a response is not sent
         /// </summary>
-        public event ResponderEventHandler NotResponded;
+        public event ResponderEventHandler DidNotRespond;
+
+        public event ContentNotFoundEventHandler ContentNotFound;
         
         BamConf _bamconf;
         public BamConf BamConf
         {
-            get { return _bamconf; }
+            get => _bamconf;
             set
             {
                 _bamconf = value;
@@ -285,7 +288,13 @@ namespace Bam.Net.Server
         protected static void WireResponseLogging(IResponder responder, ILogger logger)
         {
             responder.Responded += (r, context) => logger.AddEntry("*** ({0}) Responded ***\r\n{1}", LogEventType.Information, r.Name, context.Request.PropertiesToString());
-            responder.NotResponded += (r, context) => logger.AddEntry("*** ({0}) Didn't Respond ***\r\n{1}", LogEventType.Warning, r.Name, context.Request.PropertiesToString());
+            responder.DidNotRespond += (r, context) => logger.AddEntry("*** ({0}) Didn't Respond ***\r\n{1}", LogEventType.Warning, r.Name, context.Request.PropertiesToString());
+            responder.ContentNotFound += (r, context, paths) =>
+            {
+                StringBuilder formattedPaths = new StringBuilder();
+                paths.Each(path => formattedPaths.AppendLine($"{path}"));
+                logger.AddEntry("*** ({0}) Content Not Found ***\r\n{1}\r\n{2}", LogEventType.Warning, r.Name, formattedPaths.ToString(), context.Request.PropertiesToString());
+            };
         }
 
         protected void WireResponseLogging(ILogger logger)
@@ -293,17 +302,36 @@ namespace Bam.Net.Server
             WireResponseLogging(this, logger);
         }
 
+        protected internal void OnResponded(IResponder responder, IHttpContext context)
+        {
+            Task.Run(() => Responded?.Invoke(responder, context));
+        }
+        
         protected internal void OnResponded(IHttpContext context)
         {
             Task.Run(() => Responded?.Invoke(this, context));
         }
 
-        protected internal void OnNotResponded(IHttpContext context)
+        protected internal void OnDidNotRespond(IHttpContext context)
         {
-            Task.Run(() => NotResponded?.Invoke(this, context));
+            Task.Run(() => DidNotRespond?.Invoke(this, context));
         }
 
-        List<string> _respondToPrefixes;
+        protected internal void OnDidNotRespond(IResponder responder, IHttpContext context)
+        {
+            Task.Run(() => DidNotRespond?.Invoke(responder, context));
+        }
+        
+        protected internal void OnContentNotFound(IResponder responder, IHttpContext context, string[] checkedPaths)
+        {
+            Task.Run(() =>
+            {
+                RequestLog.LogContentNotFound(responder, context, checkedPaths);
+                ContentNotFound?.Invoke(responder, context, checkedPaths);
+            });
+        }
+
+        readonly List<string> _respondToPrefixes;
         protected internal void AddRespondToPrefix(string prefix)
         {
             prefix = prefix.ToLowerInvariant();
@@ -315,7 +343,7 @@ namespace Bam.Net.Server
             _respondToPrefixes.Add(prefix);
         }
 
-        List<string> _ignorePrefixes;
+        readonly List<string> _ignorePrefixes;
         protected internal void AddIgnorPrefix(string prefix)
         {
             prefix = prefix.ToLowerInvariant();

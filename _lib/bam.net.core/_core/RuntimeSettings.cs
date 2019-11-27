@@ -18,12 +18,12 @@ namespace Bam.Net
                     {
                         StringBuilder path = new StringBuilder();
                         path.Append(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-                        if (!path.ToString().EndsWith("\\"))
+                        if (!path.ToString().EndsWith(Path.PathSeparator))
                         {
-                            path.Append("\\");
+                            path.Append(Path.PathSeparator);
                         }
 
-                        path.Append(DefaultConfiguration.GetAppSetting("ApplicationName", "UNKNOWN") + "\\");
+                        path.Append(DefaultConfiguration.GetAppSetting("ApplicationName", "UNKNOWN") + Path.PathSeparator);
                         FileInfo fileInfo = new FileInfo(path.ToString());
                         if (!Directory.Exists(fileInfo.Directory.FullName))
                         {

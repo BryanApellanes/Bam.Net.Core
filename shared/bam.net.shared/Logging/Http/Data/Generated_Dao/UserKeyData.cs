@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -17,30 +17,30 @@ namespace Bam.Net.Logging.Http.Data.Dao
 	// schema = HttpLogging
 	// connection Name = HttpLogging
 	[Serializable]
-	[Bam.Net.Data.Table("UserHashData", "HttpLogging")]
-	public partial class UserHashData: Bam.Net.Data.Dao
+	[Bam.Net.Data.Table("UserKeyData", "HttpLogging")]
+	public partial class UserKeyData: Bam.Net.Data.Dao
 	{
-		public UserHashData():base()
+		public UserKeyData():base()
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public UserHashData(DataRow data)
+		public UserKeyData(DataRow data)
 			: base(data)
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public UserHashData(Database db)
+		public UserKeyData(Database db)
 			: base(db)
 		{
 			this.SetKeyColumnName();
 			this.SetChildren();
 		}
 
-		public UserHashData(Database db, DataRow data)
+		public UserKeyData(Database db, DataRow data)
 			: base(db, data)
 		{
 			this.SetKeyColumnName();
@@ -48,19 +48,21 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		[Bam.Net.Exclude]
-		public static implicit operator UserHashData(DataRow data)
+		public static implicit operator UserKeyData(DataRow data)
 		{
-			return new UserHashData(data);
+			return new UserKeyData(data);
 		}
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -73,7 +75,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -87,7 +89,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -101,21 +103,21 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:UserNameHash, columnName:UserNameHash	
-	[Bam.Net.Data.Column(Name="UserNameHash", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
-	public ulong? UserNameHash
+	// property:UserKey, columnName: UserKey	
+	[Bam.Net.Data.Column(Name="UserKey", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? UserKey
 	{
 		get
 		{
-			return GetULongValue("UserNameHash");
+			return GetULongValue("UserKey");
 		}
 		set
 		{
-			SetValue("UserNameHash", value);
+			SetValue("UserKey", value);
 		}
 	}
 
-	// property:UserName, columnName:UserName	
+	// property:UserName, columnName: UserName	
 	[Bam.Net.Data.Column(Name="UserName", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string UserName
 	{
@@ -129,7 +131,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Created, columnName:Created	
+	// property:Created, columnName: Created	
 	[Bam.Net.Data.Column(Name="Created", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Created
 	{
@@ -145,15 +147,16 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 
 
-				
-		
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -162,39 +165,39 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 			else
 			{
-				var colFilter = new UserHashDataColumns();
+				var colFilter = new UserKeyDataColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the UserHashData table.
-		/// </summary>
+        /// Return every record in the UserKeyData table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
-		public static UserHashDataCollection LoadAll(Database database = null)
+		public static UserKeyDataCollection LoadAll(Database database = null)
 		{
-			Database db = database ?? Db.For<UserHashData>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<UserHashData>();
-			var results = new UserHashDataCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+			Database db = database ?? Db.For<UserKeyData>();
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<UserKeyData>();
+            var results = new UserKeyDataCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<UserHashData>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<UserKeyData>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				UserHashDataColumns columns = new UserHashDataColumns();
-				var orderBy = Bam.Net.Data.Order.By<UserHashDataColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
+				UserKeyDataColumns columns = new UserKeyDataColumns();
+				var orderBy = Bam.Net.Data.Order.By<UserKeyDataColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, (c) => c.KeyColumn > 0, orderBy, database);
 				while(results.Count > 0)
 				{
@@ -205,186 +208,186 @@ namespace Bam.Net.Logging.Http.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<UserHashData>> batchProcessor, Database database = null)
+		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<UserKeyData>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery(int batchSize, WhereDelegate<UserHashDataColumns> where, Action<IEnumerable<UserHashData>> batchProcessor, Database database = null)
+		public static async Task BatchQuery(int batchSize, WhereDelegate<UserKeyDataColumns> where, Action<IEnumerable<UserKeyData>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				UserHashDataColumns columns = new UserHashDataColumns();
-				var orderBy = Bam.Net.Data.Order.By<UserHashDataColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
+				UserKeyDataColumns columns = new UserKeyDataColumns();
+				var orderBy = Bam.Net.Data.Order.By<UserKeyDataColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
-					results = Top(batchSize, (UserHashDataColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
+					results = Top(batchSize, (UserKeyDataColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<UserHashData>> batchProcessor, Bam.Net.Data.OrderBy<UserHashDataColumns> orderBy, Database database = null)
+		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<UserKeyData>> batchProcessor, Bam.Net.Data.OrderBy<UserKeyDataColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
-		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<UserHashDataColumns> where, Action<IEnumerable<UserHashData>> batchProcessor, Bam.Net.Data.OrderBy<UserHashDataColumns> orderBy, Database database = null)
+		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<UserKeyDataColumns> where, Action<IEnumerable<UserKeyData>> batchProcessor, Bam.Net.Data.OrderBy<UserKeyDataColumns> orderBy, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
-				UserHashDataColumns columns = new UserHashDataColumns();
+				UserKeyDataColumns columns = new UserKeyDataColumns();
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
-					results = Top(batchSize, (UserHashDataColumns)where(columns) && orderBy.Column > top, orderBy, database);
+					results = Top(batchSize, (UserKeyDataColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
-		public static UserHashData GetById(uint id, Database database = null)
+		public static UserKeyData GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
-		public static UserHashData GetById(int id, Database database = null)
+		public static UserKeyData GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
-		public static UserHashData GetById(long id, Database database = null)
+		public static UserKeyData GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
-		public static UserHashData GetById(ulong id, Database database = null)
+		public static UserKeyData GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
-		public static UserHashData GetByUuid(string uuid, Database database = null)
+		public static UserKeyData GetByUuid(string uuid, Database database = null)
 		{
 			return OneWhere(c => Bam.Net.Data.Query.Where("Uuid") == uuid, database);
 		}
 
-		public static UserHashData GetByCuid(string cuid, Database database = null)
+		public static UserKeyData GetByCuid(string cuid, Database database = null)
 		{
 			return OneWhere(c => Bam.Net.Data.Query.Where("Cuid") == cuid, database);
 		}
 
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Query(QueryFilter filter, Database database = null)
+		public static UserKeyDataCollection Query(QueryFilter filter, Database database = null)
 		{
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
-		public static UserHashDataCollection Where(QueryFilter filter, Database database = null)
+		[Bam.Net.Exclude]
+		public static UserKeyDataCollection Where(QueryFilter filter, Database database = null)
 		{
-			WhereDelegate<UserHashDataColumns> whereDelegate = (c) => filter;
+			WhereDelegate<UserKeyDataColumns> whereDelegate = (c) => filter;
 			return Where(whereDelegate, database);
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a UserHashDataColumns 
+		/// <param name="where">A Func delegate that recieves a UserKeyDataColumns
 		/// and returns a QueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Where(Func<UserHashDataColumns, QueryFilter<UserHashDataColumns>> where, OrderBy<UserHashDataColumns> orderBy = null, Database database = null)
+		public static UserKeyDataCollection Where(Func<UserKeyDataColumns, QueryFilter<UserKeyDataColumns>> where, OrderBy<UserKeyDataColumns> orderBy = null, Database database = null)
 		{
-			database = database ?? Db.For<UserHashData>();
-			return new UserHashDataCollection(database.GetQuery<UserHashDataColumns, UserHashData>(where, orderBy), true);
+			database = database ?? Db.For<UserKeyData>();
+			return new UserKeyDataCollection(database.GetQuery<UserKeyDataColumns, UserKeyData>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Where(WhereDelegate<UserHashDataColumns> where, Database database = null)
-		{		
-			database = database ?? Db.For<UserHashData>();
-			var results = new UserHashDataCollection(database, database.GetQuery<UserHashDataColumns, UserHashData>(where), true);
+		public static UserKeyDataCollection Where(WhereDelegate<UserKeyDataColumns> where, Database database = null)
+		{
+			database = database ?? Db.For<UserKeyData>();
+			var results = new UserKeyDataCollection(database, database.GetQuery<UserKeyDataColumns, UserKeyData>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="orderBy">
 		/// Specifies what column and direction to order the results by
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Where(WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy = null, Database database = null)
-		{		
-			database = database ?? Db.For<UserHashData>();
-			var results = new UserHashDataCollection(database, database.GetQuery<UserHashDataColumns, UserHashData>(where, orderBy), true);
+		public static UserKeyDataCollection Where(WhereDelegate<UserKeyDataColumns> where, OrderBy<UserKeyDataColumns> orderBy = null, Database database = null)
+		{
+			database = database ?? Db.For<UserKeyData>();
+			var results = new UserKeyDataCollection(database, database.GetQuery<UserKeyDataColumns, UserKeyData>(where, orderBy), true);
 			return results;
 		}
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;UserHashDataColumns&gt;.
+		/// WhereDelegate`UserKeyDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
-		public static UserHashDataCollection Where(QiQuery where, Database database = null)
+		public static UserKeyDataCollection Where(QiQuery where, Database database = null)
 		{
-			var results = new UserHashDataCollection(database, Select<UserHashDataColumns>.From<UserHashData>().Where(where, database));
+			var results = new UserKeyDataCollection(database, Select<UserKeyDataColumns>.From<UserKeyData>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static UserHashData GetOneWhere(QueryFilter where, Database database = null)
+		public static UserKeyData GetOneWhere(QueryFilter where, Database database = null)
 		{
 			var result = OneWhere(where, database);
 			if(result == null)
@@ -397,56 +400,56 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashData OneWhere(QueryFilter where, Database database = null)
+		public static UserKeyData OneWhere(QueryFilter where, Database database = null)
 		{
-			WhereDelegate<UserHashDataColumns> whereDelegate = (c) => where;
+			WhereDelegate<UserKeyDataColumns> whereDelegate = (c) => where;
 			var result = Top(1, whereDelegate, database);
 			return OneOrThrow(result);
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static void SetOneWhere(WhereDelegate<UserHashDataColumns> where, Database database = null)
+		public static void SetOneWhere(WhereDelegate<UserKeyDataColumns> where, Database database = null)
 		{
-			SetOneWhere(where, out UserHashData ignore, database);
+			SetOneWhere(where, out UserKeyData ignore, database);
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
 		[Bam.Net.Exclude]
-		public static void SetOneWhere(WhereDelegate<UserHashDataColumns> where, out UserHashData result, Database database = null)
+		public static void SetOneWhere(WhereDelegate<UserKeyDataColumns> where, out UserKeyData result, Database database = null)
 		{
 			result = GetOneWhere(where, database);
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashData GetOneWhere(WhereDelegate<UserHashDataColumns> where, Database database = null)
+		public static UserKeyData GetOneWhere(WhereDelegate<UserKeyDataColumns> where, Database database = null)
 		{
 			var result = OneWhere(where, database);
 			if(result == null)
 			{
-				UserHashDataColumns c = new UserHashDataColumns();
-				IQueryFilter filter = where(c); 
+				UserKeyDataColumns c = new UserKeyDataColumns();
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -455,47 +458,47 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single UserHashData instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashData OneWhere(WhereDelegate<UserHashDataColumns> where, Database database = null)
+		public static UserKeyData OneWhere(WhereDelegate<UserKeyDataColumns> where, Database database = null)
 		{
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<UserHashDataColumns>.
+		/// WhereDelegate`UserKeyDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
-		public static UserHashData OneWhere(QiQuery where, Database database = null)
+		public static UserKeyData OneWhere(QiQuery where, Database database = null)
 		{
 			var results = Top(1, where, database);
 			return OneOrThrow(results);
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashData FirstOneWhere(WhereDelegate<UserHashDataColumns> where, Database database = null)
+		public static UserKeyData FirstOneWhere(WhereDelegate<UserKeyDataColumns> where, Database database = null)
 		{
 			var results = Top(1, where, database);
 			if(results.Count > 0)
@@ -507,18 +510,18 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashData FirstOneWhere(WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy, Database database = null)
+		public static UserKeyData FirstOneWhere(WhereDelegate<UserKeyDataColumns> where, OrderBy<UserKeyDataColumns> orderBy, Database database = null)
 		{
 			var results = Top(1, where, orderBy, database);
 			if(results.Count > 0)
@@ -534,15 +537,15 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashData FirstOneWhere(QueryFilter where, OrderBy<UserHashDataColumns> orderBy = null, Database database = null)
+		public static UserKeyData FirstOneWhere(QueryFilter where, OrderBy<UserKeyDataColumns> orderBy = null, Database database = null)
 		{
-			WhereDelegate<UserHashDataColumns> whereDelegate = (c) => where;
+			WhereDelegate<UserKeyDataColumns> whereDelegate = (c) => where;
 			var results = Top(1, whereDelegate, orderBy, database);
 			if(results.Count > 0)
 			{
@@ -556,20 +559,20 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Top(int count, WhereDelegate<UserHashDataColumns> where, Database database = null)
+		public static UserKeyDataCollection Top(int count, WhereDelegate<UserKeyDataColumns> where, Database database = null)
 		{
 			return Top(count, where, null, database);
 		}
@@ -580,12 +583,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="orderBy">
 		/// Specifies what column and direction to order the results by
@@ -594,29 +597,29 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Top(int count, WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy, Database database = null)
+		public static UserKeyDataCollection Top(int count, WhereDelegate<UserKeyDataColumns> where, OrderBy<UserKeyDataColumns> orderBy, Database database = null)
 		{
-			UserHashDataColumns c = new UserHashDataColumns();
-			IQueryFilter filter = where(c);         
-			
-			Database db = database ?? Db.For<UserHashData>();
-			QuerySet query = GetQuerySet(db); 
-			query.Top<UserHashData>(count);
+			UserKeyDataColumns c = new UserKeyDataColumns();
+			IQueryFilter filter = where(c);
+
+			Database db = database ?? Db.For<UserKeyData>();
+			QuerySet query = GetQuerySet(db);
+			query.Top<UserKeyData>(count);
 			query.Where(filter);
 
 			if(orderBy != null)
 			{
-				query.OrderBy<UserHashDataColumns>(orderBy);
+				query.OrderBy<UserKeyDataColumns>(orderBy);
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<UserHashDataCollection>(0);
+			var results = query.Results.As<UserKeyDataCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Top(int count, QueryFilter where, Database database)
+		public static UserKeyDataCollection Top(int count, QueryFilter where, Database database)
 		{
 			return Top(count, where, null, database);
 		}
@@ -627,10 +630,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -640,30 +643,30 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Top(int count, QueryFilter where, OrderBy<UserHashDataColumns> orderBy = null, Database database = null)
+		public static UserKeyDataCollection Top(int count, QueryFilter where, OrderBy<UserKeyDataColumns> orderBy = null, Database database = null)
 		{
-			Database db = database ?? Db.For<UserHashData>();
+			Database db = database ?? Db.For<UserKeyData>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<UserHashData>(count);
+			query.Top<UserKeyData>(count);
 			query.Where(where);
 
 			if(orderBy != null)
 			{
-				query.OrderBy<UserHashDataColumns>(orderBy);
+				query.OrderBy<UserKeyDataColumns>(orderBy);
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<UserHashDataCollection>(0);
+			var results = query.Results.As<UserKeyDataCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		[Bam.Net.Exclude]
-		public static UserHashDataCollection Top(int count, QueryFilter where, string orderBy = null, SortOrder sortOrder = SortOrder.Ascending, Database database = null)
+		public static UserKeyDataCollection Top(int count, QueryFilter where, string orderBy = null, SortOrder sortOrder = SortOrder.Ascending, Database database = null)
 		{
-			Database db = database ?? Db.For<UserHashData>();
+			Database db = database ?? Db.For<UserKeyData>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<UserHashData>(count);
+			query.Top<UserKeyData>(count);
 			query.Where(where);
 
 			if(orderBy != null)
@@ -672,7 +675,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 
 			query.Execute(db);
-			var results = query.Results.As<UserHashDataCollection>(0);
+			var results = query.Results.As<UserKeyDataCollection>(0);
 			results.Database = db;
 			return results;
 		}
@@ -684,38 +687,38 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
-		public static UserHashDataCollection Top(int count, QiQuery where, Database database = null)
+		public static UserKeyDataCollection Top(int count, QiQuery where, Database database = null)
 		{
-			Database db = database ?? Db.For<UserHashData>();
+			Database db = database ?? Db.For<UserKeyData>();
 			QuerySet query = GetQuerySet(db);
-			query.Top<UserHashData>(count);
+			query.Top<UserKeyData>(count);
 			query.Where(where);
 			query.Execute(db);
-			var results = query.Results.As<UserHashDataCollection>(0);
+			var results = query.Results.As<UserKeyDataCollection>(0);
 			results.Database = db;
 			return results;
 		}
 
 		/// <summary>
-		/// Return the count of UserHashDatas
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
 		public static long Count(Database database = null)
         {
-			Database db = database ?? Db.For<UserHashData>();
+			Database db = database ?? Db.For<UserKeyData>();
             QuerySet query = GetQuerySet(db);
-            query.Count<UserHashData>();
+            query.Count<UserKeyData>();
             query.Execute(db);
             return (long)query.Results[0].DataRow[0];
         }
@@ -723,41 +726,41 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UserHashDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UserKeyDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between UserHashDataColumns and other values
+		/// between UserKeyDataColumns and other values
 		/// </param>
 		/// <param name="database">
 		/// Which database to query or null to use the default
 		/// </param>
 		[Bam.Net.Exclude]
-		public static long Count(WhereDelegate<UserHashDataColumns> where, Database database = null)
+		public static long Count(WhereDelegate<UserKeyDataColumns> where, Database database = null)
 		{
-			UserHashDataColumns c = new UserHashDataColumns();
+			UserKeyDataColumns c = new UserKeyDataColumns();
 			IQueryFilter filter = where(c) ;
 
-			Database db = database ?? Db.For<UserHashData>();
-			QuerySet query = GetQuerySet(db);	 
-			query.Count<UserHashData>();
-			query.Where(filter);	  
+			Database db = database ?? Db.For<UserKeyData>();
+			QuerySet query = GetQuerySet(db);
+			query.Count<UserKeyData>();
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
-		    Database db = database ?? Db.For<UserHashData>();
-			QuerySet query = GetQuerySet(db);	 
-			query.Count<UserHashData>();
-			query.Where(where);	  
+		    Database db = database ?? Db.For<UserKeyData>();
+			QuerySet query = GetQuerySet(db);
+			query.Count<UserKeyData>();
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
-		private static UserHashData CreateFromFilter(IQueryFilter filter, Database database = null)
+		private static UserKeyData CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<UserHashData>();			
-			var dao = new UserHashData();
+			Database db = database ?? Db.For<UserKeyData>();
+			var dao = new UserKeyData();
 			filter.Parameters.Each(p=>
 			{
 				dao.Property(p.ColumnName, p.Value);
@@ -765,8 +768,8 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
-		private static UserHashData OneOrThrow(UserHashDataCollection c)
+
+		private static UserKeyData OneOrThrow(UserKeyDataCollection c)
 		{
 			if(c.Count == 1)
 			{
@@ -781,4 +784,4 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 	}
-}																								
+}

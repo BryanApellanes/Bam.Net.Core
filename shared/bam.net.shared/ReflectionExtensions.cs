@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using Bam.Net.Data;
 using GraphQL.Types;
+using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace Bam.Net
 {
@@ -613,7 +615,12 @@ namespace Bam.Net
                 {
                     value = Convert.ToInt64(value);
                 }
-                else if ((value is long || value is int || value is decimal) &&
+                else if (value is long l &&
+                         (property.PropertyType == typeof(ulong) || property.PropertyType == typeof(ulong?)))
+                {
+                    value = Dao.MapLongToUlong(l);
+                }
+                else if ((value is int || value is decimal) &&
                    (property.PropertyType == typeof(ulong) ||
                    property.PropertyType == typeof(ulong?)))
                 {

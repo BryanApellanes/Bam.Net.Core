@@ -20,7 +20,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 		}	
 
-				
         public UserDataColumns Id
         {
             get
@@ -42,18 +41,18 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new UserDataColumns("Cuid");
             }
         }
-        public UserDataColumns UserNameHash
+        public UserDataColumns UserKey
         {
             get
             {
-                return new UserDataColumns("UserNameHash");
+                return new UserDataColumns("UserKey");
             }
         }
-        public UserDataColumns RequestCuid
+        public UserDataColumns RequestId
         {
             get
             {
-                return new UserDataColumns("RequestCuid");
+                return new UserDataColumns("RequestId");
             }
         }
         public UserDataColumns Created
@@ -63,6 +62,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new UserDataColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

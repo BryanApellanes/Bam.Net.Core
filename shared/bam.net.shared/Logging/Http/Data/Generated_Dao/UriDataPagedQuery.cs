@@ -12,6 +12,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 {
     public class UriDataPagedQuery: PagedQuery<UriDataColumns, UriData>
     { 
-		public UriDataPagedQuery(UriDataColumns orderByColumn, UriDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public UriDataPagedQuery(UriDataColumns orderByColumn,UriDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

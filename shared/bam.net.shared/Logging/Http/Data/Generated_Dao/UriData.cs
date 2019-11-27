@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,12 +55,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -73,7 +75,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -87,7 +89,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -101,7 +103,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:IsDefaultPort, columnName:IsDefaultPort	
+	// property:IsDefaultPort, columnName: IsDefaultPort	
 	[Bam.Net.Data.Column(Name="IsDefaultPort", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? IsDefaultPort
 	{
@@ -115,7 +117,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Authority, columnName:Authority	
+	// property:Authority, columnName: Authority	
 	[Bam.Net.Data.Column(Name="Authority", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Authority
 	{
@@ -129,7 +131,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:DnsSafeHost, columnName:DnsSafeHost	
+	// property:DnsSafeHost, columnName: DnsSafeHost	
 	[Bam.Net.Data.Column(Name="DnsSafeHost", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string DnsSafeHost
 	{
@@ -143,7 +145,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Fragment, columnName:Fragment	
+	// property:Fragment, columnName: Fragment	
 	[Bam.Net.Data.Column(Name="Fragment", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Fragment
 	{
@@ -157,7 +159,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Host, columnName:Host	
+	// property:Host, columnName: Host	
 	[Bam.Net.Data.Column(Name="Host", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Host
 	{
@@ -171,7 +173,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:IdnHost, columnName:IdnHost	
+	// property:IdnHost, columnName: IdnHost	
 	[Bam.Net.Data.Column(Name="IdnHost", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string IdnHost
 	{
@@ -185,7 +187,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:IsAbsoluteUri, columnName:IsAbsoluteUri	
+	// property:IsAbsoluteUri, columnName: IsAbsoluteUri	
 	[Bam.Net.Data.Column(Name="IsAbsoluteUri", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? IsAbsoluteUri
 	{
@@ -199,7 +201,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:IsFile, columnName:IsFile	
+	// property:IsFile, columnName: IsFile	
 	[Bam.Net.Data.Column(Name="IsFile", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? IsFile
 	{
@@ -213,7 +215,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:IsUnc, columnName:IsUnc	
+	// property:IsUnc, columnName: IsUnc	
 	[Bam.Net.Data.Column(Name="IsUnc", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? IsUnc
 	{
@@ -227,7 +229,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:LocalPath, columnName:LocalPath	
+	// property:LocalPath, columnName: LocalPath	
 	[Bam.Net.Data.Column(Name="LocalPath", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string LocalPath
 	{
@@ -241,7 +243,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:OriginalString, columnName:OriginalString	
+	// property:OriginalString, columnName: OriginalString	
 	[Bam.Net.Data.Column(Name="OriginalString", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string OriginalString
 	{
@@ -255,7 +257,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:PathAndQuery, columnName:PathAndQuery	
+	// property:PathAndQuery, columnName: PathAndQuery	
 	[Bam.Net.Data.Column(Name="PathAndQuery", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string PathAndQuery
 	{
@@ -269,7 +271,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Port, columnName:Port	
+	// property:Port, columnName: Port	
 	[Bam.Net.Data.Column(Name="Port", DbDataType="Int", MaxLength="10", AllowNull=true)]
 	public int? Port
 	{
@@ -283,7 +285,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:QueryString, columnName:QueryString	
+	// property:QueryString, columnName: QueryString	
 	[Bam.Net.Data.Column(Name="QueryString", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string QueryString
 	{
@@ -297,7 +299,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Scheme, columnName:Scheme	
+	// property:Scheme, columnName: Scheme	
 	[Bam.Net.Data.Column(Name="Scheme", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Scheme
 	{
@@ -311,7 +313,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:AbsoluteUri, columnName:AbsoluteUri	
+	// property:AbsoluteUri, columnName: AbsoluteUri	
 	[Bam.Net.Data.Column(Name="AbsoluteUri", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string AbsoluteUri
 	{
@@ -325,7 +327,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:IsLoopback, columnName:IsLoopback	
+	// property:IsLoopback, columnName: IsLoopback	
 	[Bam.Net.Data.Column(Name="IsLoopback", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? IsLoopback
 	{
@@ -339,7 +341,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:AbsolutePath, columnName:AbsolutePath	
+	// property:AbsolutePath, columnName: AbsolutePath	
 	[Bam.Net.Data.Column(Name="AbsolutePath", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string AbsolutePath
 	{
@@ -353,7 +355,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:UserInfo, columnName:UserInfo	
+	// property:UserInfo, columnName: UserInfo	
 	[Bam.Net.Data.Column(Name="UserInfo", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string UserInfo
 	{
@@ -367,7 +369,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:UserEscaped, columnName:UserEscaped	
+	// property:UserEscaped, columnName: UserEscaped	
 	[Bam.Net.Data.Column(Name="UserEscaped", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? UserEscaped
 	{
@@ -381,7 +383,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Created, columnName:Created	
+	// property:Created, columnName: Created	
 	[Bam.Net.Data.Column(Name="Created", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Created
 	{
@@ -397,15 +399,16 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 
 
-				
-		
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -416,32 +419,32 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			{
 				var colFilter = new UriDataColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the UriData table.
-		/// </summary>
+        /// Return every record in the UriData table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static UriDataCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<UriData>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<UriData>();
-			var results = new UriDataCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<UriData>();
+            var results = new UriDataCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<UriData>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<UriData>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -457,21 +460,21 @@ namespace Bam.Net.Logging.Http.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<UriData>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<UriDataColumns> where, Action<IEnumerable<UriData>> batchProcessor, Database database = null)
 		{
@@ -483,27 +486,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (UriDataColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<UriData>> batchProcessor, Bam.Net.Data.OrderBy<UriDataColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<UriDataColumns> where, Action<IEnumerable<UriData>> batchProcessor, Bam.Net.Data.OrderBy<UriDataColumns> orderBy, Database database = null)
 		{
@@ -514,13 +517,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (UriDataColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		public static UriData GetById(uint id, Database database = null)
@@ -559,7 +562,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static UriDataCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<UriDataColumns> whereDelegate = (c) => filter;
@@ -567,9 +570,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a UriDataColumns 
+		/// <param name="where">A Func delegate that recieves a UriDataColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -580,27 +583,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			database = database ?? Db.For<UriData>();
 			return new UriDataCollection(database.GetQuery<UriDataColumns, UriData>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static UriDataCollection Where(WhereDelegate<UriDataColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<UriData>();
 			var results = new UriDataCollection(database, database.GetQuery<UriDataColumns, UriData>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -610,7 +613,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static UriDataCollection Where(WhereDelegate<UriDataColumns> where, OrderBy<UriDataColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<UriData>();
 			var results = new UriDataCollection(database, database.GetQuery<UriDataColumns, UriData>(where, orderBy), true);
 			return results;
@@ -618,9 +621,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;UriDataColumns&gt;.
+		/// WhereDelegate`UriDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -629,9 +632,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			var results = new UriDataCollection(database, Select<UriDataColumns>.From<UriData>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -649,8 +652,8 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -663,7 +666,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -674,7 +677,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -685,7 +688,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -698,7 +701,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			if(result == null)
 			{
 				UriDataColumns c = new UriDataColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -707,11 +710,11 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single UriData instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -722,12 +725,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<UriDataColumns>.
+		/// WhereDelegate`UriDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -738,10 +741,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -759,12 +762,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -786,7 +789,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -808,14 +811,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -832,10 +835,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -849,10 +852,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		public static UriDataCollection Top(int count, WhereDelegate<UriDataColumns> where, OrderBy<UriDataColumns> orderBy, Database database = null)
 		{
 			UriDataColumns c = new UriDataColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<UriData>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<UriData>(count);
 			query.Where(filter);
 
@@ -879,10 +882,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -936,10 +939,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -958,7 +961,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Return the count of UriDatas
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -975,7 +978,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a UriDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a UriDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between UriDataColumns and other values
 		/// </param>
@@ -989,26 +992,26 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<UriData>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<UriData>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<UriData>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<UriData>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static UriData CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<UriData>();			
+			Database db = database ?? Db.For<UriData>();
 			var dao = new UriData();
 			filter.Parameters.Each(p=>
 			{
@@ -1017,7 +1020,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static UriData OneOrThrow(UriDataCollection c)
 		{
 			if(c.Count == 1)
@@ -1033,4 +1036,4 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 	}
-}																								
+}

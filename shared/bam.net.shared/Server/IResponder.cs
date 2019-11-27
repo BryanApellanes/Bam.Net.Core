@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Bam.Net.ServiceProxy;
+using DefaultNamespace;
 
 namespace Bam.Net.Server
 {
@@ -13,7 +14,8 @@ namespace Bam.Net.Server
     {
         string Name { get; }
         event ResponderEventHandler Responded;
-        event ResponderEventHandler NotResponded;
+        event ResponderEventHandler DidNotRespond;
+        event ContentNotFoundEventHandler ContentNotFound;
         bool Respond(IHttpContext context);
         bool TryRespond(IHttpContext context);
     }

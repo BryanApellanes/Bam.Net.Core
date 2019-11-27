@@ -12,6 +12,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 {
     public class CookieDataPagedQuery: PagedQuery<CookieDataColumns, CookieData>
     { 
-		public CookieDataPagedQuery(CookieDataColumns orderByColumn, CookieDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public CookieDataPagedQuery(CookieDataColumns orderByColumn,CookieDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

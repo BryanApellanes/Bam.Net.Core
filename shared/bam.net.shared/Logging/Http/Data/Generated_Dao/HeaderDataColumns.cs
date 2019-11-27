@@ -20,7 +20,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 		}	
 
-				
         public HeaderDataColumns Id
         {
             get
@@ -56,6 +55,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new HeaderDataColumns("Value");
             }
         }
+        public HeaderDataColumns Key
+        {
+            get
+            {
+                return new HeaderDataColumns("Key");
+            }
+        }
         public HeaderDataColumns Created
         {
             get
@@ -64,6 +70,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
             }
         }
 
+
+        public HeaderDataColumns ResponseDataId
+        {
+            get
+            {
+                return new HeaderDataColumns("ResponseDataId");
+            }
+        }
         public HeaderDataColumns RequestDataId
         {
             get

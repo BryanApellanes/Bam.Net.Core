@@ -12,7 +12,7 @@ namespace Bam.Net.Logging.Http.Data
         /// Gets or sets the user hash identifier which is the SHA512 hash of the user's username 
         /// converted to ulong.
         /// </summary>
-        public ulong UserNameHash { get; set; }
-        public string RequestKey { get; set; }
+        public ulong UserKey { get; set; }
+        public string RequestId { get; set; }
     }
 }

@@ -2343,9 +2343,7 @@ namespace Bam.Net
         {
             for (int i = 0; i < length; i++)
             {
-
                 char ch = Convert.ToChar(RandomHelper.Next(97, 122)); // ascii codes for printable alphabet
-
                 result += ch;
             }
 

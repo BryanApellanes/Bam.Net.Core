@@ -51,13 +51,7 @@ namespace Bam.Net.ServiceProxy
             set;
         }
 
-        public IUserResolver this[int i]
-        {
-            get
-            {
-                return _resolvers[i];
-            }
-        }
+        public IUserResolver this[int i] => _resolvers[i];
 
         public void Clear()
         {

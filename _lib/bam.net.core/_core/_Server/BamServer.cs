@@ -21,6 +21,7 @@ using Bam.Net.Server.Listeners;
 using Bam.Net.Data.Repositories;
 using Bam.Net.ServiceProxy.Secure;
 using System.Reflection;
+using Bam.Net.Logging.Http;
 using Bam.Net.Server.Renderers;
 using Bam.Net.Presentation;
 
@@ -31,6 +32,17 @@ namespace Bam.Net.Server
     /// </summary>
     public partial class BamServer // core
     {
+        protected void PreProcessRequest(HttpListenerContext context)
+        {
+            if (context?.Request == null)
+            {
+                return;
+            }
+
+            context.SetRequestId();
+            RequestLog.LogRequest(new HttpContextWrapper(context));
+        }
+        
         protected void ProcessRequest(HttpListenerContext context)
         {
             HandleRequestAsync(new HttpContextWrapper(context));

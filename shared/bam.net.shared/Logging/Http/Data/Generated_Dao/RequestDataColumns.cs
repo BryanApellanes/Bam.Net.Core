@@ -20,7 +20,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 		}	
 
-				
         public RequestDataColumns Id
         {
             get
@@ -40,6 +39,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
             get
             {
                 return new RequestDataColumns("Cuid");
+            }
+        }
+        public RequestDataColumns RequestId
+        {
+            get
+            {
+                return new RequestDataColumns("RequestId");
             }
         }
         public RequestDataColumns AcceptTypes
@@ -77,11 +83,11 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new RequestDataColumns("HttpMethod");
             }
         }
-        public RequestDataColumns UrlId
+        public RequestDataColumns UrlKey
         {
             get
             {
-                return new RequestDataColumns("UrlId");
+                return new RequestDataColumns("UrlKey");
             }
         }
         public RequestDataColumns UrlReferrerId
@@ -126,6 +132,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new RequestDataColumns("RawUrl");
             }
         }
+        public RequestDataColumns Key
+        {
+            get
+            {
+                return new RequestDataColumns("Key");
+            }
+        }
         public RequestDataColumns Created
         {
             get
@@ -133,6 +146,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new RequestDataColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

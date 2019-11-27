@@ -20,7 +20,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			}
 		}	
 
-				
         public CookieDataColumns Id
         {
             get
@@ -140,6 +139,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
                 return new CookieDataColumns("Version");
             }
         }
+        public CookieDataColumns Key
+        {
+            get
+            {
+                return new CookieDataColumns("Key");
+            }
+        }
         public CookieDataColumns Created
         {
             get
@@ -148,6 +154,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
             }
         }
 
+
+        public CookieDataColumns ResponseDataId
+        {
+            get
+            {
+                return new CookieDataColumns("ResponseDataId");
+            }
+        }
         public CookieDataColumns RequestDataId
         {
             get

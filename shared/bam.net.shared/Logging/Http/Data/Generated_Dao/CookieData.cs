@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,12 +55,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -73,7 +75,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -87,7 +89,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -101,7 +103,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:TimeStamp, columnName:TimeStamp	
+	// property:TimeStamp, columnName: TimeStamp	
 	[Bam.Net.Data.Column(Name="TimeStamp", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? TimeStamp
 	{
@@ -115,7 +117,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Secure, columnName:Secure	
+	// property:Secure, columnName: Secure	
 	[Bam.Net.Data.Column(Name="Secure", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? Secure
 	{
@@ -129,7 +131,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Port, columnName:Port	
+	// property:Port, columnName: Port	
 	[Bam.Net.Data.Column(Name="Port", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Port
 	{
@@ -143,7 +145,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Path, columnName:Path	
+	// property:Path, columnName: Path	
 	[Bam.Net.Data.Column(Name="Path", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Path
 	{
@@ -157,7 +159,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Name, columnName:Name	
+	// property:Name, columnName: Name	
 	[Bam.Net.Data.Column(Name="Name", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Name
 	{
@@ -171,7 +173,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:HttpOnly, columnName:HttpOnly	
+	// property:HttpOnly, columnName: HttpOnly	
 	[Bam.Net.Data.Column(Name="HttpOnly", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? HttpOnly
 	{
@@ -185,7 +187,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Expires, columnName:Expires	
+	// property:Expires, columnName: Expires	
 	[Bam.Net.Data.Column(Name="Expires", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Expires
 	{
@@ -199,7 +201,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Domain, columnName:Domain	
+	// property:Domain, columnName: Domain	
 	[Bam.Net.Data.Column(Name="Domain", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Domain
 	{
@@ -213,7 +215,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Value, columnName:Value	
+	// property:Value, columnName: Value	
 	[Bam.Net.Data.Column(Name="Value", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Value
 	{
@@ -227,7 +229,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Discard, columnName:Discard	
+	// property:Discard, columnName: Discard	
 	[Bam.Net.Data.Column(Name="Discard", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? Discard
 	{
@@ -241,7 +243,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:UriId, columnName:UriId	
+	// property:UriId, columnName: UriId	
 	[Bam.Net.Data.Column(Name="UriId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
 	public ulong? UriId
 	{
@@ -255,7 +257,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Comment, columnName:Comment	
+	// property:Comment, columnName: Comment	
 	[Bam.Net.Data.Column(Name="Comment", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Comment
 	{
@@ -269,7 +271,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Expired, columnName:Expired	
+	// property:Expired, columnName: Expired	
 	[Bam.Net.Data.Column(Name="Expired", DbDataType="Bit", MaxLength="1", AllowNull=true)]
 	public bool? Expired
 	{
@@ -283,7 +285,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Version, columnName:Version	
+	// property:Version, columnName: Version	
 	[Bam.Net.Data.Column(Name="Version", DbDataType="Int", MaxLength="10", AllowNull=true)]
 	public int? Version
 	{
@@ -297,7 +299,21 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	// property:Created, columnName:Created	
+	// property:Key, columnName: Key	
+	[Bam.Net.Data.Column(Name="Key", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? Key
+	{
+		get
+		{
+			return GetULongValue("Key");
+		}
+		set
+		{
+			SetValue("Key", value);
+		}
+	}
+
+	// property:Created, columnName: Created	
 	[Bam.Net.Data.Column(Name="Created", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
 	public DateTime? Created
 	{
@@ -312,17 +328,51 @@ namespace Bam.Net.Logging.Http.Data.Dao
 	}
 
 
+	// start ResponseDataId -> ResponseDataId
+	[Bam.Net.Data.ForeignKey(
+        Table="CookieData",
+		Name="ResponseDataId",
+		DbDataType="BigInt",
+		MaxLength="",
+		AllowNull=true,
+		ReferencedKey="Id",
+		ReferencedTable="ResponseData",
+		Suffix="1")]
+	public ulong? ResponseDataId
+	{
+		get
+		{
+			return GetULongValue("ResponseDataId");
+		}
+		set
+		{
+			SetValue("ResponseDataId", value);
+		}
+	}
+
+    ResponseData _responseDataOfResponseDataId;
+	public ResponseData ResponseDataOfResponseDataId
+	{
+		get
+		{
+			if(_responseDataOfResponseDataId == null)
+			{
+				_responseDataOfResponseDataId = Bam.Net.Logging.Http.Data.Dao.ResponseData.OneWhere(c => c.KeyColumn == this.ResponseDataId, this.Database);
+			}
+			return _responseDataOfResponseDataId;
+		}
+	}
 
 	// start RequestDataId -> RequestDataId
 	[Bam.Net.Data.ForeignKey(
         Table="CookieData",
-		Name="RequestDataId", 
-		DbDataType="BigInt", 
+		Name="RequestDataId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="RequestData",
-		Suffix="1")]
+		Suffix="2")]
 	public ulong? RequestDataId
 	{
 		get
@@ -335,7 +385,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 	}
 
-	RequestData _requestDataOfRequestDataId;
+    RequestData _requestDataOfRequestDataId;
 	public RequestData RequestDataOfRequestDataId
 	{
 		get
@@ -347,16 +397,18 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			return _requestDataOfRequestDataId;
 		}
 	}
-	
-				
-		
+
+
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -367,32 +419,32 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			{
 				var colFilter = new CookieDataColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the CookieData table.
-		/// </summary>
+        /// Return every record in the CookieData table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static CookieDataCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<CookieData>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<CookieData>();
-			var results = new CookieDataCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<CookieData>();
+            var results = new CookieDataCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<CookieData>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<CookieData>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -408,21 +460,21 @@ namespace Bam.Net.Logging.Http.Data.Dao
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<CookieData>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<CookieDataColumns> where, Action<IEnumerable<CookieData>> batchProcessor, Database database = null)
 		{
@@ -434,27 +486,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (CookieDataColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<CookieData>> batchProcessor, Bam.Net.Data.OrderBy<CookieDataColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<CookieDataColumns> where, Action<IEnumerable<CookieData>> batchProcessor, Bam.Net.Data.OrderBy<CookieDataColumns> orderBy, Database database = null)
 		{
@@ -465,13 +517,13 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (CookieDataColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		public static CookieData GetById(uint id, Database database = null)
@@ -510,7 +562,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static CookieDataCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<CookieDataColumns> whereDelegate = (c) => filter;
@@ -518,9 +570,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a CookieDataColumns 
+		/// <param name="where">A Func delegate that recieves a CookieDataColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -531,27 +583,27 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			database = database ?? Db.For<CookieData>();
 			return new CookieDataCollection(database.GetQuery<CookieDataColumns, CookieData>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static CookieDataCollection Where(WhereDelegate<CookieDataColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<CookieData>();
 			var results = new CookieDataCollection(database, database.GetQuery<CookieDataColumns, CookieData>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -561,7 +613,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static CookieDataCollection Where(WhereDelegate<CookieDataColumns> where, OrderBy<CookieDataColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<CookieData>();
 			var results = new CookieDataCollection(database, database.GetQuery<CookieDataColumns, CookieData>(where, orderBy), true);
 			return results;
@@ -569,9 +621,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;CookieDataColumns&gt;.
+		/// WhereDelegate`CookieDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -580,9 +632,9 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			var results = new CookieDataCollection(database, Select<CookieDataColumns>.From<CookieData>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -600,8 +652,8 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -614,7 +666,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -625,7 +677,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Set one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -636,7 +688,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -649,7 +701,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			if(result == null)
 			{
 				CookieDataColumns c = new CookieDataColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -658,11 +710,11 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single CookieData instance by its Id/Key value
+		/// single @Model.ClassName instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -673,12 +725,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<CookieDataColumns>.
+		/// WhereDelegate`CookieDataColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -689,10 +741,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -710,12 +762,12 @@ namespace Bam.Net.Logging.Http.Data.Dao
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -737,7 +789,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -759,14 +811,14 @@ namespace Bam.Net.Logging.Http.Data.Dao
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -783,10 +835,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -800,10 +852,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		public static CookieDataCollection Top(int count, WhereDelegate<CookieDataColumns> where, OrderBy<CookieDataColumns> orderBy, Database database = null)
 		{
 			CookieDataColumns c = new CookieDataColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<CookieData>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<CookieData>(count);
 			query.Where(filter);
 
@@ -830,10 +882,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -887,10 +939,10 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -909,7 +961,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 		/// <summary>
-		/// Return the count of CookieDatas
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -926,7 +978,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a CookieDataColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between CookieDataColumns and other values
 		/// </param>
@@ -940,26 +992,26 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<CookieData>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<CookieData>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<CookieData>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<CookieData>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static CookieData CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<CookieData>();			
+			Database db = database ?? Db.For<CookieData>();
 			var dao = new CookieData();
 			filter.Parameters.Each(p=>
 			{
@@ -968,7 +1020,7 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static CookieData OneOrThrow(CookieDataCollection c)
 		{
 			if(c.Count == 1)
@@ -984,4 +1036,4 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 	}
-}																								
+}

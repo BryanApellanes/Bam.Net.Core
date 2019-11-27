@@ -12,5 +12,14 @@ namespace Bam.Net.Logging.Http.Data
         public string Name { get; set; }
         [CompositeKey]
         public string Value { get; set; }
+        
+        [CompositeKey]
+        public virtual ulong ResponseDataId { get; set; }
+        public virtual ResponseData ResponseData { get; set; }
+        
+        [CompositeKey]
+        public virtual ulong RequestDataId { get; set; }
+        
+        public virtual RequestData RequestData { get; set; }
     }
 }

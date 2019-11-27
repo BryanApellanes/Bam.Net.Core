@@ -12,13 +12,13 @@ using Bam.Net.Logging.Http.Data.Dao;
 
 namespace Bam.Net.Logging.Http.Data.Dao.Qi
 {
-    public class UserHashDataController : DaoController
+    public class ResponseDataController : DaoController
     {	
-		public ActionResult Save(Bam.Net.Logging.Http.Data.Dao.UserHashData[] values)
+		public ActionResult Save(Bam.Net.Logging.Http.Data.Dao.ResponseData[] values)
 		{
 			try
 			{
-				UserHashDataCollection saver = new UserHashDataCollection();
+				ResponseDataCollection saver = new ResponseDataCollection();
 				saver.AddRange(values);
 				saver.Save();
 				return Json(new { Success = true, Message = "", Dao = "" });
@@ -29,7 +29,7 @@ namespace Bam.Net.Logging.Http.Data.Dao.Qi
 			}
 		}
 
-		public ActionResult Create(Bam.Net.Logging.Http.Data.Dao.UserHashData dao)
+		public ActionResult Create(Bam.Net.Logging.Http.Data.Dao.ResponseData dao)
 		{
 			return Update(dao);
 		}
@@ -38,7 +38,7 @@ namespace Bam.Net.Logging.Http.Data.Dao.Qi
         {
 			try
 			{
-				object value = Bam.Net.Logging.Http.Data.Dao.UserHashData.OneWhere(c => c.KeyColumn == id).ToJsonSafe();
+				object value = Bam.Net.Logging.Http.Data.Dao.ResponseData.OneWhere(c => c.KeyColumn == id).ToJsonSafe();
 				return Json(new { Success = true, Message = "", Dao = value });
 			}
 			catch(Exception ex)
@@ -47,7 +47,7 @@ namespace Bam.Net.Logging.Http.Data.Dao.Qi
 			}
         }
 
-		public ActionResult Update(Bam.Net.Logging.Http.Data.Dao.UserHashData dao)
+		public ActionResult Update(Bam.Net.Logging.Http.Data.Dao.ResponseData dao)
         {
 			try
 			{
@@ -65,14 +65,14 @@ namespace Bam.Net.Logging.Http.Data.Dao.Qi
 			try
 			{
 				string msg = "";
-				Bam.Net.Logging.Http.Data.Dao.UserHashData dao = Bam.Net.Logging.Http.Data.Dao.UserHashData.OneWhere(c => c.KeyColumn == id);				
+				Bam.Net.Logging.Http.Data.Dao.ResponseData dao = Bam.Net.Logging.Http.Data.Dao.ResponseData.OneWhere(c => c.KeyColumn == id);				
 				if(dao != null)
 				{
 					dao.Delete();	
 				}
 				else
 				{
-					msg = string.Format("The specified id ({0}) was not found in the table (UserHashData)", id);
+					msg = string.Format("The specified id ({0}) was not found in the table (ResponseData)", id);
 				}
 				return Json(new { Success = true, Message = msg, Dao = "" });
 			}
@@ -86,8 +86,8 @@ namespace Bam.Net.Logging.Http.Data.Dao.Qi
 		{
 			try
 			{
-				query.table = Bam.Net.Data.Dao.TableName(typeof(Bam.Net.Logging.Http.Data.Dao.UserHashData));
-				object value = Bam.Net.Logging.Http.Data.Dao.UserHashData.OneWhere(query).ToJsonSafe();
+				query.table = Bam.Net.Data.Dao.TableName(typeof(Bam.Net.Logging.Http.Data.Dao.ResponseData));
+				object value = Bam.Net.Logging.Http.Data.Dao.ResponseData.OneWhere(query).ToJsonSafe();
 				return Json(new { Success = true, Message = "", Dao = value });
 			}
 			catch(Exception ex)
@@ -100,8 +100,8 @@ namespace Bam.Net.Logging.Http.Data.Dao.Qi
 		{
 			try
 			{
-				query.table = Bam.Net.Data.Dao.TableName(typeof(Bam.Net.Logging.Http.Data.Dao.UserHashData));
-				object[] value = Bam.Net.Logging.Http.Data.Dao.UserHashData.Where(query).ToJsonSafe();
+				query.table = Bam.Net.Data.Dao.TableName(typeof(Bam.Net.Logging.Http.Data.Dao.ResponseData));
+				object[] value = Bam.Net.Logging.Http.Data.Dao.ResponseData.Where(query).ToJsonSafe();
 				return Json(new { Success = true, Message = "", Dao = value });
 			}
 			catch(Exception ex)

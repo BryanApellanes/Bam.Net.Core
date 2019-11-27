@@ -12,6 +12,6 @@ namespace Bam.Net.Logging.Http.Data.Dao
 {
     public class UserDataPagedQuery: PagedQuery<UserDataColumns, UserData>
     { 
-		public UserDataPagedQuery(UserDataColumns orderByColumn, UserDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public UserDataPagedQuery(UserDataColumns orderByColumn,UserDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

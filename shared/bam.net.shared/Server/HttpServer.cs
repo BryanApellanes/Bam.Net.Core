@@ -187,12 +187,24 @@ namespace Bam.Net.Server
                 try
                 {
                     HttpListenerContext context = _listener.GetContext();
-                    Task.Run(() => ProcessRequest(context));
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            PreProcessRequest(context);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warn("Exception PRE-processing request {0}", ex.Message);
+                        }
+                        ProcessRequest(context);
+                    });
                 }
                 catch { }
             }
         }
 
+        public event Action<HttpListenerContext> PreProcessRequest;
         public event Action<HttpListenerContext> ProcessRequest;
     }
 }

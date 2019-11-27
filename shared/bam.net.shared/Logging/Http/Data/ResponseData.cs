@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Bam.Net.Data.Repositories;
+using Bam.Net.Server;
 using Bam.Net.ServiceProxy;
 using CsQuery.Implementation;
 
@@ -10,10 +11,16 @@ namespace Bam.Net.Logging.Http.Data
     [Serializable]
     public class ResponseData: KeyedRepoData
     {
-        public static ResponseData FromResponse(IResponse response, string[] checkedPaths = null)
+        public static ResponseData FromResponse(IHttpContext context, string[] checkedPaths = null)
+        {
+            return FromResponse(context.Request.GetRequestId(), context.Response, checkedPaths);
+        }
+        
+        public static ResponseData FromResponse(string requestId, IResponse response, string[] checkedPaths = null)
         {
             ResponseData responseData = new ResponseData
             {
+                RequestId =  requestId,
                 CheckedPaths = checkedPaths != null ? string.Join(", ", checkedPaths) : "",
                 ContentLength64 =  response.ContentLength64,
                 ContentType =  response.ContentType,
@@ -35,6 +42,8 @@ namespace Bam.Net.Logging.Http.Data
             return responseData;
         }
         
+        [CompositeKey]
+        public string RequestId { get; set; }
         [CompositeKey]
         public string CheckedPaths { get; set; }
         public long ContentLength64 { get; set; }

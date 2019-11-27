@@ -25,11 +25,11 @@ namespace Bam.Net.Logging.Http.Data.Wrappers
 
 		public HeaderDataWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -47,6 +47,37 @@ namespace Bam.Net.Logging.Http.Data.Wrappers
 		}
 
 
+        Bam.Net.Logging.Http.Data.ResponseData _responseData;
+		public override Bam.Net.Logging.Http.Data.ResponseData ResponseData
+		{
+			get
+			{
+				if (_responseData == null)
+				{
+					_responseData = (Bam.Net.Logging.Http.Data.ResponseData)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.Logging.Http.Data.ResponseData));
+				}
+				return _responseData;
+			}
+			set
+			{
+				_responseData = value;
+			}
+		}        Bam.Net.Logging.Http.Data.RequestData _requestData;
+		public override Bam.Net.Logging.Http.Data.RequestData RequestData
+		{
+			get
+			{
+				if (_requestData == null)
+				{
+					_requestData = (Bam.Net.Logging.Http.Data.RequestData)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.Logging.Http.Data.RequestData));
+				}
+				return _requestData;
+			}
+			set
+			{
+				_requestData = value;
+			}
+		}
 
 
 	}

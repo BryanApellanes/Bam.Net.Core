@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.Logging.Http.Data.Dao
 {
-	// schema = HttpLogging 
+	// schema = HttpLogging
     public static class HttpLoggingContext
     {
 		public static string ConnectionName
@@ -31,6 +31,110 @@ namespace Bam.Net.Logging.Http.Data.Dao
 		}
 
 
+	public class ContentNotFoundDataQueryContext
+	{
+			public ContentNotFoundDataCollection Where(WhereDelegate<ContentNotFoundDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.Where(where, db);
+			}
+		   
+			public ContentNotFoundDataCollection Where(WhereDelegate<ContentNotFoundDataColumns> where, OrderBy<ContentNotFoundDataColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.Where(where, orderBy, db);
+			}
+
+			public ContentNotFoundData OneWhere(WhereDelegate<ContentNotFoundDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.OneWhere(where, db);
+			}
+
+			public static ContentNotFoundData GetOneWhere(WhereDelegate<ContentNotFoundDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.GetOneWhere(where, db);
+			}
+		
+			public ContentNotFoundData FirstOneWhere(WhereDelegate<ContentNotFoundDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.FirstOneWhere(where, db);
+			}
+
+			public ContentNotFoundDataCollection Top(int count, WhereDelegate<ContentNotFoundDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.Top(count, where, db);
+			}
+
+			public ContentNotFoundDataCollection Top(int count, WhereDelegate<ContentNotFoundDataColumns> where, OrderBy<ContentNotFoundDataColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<ContentNotFoundDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ContentNotFoundData.Count(where, db);
+			}
+	}
+
+	static ContentNotFoundDataQueryContext _contentNotFoundDatas;
+	static object _contentNotFoundDatasLock = new object();
+	public static ContentNotFoundDataQueryContext ContentNotFoundDatas
+	{
+		get
+		{
+			return _contentNotFoundDatasLock.DoubleCheckLock<ContentNotFoundDataQueryContext>(ref _contentNotFoundDatas, () => new ContentNotFoundDataQueryContext());
+		}
+	}
+	public class ResponseDataQueryContext
+	{
+			public ResponseDataCollection Where(WhereDelegate<ResponseDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.Where(where, db);
+			}
+		   
+			public ResponseDataCollection Where(WhereDelegate<ResponseDataColumns> where, OrderBy<ResponseDataColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.Where(where, orderBy, db);
+			}
+
+			public ResponseData OneWhere(WhereDelegate<ResponseDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.OneWhere(where, db);
+			}
+
+			public static ResponseData GetOneWhere(WhereDelegate<ResponseDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.GetOneWhere(where, db);
+			}
+		
+			public ResponseData FirstOneWhere(WhereDelegate<ResponseDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.FirstOneWhere(where, db);
+			}
+
+			public ResponseDataCollection Top(int count, WhereDelegate<ResponseDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.Top(count, where, db);
+			}
+
+			public ResponseDataCollection Top(int count, WhereDelegate<ResponseDataColumns> where, OrderBy<ResponseDataColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<ResponseDataColumns> where, Database db = null)
+			{
+				return Bam.Net.Logging.Http.Data.Dao.ResponseData.Count(where, db);
+			}
+	}
+
+	static ResponseDataQueryContext _responseDatas;
+	static object _responseDatasLock = new object();
+	public static ResponseDataQueryContext ResponseDatas
+	{
+		get
+		{
+			return _responseDatasLock.DoubleCheckLock<ResponseDataQueryContext>(ref _responseDatas, () => new ResponseDataQueryContext());
+		}
+	}
 	public class CookieDataQueryContext
 	{
 			public CookieDataCollection Where(WhereDelegate<CookieDataColumns> where, Database db = null)
@@ -343,56 +447,57 @@ namespace Bam.Net.Logging.Http.Data.Dao
 			return _userDatasLock.DoubleCheckLock<UserDataQueryContext>(ref _userDatas, () => new UserDataQueryContext());
 		}
 	}
-	public class UserHashDataQueryContext
+	public class UserKeyDataQueryContext
 	{
-			public UserHashDataCollection Where(WhereDelegate<UserHashDataColumns> where, Database db = null)
+			public UserKeyDataCollection Where(WhereDelegate<UserKeyDataColumns> where, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.Where(where, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.Where(where, db);
 			}
 		   
-			public UserHashDataCollection Where(WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy = null, Database db = null)
+			public UserKeyDataCollection Where(WhereDelegate<UserKeyDataColumns> where, OrderBy<UserKeyDataColumns> orderBy = null, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.Where(where, orderBy, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.Where(where, orderBy, db);
 			}
 
-			public UserHashData OneWhere(WhereDelegate<UserHashDataColumns> where, Database db = null)
+			public UserKeyData OneWhere(WhereDelegate<UserKeyDataColumns> where, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.OneWhere(where, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.OneWhere(where, db);
 			}
 
-			public static UserHashData GetOneWhere(WhereDelegate<UserHashDataColumns> where, Database db = null)
+			public static UserKeyData GetOneWhere(WhereDelegate<UserKeyDataColumns> where, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.GetOneWhere(where, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.GetOneWhere(where, db);
 			}
 		
-			public UserHashData FirstOneWhere(WhereDelegate<UserHashDataColumns> where, Database db = null)
+			public UserKeyData FirstOneWhere(WhereDelegate<UserKeyDataColumns> where, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.FirstOneWhere(where, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.FirstOneWhere(where, db);
 			}
 
-			public UserHashDataCollection Top(int count, WhereDelegate<UserHashDataColumns> where, Database db = null)
+			public UserKeyDataCollection Top(int count, WhereDelegate<UserKeyDataColumns> where, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.Top(count, where, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.Top(count, where, db);
 			}
 
-			public UserHashDataCollection Top(int count, WhereDelegate<UserHashDataColumns> where, OrderBy<UserHashDataColumns> orderBy, Database db = null)
+			public UserKeyDataCollection Top(int count, WhereDelegate<UserKeyDataColumns> where, OrderBy<UserKeyDataColumns> orderBy, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.Top(count, where, orderBy, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.Top(count, where, orderBy, db);
 			}
 
-			public long Count(WhereDelegate<UserHashDataColumns> where, Database db = null)
+			public long Count(WhereDelegate<UserKeyDataColumns> where, Database db = null)
 			{
-				return Bam.Net.Logging.Http.Data.Dao.UserHashData.Count(where, db);
+				return Bam.Net.Logging.Http.Data.Dao.UserKeyData.Count(where, db);
 			}
 	}
 
-	static UserHashDataQueryContext _userHashDatas;
-	static object _userHashDatasLock = new object();
-	public static UserHashDataQueryContext UserHashDatas
+	static UserKeyDataQueryContext _userKeyDatas;
+	static object _userKeyDatasLock = new object();
+	public static UserKeyDataQueryContext UserKeyDatas
 	{
 		get
 		{
-			return _userHashDatasLock.DoubleCheckLock<UserHashDataQueryContext>(ref _userHashDatas, () => new UserHashDataQueryContext());
+			return _userKeyDatasLock.DoubleCheckLock<UserKeyDataQueryContext>(ref _userKeyDatas, () => new UserKeyDataQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

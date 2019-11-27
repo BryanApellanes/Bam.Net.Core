@@ -10,8 +10,8 @@ using Bam.Net.Data;
 
 namespace Bam.Net.Logging.Http.Data.Dao
 {
-    public class UserHashDataPagedQuery: PagedQuery<UserHashDataColumns, UserHashData>
+    public class ResponseDataPagedQuery: PagedQuery<ResponseDataColumns, ResponseData>
     { 
-		public UserHashDataPagedQuery(UserHashDataColumns orderByColumn, UserHashDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ResponseDataPagedQuery(ResponseDataColumns orderByColumn,ResponseDataQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

@@ -354,8 +354,9 @@ namespace Bam.Net.Server
                 responder.PageRenderer = new AppPageRendererManager(responder, ApplicationServiceRegistry.Get<ITemplateManager>(), applicationTemplateManager);
                 responder.FileUploading += (o, a) => FileUploading?.Invoke(o, a);
                 responder.FileUploaded += (o, a) => FileUploaded?.Invoke(o, a);
-                responder.Responded += (r, context) => OnResponded(context);
-                responder.NotResponded += (r, context) => OnNotResponded(context);
+                responder.Responded += OnResponded;
+                responder.DidNotRespond += OnDidNotRespond;
+                responder.ContentNotFound += OnContentNotFound;
                 responder.ContentResponder = this;
                 responder.AppTemplateManager = applicationTemplateManager;
                 ApplicationServiceRegistry.SetInjectionProperties(responder);
@@ -467,7 +468,8 @@ namespace Bam.Net.Server
                     else
                     {
                         LogContentNotFound(relativePathFromUrl, appName, allCheckedPaths.ToArray());
-                        OnNotResponded(context);
+                        OnContentNotFound(this, context, allCheckedPaths.ToArray());
+                        OnDidNotRespond(context);
                     }
                 }
 
@@ -480,7 +482,7 @@ namespace Bam.Net.Server
             catch (Exception ex)
             {
                 Logger.AddEntry("An error occurred in {0}.{1}: {2}", ex, this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
-                OnNotResponded(context);
+                OnDidNotRespond(context);
                 return false;
             }
         }
@@ -494,7 +496,7 @@ namespace Bam.Net.Server
             return ApplicationNameResolver.ResolveApplicationName(context);
         }
 
-        private void LogContentNotFound(string path, string appName, string[] checkedPaths)
+        protected void LogContentNotFound(string path, string appName, string[] checkedPaths)
         {
             // Get the service names for the specified appName to determine whether it is
             // worth logging that this request was not handled.  If the content was not 

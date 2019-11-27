@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Server
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class NotRespondedHandlerAttribute: Attribute
+    public class NoResponseHandlerAttribute: Attribute
     {
     }
 }
