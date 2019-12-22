@@ -14,7 +14,7 @@ namespace Bam.Shell.Conf
     /// <summary>
     /// Provides read write access to the process level configuration file for applications.
     /// </summary>
-    public class ConfigProvider : Bam.Shell.Conf.ConfProvider
+    public class ProcessConfProvider : Bam.Shell.Conf.ConfProvider
     {
         public override void RegisterArguments(string[] args)
         {            

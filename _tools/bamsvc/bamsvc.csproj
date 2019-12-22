@@ -13,11 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="brpc.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="brpc.ico" />
+    <Content Include="bamsvc.ico" />
   </ItemGroup>
 
   <ItemGroup>

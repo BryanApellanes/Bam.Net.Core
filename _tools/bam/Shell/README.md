@@ -1,4 +1,4 @@
-# Bam Shell
+# Bam Shell and ArgZero
 The Bam command line tool adopts a convention based shell class method delegation paradigm enabling pattern based interaction with .net classes from the command line.
 
 To execute a bam shell provider method follow this pattern:

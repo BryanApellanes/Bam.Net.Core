@@ -1350,18 +1350,6 @@ namespace Bam.Net
             }
         }
 
-        public static void Each<T>(this T[] arr, dynamic context, Action<dynamic, T> action)
-        {
-            if (arr != null)
-            {
-                int l = arr.Length;
-                for (int i = 0; i < l; i++)
-                {
-                    action(context, arr[i]);
-                }
-            }
-        }
-
         /// <summary>
         /// Iterate over the current IEnumerable 
         /// from the specified index passing

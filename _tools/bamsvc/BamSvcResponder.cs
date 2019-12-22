@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 namespace Bam.Net.Application
 {
-    public class BamRpcResponder : HttpHeaderResponder, IInitialize<BamRpcResponder>
+    public class BamSvcResponder : HttpHeaderResponder, IInitialize<BamSvcResponder>
     {
         readonly Dictionary<string, IResponder> _responders;
-        public BamRpcResponder(BamConf conf, ILogger logger, bool verbose = false)
+        public BamSvcResponder(BamConf conf, ILogger logger, bool verbose = false)
             : base(conf, logger)
         {
             RendererFactory = new WebRendererFactory(logger);
@@ -77,8 +77,8 @@ namespace Bam.Net.Application
             }
         }
 
-        public event Action<BamRpcResponder> Initializing;
-        public event Action<BamRpcResponder> Initialized;
+        public event Action<BamSvcResponder> Initializing;
+        public event Action<BamSvcResponder> Initialized;
 
         public override void Initialize()
         {

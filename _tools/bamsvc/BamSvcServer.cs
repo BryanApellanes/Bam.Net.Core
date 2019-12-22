@@ -13,10 +13,10 @@ using Bam.Net.Services.Clients;
 
 namespace Bam.Net.Application
 {
-    public class BamRpcServer: SimpleServer<BamRpcResponder>
+    public class BamSvcServer: SimpleServer<BamSvcResponder>
     {
-        public BamRpcServer(BamConf conf, ILogger logger, bool verbose = false)
-            : base(new BamRpcResponder(conf, logger, verbose), logger)
+        public BamSvcServer(BamConf conf, ILogger logger, bool verbose = false)
+            : base(new BamSvcResponder(conf, logger, verbose), logger)
         {
             Responder.Initialize();
             CreatedOrChangedHandler = (o, fsea) =>
@@ -63,10 +63,10 @@ namespace Bam.Net.Application
         }
         protected ServiceProxyResponder RegisterServiceTypes()
         {
-            BamRpcResponder rpc = Responder;
-            ServiceProxyResponder responder = rpc.ServiceProxyResponder;
+            BamSvcResponder svc = Responder;
+            ServiceProxyResponder responder = svc.ServiceProxyResponder;
             AddCommonServices(responder);
-            rpc.RpcResponder.Executors = responder.CommonServiceProvider;
+            svc.RpcResponder.Executors = responder.CommonServiceProvider;
             return responder;
         }
 
