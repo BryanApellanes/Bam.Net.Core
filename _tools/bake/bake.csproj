@@ -7,12 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="recipe.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <!--<PackageReference Include="bam.net.core" Version="1.0.3" />-->
     <PackageReference Include="YamlDotNet" Version="7.0.0" />
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
@@ -92,5 +86,11 @@
     <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bake.X.manifest" />
     <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bake.X.manifest" />
     <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\bake.X.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="default-recipe.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

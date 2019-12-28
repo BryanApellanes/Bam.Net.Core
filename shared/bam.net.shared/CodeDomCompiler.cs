@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Bam.Net
 {
+    [Obsolete("CodeDomCompiler is obsolete, use RoslynCompiler instead")]
     public class CodeDomCompiler : ICompiler
     {
         public CodeDomCompiler(Assembly[] referenceAssemblies)

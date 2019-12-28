@@ -188,6 +188,9 @@ namespace Bam.Net.Testing
 
 		protected static bool IsInteractive { get; set; }
 
+        /// <summary>
+        /// Execute the entry assembly as an interactive console menu.
+        /// </summary>
         public static void Interactive()
         {
             try

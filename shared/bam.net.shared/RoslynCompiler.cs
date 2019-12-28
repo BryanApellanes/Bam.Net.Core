@@ -44,7 +44,7 @@ namespace Bam.Net
             }
         }
 
-        HashSet<string> _referenceAssemblyPaths;
+        readonly HashSet<string> _referenceAssemblyPaths;
         public string[] ReferenceAssemblyPaths
         {
             get { return _referenceAssemblyPaths.ToArray(); }

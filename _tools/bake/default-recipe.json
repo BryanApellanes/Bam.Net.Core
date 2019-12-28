@@ -1,5 +1,6 @@
 {
-  "ProjectRoot": "./",
+  "Name": "default-recipe",
+  "ProjectRoot": "/home/bryan/src/BamFrameworkCore/Bam.Net/_tools",
   "ProjectFilePaths": [
     "/home/bryan/src/BamFrameworkCore/Bam.Net/_tools/bamtest/bamtest.csproj",
     "/home/bryan/src/BamFrameworkCore/Bam.Net/_tools/bamdb/bamdb.csproj",

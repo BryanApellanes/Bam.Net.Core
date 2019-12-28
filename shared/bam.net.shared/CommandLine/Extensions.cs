@@ -112,7 +112,7 @@ namespace Bam.Net.CommandLine
 
         /// <summary>
         /// Run the specified command in a separate process capturing the output
-        /// and error streams if any
+        /// and error streams if any.
         /// </summary>
         /// <param name="startInfo"></param>
         /// <param name="output"></param>
@@ -127,6 +127,16 @@ namespace Bam.Net.CommandLine
             return Run(startInfo, receiver, timeout);
         }
 
+        /// <summary>
+        /// Run the specified command in a separate process capturing the output and error streams if any.
+        /// This method blocks until the process completes or the timeout elapses.  The default timeout is
+        /// 600000.
+        /// </summary>
+        /// <param name="startInfo"></param>
+        /// <param name="dataHandler"></param>
+        /// <param name="errorHandler"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
         public static ProcessOutput Run(this ProcessStartInfo startInfo, Action<string> dataHandler, Action<string> errorHandler = null, int timeout = 600000)
         {
             return Run(startInfo, new ProcessOutputCollector(dataHandler, errorHandler), timeout);

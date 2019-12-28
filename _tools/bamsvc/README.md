@@ -1,15 +1,15 @@
-# BamRpc
+# BamSvc
 
-Use `bamrpc` to expose a class definition as a web service.  Alternatively, use `bamrpc` to expose classes in a registry, or set of registries, as web services. 
+Use `bamsvc` to expose a class definition as a web service.  Alternatively, use `bamsvc` to expose classes in a registry, or set of registries, as web services. 
 
 # TL;DR
 Serve services:	
 
-bamrpc /serve:[className] /AssemblySearchPattern:[searchPattern]
+bamsvc /serve:[className] /AssemblySearchPattern:[searchPattern]
 
 or
 
-bamrpc /registries:[commaSeparatedListOfRegistryNames] /AssemblySearchPattern:[searchPattern]
+bamsvc /registries:[commaSeparatedListOfRegistryNames] /AssemblySearchPattern:[searchPattern]
 
 ### Web Service Class
 ```C#
@@ -30,10 +30,10 @@ ServiceProxySystem.Register<Echo>();
 
 ### Web Service Clients
 In addition to automatically exposing any class that you choose as a
-web service, `bamrpc` will also automatically generate clients.
+web service, `bamsvc` will also automatically generate clients.
 
 #### C# Clients
-To obtain C# client code simply download the code from a running `bamrpc` server using the following path:
+To obtain C# client code simply download the code from a running `bamsvc` server using the following path:
 
 ```
 /ServiceProxy/CSharpProxies
@@ -46,7 +46,7 @@ You may also specify an optional namespace that the clients are defined in
 ```
 
 #### JavaScript Clients
-`bamrpc` also generates JavaScript clients, which
+`bamsvc` also generates JavaScript clients, which
 are downloaded in a similar way as the C# clients.  The recommended way
 of acquiring JavaScript clients would be to include a script tag in your pages
 with the src attribute set to the JavaScript proxies path:
@@ -78,5 +78,5 @@ public class YourClassName
 To serve your registry do the following:
 
 ```
-bamrpc /serve:YourRegistryName
+bamsvc /serve:YourRegistryName
 ```
