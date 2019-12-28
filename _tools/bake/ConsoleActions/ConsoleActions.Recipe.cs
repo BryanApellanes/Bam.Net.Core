@@ -16,6 +16,7 @@ namespace Bam.Net.Bake
         public void Recipe()
         {
             // build each csproj with dotnet publish
+            string startDir = Environment.CurrentDirectory;
             Recipe recipe = GetRecipe();
             if (Arguments.Contains("output"))
             {
@@ -26,10 +27,8 @@ namespace Bam.Net.Bake
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
                 string projectName = Path.GetFileNameWithoutExtension(projectFile);
-                if (projectName.Equals("bake")) // don't try to bake bake in case it is the current process
-                {
-                    continue;
-                }
+                DirectoryInfo projectDirectory = new FileInfo(projectFile).Directory;
+                Environment.CurrentDirectory = projectDirectory.FullName;
                 DirectoryInfo projectOutputDirectory = new DirectoryInfo(Path.Combine(outputDirectory, projectName));
                 string outputDirectoryPath = projectOutputDirectory.FullName;
                 string dotNetArgs = $"publish {projectFile} -c {recipe.BuildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectoryPath}";
@@ -37,6 +36,8 @@ namespace Bam.Net.Bake
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
                 OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, outputDirectoryPath);
             }
+
+            Environment.CurrentDirectory = startDir;
         }
     }
 }

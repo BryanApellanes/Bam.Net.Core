@@ -1,0 +1,11 @@
+{
+  "Name": "ubuntu.16.10-x64-bamtoolkit",
+  "ProjectRoot": "./Bam.Net.Core/_tools/",
+  "ProjectFilePaths": [
+    "/media/data/src/BamToolkit/Bam.Net.Core/_tools/bam/bam.csproj"
+  ],
+  "OutputDirectory": "/tmp/bam/bin",
+  "NugetOutputDirectory": "/home/bryan/.bam/nupkg/Linux",
+  "BuildConfig": "Debug",
+  "OsName": "Linux"
+}

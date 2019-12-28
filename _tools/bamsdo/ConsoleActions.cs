@@ -193,7 +193,7 @@ namespace Bam.Net
         {
             string html = TryGetHtml(typeName);
             CQ cq = CQ.Create(html);
-            CQ propBody = cq[string.Format(".definition-table .supertype-name a[href='./{0}']", typeName)].First().ParentsUntil(".definition-table").Next();
+            CQ propBody = cq[$".definition-table .supertype-name a[href='./{typeName}']"].First().ParentsUntil(".definition-table").Next();
             List<SchemaDotOrgProperty> properties = new List<SchemaDotOrgProperty>();
             cq["tr", propBody].Each((row) =>
             {
@@ -202,7 +202,7 @@ namespace Bam.Net
                 {
                     string expectedType = cq[".prop-ect", row].Text().Trim();
                     string description = cq[".prop-desc", row].Text().Trim().Replace("\r", "").Replace("\n", "");
-                    if (properties.Where(p => p.Name.Equals(propName)).FirstOrDefault() == null)
+                    if (properties.FirstOrDefault(p => p.Name.Equals(propName)) == null)
                     {
                         properties.Add(new SchemaDotOrgProperty { Name = propName, ExpectedType = expectedType, Description = description });
                     }
@@ -224,7 +224,7 @@ namespace Bam.Net
 
                 string baseUrl = "http://schema.org/";
                 WebClient client = new WebClient();
-                string html = client.DownloadString(string.Format("{0}{1}", baseUrl, typeName));
+                string html = client.DownloadString($"{baseUrl}{typeName}");
                 html.SafeWriteToFile(typeFile.FullName);
                 return html;
             }
