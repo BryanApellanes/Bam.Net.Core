@@ -34,7 +34,7 @@ namespace Bam.Net.CommandLine
         }
 
         /// <summary>
-        /// Runs the specified command.
+        /// Runs the specified command blocking until complete.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <param name="timeout">The timeout.</param>

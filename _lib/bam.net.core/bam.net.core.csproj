@@ -24,8 +24,6 @@
     <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="Handlebars.Net" Version="1.9.5" />
     <PackageReference Include="InterSystemsCache" Version="1.0.4" />
-    <PackageReference Include="Lucene.Net.Core" Version="4.9.0" />
-    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00005" />
     <PackageReference Include="Markdig" Version="0.15.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />

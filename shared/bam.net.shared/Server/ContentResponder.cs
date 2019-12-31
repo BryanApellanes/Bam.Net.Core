@@ -24,8 +24,6 @@ using Bam.Net.Data.Repositories;
 using Bam.Net.Configuration;
 using Bam.Net.Presentation;
 using Bam.Net.Services;
-using Lucene.Net.Analysis.Hunspell;
-using Lucene.Net.Support;
 
 namespace Bam.Net.Server
 {

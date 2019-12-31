@@ -21,7 +21,6 @@ using Bam.Net.Logging;
 using Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository;
 using Bam.Net.Data;
 using CsQuery.ExtensionMethods.Internal;
-using Lucene.Net.Support;
 
 namespace Bam.Net.CoreServices
 {

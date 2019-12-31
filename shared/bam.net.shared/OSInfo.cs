@@ -38,6 +38,7 @@ namespace Bam.Net
         }
 
         public static bool IsUnix => Current != OSNames.Windows;
+        public static bool IsWindows => Current == OSNames.Windows;
 
         public static string CoreVersion => Config.Current["CoreVersion"].Or(DefaultCoreVersion);
 

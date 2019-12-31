@@ -8,7 +8,7 @@ namespace Bam.Net
 {
     public class Month
     {
-        static Dictionary<int, string> _months = new Dictionary<int, string>
+        static readonly Dictionary<int, string> _months = new Dictionary<int, string>
         {
             {1, "January" },
             {2, "February"},

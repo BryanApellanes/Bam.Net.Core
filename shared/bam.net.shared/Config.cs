@@ -9,9 +9,6 @@ using Bam.Net.Logging;
 using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Server;
 using Bam.Net.Services;
-using Lucene.Net.Analysis.Hunspell;
-using Lucene.Net.Queries.Function.ValueSources;
-using Npgsql;
 
 namespace Bam.Net
 {

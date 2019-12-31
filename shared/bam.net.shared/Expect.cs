@@ -16,16 +16,12 @@ namespace Bam.Net
     {
         public static bool ShouldHtmlEncodeExceptions { get; set; }
 
-		/// <summary>
-		/// Asserts that the current boolean is true
-		/// </summary>
-		/// <param name="boolToCheck"></param>
-        public static void IsTrue(this bool boolToCheck)
+        public static void ShouldBeTrue(this bool boolToCheck, string message = null)
         {
-            IsTrue(boolToCheck, "Expected <true>, Actual <false>");
+            IsTrue(boolToCheck, message ?? "Expected <true>, Actual <false>");
         }
-        
-        public static void IsTrue(this bool boolToCheck, string message) 
+
+        public static void IsTrue(this bool boolToCheck, string message = "Expected <true>, Actual <false>") 
         {
             if (!boolToCheck)
             {
@@ -50,6 +46,11 @@ namespace Bam.Net
             Expect.IsTrue(File.Exists(filePath), message);
         }
 
+        public static void ShouldBeFalse(this bool boolToCheck, string message = null)
+        {
+            IsFalse(boolToCheck, message);
+        }
+        
         public static void IsFalse(this bool boolToCheck)
         {
             IsFalse(boolToCheck, string.Empty);

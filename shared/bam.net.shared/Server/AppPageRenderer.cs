@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using Bam.Net.Presentation;
 using Bam.Net.ServiceProxy;
-using Lucene.Net.Support;
 
 namespace Bam.Net.Server
 {

@@ -8,7 +8,6 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Lucene.Net.Analysis.Hunspell;
 
 namespace Bam.Net.Configuration
 {
