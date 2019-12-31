@@ -5,15 +5,8 @@ using System.Linq;
 using System.Reflection;
 using Bam.Net;
 using Bam.Net.CommandLine;
-using Bam.Net.Data.Dynamic;
-using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Testing;
-using CsQuery.ExtensionMethods;
-using GraphQL.Types;
-using Lucene.Net.Analysis.Hunspell;
-using Lucene.Net.Analysis.Standard;
-using Microsoft.CodeAnalysis.Operations;
 
 namespace Bam.Shell
 {
