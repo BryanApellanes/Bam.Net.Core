@@ -45,7 +45,7 @@ namespace Bam.Net.Bake
                 File.Delete(outputFile.FullName);
                 Thread.Sleep(300);
             }
-            OutLineFormat("Zipping {0} to {1}", ConsoleColor.DarkYellow, recipe.OutputDirectory, outputFile.FullName);
+            OutLineFormat("Zipping {0} to {1}...", ConsoleColor.DarkYellow, recipe.OutputDirectory, outputFile.FullName);
             ZipFile.CreateFromDirectory(new DirectoryInfo(recipe.OutputDirectory).FullName, outputFile.FullName);
             OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(300);
