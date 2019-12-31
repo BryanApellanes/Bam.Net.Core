@@ -40,11 +40,12 @@ namespace Bam.Net.Bake
 
             if (outputFile.Exists)
             {
-                OutLineFormat("File {0} exists, deleting...", outputFile.FullName);
+                OutLineFormat("File {0} exists, deleting...", ConsoleColor.DarkYellow, outputFile.FullName);
                 Thread.Sleep(300);
                 File.Delete(outputFile.FullName);
                 Thread.Sleep(300);
             }
+            OutLineFormat("Zipping {0} to {1}", ConsoleColor.DarkYellow, recipe.OutputDirectory, outputFile.FullName);
             ZipFile.CreateFromDirectory(new DirectoryInfo(recipe.OutputDirectory).FullName, outputFile.FullName);
             OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(300);
