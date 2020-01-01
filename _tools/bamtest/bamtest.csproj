@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Bam.Net.Application</RootNamespace>
 
-    <PackageId>bamtest.exe</PackageId>
+    <PackageId>bamtest</PackageId>
     <Version>0.0.1</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
