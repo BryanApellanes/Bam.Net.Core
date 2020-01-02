@@ -75,7 +75,17 @@ namespace Bam.Net.Bake {
         
         private string targetFrameworkField;
         
+        private string rootNamespaceField;
+        
         private string applicationIconField;
+        
+        private string packageIdField;
+        
+        private string versionField;
+        
+        private string authorsField;
+        
+        private string companyField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -101,12 +111,67 @@ namespace Bam.Net.Bake {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string RootNamespace {
+            get {
+                return this.rootNamespaceField;
+            }
+            set {
+                this.rootNamespaceField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string ApplicationIcon {
             get {
                 return this.applicationIconField;
             }
             set {
                 this.applicationIconField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string PackageId {
+            get {
+                return this.packageIdField;
+            }
+            set {
+                this.packageIdField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string Version {
+            get {
+                return this.versionField;
+            }
+            set {
+                this.versionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string Authors {
+            get {
+                return this.authorsField;
+            }
+            set {
+                this.authorsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string Company {
+            get {
+                return this.companyField;
+            }
+            set {
+                this.companyField = value;
             }
         }
     }

@@ -8,7 +8,12 @@
             <xs:sequence>
               <xs:element name="OutputType" type="xs:string" minOccurs="0" />
               <xs:element name="TargetFramework" type="xs:string" minOccurs="0" />
+              <xs:element name="RootNamespace" type="xs:string" minOccurs="0" />
               <xs:element name="ApplicationIcon" type="xs:string" minOccurs="0" />
+              <xs:element name="PackageId" type="xs:string" minOccurs="0" />
+              <xs:element name="Version" type="xs:string" minOccurs="0" />
+              <xs:element name="Authors" type="xs:string" minOccurs="0" />
+              <xs:element name="Company" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
