@@ -195,10 +195,24 @@ namespace Bam.Net.Bake
 
             Project.ItemGroup = itemGroups.ToArray();
         }
+
+        public void Version(VersionSpec versionSpec)
+        {
+            if (!HasVersionElement(out ProjectPropertyGroup propertyGroup))
+            {
+                propertyGroup = new ProjectPropertyGroup {Version = "0.0.0", PackageId = Name};
+            }
+        }
         
         public void Save()
         {
             Project.ToXmlFile(ProjectFilePath);
+        }
+
+        private bool HasVersionElement(out ProjectPropertyGroup propertyGroup)
+        {
+            propertyGroup = Project.PropertyGroup.FirstOrDefault(pg => pg.Version != null);
+            return propertyGroup != null;
         }
         
         private ReferenceInfo[] GetReferenceInfos()

@@ -633,6 +633,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Presentation\ViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SemanticVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRendererManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppServerConf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRenderer.cs" />
@@ -846,6 +847,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VersionSpec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsFileExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsRemoteFileHandler.cs" />
