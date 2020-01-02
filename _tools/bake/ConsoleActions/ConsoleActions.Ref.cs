@@ -12,7 +12,7 @@ namespace Bam.Net.Bake
 {
     public partial class ConsoleActions
     {
-        [ConsoleAction("ref","update project file references to bam.net.core, value may be either 'Project' or 'Package-{Version}'")]
+        [ConsoleAction("ref","for a given recipe, update project file references to bam.net.core, value may be either 'Project' or 'Package-{Version}'")]
         public void Ref()
         {
             Recipe recipe = GetRecipe();

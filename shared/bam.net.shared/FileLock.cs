@@ -8,14 +8,8 @@ namespace Bam.Net
 {
     internal static class FileLock
     {
-        static Dictionary<string, object> _locks = new Dictionary<string, object>();
-        public static Dictionary<string, object> Locks
-        {
-            get
-            {
-                return _locks;
-            }
-        }
+        static readonly Dictionary<string, object> _locks = new Dictionary<string, object>();
+        public static Dictionary<string, object> Locks => _locks;
 
         public static object Named(string name)
         {

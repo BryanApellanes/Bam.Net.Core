@@ -130,7 +130,7 @@ namespace Bam.Net.Bake
             }
             if (!File.Exists(recipePath))
             {
-                OutLineFormat("Specified file does not exist: {0}", ConsoleColor.Yellow, new FileInfo(recipePath).FullName);
+                OutLineFormat("Specified recipe file does not exist: {0}", ConsoleColor.Yellow, new FileInfo(recipePath).FullName);
                 Exit(1);
             }
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
