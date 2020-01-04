@@ -1,6 +1,6 @@
-﻿# Bam.exe
+﻿# Bam
 
-Bam.exe is a tool used to manage BamFramework features and functionality.
+Bam is a tool used to manage BamFramework features and functionality.
 
 TL;DR (see as code reference ./Shell/LifeCycleProvider.cs)
 

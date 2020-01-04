@@ -7,12 +7,12 @@ cloud aware web based applications using the MV* design patterns they are alread
 familiar with.  
 
 ## Why Bam.Net?
-Bam.Net consists of reusable code components that I've written over the years 
-that were used to contribute to numerous projects in a variety of professional 
-roles I've held.  While there is functional overlap between Bam.Net and other 
-more popular systems today, at the time of its creation either no equivalent 
+Bam.Net consists of reusable code components written over the years, used to 
+contribute to numerous projects in a variety of professional roles held by 
+the primary author.  While functional overlap exists between Bam.Net and other 
+more popular frameworks today, at the time of its creation either no equivalent 
 existed or the options did not provide the specific functionality and capabilities 
-that I was looking for.
+desired.
 
 ## No, I Mean Why Is It Called Bam.Net?
 Bam.Net is a re-branding of what was "Brevitee" and "Bryan.Apellanes" before that.  
