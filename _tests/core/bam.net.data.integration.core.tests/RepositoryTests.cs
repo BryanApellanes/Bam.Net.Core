@@ -42,7 +42,7 @@ namespace Bam.Net.Data.Tests.Integration
 			_objectDir = new DirectoryInfo(".\\RepositoryTests_ObjectRepo");
 			_repos = new HashSet<IRepository>();
 			_repos.Add(new DaoRepository(new SQLiteDatabase(_sqliteDir.FullName, "RepositoryTests")));
-			_repos.Add(new ObjectRepository(_objectDir.FullName));	
+			//_repos.Add(new ObjectRepository(_objectDir.FullName));	
 		}
 
 		[IntegrationTestCleanup]

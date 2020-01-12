@@ -20,7 +20,7 @@ using Bam.Net.Data.Npgsql;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Data.Schema;
 using System.Configuration;
-using Bam.Net.Data.OleDb;
+//using Bam.Net.Data.OleDb;
 
 namespace Bam.Net.Data.Tests.Integration
 {
@@ -39,7 +39,7 @@ namespace Bam.Net.Data.Tests.Integration
                 initializer = db => Db.TryEnsureSchema<TestTable>(db);
             }
 
-            MsSqlDatabase msDatabase = new MsSqlDatabase("chumsql2", databaseName, new MsSqlCredentials { UserName = "mssqluser", Password = "mssqlP455w0rd" });
+            MsSqlDatabase msDatabase = new MsSqlDatabase("chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
             initializer(msDatabase);
             _testDatabases.Add(msDatabase);
 
@@ -47,9 +47,9 @@ namespace Bam.Net.Data.Tests.Integration
             initializer(sqliteDatabase);
             _testDatabases.Add(sqliteDatabase);
 
-            OleDbDatabase oleDatabase = new OleDbDatabase("Microsoft.ACE.OLEDB.12.0", databaseName.RandomLetters(4));
+            /*OleDbDatabase oleDatabase = new OleDbDatabase("Microsoft.ACE.OLEDB.12.0", databaseName.RandomLetters(4));
             initializer(oleDatabase);
-            _testDatabases.Add(oleDatabase);
+            _testDatabases.Add(oleDatabase);*/
 
             OracleDatabase oracleDatabase = new OracleDatabase("chumsql2", databaseName, new OracleCredentials { UserId = "C##ORACLEUSER", Password = "oracleP455w0rd" });
             initializer(oracleDatabase);
@@ -83,13 +83,13 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
         
-        public static SchemaExtractor GetMsSqlSmoSchemaExtractor(string connectionName)
+        /*public static SchemaExtractor GetMsSqlSmoSchemaExtractor(string connectionName)
         {
             string connString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
             Expect.IsNotNullOrEmpty(connString, "The connection string named {0} wasn't found in the config file"._Format(connectionName));
 
             return new MsSqlSmoSchemaExtractor(connectionName);
-        }
+        }*/
         
         public static SchemaExtractor GetMsSqlSchemaExtractor(MsSqlDatabase database)
         {

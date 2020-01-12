@@ -8,7 +8,7 @@
     <PackageId>bamsdo</PackageId>
     <Version>0.0.1</Version>
     <Authors>Bryan Apellanes</Authors>
-    <Company>ThreeHeadz</Company>
+    <Company>Three Headz</Company>
   </PropertyGroup>
 
   <ItemGroup>

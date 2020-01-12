@@ -130,7 +130,7 @@ namespace Bam.Net.Data.Tests.Integration
 
         public IEnumerable<SchemaExtractor> GetSchemaExtractors()
         {
-            yield return new MsSqlSmoSchemaExtractor(GetDatabase<MsSqlDatabase>());
+            //yield return new MsSqlSmoSchemaExtractor(GetDatabase<MsSqlDatabase>());
             yield return new MsSqlSchemaExtractor(GetDatabase<MsSqlDatabase>());
             yield return new SQLiteSchemaExtractor(GetDatabase<SQLiteDatabase>());
             yield return new MySqlSchemaExtractor(GetDatabase<MySqlDatabase>());
