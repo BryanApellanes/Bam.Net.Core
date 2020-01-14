@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="/media/data/src/BamFrameworkCore/Bam.Net/_lib/bam.net.core/bam.net.core.csproj" />
+    <ProjectReference Include="../bam.net.core/bam.net.core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
