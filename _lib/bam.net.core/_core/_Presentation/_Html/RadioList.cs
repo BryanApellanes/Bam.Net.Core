@@ -30,18 +30,20 @@ namespace Bam.Net.Presentation.Html
 
             TagBuilder list = FromEnum(enumType, selected, id);
 
-            return builder.Child(list);
+            throw new NotImplementedException("Implement this using Tag class");
+            //return builder.Child(list);
         }
 
         public static TagBuilder FromEnum(Type enumType, object selected, string id = null)
         {
+            throw new NotImplementedException("Implement this using Tag class");
             if (string.IsNullOrEmpty(id))
             {
                 id = "".RandomString(5);
             }
 
             FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
-            TagBuilder list = new TagBuilder("ul")
+            /*TagBuilder list = new TagBuilder("ul")
                 .Attr("id", id)
                 .Css("list-style", "none");
 
@@ -67,7 +69,7 @@ namespace Bam.Net.Presentation.Html
                 list.Child(li);
                 first = false;
             }
-            return list;
+            return list;*/
         }
 
     }

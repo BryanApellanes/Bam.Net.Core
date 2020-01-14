@@ -13,26 +13,13 @@ namespace Bam.Net
         string _className;
         public string ClassName
         {
-            get
-            {
-                if (_className == null)
-                {
-                    _className = TypeName;
-                }
-                return _className;
-            }
-            set
-            {
-                _className = value;
-            }
+            get => _className ?? (_className = TypeName);
+            set => _className = value;
         }
         string _typeName;
         public string TypeName
         {
-            get
-            {
-                return _typeName;
-            }
+            get => _typeName;
             set
             {
                 string t = value.LettersOnly();

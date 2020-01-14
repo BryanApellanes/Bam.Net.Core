@@ -3450,9 +3450,8 @@ namespace Bam.Net
         public static bool IsAllCaps(this string value)
         {
             bool result = true;
-            for (int i = 0; i < value.Length; i++)
+            foreach (var c in value)
             {
-                char c = value[i];
                 result = char.IsUpper(c);
                 if (!result)
                 {

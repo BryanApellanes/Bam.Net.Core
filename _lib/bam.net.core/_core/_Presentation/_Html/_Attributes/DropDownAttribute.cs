@@ -13,7 +13,7 @@ namespace Bam.Net.Presentation.Html
 {
     /// <summary>
     /// Designates that this property when rendered by the FileExtParamsBuilder
-    /// should be a drowpdown (select) element.  Must call 
+    /// should be a dropdown (select) element.  Must call 
     /// DropDown.SetOptions([nameToUseForDefaultValue], dictionaryOfDefaultValues)
     /// for this to function properly.
     /// </summary>

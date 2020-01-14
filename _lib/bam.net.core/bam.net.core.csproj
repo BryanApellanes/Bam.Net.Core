@@ -59,9 +59,14 @@
     <EmbeddedResource Remove="Presentation\Html\Attributes\**" />
     <None Remove="Presentation\Html\Attributes\**" />
   </ItemGroup>
- 
-  <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 
-  <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
+  <ItemGroup>
+    <Compile Include="..\..\shared\bam.net.shared\Application\Files\FsFileIdentifier.cs">
+      <Link>bam.net.shared\Application\Files\FsFileIdentifier.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+   
+  <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 
 </Project>

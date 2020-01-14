@@ -12,7 +12,7 @@ namespace Bam.Net.Presentation.Html
     /// Used to build input forms for specified 
     /// types, methods and their parameters. 
     /// </summary>
-    public partial class InputFormProvider
+    public partial class InputFormProvider: InputProvider
     {
         Type invocationType;
         Dictionary<Type, Func<Type, Tag>> customAttributeBuilders;
@@ -30,7 +30,12 @@ namespace Bam.Net.Presentation.Html
         {
             this.invocationType = invocationTarget;
         }
-
+        
+        public override Tag CreateInput(PropertyInfo propertyInfo, object data = null)
+        {
+            return InputProvider.CreateInput(InputTypes.Text, propertyInfo, data);
+        }
+        
         public Type InvocationType
         {
             get => this.invocationType;

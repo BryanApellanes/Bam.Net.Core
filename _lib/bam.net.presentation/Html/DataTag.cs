@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Bam.Net.Schema.Org.DataTypes;
 
 namespace Bam.Net.Presentation.Html
 {

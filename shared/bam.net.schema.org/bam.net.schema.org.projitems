@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\Js\Sdo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\Number.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\OneOfThese.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\SchemaDotOrgProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\Text.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\Things\AboutPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema.Org\Things\AcceptAction.cs" />

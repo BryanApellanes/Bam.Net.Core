@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data.Repositories;
-using Bam.Net.Schema.Org.Things;
+//using Bam.Net.Schema.Org.Things;
 
 namespace Bam.Net.Services.Catalog.Data
 {

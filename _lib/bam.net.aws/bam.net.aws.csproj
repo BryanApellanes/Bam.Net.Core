@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
-        <RootNamespace>bam.aws</RootNamespace>
+        <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
+        <RootNamespace>Bam.Net.Aws</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\bam.net.core\bam.net.core.csproj" />
+      <ProjectReference Include="/media/data/src/BamFrameworkCore/Bam.Net/_lib/bam.net.core/bam.net.core.csproj" />
     </ItemGroup>
 
 </Project>

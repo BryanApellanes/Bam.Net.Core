@@ -1,5 +1,4 @@
 using System;
-using Bam.Net.Schema.Org.Things;
 
 namespace Bam.Net.Presentation.Html
 {

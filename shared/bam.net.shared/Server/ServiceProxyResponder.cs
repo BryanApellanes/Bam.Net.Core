@@ -22,7 +22,7 @@ using Bam.Net.Configuration;
 using System.Threading.Tasks;
 using Bam.Net.Application;
 using Bam.Net.Presentation;
-using Bam.Net.Schema.Org.Things;
+//using Bam.Net.Schema.Org.Things;
 using Bam.Net.Server.Meta;
 using Bam.Net.Services;
 
