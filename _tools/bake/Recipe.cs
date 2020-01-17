@@ -22,10 +22,14 @@ namespace Bam.Net.Bake
             NameIsDefault = true;
             ProjectRoot = "_tools";
             OsName = OSInfo.Current;
-            OutputDirectory = Path.Combine(BamPaths.ToolkitPath, OsName.ToString());
-            NugetOutputDirectory = Path.Combine(BamPaths.NugetOutputPath, OsName.ToString());
+            OutputDirectory = DefaultOutputDirectory;
+            NugetOutputDirectory = DefaultNugetOutputDirectory;
         }
-        
+
+        public static string DefaultOutputDirectory => Path.Combine(BamPaths.ToolkitPath, OSInfo.Current.ToString());
+
+        public static string DefaultNugetOutputDirectory => Path.Combine(BamPaths.NugetOutputPath, OSInfo.Current.ToString());
+
         /// <summary>
         /// Create a recipe containing a single project.
         /// </summary>

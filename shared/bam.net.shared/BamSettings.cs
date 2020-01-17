@@ -29,6 +29,7 @@ namespace Bam.Net
         public string NodePath { get; set; }
         public string NpmPath { get; set; }
         public string DockerPath { get; set; }
+        public string NugetPath { get; set; }
 
         public bool IsValid(Action<string> notValid)
         {
@@ -56,6 +57,10 @@ namespace Bam.Net
             {
                 DockerPath = TryGetPath("docker");
             }
+            if (string.IsNullOrEmpty(NugetPath))
+            {
+                NugetPath = TryGetPath("nuget");
+            }
 
             StringBuilder message = new StringBuilder();
             if (string.IsNullOrEmpty(GitPath.Trim()))
@@ -78,6 +83,11 @@ namespace Bam.Net
             {
                 message.AppendLine("docker was not found, please specify the path to the docker executable");
             }
+
+            if (string.IsNullOrEmpty(NugetPath.Trim()))
+            {
+                message.AppendLine("nuget was not found, please specify the path to the nuget executable");
+            }
             if (!string.IsNullOrEmpty(message.ToString()))
             {
                 notValid(message.ToString());
@@ -98,7 +108,8 @@ namespace Bam.Net
                     NpxPath = GetPath("npx"),
                     NodePath = GetPath("node"),
                     NpmPath = GetPath("npm"),
-                    DockerPath = TryGetPath("docker")
+                    DockerPath = TryGetPath("docker"),
+                    NugetPath = TryGetPath("nuget")
                 };
                 settings.ToYamlFile(path);
             }

@@ -41,7 +41,7 @@ namespace Bam.Net.Bake
                 string tempRecipe = $"./temp_recipe_{6.RandomLetters()}.json";
                 toUse.ToJsonFile(tempRecipe);
                 Arguments["recipe"] = new FileInfo(tempRecipe).FullName;
-                Recipe();
+                BakeRecipe();
             }
         }
     }

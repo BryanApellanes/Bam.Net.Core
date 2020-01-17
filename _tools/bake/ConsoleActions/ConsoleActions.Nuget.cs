@@ -42,5 +42,17 @@ namespace Bam.Net.Bake
                 OutLineFormat("pack command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, nugetDirectory);
             }
         }
+
+        [ConsoleAction("addNugetSource", "Add the default NugetOutputPath to the local nuget sources")]
+        public void AddNugetSource()
+        {
+            string path = GetArgument("addNugetSource").Or(Recipe.DefaultNugetOutputDirectory);
+            string sourceName = GetArgument("name").Or("BamPackages");
+            string nugetArgs = $"sources Add -Name \"{sourceName}\" -Source {path}";
+            BamSettings settings = BamSettings.Load();
+            ProcessStartInfo startInfo = settings.NugetPath.ToStartInfo(nugetArgs);
+            startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
+            OutLineFormat("addNugetSource command finished", ConsoleColor.Blue);
+        }
     }
 }

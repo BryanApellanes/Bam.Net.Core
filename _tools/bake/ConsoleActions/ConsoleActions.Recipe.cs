@@ -13,7 +13,7 @@ namespace Bam.Net.Bake
     public partial class ConsoleActions
     {
         [ConsoleAction("recipe", "bake the specified recipe")]
-        public void Recipe()
+        public void BakeRecipe()
         {
             // build each csproj with dotnet publish
             string startDir = Environment.CurrentDirectory;
