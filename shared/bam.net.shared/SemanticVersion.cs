@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace Bam.Net
@@ -33,6 +34,12 @@ namespace Bam.Net
             return $"{version}{suffix}";
         }
 
+        public SemanticVersion Next(VersionSpec spec = VersionSpec.Patch, string componentValue = "")
+        {
+            SemanticVersion next = this.CopyAs<SemanticVersion>();
+            return next.Increment(spec, componentValue);
+        }
+        
         public SemanticVersion Increment(VersionSpec spec = VersionSpec.Patch, string componentValue = "")
         {
             switch (spec)
@@ -57,6 +64,20 @@ namespace Bam.Net
             return this;
         }
 
+        public static bool TryParse(string version, out SemanticVersion semanticVersion)
+        {
+            semanticVersion = null;
+            try
+            {
+                semanticVersion = Parse(version);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        
         public static SemanticVersion Parse(string version)
         {
             string[] versionAndExtra = version.DelimitSplit("-");

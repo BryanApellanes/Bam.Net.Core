@@ -12,7 +12,7 @@ namespace Bam.Net.Bake
 {
     public partial class ConsoleActions
     {
-        [ConsoleAction("nuget", "pack the specified recipe as a nuget package")]
+        [ConsoleAction("nuget", "pack the specified recipe as nuget packages")]
         public void Nuget()
         {
             Recipe recipe = GetRecipe();
@@ -46,8 +46,8 @@ namespace Bam.Net.Bake
         [ConsoleAction("addNugetSource", "Add the default NugetOutputPath to the local nuget sources")]
         public void AddNugetSource()
         {
-            string path = GetArgument("addNugetSource").Or(Recipe.DefaultNugetOutputDirectory);
-            string sourceName = GetArgument("name").Or("BamPackages");
+            string path = GetArgument("addNugetSource", true, $"Please enter the path to add ({Recipe.DefaultNugetOutputDirectory})").Or(Recipe.DefaultNugetOutputDirectory);
+            string sourceName = GetArgument("name", true, $"Please enter the name of the nuget source (BamPackages)").Or("BamPackages");
             string nugetArgs = $"sources Add -Name \"{sourceName}\" -Source {path}";
             BamSettings settings = BamSettings.Load();
             ProcessStartInfo startInfo = settings.NugetPath.ToStartInfo(nugetArgs);

@@ -15,6 +15,10 @@ namespace Bam.Net.Bake
         [ConsoleAction("recipe", "bake the specified recipe")]
         public void BakeRecipe()
         {
+            if (Arguments.Contains("version")) // don't bake the recipe if all we're doing is updating the version
+            {
+                return;
+            }
             // build each csproj with dotnet publish
             string startDir = Environment.CurrentDirectory;
             Recipe recipe = GetRecipe();

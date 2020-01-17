@@ -1,9 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using Bam.Net.Application;
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
@@ -15,10 +21,37 @@ namespace Bam.Net.Bake
         [ConsoleAction("version", "Update the package version of each project referenced by a recipe.")]
         public void Version()
         {
+            SemanticVersion currentVersion = FileSystemSemanticVersion.Find();
+            string prompt = "Please specify 'major', 'minor' or 'patch' to increment version component.";
+            string versionArg = GetArgument("version", true, prompt);
+            if (string.IsNullOrEmpty(versionArg))
+            {
+                OutLine(prompt);
+                Exit(1);
+            }
+            VersionSpec versionSpec = versionArg.ToEnum<VersionSpec>();
+            SemanticVersion newVersion = currentVersion.Next(versionSpec);
             Recipe recipe = GetRecipe();
-            string versionArg = GetArgument("version", true, "Please specify 'major', 'minor' or 'patch' to increment version component.");
+            OutLineFormat("Current version in semver directory: {0}", currentVersion.ToString());
+            OutLineFormat("New version in semver directory: {0}", newVersion.ToString());
             
-            throw new NotImplementedException("This is not fully implemented");
-        } 
+            foreach (string projectFile in recipe.ProjectFilePaths)
+            {
+                XDocument xdoc = XDocument.Load(projectFile);
+                XElement versionElement = xdoc.Element("Project").Element("PropertyGroup").Element("Version");
+                
+                if (versionElement != null)
+                {
+                    string version = newVersion.ToString();
+                    OutLineFormat("Setting version for {0} to {1}", projectFile, version);
+                    versionElement.Value = version;
+                    XmlWriterSettings settings = new XmlWriterSettings {Indent = true, OmitXmlDeclaration = true};
+                    using (XmlWriter xw = XmlWriter.Create(projectFile, settings))
+                    {
+                        xdoc.Save(xw);
+                    }
+                }
+            }
+        }
     }
 }
