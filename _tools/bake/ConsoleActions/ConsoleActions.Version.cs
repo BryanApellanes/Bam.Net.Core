@@ -60,6 +60,11 @@ namespace Bam.Net.Bake
             FileSystemSemanticVersion newVersion = currentVersion.CopyAs<FileSystemSemanticVersion>();
             if (!string.IsNullOrEmpty(versionArg))
             {
+                if (SemanticVersion.TryParse(versionArg, out SemanticVersion parsedVersion))
+                {
+                    newVersion.CopyProperties(parsedVersion);
+                    return newVersion;
+                }
                 VersionSpec versionSpec = versionArg.ToEnum<VersionSpec>();
                 newVersion.Increment(versionSpec);
             }
