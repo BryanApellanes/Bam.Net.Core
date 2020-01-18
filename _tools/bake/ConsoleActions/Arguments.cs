@@ -14,7 +14,8 @@ namespace Bam.Net.Bake
             AddValidArgument("zipRecipe", false, false, "On /zip, Specify the recipe whose 'OutputDirectory' setting is zipped.");
             AddValidArgument("nugetOutput", "On /nuget, Specify the directory where nuget packages are output.");
             AddValidArgument("packageVersion", false, false, "On /nuget, Specify the package version to set.");
-            AddValidArgument("name", false, false, "On /nuget, Specify the name of the package source to add");
+            
+            AddValidArgument("name", false, false, "On /addNugetSource, Specify the name of the package source to add");
             
             AddValidArgument("major", true, false, "On /version, Increment the major version number");
             AddValidArgument("minor", true, false, "On /version, Increment the minor version number");
