@@ -3,6 +3,10 @@
     <PropertyGroup>
         <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
         <RootNamespace>Bam.Net.Aws</RootNamespace>
+        <PackageId>bam.net.aws</PackageId>
+        <Version>1.0.4</Version>
+        <Authors>Bryan Apellanes</Authors>
+        <Company>Three Headz</Company>
     </PropertyGroup>
 
     <ItemGroup>

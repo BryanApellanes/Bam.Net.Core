@@ -2,6 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>Bam.Net.Shema.Org</RootNamespace>
+        <PackageId>bam.net.schema.org</PackageId>
+        <Version>1.0.4</Version>
+        <Authors>Bryan Apellanes</Authors>
+        <Company>Three Headz</Company>
     </PropertyGroup>
 
     <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
