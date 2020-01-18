@@ -49,7 +49,7 @@ namespace Bam.Net.Bake
                 }
                 else
                 {
-                    OutLineFormat("Version element not found for in project file: {0}", ConsoleColor.Yellow, projectFile);
+                    OutLineFormat("Version element not found in project file: {0}", ConsoleColor.Yellow, projectFile);
                 }
             }
             newVersion.Save();
