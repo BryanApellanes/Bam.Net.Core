@@ -26,7 +26,7 @@ namespace Bam.Net.Bake
             string prompt = "Please specify 'major', 'minor' or 'patch' to increment version component.";
             string versionArg = GetArgument("version", true, prompt);
 
-            SemanticVersion newVersion = GetNewVersion(currentVersion, versionArg);
+            FileSystemSemanticVersion newVersion = GetNewVersion(currentVersion, versionArg);
             Recipe recipe = GetRecipe();
             OutLineFormat("Current version in semver directory: {0}", currentVersion.ToString());
             OutLineFormat("New version in semver directory: {0}", newVersion.ToString());
@@ -52,11 +52,12 @@ namespace Bam.Net.Bake
                     OutLineFormat("Version element not found for in project file: {0}", ConsoleColor.Yellow, projectFile);
                 }
             }
+            newVersion.Save();
         }
 
-        private SemanticVersion GetNewVersion(FileSystemSemanticVersion currentVersion, string versionArg)
+        private FileSystemSemanticVersion GetNewVersion(FileSystemSemanticVersion currentVersion, string versionArg)
         {
-            SemanticVersion newVersion = currentVersion.CopyAs<SemanticVersion>();
+            FileSystemSemanticVersion newVersion = currentVersion.CopyAs<FileSystemSemanticVersion>();
             if (!string.IsNullOrEmpty(versionArg))
             {
                 VersionSpec versionSpec = versionArg.ToEnum<VersionSpec>();

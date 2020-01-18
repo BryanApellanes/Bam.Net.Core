@@ -7,6 +7,12 @@ namespace Bam.Net
     {
         public string SemverDirectory { get; set; }
         public string VersionFile { get; set; }
+
+        public void Save()
+        {
+            this.ToString().SafeWriteToFile(VersionFile, true);
+        }
+        
         public static FileSystemSemanticVersion Find()
         {
             DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
