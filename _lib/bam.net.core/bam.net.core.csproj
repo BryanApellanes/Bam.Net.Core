@@ -1,21 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Bam.Net</RootNamespace>
-
     <PackageId>bam.net.core</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.0.4</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
-  
   <ItemGroup>
-
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
     <PackageReference Include="CsQuery.Core" Version="2.0.1" />
     <PackageReference Include="CsvHelper" Version="12.1.2" />
@@ -50,7 +45,6 @@
     <PackageReference Include="YamlDotNet" Version="5.3.0" />
     <PackageReference Include="YUICompressor.NET" Version="3.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Automation\Scripting\CSharpScriptContext.hbs" />
     <EmbeddedResource Include="Automation\Scripting\CSharpScriptContext.hbs" />
@@ -59,14 +53,10 @@
     <EmbeddedResource Remove="Presentation\Html\Attributes\**" />
     <None Remove="Presentation\Html\Attributes\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Include="..\..\shared\bam.net.shared\Application\Files\FsFileIdentifier.cs">
       <Link>bam.net.shared\Application\Files\FsFileIdentifier.cs</Link>
     </Compile>
   </ItemGroup>
-
-   
   <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
-
 </Project>
