@@ -18,6 +18,18 @@ namespace Bam.Net
         public string PreRelease { get; set; }
         public string Build { get; set; }
 
+        public void ClearSuffix()
+        {
+            PreRelease = string.Empty;
+            Build = string.Empty;
+        }
+
+        public void SetSuffix(string suffix)
+        {
+            ClearSuffix();
+            PreRelease = suffix;
+        }
+        
         public override string ToString()
         {
             string version = $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}";

@@ -7,7 +7,7 @@ namespace Bam.Net
     {
         public string SemverDirectory { get; set; }
         public string VersionFile { get; set; }
-        public static SemanticVersion Find()
+        public static FileSystemSemanticVersion Find()
         {
             DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
             DirectoryInfo semverDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, "semver"));

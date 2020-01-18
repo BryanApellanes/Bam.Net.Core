@@ -15,6 +15,15 @@ namespace Bam.Net.Bake
             AddValidArgument("nugetOutput", "On /nuget, Specify the directory where nuget packages are output.");
             AddValidArgument("packageVersion", false, false, "On /nuget, Specify the package version to set.");
             AddValidArgument("name", false, false, "On /nuget, Specify the name of the package source to add");
+            
+            AddValidArgument("major", true, false, "On /version, Increment the major version number");
+            AddValidArgument("minor", true, false, "On /version, Increment the minor version number");
+            AddValidArgument("patch", true, false, "On /version, Increment the patch version number");
+            AddValidArgument("dev", true, false, "On /version, Include the commit as build number");
+            AddValidArgument("test", true, false, "On /version, Include '-test' as the build number");
+            AddValidArgument("staging", true, false, "On /version, Include '-rc+{Commit} as the build");
+            AddValidArgument("release", true, false, "On /version, Remove build and prerelease.");
+            AddValidArgument("gitRepo", false, false, "On /version, Specify the repository to get the commit hash from");
         }
     }
 }
