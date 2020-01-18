@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
+using System.Xml.Linq;
 using Bam.Net.Application;
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
@@ -15,11 +16,7 @@ namespace Bam.Net.Bake
         [ConsoleAction("nuget", "pack the specified recipe as nuget packages")]
         public void Nuget()
         {
-            Recipe recipe = GetRecipe();
-            if (Arguments.Contains("nugetOutput"))
-            {
-                recipe.NugetOutputDirectory = GetArgument("nugetOutput");
-            }
+            Recipe recipe = GetRecipeWithNugetOutput();
             BamSettings settings = BamSettings.Load();
             string nugetDirectory = GetNugetDirectory(recipe);
             foreach (string projectFile in recipe.ProjectFilePaths)
@@ -43,16 +40,56 @@ namespace Bam.Net.Bake
             }
         }
 
-        [ConsoleAction("addNugetSource", "Add the default NugetOutputPath to the local nuget sources")]
-        public void AddNugetSource()
+        [ConsoleAction("nugetPush", "push the nuget packages that result from a specified recipe; bake /nuget must be called first.")]
+        public void NugetPush()
         {
-            string path = GetArgument("addNugetSource", true, $"Please enter the path to add ({Recipe.DefaultNugetOutputDirectory})").Or(Recipe.DefaultNugetOutputDirectory);
-            string sourceName = GetArgument("name", true, $"Please enter the name of the nuget source (BamPackages)").Or("BamPackages");
-            string nugetArgs = $"sources Add -Name \"{sourceName}\" -Source {path}";
+            string nugetApiKey = GetArgumentOrDefault("nugetApiKey", "");
+            if (string.IsNullOrEmpty(nugetApiKey))
+            {
+                OutLineFormat("nugetApiKey not specified", ConsoleColor.Red);
+                Exit(1);
+            }
+            string nugetSource = GetArgumentOrDefault("nugetSource", "nuget.org");
+            Recipe recipe = GetRecipeWithNugetOutput();
             BamSettings settings = BamSettings.Load();
-            ProcessStartInfo startInfo = settings.NugetPath.ToStartInfo(nugetArgs);
-            startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
-            OutLineFormat("addNugetSource command finished", ConsoleColor.Blue);
+            string nugetDirectory = GetNugetDirectory(recipe);
+            foreach (string projectFile in recipe.ProjectFilePaths)
+            {
+                string projectName = GetProjectName(projectFile);
+                string projectVersion = GetProjectVersion(projectFile);
+                string nupkgName = $"{projectName}.{projectVersion}.nupkg";
+                string nupkgPath = Path.Combine(nugetDirectory, nupkgName);
+
+                string dotNetArgs = $"nuget push {nupkgPath} -s {nugetSource} -k {nugetApiKey}";
+
+                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
+                startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
+                OutLineFormat("nuget push command finished for project {0}", ConsoleColor.Blue, projectFile);
+            }
+        }
+        
+        private static Recipe GetRecipeWithNugetOutput()
+        {
+            Recipe recipe = GetRecipe();
+            if (Arguments.Contains("nugetOutput"))
+            {
+                recipe.NugetOutputDirectory = GetArgument("nugetOutput");
+            }
+
+            return recipe;
+        }
+
+        private string GetProjectVersion(string projectFile)
+        {
+            XDocument xdoc = XDocument.Load(projectFile);
+            XElement versionElement = xdoc.Element("Project")?.Element("PropertyGroup")?.Element("Version");
+            return versionElement?.Value;
+        }
+
+        private string GetProjectName(string projectFile)
+        {
+            FileInfo file = new FileInfo(projectFile);
+            return Path.GetFileNameWithoutExtension(file.Name);
         }
     }
 }

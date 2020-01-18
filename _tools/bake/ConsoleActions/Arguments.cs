@@ -11,11 +11,14 @@ namespace Bam.Net.Bake
             AddValidArgument("output", false, true, "Specify the directory to build to.");
             AddValidArgument("outputRecipe", false, false, "On /discover, Specify the name of the recipe to write, default is 'recipe.json'.");
             AddValidArgument("recipePerProject", true, false, "On /discover, Specifies that all discovered projects have their own recipe written.");
+            
             AddValidArgument("zipRecipe", false, false, "On /zip, Specify the recipe whose 'OutputDirectory' setting is zipped.");
+            
             AddValidArgument("nugetOutput", "On /nuget, Specify the directory where nuget packages are output.");
             AddValidArgument("packageVersion", false, false, "On /nuget, Specify the package version to set.");
             
-            AddValidArgument("name", false, false, "On /addNugetSource, Specify the name of the package source to add");
+            AddValidArgument("nugetSource", false, false, "On /nugetPush, Specify the source to push to; default is 'nuget.org'");
+            AddValidArgument("nugetApiKey", false, false, "On /nugetPush, Specify the apiKey used to push to the nuget repository");
             
             AddValidArgument("major", true, false, "On /version, Increment the major version number");
             AddValidArgument("minor", true, false, "On /version, Increment the minor version number");

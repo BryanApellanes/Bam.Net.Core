@@ -75,7 +75,7 @@ namespace Bam.Net.CommandLine
             while (keyInfo.Key != ConsoleKey.Enter);
             return pass;
         }
-                
+
         public static string GetArgument(string name, bool useCache, string promptMessage = null)
         {
             if (useCache)
@@ -113,6 +113,13 @@ namespace Bam.Net.CommandLine
             return GetArgument(name, promptMessage, (p) => PasswordPrompt(p));
         }
 
+        /// <summary>
+        /// Get the value specified for the specified argument, returning ifNotSpecified
+        /// if the specified argument was not supplied.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="ifNotSpecified"></param>
+        /// <returns></returns>
         public static string GetArgumentOrDefault(string name, string ifNotSpecified)
         {
             return Arguments.Contains(name) ? Arguments[name] : ifNotSpecified;
