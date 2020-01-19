@@ -64,7 +64,26 @@ namespace Bam.Net.Bake
 
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
-                OutLineFormat("nuget push command finished for project {0}", ConsoleColor.Blue, projectFile);
+                OutLineFormat("dotnet nuget push command finished for project {0}", ConsoleColor.Blue, projectFile);
+            }
+        }
+
+        [ConsoleAction("nugetRestore", "call dotnet restore for the projects in a specified recipe")]
+        public void NugetRestore()
+        {
+            string nugetSource = GetArgumentOrDefault("nugetSource", "nuget.org");
+            Recipe recipe = GetRecipeWithNugetOutput();
+            BamSettings settings = BamSettings.Load();
+            string nugetDirectory = GetNugetDirectory(recipe);
+            string currentDirectory = Environment.CurrentDirectory;
+            foreach (string projectFile in recipe.ProjectFilePaths)
+            {
+                string dotNetArgs = $"restore -s {nugetSource}";
+                FileInfo file = new FileInfo(projectFile);
+                Environment.CurrentDirectory = file.Directory.FullName;
+                ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
+                startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkCyan));
+                OutLineFormat("dotnet nuget restore command finished for project {0}", ConsoleColor.Blue, projectFile);
             }
         }
         

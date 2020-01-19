@@ -84,7 +84,8 @@ namespace Bam.Net.Testing
             
 			AddValidArgument("i", true, description: "Run interactively");
 			AddValidArgument("?", true, description: "Show usage");
-			AddValidArgument("t", true, description: "Run all unit tests");
+            AddValidArgument("v", true, description: "Show version information");
+            AddValidArgument("t", true, description: "Run all unit tests");
             AddValidArgument("it", true, description: "Run all integration tests");
             AddValidArgument("spec", true, description: "Run all specification tests");
             AddValidArgument("tag", false, description: "Specify a tag to associate with test executions");
@@ -97,6 +98,11 @@ namespace Bam.Net.Testing
 				Usage(Assembly.GetEntryAssembly());
 				Exit();
 			}
+            else if (Arguments.Contains("v"))
+            {
+                Version(Assembly.GetEntryAssembly());
+                Exit();
+            }
 			else if (Arguments.Contains("i"))
 			{
 				Interactive();

@@ -667,6 +667,26 @@ namespace Bam.Net.CommandLine
             Exited?.Invoke(code);
         }
 
+        public static void Version(Assembly assembly)
+        {
+            FileVersionInfo fv = FileVersionInfo.GetVersionInfo(assembly.Location);
+            AssemblyCommitAttribute commitAttribute =  assembly.GetCustomAttribute<AssemblyCommitAttribute>();
+            StringBuilder versionInfo = new StringBuilder();
+            versionInfo.AppendFormat("AssemblyVersion: {0}\r\n", assembly.GetName().Version.ToString());
+            versionInfo.AppendFormat("AssemblyFileVersion: {0}\r\n", fv.FileVersion.ToString());
+            if (commitAttribute != null)
+            {
+                versionInfo.AppendFormat("Commit: {0}\r\n", commitAttribute.Commit);
+            }
+            else
+            {
+                versionInfo.AppendFormat("Commit: AssemblyCommitAttribute not found on specified assembly: {0}\r\n",
+                    assembly.Location);
+            }
+            
+            OutLine(versionInfo.ToString(), ConsoleColor.Cyan);
+        }
+
         public static void Usage(Assembly assembly)
         {
             string assemblyVersion = assembly.GetName().Version.ToString();

@@ -17,7 +17,7 @@ namespace Bam.Net.Bake
             AddValidArgument("nugetOutput", "On /nuget, Specify the directory where nuget packages are output.");
             AddValidArgument("packageVersion", false, false, "On /nuget, Specify the package version to set.");
             
-            AddValidArgument("nugetSource", false, false, "On /nugetPush, Specify the source to push to; default is 'nuget.org'");
+            AddValidArgument("nugetSource", false, false, "On /nugetPush | /nugetRestore, Specify the source to push to; default is 'nuget.org'");
             AddValidArgument("nugetApiKey", false, false, "On /nugetPush, Specify the apiKey used to push to the nuget repository");
             
             AddValidArgument("major", true, false, "On /version, Increment the major version number");

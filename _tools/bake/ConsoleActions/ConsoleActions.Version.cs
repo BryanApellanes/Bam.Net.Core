@@ -19,20 +19,23 @@ namespace Bam.Net.Bake
 {
     public partial class ConsoleActions
     {
-        [ConsoleAction("version", "Update the package version of each project referenced by a recipe.")]
+        [ConsoleAction("version", "Update the package version of each project referenced by a recipe; also (over)writes the SemanticAssemblyInfo.cs file for all projects in the recipe.")]
         public void Version()
         {
-            FileSystemSemanticVersion currentVersion = FileSystemSemanticVersion.Find();
             string prompt = "Please specify 'major', 'minor' or 'patch' to increment version component.";
             string versionArg = GetArgument("version", true, prompt);
 
-            FileSystemSemanticVersion newVersion = GetNewVersion(currentVersion, versionArg);
+            //TODO : change how this gets the recipe because /recipe is a console exec switch to bake the specified recipe. Consider /versionRecipe
             Recipe recipe = GetRecipe();
-            OutLineFormat("Current version in semver directory: {0}", currentVersion.ToString());
-            OutLineFormat("New version in semver directory: {0}", newVersion.ToString());
-            
+
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
+                FileInfo projectFileInfo = new FileInfo(projectFile);
+                FileSystemSemanticVersion currentVersion = FileSystemSemanticVersion.Find(projectFileInfo.Directory);
+                FileSystemSemanticVersion newVersion = GetNewVersion(currentVersion, versionArg, projectFile);
+                OutLineFormat("Current version in semver directory {0}: {1}", newVersion.SemverDirectory, currentVersion.ToString());
+                OutLineFormat("New version in semver directory {0}: {1}", newVersion.SemverDirectory, newVersion.ToString());
+                
                 XDocument xdoc = XDocument.Load(projectFile);
                 XElement versionElement = xdoc.Element("Project").Element("PropertyGroup").Element("Version");
                 
@@ -51,11 +54,12 @@ namespace Bam.Net.Bake
                 {
                     OutLineFormat("Version element not found in project file: {0}", ConsoleColor.Yellow, projectFile);
                 }
+                newVersion.Save();
+                AssemblySemanticVersion.WriteProjectSemanticAssemblyInfo(projectFile);
             }
-            newVersion.Save();
         }
 
-        private FileSystemSemanticVersion GetNewVersion(FileSystemSemanticVersion currentVersion, string versionArg)
+        private FileSystemSemanticVersion GetNewVersion(FileSystemSemanticVersion currentVersion, string versionArg, string projectFile)
         {
             FileSystemSemanticVersion newVersion = currentVersion.CopyAs<FileSystemSemanticVersion>();
             if (!string.IsNullOrEmpty(versionArg))
@@ -85,9 +89,10 @@ namespace Bam.Net.Bake
 
             if (Arguments.Contains("dev"))
             {
-                string gitRepo = GetArgument("gitRepo", "Please specify the path to the git repo");
+                string gitRepo = new FileInfo(projectFile).Directory.FullName;
                 GitLog gitLog = GitLog.Get(gitRepo, 1).First();
-                newVersion.SetSuffix(gitLog.CommitHash.First(6));
+                newVersion.SetSuffix(gitLog.AbbreviatedCommitHash);
+                newVersion.GitLog = gitLog;
             }
 
             if (Arguments.Contains("test"))
@@ -97,10 +102,11 @@ namespace Bam.Net.Bake
 
             if (Arguments.Contains("staging"))
             {
-                string gitRepo = GetArgument("gitRepo", "Please specify the path to the git repo");
+                string gitRepo = new FileInfo(projectFile).Directory.FullName;
                 GitLog gitLog = GitLog.Get(gitRepo, 1).First();
-                newVersion.PreRelease = "rc";
-                newVersion.Build = gitLog.CommitHash.First(6);
+                newVersion.ReleasePrefix = "rc";
+                newVersion.Build = gitLog.AbbreviatedCommitHash;
+                newVersion.GitLog = gitLog;
             }
 
             if (Arguments.Contains("release"))

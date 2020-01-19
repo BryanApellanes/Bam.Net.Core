@@ -1,21 +1,58 @@
 using System;
 using System.IO;
+using System.Linq;
+using Bam.Net.Automation.SourceControl;
+using UnityEngine;
 
 namespace Bam.Net
 {
     public class FileSystemSemanticVersion : SemanticVersion
     {
-        public string SemverDirectory { get; set; }
+        public string SemverDirectory { get; private set; }
         public string VersionFile { get; set; }
+
+        private GitLog _gitLog;
+        private object _gitLogLock = new object();
+
+        public GitLog GitLog
+        {
+            get { return _gitLogLock.DoubleCheckLock<GitLog>(ref _gitLog, () => GitLog.Get(SemverDirectory, 1).First()); }
+            set => _gitLog = value;
+        }
 
         public void Save()
         {
             this.ToString().SafeWriteToFile(VersionFile, true);
         }
+
+        public static bool TryFind(string directoryPath, out FileSystemSemanticVersion fileSystemSemanticVersion)
+        {
+            fileSystemSemanticVersion = null;
+            try
+            {
+                fileSystemSemanticVersion = Find(directoryPath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Bam.Net.Logging.Log.Warn("Exception finding semver for directory {0}: {1}", directoryPath, ex.Message);
+                return false;
+            }
+        }
         
         public static FileSystemSemanticVersion Find()
         {
             DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+            return Find(currentDirectory);
+        }
+
+        public static FileSystemSemanticVersion Find(string fromDirectory)
+        {
+            return Find(new DirectoryInfo(fromDirectory));
+        }
+        
+        public static FileSystemSemanticVersion Find(DirectoryInfo currentDirectory)
+        {
             DirectoryInfo semverDirectory = new DirectoryInfo(Path.Combine(currentDirectory.FullName, "semver"));
             while (!semverDirectory.Exists)
             {
@@ -32,7 +69,7 @@ namespace Bam.Net
             {
                 throw new DirectoryNotFoundException("The semver directory was not found");
             }
-            
+
             FileInfo versionFile = new FileInfo(Path.Combine(semverDirectory.FullName, "version"));
             if (!versionFile.Exists)
             {
