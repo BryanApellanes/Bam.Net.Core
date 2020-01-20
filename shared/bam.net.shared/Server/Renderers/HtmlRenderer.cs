@@ -1,13 +1,13 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
-using Bam.Net.Presentation;
-using Bam.Net.ServiceProxy;
-using Bam.Net.Web;
-using Bam.Net.Presentation;
+
 using System;
 using System.IO;
 using System.Text;
+using Bam.Net.Presentation;
+using Bam.Net.ServiceProxy;
+using Bam.Net.Web;
 
 namespace Bam.Net.Server.Renderers
 {

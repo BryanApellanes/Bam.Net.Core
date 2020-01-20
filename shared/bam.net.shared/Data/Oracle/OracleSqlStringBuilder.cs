@@ -1,20 +1,14 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
-using Bam.Net.Incubation;
-using Bam.Net;
-using Bam.Net.Data;
 using Bam.Net.Data.Oracle;
-using Oracle.ManagedDataAccess;
+using Bam.Net.Incubation;
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess;
 
 namespace Bam.Net.Data
 {
@@ -191,7 +185,7 @@ namespace Bam.Net.Data
 			this.parameters.AddRange(where.Parameters);
 			return this;
 		}
-		public override DataSet GetDataSet(Database db, bool releaseConnection = true, System.Data.Common.DbConnection conn = null, System.Data.Common.DbTransaction tx = null)
+		public override DataSet GetDataSet(Database db, bool releaseConnection = true, DbConnection conn = null, DbTransaction tx = null)
 		{
 			OracleDatasetProvider oracleGetDatasetProvider = new OracleDatasetProvider(this);
 			return oracleGetDatasetProvider.GetDataSet(db, releaseConnection, conn, tx);
