@@ -44,7 +44,7 @@ namespace Bam.Net.Data.GraphQL
 
         public void AddTypes(params Type[] types)
         {
-            types.Each(type => AddType(type));
+            types.Each(AddType);
         }
         
         public override void WriteSource(string writeSourceDir)
@@ -78,8 +78,7 @@ namespace Bam.Net.Data.GraphQL
             
             compiler.AddAssemblyReference(typeof(GraphType).Assembly.Location);
 
-            bytes =
-                compiler.Compile(AssemblyName ?? 8.RandomLetters(), new DirectoryInfo(SourceDirectoryPath));
+            bytes = compiler.Compile(AssemblyName ?? 8.RandomLetters(), new DirectoryInfo(SourceDirectoryPath));
             return Assembly.Load(bytes);
         }
         

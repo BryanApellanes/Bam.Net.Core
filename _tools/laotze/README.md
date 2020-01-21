@@ -1,5 +1,6 @@
 ﻿# Data Access Objects (Dao) From LaoTze
-Generating Data Access Objects using LaoTze.exe is done by creating a *.db.js 
+
+Generating data access objects from scratch using LaoTze.exe is done by creating a *.db.js 
 file and processing that file with the command line tool LaoTze.exe.  A *.db.js 
 file is a special JavaScript file that contains a single JavaScript literal object 
 named “database” that defines a database schema.  An example database schema object

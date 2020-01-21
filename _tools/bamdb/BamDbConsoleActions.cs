@@ -9,12 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Bam.Net.Data.GraphQL;
+using Bam.Net.Server;
+using Bam.Shell.CodeGen;
 using GraphQL.Language.AST;
 
 namespace Bam.Net.Application
 {
     [Serializable]
-    public class UtilityActions : CommandLineTestInterface
+    public class BamDbConsoleActions : CommandLineTestInterface
     {
         [ConsoleAction("generateSchemaRepository", "Generate a schema specific DaoRepository")]
         public static void GenerateSchemaRepository()
@@ -205,14 +207,10 @@ namespace Bam.Net.Application
             }
             else
             {
-                config.TypeAssembly = GetArgument("typeAssembly",
-                    "Please enter the path to the assembly containing types to generate GraphQL wrappers for");
-                config.FromNameSpace = GetArgument("fromNameSpace",
-                    "Please enter the namespace containing types to generate GraphQL wrappers for");
-                config.ToNameSpace =
-                    GetArgument("toNameSpace", "Please enter the namespace to write generated types to");
-                config.WriteSourceTo = GetArgument("writeSourceTo",
-                    "Please enter the path to the directory to write source files to");
+                config.TypeAssembly = GetArgument("typeAssembly", "Please enter the path to the assembly containing types to generate GraphQL wrappers for");
+                config.FromNameSpace = GetArgument("fromNameSpace", "Please enter the namespace containing types to generate GraphQL wrappers for");
+                config.ToNameSpace = GetArgument("toNameSpace", "Please enter the namespace to write generated types to");
+                config.WriteSourceTo = GetArgument("writeSourceTo", "Please enter the path to the directory to write source files to");
             }
 
             return config;

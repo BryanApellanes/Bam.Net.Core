@@ -24,19 +24,23 @@ namespace Bam.Shell.CodeGen
         {
         }
 
+        public const string DefaultDaoConfigFile = "./.bamdb.daoconfigs";
+        public const string DefaultOutput = "./_gen";
+        
         public override void RegisterArguments(string[] args)
         {
             base.RegisterArguments(args);
             AddValidArgument("output", false, true, "Schema: The directory path to output generated files to.");
             AddValidArgument("config", false, false, "Schema: The file containing serialized DaoConfigs.");
-            AddValidArgument("configName", false, false, "Schema: The name of the connection string in the config file.");
-            AddValidArgument("namespace", false, true, "Schema: The namespace to place generated dao classes into.");
+            AddValidArgument("configName", false, false, "Schema | Dao: The name of the entry in the config file to use.");
             AddValidArgument("postgresSchema", false, false, "Schema: The name of the postgres table_schema to work with when extracting a schema from a postgres database.");
+            
+            AddValidArgument("namespace", false, true, "Dao: The namespace to place generated dao classes into.");
         }
 
         public override void Gen(Action<string> output = null, Action<string> error = null)
         {
-            string writeTo = "./_gen";
+            string writeTo = DefaultOutput;
             if (Arguments.Contains("output"))
             {
                 writeTo = Arguments["output"];
@@ -48,8 +52,7 @@ namespace Bam.Shell.CodeGen
 
             SchemaExtractorInfo extractorInfo = GetExtractor(output, error);
             ISchemaExtractor extractor = extractorInfo.SchemaExtractor;
-            ConsoleLogger logger = new ConsoleLogger();
-            logger.AddDetails = false;
+            ConsoleLogger logger = new ConsoleLogger {AddDetails = false};
             ((Loggable) extractor).Subscribe(logger);
             output("Beginning schema extraction");
             output(extractor.PropertiesToString());
@@ -147,12 +150,17 @@ namespace Bam.Shell.CodeGen
 
         private static string GetConfigFile(Action<string> error)
         {
-            string configFile = "./.bamdb.daoconfigs";
+            string configFile = DefaultDaoConfigFile;
             if (Arguments.Contains("config"))
             {
                 configFile = Arguments["config"];
             }
 
+            if(configFile.StartsWith("~/"))
+            {
+                configFile = Path.Combine(BamPaths.UserHome, configFile.TruncateFront(2));
+            }
+            
             if (!File.Exists(configFile))
             {
                 error($"Config file was not found: {configFile}");

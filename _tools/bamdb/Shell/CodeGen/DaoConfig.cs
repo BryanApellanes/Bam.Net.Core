@@ -1,8 +1,10 @@
+using System;
 using System.IO;
 using Bam.Net;
 
 namespace Bam.Shell.CodeGen
 {
+    [Serializable]
     public class DaoConfig
     {
         public DaoConfig()
