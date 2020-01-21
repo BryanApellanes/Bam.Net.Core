@@ -44,6 +44,10 @@ namespace Bam.Shell.CodeGen
             if (Arguments.Contains("output"))
             {
                 writeTo = Arguments["output"];
+                if (writeTo.StartsWith("~"))
+                {
+                    writeTo = Path.Combine(BamPaths.UserHome, writeTo.TruncateFront(2));
+                }
             }
 
             string srcDir = Path.Combine(writeTo, "src");
@@ -57,6 +61,7 @@ namespace Bam.Shell.CodeGen
             output("Beginning schema extraction");
             output(extractor.PropertiesToString());
             SchemaDefinition schema = extractor.Extract();
+            schema.DbType = extractorInfo.DbType.ToString();
             string schemaFilePath = new FileInfo(Path.Combine(writeTo, $"{extractorInfo.DbType.ToString()}-{schema.Name}.schema")).FullName;
             schema.Save(schemaFilePath);
             output($"Extraction complete {schemaFilePath}");
