@@ -72,29 +72,16 @@ namespace Bam.Net.Data.Schema
         string name;
         public string Name
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                this.name = Regex.Replace(value, @"\s", string.Empty);
-            }
+            get => name;
+            set => this.name = Regex.Replace(value, @"\s", string.Empty);
         }
 
         string _className;
         public string ClassName
         {
-            get
-            {
-                return _className ?? Name.PascalCase(true, " ", "_").DropLeadingNonLetters();
-            }
-            set
-            {
-                _className = value;
-            }
+            get => string.IsNullOrEmpty(_className) ? GetClassName(Name) : _className;
+            set => _className = GetClassName(value);
         }
-
 
         public Column[] Columns
         {
@@ -304,6 +291,16 @@ namespace Bam.Net.Data.Schema
         public override string ToString()
         {
             return string.Format("{0}.Name={1}::{0}.ClassName={2}", typeof(Table).Name, this.Name, this.ClassName);
+        }
+
+        public static string GetClassName(string name)
+        {
+            if (name[0].IsNumber())
+            {
+                name = $"_{name.PascalCase(true, " ", "_")}";
+                return name;
+            }
+            return name.PascalCase(true, " ", "_").DropLeadingNonLetters();
         }
     }
 }

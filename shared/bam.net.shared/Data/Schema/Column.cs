@@ -58,31 +58,22 @@ namespace Bam.Net.Data.Schema
                 {
 
                     string val = TableName;
-                    if (!string.IsNullOrEmpty(TableName))
+                    if (!string.IsNullOrEmpty(val))
                     {
-                        val = TableName.PascalCase(true, " ", "_").DropLeadingNonLetters();
+                        val = Table.GetClassName(val); //TableName.PascalCase(true, " ", "_").DropLeadingNonLetters();
                     }
                     _tableClassName = val;
                 }
                 return _tableClassName;
             }
-            set
-            {
-                _tableClassName = value;
-            }
+            set => _tableClassName = Table.GetClassName(value);
         }
 
         string name;
         public string Name
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                this.name = Regex.Replace(value, @"\s", string.Empty);
-            }
+            get => name;
+            set => this.name = Regex.Replace(value, @"\s", string.Empty);
         }
 
         string _propertyName;
@@ -92,16 +83,20 @@ namespace Bam.Net.Data.Schema
         /// </summary>
         public string PropertyName
         {
-            get
-            {
-                return string.IsNullOrEmpty(_propertyName) ? Name.PascalCase(true, " ", "_").DropLeadingNonLetters() : _propertyName;
-            }
-            set
-            {
-                _propertyName = value;
-            }
+            get => string.IsNullOrEmpty(_propertyName) ? GetPropertyName(Name) : _propertyName;
+            set => _propertyName = GetPropertyName(value);
         }
 
+        public static string GetPropertyName(string name)
+        {
+            if (name[0].IsNumber())
+            {
+                name = $"_{name.PascalCase(true, " ", "_")}";
+                return name;
+            }
+
+            return name.PascalCase(true, " ", "_").DropLeadingNonLetters();
+        }
         /// <summary>
         /// The Dao defined DataType of the column
         /// </summary>
@@ -158,37 +153,37 @@ namespace Bam.Net.Data.Schema
                     switch (DataType)
                     {
                         case DataTypes.Default:
-                            SetDbDataype("VarChar", "4000");
+                            SetDbDataType("VarChar", "4000");
                             break;
                         case DataTypes.Boolean:
-                            SetDbDataype("Bit", "1");
+                            SetDbDataType("Bit", "1");
                             break;
                         case DataTypes.Int:
-                            SetDbDataype("Int", "10");
+                            SetDbDataType("Int", "10");
                             break;
                         case DataTypes.UInt:
-                            SetDbDataype("Int", "10");
+                            SetDbDataType("Int", "10");
                             break;
                         case DataTypes.Long:
-                            SetDbDataype("BigInt", "19");
+                            SetDbDataType("BigInt", "19");
                             break;
                         case DataTypes.ULong:
-                            SetDbDataype("BigInt", "19");
+                            SetDbDataType("BigInt", "19");
                             break;
                         case DataTypes.Decimal:
-                            SetDbDataype("Decimal", "28");
+                            SetDbDataType("Decimal", "28");
                             break;
                         case DataTypes.String:
-                            SetDbDataype("VarChar", "4000");
+                            SetDbDataType("VarChar", "4000");
                             break;
                         case DataTypes.ByteArray:
-                            SetDbDataype("VarBinary", "8000");
+                            SetDbDataType("VarBinary", "8000");
                             break;
                         case DataTypes.DateTime:
-                            SetDbDataype("DateTime", "8");
+                            SetDbDataType("DateTime", "8");
                             break;
                         default:
-                            SetDbDataype("VarChar", "4000");
+                            SetDbDataType("VarChar", "4000");
                             break;
                     }
                 }
@@ -201,7 +196,7 @@ namespace Bam.Net.Data.Schema
             }
         }
 
-        private void SetDbDataype(string dbDataType, string max = null)
+        private void SetDbDataType(string dbDataType, string max = null)
         {
             _dbDataType = dbDataType;
             if (string.IsNullOrEmpty(MaxLength) && !string.IsNullOrEmpty(max))
@@ -225,13 +220,12 @@ namespace Bam.Net.Data.Schema
 
         public override int GetHashCode()
         {
-            return string.Format("{0}.{1}", this.TableName, this.Name).ToLowerInvariant().GetHashCode();
+            return $"{this.TableName}.{this.Name}".ToLowerInvariant().GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            Column col = obj as Column;
-            if (col != null)
+            if (obj is Column col)
             {
                 return col.GetHashCode() == this.GetHashCode();
             }

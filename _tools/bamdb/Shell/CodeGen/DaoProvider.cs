@@ -29,21 +29,25 @@ namespace Bam.Shell.CodeGen
             if (Arguments.Contains("output"))
             {
                 writeTo = Arguments["output"];
+                if(writeTo.StartsWith("~/"))
+                {
+                    writeTo = Path.Combine(BamPaths.UserHome, writeTo.TruncateFront(2));
+                }
             }
 
             string srcDir = Path.Combine(writeTo, "src");
             
             DirectoryInfo outputDir = new DirectoryInfo(writeTo);
 
-            
-            output("Generating Daos...");
+            output($"Generating Daos to {writeTo}...");
             string nameSpace = $"{schema.Name}.Dao";
             if (Arguments.Contains("namespace"))
             {
-                nameSpace = Arguments["nameSpace"];
+                nameSpace = Arguments["namespace"];
             }
             DaoGenerator daoGenerator = new DaoGenerator(nameSpace);
             daoGenerator.Generate(schema, writeTo);
+            output("Generation complete.");
         }
     }
 }

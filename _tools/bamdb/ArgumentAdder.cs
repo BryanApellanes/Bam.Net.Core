@@ -1,4 +1,5 @@
-﻿using Bam.Net.CommandLine;
+﻿using System.Linq;
+using Bam.Net.CommandLine;
 
 namespace Bam.Net.Application
 {
@@ -7,7 +8,7 @@ namespace Bam.Net.Application
         internal static void AddArguments(string[] args)
         {
             AddUtilityArguments();
-            ParseArgs(args);
+            ParseArgs(args.Skip(2).ToArray());
         }
 
         private static void AddUtilityArguments()

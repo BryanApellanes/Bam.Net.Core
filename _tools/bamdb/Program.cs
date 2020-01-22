@@ -20,11 +20,13 @@ namespace Bam.Net.Application
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
             AddSwitches(typeof(BamDbConsoleActions));
             AddConfigurationSwitches();
-            ArgumentAdder.AddArguments(args);
-
+            
             BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb.exe");
             RegisterArgZeroProviders<DataShellProvider>(args);
             RegisterArgZeroProviders<CodeGenProvider>(args);
+            RegisterArgZeroProviders<DaoProvider>(args);
+            
+            ArgumentAdder.AddArguments(args);
             ExecuteArgZero(args);
             
             Initialize(args, (a) =>

@@ -10,6 +10,9 @@ The following describes arg zero based code generation options using bamdb. See 
     - `/config` - The file containing serialized DaoConfigs; default value is `"./.bamdb.daoconfigs"`.
     - `/configName` - The name of the config to use.  If there is only one entry specified in the config file, it is used.  If there is more than one entry in the config file and the `/configName` argument is omitted, you are prompted for the config to use.    
 - `gen Dao` - Generate Dao classes for a specified schema file.
+    - `/output` - The directory path to output generated code to; default value is `"./_gen/src"`.
+    - `/namespace` - The namespace to place generated classes into.
+    - `/schema` - The path to the schema definition file.
 - `gen GraphQL` - Generate an assembly containing classes for graphQL traversal of persistable types.
 
 ## Command Line Switch Code Generation

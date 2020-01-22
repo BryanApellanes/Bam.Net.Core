@@ -23,6 +23,11 @@ namespace Bam.Net.CommandLine
         public string Name { get; set; }
         public bool AllowNullValue { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Name}({Description})";
+        }
+
         public static ArgumentInfo[] FromStringArray(string[] argumentNames)
         {
             return FromStringArray(argumentNames, false);
