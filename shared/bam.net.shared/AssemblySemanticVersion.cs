@@ -63,19 +63,21 @@ namespace Bam.Net
             return $"{Major}.{Minor}.{BuildNumber}.{Revision}";
         }
 
-        public static void WriteProjectSemanticAssemblyInfo(string projectFilePath, SemanticVersion version)
+        public static string WriteProjectSemanticAssemblyInfo(string projectFilePath, SemanticVersion version)
         {
-            WriteProjectSemanticAssemblyInfo(new FileInfo(projectFilePath), version);
+            return WriteProjectSemanticAssemblyInfo(new FileInfo(projectFilePath), version);
         }
         
-        public static void WriteProjectSemanticAssemblyInfo(FileInfo projectFile, SemanticVersion version)
+        public static string WriteProjectSemanticAssemblyInfo(FileInfo projectFile, SemanticVersion version)
         {
-            From(version).WriteSemanticAssemblyInfo(projectFile.Directory.FullName);
+            return From(version).WriteSemanticAssemblyInfo(projectFile.Directory.FullName);
         }
         
         public static AssemblySemanticVersion From(SemanticVersion semanticVersion)
         {
-            return semanticVersion.CopyAs<AssemblySemanticVersion>();
+            AssemblySemanticVersion assemblySemanticVersion = semanticVersion.CopyAs<AssemblySemanticVersion>();
+            assemblySemanticVersion.Commit = semanticVersion.Build;
+            return assemblySemanticVersion;
         }
         
         /// <summary>
@@ -83,11 +85,12 @@ namespace Bam.Net
         /// </summary>
         /// <param name="overwrite"></param>
         /// <param name="path"></param>
-        public void WriteSemanticAssemblyInfo(string path = ".", bool overwrite = true)
+        public string WriteSemanticAssemblyInfo(string path = ".", bool overwrite = true)
         {
             FileInfo file = new FileInfo(Path.Combine(path, "SemanticAssemblyInfo.cs"));
             Log.Info("Writing file {0}", file.FullName);
             ToSemanticAssemblyInfo().SafeWriteToFile(file.FullName, overwrite);
+            return file.FullName;
         }
         
         public string ToSemanticAssemblyInfo()

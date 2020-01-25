@@ -21,7 +21,7 @@ namespace Bam.Net
             Major = 1;
             Minor = 0;
             Patch = 0;
-            PreReleasePrefix = "rc";
+            PreReleasePrefix = string.Empty;
         }
         
         public int Major { get; set; }
@@ -29,7 +29,6 @@ namespace Bam.Net
         public int Patch { get; set; }
         
         public SemanticLifecycle Lifecycle { get; set; }
-        public bool IsPreRelease { get; set; }
         /// <summary>
         /// A prerelease designation or blank.  Example values include
         /// "dev", "test" or "rc" (release candidate)
@@ -60,19 +59,23 @@ namespace Bam.Net
                 switch (Lifecycle)
                 {
                     case SemanticLifecycle.Dev:
-                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}-dev+{Build}";
+                        PreReleasePrefix = "dev";
+                        break;
                     case SemanticLifecycle.Test:
-                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}-test+{Build}";
+                        PreReleasePrefix = "test";
+                        break;
                     case SemanticLifecycle.Staging:
-                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}-staging+{Build}";
+                        PreReleasePrefix = "staging";
+                        break;
                     case SemanticLifecycle.Release:
-                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}";
+                        PreReleasePrefix = string.Empty;
+                        break;
                 }
             }
             
             string version = $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}";
             string suffix = string.Empty;
-            if (IsPreRelease)
+            if (!string.IsNullOrEmpty(PreReleasePrefix))
             {
                 suffix = !string.IsNullOrEmpty(Build) ? $"-{PreReleasePrefix}+{Build}" : $"-{PreReleasePrefix}";
             }

@@ -27,6 +27,7 @@ namespace Bam.Net.Bake
             string versionArg = GetArgument("version", true, prompt);
             SemanticVersion currentVersion = GetCurrentVersion(versionArg);
             SemanticVersion nextVersion = GetNextVersion(versionArg);
+            SetLifecycle(nextVersion);
             bool reset = Arguments.Contains("reset");
 
             string recipePath = Arguments["versionRecipe"];
@@ -43,8 +44,11 @@ namespace Bam.Net.Bake
                 FileInfo projectFileInfo = new FileInfo(projectFile);
                 FileSystemSemanticVersion currentProjectVersion = FileSystemSemanticVersion.Find(projectFileInfo.Directory);
                 SemanticVersion nextProjectVersion = GetNextVersionFrom(currentProjectVersion);
-                SetGitLog(nextProjectVersion, projectFile);
+                nextProjectVersion = SetBuild(nextProjectVersion, projectFile);
+                SetLifecycle(nextProjectVersion);
                 SemanticVersion versionToUse = reset ? currentVersion : nextVersion >= nextProjectVersion ? nextVersion : nextProjectVersion;
+                versionToUse = SetBuild(versionToUse, projectFile);
+                SetLifecycle(versionToUse);
                 OutLineFormat("Project: {0}", ConsoleColor.Cyan, projectFileInfo.FullName);
                 OutLineFormat("Current version in semver directory {0}: {1}", currentProjectVersion.SemverDirectory, currentProjectVersion.ToString());
                 OutLineFormat("Next project version: {0}", nextProjectVersion.ToString());
@@ -69,7 +73,10 @@ namespace Bam.Net.Bake
                     OutLineFormat("Version element not found in project file: {0}", ConsoleColor.Yellow, projectFile);
                 }
                 
-                AssemblySemanticVersion.WriteProjectSemanticAssemblyInfo(projectFile, versionToUse);
+                string semanticAssemblyInfo = AssemblySemanticVersion.WriteProjectSemanticAssemblyInfo(projectFile, versionToUse);
+                OutLineFormat("Wrote file {0}", ConsoleColor.Yellow, semanticAssemblyInfo);
+                OutLine(semanticAssemblyInfo.SafeReadFile(), ConsoleColor.Cyan);
+                OutLine();
             }
         }
 
@@ -119,26 +126,6 @@ namespace Bam.Net.Bake
                 newVersion.Increment(VersionSpec.Patch);
             }
 
-            if (Arguments.Contains("dev"))
-            {
-                newVersion.Lifecycle = SemanticLifecycle.Dev;
-            }
-
-            if (Arguments.Contains("test"))
-            {
-                newVersion.Lifecycle = SemanticLifecycle.Test;
-            }
-
-            if (Arguments.Contains("staging"))
-            {
-                newVersion.Lifecycle = SemanticLifecycle.Staging;
-            }
-
-            if (Arguments.Contains("release"))
-            {
-                newVersion.Lifecycle = SemanticLifecycle.Release;
-            }
-
             if (newVersion.Equals(currentVersion))
             {
                 newVersion.Increment(VersionSpec.Patch);
@@ -147,11 +134,35 @@ namespace Bam.Net.Bake
             return newVersion;
         }
 
-        private static void SetGitLog(SemanticVersion newVersion, string projectFile)
+        private static void SetLifecycle(SemanticVersion version)
+        {
+            if (Arguments.Contains("dev"))
+            {
+                version.Lifecycle = SemanticLifecycle.Dev;
+            }
+
+            if (Arguments.Contains("test"))
+            {
+                version.Lifecycle = SemanticLifecycle.Test;
+            }
+
+            if (Arguments.Contains("staging"))
+            {
+                version.Lifecycle = SemanticLifecycle.Staging;
+            }
+
+            if (Arguments.Contains("release"))
+            {
+                version.Lifecycle = SemanticLifecycle.Release;
+            }
+        }
+
+        private static SemanticVersion SetBuild(SemanticVersion version, string projectFile)
         {
             string gitRepo = new FileInfo(projectFile).Directory.FullName;
             GitLog gitLog = GitLog.Get(gitRepo, 1).First();
-            newVersion.Build = gitLog.AbbreviatedCommitHash;
+            version.Build = gitLog.AbbreviatedCommitHash;
+            return version.CopyAs<SemanticVersion>();
         }
     }
 }
