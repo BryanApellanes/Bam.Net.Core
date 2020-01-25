@@ -25,8 +25,9 @@ namespace Bam.Net.Bake
         {
             string prompt = "Please specify 'major', 'minor' or 'patch' to increment version component.";
             string versionArg = GetArgument("version", true, prompt);
-            SemanticVersion specifiedVersion = GetVersionArg(versionArg);
-            SemanticVersion nextVersion = GetNextVersionFrom(specifiedVersion);
+            SemanticVersion currentVersion = GetCurrentVersion(versionArg);
+            SemanticVersion nextVersion = GetNextVersion(versionArg);
+            bool reset = Arguments.Contains("reset");
 
             string recipePath = Arguments["versionRecipe"];
             if (string.IsNullOrEmpty(recipePath))
@@ -43,7 +44,7 @@ namespace Bam.Net.Bake
                 FileSystemSemanticVersion currentProjectVersion = FileSystemSemanticVersion.Find(projectFileInfo.Directory);
                 SemanticVersion nextProjectVersion = GetNextVersionFrom(currentProjectVersion);
                 SetGitLog(nextProjectVersion, projectFile);
-                SemanticVersion versionToUse = nextVersion >= nextProjectVersion ? nextVersion : nextProjectVersion;
+                SemanticVersion versionToUse = reset ? currentVersion : nextVersion >= nextProjectVersion ? nextVersion : nextProjectVersion;
                 OutLineFormat("Project: {0}", ConsoleColor.Cyan, projectFileInfo.FullName);
                 OutLineFormat("Current version in semver directory {0}: {1}", currentProjectVersion.SemverDirectory, currentProjectVersion.ToString());
                 OutLineFormat("Next project version: {0}", nextProjectVersion.ToString());
@@ -72,15 +73,31 @@ namespace Bam.Net.Bake
             }
         }
 
-        private SemanticVersion GetVersionArg(string versionArg)
+        private SemanticVersion GetCurrentVersion(string versionArg, string semverDirectory = ".")
         {
             if (SemanticVersion.TryParse(versionArg, out SemanticVersion parsedVersion))
             {
                 return parsedVersion;
             }
+            
             SemanticVersion result = new SemanticVersion();
-            Log.Warn("Couldn't parse versionArg {0}, using default version {1}", versionArg, result.ToString());
+            if (FileSystemSemanticVersion.TryFind(semverDirectory, out FileSystemSemanticVersion version))
+            {
+                result = version;
+            }
+
             return result;
+        }
+
+        private SemanticVersion GetNextVersion(string versionArg, string semverDirectory = ".")
+        {
+            SemanticVersion currentVersion = GetCurrentVersion(versionArg, semverDirectory);
+            if (versionArg.TryToEnum<VersionSpec>(out VersionSpec versionSpec))
+            {
+                return currentVersion.Increment(versionSpec);
+            }
+
+            return GetNextVersionFrom(currentVersion);
         }
         
         private SemanticVersion GetNextVersionFrom(SemanticVersion currentVersion)

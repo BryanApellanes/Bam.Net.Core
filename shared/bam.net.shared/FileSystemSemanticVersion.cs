@@ -8,11 +8,16 @@ namespace Bam.Net
 {
     public class FileSystemSemanticVersion : SemanticVersion
     {
+        public FileSystemSemanticVersion()
+        {
+            SemverDirectory = ".";
+            VersionFile = "./version";
+        }
         public string SemverDirectory { get; private set; }
         public string VersionFile { get; set; }
 
         private GitLog _gitLog;
-        private object _gitLogLock = new object();
+        private readonly object _gitLogLock = new object();
 
         public GitLog GitLog
         {

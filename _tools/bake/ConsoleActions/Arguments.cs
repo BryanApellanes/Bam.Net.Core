@@ -29,6 +29,7 @@ namespace Bam.Net.Bake
             AddValidArgument("staging", true, false, "On /version, Include '-rc+{Commit} as the build");
             AddValidArgument("release", true, false, "On /version, Remove build and prerelease.");
             AddValidArgument("gitRepo", false, false, "On /version, Specify the repository to get the commit hash from");
+            AddValidArgument("reset", true, false, "On /version, reset the version to the one specified by the /version option");
         }
     }
 }
