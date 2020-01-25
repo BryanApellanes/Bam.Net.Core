@@ -17,9 +17,9 @@ namespace Bam.Net.Data.Schema
     /// </summary>
     public partial class Table
     {
-        Dictionary<string, Column> _columns;
+        readonly Dictionary<string, Column> _columns;
         List<ForeignKeyColumn> _referencingForeignKeys;
-        Dictionary<string, ForeignKeyColumn> _foreignKeys;
+        readonly Dictionary<string, ForeignKeyColumn> _foreignKeys;
 
         public Table()
         {
@@ -80,7 +80,7 @@ namespace Bam.Net.Data.Schema
         public string ClassName
         {
             get => string.IsNullOrEmpty(_className) ? GetClassName(Name) : _className;
-            set => _className = GetClassName(value);
+            set => _className = value;
         }
 
         public Column[] Columns
@@ -128,7 +128,7 @@ namespace Bam.Net.Data.Schema
         }
 
         /// <summary>
-        /// All ForeignKeyColmns where the current table is referenced.
+        /// All ForeignKeyColumns where the current table is referenced.
         /// </summary>
         public ForeignKeyColumn[] ReferencingForeignKeys
         {
@@ -258,7 +258,7 @@ namespace Bam.Net.Data.Schema
             {
                 if (string.IsNullOrWhiteSpace(columnName))
                 {
-                    throw new ArgumentNullException("columnName");
+                    throw new ArgumentNullException(nameof(columnName));
                 }
 
                 if (this._columns.ContainsKey(columnName))
@@ -271,7 +271,7 @@ namespace Bam.Net.Data.Schema
                 }
                 else
                 {
-                    throw new InvalidOperationException(string.Format("The specified column {0} was not found on the table {1}", columnName, this.Name));
+                    throw new InvalidOperationException($"The specified column {columnName} was not found on the table {this.Name}");
                 }
             }
         }
@@ -295,12 +295,16 @@ namespace Bam.Net.Data.Schema
 
         public static string GetClassName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return string.Empty;
+            }
             if (name[0].IsNumber())
             {
-                name = $"_{name.PascalCase(true, " ", "_")}";
+                name = $"_{name.PascalCase(true, " ", "_").AlphaNumericOnly()}";
                 return name;
             }
-            return name.PascalCase(true, " ", "_").DropLeadingNonLetters();
+            return name.PascalCase(true, " ", "_").AlphaNumericOnly();
         }
     }
 }

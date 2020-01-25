@@ -139,7 +139,7 @@ namespace Bam.Shell
         }
         
         /// <summary>
-        /// Execute any ArgZero arguments specified on the command.  Has no effect if no relevant arguments
+        /// Execute any ArgZero arguments specified on the command line.  Has no effect if no relevant arguments
         /// are detected.
         /// </summary>
         public static void ExecuteArgZero(string[] arguments, Action onArgZeroExecuted = null)
@@ -160,7 +160,7 @@ namespace Bam.Shell
             {
                 List<string> targetArguments = new List<string>();
                 List<ArgumentInfo> argumentInfos = new List<ArgumentInfo>();
-                arguments.Rest(1, (val) =>
+                arguments.Rest(2, (val) =>
                 {
                     targetArguments.Add(val);
                     if (val.StartsWith("/"))

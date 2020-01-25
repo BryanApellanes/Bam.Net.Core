@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Bam.Net.Data.Schema
 {
@@ -9,7 +7,7 @@ namespace Bam.Net.Data.Schema
     {
         public Stream GetTargetContextStream(Func<string, Stream> targetResolver, string root, SchemaDefinition schema)
         {
-            string parameterValue = string.Format("{0}Context", schema.Name);
+            string parameterValue = $"{schema.Name}Context";
             return GetTargetStream(targetResolver, root, parameterValue);
         }
 
@@ -21,31 +19,31 @@ namespace Bam.Net.Data.Schema
 
         public Stream GetTargetQueryClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string paramaterValue = string.Format("{0}Query", table.ClassName);
+            string paramaterValue = $"{table.ClassName}Query";
             return GetTargetStream(targetResolver, root, paramaterValue);
         }
 
         public Stream GetTargetPagedQueryClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string paramaterValue = string.Format("{0}PagedQuery", table.ClassName);
+            string paramaterValue = $"{table.ClassName}PagedQuery";
             return GetTargetStream(targetResolver, root, paramaterValue);
         }
 
         public Stream GetTargetQiClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string paramaterValue = string.Format("Qi/{0}", table.ClassName);
+            string paramaterValue = $"Qi/{table.ClassName}";
             return GetTargetStream(targetResolver, root, paramaterValue);
         }
 
         public Stream GetTargetCollectionStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string parameterValue = string.Format("{0}Collection", table.ClassName);
+            string parameterValue = $"{table.ClassName}Collection";
             return GetTargetStream(targetResolver, root, parameterValue);
         }
 
         public Stream GetTargetColumnsClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string parameterValue = string.Format("{0}Columns", table.ClassName);
+            string parameterValue = $"{table.ClassName}Columns";
             return GetTargetStream(targetResolver, root, parameterValue);
         }
 
@@ -73,7 +71,7 @@ namespace Bam.Net.Data.Schema
             }
             else
             {
-                string path = Path.Combine(root, string.Format("{0}.cs", parameterValue));
+                string path = Path.Combine(root, $"{parameterValue}.cs");
                 FileInfo f = new FileInfo(path);
                 if (!f.Directory.Exists)
                 {

@@ -18,7 +18,7 @@ namespace Bam.Net.Application
             DefaultMethod = typeof(Program).GetMethod(nameof(AfterInitialize));
             IsolateMethodCalls = false;
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified");
-            AddSwitches(typeof(BamDbConsoleActions));
+            AddSwitches();
             AddConfigurationSwitches();
             
             BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb.exe");
@@ -34,6 +34,7 @@ namespace Bam.Net.Application
                 OutLineFormat("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
                 Environment.Exit(1);
             });
+            ExecuteSwitches();
         }
 
         public static void AfterInitialize()

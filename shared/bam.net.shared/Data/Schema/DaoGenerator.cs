@@ -8,6 +8,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.CodeDom.Compiler;
+using Bam.Net.Logging;
 using Microsoft.CSharp;
 using Bam.Net.ServiceProxy;
 
@@ -32,14 +33,8 @@ namespace Bam.Net.Data.Schema
             this.RazorResultInspector = resultInspector;
         }
 
-        public static List<string> DefaultReferenceAssemblies
-        {
-            get
-            {
-				return new List<string>(AdHocCSharpCompiler.DefaultReferenceAssemblies);
-            }
-        }
-                
+        public static List<string> DefaultReferenceAssemblies => new List<string>(AdHocCSharpCompiler.DefaultReferenceAssemblies);
+
         public IDaoCodeWriter DaoCodeWriter
         {
             get;
@@ -152,7 +147,7 @@ namespace Bam.Net.Data.Schema
 
             OnGenerateComplete(schema);
         }
-
+        
         private static void EnsurePartialsDir(string partialsDir)
         {
             DirectoryInfo partials = new DirectoryInfo(partialsDir);

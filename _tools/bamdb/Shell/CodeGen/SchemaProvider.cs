@@ -63,7 +63,9 @@ namespace Bam.Shell.CodeGen
             SchemaDefinition schema = extractor.Extract();
             schema.DbType = extractorInfo.DbType.ToString();
             string schemaFilePath = new FileInfo(Path.Combine(writeTo, $"{extractorInfo.DbType.ToString()}-{schema.Name}.schema")).FullName;
+            string schemaNameMapFilePath = $"{schemaFilePath}.map";
             schema.Save(schemaFilePath);
+            extractor.NameMap.ToJsonFile(schemaNameMapFilePath);
             output($"Extraction complete {schemaFilePath}");
         }
         

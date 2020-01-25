@@ -65,15 +65,15 @@ namespace Bam.Net.Data.Schema
             return propertyName;
         }
 
-        public string GetPropertyName(string tableName, string columName)
+        public string GetPropertyName(string tableName, string columnName)
         {
-            ColumnNameToPropertyName lookup = ColumnNamesToPropertyNames.FirstOrDefault(c => c.TableName.Equals(tableName) && c.ColumnName.Equals(columName));
+            ColumnNameToPropertyName lookup = ColumnNamesToPropertyNames.FirstOrDefault(c => c.TableName.Equals(tableName) && c.ColumnName.Equals(columnName));
             if (lookup != null)
             {
                 return lookup.PropertyName;
             }
 
-            return columName;
+            return columnName;
         }
 
         public void Set(TableNameToClassName tableNameToClassName)

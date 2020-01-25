@@ -24,7 +24,19 @@ namespace Bam.Shell.CodeGen
                 error("Schema not specified, use /schema:[schemaDefinitionFilePath]");
                 Exit(1);
             }
-            SchemaDefinition schema = SchemaDefinition.Load(Arguments["schema"]);
+
+            string schemaPath = Arguments["schema"];
+            if (schemaPath.StartsWith("~/"))
+            {
+                schemaPath = Path.Combine(BamPaths.UserHome, schemaPath.TruncateFront(2));
+            }
+                
+            SchemaDefinition schema = SchemaDefinition.Load(schemaPath);
+            SchemaNameMap nameMap = null;
+            if (File.Exists($"{schema.File}.map.fixed"))
+            {
+                nameMap = SchemaNameMap.Load($"{schema.File}.map.fixed");
+            }
             string writeTo = "./_gen/src";
             if (Arguments.Contains("output"))
             {
@@ -46,6 +58,11 @@ namespace Bam.Shell.CodeGen
                 nameSpace = Arguments["namespace"];
             }
             DaoGenerator daoGenerator = new DaoGenerator(nameSpace);
+            if (nameMap != null)
+            {
+                MappedSchemaDefinition mappedSchemaDefinition = new MappedSchemaDefinition(schema, nameMap);
+                schema = mappedSchemaDefinition.MapSchemaClassAndPropertyNames();
+            }
             daoGenerator.Generate(schema, writeTo);
             output("Generation complete.");
         }

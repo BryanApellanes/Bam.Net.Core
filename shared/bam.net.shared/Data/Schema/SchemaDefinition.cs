@@ -179,14 +179,14 @@ namespace Bam.Net.Data.Schema
 
         public SchemaManagerResult AddXref(XrefTable xref)
         {
-            SchemaManagerResult r = new SchemaManagerResult(string.Format("XrefTable {0} was added.", xref.Name));
+            SchemaManagerResult r = new SchemaManagerResult($"XrefTable {xref.Name} was added.");
             try
             {
                 xref.ConnectionName = this.Name;
                 if (_xrefs.ContainsKey(xref.Name))
                 {
                     _xrefs[xref.Name] = xref;
-                    r.Message = string.Format("XrefTable {0} was updated.", xref.Name);
+                    r.Message = $"XrefTable {xref.Name} was updated.";
                 }
                 else
                 {
@@ -219,14 +219,14 @@ namespace Bam.Net.Data.Schema
 
         public SchemaManagerResult AddTable(Table table)
         {
-            SchemaManagerResult r = new SchemaManagerResult(string.Format("Table {0} was added.", table.Name));
+            SchemaManagerResult r = new SchemaManagerResult($"Table {table.Name} was added.");
             try
             {
                 table.ConnectionName = this.Name;
                 if (this._tables.ContainsKey(table.Name))
                 {
                     this._tables[table.Name] = table;
-                    r.Message = string.Format("Table {0} was updated.", table.Name);
+                    r.Message = $"Table {table.Name} was updated.";
                 }
                 else
                 {
@@ -243,7 +243,7 @@ namespace Bam.Net.Data.Schema
 
         public SchemaManagerResult AddForeignKey(ForeignKeyColumn fk)
         {
-            SchemaManagerResult r = new SchemaManagerResult(string.Format("ForeignKey {0} was added.", fk.ReferenceName));
+            SchemaManagerResult r = new SchemaManagerResult($"ForeignKey {fk.ReferenceName} was added.");
             try
             {
                 if (!this._foreignKeys.Contains(fk))
@@ -337,7 +337,7 @@ namespace Bam.Net.Data.Schema
             Save(this);
         }
 
-        static object _saveLock = new object();
+        static readonly object _saveLock = new object();
         private static void Save(SchemaDefinition schema)
         {
             lock (_saveLock)

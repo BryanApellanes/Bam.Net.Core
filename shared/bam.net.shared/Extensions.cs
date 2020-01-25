@@ -286,8 +286,8 @@ namespace Bam.Net
 
         /// <summary>
         /// If the specified file exists, a new path with 
-        /// an underscore and a number appended will be 
-        /// returned where the new path does not exist
+        /// an underscore and a number appended is 
+        /// returned where the new path does not exist.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -3376,6 +3376,20 @@ namespace Bam.Net
             return targetString[0].IsNumber();
         }
 
+        public static string AlphaNumericOnly(this string targetString)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (char c in targetString)
+            {
+                if (c.IsLetter() || c.IsNumber())
+                {
+                    result.Append(c.ToString());
+                }
+            }
+
+            return result.ToString();
+        }
+        
         public static string LettersOnly(this string targetString)
         {
             StringBuilder result = new StringBuilder();

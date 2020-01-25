@@ -103,7 +103,7 @@ namespace Bam.Net.Data.Intersystems
 
         public override string GetColumnDbDataType(string tableName, string columnName)
         {
-            InterSystemsFieldDescriptor cfd = FieldDescriptorsByTable[tableName].Where(f => f.SqlFieldName.Equals(columnName)).FirstOrDefault();
+            InterSystemsFieldDescriptor cfd = FieldDescriptorsByTable[tableName].FirstOrDefault(f => f.SqlFieldName.Equals(columnName));
             if(cfd == null || cfd.OdbcType.Equals("varchar", StringComparison.InvariantCultureIgnoreCase))
             {
                 return "VARCHAR";

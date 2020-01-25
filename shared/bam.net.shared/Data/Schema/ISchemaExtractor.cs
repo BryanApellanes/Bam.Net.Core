@@ -10,6 +10,7 @@ namespace Bam.Net.Data.Schema
 {
     public interface ISchemaExtractor
     {
+        SchemaNameMap NameMap { get; set; }
         SchemaDefinition Extract();
     }
 }

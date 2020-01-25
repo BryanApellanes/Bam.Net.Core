@@ -66,7 +66,7 @@ namespace Bam.Net.Data.Schema
                 }
                 return _tableClassName;
             }
-            set => _tableClassName = Table.GetClassName(value);
+            set => _tableClassName = value;
         }
 
         string name;
@@ -89,14 +89,19 @@ namespace Bam.Net.Data.Schema
 
         public static string GetPropertyName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return string.Empty;
+            }
             if (name[0].IsNumber())
             {
-                name = $"_{name.PascalCase(true, " ", "_")}";
+                name = $"_{name.PascalCase(true, " ", "_").AlphaNumericOnly()}";
                 return name;
             }
 
-            return name.PascalCase(true, " ", "_").DropLeadingNonLetters();
+            return name.PascalCase(true, " ", "_").AlphaNumericOnly();
         }
+        
         /// <summary>
         /// The Dao defined DataType of the column
         /// </summary>
