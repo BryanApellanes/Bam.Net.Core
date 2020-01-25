@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Bam.Net.Analytics;
 
 namespace Bam.Net
 {
@@ -19,7 +20,7 @@ namespace Bam.Net
             Major = 0;
             Minor = 0;
             Patch = 0;
-            ReleasePrefix = "rc";
+            PreReleasePrefix = "rc";
         }
         
         public int Major { get; set; }
@@ -32,30 +33,47 @@ namespace Bam.Net
         /// A prerelease designation or blank.  Example values include
         /// "dev", "test" or "rc" (release candidate)
         /// </summary>
-        public virtual string ReleasePrefix { get; set; }
+        public virtual string PreReleasePrefix { get; set; }
+        
+        /// <summary>
+        /// A value used to track the build number, commonly the git commit.
+        /// </summary>
         public virtual string Build { get; set; }
 
         public void ClearSuffix()
         {
-            ReleasePrefix = string.Empty;
+            PreReleasePrefix = string.Empty;
             Build = string.Empty;
         }
 
         public void SetSuffix(string suffix)
         {
             ClearSuffix();
-            ReleasePrefix = suffix;
+            PreReleasePrefix = suffix;
         }
         
         public override string ToString()
         {
-            // TODO: account for SemanticLifecycleSpec value
+            if (Lifecycle != SemanticLifecycle.None)
+            {
+                switch (Lifecycle)
+                {
+                    case SemanticLifecycle.Dev:
+                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}-dev+{Build}";
+                    case SemanticLifecycle.Test:
+                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}-test+{Build}";
+                    case SemanticLifecycle.Staging:
+                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}-staging+{Build}";
+                    case SemanticLifecycle.Release:
+                        return $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}";
+                }
+            }
             
             string version = $"{Major.ToString()}.{Minor.ToString()}.{Patch.ToString()}";
             string suffix = string.Empty;
             if (IsPreRelease)
             {
-                suffix = !string.IsNullOrEmpty(Build) ? $"-{ReleasePrefix}+{Build}" : $"-{ReleasePrefix}";
+                suffix = !string.IsNullOrEmpty(Build) ? $"-{PreReleasePrefix}+{Build}" : $"-{PreReleasePrefix}";
             }
             else if (!string.IsNullOrEmpty(Build))
             {
@@ -85,7 +103,7 @@ namespace Bam.Net
                     ++Patch;
                     break;
                 case VersionSpec.PreRelease:
-                    ReleasePrefix = componentValue;
+                    PreReleasePrefix = componentValue;
                     break;
                 case VersionSpec.Build:
                     Build = componentValue;
@@ -129,7 +147,7 @@ namespace Bam.Net
             {
                 string[] suffixParts = suffix.DelimitSplit("-", "+");
                 Args.ThrowIf(suffixParts.Length > 2, "Unrecognized SemanticVersion: {0}", version);
-                value.ReleasePrefix = suffixParts[0];
+                value.PreReleasePrefix = suffixParts[0];
                 if (suffixParts.Length == 2)
                 {
                     value.Build = suffixParts[1];

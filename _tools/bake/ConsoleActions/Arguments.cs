@@ -20,6 +20,7 @@ namespace Bam.Net.Bake
             AddValidArgument("nugetSource", false, false, "On /nugetPush | /nugetRestore, Specify the source to push to; default is 'nuget.org'");
             AddValidArgument("nugetApiKey", false, false, "On /nugetPush, Specify the apiKey used to push to the nuget repository");
             
+            AddValidArgument("versionRecipe", true, false, "On /version, specify the recipe to update versions for");
             AddValidArgument("major", true, false, "On /version, Increment the major version number");
             AddValidArgument("minor", true, false, "On /version, Increment the minor version number");
             AddValidArgument("patch", true, false, "On /version, Increment the patch version number");

@@ -25,8 +25,14 @@ namespace Bam.Net.Bake
             string prompt = "Please specify 'major', 'minor' or 'patch' to increment version component.";
             string versionArg = GetArgument("version", true, prompt);
 
-            //TODO : change how this gets the recipe because /recipe is a console exec switch to bake the specified recipe. Consider /versionRecipe
-            Recipe recipe = GetRecipe();
+            string recipePath = Arguments["versionRecipe"];
+            if (string.IsNullOrEmpty(recipePath))
+            {
+                OutLineFormat("Please specify /versionRecipe:<path_to_recipe_to_update_version>");
+                Exit(1);
+            }
+
+            Recipe recipe = recipePath.FromJsonFile<Recipe>();
 
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
@@ -87,34 +93,36 @@ namespace Bam.Net.Bake
                 newVersion.Increment(VersionSpec.Patch);
             }
 
+            SetGitLog(newVersion, projectFile);
             if (Arguments.Contains("dev"))
             {
-                string gitRepo = new FileInfo(projectFile).Directory.FullName;
-                GitLog gitLog = GitLog.Get(gitRepo, 1).First();
-                newVersion.SetSuffix(gitLog.AbbreviatedCommitHash);
-                newVersion.GitLog = gitLog;
+                newVersion.Lifecycle = SemanticLifecycle.Dev;
             }
 
             if (Arguments.Contains("test"))
             {
-                newVersion.SetSuffix("test");
+                newVersion.Lifecycle = SemanticLifecycle.Test;
             }
 
             if (Arguments.Contains("staging"))
             {
-                string gitRepo = new FileInfo(projectFile).Directory.FullName;
-                GitLog gitLog = GitLog.Get(gitRepo, 1).First();
-                newVersion.ReleasePrefix = "rc";
-                newVersion.Build = gitLog.AbbreviatedCommitHash;
-                newVersion.GitLog = gitLog;
+                newVersion.Lifecycle = SemanticLifecycle.Staging;
             }
 
             if (Arguments.Contains("release"))
             {
-                newVersion.ClearSuffix();
+                newVersion.Lifecycle = SemanticLifecycle.Release;
             }
 
             return newVersion;
+        }
+
+        private static void SetGitLog(FileSystemSemanticVersion newVersion, string projectFile)
+        {
+            string gitRepo = new FileInfo(projectFile).Directory.FullName;
+            GitLog gitLog = GitLog.Get(gitRepo, 1).First();
+            newVersion.Build = gitLog.AbbreviatedCommitHash;
+            newVersion.GitLog = gitLog;
         }
     }
 }
