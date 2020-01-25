@@ -94,6 +94,7 @@ namespace Bam.Net
         public void WriteSemanticAssemblyInfo(string path = ".", bool overwrite = true)
         {
             FileInfo file = new FileInfo(Path.Combine(path, "SemanticAssemblyInfo.cs"));
+            Log.Info("Writing file {0}", file.FullName);
             ToSemanticAssemblyInfo().SafeWriteToFile(file.FullName, overwrite);
         }
         
