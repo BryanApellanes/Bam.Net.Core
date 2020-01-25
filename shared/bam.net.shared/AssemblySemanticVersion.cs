@@ -63,22 +63,14 @@ namespace Bam.Net
             return $"{Major}.{Minor}.{BuildNumber}.{Revision}";
         }
 
-        public static void WriteProjectSemanticAssemblyInfo(string projectFilePath)
+        public static void WriteProjectSemanticAssemblyInfo(string projectFilePath, SemanticVersion version)
         {
-            WriteProjectSemanticAssemblyInfo(new FileInfo(projectFilePath));
+            WriteProjectSemanticAssemblyInfo(new FileInfo(projectFilePath), version);
         }
         
-        public static void WriteProjectSemanticAssemblyInfo(FileInfo projectFile)
+        public static void WriteProjectSemanticAssemblyInfo(FileInfo projectFile, SemanticVersion version)
         {
-            if (FileSystemSemanticVersion.TryFind(projectFile.Directory.FullName,
-                out FileSystemSemanticVersion currentVersion))
-            {
-                From(currentVersion).WriteSemanticAssemblyInfo(projectFile.Directory.FullName);
-            }
-            else
-            {
-                Log.Warn("Failed to find semantic version for project file: {0}", projectFile?.FullName ?? "[null]");
-            }
+            From(version).WriteSemanticAssemblyInfo(projectFile.Directory.FullName);
         }
         
         public static AssemblySemanticVersion From(SemanticVersion semanticVersion)

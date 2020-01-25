@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Bam.Net.Analytics;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace Bam.Net
 {
@@ -19,7 +20,7 @@ namespace Bam.Net
         {
             Major = 0;
             Minor = 0;
-            Patch = 0;
+            Patch = 1;
             PreReleasePrefix = "rc";
         }
         
@@ -155,6 +156,60 @@ namespace Bam.Net
             }
 
             return value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SemanticVersion version)
+            {
+                return ToString().Equals(version.ToString());
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+
+        public static bool operator >(SemanticVersion one, SemanticVersion two)
+        {
+            return !(one < two);
+        }
+        public static bool operator <(SemanticVersion one, SemanticVersion two)
+        {
+            if (one.Major < two.Major)
+            {
+                return true;
+            }
+
+            if (one.Major == two.Major && one.Minor < two.Minor)
+            {
+                return true;
+            }
+
+            return one.Major == two.Major && one.Minor == two.Minor && one.Patch < two.Patch;
+        }
+
+        public static bool operator >=(SemanticVersion one, SemanticVersion two)
+        {
+            if (one > two)
+            {
+                return true;
+            }
+
+            return one.Major == two.Major && one.Minor == two.Minor && one.Patch == two.Patch;
+        }
+
+        public static bool operator <=(SemanticVersion one, SemanticVersion two)
+        {
+            if (one < two)
+            {
+                return true;
+            }
+            
+            return one.Major == two.Major && one.Minor == two.Minor && one.Patch == two.Patch;
         }
     }
 }

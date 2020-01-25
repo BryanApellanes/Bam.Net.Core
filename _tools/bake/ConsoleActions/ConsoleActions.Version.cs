@@ -13,6 +13,7 @@ using System.Xml.XPath;
 using Bam.Net.Application;
 using Bam.Net.Automation.SourceControl;
 using Bam.Net.CommandLine;
+using Bam.Net.Logging;
 using Bam.Net.Testing;
 
 namespace Bam.Net.Bake
@@ -24,6 +25,8 @@ namespace Bam.Net.Bake
         {
             string prompt = "Please specify 'major', 'minor' or 'patch' to increment version component.";
             string versionArg = GetArgument("version", true, prompt);
+            SemanticVersion specifiedVersion = GetVersionArg(versionArg);
+            SemanticVersion nextVersion = GetNextVersionFrom(specifiedVersion);
 
             string recipePath = Arguments["versionRecipe"];
             if (string.IsNullOrEmpty(recipePath))
@@ -37,17 +40,21 @@ namespace Bam.Net.Bake
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
                 FileInfo projectFileInfo = new FileInfo(projectFile);
-                FileSystemSemanticVersion currentVersion = FileSystemSemanticVersion.Find(projectFileInfo.Directory);
-                FileSystemSemanticVersion newVersion = GetNewVersion(currentVersion, versionArg, projectFile);
-                OutLineFormat("Current version in semver directory {0}: {1}", newVersion.SemverDirectory, currentVersion.ToString());
-                OutLineFormat("New version in semver directory {0}: {1}", newVersion.SemverDirectory, newVersion.ToString());
-                
+                FileSystemSemanticVersion currentProjectVersion = FileSystemSemanticVersion.Find(projectFileInfo.Directory);
+                SemanticVersion nextProjectVersion = GetNextVersionFrom(currentProjectVersion);
+                SetGitLog(nextProjectVersion, projectFile);
+                SemanticVersion versionToUse = nextVersion >= nextProjectVersion ? nextVersion : nextProjectVersion;
+                OutLineFormat("Project: {0}", ConsoleColor.Cyan, projectFileInfo.FullName);
+                OutLineFormat("Current version in semver directory {0}: {1}", currentProjectVersion.SemverDirectory, currentProjectVersion.ToString());
+                OutLineFormat("Next project version: {0}", nextProjectVersion.ToString());
+                OutLineFormat("Using version: {0}", versionToUse.ToString());
+
                 XDocument xdoc = XDocument.Load(projectFile);
                 XElement versionElement = xdoc.Element("Project").Element("PropertyGroup").Element("Version");
                 
                 if (versionElement != null)
                 {
-                    string version = newVersion.ToString();
+                    string version = versionToUse.ToString();
                     OutLineFormat("Setting version for {0} to {1}", projectFile, version);
                     versionElement.Value = version;
                     XmlWriterSettings settings = new XmlWriterSettings {Indent = true, OmitXmlDeclaration = true};
@@ -60,24 +67,26 @@ namespace Bam.Net.Bake
                 {
                     OutLineFormat("Version element not found in project file: {0}", ConsoleColor.Yellow, projectFile);
                 }
-                newVersion.Save();
-                AssemblySemanticVersion.WriteProjectSemanticAssemblyInfo(projectFile);
+                
+                AssemblySemanticVersion.WriteProjectSemanticAssemblyInfo(projectFile, versionToUse);
             }
         }
 
-        private FileSystemSemanticVersion GetNewVersion(FileSystemSemanticVersion currentVersion, string versionArg, string projectFile)
+        private SemanticVersion GetVersionArg(string versionArg)
         {
-            FileSystemSemanticVersion newVersion = currentVersion.CopyAs<FileSystemSemanticVersion>();
-            if (!string.IsNullOrEmpty(versionArg))
+            if (SemanticVersion.TryParse(versionArg, out SemanticVersion parsedVersion))
             {
-                if (SemanticVersion.TryParse(versionArg, out SemanticVersion parsedVersion))
-                {
-                    newVersion.CopyProperties(parsedVersion);
-                    return newVersion;
-                }
-                VersionSpec versionSpec = versionArg.ToEnum<VersionSpec>();
-                newVersion.Increment(versionSpec);
+                return parsedVersion;
             }
+            SemanticVersion result = new SemanticVersion();
+            Log.Warn("Couldn't parse versionArg {0}, using default version {1}", versionArg, result.ToString());
+            return result;
+        }
+        
+        private SemanticVersion GetNextVersionFrom(SemanticVersion currentVersion)
+        {
+            SemanticVersion newVersion = currentVersion.CopyAs<SemanticVersion>();
+           
             if (Arguments.Contains("major"))
             {
                 newVersion.Increment(VersionSpec.Major);
@@ -93,7 +102,6 @@ namespace Bam.Net.Bake
                 newVersion.Increment(VersionSpec.Patch);
             }
 
-            SetGitLog(newVersion, projectFile);
             if (Arguments.Contains("dev"))
             {
                 newVersion.Lifecycle = SemanticLifecycle.Dev;
@@ -114,15 +122,19 @@ namespace Bam.Net.Bake
                 newVersion.Lifecycle = SemanticLifecycle.Release;
             }
 
+            if (newVersion.Equals(currentVersion))
+            {
+                newVersion.Increment(VersionSpec.Patch);
+            }
+            
             return newVersion;
         }
 
-        private static void SetGitLog(FileSystemSemanticVersion newVersion, string projectFile)
+        private static void SetGitLog(SemanticVersion newVersion, string projectFile)
         {
             string gitRepo = new FileInfo(projectFile).Directory.FullName;
             GitLog gitLog = GitLog.Get(gitRepo, 1).First();
             newVersion.Build = gitLog.AbbreviatedCommitHash;
-            newVersion.GitLog = gitLog;
         }
     }
 }
