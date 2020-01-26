@@ -12,6 +12,7 @@ then
     exit 0
 fi
 
+export BAMSRCROOT=../../
 source ./get-os-runtime.sh
 
 OUTPUTRECIPES=./recipes/

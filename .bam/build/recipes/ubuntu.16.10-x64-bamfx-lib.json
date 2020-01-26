@@ -1,11 +1,12 @@
 {
   "Name": "ubuntu.16.10-x64-bamfx-lib",
-  "ProjectRoot": "../.././_lib/",
+  "ProjectRoot": "../..//_lib/",
   "ProjectFilePaths": [
     "/media/data/src/Bam.Net.Core/_lib/bam.net.aws/bam.net.aws.csproj",
     "/media/data/src/Bam.Net.Core/_lib/bam.net.core/bam.net.core.csproj",
     "/media/data/src/Bam.Net.Core/_lib/bam.net.presentation/bam.net.presentation.csproj",
-    "/media/data/src/Bam.Net.Core/_lib/adhoc/adhoc.csproj"
+    "/media/data/src/Bam.Net.Core/_lib/adhoc/adhoc.csproj",
+    "/media/data/src/Bam.Net.Core/_lib/bam.net.schema.org/bam.net.schema.org.csproj"
   ],
   "OutputDirectory": "/tmp/bam/fx",
   "NugetOutputDirectory": "/home/bryan/.bam/nupkg/Linux",
