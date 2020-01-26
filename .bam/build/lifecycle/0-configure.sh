@@ -3,7 +3,7 @@
 CONTEXT=$1
 
 if [[ -z $1 ]]; then
-    CONTEXT="bake"
+    CONTEXT="tools"
 fi
 
 COMMAND="configure"

@@ -12,7 +12,7 @@ fi
 CONTEXT=$1
 
 if [[ -z $1 ]]; then
-    CONTEXT="docker"
+    CONTEXT="tools"
 fi
 
 COMMAND="build"
