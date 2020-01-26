@@ -4,13 +4,10 @@ source ../common/init.sh
 
 ensure_bake
 
-printf "deleting ${OUTPUTBIN}"
+printf "deleting ${OUTPUTBIN}\r\n"
 rm -fr ${OUTPUTBIN}
 
 ${BAKE} /recipe:./recipes/${RUNTIME}-bamtoolkit.json
 
-printf "zipping toolkit to ${OUTPUT}\r\n"
-
-${BAKE} /zip /zipRecipe:./recipes/${RUNTIME}-bamtoolkit.json /output:${OUTPUTBIN}
-
+./commands/zip.sh
 ./commands/install.sh
