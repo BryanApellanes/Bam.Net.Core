@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <RootNamespace>Bam.Net.Adhoc</RootNamespace>
     <PackageId>bam.net.adhoc</PackageId>
-    <Version>1.0.4</Version>
+    <Version>1.0.5-test+b01aed0</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
   </PropertyGroup>
@@ -14,47 +13,37 @@
     <_UnmanagedRegistrationCache Remove="obj\adhoc.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\adhoc.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\adhoc.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\adhoc.csproj.ResolveComReference.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\adhoc.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\adhoc.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\adhoc.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\adhoc.pdb" />
   </ItemGroup>
-
   <ItemGroup>
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\adhoc.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\adhoc.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\adhoc.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\adhoc.dll.manifest" />
   </ItemGroup>
-
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\adhoc.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\adhoc.application" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="../bam.net.core/bam.net.core.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <ClsidMap Remove="obj\Debug\netcoreapp2.2\adhoc.clsidmap" />
   </ItemGroup>
-
   <ItemGroup>
     <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\adhoc.X.manifest" />
   </ItemGroup>
-
 </Project>

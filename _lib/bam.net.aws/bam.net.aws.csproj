@@ -1,20 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
-        <RootNamespace>Bam.Net.Aws</RootNamespace>
-        <PackageId>bam.net.aws</PackageId>
-        <Version>1.0.4</Version>
-        <Authors>Bryan Apellanes</Authors>
-        <Company>Three Headz</Company>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="../bam.net.core/bam.net.core.csproj" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
+    <RootNamespace>Bam.Net.Aws</RootNamespace>
+    <PackageId>bam.net.aws</PackageId>
+    <Version>1.0.5-test+b01aed0</Version>
+    <Authors>Bryan Apellanes</Authors>
+    <Company>Three Headz</Company>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../bam.net.core/bam.net.core.csproj" />
+  </ItemGroup>
 </Project>

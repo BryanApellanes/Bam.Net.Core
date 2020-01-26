@@ -1,22 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <ApplicationIcon>bam.ico</ApplicationIcon>
     <StartupObject>Bam.Net.Program</StartupObject>
-
     <PackageId>bam.exe</PackageId>
-    <Version>0.0.1</Version>
+    <Version>1.0.5-test+b01aed0</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
-
   <ItemGroup>
     <None Update="Bam-Windows.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -25,7 +21,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Templates\AspNetCore\ScopedAppModule.cs.hbs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -80,11 +75,9 @@
     <None Remove="Templates\Shell\ConcreteMethod.hbs" />
     <EmbeddedResource Include="Templates\Shell\ConcreteMethod.hbs" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Templates\BamApp\about.html.hbs" />
   </ItemGroup>
-
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
@@ -107,7 +100,6 @@
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
     <_UnmanagedRegistrationCache Remove="obj\bam.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
@@ -130,7 +122,6 @@
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.csproj.ResolveComReference.cache" />
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.csproj.ResolveComReference.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
@@ -153,7 +144,6 @@
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
@@ -176,7 +166,6 @@
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.pdb" />
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.pdb" />
   </ItemGroup>
-
   <ItemGroup>
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
@@ -199,7 +188,6 @@
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll" />
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
@@ -222,7 +210,6 @@
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.dll.manifest" />
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.dll.manifest" />
   </ItemGroup>
-
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
@@ -245,7 +232,6 @@
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\win10-x64\bam.application" />
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.application" />
   </ItemGroup>
-
   <ItemGroup>
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.pdb" />
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.dll" />
@@ -276,14 +262,10 @@
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.pdb" />
     <Clean Remove="obj\Debug\netcoreapp2.2\win10-x64\\TempCA\bam.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
   </ItemGroup>
-
-
 </Project>
