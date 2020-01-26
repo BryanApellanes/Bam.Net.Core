@@ -11,3 +11,5 @@ fi
 source ./get-os-runtime.sh
 
 dotnet publish ${BAMSRCROOT}/_tools/bake/bake.csproj -c Release -r ${RUNTIME} -o ~/.bam/bake
+
+export BAKE=~/.bam/bake
