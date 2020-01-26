@@ -1,0 +1,18 @@
+name: Build Dev Lib & Tools
+
+on: 
+  push:
+    branches:
+      - bam-net-core-dev
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      DIST: /tmp/bam
+    steps:
+    - uses: actions/checkout@v1
+    - name: checkout bam-net-core-dev branch
+      run: ./checkout.sh bam-net-core-dev
