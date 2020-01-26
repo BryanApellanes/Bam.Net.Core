@@ -5,9 +5,9 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>pie.ico</ApplicationIcon>
-    
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-    
+  
   <ItemGroup>
     <PackageReference Include="YamlDotNet" Version="7.0.0" />
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />

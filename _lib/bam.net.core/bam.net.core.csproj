@@ -6,6 +6,7 @@
     <Version>1.0.5-test+b01aed0</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>

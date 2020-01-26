@@ -7,6 +7,7 @@
     <Version>1.0.5-test+b01aed0</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bamsdo.csproj.UnmanagedRegistration.cache" />

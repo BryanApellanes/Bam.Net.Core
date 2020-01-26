@@ -5,10 +5,12 @@
     <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <ApplicationIcon>bam.ico</ApplicationIcon>
     <StartupObject>Bam.Net.Program</StartupObject>
-    <PackageId>bam.exe</PackageId>
-    <Version>1.0.5-test+b01aed0</Version>
+
+    <PackageId>bam</PackageId>
+    <Version>0.0.1</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
