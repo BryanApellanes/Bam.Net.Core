@@ -7,10 +7,11 @@
     <ApplicationIcon>bam.ico</ApplicationIcon>
     <StartupObject>Bam.Net.Program</StartupObject>
 
-    <PackageId>bam.exe</PackageId>
+    <PackageId>bam</PackageId>
     <Version>0.0.1</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -6,13 +6,15 @@ using Microsoft.CodeAnalysis.Emit;
 namespace Bam.Net
 {
     /// A standard version string in the following formats:
-    /// If PreRelease is specified without Build
-    /// {Major}.{Minor}.{Patch}-{PreRelease}
+    /// If PreReleasePrefix is specified without Build
+    /// {Major}.{Minor}.{Patch}-{PreReleasePrefix}
     ///
-    /// If both PreRelease and Build are specified
-    /// {Major}.{Minor}.{Patch}-{PreRelease}+{Build}
+    /// If Build is specified without PreReleasePrefix
+    /// {Major}.{Minor{.{Patch}-{Build}
+    /// If both PreReleasePrefix and Build are specified
+    /// {Major}.{Minor}.{Patch}-{PreReleasePrefix}+{Build}
     ///
-    /// If neither PreRelease nor Build are specified
+    /// If neither PreReleasePrefix nor Build are specified
     /// {Major}.{Minor}.{Patch}
     public class SemanticVersion
     {
