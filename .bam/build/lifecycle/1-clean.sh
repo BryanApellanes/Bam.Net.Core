@@ -12,11 +12,11 @@ fi
 CONTEXT=$1
 
 if [[ -z $1 ]]; then
-    CONTEXT="docker"
+    CONTEXT="bake"
 fi
 
 COMMAND="clean"
 
-cd ./ci
+cd ./common
 ./exec.sh ${CONTEXT} $COMMAND
 cd ..

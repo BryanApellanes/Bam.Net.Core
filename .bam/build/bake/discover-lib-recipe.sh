@@ -14,6 +14,6 @@ fi
 
 source ../common/init.sh
 
-build_bake
+ensure_bake
 
-${BAKE} /discover:${BAMSRCROOT}/_lib/ /output:/tmp/bam/fx /outputRecipe:$OUTPUTRECIPES$RUNTIME-bamfx-lib.json
+${BAKE} /discover:${BAMSRCROOT}/_lib/ /output:/tmp/bam/fx /outputRecipe:${OUTPUTRECIPES}${RUNTIME}-bamfx-lib.json

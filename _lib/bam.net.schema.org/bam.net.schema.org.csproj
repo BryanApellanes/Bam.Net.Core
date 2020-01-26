@@ -1,15 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
-        <RootNamespace>Bam.Net.Shema.Org</RootNamespace>
-        <PackageId>bam.net.schema.org</PackageId>
-        <Version>1.0.4</Version>
-        <Authors>Bryan Apellanes</Authors>
-        <Company>Three Headz</Company>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    </PropertyGroup>
-
-    <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Bam.Net.Shema.Org</RootNamespace>
+    <PackageId>bam.net.schema.org</PackageId>
+    <Version>1.0.5-test+566a944</Version>
+    <Authors>Bryan Apellanes</Authors>
+    <Company>Three Headz</Company>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
 </Project>

@@ -1,7 +1,6 @@
 #!/bin/bash
 
+source ../common/init.sh
 
-
-./set-version.sh test
 ./build-lib.sh
 ./build-toolkit.sh

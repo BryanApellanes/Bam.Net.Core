@@ -17,6 +17,6 @@ fi
 
 COMMAND="build"
 
-cd ./ci
+cd ./common
 ./exec.sh ${CONTEXT} $COMMAND
 cd ..
