@@ -8,8 +8,9 @@ if [[ $1 = "-help" ]] || [[ $1 = "-?" ]] || [[ $1 = "-h" ]]; then
     exit 0
 fi
 
+export BAMSRCROOT=../../.
 source ./get-os-runtime.sh
 
 dotnet publish ${BAMSRCROOT}/_tools/bake/bake.csproj -c Release -r ${RUNTIME} -o ~/.bam/bake
 
-export BAKE=~/.bam/bake
+export BAKE=~/.bam/bake/bake

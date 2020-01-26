@@ -10,10 +10,15 @@ if [[ $1 = "-help" ]] || [[ $1 = "-?" ]] || [[ $1 = "-h" ]]; then
     exit 0
 fi
 
+if [[ -z "$BAMLIFECYCLE" ]]; then
+    BAMLIFECYCLE=test
+fi
+
 export BAMSRCROOT=../../
 
 source ./get-os-runtime.sh
 source ./build-bake.sh
 
-$BAKE /version:Patch /test /versionRecipe:./recipes/$RUNTIME-bamfx-lib.json
-$BAKE /version:Patch /test /versionRecipe:./recipes/$RUNTIME-bamtoolkit.json
+echo "BAMLIFECYLE = ${BAMLIFECYCLE}"
+$BAKE /version:Patch /${BAMLIFECYCLE} /versionRecipe:./recipes/$RUNTIME-bamfx-lib.json
+$BAKE /version:Patch /${BAMLIFECYCLE} /versionRecipe:./recipes/$RUNTIME-bamtoolkit.json
