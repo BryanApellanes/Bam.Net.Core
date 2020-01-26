@@ -8,25 +8,25 @@ namespace Bam.Net
         /// <summary>
         /// The same as Revision.
         /// </summary>
-        public int BuildNumber
+        public uint BuildNumber
         {
             get => Revision;
             set => _revision = value;
         }
 
-        private int? _revision;
+        private uint? _revision;
         /// <summary>
         /// The revision number; this value is based on the
         /// Build or Commit.  The Revision is the SHA1 of the Build
-        /// converted to an integer.
+        /// converted to an uint.
         /// </summary>
-        public int Revision
+        public uint Revision
         {
             get
             {
                 if (_revision == null)
                 {
-                    _revision = (Commit?.ToSha1Int()).Value;
+                    _revision = (Commit?.ToSha1Uint()).Value;
                 }
 
                 return _revision ?? 0;

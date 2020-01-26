@@ -201,6 +201,13 @@ namespace Bam.Net
             return hashBytes.ToHexString();
         }
 
+        public static uint ToHashUint(this string toBeHashed, HashAlgorithms algorithm, Encoding encoding = null)
+        {
+            byte[] hashBytes = ToHashBytes(toBeHashed, algorithm, encoding);
+
+            return BitConverter.ToUInt32(hashBytes, 0);
+        }
+        
         public static int ToHashInt(this string toBeHashed, HashAlgorithms algorithm, Encoding encoding = null)
         {
             byte[] hashBytes = ToHashBytes(toBeHashed, algorithm, encoding);
@@ -230,7 +237,11 @@ namespace Bam.Net
             byte[] hashBytes = alg.ComputeHash(bytes);
             return hashBytes;
         }
-
+        public static uint ToSha1Uint(this string toBeHashed)
+        {
+            return ToHashUint(toBeHashed, Net.HashAlgorithms.SHA1);
+        }
+        
         public static int ToSha1Int(this string toBeHashed)
         {
             return ToHashInt(toBeHashed, Bam.Net.HashAlgorithms.SHA1);
