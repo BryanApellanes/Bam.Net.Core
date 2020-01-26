@@ -1,6 +1,6 @@
 {
   "Name": "ubuntu.16.10-x64-bamfx-lib",
-  "ProjectRoot": "../..//_lib/",
+  "ProjectRoot": "../../.././_lib/",
   "ProjectFilePaths": [
     "/media/data/src/Bam.Net.Core/_lib/bam.net.aws/bam.net.aws.csproj",
     "/media/data/src/Bam.Net.Core/_lib/bam.net.core/bam.net.core.csproj",

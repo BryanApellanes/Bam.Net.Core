@@ -4,7 +4,7 @@
 
 if [[ $1 = "-help" ]] || [[ $1 = "-?" ]] || [[ $1 = "-h" ]]
 then
-    printf "usage: bake-discover-lib-recipe {{path to Bam.Net.Core}}\r\n"
+    printf "usage: bake-discover-tools-recipe {{path to Bam.Net.Core}}\r\n"
     printf "\r\n"
     printf "Builds a temporary copy of 'bake' and uses it to discover tools in the specified Bam.Net.Core root.\r\n"
     printf "'bake' looks for *.csproj files in the child directories of the _tools directory in the specified root.\r\n"
@@ -12,12 +12,8 @@ then
     exit 0
 fi
 
-export BAMSRCROOT=../../
-source ./get-os-runtime.sh
+source ../common/init.sh
 
-OUTPUTRECIPES=./recipes/
+build_bake
 
-rm -fr ~/.bam/tmp/bake
-dotnet publish $BAMSRCROOT/_tools/bake/bake.csproj -c Release -r $RUNTIME -o ~/.bam/tmp/bake
-
-~/.bam/tmp/bake/bake /discover:$BAMSRCROOT/_lib/ /output:/tmp/bam/fx /outputRecipe:$OUTPUTRECIPES$RUNTIME-bamfx-lib.json
+$BAKE /discover:${BAMSRCROOT}/_tools/ /output:/tmp/bam/bin /outputRecipe:${OUTPUTRECIPES}${RUNTIME}-bamtoolkit.json

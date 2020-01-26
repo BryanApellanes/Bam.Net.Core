@@ -1,6 +1,6 @@
 {
   "Name": "ubuntu.16.10-x64-bamtoolkit",
-  "ProjectRoot": "../..//_tools/",
+  "ProjectRoot": "../../.././_tools/",
   "ProjectFilePaths": [
     "/media/data/src/Bam.Net.Core/_tools/bamtest/bamtest.csproj",
     "/media/data/src/Bam.Net.Core/_tools/bamdb/bamdb.csproj",
