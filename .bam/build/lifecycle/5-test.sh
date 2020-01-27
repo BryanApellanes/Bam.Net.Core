@@ -12,11 +12,11 @@ fi
 CONTEXT=$1
 
 if [[ -z $1 ]]; then
-    export CONTEXT="docker"
+    export CONTEXT="tools"
 fi
 
 export COMMAND="test"
 
-cd ./ci
+cd ./common
 ./exec.sh ${CONTEXT} ${COMMAND} $2 $3 $4 $5
 cd ..
