@@ -19,20 +19,20 @@ namespace Bam.Net.Data.Schema
 
         public Stream GetTargetQueryClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string paramaterValue = $"{table.ClassName}Query";
-            return GetTargetStream(targetResolver, root, paramaterValue);
+            string parameterValue = $"{table.ClassName}Query";
+            return GetTargetStream(targetResolver, root, parameterValue);
         }
 
         public Stream GetTargetPagedQueryClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string paramaterValue = $"{table.ClassName}PagedQuery";
-            return GetTargetStream(targetResolver, root, paramaterValue);
+            string parameterValue = $"{table.ClassName}PagedQuery";
+            return GetTargetStream(targetResolver, root, parameterValue);
         }
 
         public Stream GetTargetQiClassStream(Func<string, Stream> targetResolver, string root, Table table)
         {
-            string paramaterValue = $"Qi/{table.ClassName}";
-            return GetTargetStream(targetResolver, root, paramaterValue);
+            string parameterValue = $"Qi/{table.ClassName}";
+            return GetTargetStream(targetResolver, root, parameterValue);
         }
 
         public Stream GetTargetCollectionStream(Func<string, Stream> targetResolver, string root, Table table)
