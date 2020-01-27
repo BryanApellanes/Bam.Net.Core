@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Bam.Net.Shema.Org</RootNamespace>
     <PackageId>bam.net.schema.org</PackageId>
-    <Version>1.0.5-test+6272506</Version>
+    <Version>1.0.5-test+fb59d5e</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
