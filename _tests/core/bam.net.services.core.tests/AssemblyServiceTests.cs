@@ -54,8 +54,9 @@ namespace Bam.Net.Services.Tests
             AssemblyName[] assNames = current.GetReferencedAssemblies().Where(AssemblyDescriptor.AssemblyNameFilter).ToArray();
             AssemblyDescriptor descriptor = new AssemblyDescriptor(current);
             Thread.Sleep(300);
-            Expect.IsTrue(assNames.Length > 0);
-            Expect.AreEqual(assNames.Length, descriptor.AssemblyReferenceDescriptors.Count);
+            (assNames.Length > 0).IsTrue();
+            OutLineFormat("Assembly names: {0}", assNames.Select(an=> an.Name).ToArray().ToDelimited(s=> s, ", "));
+            (descriptor.AssemblyReferenceDescriptors.Count > 0).IsTrue();
         }
 
         [UnitTest]
