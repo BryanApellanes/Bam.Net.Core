@@ -29,6 +29,17 @@ namespace Bam.Net.Bake
             }
             BamSettings settings = BamSettings.Load();
             string outputDirectory = GetOutputDirectory(recipe);
+            string buildConfigString = recipe.BuildConfig.ToString();
+            if (Arguments.Contains("buildConfig"))
+            {
+                buildConfigString = Arguments["buildConfig"];
+            }
+            BuildConfig buildConfig = BuildConfig.Debug;
+            if (!BuildConfig.TryParse(buildConfigString, out buildConfig))
+            {
+                OutLineFormat("Unable to parse specified buildConfig (should be either Debug or Release: {0}", ConsoleColor.Magenta, buildConfigString);
+                Exit(1);
+            }
             foreach (string projectFile in recipe.ProjectFilePaths)
             {
                 string projectName = Path.GetFileNameWithoutExtension(projectFile);
@@ -36,7 +47,7 @@ namespace Bam.Net.Bake
                 Environment.CurrentDirectory = projectDirectory.FullName;
                 DirectoryInfo projectOutputDirectory = new DirectoryInfo(Path.Combine(outputDirectory, projectName));
                 string outputDirectoryPath = projectOutputDirectory.FullName;
-                string dotNetArgs = $"publish {projectFile} -c {recipe.BuildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectoryPath}";
+                string dotNetArgs = $"publish {projectFile} -c {buildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectoryPath}";
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
                 OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, outputDirectoryPath);
