@@ -105,10 +105,20 @@ namespace Bam.Net.Testing
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
             string testGroupName = Arguments["Group"];
             string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
+            HashSet<string> projects = new HashSet<string>();
+            if (Arguments.Contains("projects"))
+            {
+                projects = new HashSet<string>(Arguments["projects"].DelimitSplit(new[] {","}, true).ToArray());
+            }
+            
             foreach (string projectFilePath in recipe.ProjectFilePaths)
             {
                 FileInfo projectFile = new FileInfo(projectFilePath);
                 string projectName = Path.GetFileNameWithoutExtension(projectFile.Name);
+                if (projects.Count > 0 && !projects.Contains(projectName))
+                {
+                    continue;
+                }
                 string testDirectoryPath = Path.Combine(recipe.OutputDirectory, projectName);
                 DirectoryInfo testDirectory = new DirectoryInfo(testDirectoryPath);
                 if (!testDirectory.Exists)

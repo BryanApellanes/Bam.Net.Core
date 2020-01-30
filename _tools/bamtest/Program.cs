@@ -39,25 +39,6 @@ namespace Bam.Net.Testing
 
         public static void PreInit()
         {
-            #region expand for PreInit help
-            // To accept custom command line arguments you may use            
-            /*
-             * AddValidArgument(string argumentName, bool allowNull)
-            */
-
-            // All arguments are assumed to be name value pairs in the format
-            // /name:value unless allowNull is true then only the name is necessary.
-
-            // to access arguments and values you may use the protected member
-            // arguments. Example:
-
-            /*
-             * arguments.Contains(argName); // returns true if the specified argument name was passed in on the command line
-             * arguments[argName]; // returns the specified value associated with the named argument
-             */
-
-            // the arguments protected member is not available in PreInit() (this method)
-            #endregion
             AddValidArgument("search", false, description: "The search pattern to use to locate test assemblies, the default is *Tests.* if not specified.");
             AddValidArgument("testFile", false, description: "The path to the assembly containing tests to run");
             AddValidArgument("dir", false, description: "The directory to look for test assemblies in");
@@ -67,6 +48,8 @@ namespace Bam.Net.Testing
             AddValidArgument("type", false, description: "The type of tests to run [Unit | Integration], default is Unit.");
             AddValidArgument("testReportHost", false, description: "The hostname of the test report service");
             AddValidArgument("testReportPort", false, description: "The port that the test report service is listening on");
+
+            AddValidArgument("projects", false, false, "On /recipe, optionally specify a comma separated list of project names to test from the specified recipe.");
 
             AddValidArgument(_exitOnFailure, true);
             AddSwitches(typeof(Program));

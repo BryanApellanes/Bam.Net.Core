@@ -12,7 +12,7 @@ namespace Bam.Net.Bake
             AddValidArgument("outputRecipe", false, false, "On /discover, Specify the name of the recipe to write, default is 'recipe.json'.");
             AddValidArgument("recipePerProject", true, false, "On /discover, Specifies that all discovered projects have their own recipe written.");
             AddValidArgument("buildConfig", false, false, "On /recipe, optionally specify a build config overriding the one defined in the recipe.");
-            
+
             AddValidArgument("zipRecipe", false, false, "On /zip, Specify the recipe whose 'OutputDirectory' setting is zipped.");
             
             AddValidArgument("nugetOutput", "On /nuget, Specify the directory where nuget packages are output.");
