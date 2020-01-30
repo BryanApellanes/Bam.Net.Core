@@ -103,7 +103,7 @@ namespace Bam.Net.Testing
             }
 
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
-            string testGroupName = GetArgument("Group", "Please enter the name of the test group to run.");
+            string testGroupName = Arguments["Group"];
             string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
             foreach (string projectFilePath in recipe.ProjectFilePaths)
             {
