@@ -49,6 +49,7 @@ namespace Bam.Net.Bake
                 DirectoryInfo projectOutputDirectory = new DirectoryInfo(Path.Combine(outputDirectory, projectName));
                 string outputDirectoryPath = projectOutputDirectory.FullName;
                 string dotNetArgs = $"publish {projectFile} -c {buildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectoryPath}";
+                OutLineFormat("dotnet {0}", ConsoleColor.Blue, dotNetArgs);
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
                 OutLineFormat("publish command finished for project {0}, output directory = {1}", ConsoleColor.Blue, projectFile, outputDirectoryPath);
