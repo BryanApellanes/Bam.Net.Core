@@ -33,6 +33,7 @@ namespace Bam.Net.Bake
             if (Arguments.Contains("buildConfig"))
             {
                 buildConfigString = Arguments["buildConfig"];
+                OutLineFormat("Recipe BuildConfig = {0}, Specified BuildConfig = {1}", ConsoleColor.DarkYellow, recipe.BuildConfig.ToString(), buildConfigString);
             }
             BuildConfig buildConfig = BuildConfig.Debug;
             if (!BuildConfig.TryParse(buildConfigString, out buildConfig))
