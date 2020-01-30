@@ -21,6 +21,10 @@ namespace Bam.Net.Testing
             IsolateMethodCalls = false;
             PreInit();
             Initialize(args);
+            if (Arguments.Contains("debug"))
+            {
+                Pause("Attach the debugger now");
+            }
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false, ShowTime = true, ApplicationName = "bamtest", UseColors = true };
             logger.StartLoggingThread();
             if(ExecuteSwitches(Arguments, typeof(Program), false, logger))
@@ -72,11 +76,6 @@ namespace Bam.Net.Testing
         
         public static void Start()
         {
-            if (Arguments.Contains("debug"))
-            {
-                Pause("Attach the debugger now");
-            }
-
             Enum.TryParse<TestType>(Arguments["type"].Or("Unit"), out TestType testType);
 
             Setup(out string startDirectory, out FileInfo[] files);
