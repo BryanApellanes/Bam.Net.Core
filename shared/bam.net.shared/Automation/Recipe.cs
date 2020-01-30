@@ -6,13 +6,12 @@ using System.Text;
 using System.Xml.Serialization;
 using Bam.Net.Application;
 using Bam.Net.Automation;
-using Bam.Net.Bake;
 using Bam.Net.CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using YamlDotNet.Serialization;
 
-namespace Bam.Net.Bake
+namespace Bam.Net.Automation
 {
     public class Recipe
     {

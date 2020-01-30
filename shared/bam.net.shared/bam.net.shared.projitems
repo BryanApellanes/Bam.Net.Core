@@ -306,10 +306,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\NotificationWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ProcessWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Project.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\ProjectInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ProjectReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsExec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Deployable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\PsKill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\Recipe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\ReferenceInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\ReferenceKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningRemoteFileHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ScanningWorkerTypeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Automation\Scp.cs" />

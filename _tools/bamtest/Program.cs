@@ -161,7 +161,7 @@ namespace Bam.Net.Testing
         {
             string resultDirectory = Arguments.Contains("data") ? Arguments["data"] : ".";
             string filePrefix = Arguments["dataPrefix"].Or("BamTests");
-            List<ITestRunListener<UnitTestMethod>> testRunListeners = new List<ITestRunListener<UnitTestMethod>> { new UnitTestRunListener(resultDirectory, $"{filePrefix}_{DateTime.Now.Date.ToString("MM_dd_yyyy")}") };
+            List<ITestRunListener<UnitTestMethod>> testRunListeners = new List<ITestRunListener<UnitTestMethod>> { new UnitTestRunListener(resultDirectory, $"{filePrefix}_{DateTime.Now.Date:MM_dd_yyyy}") };
 
             string reportHost = Arguments["testReportHost"];
             if (string.IsNullOrEmpty(reportHost))

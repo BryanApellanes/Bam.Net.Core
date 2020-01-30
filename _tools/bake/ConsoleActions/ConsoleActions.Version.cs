@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Bam.Net.Application;
+using Bam.Net.Automation;
 using Bam.Net.Automation.SourceControl;
 using Bam.Net.CommandLine;
 using Bam.Net.Logging;
