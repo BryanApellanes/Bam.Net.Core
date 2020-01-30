@@ -135,6 +135,7 @@ namespace Bam.Net.Testing
                 {
                     foreach (FileInfo testAssembly in GetTestAssemblies(testDirectory.GetFiles(searchPattern)))
                     {
+                        OutLineFormat("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
                         RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
                     }
                 }
