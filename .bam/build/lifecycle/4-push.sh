@@ -14,22 +14,11 @@ fi
 CONTEXT=$1
 
 if [[ -z $1 ]]; then
-    export CONTEXT="docker"
+    export CONTEXT="tests"
 fi
 
 export COMMAND="push"
 
-if [[ !(-z $2) ]]; then
-    export COMMAND="push-$2"
-fi
-
-REGISTRYALIASORPATH=$3
-
-if [[ -z $REGISTRYALIASORPATH ]]; then
-    export REGISTRYALIASORPATH=$(<defaultimageregistry)
-fi
-
-printf "REGISTRYALIASORPATH is ${REGISTRYALIASORPATH}\r\n"
-cd ./ci
-./exec.sh ${CONTEXT} ${COMMAND} ${REGISTRYALIASORPATH}
+cd ./common
+./exec.sh ${CONTEXT} ${COMMAND}
 cd ..

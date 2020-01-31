@@ -20,21 +20,11 @@ fi
 CONTEXT=$1
 
 if [[ -z $1 ]]; then
-    export CONTEXT="docker"
+    export CONTEXT="tools"
 fi
 
 export COMMAND="deploy"
 
-TARGETENVIRONMENT="test"
-if [[ !(-z $2) ]]; then
-    export TARGETENVIRONMENT=$2
-fi
-
-IMAGETAG="publish"
-if [[ !(-z $3) ]]; then
-    export IMAGETAG=$3
-fi
-
-cd ./ci
-./exec.sh ${CONTEXT} ${COMMAND} ${TARGETENVIRONMENT} ${IMAGETAG}
+cd ./common
+./exec.sh ${CONTEXT} ${COMMAND} 
 cd ..

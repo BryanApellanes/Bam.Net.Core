@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Bam.Net.Testing;
 
-namespace Bam.Net.Bake
+namespace Bam.Net.Automation
 {
     public class ProjectInfo
     {

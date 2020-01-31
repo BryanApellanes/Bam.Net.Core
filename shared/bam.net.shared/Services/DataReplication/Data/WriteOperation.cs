@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Services.DataReplication.Data
 {
+    [Serializable]
     public abstract class WriteOperation: Operation
     {  
         public OperationIntent Intent { get; set; }

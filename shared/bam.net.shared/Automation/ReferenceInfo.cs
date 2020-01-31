@@ -1,5 +1,5 @@
 using System.IO;
-using Bam.Net.Bake;
+using Bam.Net.Automation;
 
 namespace Bam.Net
 {

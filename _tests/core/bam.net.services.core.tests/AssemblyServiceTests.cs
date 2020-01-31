@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Bam.Net.Caching;
 using Bam.Net.CommandLine;
@@ -52,8 +53,10 @@ namespace Bam.Net.Services.Tests
             Assembly current = Assembly.GetExecutingAssembly();
             AssemblyName[] assNames = current.GetReferencedAssemblies().Where(AssemblyDescriptor.AssemblyNameFilter).ToArray();
             AssemblyDescriptor descriptor = new AssemblyDescriptor(current);
-            Expect.IsTrue(assNames.Length > 0);
-            Expect.AreEqual(assNames.Length, descriptor.AssemblyReferenceDescriptors.Count);
+            Thread.Sleep(300);
+            (assNames.Length > 0).IsTrue();
+            OutLineFormat("Assembly names: {0}", assNames.Select(an=> an.Name).ToArray().ToDelimited(s=> s, ", "));
+            (descriptor.AssemblyReferenceDescriptors.Count > 0).IsTrue();
         }
 
         [UnitTest]
