@@ -1,0 +1,22 @@
+{
+  "Name": "ubuntu.16.10-x64-bamtoolkit",
+  "ProjectRoot": "../../.././_tools/",
+  "ProjectFilePaths": [
+    "/media/data/src/Bam.Net.Core/_tools/bamtest/bamtest.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bamdb/bamdb.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bamsdo/bamsdo.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bamweb/bamweb.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bam/bam.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/badns/badns.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bamsvc/bamsvc.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/laotze/laotze.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bamd/bamd.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/masuco/masuco.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/bake/bake.csproj",
+    "/media/data/src/Bam.Net.Core/_tools/breve/breve.csproj"
+  ],
+  "OutputDirectory": "/tmp/bam/bin",
+  "NugetOutputDirectory": "/home/bryan/.bam/nupkg/Linux",
+  "BuildConfig": "Debug",
+  "OsName": "Linux"
+}

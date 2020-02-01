@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Threading;
 using System.Xml.Linq;
 using Bam.Net.Application;
+using Bam.Net.Automation;
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 

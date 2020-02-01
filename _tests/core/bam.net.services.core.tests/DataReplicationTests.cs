@@ -183,7 +183,7 @@ namespace Bam.Net.Services.Tests
             {
                 Warn("Inconclusive, blocker was not set");
             }
-            Expect.IsTrue(checkedJournal.Value);
+            checkedJournal.Value.IsTrue();
             string newAddress = "Updated " + 8.RandomLetters();
             value.Address = newAddress;
             journal.Enqueue(value, (jes) =>

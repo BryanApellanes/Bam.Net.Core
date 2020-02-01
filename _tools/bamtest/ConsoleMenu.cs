@@ -12,6 +12,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Runtime.Loader;
 using System.Threading;
+using Bam.Net.Automation;
 using Bam.Net.Data;
 using Bam.Net.Automation.Testing;
 using Bam.Net.Testing.Unit;
@@ -86,6 +87,61 @@ namespace Bam.Net.Testing
             }
         }
 
+        [ConsoleAction("Recipe", "[path_to_bake_recipe_dot_json]", "Run tests found in the projects referenced by the specified recipe.")]
+        public static void RunTestsForRecipe()
+        {
+            string recipePath = GetArgument("Recipe", "Please enter the path to the recipe file to test");
+            if (string.IsNullOrEmpty(recipePath))
+            {
+                recipePath = "./recipe.json";
+            }
+
+            if (!File.Exists(recipePath))
+            {
+                OutLineFormat("Recipe not found: {0}\r\nSpecify /Recipe:[path_to_bake_recipe_dot_json]", recipePath);
+                Exit(1);
+            }
+
+            Recipe recipe = recipePath.FromJsonFile<Recipe>();
+            string testGroupName = Arguments["Group"];
+            string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
+            HashSet<string> projects = new HashSet<string>();
+            if (Arguments.Contains("projects"))
+            {
+                projects = new HashSet<string>(Arguments["projects"].DelimitSplit(new[] {","}, true).ToArray());
+            }
+            
+            foreach (string projectFilePath in recipe.ProjectFilePaths)
+            {
+                FileInfo projectFile = new FileInfo(projectFilePath);
+                string projectName = Path.GetFileNameWithoutExtension(projectFile.Name);
+                if (projects.Count > 0 && !projects.Contains(projectName))
+                {
+                    continue;
+                }
+                string testDirectoryPath = Path.Combine(recipe.OutputDirectory, projectName);
+                DirectoryInfo testDirectory = new DirectoryInfo(testDirectoryPath);
+                if (!testDirectory.Exists)
+                {
+                    OutLineFormat("Directory not found: {0}", ConsoleColor.Yellow, testDirectory.FullName);
+                    continue;
+                }
+                
+                if (!string.IsNullOrEmpty(testGroupName))
+                {
+                    RunUnitTestGroupsInFolder(testDirectoryPath, searchPattern, testGroupName);
+                }
+                else
+                {
+                    foreach (FileInfo testAssembly in GetTestAssemblies(testDirectory.GetFiles(searchPattern)))
+                    {
+                        OutLineFormat("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
+                        RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
+                    }
+                }
+            }
+        }
+        
         /// <summary>
         /// Runs the unit tests in file.
         /// </summary>
@@ -101,14 +157,22 @@ namespace Bam.Net.Testing
             RunUnitTestsInFile(assemblyPath, Environment.CurrentDirectory);
         }
 
-        [ConsoleAction("Group", "[name of test group]",
-            "Run tests with the specified TestGroup attribute name in assemblies found for the given search pattern.")]
-        public static void RunTestGroupsInFolder()
+        [ConsoleAction("Group", "[name of test group]", "Run tests with the specified TestGroup attribute name in assemblies found for the given search pattern.")]
+        public static void RunUnitTestGroupsInFolder()
         {
+            if (Arguments.Contains("Recipe")) // don't run if we are testing a recipe
+            {
+                return;
+            }
             string testGroupName = GetArgument("Group", "Please enter the name of the test group to run.");
             string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
-            string testDir = GetArgumentOrDefault("dir", BamPaths.BamHome);
-            DirectoryInfo directory = new DirectoryInfo(testDir);
+            string testDirectoryName = GetArgumentOrDefault("dir", BamPaths.BamHome);
+            RunUnitTestGroupsInFolder(testDirectoryName, searchPattern, testGroupName);
+        }
+
+        public static void RunUnitTestGroupsInFolder(string testDirectoryName, string searchPattern, string testGroupName)
+        {
+            DirectoryInfo directory = new DirectoryInfo(testDirectoryName);
             FileInfo[] files = directory.GetFiles(searchPattern);
             if (files.Length > 0)
             {
@@ -116,21 +180,21 @@ namespace Bam.Net.Testing
                 Thread.Sleep(3000);
                 List<UnitTestMethod> succeeded = new List<UnitTestMethod>();
                 Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
-                foreach (FileInfo file in files.Where(fi=> fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase)))
+                foreach (FileInfo file in GetTestAssemblies(files))
                 {
-                    RunTestGroupFromFile(file, testGroupName, failed, succeeded);
+                    RunUnitTestGroupInFile(file, testGroupName, failed, succeeded);
                 }
 
                 if (succeeded.Count > 0)
                 {
                     OutLineFormat("{0} tests passed", ConsoleColor.Green, succeeded.Count);
-                    succeeded.Each(unitTest=> OutLineFormat("{0} passed", ConsoleColor.Green, unitTest.Description));
+                    succeeded.Each(unitTest => OutLineFormat("{0} passed", ConsoleColor.Green, unitTest.Description));
                 }
-                
+
                 if (failed.Count > 0)
                 {
                     StringBuilder failures = new StringBuilder();
-                    failed.Keys.Each(unitTest =>  failures.AppendLine($"{unitTest.Description}: {failed[unitTest].Message}\r\n{failed[unitTest].StackTrace}\r\n"));
+                    failed.Keys.Each(unitTest => failures.AppendLine($"{unitTest.Description}: {failed[unitTest].Message}\r\n{failed[unitTest].StackTrace}\r\n"));
                     OutLineFormat("There were {0} failures", failed.Count);
                     OutLine(failures.ToString(), ConsoleColor.Magenta);
                     Exit(1);
@@ -140,11 +204,17 @@ namespace Bam.Net.Testing
                     Exit(0);
                 }
             }
-            OutLineFormat("No files found in ({0}) for search pattern ({1})", testDir, searchPattern);
+
+            OutLineFormat("No files found in ({0}) for search pattern ({1})", testDirectoryName, searchPattern);
             Exit(1);
         }
 
-        private static void RunTestGroupFromFile(FileInfo file, string testGroupName, Dictionary<UnitTestMethod, Exception> failed, List<UnitTestMethod> succeeded)
+        private static IEnumerable<FileInfo> GetTestAssemblies(FileInfo[] files)
+        {
+            return files.Where(fi => fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public static void RunUnitTestGroupInFile(FileInfo file, string testGroupName, Dictionary<UnitTestMethod, Exception> failed, List<UnitTestMethod> succeeded)
         {
             Assembly testAssembly = null;
             try
@@ -160,16 +230,15 @@ namespace Bam.Net.Testing
             OutLineFormat("Loaded assembly {0}", ConsoleColor.Green, testAssembly.FullName);
             List<UnitTestMethod> testMethods = UnitTestMethod.FromAssembly(testAssembly).Where(unitTestMethod =>
             {
-                if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(
-                    out TestGroupAttribute testGroupAttribute))
+                if (unitTestMethod.Method.HasCustomAttributeOfType<TestGroupAttribute>(out TestGroupAttribute testGroupAttribute))
                 {
                     return testGroupAttribute.Groups.Contains(testGroupName);
                 }
 
                 return false;
             }).ToList();
-            OutLineFormat("Found ({0}) tests in group ({1}) in assembly ({2})", ConsoleColor.Blue, testMethods.Count,
-                testGroupName, testAssembly.FullName);
+            
+            OutLineFormat("Found ({0}) tests in group ({1}) in assembly ({2})", ConsoleColor.Blue, testMethods.Count, testGroupName, testAssembly.FullName);
             testMethods.Each(testMethod =>
             {
                 if (testMethod.TryInvoke(ex =>
@@ -179,14 +248,12 @@ namespace Bam.Net.Testing
                 }))
                 {
                     succeeded.Add(testMethod);
-                }
-
-                ;
+                };
             });
         }
 
         /// <summary>
-        /// Runs the unit tests in specified assemlby.
+        /// Runs the unit tests in specified assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="endDirectory">The end directory.</param>

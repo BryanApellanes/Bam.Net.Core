@@ -11,6 +11,7 @@ using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Services.DataReplication.Data
 { 
+    [Serializable]
     public abstract class Operation: AuditRepoData
     {
         public string TypeNamespace { get; set; }

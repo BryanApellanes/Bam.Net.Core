@@ -2,9 +2,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
     <PackageId>bamd</PackageId>
-    <Version>0.0.1</Version>
+    <Version>1.0.5-test+fb59d5e</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
