@@ -21,7 +21,7 @@ namespace Bam.Net.Application
             AddSwitches();
             AddConfigurationSwitches();
             
-            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb.exe");
+            BamEnvironmentVariables.SetBamVariable("ApplicationName", "bamdb");
             RegisterArgZeroProviders<DataShellProvider>(args);
             RegisterArgZeroProviders<CodeGenProvider>(args);
             RegisterArgZeroProviders<DaoProvider>(args);

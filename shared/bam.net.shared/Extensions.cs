@@ -1896,10 +1896,14 @@ namespace Bam.Net
             }
         }
 
-        public static string ToJson(this object value)
+        public static string ToJson(this object value, params JsonConverter[] converters)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
-            return JsonConvert.SerializeObject(value);
+            if (converters != null && converters.Length > 0)
+            {
+                settings.Converters = new List<JsonConverter>(converters);
+            }
+            return JsonConvert.SerializeObject(value, settings);
         }
 
         public static string ToJson<Attr>(this object value) where Attr: Attribute

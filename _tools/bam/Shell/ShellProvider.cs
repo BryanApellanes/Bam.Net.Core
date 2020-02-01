@@ -42,7 +42,7 @@ namespace Bam.Shell
         }
         
         static HandlebarsDirectory _handlebarsDirectory;
-        static object _handlebarsLock = new object();
+        static readonly object _handlebarsLock = new object();
         public static HandlebarsDirectory GetHandlebarsDirectory()
         {
             return _handlebarsLock.DoubleCheckLock(ref _handlebarsDirectory, () =>

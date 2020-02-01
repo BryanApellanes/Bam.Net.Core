@@ -52,7 +52,7 @@ namespace Bam.Shell
             mgr.DynamicTypeDataRepository.Query<DynamicNamespaceDescriptor>(d => d.Id > 0).Each(d => mgr.DynamicTypeDataRepository.Delete(d));
             OutLine("Done", ConsoleColor.DarkYellow);
         }
-
+        
         [ConsoleAction("run", "Run a ConsoleAction in another assembly")]
         public void Run(string name, Action<string> output = null, Action<string> error = null)
         {

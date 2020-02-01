@@ -10,6 +10,10 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\bam.net.core\bam.net.core.csproj" />
+    </ItemGroup>
+
     <Import Project="..\..\shared\bam.net.schema.org\bam.net.schema.org.projitems" Label="Shared" />
 
 </Project>
