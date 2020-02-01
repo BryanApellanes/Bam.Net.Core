@@ -613,8 +613,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemYamlJSchemaResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaYamlLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaNameProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaNameProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JsonJSchemaLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\YamlJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Org\SchemaDotOrgProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SemanticLifecycle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SemanticVersion.cs" />
@@ -830,6 +836,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UnixPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VersionSpec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsFileExtensions.cs" />

@@ -27,7 +27,6 @@ namespace Bam.Net.Application.Json
         public override Stream GetSchemaResource(ResolveSchemaContext context, SchemaReference reference)
         {
             string baseUri = reference.BaseUri.ToString(); // path to the file
-            
 
             string filePath = Path.Combine(RootDirectory.FullName, baseUri);
             Dictionary<object, object> schema = filePath.FromYamlFile() as Dictionary<object, object>; 
@@ -130,7 +129,6 @@ namespace Bam.Net.Application.Json
                 {
                     ParseStrings(dictionary);
                 }
-                
             });
         }
     }
