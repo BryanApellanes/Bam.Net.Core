@@ -29,12 +29,12 @@ namespace Bam.Net.Application.Json
 
         public Func<string, string> ParseRootTableNameFunction { get; set; }
         public Func<string, string> ParsePropertyNameForColumnNameFunction { get; set; }
-        public string GetRootTableName(JSchema jSchema)
+        public string GetTableName(JSchema jSchema)
         {
-            return GetRootClassName(jSchema);
+            return GetClassName(jSchema);
         }
 
-        public string GetRootClassName(JSchema jSchema)
+        public string GetClassName(JSchema jSchema)
         {
             Args.ThrowIfNull(jSchema.Type, "jSchema.Type");
             
@@ -53,6 +53,23 @@ namespace Bam.Net.Application.Json
 
             return string.Empty;
         }
+        
+        public string[] GetAllTableNames(JSchema jSchema)
+        {
+            HashSet<string> tableNames = new HashSet<string> {GetTableName(jSchema)};
+
+            foreach (string objectPropertyName in GetObjectPropertyNames(jSchema))
+            {
+                tableNames.Add(GetPropertyTableName(jSchema, objectPropertyName));
+            }
+            return tableNames.ToArray();
+        }
+
+        public string[] GetPropertyColumnNames(JSchema jSchema, string propertyName)
+        {
+            JSchema propertySchema = GetPropertySchema(jSchema, propertyName);
+            return GetColumnNames(propertySchema);
+        }
 
         public string[] GetColumnNames(JSchema jSchema)
         {
@@ -68,22 +85,6 @@ namespace Bam.Net.Application.Json
         }
 
         private object _schemaNameMapLock = new object();
-        public SchemaNameMap GetSchemaNameMap(JSchema jSchema)
-        {
-            ulong jSchemaId = jSchema.ToJson().ToSha256ULong();
-            if (!_schemaNameMapsByJSchemaHash.ContainsKey(jSchemaId))
-            {
-                SchemaNameMap schemaNameMap = GenerateSchemaNameMap(jSchema);
-                _schemaNameMapsByJSchemaHash.Add(jSchemaId, schemaNameMap);
-            }
-
-            return _schemaNameMapsByJSchemaHash[jSchemaId];
-        }
-
-        protected SchemaNameMap GenerateSchemaNameMap(JSchema jSchema)
-        {
-            throw new NotImplementedException();
-        }
 
         protected HashSet<string> PrimitiveTypes
         {
@@ -107,6 +108,13 @@ namespace Bam.Net.Application.Json
             return propertyNames.ToArray();
         }
 
+        
+        
+        /// <summary>
+        /// Get the names of the properties that are of type object.
+        /// </summary>
+        /// <param name="jSchema"></param>
+        /// <returns></returns>
         public string[] GetObjectPropertyNames(JSchema jSchema)
         {
             return GetPropertyNamesOfType(jSchema, "object");
@@ -116,7 +124,18 @@ namespace Bam.Net.Application.Json
         {
             return GetPropertyNamesOfType(jSchema, "array");
         }
+
+        public string GetPropertyTableName(JSchema rootSchema, string propertyName)
+        {
+            JSchema propertySchema = GetPropertySchema(rootSchema, propertyName);
+            return GetTableName(propertySchema);
+        }
         
+        public JSchema GetPropertySchema(JSchema rootSchema, string propertyName)
+        {
+            return rootSchema.Properties[propertyName];
+        }
+
         protected string[] GetPropertyNamesOfType(JSchema jSchema, string typeName)
         {List<string> propertyNames = new List<string>();
             foreach(string propertyName in jSchema.Properties.Keys)

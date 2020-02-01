@@ -6,9 +6,12 @@ namespace Bam.Net.Application.Json
 {
     public interface IJSchemaNameProvider
     {
-        string GetRootTableName(JSchema jSchema);
-        string GetRootClassName(JSchema jSchema);
+        string[] GetObjectPropertyNames(JSchema jSchema);
+        JSchema GetPropertySchema(JSchema rootSchema, string propertyName);
+        string[] GetAllTableNames(JSchema jSchema);
+        string GetTableName(JSchema jSchema);
+        string GetClassName(JSchema jSchema);
         string[] GetColumnNames(JSchema jSchema);
-        SchemaNameMap GetSchemaNameMap(JSchema jSchema);
+        string[] GetPropertyColumnNames(JSchema jSchema, string propertyName);
     }
 }

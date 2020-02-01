@@ -28,31 +28,32 @@ namespace Bam.Net.Application.Json
         public SchemaManager SchemaManager { get; set; }
         public JSchemaLoader JSchemaLoader { get; set; }
         public IJSchemaNameProvider JSchemaNameProvider { get; set; }
-            
-        private void temp()
-        {
-            Dictionary<object, object> orgYaml = "/home/bryan/src/BamAppServices/_data/Vimly.Entity/v1/organization_v1.yaml".FromYamlFile() as Dictionary<object, object>;
-            JSchema jSchema = JSchema.Parse(orgYaml.ToJson(), new FileSystemYamlJSchemaResolver("/home/bryan/src/BamAppServices/_data/Vimly.Entity/v1/"));
-            //OutLine(jSchema.ToJson(), ConsoleColor.Blue);
-            //OutLine(jSchema.ToString(), ConsoleColor.Cyan);
-            
-            // TODO: build dao schema 
-            // read properties
-            // read "javaType" property for class names
-            // if type = "array" read items for type and setup foreign key
-            // move this implementation to JsonSchemaYamlLoader
-        }
 
         public SchemaDefinition GenerateSchemaDefinition(JSchema rootSchema)
         {
             AddJSchema(SchemaManager.CurrentSchema, rootSchema);
+            throw new NotImplementedException("This implementation is not complete");
             return SchemaManager.CurrentSchema;
         }
 
         public void AddJSchema(SchemaDefinition schemaDefinition, JSchema rootSchema)
         {
             SchemaManager.CurrentSchema = schemaDefinition;
-            
+            string rootTableName = JSchemaNameProvider.GetTableName(rootSchema);
+            SchemaManager.AddTable(rootTableName);
+            string[] objectPropertyNames = JSchemaNameProvider.GetObjectPropertyNames(rootSchema);
+            foreach (string objectPropertyName in objectPropertyNames)
+            {
+                JSchema propertySchema = JSchemaNameProvider.GetPropertySchema(rootSchema, objectPropertyName);
+                string propertyTableName = JSchemaNameProvider.GetTableName(propertySchema);
+                SchemaManager.AddTable(propertyTableName);
+                
+                string[] columnNames = JSchemaNameProvider.GetPropertyColumnNames(rootSchema, objectPropertyName);
+                foreach (string columnName in columnNames)
+                {
+                    SchemaManager.AddColumn(propertyTableName, columnName);
+                }
+            }
         }
         
         /// <summary>
@@ -61,10 +62,18 @@ namespace Bam.Net.Application.Json
         /// <param name="jSchemaFilePath">The path to the json schema</param>
         /// <param name="serializationFormat">The format that the json schema is in; either yaml or json</param>
         /// <returns></returns>
-        public static SchemaDefinition GenerateSchemaDefinition(string jSchemaFilePath, SerializationFormat serializationFormat)
+        public static SchemaDefinition GenerateSchemaDefinition(string jSchemaFilePath, SerializationFormat serializationFormat, JSchemaNameProvider jSchemaNameProvider = null)
         {
             JSchema jSchema = JSchemaLoader.LoadJSchema(jSchemaFilePath, serializationFormat);
-            JSchemaSchemaGenerator generator = new JSchemaSchemaGenerator(new SchemaManager(), serializationFormat);
+            return GenerateSchemaDefinition(jSchema, serializationFormat, jSchemaNameProvider);
+        }
+
+        public static SchemaDefinition GenerateSchemaDefinition(JSchema jSchema, SerializationFormat serializationFormat, JSchemaNameProvider jSchemaNameProvider)
+        {
+            JSchemaSchemaGenerator generator = new JSchemaSchemaGenerator(new SchemaManager(), serializationFormat)
+            {
+                JSchemaNameProvider = jSchemaNameProvider
+            };
             return generator.GenerateSchemaDefinition(jSchema);
         }
     }
