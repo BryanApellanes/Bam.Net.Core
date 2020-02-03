@@ -585,6 +585,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\Handlebars\HandlebarsWrapperModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\KeyedRepoData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\NamedAuditRepoData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ObjectPersister.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ObjectPersisterDirectoryProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ObjectReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />

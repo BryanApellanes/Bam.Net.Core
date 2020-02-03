@@ -180,7 +180,7 @@ namespace Bam.Net
         }
 
         /// <summary>
-        /// Gets or sets the acquire lock retry interval, the ammount of time in milliseconds to sleep
+        /// Gets or sets the acquire lock retry interval, the amount of time in milliseconds to sleep
         /// between attempts to acquire a lock.
         /// </summary>
         /// <value>
@@ -245,45 +245,15 @@ namespace Bam.Net
 
         public string CurrentLockerMachineName { get; set; }
 
-        protected string LockFile
-        {
-            get
-            {
-                return Path.Combine(RootDirectory, "{0}.lock"._Format(Name));
-            }
-        }
+        protected string LockFile => Path.Combine(RootDirectory, "{0}.lock"._Format(Name));
 
-        protected string TempLockFile
-        {
-            get
-            {
-                return $"{LockFile}.tmp";
-            }
-        }
+        protected string TempLockFile => $"{LockFile}.tmp";
 
-        protected internal string WriteFile
-        {
-            get
-            {
-                return Path.Combine(RootDirectory, "{0}.write"._Format(Name));
-            }
-        }
+        protected internal string WriteFile => Path.Combine(RootDirectory, "{0}.write"._Format(Name));
 
-        protected internal string ReadFile
-        {
-            get
-            {
-                return Path.Combine(RootDirectory, "{0}.read"._Format(Name));
-            }
-        }
+        protected internal string ReadFile => Path.Combine(RootDirectory, "{0}.read"._Format(Name));
 
-        protected internal string MessageFile
-        {
-            get
-            {
-                return Path.Combine(RootDirectory, Name);
-            }
-        }
+        protected internal string MessageFile => Path.Combine(RootDirectory, Name);
 
         private void EnsureRoot()
         {
@@ -293,7 +263,7 @@ namespace Bam.Net
             }
         }
 
-        static object _lock = new object();
+        static readonly object _lock = new object();
         private bool AcquireLock(int timeoutInMilliseconds)
         {
             try
