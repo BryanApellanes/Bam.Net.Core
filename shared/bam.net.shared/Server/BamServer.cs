@@ -157,12 +157,12 @@ namespace Bam.Net.Server
         /// </summary>
         public event Action<BamServer> Stopped;
 
-        private object _requestLogLock = new object();
+        private readonly object _requestLogLock = new object();
         private RequestLog _requestLog;
         public RequestLog RequestLog
         {
             get { return _requestLogLock.DoubleCheckLock(ref _requestLog, () => new RequestLog()); }
-            set { _requestLog = value; }
+            set => _requestLog = value;
         }
         
         private string ServerWorkspace => Path.Combine("common", "workspace");

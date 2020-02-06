@@ -21,21 +21,9 @@ namespace Bam.Net.Server.Renderers
             HandlebarsEmbeddedResources = new HandlebarsEmbeddedResources(Assembly.GetEntryAssembly());
         }
 
-        public string ContentRoot
-        {
-            get
-            {
-                return ContentResponder.ContentRoot;
-            }
-        }
+        public string ContentRoot => ContentResponder.ContentRoot;
 
-        public ITemplateNameResolver TemplateNameResolver
-        {
-            get
-            {
-                return ContentResponder?.ApplicationServiceRegistry?.Get<ITemplateNameResolver>() ?? ApplicationServiceRegistry.Current?.Get<ITemplateNameResolver>();
-            }
-        }
+        public ITemplateNameResolver TemplateNameResolver => ContentResponder?.ApplicationServiceRegistry?.Get<ITemplateNameResolver>() ?? ApplicationServiceRegistry.Current?.Get<ITemplateNameResolver>();
 
         public HashSet<HandlebarsDirectory> HandlebarsDirectories
         {
@@ -49,7 +37,7 @@ namespace Bam.Net.Server.Renderers
         }
 
         HandlebarsDirectory _combined;
-        object _combinedLock = new object();
+        readonly object _combinedLock = new object();
         protected HandlebarsDirectory CombinedHandlebarsDirectory()
         {
             return _combinedLock.DoubleCheckLock(ref _combined, () =>

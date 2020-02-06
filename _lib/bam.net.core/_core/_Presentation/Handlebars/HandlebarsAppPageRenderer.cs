@@ -22,6 +22,18 @@ namespace Bam.Net.Presentation.Handlebars
         
         public override byte[] RenderPage(IRequest request, IResponse response)
         {
+            string templateName = GetTemplateName(request);
+
+            if (!string.IsNullOrEmpty(templateName))
+            {
+                return TemplateRenderer.Render(templateName, CreatePageModel(request)).ToBytes();
+            }
+
+            return new byte[] { };
+        }
+
+        protected string GetTemplateName(IRequest request)
+        {
             RequestInfo requestInfo = GetRequestInfo(request);
             string templateName = string.Empty;
             if (requestInfo.RouteInfo.IsHomeRequest)
@@ -33,12 +45,7 @@ namespace Bam.Net.Presentation.Handlebars
                 templateName = System.IO.Path.GetFileNameWithoutExtension(absolutePath);
             }
 
-            if (!string.IsNullOrEmpty(templateName))
-            {
-                return TemplateRenderer.Render(templateName, CreatePageModel(request)).ToBytes();
-            }
-
-            return new byte[] { };
+            return templateName;
         }
     }
 }

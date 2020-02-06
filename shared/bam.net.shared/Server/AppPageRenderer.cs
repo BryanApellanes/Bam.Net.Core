@@ -13,8 +13,7 @@ namespace Bam.Net.Server
             InitializeDefaultRenderers();
         }
 
-        public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager,
-            IApplicationTemplateManager applicationTemplateManager) : base(appContentResponder, commonTemplateManager, applicationTemplateManager)
+        public AppPageRenderer(AppContentResponder appContentResponder, ITemplateManager commonTemplateManager, IApplicationTemplateManager applicationTemplateManager) : base(appContentResponder, commonTemplateManager, applicationTemplateManager)
         {
             InitializeDefaultRenderers();
         }
@@ -55,7 +54,7 @@ namespace Bam.Net.Server
             return GetRequestInfo(request).FileExists(AppConf);
         }
 
-        protected bool FileExists(IRequest request, out string absolutePath)
+        protected virtual bool FileExists(IRequest request, out string absolutePath)
         {
             return GetRequestInfo(request).FileExists(AppConf, out absolutePath);
         }
