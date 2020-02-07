@@ -187,6 +187,42 @@ namespace Bam.Net.Server
             set;
         }
 
+        public Dictionary<string, List<AppPageRendererManager>> ReloadAppPageRendererManagers()
+        {
+            _appPageRendererManagers = null;
+            return AppPageRendererManagers;
+        }
+        
+        private Dictionary<string, List<AppPageRendererManager>> _appPageRendererManagers;
+        private readonly object _appPageRendererManagerLock = new object();
+        public Dictionary<string, List<AppPageRendererManager>> AppPageRendererManagers
+        {
+            get
+            {
+                return _appPageRendererManagerLock.DoubleCheckLock(ref _appPageRendererManagers, () =>
+                    {
+                        Dictionary<string, List<AppPageRendererManager>> result = new Dictionary<string, List<AppPageRendererManager>>();
+                        foreach (AppConf appToServe in _conf.AppsToServe)
+                        {
+                            if (string.IsNullOrEmpty(appToServe.Name))
+                            {
+                                Log.Warn("Application name not specified in AppConf: \r\n{0}", appToServe.ToJson(true));
+                            }
+                            if (!result.ContainsKey(appToServe.Name))
+                            {
+                                result.Add(appToServe.Name, new List<AppPageRendererManager>());
+                            }
+
+                            if (AppContentResponders[appToServe.Name].PageRenderer is AppPageRendererManager current)
+                            {
+                                result[appToServe.Name].Add(current);
+                            }
+                        }
+                        return result;
+                    }); 
+            }
+        }
+        
         protected void OnInitializing()
         {
             Initializing?.Invoke(this);
@@ -473,7 +509,7 @@ namespace Bam.Net.Server
         }
 
         ILogger _logger;
-        object _loggerLock = new object();
+        readonly object _loggerLock = new object();
         public ILogger MainLogger
         {
             get
@@ -1012,7 +1048,7 @@ namespace Bam.Net.Server
         }
 
         BamConf _conf;
-        object _confLock = new object();
+        readonly object _confLock = new object();
         /// <summary>
         /// Get a BamConf instance which represents the current
         /// state of the BamServer
@@ -1177,7 +1213,7 @@ namespace Bam.Net.Server
 
         private void HandlePostInitialization(BamServer server)
         {
-            PostInitializationHandler = new PostServerInitializationHandler();
+            PostInitializationHandler = new PostServerInitializationHandler(); // TODO: get this from ServiceRegistry (DI)
 
             PostInitializationHandler.HandleInitialization(this);
 

@@ -25,7 +25,7 @@ namespace Bam.Net.Server
         public AppConf AppConf => AppContentResponder.AppConf;
 
         public string FileExtension { get; protected set; }
-        public int Order { get; set; }
+        public int Precedence { get; set; }
 
         public string DefaultFilePath => Path.Combine("~/", AppConf.HtmlDir, $"{AppConf.DefaultPage}{FileExtension}");
 
@@ -49,7 +49,7 @@ namespace Bam.Net.Server
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        protected internal bool FileExists(IRequest request)
+        protected internal virtual bool FileExists(IRequest request)
         {
             return GetRequestInfo(request).FileExists(AppConf);
         }
@@ -64,7 +64,7 @@ namespace Bam.Net.Server
             return new RequestInfo
             {
                 RequestPath = request.Url.AbsolutePath,
-                RelativePath = Path.Combine("~/", AppConf.HtmlDir, $"{request.Url.AbsolutePath}.{FileExtension}"),
+                RelativePath = Path.Combine("~/", AppConf.HtmlDir, $"{request.Url.AbsolutePath}{FileExtension}"),
                 RouteInfo =  GetRouteInfo(request)
             };
         }

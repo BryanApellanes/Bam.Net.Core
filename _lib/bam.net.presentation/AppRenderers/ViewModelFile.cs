@@ -10,7 +10,7 @@ namespace Bam.Net.Presentation.AppRenderers
         
         public T GetActionProvider<T>(AppConf appConf)
         {
-            throw new NotImplementedException();
+            return (T) GetActionProvider(appConf);
         }
 
         public object GetActionProvider(AppConf appConf)

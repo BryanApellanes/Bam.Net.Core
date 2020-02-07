@@ -86,7 +86,7 @@ namespace Bam.Net.Server
         {
             HashSet<string> extensions = new HashSet<string>();
             DirectoryInfo htmlDir = new DirectoryInfo(Path.Combine(AppConf.AppRoot.Root, AppConf.HtmlDir));
-            foreach (FileInfo fileInfo in htmlDir.GetFiles())
+            foreach (FileInfo fileInfo in htmlDir.GetFiles("*.*", SearchOption.AllDirectories))
             {
                 if (!fileInfo.Extension.Equals(".dll", StringComparison.InvariantCultureIgnoreCase) &&
                     !fileInfo.Extension.Equals(".exe", StringComparison.InvariantCultureIgnoreCase))
@@ -117,8 +117,7 @@ namespace Bam.Net.Server
                                 if (extensions.Contains(appPageRenderer.FileExtension))
                                 {
                                     AddPageRenderer(appPageRenderer);
-                                    FireEvent(RendererLoaded,
-                                        new RendererLoadedEventArgs {AppConf = AppConf, Renderer = appPageRenderer});
+                                    FireEvent(RendererLoaded, new RendererLoadedEventArgs {AppConf = AppConf, Renderer = appPageRenderer});
                                 }
                                 else if (type.HasCustomAttributeOfType<AppAttribute>(out AppAttribute attribute))
                                 {
@@ -145,7 +144,7 @@ namespace Bam.Net.Server
         private AppPageRenderer ResolveRenderer(IRequest request)
         {
             AppPageRenderer renderer = _renderers
-                .ToImmutableSortedSet(new Comparer<AppPageRenderer>((x, y) => x.Order.CompareTo(y.Order)))
+                .ToImmutableSortedSet(new Comparer<AppPageRenderer>((x, y) => y.Precedence.CompareTo(x.Precedence)))
                 .FirstOrDefault(apr => apr.FileExists(request));
 
             if (renderer != null)
