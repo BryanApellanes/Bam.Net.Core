@@ -360,6 +360,11 @@ namespace Bam.Net
             return currentPath;
         }
 
+        /// <summary>
+        /// Read the specified string up to the first instance of the specified charToFind
+        /// returning the characters read and producing remainder as an out parameter.  Discards
+        /// the specified charToFind returning only values on either side
+        /// </summary>
         public static string ReadUntil(this string toRead, char charToFind)
         {
             return ReadUntil(toRead, charToFind, out string ignore);
@@ -392,6 +397,25 @@ namespace Bam.Net
             return result.ToString();
         }
 
+        public static string ReadUntil(this string toRead, string stringToFind, out string remainder)
+        {
+            StringBuilder readBuffer = new StringBuilder();
+            int pos = 0;
+            remainder = string.Empty;
+            foreach (char c in toRead)
+            {
+                readBuffer.Append(c);
+                if (readBuffer.ToString().EndsWith(stringToFind))
+                {
+                    remainder = toRead.Substring(pos + 1);
+                    break;
+                }
+                ++pos;
+            }
+
+            return readBuffer.ToString().Truncate(stringToFind.Length);
+        }
+        
         public static string RemainderAfter(this string toRead, char leadingChar)
         {
             int pos = 0;

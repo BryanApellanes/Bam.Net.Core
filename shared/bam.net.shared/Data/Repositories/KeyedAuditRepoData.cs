@@ -30,10 +30,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return key;
             }
-            set
-            {
-                key = value;
-            }
+            set => key = value;
         }
 
         readonly object _saveLock = new object();

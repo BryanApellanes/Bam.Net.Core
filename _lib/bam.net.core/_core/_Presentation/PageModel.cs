@@ -48,8 +48,18 @@ namespace Bam.Net.Presentation
         
         public string Name { get; set; }
         public LayoutModel Layout { get; set; }
-        public ViewModel ViewModel { get; set; }
-        
+        private ViewModel _viewModel;
+
+        public ViewModel ViewModel
+        {
+            get => _viewModel;
+            set
+            {
+                _viewModel = value;
+                _viewModel.Application = Application;
+            }
+        }
+
         public IRequest Request { get; set; }
         public AppContentResponder AppContentResponder { get; set; }
     }

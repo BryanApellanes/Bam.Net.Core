@@ -303,11 +303,17 @@ namespace Bam.Net.Server
             return CleanUserPath(result);
         }
 
+        /// <summary>
+        /// Normalizes the specified path and resolves ~ anywhere in the path to the
+        /// users home directory.
         public string CleanUserPath(string path)
         {
             return CleanPath(path, ResolveUserHome);
         }
 
+        /// <summary>
+        /// Normalizes the specified path and resolves ~ anywhere in the path to the
+        /// apps home directory.
         public string CleanAppPath(string path)
         {
             return CleanPath(path, ResolveAppHome);
@@ -315,7 +321,7 @@ namespace Bam.Net.Server
         
         /// <summary>
         /// Normalizes the specified path and resolves ~ anywhere in the path to the
-        /// users home directory.
+        /// result of the specified tildeResolver.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>

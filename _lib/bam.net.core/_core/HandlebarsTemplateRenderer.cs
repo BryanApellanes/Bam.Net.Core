@@ -41,11 +41,6 @@ namespace Bam.Net
         
         public HashSet<HandlebarsDirectory> HandlebarsDirectories { get; set; }
         public HandlebarsEmbeddedResources HandlebarsEmbeddedResources { get; set; }
-
-        public void AddTemplate(string templateName, string source, bool reload = false)
-        {
-            HandlebarsDotNet.Handlebars.RegisterTemplate(templateName, source);
-        }
         
         public void AddDirectory(DirectoryInfo directoryInfo)
         {

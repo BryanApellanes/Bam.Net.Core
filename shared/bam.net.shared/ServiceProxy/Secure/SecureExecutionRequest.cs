@@ -77,7 +77,7 @@ namespace Bam.Net.ServiceProxy.Secure
         }
 
         SecureSession _session;
-        object _sessionSync = new object();
+        readonly object _sessionSync = new object();
         public SecureSession Session
         {
             get

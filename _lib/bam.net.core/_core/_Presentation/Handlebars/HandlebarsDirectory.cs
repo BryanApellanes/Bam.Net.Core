@@ -170,17 +170,22 @@ namespace Bam.Net.Presentation.Handlebars
                     {
                         foreach (FileInfo file in Directory?.GetFiles($"*.{FileExtension}"))
                         {
-                            string shortName = Path.GetFileNameWithoutExtension(file.FullName);
-                            string longName = file.FullName.Truncate($".{FileExtension}".Length);
-                            string content = file.ReadAllText();
-                            Func<object, string> template = HandlebarsDotNet.Handlebars.Compile(content);
-                            Templates.AddMissing(shortName, template);
-                            Templates.AddMissing(longName, template);
+                            AddCompiledTemplateFile(file);
                         }
                     }
                     _loaded = true;
                 }
             }
+        }
+
+        public void AddCompiledTemplateFile(FileInfo file)
+        {
+            string shortName = Path.GetFileNameWithoutExtension(file.FullName);
+            string longName = file.FullName.Truncate($".{FileExtension}".Length);
+            string content = file.ReadAllText();
+            Func<object, string> template = HandlebarsDotNet.Handlebars.Compile(content);
+            Templates.AddMissing(shortName, template);
+            Templates.AddMissing(longName, template);
         }
 
         private void SetDirectory(DirectoryInfo directory)

@@ -46,10 +46,7 @@ namespace Bam.Net.Logging
         [YamlIgnore]
         [JsonIgnore]
         [Exclude]
-        public virtual ILogger[] Subscribers
-        {
-            get { return _subscribers.ToArray(); }
-        }
+        public virtual ILogger[] Subscribers => _subscribers.ToArray();
 
         object _subscriberLock = new object();
 
@@ -61,14 +58,8 @@ namespace Bam.Net.Logging
         [Exclude]
 		public virtual void Subscribe(Loggable loggable)
 		{
-			Subscribers.Each(logger =>
-			{
-				loggable.Subscribe(logger);
-			});
-            loggable.Subscribers.Each(logger =>
-            {
-                Subscribe(logger);
-            });
+			Subscribers.Each(loggable.Subscribe);
+            loggable.Subscribers.Each(Subscribe);
 		}
 
         /// <summary>

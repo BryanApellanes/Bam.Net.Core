@@ -33,15 +33,26 @@ namespace Bam.Net.Presentation.AppRenderers
             }
         }
         
-        public string Path { get; set; }
+        public string FileSystemPath { get; set; }
         /// <summary>
         /// Namespace qualified name of the action provider.  Or AssemblyQualified name to be more
         /// restrictive.
         /// </summary>
         public string ActionProvider { get; set; }
 
-        public string ViewModelId => $"{Path}_{ActionProvider}";
+        public string ViewModelId => $"{FileSystemPath}::{ActionProvider}";
 
+        public string GetShortName()
+        {
+            return Path.GetFileNameWithoutExtension(FileSystemPath);
+        }
+
+        public string GetLongName()
+        {
+            string fileExtension = Path.GetExtension(FileSystemPath);
+            return FileSystemPath.Truncate(fileExtension.Length);
+        }
+        
         public T GetActionProvider<T>(AppConf appConf)
         {
             return (T) GetActionProvider(appConf);
@@ -61,32 +72,38 @@ namespace Bam.Net.Presentation.AppRenderers
 
         public string GetSource()
         {
-            Args.ThrowIfNullOrEmpty(Path, "Path");
+            Args.ThrowIfNullOrEmpty(FileSystemPath, "Path");
             
             if (_fileCaches == null)
             {
                 _fileCaches = new Dictionary<string, TextFileCache>();
             }
 
-            string fileExtension = System.IO.Path.GetExtension(Path).ToLowerInvariant();
+            string fileExtension = System.IO.Path.GetExtension(FileSystemPath).ToLowerInvariant();
             if (!_fileCaches.ContainsKey(fileExtension))
             {
                 _fileCaches.Add(fileExtension, new TextFileCache(fileExtension));
             }
 
-            return _fileCaches[fileExtension].GetText(new FileInfo(Path));
+            return _fileCaches[fileExtension].GetText(new FileInfo(FileSystemPath));
         }
         
         public ViewModel<T> GetViewModel<T>(AppConf appConf)
         {
-            string name = System.IO.Path.GetFileNameWithoutExtension(Path);
+            string name = System.IO.Path.GetFileNameWithoutExtension(FileSystemPath);
             return new ViewModel<T>() {Name = name, ActionProvider = GetActionProvider<T>(appConf)};
         }
 
         public ViewModel GetViewModel(AppConf appConf)
         {
-            string name = System.IO.Path.GetFileNameWithoutExtension(Path);
-            return new ViewModel {Name = name, ActionProvider = GetActionProvider(appConf)};
+            string name = System.IO.Path.GetFileNameWithoutExtension(FileSystemPath);
+            ViewModel result = new ViewModel
+            {
+                Name = name, 
+                ActionProvider = GetActionProvider(appConf), 
+                ViewModelId = ViewModelId
+            };
+            return result;
         }
 
         public virtual ViewModel Load(AppConf appConf)
@@ -112,14 +129,14 @@ namespace Bam.Net.Presentation.AppRenderers
         /// <returns></returns>
         public virtual string ParseActionProviderName(AppConf appConf)
         {
-            XDocument document = XDocument.Load(Path);
+            XDocument document = XDocument.Load(FileSystemPath);
             ActionProvider = document.Element("html").DataAttribute("actionprovider");
             return ActionProvider;
         }
 
         protected virtual Type ResolveActionProviderType(AppConf appConf)
         {
-            if (string.IsNullOrEmpty(Path))
+            if (string.IsNullOrEmpty(FileSystemPath))
             {
                 Args.Throw<InvalidOperationException>("ViewModel path not set");
             }
@@ -131,7 +148,7 @@ namespace Bam.Net.Presentation.AppRenderers
 
             if (string.IsNullOrEmpty(ActionProvider))
             {
-                Args.Throw<InvalidOperationException>("Unable to resolve action provider name from viewmodel: {0}", Path);
+                Args.Throw<InvalidOperationException>("Unable to resolve action provider name from viewmodel: {0}", FileSystemPath);
             }
 
             DirectoryInfo binDir = new DirectoryInfo(System.IO.Path.Combine(appConf.AppRoot.Root, appConf.BinDir));
@@ -151,7 +168,7 @@ namespace Bam.Net.Presentation.AppRenderers
                 }
                 catch (Exception ex)
                 {
-                    appConf?.Logger.Warning("Error resolving action provider type for viewmodel {0}: {1}", Path, ex.Message);
+                    appConf?.Logger.Warning("Error resolving action provider type for viewmodel {0}: {1}", FileSystemPath, ex.Message);
                 }
             }
 
