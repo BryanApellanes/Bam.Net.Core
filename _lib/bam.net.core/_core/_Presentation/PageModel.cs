@@ -36,21 +36,21 @@ namespace Bam.Net.Presentation
         {
             Request = request;
             AppContentResponder = appContentResponder;
-            ApplicationModel = new ApplicationModel(appContentResponder.AppConf);
+            Application = new ApplicationModel(appContentResponder.AppConf);
             string absolutePath = request.Url.AbsolutePath;
             string extension = Path.GetExtension(absolutePath);
             string path = absolutePath.Truncate(extension.Length);
-            LayoutModel = AppContentResponder.GetLayoutModelForPath(path);
+            Layout = AppContentResponder.GetLayoutModelForPath(path);
             ViewModel = new ViewModel();
         }
         
-        public ApplicationModel ApplicationModel { get; set; }
+        public ApplicationModel Application { get; set; }
         
         public string Name { get; set; }
-        public LayoutModel LayoutModel { get; set; }
+        public LayoutModel Layout { get; set; }
         public ViewModel ViewModel { get; set; }
         
-        internal IRequest Request { get; set; }
-        internal AppContentResponder AppContentResponder { get; set; }
+        public IRequest Request { get; set; }
+        public AppContentResponder AppContentResponder { get; set; }
     }
 }

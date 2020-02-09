@@ -12,7 +12,7 @@ namespace Bam.Net.Documentation.CodeAnalysis
 {
     public class CSharpDocumentationSyntaxWalker : CSharpSyntaxWalker
     {
-        static HashSet<SyntaxKind> _commentTypes = new HashSet<SyntaxKind>(new[] {
+        static readonly HashSet<SyntaxKind> _commentTypes = new HashSet<SyntaxKind>(new[] {
                                                                         SyntaxKind.SingleLineCommentTrivia,
                                                                         SyntaxKind.MultiLineCommentTrivia,
                                                                         SyntaxKind.DocumentationCommentExteriorTrivia,

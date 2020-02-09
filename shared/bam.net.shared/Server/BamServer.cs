@@ -393,7 +393,7 @@ namespace Bam.Net.Server
         /// <summary>
         /// Subscribe the specified logger to the events of the
         /// ContentResponder.  Will also subscribe to the DaoResponder
-        /// if EnableDao is true and the ServiceProxyReponder if
+        /// if EnableDao is true and the ServiceProxyResponder if
         /// EnableServiceProxy is true.  Additionally, will subscribe to
         /// any other responders that have been added using AddResponder
         /// </summary>

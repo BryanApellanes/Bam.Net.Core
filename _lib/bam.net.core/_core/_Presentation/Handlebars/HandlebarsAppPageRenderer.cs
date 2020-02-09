@@ -32,7 +32,7 @@ namespace Bam.Net.Presentation.Handlebars
             return new byte[] { };
         }
 
-        protected string GetTemplateName(IRequest request)
+        protected virtual string GetTemplateName(IRequest request)
         {
             RequestInfo requestInfo = GetRequestInfo(request);
             string templateName = string.Empty;

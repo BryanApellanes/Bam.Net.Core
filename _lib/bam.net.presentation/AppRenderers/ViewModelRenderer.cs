@@ -34,7 +34,8 @@ namespace Bam.Net.Presentation.AppRenderers
                 return true;
             }
 
-            string fileName = Path.GetFileName(request.Url.AbsolutePath);
+            string path = request.Url.AbsolutePath.Equals("/") ? DefaultFilePath : request.Url.AbsolutePath; 
+            string fileName = Path.GetFileName(path);
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             string myFileName = $"{fileNameWithoutExtension}{FileExtension}";
             return ContentLocator.Locate(myFileName, out absolutePath, out string[] checkedPaths);
@@ -45,14 +46,31 @@ namespace Bam.Net.Presentation.AppRenderers
             if (FileExists(request, out string absolutePath))
             {
                 FileInfo fileInfo = new FileInfo(absolutePath);
-                ViewModelFile viewModelFile = new ViewModelFile(){Path = fileInfo.FullName};
+                ViewModelFile viewModelFile = new ViewModelFile {Path = fileInfo.FullName};
+                ViewModel viewModel = viewModelFile.Load(AppConf);
+                viewModel.ViewModelId = viewModelFile.ViewModelId;
+                
+                TemplateRenderer.AddTemplate(viewModelFile.ViewModelId, viewModelFile.GetSource());
+                
                 return new PageModel(request, AppContentResponder)
                 {
-                    ViewModel =  viewModelFile.Load(AppConf)
+                    ViewModel =  viewModel
                 };
             }
 
             return base.CreatePageModel(request);
+        }
+
+        protected override string GetTemplateName(IRequest request)
+        {
+            if (FileExists(request, out string absolutePath))
+            {
+                FileInfo fileInfo = new FileInfo(absolutePath);
+                ViewModelFile viewModelFile = new ViewModelFile {Path = fileInfo.FullName};
+                viewModelFile.ParseActionProviderName(AppConf);
+                return viewModelFile.ViewModelId;
+            }
+            return base.GetTemplateName(request);
         }
     }
 }

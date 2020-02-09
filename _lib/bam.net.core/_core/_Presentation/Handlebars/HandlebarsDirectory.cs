@@ -110,14 +110,8 @@ namespace Bam.Net.Presentation.Handlebars
         DirectoryInfo _directory;
         public DirectoryInfo Directory
         {
-            get
-            {
-                return _directory;
-            }
-            set
-            {
-                SetDirectory(value);
-            }
+            get => _directory;
+            set => SetDirectory(value);
         }
         
         public void AddPartialsDirectory(string partialsDirectory)
@@ -138,13 +132,10 @@ namespace Bam.Net.Presentation.Handlebars
         
         public string FileExtension { get; set; }
         public HashSet<DirectoryInfo> PartialsDirectories { get; set; }
-        object _reloadLock = new object();
+        readonly object _reloadLock = new object();
         bool _loaded = false;
 
-        public bool IsLoaded
-        {
-            get { return _loaded; }
-        }
+        public bool IsLoaded => _loaded;
 
         public void Reload()
         {

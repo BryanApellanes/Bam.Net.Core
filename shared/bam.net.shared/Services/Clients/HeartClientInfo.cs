@@ -12,7 +12,7 @@ namespace Bam.Net.Services.Clients
         {
             HeartHostName = "heart.bamapps.net";
             HeartPort = 80;
-            ContentRoot = "/bam/content";
+            ContentRoot = "/opt/bam/content";
         }
         public string HeartHostName { get; set; }
         public int HeartPort { get; set; }

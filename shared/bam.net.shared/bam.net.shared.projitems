@@ -635,6 +635,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppServerConf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\HostProcessInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\IActionProviderResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ITemplateable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ContentNotFoundEventHandler.cs" />
@@ -2028,7 +2029,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamDaoServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\BamServiceProxyServer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Server\BootstrapIcons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ColorScheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ConfFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\ContentEventArgs.cs" />

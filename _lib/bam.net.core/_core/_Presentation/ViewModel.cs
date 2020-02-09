@@ -37,5 +37,7 @@ namespace Bam.Net.Presentation
         {
             ActionProvider?.Invoke(methodName, args);
         }
+        
+        internal string ViewModelId { get; set; }
     }
 }
