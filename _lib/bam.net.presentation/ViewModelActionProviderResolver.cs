@@ -5,8 +5,10 @@ namespace Bam.Net.Presentation
 {
     public class ViewModelActionProviderResolver: IActionProviderResolver
     {
-        public Type ResolveActionProvider(string actionProvider)
+        // TODO: consider encapsulating ParseActionProviderName here
+        public Type ResolveActionProvider(string actionProvider)q
         {
+            // TODO: See ViewModelFile for implementation that should be moved here
             throw new NotImplementedException();
         }
     }
