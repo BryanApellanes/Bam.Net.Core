@@ -11,7 +11,7 @@ namespace Bam.Net.Data
 {
     public class DatabaseConfig
     {
-        Dictionary<RelationalDatabaseTypes, Func<Database>> _databaseTypes;
+        readonly Dictionary<RelationalDatabaseTypes, Func<Database>> _databaseTypes;
 
         public DatabaseConfig()
         {
