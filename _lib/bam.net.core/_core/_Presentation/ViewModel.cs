@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.Server;
 using Bam.Net.Services.Hosts;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Engines;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Presentation
 {
@@ -23,6 +26,11 @@ namespace Bam.Net.Presentation
 
         public ViewModelUrl Url { get; set; }
 
+        [XmlIgnore]
+        [JsonIgnore]
+        [YamlIgnore]
+        public PageModel Page { get; set; }
+        
         public IEnumerable<object> State { get; set; }
 
         public AppContentResponder AppContentResponder { get; internal set; }

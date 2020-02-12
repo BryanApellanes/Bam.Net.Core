@@ -22,8 +22,8 @@ namespace Bam.Net.Automation
         {
             public SftpConfig()
             {
-                RemoteRoot = Path.Combine(BamPaths.BamHome, "files", "in");
-                LocalRoot = Path.Combine(BamPaths.BamHome, "files", "out");
+                RemoteRoot = Path.Combine(BamPaths.Home, "files", "in");
+                LocalRoot = Path.Combine(BamPaths.Home, "files", "out");
             }
             
             public string UserName { get; set; }

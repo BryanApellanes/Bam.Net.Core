@@ -41,8 +41,7 @@ namespace Bam.Net.Data
         public string ServerName { get; set; }
         
         public DatabaseCredentials Credentials { get; set; }
-        
-        
+
         public RelationalDatabaseTypes DatabaseType { get; set; }
         
         public Database GetDatabase()
@@ -55,6 +54,26 @@ namespace Bam.Net.Data
             return (T) GetDatabase();
         }
 
+        /// <summary>
+        /// Load the database configs from ~/.bam/databaseconfigs.yaml
+        /// </summary>
+        /// <returns></returns>
+        public static DatabaseConfig[] LoadProfileConfigs()
+        {
+            string databaseconfigsPath = Path.Combine(BamPaths.Profile, $"{nameof(DatabaseConfig).Pluralize()}.yaml");
+            DatabaseConfig[] result = new DatabaseConfig[]{};
+            if (File.Exists(databaseconfigsPath))
+            {
+                result = LoadConfigs(databaseconfigsPath);
+            }
+            else
+            {
+                result.ToJsonFile(databaseconfigsPath);
+            }
+
+            return result;
+        }
+        
         public static DatabaseConfig[] LoadConfigs(string filePath = null)
         {
             filePath = filePath ?? $"{nameof(DatabaseConfig).Pluralize()}.yaml";

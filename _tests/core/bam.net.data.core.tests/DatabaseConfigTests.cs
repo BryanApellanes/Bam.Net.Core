@@ -11,7 +11,7 @@ namespace Bam.Net.Data.Tests
 {
     public class DatabaseConfigTests: CommandLineTestInterface
     {
-        [ConsoleAction("dynamicQuery", "Run the db config test")]
+        [ConsoleAction("dynamicQuery", "Run the dynamicQuery test")]
         [TestGroup("Data.Dynamic")]
         [UnitTest]
         public void GetDbFromConfig()
@@ -32,7 +32,7 @@ namespace Bam.Net.Data.Tests
             
         }
         
-        [ConsoleAction("loadDbConfigTest", "Run the db config test")]
+        [ConsoleAction("loadDbConfigTest", "Run the loadDbConfigTest test")]
         [TestGroup("Data.Core")]
         [UnitTest]
         public void CanLoadDatabaseConfigs()
@@ -42,7 +42,7 @@ namespace Bam.Net.Data.Tests
             OutLine(configs.ToJson(true));
         }
         
-        [ConsoleAction("dbTest", "Run the db config test")]
+        [ConsoleAction("dbTest", "Run the dbTest test")]
         [UnitTest]
         [TestGroup("Data.Core")]
         public void CanDeserializeDatabaseConfig()

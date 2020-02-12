@@ -13,7 +13,7 @@ namespace Bam.Net
     { 
         static Paths()
         {
-            Root = BamPaths.BamHome;
+            Root = BamPaths.Home;
 
             SystemDrive = Path.Combine(Root, "public"); 
             WindowsDrive = OSInfo.Current == OSNames.Windows ? "/bam/public" : SystemDrive;

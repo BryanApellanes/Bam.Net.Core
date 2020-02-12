@@ -34,6 +34,7 @@ namespace Bam.Net.Presentation
     {
         public PageModel(IRequest request, AppContentResponder appContentResponder)
         {
+            Name = request.Url.LocalPath;
             Request = request;
             AppContentResponder = appContentResponder;
             Application = new ApplicationModel(appContentResponder.AppConf);
@@ -47,9 +48,13 @@ namespace Bam.Net.Presentation
         public ApplicationModel Application { get; set; }
         
         public string Name { get; set; }
-        public LayoutModel Layout { get; set; }
-        private ViewModel _viewModel;
 
+        public string Scripts => Layout?.ScriptTags ?? string.Empty;
+        public string StyleSheets => Layout?.StyleSheetLinkTags ?? string.Empty;
+
+        public LayoutModel Layout { get; set; }
+        
+        private ViewModel _viewModel;
         public ViewModel ViewModel
         {
             get => _viewModel;
@@ -57,9 +62,20 @@ namespace Bam.Net.Presentation
             {
                 _viewModel = value;
                 _viewModel.Application = Application;
+                _viewModel.Page = this;
             }
         }
 
+        /// <summary>
+        /// Returns a dynamically generated object that represents the combination of the PageModel and ViewModel
+        /// in one object instance.
+        /// </summary>
+        /// <returns></returns>
+        public object TemplateData()
+        {
+            return this.CombineToDynamic($"{Name}_{ViewModel.Name}", ViewModel);
+        }
+        
         public IRequest Request { get; set; }
         public AppContentResponder AppContentResponder { get; set; }
     }

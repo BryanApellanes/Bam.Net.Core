@@ -29,7 +29,7 @@ namespace Bam.Net
         {
             get
             {
-                return Path.Combine(BamPaths.ContentPath, "apps", AppName());
+                return Path.Combine(BamPaths.Content, "apps", AppName());
             }
         }
 

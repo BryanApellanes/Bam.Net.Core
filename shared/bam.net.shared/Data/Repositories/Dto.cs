@@ -134,8 +134,8 @@ namespace Bam.Net.Data.Repositories
             return AssemblyFor(nameSpace, nameSpace, typeName, dictionary);
         }
         
-        static Dictionary<string, Assembly> _dtoAssemblies = new Dictionary<string, Assembly>();
-        static object _dtoAssemblyLock = new object();
+        static readonly Dictionary<string, Assembly> _dtoAssemblies = new Dictionary<string, Assembly>();
+        static readonly object _dtoAssemblyLock = new object();
         public static Assembly AssemblyFor(string assemblyName, string nameSpace, string typeName, Dictionary<object, object> dictionary)
         {
             nameSpace = nameSpace ?? DefaultNamespace;

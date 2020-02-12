@@ -113,20 +113,11 @@ namespace Bam.Net.Server.Rest
                 return _deserializerLock.DoubleCheckLock(ref _deserializers, () =>
                 {
                     _deserializers = new Dictionary<string, Func<string, Type, object>>();
-                    _deserializers.Add(".json", (s, t) =>
-                    {
-                        return s.FromJson(t);
-                    });
-                    _deserializers.Add(".xml", (s, t) =>
-                    {
-                        return s.FromXml(t);
-                    });
-                    Func<string, Type, object> yaml = (s, t) =>
-                    {
-                        return s.FromYaml(t);
-                    };
-                    _deserializers.Add(".yml", yaml);
-                    _deserializers.Add(".yaml", yaml);
+                    _deserializers.Add(".json", (s, t) => s.FromJson(t));
+                    _deserializers.Add(".xml", (s, t) => s.FromXml(t));
+                    object Yaml(string s, Type t) => s.FromYaml(t);
+                    _deserializers.Add(".yml", Yaml);
+                    _deserializers.Add(".yaml", Yaml);
                     return _deserializers;
                 });
             }

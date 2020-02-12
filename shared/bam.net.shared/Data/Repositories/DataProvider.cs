@@ -86,7 +86,7 @@ namespace Bam.Net.Data.Repositories
         }
 
         static DataProvider _fromConfig;
-        static object _fromConfigLock = new object();
+        static readonly object _fromConfigLock = new object();
         /// <summary>
         /// Gets the current instance configured for the current ProcessMode.
         /// </summary>

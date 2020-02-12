@@ -3009,10 +3009,10 @@ namespace Bam.Net
             }
         }
 
-        static Dictionary<string, object> fileAccessLocks = new Dictionary<string, object>();
+        static readonly Dictionary<string, object> fileAccessLocks = new Dictionary<string, object>();
 
         /// <summary>
-        /// Returns the content of the file refferred to by the current
+        /// Returns the content of the file referred to by the current
         /// string instance.
         /// </summary>
         /// <param name="filePath"></param>
@@ -4127,7 +4127,54 @@ namespace Bam.Net
             nameSpace = nameSpace ?? Dto.DefaultNamespace;
             return Dto.InstanceFor(nameSpace, typeName, dictionary);
         }
+
+        public static dynamic CombineToDynamic(this object instance, params object[] combineWith)
+        {
+            StringBuilder typeName = new StringBuilder();
+            typeName.Append(instance.GetType().Name);
+            combineWith.Each(o => typeName.Append($"_{o.GetType().Name}"));
+            return CombineToDynamic(instance, typeName, combineWith);
+        }
         
+        public static dynamic CombineToDynamic(this object instance, string typeName, params object[] combineWith)
+        {
+            return CombineToDynamic(instance, typeName, null, combineWith);
+        }
+        
+        public static dynamic CombineToDynamic(this object instance, string typeName, string nameSpace, params object[] combineWith)
+        {
+            Dictionary<object, object> combined = new Dictionary<object, object>();
+            instance.ToKeyValuePairs().Each(kvp=> combined.Add(kvp.Key, kvp.Value));
+            foreach (object obj in combineWith)
+            {
+                foreach (KeyValuePair kvp in obj.ToKeyValuePairs())
+                {
+                    if (combined.ContainsKey(kvp.Key))
+                    {
+                        Log.Warn("Duplicate keys found combining instances into dynamic instance for specified dynamic type name '{0}'", typeName);
+                        combined[kvp.Key] = kvp.Value;
+                    }
+                    else
+                    {
+                        combined.Add(kvp.Key,kvp.Value);
+                    }
+                }
+            }
+
+            return combined.ToDynamic(typeName, nameSpace);
+        }
+
+        private static Dictionary<object, object> ConvertKeys(object instance)
+        {
+            Dictionary<string, object> instanceDictionary = instance.ToDictionary();
+            Dictionary<object, object> converted = new Dictionary<object, object>();
+            instanceDictionary.Keys.Each(k =>
+            {
+                converted.Add(k, instanceDictionary[k]);
+            });
+            return converted;
+        }
+
         public static IEnumerable<Dictionary<object, object>> ToDictionaries(this DataTable table)
         {
             foreach (DataRow row in table.Rows)

@@ -17,7 +17,7 @@ namespace Bam.Net
                 Set(BAM_HOME, value);
             }
 
-            return Get(BAM_HOME).Or(BamPaths.BamHome);
+            return Get(BAM_HOME).Or(BamPaths.Home);
         }
 
         public static void SetApplicationName(string applicationName)

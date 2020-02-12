@@ -34,7 +34,7 @@ namespace Bam.Net.Presentation.AppRenderers
 
             if (!string.IsNullOrEmpty(templateName) && Templates.ContainsKey(templateName))
             {
-                return Templates[templateName](pageModel).ToBytes();
+                return Templates[templateName](pageModel.TemplateData()).ToBytes();
             }
             
             return new byte[] { };
@@ -64,7 +64,7 @@ namespace Bam.Net.Presentation.AppRenderers
             if (FileExists(request, out string absolutePath))
             {
                 FileInfo fileInfo = new FileInfo(absolutePath);
-                ViewModelFile viewModelFile = new ViewModelFile {FileSystemPath = fileInfo.FullName};
+                ViewModelTemplate viewModelFile = new ViewModelTemplate {FileSystemPath = fileInfo.FullName};
                 string relativeFilePath = $"{fileInfo.FullName.TruncateFront(AppRoot.Root.Length)}";
                 ViewModel viewModel = viewModelFile.Load(AppConf);
                 
@@ -81,7 +81,7 @@ namespace Bam.Net.Presentation.AppRenderers
             return base.CreatePageModel(request);
         }
         
-        public void AddCompiledTemplateFile(string templateName, ViewModelFile file)
+        public void AddCompiledTemplateFile(string templateName, ViewModelTemplate file)
         {
             string content = file.GetSource();
             Func<object, string> template = HandlebarsDotNet.Handlebars.Compile(content);
@@ -98,7 +98,7 @@ namespace Bam.Net.Presentation.AppRenderers
             if (FileExists(request, out string absolutePath))
             {
                 FileInfo fileInfo = new FileInfo(absolutePath);
-                ViewModelFile viewModelFile = new ViewModelFile
+                ViewModelTemplate viewModelFile = new ViewModelTemplate
                 {
                     FileSystemPath = fileInfo.FullName
                 };

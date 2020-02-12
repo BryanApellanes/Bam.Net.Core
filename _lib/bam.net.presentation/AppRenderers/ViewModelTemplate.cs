@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Bam.Net.Presentation.AppRenderers
 {
-    public class ViewModelFile
+    public class ViewModelTemplate
     {
         private static Dictionary<string, TextFileCache> _fileCaches;
         private static Dictionary<string, Type> _actionProviderTypes;
         private static Dictionary<string, object> _actionProviders;
         private static Dictionary<string, ViewModel> _viewModels;
 
-        public ViewModelFile()
+        public ViewModelTemplate()
         {    if (_actionProviders == null)
             {
                 _actionProviders = new Dictionary<string, object>();

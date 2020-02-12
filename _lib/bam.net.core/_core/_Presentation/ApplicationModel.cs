@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Configuration;
 using Bam.Net.CoreServices;
+using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Server;
 
@@ -46,6 +47,20 @@ namespace Bam.Net.Presentation
         public AppConf AppConf { get; set; }
         public string ApplicationNameSpace { get; set; }
         public string ApplicationName { get; set; }
+
+        private Database[] _databases;
+        private readonly object _databasesLock = new object();
+        public Database[] Databases
+        {
+            get
+            {
+                return _databasesLock.DoubleCheckLock(ref _databases,
+                    () => Path.Combine(DataDirectory.FullName, $"{nameof(DatabaseConfig).Pluralize()}.yaml")
+                        .FromYamlFile<DatabaseConfig[]>().Select(dc => dc.GetDatabase()).ToArray());
+            }
+        }
+        
+        public string Home => AppConf.AppRoot.SpecifiedPath;
 
         public ILog Log { get; set; }
 
