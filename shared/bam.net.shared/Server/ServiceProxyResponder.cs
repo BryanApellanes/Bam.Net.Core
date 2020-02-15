@@ -348,13 +348,7 @@ namespace Bam.Net.Server
         /// <summary>
         /// List of service class names
         /// </summary>
-        public string[] CommonServices
-        {
-            get
-            {
-                return _commonServiceProvider.ClassNames;
-            }
-        }
+        public string[] CommonServices => _commonServiceProvider.ClassNames;
 
         public string[] AppServices(string appName)
         {
@@ -760,7 +754,7 @@ namespace Bam.Net.Server
             return results.ToArray();
         }
 
-        Dictionary<string, IClientProxyGenerator> _clientProxyGenerators;
+        readonly Dictionary<string, IClientProxyGenerator> _clientProxyGenerators;
         private bool SendProxyCode(IHttpContext context)
         {
             bool result = false;

@@ -85,10 +85,17 @@ namespace Bam.Net.Caching.File
                 }
                 List<Task> tasks = new List<Task>
                 {
-                    Task.Run(GetText),
                     Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5)),
-                    Task.Run(GetZippedText),
-                    Task.Run(GetZippedBytes)
+                    Task.Run(()=>
+                    {
+                        GetText();
+                        GetZippedText();
+                    }),
+                    Task.Run(() =>
+                    {
+                        GetBytes();
+                        GetZippedBytes();
+                    })
                 };
                 Task.WaitAll(tasks.ToArray());
                 return true;
