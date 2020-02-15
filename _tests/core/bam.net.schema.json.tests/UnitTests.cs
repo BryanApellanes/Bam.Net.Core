@@ -24,7 +24,7 @@ namespace Bam.Net.Schema.Json.Tests
             UnixPath path = new UnixPath("~/src");
             path.Resolve().StartsWith("~").IsFalse();
             path.Path.StartsWith("~/").IsTrue();
-            path.Resolve().StartsWith(BamPaths.UserHome);
+            path.Resolve().StartsWith(BamHome.UserHome);
             OutLineFormat("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
         }
         

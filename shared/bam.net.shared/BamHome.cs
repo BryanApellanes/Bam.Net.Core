@@ -6,9 +6,12 @@ using System.Text;
 
 namespace Bam.Net
 {
-    public class BamHome // TODO: refactor this into BamHome.[home paths] and BamProfile.[profile paths]
+    /// <summary>
+    /// Paths rooted in the root of the bam installation. (/opt/bam on *nix, c:/bam on windows)
+    /// </summary>
+    public static class BamHome // TODO: refactor this into BamHome.[home paths] and BamProfile.[profile paths]
     {
-        public static string Path => System.IO.Path.Combine(HomeSegments);
+        public static string Path => System.IO.Path.Combine(PathSegments);
 
         /// <summary>
         /// The root of the bam installation, the same as BamHome
@@ -20,7 +23,7 @@ namespace Bam.Net
         /// <summary>
         /// The path segments for BamHome
         /// </summary>
-        public static string[] HomeSegments
+        public static string[] PathSegments
         {
             get
             {
@@ -35,51 +38,40 @@ namespace Bam.Net
             }
         }
 
-        public static string Profile => System.IO.Path.Combine(UserHome, ".bam");
+        public static string Profile => BamProfile.Path;
         
-        public static string UserHome
-        {
-            get
-            {
-                if (OSInfo.Current == OSNames.Windows)
-                {
-                    return Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-                }
-                else
-                {
-                    return Environment.GetEnvironmentVariable("HOME");
-                }
-            }
-        }
+        public static string UserHome => BamProfile.UserHome;
 
         public static string SystemRuntime => System.IO.Path.Combine(System.IO.Path.Combine(ReferenceRuntimeSegments), "System.Runtime.dll");
 
-        public static string[] ReferenceRuntimeSegments
-        {
-            get
+        public static string[] ReferenceRuntimeSegments =>
+            new List<string>
             {
-                return new List<string>
-                {
-                    Path, "nuget", "global", $"runtime.{OSInfo.ReferenceRuntime}.microsoft.netcore.app",
-                    OSInfo.CoreVersion, "runtimes", OSInfo.ReferenceRuntime, "lib", OSInfo.DefaultLibSubfolder,
-                }.ToArray();
-            }
-        }
+                Path, "nuget", "global", $"runtime.{OSInfo.ReferenceRuntime}.microsoft.netcore.app",
+                OSInfo.CoreVersion, "runtimes", OSInfo.ReferenceRuntime, "lib", OSInfo.DefaultLibSubfolder,
+            }.ToArray();
 
         public static string Build => System.IO.Path.Combine(Path, "build");
 
         public static string PublicPath => System.IO.Path.Combine(Path, "public");
 
-        public static string ToolkitPath => System.IO.Path.Combine(ToolkitSegments);
+        /// <summary>
+        /// The default path where the bam toolkit should be found.  Same as BamProfile.ToolkitPath.
+        /// </summary>
+        public static string ToolkitPath => BamProfile.ToolkitPath;
 
-        public static string[] ToolkitSegments => new List<string>() {UserHome, ".bam", "toolkit"}.ToArray();
+        /// <summary>
+        /// Path segments representing the path where the bam toolkit should be found.  Same as BamProfile.ToolkitSegments
+        /// </summary>
+        public static string[] ToolkitSegments => BamProfile.ToolkitSegments;
 
         public static string CurrentRuntimeToolkitPath => System.IO.Path.Combine(CurrentRuntimeToolkitSegments);
+        
         public static string[] CurrentRuntimeToolkitSegments => new List<string>(ToolkitSegments) {OSInfo.CurrentRuntime}.ToArray();
         
-        public static string NugetOutputPath => System.IO.Path.Combine(NugetOutputSegments);
+        public static string NugetOutputPath => BamProfile.NugetOutputPath;
         
-        public static string[] NugetOutputSegments => new List<string>() {UserHome, ".bam", "nupkg"}.ToArray();
+        public static string[] NugetOutputSegments => BamProfile.NugetOutputSegments;
         
         /// <summary>
         /// The path where third party tools are found, including sysinternals and opencover.
@@ -93,7 +85,7 @@ namespace Bam.Net
 
         public static string Content => System.IO.Path.Combine(ContentSegments);
 
-        public static string[] ContentSegments => new List<string>(HomeSegments) {"content"}.ToArray();
+        public static string[] ContentSegments => new List<string>(PathSegments) {"content"}.ToArray();
 
         public static string Apps => System.IO.Path.Combine(AppsSegments);
 
@@ -101,14 +93,16 @@ namespace Bam.Net
 
         public static string SvcScriptsSrcPath => System.IO.Path.Combine(SvcScriptsSrcSegments);
 
-        public static string[] SvcScriptsSrcSegments => new List<string>(HomeSegments) {"svc", "scripts"}.ToArray();
+        public static string[] SvcScriptsSrcSegments => new List<string>(PathSegments) {"svc", "scripts"}.ToArray();
 
-        public static string Conf => System.IO.Path.Combine(ConfSegments);
+        public static string Config => System.IO.Path.Combine(ConfigSegments);
 
-        public static string[] ConfSegments => new List<string>(HomeSegments) {"conf"}.ToArray();
+        public static string[] ConfigSegments => new List<string>(PathSegments) {"config"}.ToArray();
 
         public static string DataPath => System.IO.Path.Combine(DataSegments);
 
-        public static string[] DataSegments => new List<string>(HomeSegments) {"data"}.ToArray();
+        public static string[] DataSegments => new List<string>(PathSegments) {"data"}.ToArray();
+        public static string Recipes => System.IO.Path.Combine(RecipeSegments);
+        public static string[] RecipeSegments => new List<string>(PathSegments) {"recipes"}.ToArray();
     }
 }

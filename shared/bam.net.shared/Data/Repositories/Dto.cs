@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 
 namespace Bam.Net.Data.Repositories
 {

@@ -397,8 +397,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Automation\ZipFolderWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundThreadQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundThreadQueueEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BamDir.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BamEnvironmentVariables.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BamHome.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BamProfile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BamSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Breve\BreveFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Breve\BreveGenerator.cs" />

@@ -280,8 +280,8 @@ namespace Bam.Net
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
             string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
             string path = !appName.StartsWith("UNKNOWN")
-                ? Path.Combine(BamHome.Conf, appName, $"{appName}.appsettings.yaml")
-                : Path.Combine(BamHome.Conf, assemblyName, $"{assemblyName}.appsettings.yaml");
+                ? Path.Combine(BamHome.Config, appName, $"{appName}.appsettings.yaml")
+                : Path.Combine(BamHome.Config, assemblyName, $"{assemblyName}.appsettings.yaml");
             Log.Trace("config file path = {0}", path);
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
