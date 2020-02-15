@@ -42,9 +42,10 @@ namespace Bam.Net.Bake
                 Recipe recipe = new Recipe
                 {
                     ProjectRoot = directoryPath,
-                    ProjectFilePaths = projectFilePaths.ToArray()
+                    ProjectFilePaths = projectFilePaths.ToArray(),
+                    BuildConfig = TryGetBuildConfig()
                 };
-
+                
                 string recipeFile = Arguments.Contains("outputRecipe") ? Arguments["outputRecipe"] : DefaultRecipeFile;
                 FileInfo file = ReadRecipe(recipeFile, recipe);
 
@@ -56,6 +57,26 @@ namespace Bam.Net.Bake
                 WriteRecipe(recipe, file);
                 return true;
             }
+        }
+        
+        private BuildConfig TryGetBuildConfig()
+        {
+            try
+            {
+                if (Arguments.Contains("buildConfig"))
+                {
+                    if (Arguments["buildConfig"].TryToEnum<BuildConfig>(out BuildConfig config))
+                    {
+                        return config;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error($"Error occurred getting BuildConfig: {ex.Message}", ex);
+            }
+                
+            return BuildConfig.Debug;
         }
     }
 }
