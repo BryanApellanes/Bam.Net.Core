@@ -16,8 +16,7 @@ namespace Bam.Net.Schema.Json.Tests
         private UnixPath RootData = new UnixPath("~/_data/JsonSchema/");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
-        
-        
+
         [UnitTest]
         public void CanResolveUnixPath()
         {

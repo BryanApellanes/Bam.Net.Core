@@ -79,19 +79,23 @@ namespace Bam.Net.Caching.File
         {
             try
             {
-                if (File.Exists)
+                if (!File.Exists)
                 {
-                    logger = logger ?? Log.Default;
-                    await Task.Run(GetText);
-                    await Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5));
-                    await Task.Run(GetZippedText);
-                    await Task.Run(GetZippedBytes);
-                    return true;
+                    return false;
                 }
-                return false;
+                List<Task> tasks = new List<Task>
+                {
+                    Task.Run(GetText),
+                    Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5)),
+                    Task.Run(GetZippedText),
+                    Task.Run(GetZippedBytes)
+                };
+                Task.WaitAll(tasks.ToArray());
+                return true;
             }
             catch (Exception ex)
             {
+                logger = logger ?? Log.Default;
                 logger.AddEntry("Error loading file {0}: {1}", ex, File?.FullName ?? "<null>", ex.Message);
                 return false;
             }

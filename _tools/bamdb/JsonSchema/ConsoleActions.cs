@@ -14,7 +14,7 @@ namespace Bam.Net.Application.Json
         [ConsoleAction]
         public void LoadSchemaTest()
         {
-
+            // see bam.net/_tests/core/bam.net.schema.json.tests
         }
 
     }

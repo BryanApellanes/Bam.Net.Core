@@ -18,7 +18,7 @@ namespace Bam.Net.Server
     {
         private bool SendMethodForm(IHttpContext context)
         {
-            Logger.AddEntry("{0} method is not supported by this framework", nameof(SendMethodForm));
+            Logger.AddEntry("{0} method is not supported by this platform", nameof(SendMethodForm));
             return false;
         }
     }
