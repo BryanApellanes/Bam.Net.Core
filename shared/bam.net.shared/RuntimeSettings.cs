@@ -55,7 +55,7 @@ namespace Bam.Net
         
         public static string GetBamAssemblyPath()
         {
-            return typeof(BamPaths).Assembly.GetFilePath();
+            return typeof(BamHome).Assembly.GetFilePath();
         }
 
         public static string GetMsCoreLibPath()

@@ -20,12 +20,9 @@ namespace Bam.Net
         {
             get { return _defaultLock.DoubleCheckLock(ref _defaultTypeResolver, () => new TypeResolver()); }
         }
-        
-        List<Assembly> _assemblies;
-        public Assembly[] Assemblies
-        {
-            get { return _assemblies.ToArray(); }
-        }
+
+        readonly List<Assembly> _assemblies;
+        public Assembly[] Assemblies => _assemblies.ToArray();
 
         public bool ScanAssemblies { get; set; }
 

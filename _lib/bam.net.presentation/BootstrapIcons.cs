@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net;
 
-namespace Bam.Net.Server
+namespace Bam.Net.Presentation
 {
     internal class BootStrapIcons
     {
 
         static string[] _all;
-        static object _allLock = new object();
+        static readonly object _allLock = new object();
         public static string[] All
         {
             get
@@ -313,5 +313,4 @@ namespace Bam.Net.Server
         Briefcase,
         Fullscreen
     }
-
 }

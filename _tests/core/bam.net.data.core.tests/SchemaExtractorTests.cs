@@ -42,7 +42,7 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='{0}';";
         public void ShowConfigPath()
         {
             OutLine(Config.Current.File.FullName);
-            Pause();
+            //Pause();
         }
     }
 }

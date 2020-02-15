@@ -14,7 +14,7 @@ namespace Bam.Net.Data.Repositories
     {
         public DataProvider()
         {
-            DataRootDirectory = BamPaths.DataPath;
+            DataRootDirectory = BamHome.DataPath;
             AppDataDirectory = "AppData";
             UsersDirectory = "Users";
             SysDataDirectory = "SysData";
@@ -57,6 +57,10 @@ namespace Bam.Net.Data.Repositories
 
         public ProcessMode ProcessMode { get; set; }
 
+        /// <summary>
+        /// The root directory used to store any data files provided by this component.
+        /// The default is BamHome.DataPath.
+        /// </summary>
         public string DataRootDirectory { get; set; }
         public string AppDataDirectory { get; set; }
         public string UsersDirectory { get; set; }
@@ -70,7 +74,7 @@ namespace Bam.Net.Data.Repositories
         public string AssemblyDirectory { get; set; }
 
         static DataProvider _default;
-        static object _defaultLock = new object();
+        static readonly object _defaultLock = new object();
         /// <summary>
         /// Gets the default instance.
         /// </summary>
@@ -86,7 +90,7 @@ namespace Bam.Net.Data.Repositories
         }
 
         static DataProvider _fromConfig;
-        static object _fromConfigLock = new object();
+        static readonly object _fromConfigLock = new object();
         /// <summary>
         /// Gets the current instance configured for the current ProcessMode.
         /// </summary>
@@ -119,6 +123,11 @@ namespace Bam.Net.Data.Repositories
             SetRuntimeAppDataDirectory(DefaultConfigurationApplicationNameProvider.Instance);
         }
 
+        /// <summary>
+        /// Sets RuntimeSettings.ProcessDataFolder to a location appropriate to the application name provided by the
+        /// specified IApplicationNameProvider.
+        /// </summary>
+        /// <param name="appNameProvider"></param>
         public void SetRuntimeAppDataDirectory(IApplicationNameProvider appNameProvider)
         {
             RuntimeSettings.ProcessDataFolder = GetAppDataDirectory(appNameProvider).FullName;

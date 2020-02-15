@@ -19,7 +19,7 @@ using Bam.Net.Configuration;
 
 namespace Bam.Net.Data.Schema
 {
-    [Proxy("dbm")]
+    [Proxy("schemaManager")]
     public partial class SchemaManager : IHasSchemaTempPathProvider
     {
         public SchemaManager(bool autoSave = true)
@@ -46,17 +46,17 @@ namespace Bam.Net.Data.Schema
             this.ManageSchema(schema);
         }
 
-        public Func<SchemaDefinition, string> SchemaTempPathProvider { get; set; }  //TODO: wire this up
+        public Func<SchemaDefinition, string> SchemaTempPathProvider { get; set; }  
 
         public bool AutoSave { get; set; }
 
         SchemaDefinition _currentSchema;
-        object _currentSchemaLock = new object();
+        readonly object _currentSchemaLock = new object();
         public SchemaDefinition CurrentSchema
         {
             get
             {
-                return _currentSchemaLock.DoubleCheckLock<SchemaDefinition>(ref _currentSchema, () => LoadSchema(string.Format("Default_{0}", DateTime.Now.ToJulianDate().ToString())));
+                return _currentSchemaLock.DoubleCheckLock<SchemaDefinition>(ref _currentSchema, () => LoadSchema($"Default_{DateTime.Now.ToJulianDate().ToString()}"));
             }
 
             set

@@ -51,8 +51,7 @@ namespace Bam.Net.Services.DataReplication.Data
         {
             get
             {
-                return _valueConverterLock.DoubleCheckLock<Func<object, string>>(ref _valueConverter,
-                    () => { return (o) => o?.ToString() ?? "NULL"; });
+                return _valueConverterLock.DoubleCheckLock<Func<object, string>>(ref _valueConverter, () => { return (o) => o?.ToString() ?? "NULL"; });
             }
             set => _valueConverter = value;
         }

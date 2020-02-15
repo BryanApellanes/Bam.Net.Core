@@ -814,24 +814,6 @@ namespace Bam.Net.Server.Tests
             return logger;
         }
 
-        private static DirectoryInfo CreateTestRoot(string directoryName = "")
-        {
-            if (string.IsNullOrEmpty(directoryName))
-            {
-                directoryName = "./".RandomLetters(6);
-            }
-            else if (!directoryName.StartsWith("./"))
-            {
-                directoryName = Path.Combine("./", directoryName);
-            }
-            DirectoryInfo test = new DirectoryInfo(directoryName);
-            if (!test.Exists)
-            {
-                test.Create();
-            }
-            return test;
-        }
-
         [UnitTest]
         public void ContentRootOfBamServerShouldHaveDefault()
         {

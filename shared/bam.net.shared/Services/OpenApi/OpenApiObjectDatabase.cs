@@ -10,7 +10,7 @@ namespace Bam.Net.Services.OpenApi
 {
     public class OpenApiObjectDatabase: SQLiteDatabase
     {
-        public OpenApiObjectDatabase(): base(Path.Combine(BamPaths.DataPath, "OpenApi"), "OpenApi")
+        public OpenApiObjectDatabase(): base(Path.Combine(BamHome.DataPath, "OpenApi"), "OpenApi")
         {
         }
     }

@@ -91,7 +91,7 @@ namespace Bam.Net.Application
 
         public static DaemonProcess ForDefaultServerConf()
         {
-            return AppServerConf.Default.ToDaemonProcess(Path.Combine(BamPaths.CurrentRuntimeToolkitPath, "bamweb"));
+            return AppServerConf.Default.ToDaemonProcess(Path.Combine(BamHome.CurrentRuntimeToolkitPath, "bamweb"));
         }
         
         public static DaemonProcess[] ForExternallyServedApps(BamConf bamConf)

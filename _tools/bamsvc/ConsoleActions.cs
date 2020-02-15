@@ -23,21 +23,21 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultContentRoot = BamPaths.ContentPath;
-        static string defaultRpcScriptsSrcPath = BamPaths.RpcScriptsSrcPath;
+        static string defaultContentRoot = BamHome.Content;
+        static string defaultSvcScriptsSrcPath = BamHome.SvcScriptsSrcPath;
 
         static BamSvcServer _bamSvcServer;
         
-        [ConsoleAction("startBamRpcServer", "Start the bam rpc server")]
-        public void StartBamRpcServerAndPause()
+        [ConsoleAction("startBamSvcServer", "Start the BamSvc server")]
+        public void StartBamSvcServerAndPause()
         {
             ConsoleLogger logger = GetLogger();
             StartBamRpcServer(logger);
             Pause("BamRpc is running");
         }
 
-        [ConsoleAction("killBamRpcServer", "Kill the bam rpc server")]
-        public void StopBamRpcServer()
+        [ConsoleAction("killBamSvcServer", "Kill the BamSvc server")]
+        public void StopBamSvcServer()
         {
             if (_bamSvcServer != null)
             {
@@ -50,7 +50,7 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("serve", "Start the BamRpc server serving a specific service class")]
+        [ConsoleAction("serve", "Start the BamSvc server serving a specific service class")]
         public void Serve()
         {
             try
@@ -60,7 +60,7 @@ namespace Bam.Net.Application
                 Type serviceType = GetServiceType(serviceClassName, out Assembly assembly);
                 if(serviceType == null)
                 {
-                    throw new InvalidOperationException(string.Format("The type {0} was not found in the assembly {1}", serviceClassName, assembly.GetFilePath()));
+                    throw new InvalidOperationException($"The type {serviceClassName} was not found in the assembly {assembly.GetFilePath()}");
                 }
                 HostPrefix[] prefixes = ServiceConfig.GetConfiguredHostPrefixes();
                 if (serviceType.HasCustomAttributeOfType(out ServiceSubdomainAttribute attr))
@@ -83,7 +83,7 @@ namespace Bam.Net.Application
             }
         }
 
-        [ConsoleAction("registries", "Start the bam rpc server serving the registries of the specified names")]
+        [ConsoleAction("registries", "Start the BamSvc server serving the registries of the specified names")]
         public void ServeRegistries()
         {
             ConsoleLogger logger = GetLogger();
@@ -91,7 +91,7 @@ namespace Bam.Net.Application
             ServeRegistries(logger, registries);
         }
         
-        [ConsoleAction("app", "Start the gloo server serving the registry for the current application (determined by the default configuration file ApplicationName value)")]
+        [ConsoleAction("app", "Start the svc server serving the registry for the current application (determined by the default configuration file ApplicationName value)")]
         public void ServeApplicationRegistry()
         {
             ConsoleLogger logger = GetLogger();
@@ -176,11 +176,11 @@ namespace Bam.Net.Application
             OutLineFormat("Wrote file {0}", filePath);
         }
 
-        [ConsoleAction("csBamRpc", "Start the BamRpc server serving the compiled results of the specified csBamRpc files")]
-        public void ServeCsGloo()
+        [ConsoleAction("csBamSvc", "Start the BamSvc server serving the compiled results of the specified csBamRpc files")]
+        public void ServeCsService()
         {
-            string csglooDirectoryPath = GetArgument("BamRpcSrc", $"Enter the path to the CsGloo source directory (default: {defaultRpcScriptsSrcPath})");
-            Assembly bamRpcAssembly = CompileBamRpcSource(csglooDirectoryPath, "csBamRpc");
+            string csglooDirectoryPath = GetArgument("BamRpcSrc", $"Enter the path to the BamSvc source directory (default: {defaultSvcScriptsSrcPath})");
+            Assembly bamRpcAssembly = CompileBamSvcSource(csglooDirectoryPath, "csBamRpc");
 
             string contentRoot = GetArgument("ContentRoot", $"Enter the path to the content root (default: {defaultContentRoot} ");
 
@@ -190,12 +190,12 @@ namespace Bam.Net.Application
             Pause($"BamRpc server is serving cs types: {string.Join(", ", glooTypes.Select(t => t.Name).ToArray())}");
         }
 
-        public static Assembly CompileBamRpcSource(string csglooDirectoryPath, string extension)
+        public static Assembly CompileBamSvcSource(string bamSvcDirectoryPath, string extension)
         {
-            string binPath = Path.Combine(BamPaths.ToolkitPath, "BamRpc_bin");
-            DirectoryInfo bamRpcSrcDirectory = new DirectoryInfo(csglooDirectoryPath.Or(defaultRpcScriptsSrcPath)).EnsureExists();
-            DirectoryInfo bamRpcBnDirectory = new DirectoryInfo(binPath).EnsureExists();
-            FileInfo[] files = bamRpcSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
+            string binPath = Path.Combine(BamHome.ToolkitPath, "BamSvc_bin");
+            DirectoryInfo bamSvcSrcDirectory = new DirectoryInfo(bamSvcDirectoryPath.Or(defaultSvcScriptsSrcPath)).EnsureExists();
+            DirectoryInfo bamSvcBnDirectory = new DirectoryInfo(binPath).EnsureExists();
+            FileInfo[] files = bamSvcSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
             StringBuilder src = new StringBuilder();
             foreach (FileInfo file in files)
             {
@@ -203,25 +203,25 @@ namespace Bam.Net.Application
             }
             string hash = src.ToString().Sha1();
             string assemblyName = $"{hash}.dll";
-            Assembly bamRpcAssembly = null;
-            string csTvgAssemblyBinPath = Path.Combine(bamRpcBnDirectory.FullName, assemblyName);
-            if (!File.Exists(csTvgAssemblyBinPath))
+            Assembly bamSvcAssembly = null;
+            string svcAssemblyBinPath = Path.Combine(bamSvcBnDirectory.FullName, assemblyName);
+            if (!File.Exists(svcAssemblyBinPath))
             {
-                bamRpcAssembly = files.ToAssembly(assemblyName);
-                FileInfo assemblyFile = bamRpcAssembly.GetFileInfo();
-                FileInfo targetPath = new FileInfo(csTvgAssemblyBinPath);
+                bamSvcAssembly = files.ToAssembly(assemblyName);
+                FileInfo assemblyFile = bamSvcAssembly.GetFileInfo();
+                FileInfo targetPath = new FileInfo(svcAssemblyBinPath);
                 if (!targetPath.Directory.Exists)
                 {
                     targetPath.Directory.Create();
                 }
-                File.Copy(assemblyFile.FullName, csTvgAssemblyBinPath);
+                File.Copy(assemblyFile.FullName, svcAssemblyBinPath);
             }
             else
             {
-                bamRpcAssembly = Assembly.LoadFile(csTvgAssemblyBinPath);
+                bamSvcAssembly = Assembly.LoadFile(svcAssemblyBinPath);
             }
 
-            return bamRpcAssembly;
+            return bamSvcAssembly;
         }
 
         private static void ServeRegistries(ILogger logger, string registries)

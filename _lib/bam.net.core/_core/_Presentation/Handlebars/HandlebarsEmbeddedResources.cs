@@ -24,11 +24,8 @@ namespace Bam.Net.Presentation.Handlebars
 
         readonly object _reloadLock = new object();
         bool _loaded = false;
-        public bool IsLoaded
-        {
-            get { return _loaded; }
-        }
-        
+        public bool IsLoaded => _loaded;
+
         public string Render(string templateName, object data)
         {
             if (!_loaded)

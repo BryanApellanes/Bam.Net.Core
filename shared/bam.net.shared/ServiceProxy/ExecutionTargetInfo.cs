@@ -26,7 +26,6 @@ namespace Bam.Net.ServiceProxy
             while (split.Count > 0)
             {
                 string currentChunk = split.Dequeue();
-                string upperred = currentChunk.ToUpperInvariant();
 
                 if (string.IsNullOrEmpty(result.ClassName))
                 {

@@ -17,7 +17,7 @@ namespace Bam.Net.Caching.File
 	/// </summary>
 	public abstract class FileCache: IFileCache
 	{
-        static object _lock = new object();
+        static readonly object _lock = new object();
         static ConcurrentDictionary<string, CachedFile> _cachedFiles;
         static ConcurrentDictionary<string, string> _hashes;
 
@@ -104,14 +104,17 @@ namespace Bam.Net.Caching.File
         {
             if (!_cachedFiles.ContainsKey(file.FullName))
             {
-                Load(file);
+                Task.Run(() => Load(file));
                 return false;
             }
 
-            if (HashChanged(file))
+            Task.Run(() =>
             {
-                Reload(file);
-            }
+                if (HashChanged(file))
+                {
+                    Reload(file);
+                }
+            });
             
             return true;
         }

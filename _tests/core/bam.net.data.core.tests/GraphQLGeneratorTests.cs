@@ -15,7 +15,7 @@ namespace Bam.Net.Data.Tests
             GraphQLTypeGenerator generator = new GraphQLTypeGenerator(new GraphQLGenerationConfig()
             {
                 SchemaName = "ApplicationRegistration",
-                TypeAssembly = typeof(BamPaths).Assembly.GetFilePath(),
+                TypeAssembly = typeof(BamHome).Assembly.GetFilePath(),
                 FromNameSpace = "Bam.Net.CoreServices.ApplicationRegistration.Data",
                 ToNameSpace = "Bam.Net.CoreServices.ApplicationRegistration.Data.GraphQL",
                 WriteSourceTo = "./.bam/_gen/graphqlTest"

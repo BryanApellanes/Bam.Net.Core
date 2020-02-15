@@ -136,6 +136,7 @@ namespace Bam.Net.Data.Dynamic
         {
             Update(true, values);
         }
+        
         public void Update(bool execute, params dynamic[] values)
         {
             SqlStringBuilder sql = CurrentSql ?? Database.GetService<SqlStringBuilder>();
@@ -189,10 +190,7 @@ namespace Bam.Net.Data.Dynamic
         /// </summary>
         public void Execute()
         {
-            if (CurrentSql != null)
-            {
-                CurrentSql.Execute(Database);
-            }
+            CurrentSql?.Execute(Database);
         }
 
 /*

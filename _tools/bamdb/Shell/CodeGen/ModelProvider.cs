@@ -23,7 +23,7 @@ namespace Bam.Shell.CodeGen
             }
         }
         
-        public override void Gen(Action<string> output = null, Action<string> error = null)
+        public override void Generate(Action<string> output = null, Action<string> error = null)
         {
             GenerationTargets target = Arguments["target"].ToEnum<GenerationTargets>();
             switch (target)

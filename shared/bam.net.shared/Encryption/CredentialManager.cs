@@ -52,31 +52,25 @@ namespace Bam.Net.Encryption
         }
 
         static Vault _localCredsVault;
-        static object _lockLocalCreds = new object();
+        static readonly object _lockLocalCreds = new object();
         public static Vault LocalCredentialVault
         {
             get
             {
                 return _lockLocalCreds.DoubleCheckLock(ref _localCredsVault, () => Vault.Load(DefaultLocalCredentialVaultInfo));
             }
-            set
-            {
-                _localCredsVault = value;
-            }
+            set => _localCredsVault = value;
         }
 
         static CredentialManager _local;
-        static object _localLock = new object();
+        static readonly object _localLock = new object();
         public static CredentialManager Local
         {
             get
             {
                 return _localLock.DoubleCheckLock(ref _local, () => new CredentialManager(LocalCredentialVault));
             }
-            set
-            {
-                _local = value;
-            }
+            set => _local = value;
         }
 
         public Vault Vault { get; set; }

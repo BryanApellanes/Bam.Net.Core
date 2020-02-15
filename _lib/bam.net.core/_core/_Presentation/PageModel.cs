@@ -34,23 +34,49 @@ namespace Bam.Net.Presentation
     {
         public PageModel(IRequest request, AppContentResponder appContentResponder)
         {
+            Name = request.Url.LocalPath;
             Request = request;
             AppContentResponder = appContentResponder;
-            ApplicationModel = new ApplicationModel(appContentResponder.AppConf);
+            Application = new ApplicationModel(appContentResponder.AppConf);
             string absolutePath = request.Url.AbsolutePath;
             string extension = Path.GetExtension(absolutePath);
             string path = absolutePath.Truncate(extension.Length);
-            LayoutModel = AppContentResponder.GetLayoutModelForPath(path);
+            Layout = AppContentResponder.GetLayoutModelForPath(path);
             ViewModel = new ViewModel();
         }
         
-        public ApplicationModel ApplicationModel { get; set; }
+        public ApplicationModel Application { get; set; }
         
         public string Name { get; set; }
-        public LayoutModel LayoutModel { get; set; }
-        public ViewModel ViewModel { get; set; }
+
+        public string Scripts => Layout?.ScriptTags ?? string.Empty;
+        public string StyleSheets => Layout?.StyleSheetLinkTags ?? string.Empty;
+
+        public LayoutModel Layout { get; set; }
         
-        internal IRequest Request { get; set; }
-        internal AppContentResponder AppContentResponder { get; set; }
+        private ViewModel _viewModel;
+        public ViewModel ViewModel
+        {
+            get => _viewModel;
+            set
+            {
+                _viewModel = value;
+                _viewModel.Application = Application;
+                _viewModel.Page = this;
+            }
+        }
+
+        /// <summary>
+        /// Returns a dynamically generated object that represents the combination of the PageModel and ViewModel
+        /// in one object instance.
+        /// </summary>
+        /// <returns></returns>
+        public virtual object TemplateData()
+        {
+            return ViewModel;
+        }
+        
+        public IRequest Request { get; set; }
+        public AppContentResponder AppContentResponder { get; set; }
     }
 }

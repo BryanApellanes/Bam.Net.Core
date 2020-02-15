@@ -100,8 +100,7 @@ namespace Bam.Net.Services.DataReplication.Data
         {
             if (Properties == null || Properties.Count == 0)
             {
-                throw new InvalidOperationException(
-                    $"Can't get InstanceIdentifier, no properties specified on {this.GetType().Name}");
+                throw new InvalidOperationException($"Can't get InstanceIdentifier, no properties specified on {this.GetType().Name}");
             }
         }
 

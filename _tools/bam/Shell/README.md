@@ -1,6 +1,8 @@
 # Bam Shell and ArgZero
 The Bam command line tool adopts a convention based shell class method delegation paradigm enabling pattern based interaction with .net classes from the command line.
 
+TODO: Document ShellGenProvider (generator for bam shell and argzero)
+
 To execute a bam shell provider method follow this pattern:
 
 ```bash

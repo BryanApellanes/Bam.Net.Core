@@ -25,13 +25,7 @@ namespace Bam.Shell.ShellGeneration
             ShellGenerationRepository.AddType<ShellDescriptor>();
         }
 
-        public Config Config
-        {
-            get
-            {
-                return Config.Current;
-            }
-        }
+        public Config Config => Config.Current;
 
         public Database ShellGenerationDatabase { get; private set; }
         public DaoRepository ShellGenerationRepository { get; private set; }
@@ -144,13 +138,10 @@ namespace Bam.Shell.ShellGeneration
             return new ShellGenConfig()
             {
                 BaseTypeNamespace = GetArgument("baseNamespace", "Please enter the namespace the base type is in (or where to write it if it doesn't exist)."),
-                BaseTypeName = GetArgument("baseTypeName",
-                    "Please enter the name of the base type."),
+                BaseTypeName = GetArgument("baseTypeName", "Please enter the name of the base type."),
                 ConcreteTypeName = GetArgument("concreteTypeName", "Please enter the name of the concreteType"),
-                Namespace = GetArgument("delegatorNamespace",
-                    "Please enter the namespace to write shell delegator code to."),
-                WriteTo = GetArgument("writeTo",
-                    "Please enter the path to the directory to write source code to.")
+                Namespace = GetArgument("delegatorNamespace",  "Please enter the namespace to write shell delegator code to."),
+                WriteTo = GetArgument("writeTo", "Please enter the path to the directory to write source code to.")
             };
         }
         

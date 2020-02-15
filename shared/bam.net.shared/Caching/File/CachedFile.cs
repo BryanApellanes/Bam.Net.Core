@@ -79,19 +79,23 @@ namespace Bam.Net.Caching.File
         {
             try
             {
-                if (File.Exists)
+                if (!File.Exists)
                 {
-                    logger = logger ?? Log.Default;
-                    await Task.Run(() => GetText());
-                    await Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5));
-                    await Task.Run(() => GetZippedText());
-                    await Task.Run(() => GetZippedBytes());
-                    return true;
+                    return false;
                 }
-                return false;
+                List<Task> tasks = new List<Task>
+                {
+                    Task.Run(GetText),
+                    Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5)),
+                    Task.Run(GetZippedText),
+                    Task.Run(GetZippedBytes)
+                };
+                Task.WaitAll(tasks.ToArray());
+                return true;
             }
             catch (Exception ex)
             {
+                logger = logger ?? Log.Default;
                 logger.AddEntry("Error loading file {0}: {1}", ex, File?.FullName ?? "<null>", ex.Message);
                 return false;
             }
@@ -131,7 +135,7 @@ namespace Bam.Net.Caching.File
         internal FileInfo File { get; set; }
 
         byte[] _zippedBytes;
-        object _zippedByteLock = new object();
+        readonly object _zippedByteLock = new object();
         /// <summary>
         /// Gets the zipped bytes.
         /// </summary>
@@ -143,7 +147,7 @@ namespace Bam.Net.Caching.File
         }
 
         byte[] _bytes;
-        object _byteLock = new object();
+        readonly object _byteLock = new object();
         /// <summary>
         /// Gets the bytes.
         /// </summary>
@@ -155,7 +159,7 @@ namespace Bam.Net.Caching.File
         }
 
         string _text;
-        object _textLock = new object();
+        readonly object _textLock = new object();
         /// <summary>
         /// Gets the text.
         /// </summary>
@@ -167,7 +171,7 @@ namespace Bam.Net.Caching.File
         }
 
         byte[] _zippedText;
-        object _zippedTextLock = new object();
+        readonly object _zippedTextLock = new object();
         /// <summary>
         /// Gets the zipped text.
         /// </summary>

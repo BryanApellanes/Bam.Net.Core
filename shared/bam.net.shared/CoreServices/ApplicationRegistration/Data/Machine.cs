@@ -44,10 +44,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
                 }
                 return _hostAddresses;
             }
-            set
-            {
-                _hostAddresses = value;
-            }
+            set => _hostAddresses = value;
         }
         
         [CompositeKey]
@@ -68,10 +65,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
                 }
                 return _nics;
             }
-            set
-            {
-                _nics = value;
-            }
+            set => _nics = value;
         }
 
         public virtual List<Client> Clients { get; set; }

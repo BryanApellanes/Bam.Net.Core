@@ -17,37 +17,19 @@ namespace Bam.Net
         /// <summary>
         /// Resolves {Paths.Apps}/{AppName}
         /// </summary>
-        public static string AppRoot
-        {
-            get { return Path.Combine(Paths.Apps, AppName()); }
-        }
+        public static string AppRoot => Path.Combine(Paths.Apps, AppName());
 
         /// <summary>
         /// Resolves {BamPaths.ContentPath}/apps/{AppName}
         /// </summary>
-        public static string Content
-        {
-            get
-            {
-                return Path.Combine(BamPaths.ContentPath, "apps", AppName());
-            }
-        }
+        public static string Content => Path.Combine(BamHome.Content, "apps", AppName());
 
         /// <summary>
         /// Resolves {AppPaths.AppRoot}/services
         /// </summary>
-        public static string Services
-        {
-            get { return Path.Combine(AppRoot, "services"); }
-        }
+        public static string Services => Path.Combine(AppRoot, "services");
 
-        public static string Data
-        {
-            get
-            {
-                return DataPaths.Get(DataProvider.Current, ProcessApplicationNameProvider.Current).AppData;
-            }
-        }
+        public static string Data => DataPaths.Get(DataProvider.Current, ProcessApplicationNameProvider.Current).AppData;
 
         public static Dictionary<string, List<Func<DirectoryInfo[]>>> NamedDirectoryBundles { get; }
 

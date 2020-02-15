@@ -55,7 +55,7 @@ namespace Bam.Net.Server
         public string RegistrarCaller { get; set; }
 
         IRegistrarCaller _registrarCaller;
-        object _registrarCallerLock = new object();
+        readonly object _registrarCallerLock = new object();
         protected IRegistrarCaller RegistrarCallerInstance
         {
             get

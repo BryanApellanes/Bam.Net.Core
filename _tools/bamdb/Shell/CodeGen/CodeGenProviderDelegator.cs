@@ -2,11 +2,11 @@ namespace Bam.Shell.CodeGen
 {
     public class CodeGenProviderDelegator : ArgZeroDelegator<CodeGenProvider>
     {
-        [ArgZero("gen")]
-        public void Gen()
+        [ArgZero("generate")]
+        public void Generate()
         {
             CodeGenProvider provider = Construct();
-            provider?.Gen(StandardOut, StandardError);
+            provider?.Generate(StandardOut, StandardError);
             Exit(provider != null ? 0 : 1);
         }
     }

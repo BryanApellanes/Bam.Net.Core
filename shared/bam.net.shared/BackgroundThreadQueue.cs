@@ -44,8 +44,8 @@ namespace Bam.Net
             }
         }
 
-        ConcurrentQueue<T> _processQueue = new ConcurrentQueue<T>();
-        object _procLock = new object();
+        readonly ConcurrentQueue<T> _processQueue = new ConcurrentQueue<T>();
+        readonly object _procLock = new object();
         public void Enqueue(T data)
         {
             lock (_procLock)
@@ -76,10 +76,7 @@ namespace Bam.Net
         bool _continue;
         public bool Continue
         {
-            get
-            {
-                return _continue;
-            }
+            get => _continue;
             set
             {
                 _continue = value;
@@ -93,8 +90,8 @@ namespace Bam.Net
         public event EventHandler Processing;
         public event EventHandler QueueEmptied;
         Thread _processThread;
-        AutoResetEvent _waitSignal = new AutoResetEvent(false);
-        object _processThreadLock = new object();
+        readonly AutoResetEvent _waitSignal = new AutoResetEvent(false);
+        readonly object _processThreadLock = new object();
         public Thread ProcessThread
         {
             get

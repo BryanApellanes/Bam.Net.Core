@@ -24,7 +24,7 @@ namespace Bam.Net.Services
         protected CoreClient CoreClient { get; set; }
 
         static ApplicationServiceRegistry _appRegistry;
-        static object _appRegistryLock = new object();
+        static readonly object _appRegistryLock = new object();
         public static ApplicationServiceRegistry Current
         {
             get
@@ -49,8 +49,8 @@ namespace Bam.Net.Services
             return ForApplication(DefaultConfigurationApplicationNameProvider.Instance.GetApplicationName());
         }
 
-        static Dictionary<string, ApplicationServiceRegistry> _appRegistries = new Dictionary<string, ApplicationServiceRegistry>();
-        static Dictionary<string, Action<ApplicationServiceRegistry>> _applicationConfigurers = new Dictionary<string, Action<ApplicationServiceRegistry>>();
+        static readonly Dictionary<string, ApplicationServiceRegistry> _appRegistries = new Dictionary<string, ApplicationServiceRegistry>();
+        static readonly Dictionary<string, Action<ApplicationServiceRegistry>> _applicationConfigurers = new Dictionary<string, Action<ApplicationServiceRegistry>>();
         public static ApplicationServiceRegistry ForApplication(string applicationName, Action<ApplicationServiceRegistry> configureMore = null)
         {
             try
@@ -72,8 +72,7 @@ namespace Bam.Net.Services
                         DirectoryInfo services = workspace.Directory("services");
                         if (services.Exists)
                         {
-                            Parallel.ForEach(services.GetFiles("*.dll"),
-                                fileInfo => { TryAddTypes(appSvcReg, fileInfo); });
+                            Parallel.ForEach(services.GetFiles("*.dll"), fileInfo => { TryAddTypes(appSvcReg, fileInfo); });
                         }
                     });
                     configureMore?.Invoke(applicationServiceRegistry);

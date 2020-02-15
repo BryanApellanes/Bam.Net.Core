@@ -35,7 +35,7 @@ namespace Bam.Net.Server
         public const string CommonFolder = "common";
         
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultRoot = BamPaths.ContentPath;
+        static string defaultRoot = BamHome.Content;
         public const string IncludeFileName = "include.js";
         public const string LayoutFileExtension = ".layout";
         public const string HostAppMapFile = "hostAppMaps.json";
@@ -337,28 +337,30 @@ namespace Bam.Net.Server
             {
                 OnAppContentResponderInitializing(appConf);
                 Logger.RestartLoggingThread();
-                AppContentResponder responder = new AppContentResponder(this, appConf)
+                AppContentResponder appContentResponder = new AppContentResponder(this, appConf)
                 {
                     Logger = Logger
                 };
+                string appName = appConf.Name.ToLowerInvariant();
+                IApplicationTemplateManager applicationTemplateManager = ApplicationServiceRegistry.Construct<AppHandlebarsRenderer>(appContentResponder);
+                AppPageRendererManager pageRendererManager = new AppPageRendererManager(appContentResponder, ApplicationServiceRegistry.Get<ITemplateManager>(), applicationTemplateManager);
                 Subscribers.Each(logger =>
                 {
                     logger.RestartLoggingThread();
-                    responder.Subscribe(logger);
+                    appContentResponder.Subscribe(logger);
+                    pageRendererManager.Subscribe(logger);
                 });
-                string appName = appConf.Name.ToLowerInvariant();
-                IApplicationTemplateManager applicationTemplateManager = ApplicationServiceRegistry.Construct<AppHandlebarsRenderer>(responder);
-                responder.Initialize();
-                responder.PageRenderer = new AppPageRendererManager(responder, ApplicationServiceRegistry.Get<ITemplateManager>(), applicationTemplateManager);
-                responder.FileUploading += (o, a) => FileUploading?.Invoke(o, a);
-                responder.FileUploaded += (o, a) => FileUploaded?.Invoke(o, a);
-                responder.Responded += OnResponded;
-                responder.DidNotRespond += OnDidNotRespond;
-                responder.ContentNotFound += OnContentNotFound;
-                responder.ContentResponder = this;
-                responder.AppTemplateManager = applicationTemplateManager;
-                ApplicationServiceRegistry.SetInjectionProperties(responder);
-                AppContentResponders[appName] = responder;
+                appContentResponder.Initialize();
+                appContentResponder.PageRenderer = pageRendererManager;
+                appContentResponder.FileUploading += (o, a) => FileUploading?.Invoke(o, a);
+                appContentResponder.FileUploaded += (o, a) => FileUploaded?.Invoke(o, a);
+                appContentResponder.Responded += OnResponded;
+                appContentResponder.DidNotRespond += OnDidNotRespond;
+                appContentResponder.ContentNotFound += OnContentNotFound;
+                appContentResponder.ContentResponder = this;
+                appContentResponder.AppTemplateManager = applicationTemplateManager;
+                ApplicationServiceRegistry.SetInjectionProperties(appContentResponder);
+                AppContentResponders[appName] = appContentResponder;
 
                 WriteHostProcessInfo(appConf);
                 OnAppContentResponderInitialized(appConf);
@@ -597,13 +599,7 @@ namespace Bam.Net.Server
         }
         #endregion
 
-        public override bool IsInitialized
-        {
-            get
-            {
-                return IsAppsInitialized;
-            }
-        }
+        public override bool IsInitialized => IsAppsInitialized;
 
         public override void Initialize()
         {

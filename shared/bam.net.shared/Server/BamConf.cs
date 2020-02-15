@@ -38,7 +38,7 @@ namespace Bam.Net.Server
 
         public BamConf()
         {
-            this.Fs = new Fs(BamPaths.BamHome);
+            this.Fs = new Fs(BamHome.Path);
             this.MaxThreads = 50;
             this.GenerateDao = true;
             this.DaoConfigs = new DaoConf[] { };
@@ -537,7 +537,7 @@ namespace Bam.Net.Server
 
         public static BamConf Load()
         {
-            return Load(DefaultConfiguration.GetAppSetting(ContentRootConfigKey, BamPaths.ContentPath));
+            return Load(DefaultConfiguration.GetAppSetting(ContentRootConfigKey, BamHome.Content));
         }
 
         /// <summary>

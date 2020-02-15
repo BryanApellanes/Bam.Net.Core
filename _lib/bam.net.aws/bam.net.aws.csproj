@@ -9,6 +9,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK.ECR" Version="3.3.103.9" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />
   </ItemGroup>
   <ItemGroup>

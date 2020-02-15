@@ -1,13 +1,1 @@
-- DatabaseType: Npgsql  
-  ConnectionName: Proj05Entity
-  ServerName: aurora-quoting-writer-integration.prod.simon365.com
-  DatabaseName: proj05-entity  
-  Credentials:
-    UserId: proj05-entity
-    Password: Jedan123
-- ConnectionName: Proj05Identity
-  DatabaseName: proj05-identity
-  DatabaseType: Npgsql
-  Credentials:
-    UserId: proj05-entity
-    Password: Jedan123
+/Users/bapellanes/.bam/conf/databaseconfigs.yaml

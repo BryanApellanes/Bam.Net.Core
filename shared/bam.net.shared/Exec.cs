@@ -84,6 +84,21 @@ namespace Bam.Net
                 return null;
             }
         }
+
+        public static T Try<T>(Func<T> func, Action<Exception> onException = null)
+        {
+            Action<Exception> exceptionHandler = onException ?? ((ex) => { });
+            try
+            {
+                return func();
+            }
+            catch (Exception ex)
+            {
+                exceptionHandler(ex);
+                return default(T);
+            }
+        }
+        
         public static void Try(Action action, Action<Exception> onException = null)
         {
             Action<Exception> exceptionHandler = onException ?? ((ex) => { });
@@ -231,7 +246,7 @@ namespace Bam.Net
         /// <summary>
         /// Returns true if the specified function takes longer to execute than the specified secondsToWait.
         /// </summary>
-        /// <typeparam name="TResult">The Type returned by the sepcified function, also the return and parameter type of the
+        /// <typeparam name="TResult">The Type returned by the specified function, also the return and parameter type of the
         /// specified callBack.</typeparam>
         /// <param name="function">The function to execute and time</param>
         /// <param name="callBack">The callBack to execute when function completes</param>
@@ -257,7 +272,7 @@ namespace Bam.Net
         /// specified callBack.</typeparam>
         /// <param name="function">The function to execute and time</param>
         /// <param name="callBack">The callBack to execute when function completes</param>
-        /// <param name="timeToWait">The ammount of time to allow the function to execute before returning true</param>
+        /// <param name="timeToWait">The amount of time to allow the function to execute before returning true</param>
         /// <returns>boolean</returns>
         public static bool TakesTooLong<TResult>(this Func<object, TResult> function, Func<TResult, TResult> callBack, TimeSpan timeToWait, object state = null, string threadName = null)
         {

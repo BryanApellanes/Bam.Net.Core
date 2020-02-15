@@ -30,6 +30,7 @@ namespace Bam.Net.Server
 		public const string DefaultPageConst = "start";
 		public const string DefaultLayoutConst = "basic";
         public const string DefaultHtmlDirConst = "pages";
+        public const string DefaultBinDirConst = "bin";
 
         public AppConf()
         {
@@ -72,7 +73,7 @@ namespace Bam.Net.Server
         {
             return new AppConf{ Name = Config.Current.ApplicationName};
         }
-
+        
         Fs _appRoot;
         readonly object _appRootLock = new object();
         [JsonIgnore]
@@ -175,7 +176,7 @@ namespace Bam.Net.Server
         public AppServerConf ServerConf { get; set; }
         
         List<HostPrefix> _bindings;
-        object _bindingsLock = new object();
+        readonly object _bindingsLock = new object();
         public HostPrefix[] Bindings
         {
             get
@@ -222,13 +223,19 @@ namespace Bam.Net.Server
         }
 
         string _defaultHtmlDir;
-
         public string HtmlDir
         {
             get => _defaultHtmlDir.Or(DefaultHtmlDirConst);
             set => _defaultHtmlDir = value.Or(DefaultHtmlDirConst);
         }
-		
+
+        private string _defaultBinDir;
+        public string BinDir
+        {
+            get => _defaultBinDir.Or(DefaultBinDirConst);
+            set => _defaultBinDir = value.Or(DefaultBinDirConst);
+        }
+        
         public bool GenerateDao { get; set; }
 
         public bool CheckDaoHashes { get; set; }
@@ -339,7 +346,7 @@ namespace Bam.Net.Server
         internal ILogger Logger => BamConf?.Server?.MainLogger ?? Log.Default;
 
         static Dictionary<string, string> _appNamesByDomAppId;
-        static object _domAppIdsSync = new object();
+        static readonly object _domAppIdsSync = new object();
         protected internal static Dictionary<string, string> AppNamesByDomAppId
         {
             get

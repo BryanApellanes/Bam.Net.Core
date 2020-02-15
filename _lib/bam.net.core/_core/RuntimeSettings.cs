@@ -34,7 +34,7 @@ namespace Bam.Net
                     }
                     else
                     {
-                        return Path.Combine(BamPaths.DataPath, Config.Current?.ApplicationName ?? CoreServices.ApplicationRegistration.Data.Application.Unknown.Name);
+                        return Path.Combine(BamHome.DataPath, Config.Current?.ApplicationName ?? CoreServices.ApplicationRegistration.Data.Application.Unknown.Name);
                     }
                 });
             }

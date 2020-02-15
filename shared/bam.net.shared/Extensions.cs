@@ -25,6 +25,7 @@ using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Testing.Data;
+using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ParameterInfo = System.Reflection.ParameterInfo;
@@ -35,90 +36,127 @@ namespace Bam.Net
     {
         static Dictionary<string, SerializationFormat> _serializationFormats;
         static object _serializationFormatsLock = new object();
+
         public static Dictionary<string, SerializationFormat> SerializationFormats
         {
             get
             {
-                return _serializationFormatsLock.DoubleCheckLock(ref _serializationFormats, () => new Dictionary<string, SerializationFormat>
-                {
-                    { ".yaml", SerializationFormat.Yaml },
-                    { ".yml", SerializationFormat.Yaml },
-                    { ".json", SerializationFormat.Json },
-                    { ".xml", SerializationFormat.Xml },
-                    { ".dat", SerializationFormat.Binary },
-                    { ".bin", SerializationFormat.Binary }
-                });
+                return _serializationFormatsLock.DoubleCheckLock(ref _serializationFormats, () =>
+                    new Dictionary<string, SerializationFormat>
+                    {
+                        {".yaml", SerializationFormat.Yaml},
+                        {".yml", SerializationFormat.Yaml},
+                        {".json", SerializationFormat.Json},
+                        {".xml", SerializationFormat.Xml},
+                        {".dat", SerializationFormat.Binary},
+                        {".bin", SerializationFormat.Binary}
+                    });
             }
         }
 
         static Dictionary<SerializationFormat, Func<Stream, Type, object>> _deserializers;
         static object _deserializersLock = new object();
+
         public static Dictionary<SerializationFormat, Func<Stream, Type, object>> Deserializers
         {
             get
             {
-                return _deserializersLock.DoubleCheckLock(ref _deserializers, () => new Dictionary<SerializationFormat, Func<Stream, Type, object>>
-                {
-                    { SerializationFormat.Invalid, (stream, type) => {
-                            Args.Throw<InvalidOperationException>("Invalid SerializationFormat specified");
-                            return null;
-                        }
-                    },
-                    { SerializationFormat.Xml, (stream, type)=> stream.FromXmlStream(type) },
-                    { SerializationFormat.Json, (stream, type) => stream.FromJsonStream(type) }, // this might not work; should be tested
-                    { SerializationFormat.Yaml, (stream, type) => stream.FromYamlStream(type) }, // this might not work; should be tested
-                    { SerializationFormat.Binary, (stream, type) => stream.FromBinaryStream() } // this might not work; should be tested
-                });
+                return _deserializersLock.DoubleCheckLock(ref _deserializers, () =>
+                    new Dictionary<SerializationFormat, Func<Stream, Type, object>>
+                    {
+                        {
+                            SerializationFormat.Invalid, (stream, type) =>
+                            {
+                                Args.Throw<InvalidOperationException>("Invalid SerializationFormat specified");
+                                return null;
+                            }
+                        },
+                        {SerializationFormat.Xml, (stream, type) => stream.FromXmlStream(type)},
+                        {
+                            SerializationFormat.Json, (stream, type) => stream.FromJsonStream(type)
+                        }, // this might not work; should be tested
+                        {
+                            SerializationFormat.Yaml, (stream, type) => stream.FromYamlStream(type)
+                        }, // this might not work; should be tested
+                        {
+                            SerializationFormat.Binary, (stream, type) => stream.FromBinaryStream()
+                        } // this might not work; should be tested
+                    });
             }
         }
 
         static Dictionary<SerializationFormat, Action<Stream, object>> _serializeActions;
         static object _serializeActionsLock = new object();
+
         public static Dictionary<SerializationFormat, Action<Stream, object>> SerializeActions
         {
             get
             {
-                return _serializeActionsLock.DoubleCheckLock(ref _serializeActions, () => new Dictionary<SerializationFormat, Action<Stream, object>>
-                {
-                    { SerializationFormat.Invalid, (stream, obj) => Args.Throw<InvalidOperationException>("Invalid SerializationFormat specified") },
-                    { SerializationFormat.Xml, (stream, obj) => obj.ToXmlStream(stream) },
-                    { SerializationFormat.Json, (stream, obj) => obj.ToJsonStream(stream) },
-                    { SerializationFormat.Yaml, (stream, obj) => obj.ToYamlStream(stream) },
-                    { SerializationFormat.Binary, (stream, obj) => obj.ToBinaryStream(stream) }
-                });
+                return _serializeActionsLock.DoubleCheckLock(ref _serializeActions, () =>
+                    new Dictionary<SerializationFormat, Action<Stream, object>>
+                    {
+                        {
+                            SerializationFormat.Invalid,
+                            (stream, obj) =>
+                                Args.Throw<InvalidOperationException>("Invalid SerializationFormat specified")
+                        },
+                        {SerializationFormat.Xml, (stream, obj) => obj.ToXmlStream(stream)},
+                        {SerializationFormat.Json, (stream, obj) => obj.ToJsonStream(stream)},
+                        {SerializationFormat.Yaml, (stream, obj) => obj.ToYamlStream(stream)},
+                        {SerializationFormat.Binary, (stream, obj) => obj.ToBinaryStream(stream)}
+                    });
             }
         }
-        
+
         static Dictionary<ExistingFileAction, Action<Stream, FileInfo>> _writeResourceActions;
         static object _writeResourceActionsLock = new object();
+
         public static Dictionary<ExistingFileAction, Action<Stream, FileInfo>> WriteResourceActions
         {
             get
             {
-                return _writeResourceActionsLock.DoubleCheckLock(ref _writeResourceActions, () => new Dictionary<ExistingFileAction, Action<Stream, FileInfo>>
-                {
-                    { ExistingFileAction.Throw, (resource, output) => Args.Throw<InvalidOperationException>("File exists, can't write resource to {0}", output.FullName) },
-                    { ExistingFileAction.OverwriteSilently, (resource, output) => resource.CopyTo(output.Create()) },
-                    { ExistingFileAction.DoNotOverwrite, (resource, output) => Logging.Log.Warn("File exists, can't write resource to {0}", output.FullName) }
-                });
+                return _writeResourceActionsLock.DoubleCheckLock(ref _writeResourceActions, () =>
+                    new Dictionary<ExistingFileAction, Action<Stream, FileInfo>>
+                    {
+                        {
+                            ExistingFileAction.Throw,
+                            (resource, output) =>
+                                Args.Throw<InvalidOperationException>("File exists, can't write resource to {0}",
+                                    output.FullName)
+                        },
+                        {ExistingFileAction.OverwriteSilently, (resource, output) => resource.CopyTo(output.Create())},
+                        {
+                            ExistingFileAction.DoNotOverwrite,
+                            (resource, output) =>
+                                Logging.Log.Warn("File exists, can't write resource to {0}", output.FullName)
+                        }
+                    });
             }
         }
 
         static Dictionary<ExistingFileAction, Action<ZipArchiveEntry, string>> _extractActions;
         static object _extractActionsLock = new object();
+
         public static Dictionary<ExistingFileAction, Action<ZipArchiveEntry, string>> ExtractActions
         {
             get
             {
-                return _extractActionsLock.DoubleCheckLock(ref _extractActions, () => new Dictionary<ExistingFileAction, Action<ZipArchiveEntry, string>>
-                {
-                    { ExistingFileAction.Throw, (zip, dest) => Args.Throw<InvalidOperationException>("File exists, can't extract {0}", dest) },
-                    { ExistingFileAction.OverwriteSilently, (zip, dest) => zip.ExtractToFile(dest, true) },
-                    { ExistingFileAction.DoNotOverwrite, (zip, dest) => Logging.Log.Warn("File exists, can't extract {0}", dest) }
-                });
+                return _extractActionsLock.DoubleCheckLock(ref _extractActions, () =>
+                    new Dictionary<ExistingFileAction, Action<ZipArchiveEntry, string>>
+                    {
+                        {
+                            ExistingFileAction.Throw,
+                            (zip, dest) => Args.Throw<InvalidOperationException>("File exists, can't extract {0}", dest)
+                        },
+                        {ExistingFileAction.OverwriteSilently, (zip, dest) => zip.ExtractToFile(dest, true)},
+                        {
+                            ExistingFileAction.DoNotOverwrite,
+                            (zip, dest) => Logging.Log.Warn("File exists, can't extract {0}", dest)
+                        }
+                    });
             }
         }
-        
+
         /// <summary>
         /// Deserialize the specified file using the file extension to determine the format.
         /// </summary>
@@ -132,7 +170,7 @@ namespace Bam.Net
 
         public static T Deserialize<T>(this FileInfo file)
         {
-            return (T)Deserialize(file, typeof(T));
+            return (T) Deserialize(file, typeof(T));
         }
 
         public static object Deserialize(this FileInfo file, Type type)
@@ -140,8 +178,10 @@ namespace Bam.Net
             string fileExtension = file.Extension;
             if (!SerializationFormats.ContainsKey(fileExtension))
             {
-                throw new ArgumentException($"File extension ({fileExtension}) not supported for deserialization, use one of ({string.Join(",", SerializationFormats.Keys.ToArray())})");
+                throw new ArgumentException(
+                    $"File extension ({fileExtension}) not supported for deserialization, use one of ({string.Join(",", SerializationFormats.Keys.ToArray())})");
             }
+
             using (FileStream fs = file.OpenRead())
             {
                 return Deserializers[SerializationFormats[fileExtension]](fs, type);
@@ -155,8 +195,9 @@ namespace Bam.Net
 
         public static bool TimesAreEqual(this DateTime instance, DateTime other, bool includeMilliseconds = false)
         {
-            return (instance.Hour == other.Hour && instance.Minute == other.Minute && instance.Second == other.Second) &&
-                (includeMilliseconds ? instance.Millisecond == other.Millisecond : true);
+            return (instance.Hour == other.Hour && instance.Minute == other.Minute &&
+                    instance.Second == other.Second) &&
+                   (includeMilliseconds ? instance.Millisecond == other.Millisecond : true);
         }
 
         public static string ReadToEnd(this Stream stream)
@@ -166,7 +207,7 @@ namespace Bam.Net
                 return sr.ReadToEnd();
             }
         }
-        
+
         public static T Try<T>(this Func<T> toTry)
         {
             return Try<T>(toTry, out Exception ignore);
@@ -191,6 +232,7 @@ namespace Bam.Net
             return Try(toTry, out Exception ignore);
 
         }
+
         public static bool Try(this Action toTry, out Exception ex)
         {
             ex = null;
@@ -215,7 +257,7 @@ namespace Bam.Net
         {
             unchecked
             {
-                int hash = (int)2166136261;
+                int hash = (int) 2166136261;
                 foreach (object property in propertiesToInclude)
                 {
                     if (property != null)
@@ -223,6 +265,7 @@ namespace Bam.Net
                         hash = (hash * 16777619) ^ property.GetHashCode();
                     }
                 }
+
                 return hash;
             }
         }
@@ -235,15 +278,16 @@ namespace Bam.Net
         /// <returns></returns>
         public static bool IsAffirmative(this string value)
         {
-            if(string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return false;
             }
+
             return value.Equals("true", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("yes", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("t", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("y", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("1");
+                   value.Equals("yes", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("t", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("y", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("1");
         }
 
         /// <summary>
@@ -258,11 +302,12 @@ namespace Bam.Net
             {
                 return true;
             }
+
             return value.Equals("false", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("no", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("f", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("n", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("0");
+                   value.Equals("no", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("f", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("n", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("0");
         }
 
         /// <summary>
@@ -274,9 +319,9 @@ namespace Bam.Net
         public static bool IsExitRequest(this string value)
         {
             return value.Equals("q", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("quit", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("exit", StringComparison.InvariantCultureIgnoreCase) ||
-                value.Equals("bye", StringComparison.InvariantCultureIgnoreCase);
+                   value.Equals("quit", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("exit", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("bye", StringComparison.InvariantCultureIgnoreCase);
         }
 
         public static FileInfo GetNextFile(this FileInfo file)
@@ -325,6 +370,7 @@ namespace Bam.Net
                 currentPath = Path.Combine(dir.FullName, nextFile);
                 num = i;
             }
+
             return currentPath;
         }
 
@@ -340,6 +386,7 @@ namespace Bam.Net
             int num;
             return GetNextDirectoryName(path, out num);
         }
+
         /// <summary>
         /// If the specified directory exists a new path with 
         /// a number appended will be returned where the 
@@ -357,9 +404,15 @@ namespace Bam.Net
                 num++;
                 currentPath = $"{path}_{num}";
             }
+
             return currentPath;
         }
 
+        /// <summary>
+        /// Read the specified string up to the first instance of the specified charToFind
+        /// returning the characters read and producing remainder as an out parameter.  Discards
+        /// the specified charToFind returning only values on either side
+        /// </summary>
         public static string ReadUntil(this string toRead, char charToFind)
         {
             return ReadUntil(toRead, charToFind, out string ignore);
@@ -386,10 +439,32 @@ namespace Bam.Net
                     remainder = toRead.Substring(pos + 1);
                     break;
                 }
+
                 ++pos;
                 result.Append(c);
             }
+
             return result.ToString();
+        }
+
+        public static string ReadUntil(this string toRead, string stringToFind, out string remainder)
+        {
+            StringBuilder readBuffer = new StringBuilder();
+            int pos = 0;
+            remainder = string.Empty;
+            foreach (char c in toRead)
+            {
+                readBuffer.Append(c);
+                if (readBuffer.ToString().EndsWith(stringToFind))
+                {
+                    remainder = toRead.Substring(pos + 1);
+                    break;
+                }
+
+                ++pos;
+            }
+
+            return readBuffer.ToString().Truncate(stringToFind.Length);
         }
 
         public static string RemainderAfter(this string toRead, char leadingChar)
@@ -401,12 +476,13 @@ namespace Bam.Net
                 {
                     return toRead.Substring(pos);
                 }
+
                 ++pos;
             }
 
             return toRead;
         }
-        
+
         /// <summary>
         /// Return a copy of the specified DateTime with milliseconds
         /// set to 0
@@ -434,7 +510,7 @@ namespace Bam.Net
 
         public static T Clone<T>(this ICloneable clonable)
         {
-            return (T)clonable.Clone();
+            return (T) clonable.Clone();
         }
 
         public static string ToBase64(this byte[] data)
@@ -466,6 +542,7 @@ namespace Bam.Net
                 default:
                     return new FileInfo(assembly.CodeBase.TruncateFront("file:///".Length));
             }
+
             return new FileInfo(assembly.CodeBase.TruncateFront("file:///".Length));
         }
 
@@ -509,7 +586,7 @@ namespace Bam.Net
                 yield return o.CopyAs(type, ctorParams);
             }
         }
-        
+
         /// <summary>
         /// Copy the specified source object as an instance of the specified generic type T using the specified, constructor
         /// parameters to construct the new instance.
@@ -520,25 +597,27 @@ namespace Bam.Net
         /// <returns></returns>
         public static T CopyAs<T>(this object source, params object[] ctorParams)
         {
-            return (T)CopyAs(source, typeof(T), ctorParams);
+            return (T) CopyAs(source, typeof(T), ctorParams);
         }
-        
+
         public static T ToInstance<T>(this Dictionary<string, string> dictionary) where T : class, new()
         {
             return CopyAs<T>(dictionary);
         }
-        
-        public static T CopyAs<T>(this Dictionary<string, string> dictionary) where T: class, new()
+
+        public static T CopyAs<T>(this Dictionary<string, string> dictionary) where T : class, new()
         {
             T result = new T();
-            foreach(string key in dictionary.Keys)
+            foreach (string key in dictionary.Keys)
             {
                 result.Property(key, dictionary[key]);
             }
+
             return result;
         }
 
-        public static object ToInstance(this Dictionary<string, string> dictionary, Type type, params object[] ctorParams)
+        public static object ToInstance(this Dictionary<string, string> dictionary, Type type,
+            params object[] ctorParams)
         {
             return CopyAs(dictionary, type, ctorParams);
         }
@@ -546,10 +625,11 @@ namespace Bam.Net
         public static object CopyAs(this Dictionary<string, string> dictionary, Type type, params object[] ctorParams)
         {
             object result = type.Construct(ctorParams);
-            foreach(string key in dictionary.Keys)
+            foreach (string key in dictionary.Keys)
             {
                 result.Property(key, dictionary[key]);
             }
+
             return result;
         }
 
@@ -558,7 +638,7 @@ namespace Bam.Net
         {
             return CopyAs(dictionary, type, ctorParams);
         }
-        
+
         public static object CopyAs(this Dictionary<object, object> dictionary, Type type, params object[] ctorParams)
         {
             object result = type.Construct(ctorParams);
@@ -569,7 +649,7 @@ namespace Bam.Net
 
             return result;
         }
-        
+
         /// <summary>
         /// Copy the current source instance as the specified type
         /// copying all properties that match in name and type.
@@ -583,6 +663,7 @@ namespace Bam.Net
             {
                 return source;
             }
+
             object result = type.Construct(ctorParams);
             result.CopyProperties(source);
             return result;
@@ -619,8 +700,10 @@ namespace Bam.Net
                 {
                     zipStream.Write(data, 0, data.Length);
                 }
+
                 data = ms.ToArray();
             }
+
             return data;
         }
 
@@ -658,38 +741,45 @@ namespace Bam.Net
         {
             using (MemoryStream readStream = new MemoryStream(data))
             {
-                using(MemoryStream writeStream = new MemoryStream())
+                using (MemoryStream writeStream = new MemoryStream())
                 {
                     using (GZipStream zipStream = new GZipStream(readStream, CompressionMode.Decompress))
                     {
                         byte[] readBuffer = new byte[1024];
                         int countRead;
-                        while((countRead = zipStream.Read(readBuffer, 0, readBuffer.Length)) > 0)
+                        while ((countRead = zipStream.Read(readBuffer, 0, readBuffer.Length)) > 0)
                         {
                             writeStream.Write(readBuffer, 0, countRead);
                         }
                     }
+
                     return writeStream.ToArray();
                 }
             }
         }
 
-        public static bool WriteResource(this Assembly assembly, Type siblingOfResource, string resourceName, FileInfo writeTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool WriteResource(this Assembly assembly, Type siblingOfResource, string resourceName,
+            FileInfo writeTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
-            return WriteResource(assembly, $"{siblingOfResource.Namespace}.{resourceName}", writeTo, existingFileAction);
+            return WriteResource(assembly, $"{siblingOfResource.Namespace}.{resourceName}", writeTo,
+                existingFileAction);
         }
 
-        public static bool WriteResource(this Assembly assembly, Type siblingOfResource, string resourceName, string writeTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool WriteResource(this Assembly assembly, Type siblingOfResource, string resourceName,
+            string writeTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
-            return WriteResource(assembly, $"{siblingOfResource.Namespace}.{resourceName}", writeTo, existingFileAction);
+            return WriteResource(assembly, $"{siblingOfResource.Namespace}.{resourceName}", writeTo,
+                existingFileAction);
         }
 
-        public static bool WriteResource(this Assembly assembly, string resourceName, string writeTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool WriteResource(this Assembly assembly, string resourceName, string writeTo,
+            ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
             return WriteResource(assembly, resourceName, new FileInfo(writeTo), existingFileAction);
         }
 
-        public static bool WriteResource(this Assembly assembly, string resourceName, FileInfo writeTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool WriteResource(this Assembly assembly, string resourceName, FileInfo writeTo,
+            ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
             string[] resourceNames = assembly.GetManifestResourceNames();
             bool found = false;
@@ -721,15 +811,20 @@ namespace Bam.Net
 
         public static Stream ReadResource(this Assembly assembly, string resourceName)
         {
-            string[] fullResourceName = assembly.GetManifestResourceNames().Where(rn => rn.EndsWith(resourceName)).ToArray();
-            if(fullResourceName.Length > 1)
+            string[] fullResourceName =
+                assembly.GetManifestResourceNames().Where(rn => rn.EndsWith(resourceName)).ToArray();
+            if (fullResourceName.Length > 1)
             {
-                Args.Throw<InvalidOperationException>("Found more than one embedded resource with the specified name {0}, fully qualify the resourceName to find only the one you want.", resourceName);
+                Args.Throw<InvalidOperationException>(
+                    "Found more than one embedded resource with the specified name {0}, fully qualify the resourceName to find only the one you want.",
+                    resourceName);
             }
-            if(fullResourceName.Length == 0)
+
+            if (fullResourceName.Length == 0)
             {
-                Args.Throw<InvalidOperationException>("Specified embedded resource not found: {0}", resourceName);                
+                Args.Throw<InvalidOperationException>("Specified embedded resource not found: {0}", resourceName);
             }
+
             return assembly.GetManifestResourceStream(fullResourceName[0]);
         }
 
@@ -743,23 +838,28 @@ namespace Bam.Net
         /// <param name="extractTo">The extract to.</param>
         /// <param name="existingFileAction">The existing file action.</param>
         /// <returns></returns>
-        public static bool UnzipResource(this Assembly assembly, Type siblingOfResource, string resourceName, string extractTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool UnzipResource(this Assembly assembly, Type siblingOfResource, string resourceName,
+            string extractTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
-            return UnzipResource(assembly, Path.Combine(siblingOfResource.Namespace, resourceName).Replace("\\", "."), extractTo, existingFileAction);
+            return UnzipResource(assembly, Path.Combine(siblingOfResource.Namespace, resourceName).Replace("\\", "."),
+                extractTo, existingFileAction);
         }
 
-        public static bool UnzipResource(this Assembly assembly, string resourceName, string extractTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool UnzipResource(this Assembly assembly, string resourceName, string extractTo,
+            ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
             return UnzipResource(assembly, resourceName, new DirectoryInfo(extractTo));
         }
 
-        public static bool UnzipResource(this Assembly assembly, string resourceName, DirectoryInfo extractTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static bool UnzipResource(this Assembly assembly, string resourceName, DirectoryInfo extractTo,
+            ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
             string[] resourceNames = assembly.GetManifestResourceNames();
             bool found = false;
             resourceNames.Each(rn =>
             {
-                bool thisIsTheOne = Path.GetFileName(rn).Equals(resourceName, StringComparison.InvariantCultureIgnoreCase);
+                bool thisIsTheOne = Path.GetFileName(rn)
+                    .Equals(resourceName, StringComparison.InvariantCultureIgnoreCase);
                 if (thisIsTheOne)
                 {
                     found = true;
@@ -772,7 +872,8 @@ namespace Bam.Net
             return found;
         }
 
-        public static void UnzipStream(this Stream zipStream, DirectoryInfo extractTo, ExistingFileAction existingFileAction)
+        public static void UnzipStream(this Stream zipStream, DirectoryInfo extractTo,
+            ExistingFileAction existingFileAction)
         {
             ZipArchive zipArchive = new ZipArchive(zipStream);
             zipArchive.Entries.Each(zipFile =>
@@ -788,6 +889,7 @@ namespace Bam.Net
                     {
                         destinationFile.Directory.Create();
                     }
+
                     zipFile.ExtractToFile(destinationFile.FullName);
                 }
             });
@@ -798,7 +900,8 @@ namespace Bam.Net
             new FileInfo(zipFilePath).UnzipTo(new DirectoryInfo(extractToDirectory));
         }
 
-        public static void UnzipTo(this FileInfo file, DirectoryInfo extractTo, ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
+        public static void UnzipTo(this FileInfo file, DirectoryInfo extractTo,
+            ExistingFileAction existingFileAction = ExistingFileAction.DoNotOverwrite)
         {
             using (FileStream fs = new FileStream(file.FullName, FileMode.Open))
             {
@@ -814,7 +917,7 @@ namespace Bam.Net
         /// <returns></returns>
         public static T ToEnum<T>(this string value)
         {
-            return (T)Enum.Parse(typeof(T), value);
+            return (T) Enum.Parse(typeof(T), value);
         }
 
         public static bool TryToEnum<T>(this string value, out T result) where T : struct
@@ -824,7 +927,7 @@ namespace Bam.Net
 
         public static T Cast<T>(this object instance)
         {
-            return (T)instance;
+            return (T) instance;
         }
 
         public static bool TryCast<T>(this object instance, out T instanceAs)
@@ -833,7 +936,7 @@ namespace Bam.Net
             instanceAs = default(T);
             try
             {
-                instanceAs = (T)instance;
+                instanceAs = (T) instance;
             }
             catch //(Exception ex)
             {
@@ -845,13 +948,13 @@ namespace Bam.Net
 
         public static string ToCsv(this object data)
         {
-            return ToCsv(new object[] { data }, false, false);
+            return ToCsv(new object[] {data}, false, false);
         }
 
         public static string ToCsvLine(this object data, Func<Type, PropertyInfo[]> propertyGetter = null)
         {
             propertyGetter = propertyGetter ?? ((t) => t.GetProperties());
-            return ToCsv(new object[] { data }, propertyGetter, false, true);
+            return ToCsv(new object[] {data}, propertyGetter, false, true);
         }
 
         public static string ToCsv(this object[] dataArr, bool includeHeader = false, bool newLine = true)
@@ -859,7 +962,8 @@ namespace Bam.Net
             return ToCsv(dataArr, (t) => t.GetProperties(), includeHeader, newLine);
         }
 
-        public static string ToCsv(this object[] dataArr, Func<Type, PropertyInfo[]> propertyGetter, bool includeHeader = false, bool newLine = true)
+        public static string ToCsv(this object[] dataArr, Func<Type, PropertyInfo[]> propertyGetter,
+            bool includeHeader = false, bool newLine = true)
         {
             using (MemoryStream stream = new MemoryStream())
             {
@@ -898,6 +1002,7 @@ namespace Bam.Net
             {
                 values.Add(prop.Name.PascalSplit(" "));
             }
+
             writer.Write(string.Join(",", values));
             writer.WriteLine();
         }
@@ -922,8 +1027,10 @@ namespace Bam.Net
                 {
                     stringValue = stringValue.Replace("\"", "\"\"");
                 }
+
                 values.Add(string.Format(format, stringValue));
             }
+
             writer.Write(string.Join(",", values.ToArray()));
         }
 
@@ -948,7 +1055,7 @@ namespace Bam.Net
         {
             return HttpUtility.HtmlEncode(value);
         }
-        
+
         public static string XmlToHumanReadable(this string xml, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.Unicode;
@@ -989,8 +1096,10 @@ namespace Bam.Net
 
                     xmlWriter.Close();
                 }
+
                 ms.Close();
             }
+
             return result;
         }
 
@@ -1022,20 +1131,22 @@ namespace Bam.Net
             {
                 return false;
             }
+
             TypeInheritanceDescriptor descriptor = new TypeInheritanceDescriptor(type);
             return descriptor.Extends(extends);
         }
-        
+
         public static bool ExtendsType<T>(this Type type)
         {
             if (type == typeof(T))
             {
                 return false;
             }
+
             TypeInheritanceDescriptor descriptor = new TypeInheritanceDescriptor(type);
             return descriptor.Extends(typeof(T));
         }
-        
+
         /// <summary>
         /// Execute the specified Func this 
         /// many times
@@ -1078,9 +1189,10 @@ namespace Bam.Net
                     }
                     else
                     {
-                        list.Add((string)currentValue); // add the current value to the new list
+                        list.Add((string) currentValue); // add the current value to the new list
                         result[key] = list;
                     }
+
                     list.Add(value);
                 }
                 else
@@ -1091,7 +1203,8 @@ namespace Bam.Net
             return result;
         }
 
-        public static bool TryParseKeyValuePairs(this string input, out Dictionary<string, object> parsed, bool pascalCasify = true, string keyValueSeparator = ":", string elementSeparator = ";")
+        public static bool TryParseKeyValuePairs(this string input, out Dictionary<string, object> parsed,
+            bool pascalCasify = true, string keyValueSeparator = ":", string elementSeparator = ";")
         {
             try
             {
@@ -1102,7 +1215,7 @@ namespace Bam.Net
             {
                 parsed = new Dictionary<string, object>
                 {
-                    {input, input }
+                    {input, input}
                 };
                 return false;
             }
@@ -1116,7 +1229,8 @@ namespace Bam.Net
             elements.Each(e =>
             {
                 string[] keyValue = e.DelimitSplit(keyValueSeparator);
-                Args.ThrowIf<ArgumentException>(keyValue.Length == 0 || keyValue.Length > 2, "Unrecognized key value format: {0}", keyValue);
+                Args.ThrowIf<ArgumentException>(keyValue.Length == 0 || keyValue.Length > 2,
+                    "Unrecognized key value format: {0}", keyValue);
                 if (keyValue.Length == 2)
                 {
                     result.Add(keyValue[0], keyValue[1]);
@@ -1128,7 +1242,7 @@ namespace Bam.Net
             });
             return result;
         }
-        
+
         /// <summary>
         /// Parses key value pairs from the string.
         /// </summary>
@@ -1137,7 +1251,8 @@ namespace Bam.Net
         /// <param name="keyValueSeparator">The key value separator.</param>
         /// <param name="elementSeparator">The element separator.</param>
         /// <returns></returns>
-        public static Dictionary<string, object> ParseKeyValuePairs(this string input, bool pascalCasify = true, string keyValueSeparator = ":", string elementSeparator = ";")
+        public static Dictionary<string, object> ParseKeyValuePairs(this string input, bool pascalCasify = true,
+            string keyValueSeparator = ":", string elementSeparator = ";")
         {
             Dictionary<string, object> result = new Dictionary<string, object>();
             string[] elements = input.DelimitSplit(elementSeparator);
@@ -1147,15 +1262,18 @@ namespace Bam.Net
 
                 if (result.ContainsKey(key))
                 {
-                    Args.Throw<InvalidOperationException>("The key {0} exists more than once in the specified string: {1}", key, input);
+                    Args.Throw<InvalidOperationException>(
+                        "The key {0} exists more than once in the specified string: {1}", key, input);
                 }
+
                 result.Add(key, value);
             });
 
             return result;
         }
 
-        public static T ParseKeyValuePairs<T>(this string input, bool pascalCasify = true, string keyValueSeparator = ":", string elementSeparator = ";") where T : class, new()
+        public static T ParseKeyValuePairs<T>(this string input, bool pascalCasify = true,
+            string keyValueSeparator = ":", string elementSeparator = ";") where T : class, new()
         {
             T result = new T();
             string[] elements = input.DelimitSplit(elementSeparator);
@@ -1168,11 +1286,13 @@ namespace Bam.Net
 
             return result;
         }
-        
-        private static void GetKeyValue(bool pascalCasify, string keyValueSeparator, string element, out string key, out string value)
+
+        private static void GetKeyValue(bool pascalCasify, string keyValueSeparator, string element, out string key,
+            out string value)
         {
             string[] kvp = element.DelimitSplit(keyValueSeparator);
-            Args.ThrowIf<ArgumentException>(kvp.Length < 1 || kvp.Length > 2, "Unrecognized Key Value pair format: ({0})", element);
+            Args.ThrowIf<ArgumentException>(kvp.Length < 1 || kvp.Length > 2,
+                "Unrecognized Key Value pair format: ({0})", element);
 
             key = (pascalCasify ? kvp[0].PascalCase() : kvp[0]).Trim();
             value = string.Empty;
@@ -1382,6 +1502,7 @@ namespace Bam.Net
                 }
             }
         }
+
         /// <summary>
         /// Iterate over the current IEnumerable starting from the specified index
         /// passing each element to the specified action
@@ -1568,6 +1689,7 @@ namespace Bam.Net
             {
                 result[i] = func(arr[i]);
             }
+
             return result;
         }
 
@@ -1577,6 +1699,7 @@ namespace Bam.Net
             {
                 return new T[] { };
             }
+
             return arr;
         }
 
@@ -1586,6 +1709,7 @@ namespace Bam.Net
             {
                 return new T[] { };
             }
+
             return arr;
         }
 
@@ -1594,7 +1718,8 @@ namespace Bam.Net
             return type.TryConstruct(out constructed, ex => { }, ctorParams);
         }
 
-        public static bool TryConstruct(this Type type, out object constructed, Action<Exception> catcher, params object[] ctorParams)
+        public static bool TryConstruct(this Type type, out object constructed, Action<Exception> catcher,
+            params object[] ctorParams)
         {
             bool result = false;
             constructed = null;
@@ -1617,7 +1742,8 @@ namespace Bam.Net
             return type.TryConstruct(out constructed, ex => { }, ctorParams);
         }
 
-        public static bool TryConstruct<T>(this Type type, out T constructed, Action<Exception> catcher, params object[] ctorParams)
+        public static bool TryConstruct<T>(this Type type, out T constructed, Action<Exception> catcher,
+            params object[] ctorParams)
         {
             bool result = true;
             constructed = default(T);
@@ -1636,6 +1762,7 @@ namespace Bam.Net
 
 
         private delegate T CompiledLambdaCtor<T>(params object[] ctorParams);
+
         /// <summary>
         /// Construct an instance of the type using a dynamically defined and
         /// compiled lambda.  This "should" replace existing Construct&lt;T&gt;
@@ -1652,11 +1779,12 @@ namespace Bam.Net
             GetExpressions(type, ctorParams, out param, out newExp);
 
             LambdaExpression lambda = Expression.Lambda(typeof(CompiledLambdaCtor<T>), newExp, param);
-            CompiledLambdaCtor<T> compiled = (CompiledLambdaCtor<T>)lambda.Compile();
+            CompiledLambdaCtor<T> compiled = (CompiledLambdaCtor<T>) lambda.Compile();
             return compiled(ctorParams);
         }
 
         private delegate object CompiledLambdaCtor(params object[] ctorParams);
+
         /// <summary>
         /// Construct an instance of the type using a dynamically defined and
         /// compiled lambda.  This "should" replace existing Construct&lt;T&gt;
@@ -1675,11 +1803,12 @@ namespace Bam.Net
             GetExpressions(type, ctorParams, out param, out newExp);
 
             LambdaExpression lambda = Expression.Lambda(typeof(CompiledLambdaCtor), newExp, param);
-            CompiledLambdaCtor compiled = (CompiledLambdaCtor)lambda.Compile();
+            CompiledLambdaCtor compiled = (CompiledLambdaCtor) lambda.Compile();
             return compiled(ctorParams);
         }
 
-        private static void GetExpressions(Type type, object[] ctorParams, out ParameterExpression param, out NewExpression newExp)
+        private static void GetExpressions(Type type, object[] ctorParams, out ParameterExpression param,
+            out NewExpression newExp)
         {
             ConstructorInfo ctor = GetConstructor(type, ctorParams);
             ParameterInfo[] parameterInfos = ctor.GetParameters();
@@ -1695,7 +1824,9 @@ namespace Bam.Net
 
                 Expression paramCastExp = Expression.Convert(paramAccessorExp, paramType);
                 argsExp[i] = paramCastExp;
-            };
+            }
+
+            ;
 
             newExp = Expression.New(ctor, argsExp);
         }
@@ -1709,7 +1840,7 @@ namespace Bam.Net
         /// <returns></returns>
         public static T Construct<T>(this Type type, params object[] ctorParams)
         {
-            return (T)type.Construct(ctorParams);
+            return (T) type.Construct(ctorParams);
         }
 
         /// <summary>
@@ -1765,13 +1896,14 @@ namespace Bam.Net
         {
             SerializeToFile(obj, format, new FileInfo(filePath));
         }
+
         public static void SerializeToFile(this object obj, SerializationFormat format, FileInfo file)
         {
             MemoryStream output = new MemoryStream();
             Serialize(obj, format, output);
-            using(StreamWriter sw = new StreamWriter(file.FullName))
+            using (StreamWriter sw = new StreamWriter(file.FullName))
             {
-                using(StreamReader reader = new StreamReader(output))
+                using (StreamReader reader = new StreamReader(output))
                 {
                     sw.Write(reader.ReadToEnd());
                 }
@@ -1854,6 +1986,7 @@ namespace Bam.Net
             {
                 file.Directory.Create();
             }
+
             ToJson(value, Newtonsoft.Json.Formatting.Indented).SafeWriteToFile(file.FullName, true);
         }
 
@@ -1877,7 +2010,7 @@ namespace Bam.Net
         /// <param name="stream"></param>
         public static void ToJsonStream(this object value, Stream stream)
         {
-            StreamWriter writer = new StreamWriter(stream);            
+            StreamWriter writer = new StreamWriter(stream);
             writer.Write(value.ToJson());
             writer.Flush();
             stream.Seek(0, SeekOrigin.Begin);
@@ -1896,13 +2029,18 @@ namespace Bam.Net
             }
         }
 
-        public static string ToJson(this object value)
+        public static string ToJson(this object value, params JsonConverter[] converters)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
-            return JsonConvert.SerializeObject(value);
+            if (converters != null && converters.Length > 0)
+            {
+                settings.Converters = new List<JsonConverter>(converters);
+            }
+
+            return JsonConvert.SerializeObject(value, settings);
         }
 
-        public static string ToJson<Attr>(this object value) where Attr: Attribute
+        public static string ToJson<Attr>(this object value) where Attr : Attribute
         {
             return ToJson(value, pi => pi.HasCustomAttributeOfType<Attr>());
         }
@@ -1915,12 +2053,15 @@ namespace Bam.Net
             {
                 obj.Add(new JObject(prop.GetValue(value)));
             }
+
             return obj.ToString();
         }
 
-        public static string ToJson(this object value, bool pretty, NullValueHandling nullValueHandling = NullValueHandling.Ignore)
+        public static string ToJson(this object value, bool pretty,
+            NullValueHandling nullValueHandling = NullValueHandling.Ignore)
         {
-            Newtonsoft.Json.Formatting formatting = pretty ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None;
+            Newtonsoft.Json.Formatting formatting =
+                pretty ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None;
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 Formatting = formatting,
@@ -2056,10 +2197,11 @@ namespace Bam.Net
         public static ulong ToUlong(this string number, ulong valueIfZero)
         {
             ulong result = valueIfZero;
-            if(ulong.TryParse(number, out ulong value))
+            if (ulong.TryParse(number, out ulong value))
             {
                 result = value;
             }
+
             return result;
         }
 
@@ -2075,9 +2217,10 @@ namespace Bam.Net
             {
                 return value;
             }
+
             return 0;
         }
-        
+
         /// <summary>
         /// Convert text to a byte array using the specified encoding or UTF8.
         /// </summary>
@@ -2120,7 +2263,7 @@ namespace Bam.Net
             //convert the hexstring to bytes
             for (int i = 0; i != len_half; i++)
             {
-                bs[i] = (byte)Int32.Parse(hexString.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber);
+                bs[i] = (byte) Int32.Parse(hexString.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber);
             }
 
             //return the byte array
@@ -2146,7 +2289,7 @@ namespace Bam.Net
             int size = 5000;
             if (fileInfo.Length <= 5000)
             {
-                size = (int)fileInfo.Length;
+                size = (int) fileInfo.Length;
             }
 
             byte[] sample = new byte[size];
@@ -2194,7 +2337,8 @@ namespace Bam.Net
 
         public static string RemoveInvalidFilePathCharacters(this string value)
         {
-            return value.Replace("<", "").Replace(">", "").Replace(":", "").Replace("\"", "").Replace("/", "").Replace("\\", "").Replace("|", "").Replace("?", "").Replace("*", "");
+            return value.Replace("<", "").Replace(">", "").Replace(":", "").Replace("\"", "").Replace("/", "")
+                .Replace("\\", "").Replace("|", "").Replace("?", "").Replace("*", "");
         }
 
         /// <summary>
@@ -2257,10 +2401,7 @@ namespace Bam.Net
         {
             char[] chars = value.ToCharArray();
             StringBuilder headBuilder = new StringBuilder();
-            count.Times((i) =>
-            {
-                headBuilder.Append(chars[i]);
-            });
+            count.Times((i) => { headBuilder.Append(chars[i]); });
             head = headBuilder.ToString();
 
             return value.TruncateFront(count);
@@ -2299,10 +2440,7 @@ namespace Bam.Net
             });
             tailBuffer = tailBuffer.Reverse().ToArray();
             string tailTmp = string.Empty;
-            tailBuffer.Each(c =>
-            {
-                tailTmp += c;
-            });
+            tailBuffer.Each(c => { tailTmp += c; });
             tail = tailTmp;
 
             return value.Truncate(count);
@@ -2318,7 +2456,7 @@ namespace Bam.Net
         {
             return RandomString(length, true, true);
         }
-        
+
         /// <summary>
         /// Add the specified length of random characters
         /// to the current string.  Only  lowercase
@@ -2371,7 +2509,8 @@ namespace Bam.Net
 
         public static string ToMonthName(this int oneThroughTwelve)
         {
-            Args.ThrowIf(oneThroughTwelve < 1 || oneThroughTwelve > 12, "Specified month number must be from 1 to 12: value specified ({0})", oneThroughTwelve.ToString());
+            Args.ThrowIf(oneThroughTwelve < 1 || oneThroughTwelve > 12,
+                "Specified month number must be from 1 to 12: value specified ({0})", oneThroughTwelve.ToString());
             return new DateTime(1, oneThroughTwelve, 1).ToString("MMMM");
         }
 
@@ -2397,7 +2536,7 @@ namespace Bam.Net
         /// </summary>
         /// <returns></returns>
         public static bool RandomBool()
-        {            
+        {
             return RandomHelper.Next(2) == 1;
         }
 
@@ -2423,17 +2562,19 @@ namespace Bam.Net
 
                 retTemp = upperIzed;
             }
+
             return retTemp;
         }
 
-        static string[] letters = new string[] { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+        static string[] letters = new string[]
+        {
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
+            "v", "w", "x", "y", "z"
+        };
 
         public static string[] LowerCaseLetters
         {
-            get
-            {
-                return letters;
-            }
+            get { return letters; }
         }
 
         public static string[] UpperCaseLetters
@@ -2445,6 +2586,7 @@ namespace Bam.Net
                 {
                     upper.Add(letter.ToUpper());
                 }
+
                 return upper.ToArray();
             }
         }
@@ -2453,7 +2595,7 @@ namespace Bam.Net
         {
             Dictionary<char, List<T>> results = new Dictionary<char, List<T>>
             {
-                { '\0', new List<T>() }
+                {'\0', new List<T>()}
             };
             list.ForEach(val =>
             {
@@ -2465,6 +2607,7 @@ namespace Bam.Net
                     {
                         results.Add(first, new List<T>());
                     }
+
                     results[first].Add(val);
                 }
                 else
@@ -2517,6 +2660,7 @@ namespace Bam.Net
                 yield return value.Substring(index, Math.Min(maxLength, value.Length - index));
             }
         }
+
         /// <summary>
         /// Returns a random lowercase letter from a-z."
         /// </summary>
@@ -2597,15 +2741,15 @@ namespace Bam.Net
                 return stringToPluralize.Substring(0, stringToPluralize.Length - 2) + "i";
             }
             else if (checkValue.EndsWith("s") ||
-                checkValue.EndsWith("sh"))
+                     checkValue.EndsWith("sh"))
             {
                 return stringToPluralize + "es";
             }
             else if (checkValue.EndsWith("ay") ||
-                checkValue.EndsWith("ey") ||
-                checkValue.EndsWith("iy") ||
-                checkValue.EndsWith("oy") ||
-                checkValue.EndsWith("uy"))
+                     checkValue.EndsWith("ey") ||
+                     checkValue.EndsWith("iy") ||
+                     checkValue.EndsWith("oy") ||
+                     checkValue.EndsWith("uy"))
             {
                 return stringToPluralize + "s";
             }
@@ -2718,7 +2862,7 @@ namespace Bam.Net
                     {
                         if (property.PropertyType == typeof(string[]))
                         {
-                            string[] values = ((string[])property.GetValue(obj, null)) ?? new string[] { };
+                            string[] values = ((string[]) property.GetValue(obj, null)) ?? new string[] { };
                             result.Add(property.Name, string.Join(", ", values));
                         }
 #if NET472
@@ -2746,12 +2890,13 @@ namespace Bam.Net
                             object value = property.GetValue(obj, null);
                             if (value != null)
                             {
-                                System.Net.CookieCollection values = (System.Net.CookieCollection)value;
+                                System.Net.CookieCollection values = (System.Net.CookieCollection) value;
                                 List<string> strings = new List<string>();
                                 foreach (System.Net.Cookie cookie in values)
                                 {
                                     strings.Add($"{cookie.Name}={cookie.Value}");
                                 }
+
                                 result.Add(property.Name, string.Join("\r\n\t", strings.ToArray()));
                             }
                             else
@@ -2764,12 +2909,13 @@ namespace Bam.Net
                             object value = property.GetValue(obj, null);
                             if (value != null)
                             {
-                                NameValueCollection values = (NameValueCollection)value;
+                                NameValueCollection values = (NameValueCollection) value;
                                 List<string> strings = new List<string>();
                                 foreach (string key in values.AllKeys)
                                 {
                                     strings.Add($"{key}={values[key]}");
                                 }
+
                                 result.Add(property.Name, string.Join("\r\n\t", strings.ToArray()));
                             }
                             else
@@ -2790,6 +2936,7 @@ namespace Bam.Net
                                     {
                                         strings.Add(o.ToString());
                                     }
+
                                     stringValue = string.Join("\r\n\t", strings.ToArray());
                                 }
                                 else
@@ -2815,10 +2962,10 @@ namespace Bam.Net
             {
                 result.Add("EXCEPTION", ex.Message);
             }
-            
+
             return result;
         }
-        
+
         public static string PropertiesToString(this object obj, PropertyInfo[] properties, string separator = "\r\n")
         {
             try
@@ -2830,8 +2977,9 @@ namespace Bam.Net
                     {
                         if (property.PropertyType == typeof(string[]))
                         {
-                            string[] values = ((string[])property.GetValue(obj, null)) ?? new string[] { };
-                            returnValue.AppendFormat("{0}: {1}{2}", property.Name, string.Join(", ", values), separator);
+                            string[] values = ((string[]) property.GetValue(obj, null)) ?? new string[] { };
+                            returnValue.AppendFormat("{0}: {1}{2}", property.Name, string.Join(", ", values),
+                                separator);
                         }
 #if NET472
                         else if (property.PropertyType == typeof(HttpCookieCollection))
@@ -2858,13 +3006,15 @@ namespace Bam.Net
                             object value = property.GetValue(obj, null);
                             if (value != null)
                             {
-                                System.Net.CookieCollection values = (System.Net.CookieCollection)value;
+                                System.Net.CookieCollection values = (System.Net.CookieCollection) value;
                                 List<string> strings = new List<string>();
                                 foreach (System.Net.Cookie cookie in values)
                                 {
                                     strings.Add(string.Format("{0}={1}", cookie.Name, cookie.Value));
                                 }
-                                returnValue.AppendFormat("{0}: {1}{2}", property.Name, string.Join("\r\n\t", strings.ToArray()), separator);
+
+                                returnValue.AppendFormat("{0}: {1}{2}", property.Name,
+                                    string.Join("\r\n\t", strings.ToArray()), separator);
                             }
                             else
                             {
@@ -2876,13 +3026,15 @@ namespace Bam.Net
                             object value = property.GetValue(obj, null);
                             if (value != null)
                             {
-                                NameValueCollection values = (NameValueCollection)value;
+                                NameValueCollection values = (NameValueCollection) value;
                                 List<string> strings = new List<string>();
                                 foreach (string key in values.AllKeys)
                                 {
                                     strings.Add(string.Format("{0}={1}", key, values[key]));
                                 }
-                                returnValue.AppendFormat("{0}: {1}{2}", property.Name, string.Join("\r\n\t", strings.ToArray()), separator);
+
+                                returnValue.AppendFormat("{0}: {1}{2}", property.Name,
+                                    string.Join("\r\n\t", strings.ToArray()), separator);
                             }
                             else
                             {
@@ -2902,6 +3054,7 @@ namespace Bam.Net
                                     {
                                         strings.Add(o.ToString());
                                     }
+
                                     stringValue = string.Join("\r\n\t", strings.ToArray());
                                 }
                                 else
@@ -2922,6 +3075,7 @@ namespace Bam.Net
                         returnValue.AppendFormat("{0}: ({1}){2}", property.Name, ex.Message, separator);
                     }
                 }
+
                 return returnValue.ToString();
             }
             catch (Exception ex)
@@ -2936,30 +3090,32 @@ namespace Bam.Net
             {
                 dir.Create();
             }
+
             return dir;
         }
 
-        public static FileInfo[] GetFiles(this DirectoryInfo parent, string[] searchPatterns, SearchOption option = SearchOption.TopDirectoryOnly)
+        public static FileInfo[] GetFiles(this DirectoryInfo parent, string[] searchPatterns,
+            SearchOption option = SearchOption.TopDirectoryOnly)
         {
             List<FileInfo> results = new List<FileInfo>();
-            searchPatterns.Each(spattern =>
-            {
-                results.AddRange(parent.GetFiles(spattern, option));
-            });
+            searchPatterns.Each(spattern => { results.AddRange(parent.GetFiles(spattern, option)); });
             return results.ToArray();
         }
 
-        public static void Copy(this DirectoryInfo src, string destinationPath, bool overwrite = false, Action<string, string> beforeFileCopy = null, Action<string, string> beforeDirectoryCopy = null)
+        public static void Copy(this DirectoryInfo src, string destinationPath, bool overwrite = false,
+            Action<string, string> beforeFileCopy = null, Action<string, string> beforeDirectoryCopy = null)
         {
             src.Copy(new DirectoryInfo(destinationPath), overwrite, beforeFileCopy, beforeDirectoryCopy);
         }
 
-        public static void Copy(this DirectoryInfo src, DirectoryInfo destination, bool overwrite = false, Action<string, string> beforeFileCopy = null, Action<string, string> beforeDirectoryCopy = null)
+        public static void Copy(this DirectoryInfo src, DirectoryInfo destination, bool overwrite = false,
+            Action<string, string> beforeFileCopy = null, Action<string, string> beforeDirectoryCopy = null)
         {
             CopyDirectory(src.FullName, destination.FullName, overwrite, beforeFileCopy, beforeDirectoryCopy);
         }
 
-        public static void CopyDirectory(this string sourcePath, string destPath, bool overwrite = false, Action<string, string> beforeFileCopy = null, Action<string, string> beforeDirectoryCopy = null)
+        public static void CopyDirectory(this string sourcePath, string destPath, bool overwrite = false,
+            Action<string, string> beforeFileCopy = null, Action<string, string> beforeDirectoryCopy = null)
         {
             if (!Directory.Exists(destPath))
             {
@@ -2981,10 +3137,10 @@ namespace Bam.Net
             }
         }
 
-        static Dictionary<string, object> fileAccessLocks = new Dictionary<string, object>();
+        static readonly Dictionary<string, object> fileAccessLocks = new Dictionary<string, object>();
 
         /// <summary>
-        /// Returns the content of the file refferred to by the current
+        /// Returns the content of the file referred to by the current
         /// string instance.
         /// </summary>
         /// <param name="filePath"></param>
@@ -2995,7 +3151,7 @@ namespace Bam.Net
             {
                 return string.Empty;
             }
-            
+
             lock (FileLock.Named(filePath))
             {
                 return File.ReadAllText(filePath);
@@ -3003,12 +3159,12 @@ namespace Bam.Net
         }
 
         public static byte[] SafeReadFileBytes(this string filePath)
-        {            
+        {
             if (!File.Exists(filePath))
             {
-                return new byte[]{ };
+                return new byte[] { };
             }
-            
+
             lock (FileLock.Named(filePath))
             {
                 return File.ReadAllBytes(filePath);
@@ -3021,7 +3177,8 @@ namespace Bam.Net
         /// <param name="filePath"></param>
         /// <param name="textToWrite"></param>
         /// <param name="postWriteAction"></param>
-        public static void SafeWriteFile(this string filePath, string textToWrite, Action<object> postWriteAction = null)
+        public static void SafeWriteFile(this string filePath, string textToWrite,
+            Action<object> postWriteAction = null)
         {
             SafeWriteFile(filePath, textToWrite, false, postWriteAction);
         }
@@ -3032,12 +3189,14 @@ namespace Bam.Net
         /// <param name="textToWrite"></param>
         /// <param name="filePath"></param>
         /// <param name="postWriteAction"></param>
-        public static void SafeWriteToFile(this string textToWrite, string filePath, Action<object> postWriteAction = null)
+        public static void SafeWriteToFile(this string textToWrite, string filePath,
+            Action<object> postWriteAction = null)
         {
             filePath.SafeWriteFile(textToWrite, postWriteAction);
         }
 
-        public static void SafeWriteToFile(this string textToWrite, string filePath, bool overwrite, Action<object> postWriteAction = null)
+        public static void SafeWriteToFile(this string textToWrite, string filePath, bool overwrite,
+            Action<object> postWriteAction = null)
         {
             filePath.SafeWriteFile(textToWrite, overwrite, postWriteAction);
         }
@@ -3048,7 +3207,8 @@ namespace Bam.Net
         /// <param name="filePath">The path to the file to write.</param>
         /// <param name="textToWrite">The text to write.</param>
         /// <param name="overwrite">True to overwrite.  If false and the file exists an InvalidOperationException will be thrown.</param>
-        public static void SafeWriteFile(this string filePath, string textToWrite, bool overwrite, Action<object> postWriteAction = null)
+        public static void SafeWriteFile(this string filePath, string textToWrite, bool overwrite,
+            Action<object> postWriteAction = null)
         {
             FileInfo fileInfo = HandleExisting(filePath, overwrite);
 
@@ -3063,15 +3223,17 @@ namespace Bam.Net
             postWriteAction?.Invoke(fileInfo);
         }
 
-        public static void SafeWriteFileBytes(this string filePath, byte[] bytesToWrite, bool overwrite, Action<object> postWriteAction = null)
+        public static void SafeWriteFileBytes(this string filePath, byte[] bytesToWrite, bool overwrite,
+            Action<object> postWriteAction = null)
         {
             SafeWriteFileBytes(filePath, bytesToWrite, 0, overwrite, postWriteAction);
         }
 
-        public static void SafeWriteFileBytes(this string filePath, byte[] bytesToWrite, long startIndex, bool overwrite, Action<object> postWriteAction = null)
+        public static void SafeWriteFileBytes(this string filePath, byte[] bytesToWrite, long startIndex,
+            bool overwrite, Action<object> postWriteAction = null)
         {
             FileInfo fileInfo = new FileInfo(filePath);
-            if(startIndex == 0)
+            if (startIndex == 0)
             {
                 fileInfo = HandleExisting(filePath, overwrite);
             }
@@ -3122,7 +3284,7 @@ namespace Bam.Net
         public static void SafeAppendToFile(this string textToAppend, string filePath)
         {
             FileInfo fileInfo = new FileInfo(filePath);
-            
+
             lock (FileLock.Named(fileInfo.FullName))
             {
                 using (StreamWriter sw = new StreamWriter(filePath, true))
@@ -3195,6 +3357,7 @@ namespace Bam.Net
             {
                 return -1;
             }
+
             long smallest = longs[0];
             longs.Each(l => smallest = l < smallest ? l : smallest);
             return smallest;
@@ -3216,6 +3379,7 @@ namespace Bam.Net
             {
                 return -1;
             }
+
             long largest = longs[0];
             longs.Each(l => largest = l > largest ? l : largest);
             return largest;
@@ -3227,6 +3391,7 @@ namespace Bam.Net
             {
                 return default(T);
             }
+
             T result = values[0];
             values.Each(s => result = s.ToString().CompareTo(result.ToString()) == 1 ? s : result);
             return result;
@@ -3234,10 +3399,11 @@ namespace Bam.Net
 
         public static string Largest(this string[] strings)
         {
-            if(strings.Length == 0)
+            if (strings.Length == 0)
             {
                 return string.Empty;
             }
+
             string result = strings[0];
             strings.Each(s => result = s.CompareTo(result) == 1 ? s : result);
             return result;
@@ -3250,7 +3416,7 @@ namespace Bam.Net
         {
             return PascalSplit(stringToKabobify, "-");
         }
-        
+
         /// <summary>
         /// Splits the specified text at capital letters inserting the specified separator.
         /// </summary>
@@ -3289,12 +3455,14 @@ namespace Bam.Net
         /// <param name="preserveInnerUppers">if set to <c>true</c> [preserve inner uppers].</param>
         /// <param name="separators">The separators.</param>
         /// <returns></returns>
-        public static string CamelCase(this string stringToCamelize, bool preserveInnerUppers = true, params string[] separators)
+        public static string CamelCase(this string stringToCamelize, bool preserveInnerUppers = true,
+            params string[] separators)
         {
             if (stringToCamelize.Length > 0)
             {
                 string pascalCase = stringToCamelize.PascalCase(preserveInnerUppers, separators);
-                string camelCase = string.Format("{0}{1}", pascalCase[0].ToString().ToLowerInvariant(), pascalCase.Remove(0, 1));
+                string camelCase = string.Format("{0}{1}", pascalCase[0].ToString().ToLowerInvariant(),
+                    pascalCase.Remove(0, 1));
                 return camelCase;
             }
             else
@@ -3302,7 +3470,7 @@ namespace Bam.Net
                 return string.Empty;
             }
         }
-        
+
         /// <summary>
         /// Return an acronym for the specified string using the 
         /// capital letters in the string
@@ -3323,6 +3491,7 @@ namespace Bam.Net
                         result.Append(current.ToString().ToUpperInvariant());
                     }
                 }
+
                 return result.ToString();
             }
             else
@@ -3342,7 +3511,8 @@ namespace Bam.Net
         /// the middle of a word remain uppercase if false they are converted to lowercase.</param>
         /// <param name="separators"></param>
         /// <returns></returns>
-        public static string PascalCase(this string stringToPascalize, bool preserveInnerUppers = true, params string[] separators)
+        public static string PascalCase(this string stringToPascalize, bool preserveInnerUppers = true,
+            params string[] separators)
         {
             string[] splitString = stringToPascalize.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             string retVal = string.Empty;
@@ -3389,7 +3559,7 @@ namespace Bam.Net
 
             return result.ToString();
         }
-        
+
         public static string LettersOnly(this string targetString)
         {
             StringBuilder result = new StringBuilder();
@@ -3413,46 +3583,46 @@ namespace Bam.Net
         public static bool IsNumber(this object value)
         {
             return value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is ulong
-                    || value is float
-                    || value is double
-                    || value is decimal;
+                   || value is byte
+                   || value is short
+                   || value is ushort
+                   || value is int
+                   || value is uint
+                   || value is long
+                   || value is ulong
+                   || value is float
+                   || value is double
+                   || value is decimal;
         }
 
         public static bool IsNumberType(this Type type)
         {
             return type == typeof(sbyte)
-                || type == typeof(byte)
-                || type == typeof(short)
-                || type == typeof(ushort)
-                || type == typeof(int)
-                || type == typeof(uint)
-                || type == typeof(long)
-                || type == typeof(ulong)
-                || type == typeof(float)
-                || type == typeof(double)
-                || type == typeof(decimal);
+                   || type == typeof(byte)
+                   || type == typeof(short)
+                   || type == typeof(ushort)
+                   || type == typeof(int)
+                   || type == typeof(uint)
+                   || type == typeof(long)
+                   || type == typeof(ulong)
+                   || type == typeof(float)
+                   || type == typeof(double)
+                   || type == typeof(decimal);
         }
 
         public static bool IsNullableNumberType(this Type type)
         {
             return type == typeof(sbyte?)
-                || type == typeof(byte?)
-                || type == typeof(short?)
-                || type == typeof(ushort?)
-                || type == typeof(int?)
-                || type == typeof(uint?)
-                || type == typeof(long?)
-                || type == typeof(ulong?)
-                || type == typeof(float?)
-                || type == typeof(double?)
-                || type == typeof(decimal?);
+                   || type == typeof(byte?)
+                   || type == typeof(short?)
+                   || type == typeof(ushort?)
+                   || type == typeof(int?)
+                   || type == typeof(uint?)
+                   || type == typeof(long?)
+                   || type == typeof(ulong?)
+                   || type == typeof(float?)
+                   || type == typeof(double?)
+                   || type == typeof(decimal?);
         }
 
         public static bool IsLetter(this char c)
@@ -3472,6 +3642,7 @@ namespace Bam.Net
                     break;
                 }
             }
+
             return result;
         }
 
@@ -3530,6 +3701,7 @@ namespace Bam.Net
             {
                 return false;
             }
+
             return theString[0].IsLetter();
         }
 
@@ -3556,9 +3728,10 @@ namespace Bam.Net
         /// <param name="objectsToStringify">The objects</param>
         /// <param name="toDelimiteder">The ToDelimitedDelegate used to represent each object</param>
         /// <returns>string</returns>
-        public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder, string delimiter)
+        public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder,
+            string delimiter)
         {
-            return string.Join(delimiter, objectsToStringify.Select(v=> toDelimiteder(v)).ToArray());
+            return string.Join(delimiter, objectsToStringify.Select(v => toDelimiteder(v)).ToArray());
         }
 
         public static string[] SemiColonSplit(this string semicolonSeparatedValues)
@@ -3568,7 +3741,7 @@ namespace Bam.Net
 
         public static string[] DelimitSplit(this string valueToSplit, string delimiter)
         {
-            return DelimitSplit(valueToSplit, new string[] { delimiter });
+            return DelimitSplit(valueToSplit, new string[] {delimiter});
         }
 
         public static string[] DelimitSplit(this string valueToSplit, params string[] delimiters)
@@ -3578,15 +3751,18 @@ namespace Bam.Net
 
         public static string[] DelimitSplit(this string valueToSplit, string delimiter, bool trimValues)
         {
-            return DelimitSplit(valueToSplit, new string[] { delimiter }, trimValues);
+            return DelimitSplit(valueToSplit, new string[] {delimiter}, trimValues);
         }
 
-        public static string DelimitedReplace(this string input, string toReplace, string replaceWith, string startDelimiter = "$$~", string endDelimiter = "~$$")
+        public static string DelimitedReplace(this string input, string toReplace, string replaceWith,
+            string startDelimiter = "$$~", string endDelimiter = "~$$")
         {
-            return DelimitedReplace(input, new Dictionary<string, string> { { toReplace, replaceWith } }, startDelimiter, endDelimiter);
+            return DelimitedReplace(input, new Dictionary<string, string> {{toReplace, replaceWith}}, startDelimiter,
+                endDelimiter);
         }
-        
-        public static string DelimitedReplace(this string input, Dictionary<string, string> replacements, string startDelimiter = "$$~", string endDelimiter = "~$$")
+
+        public static string DelimitedReplace(this string input, Dictionary<string, string> replacements,
+            string startDelimiter = "$$~", string endDelimiter = "~$$")
         {
             StringBuilder result = new StringBuilder();
             StringBuilder innerValue = new StringBuilder();
@@ -3597,7 +3773,7 @@ namespace Bam.Net
                 {
                     innerValue.Append(c);
                     string innerSoFar = innerValue.ToString();
-                    foreach(string toReplace in replacements.Keys)
+                    foreach (string toReplace in replacements.Keys)
                     {
                         if (innerSoFar.EndsWith(toReplace))
                         {
@@ -3665,9 +3841,10 @@ namespace Bam.Net
             {
                 return false; // it is but that's not what we're looking for
             }
+
             return type.IsArray ||
-                typeof(IEnumerable).IsAssignableFrom(type) ||
-                type.GetInterface(typeof(IEnumerable<>).FullName) != null;
+                   typeof(IEnumerable).IsAssignableFrom(type) ||
+                   type.GetInterface(typeof(IEnumerable<>).FullName) != null;
         }
 
         /// <summary>
@@ -3683,7 +3860,8 @@ namespace Bam.Net
             {
                 result = property.PropertyType.GetElementType();
             }
-            else if (property.PropertyType != typeof(string) && property.PropertyType.GetInterface(typeof(IEnumerable<>).FullName) != null)
+            else if (property.PropertyType != typeof(string) &&
+                     property.PropertyType.GetInterface(typeof(IEnumerable<>).FullName) != null)
             {
                 result = property.PropertyType.GetInterfaces()
                     .Where(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))
@@ -3762,10 +3940,7 @@ namespace Bam.Net
         /// <returns></returns>
         public static object CopyEventHandlers(this object destination, object source)
         {
-            GetEventSubscriptions(source).Each(es =>
-            {
-                es.EventInfo.AddEventHandler(destination, es.Delegate);
-            });
+            GetEventSubscriptions(source).Each(es => { es.EventInfo.AddEventHandler(destination, es.Delegate); });
             return destination;
         }
 
@@ -3789,18 +3964,24 @@ namespace Bam.Net
         {
             Type type = instance.GetType();
             Func<EventInfo, FieldInfo> ei2fi =
-            ei => type.GetField(ei.Name,
-                BindingFlags.NonPublic |
-                BindingFlags.Instance |
-                BindingFlags.GetField);
+                ei => type.GetField(ei.Name,
+                    BindingFlags.NonPublic |
+                    BindingFlags.Instance |
+                    BindingFlags.GetField);
 
             // ** yuck **
             IEnumerable<EventSubscription> results = from eventInfo in type.GetEvents()
-                                                     let eventFieldInfo = ei2fi(eventInfo)
-                                                     let eventFieldValue =
-                                                         (System.Delegate)eventFieldInfo?.GetValue(instance)
-                                                     from subscribedDelegate in eventFieldValue == null ? new Delegate[] { } : eventFieldValue.GetInvocationList()
-                                                     select new EventSubscription { EventName = eventFieldInfo.Name, Delegate = subscribedDelegate, FieldInfo = eventFieldInfo, EventInfo = eventInfo };
+                let eventFieldInfo = ei2fi(eventInfo)
+                let eventFieldValue =
+                    (System.Delegate) eventFieldInfo?.GetValue(instance)
+                from subscribedDelegate in eventFieldValue == null
+                    ? new Delegate[] { }
+                    : eventFieldValue.GetInvocationList()
+                select new EventSubscription
+                {
+                    EventName = eventFieldInfo.Name, Delegate = subscribedDelegate, FieldInfo = eventFieldInfo,
+                    EventInfo = eventInfo
+                };
             // ** /yuck **
             return results;
         }
@@ -3844,7 +4025,8 @@ namespace Bam.Net
             return destination;
         }
 
-        private static void ForEachProperty(object destination, object source, Action<object, object, PropertyInfo, PropertyInfo> action)
+        private static void ForEachProperty(object destination, object source,
+            Action<object, object, PropertyInfo, PropertyInfo> action)
         {
             Type destinationType = destination.GetType();
             Type sourceType = source.GetType();
@@ -3870,7 +4052,8 @@ namespace Bam.Net
             destination.CopyProperty(source, destProp, sourceProp);
         }
 
-        internal static void CopyProperty(this object destination, object source, PropertyInfo destProp, PropertyInfo sourceProp)
+        internal static void CopyProperty(this object destination, object source, PropertyInfo destProp,
+            PropertyInfo sourceProp)
         {
             if (sourceProp != null)
             {
@@ -3886,9 +4069,10 @@ namespace Bam.Net
             }
         }
 
-        internal static void CloneProperty(this object destination, object source, PropertyInfo destProp, PropertyInfo sourceProp)
+        internal static void CloneProperty(this object destination, object source, PropertyInfo destProp,
+            PropertyInfo sourceProp)
         {
-            if(sourceProp != null)
+            if (sourceProp != null)
             {
                 if (destProp.IsCompatibleWith(sourceProp))
                 {
@@ -3897,6 +4081,7 @@ namespace Bam.Net
                     {
                         value = cloneable.Clone();
                     }
+
                     destProp.SetValue(destination, value, null);
                 }
             }
@@ -3910,9 +4095,9 @@ namespace Bam.Net
         public static bool AreCompatibleProperties(PropertyInfo destProp, PropertyInfo sourceProp)
         {
             return (sourceProp.PropertyType == destProp.PropertyType ||
-                                sourceProp.PropertyType == Nullable.GetUnderlyingType(destProp.PropertyType) ||
-                                Nullable.GetUnderlyingType(sourceProp.PropertyType) == destProp.PropertyType)
-                                && destProp.CanWrite;
+                    sourceProp.PropertyType == Nullable.GetUnderlyingType(destProp.PropertyType) ||
+                    Nullable.GetUnderlyingType(sourceProp.PropertyType) == destProp.PropertyType)
+                   && destProp.CanWrite;
         }
 
         /// <summary>
@@ -3932,8 +4117,8 @@ namespace Bam.Net
         public static bool AreCompatibleTypes(this Type type, Type otherType)
         {
             return (type == otherType ||
-                otherType == Nullable.GetUnderlyingType(type) ||
-                Nullable.GetUnderlyingType(otherType) == type);
+                    otherType == Nullable.GetUnderlyingType(type) ||
+                    Nullable.GetUnderlyingType(otherType) == type);
         }
 
         public static bool IsPrimitiveNullableOrString(this Type type)
@@ -3956,6 +4141,7 @@ namespace Bam.Net
         {
             return IsForEachable(type, out Type ignore);
         }
+
         /// <summary>
         /// Determines whether the specified type is a list like type, like an array or generic
         /// List.  Excludes string.
@@ -3977,11 +4163,11 @@ namespace Bam.Net
                 underlyingType = type.GetElementType();
                 return true;
             }
-            
+
             underlyingType = type.GetGenericArguments().FirstOrDefault();
             return type.GetInterfaces().Contains(typeof(IEnumerable));
         }
-        
+
         /// <summary>
         /// Determines whether the specified type is nullable of the specified
         /// generic argument.
@@ -4008,10 +4194,11 @@ namespace Bam.Net
         public static bool IsNullable<T>(this Type type, out Type underlyingType)
         {
             underlyingType = Nullable.GetUnderlyingType(type);
-            if(underlyingType != null)
+            if (underlyingType != null)
             {
                 return underlyingType == typeof(T);
             }
+
             return false;
         }
 
@@ -4037,7 +4224,7 @@ namespace Bam.Net
         public static T As<T>(this DataRow row) where T : new()
         {
             T result = new T();
-            return (T)CopyValues(result, row);
+            return (T) CopyValues(result, row);
         }
 
         public static object CopyValues(this object destination, DataRow row)
@@ -4068,7 +4255,7 @@ namespace Bam.Net
         {
             return instance.GetType().GetProperties().Where(pi => pi.PropertyType.IsValueType).ToArray();
         }
-                
+
         private static ConstructorInfo GetConstructor(Type type, object[] ctorParams)
         {
             List<Type> paramTypes = new List<Type>();
@@ -4088,7 +4275,7 @@ namespace Bam.Net
                 yield return ToDynamic(row, typeName, nameSpace);
             }
         }
-        
+
         public static dynamic ToDynamic(this DataRow row, string typeName, string nameSpace = null)
         {
             return ToDynamic(row.ToDictionary(), typeName, nameSpace);
@@ -4096,10 +4283,52 @@ namespace Bam.Net
 
         public static dynamic ToDynamic(this Dictionary<object, object> dictionary, string typeName, string nameSpace = null)
         {
+            return ToDynamic(dictionary, typeName, () => new MetadataReference[]{}, nameSpace);
+        }
+        
+        public static dynamic ToDynamic(this Dictionary<object, object> dictionary, string typeName, Func<MetadataReference[]> getMetadataReferences, string nameSpace = null)
+        {
             nameSpace = nameSpace ?? Dto.DefaultNamespace;
             return Dto.InstanceFor(nameSpace, typeName, dictionary);
         }
-        
+
+        public static dynamic CombineToDynamic(this object instance, params object[] combineWith)
+        {
+            StringBuilder typeName = new StringBuilder();
+            typeName.Append(instance.GetType().Name);
+            combineWith.Each(o => typeName.Append($"_{o.GetType().Name}"));
+            return CombineToDynamic(instance, typeName, combineWith);
+        }
+
+        public static dynamic CombineToDynamic(this object instance, string typeName, params object[] combineWith)
+        {
+            return CombineToDynamic(instance, typeName, null, combineWith);
+        }
+
+        public static dynamic CombineToDynamic(this object instance, string typeName, string nameSpace, params object[] combineWith)
+        {
+            Dictionary<object, object> combined = new Dictionary<object, object>();
+            instance.ToKeyValuePairs().Each(kvp => combined.Add(kvp.Key, kvp.Value));
+            foreach (object obj in combineWith)
+            {
+                foreach (KeyValuePair kvp in obj.ToKeyValuePairs())
+                {
+                    if (combined.ContainsKey(kvp.Key))
+                    {
+                        string subKey = $"{obj.GetType().Name}_{kvp.Key}";
+                        Log.Warn("Duplicate keys found combining instances into dynamic instance for specified dynamic type name '{0}', using key '{1}'", typeName, subKey);
+                        combined[subKey] = kvp.Value;
+                    }
+                    else
+                    {
+                        combined.Add(kvp.Key, kvp.Value);
+                    }
+                }
+            }
+
+            return combined.ToDynamic(typeName, nameSpace);
+        }
+
         public static IEnumerable<Dictionary<object, object>> ToDictionaries(this DataTable table)
         {
             foreach (DataRow row in table.Rows)
@@ -4107,7 +4336,7 @@ namespace Bam.Net
                 yield return ToDictionary(row);
             }
         }
-        
+
         public static Dictionary<object, object> ToDictionary(this DataRow row)
         {
             Dictionary<object, object> result = new Dictionary<object, object>();
@@ -4118,9 +4347,17 @@ namespace Bam.Net
 
             return result;
         }
-        
-        public static TResult As<TKey, TValue, TResult>(this Dictionary<TKey, TValue> dictionary,
-            params object[] ctorParams)
+
+        public static TResult ToInstance<TKey, TValue, TResult>(this Dictionary<TKey, TValue> dictionary, params object[] ctorParams)
+        {
+            return FromDictionary<TKey, TValue, TResult>(dictionary, ctorParams);
+        }
+        public static TResult DictionaryToInstance<TKey, TValue, TResult>(this Dictionary<TKey, TValue> dictionary, params object[] ctorParams)
+        {
+            return FromDictionary<TKey, TValue, TResult>(dictionary, ctorParams);
+        }
+
+        public static TResult As<TKey, TValue, TResult>(this Dictionary<TKey, TValue> dictionary, params object[] ctorParams)
         {
             return FromDictionary<TKey, TValue, TResult>(dictionary, ctorParams);
         }

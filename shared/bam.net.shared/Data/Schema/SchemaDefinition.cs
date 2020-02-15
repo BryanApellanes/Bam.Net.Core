@@ -128,10 +128,7 @@ namespace Bam.Net.Data.Schema
         List<ForeignKeyColumn> _foreignKeys = new List<ForeignKeyColumn>();
         public ForeignKeyColumn[] ForeignKeys
         {
-            get
-            {
-                return this._foreignKeys.ToArray();
-            }
+            get => this._foreignKeys.ToArray();
             set
             {
                 this._foreignKeys.Clear();
@@ -142,10 +139,7 @@ namespace Bam.Net.Data.Schema
         Dictionary<string, XrefTable> _xrefs = new Dictionary<string, XrefTable>();
         public XrefTable[] Xrefs
         {
-            get
-            {
-                return _xrefs.Values.ToArray();
-            }
+            get => _xrefs.Values.ToArray();
             set
             {
                 this._xrefs = value.ToDictionary<XrefTable, string>(x => x.Name); // to Dictionary key by name

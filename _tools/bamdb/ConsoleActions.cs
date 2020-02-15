@@ -20,7 +20,7 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultContentRoot = BamPaths.ContentPath;
+        static string defaultContentRoot = BamHome.Content;
         static BamDbServer bamDbServer;
 
         [ConsoleAction("S", "Start the BamDb server")]
@@ -80,7 +80,7 @@ namespace Bam.Net.Application
 
             OutLine(msg.ToString());
         }
-        
+
         public static void StartBamDbServer(ConsoleLogger logger, IRepository repo)
         {
             BamConf conf = BamConf.Load(GetArgument("content", "Enter the path to the content root").Or(defaultContentRoot));

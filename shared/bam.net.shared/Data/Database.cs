@@ -49,7 +49,7 @@ namespace Bam.Net.Data
         }
 
         static HashSet<DatabaseInfo> _infos;
-        static object _infosLock = new object();
+        static readonly object _infosLock = new object();
         public static HashSet<DatabaseInfo> Infos
         {
             get
@@ -114,13 +114,7 @@ namespace Bam.Net.Data
         public string ConnectionName { get; set; }
 
 		protected HashSet<string> _schemaNames;
-		public string[] SchemaNames
-		{
-			get
-			{
-				return _schemaNames.ToArray();
-			}
-		}
+		public string[] SchemaNames => _schemaNames.ToArray();
 
         public virtual string Name
         {

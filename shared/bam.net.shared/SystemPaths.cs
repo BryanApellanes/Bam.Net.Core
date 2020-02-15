@@ -11,12 +11,13 @@ namespace Bam.Net
     /// <summary>
     /// A class referencing all file system paths of importance to the bam system.
     /// </summary>
+    [Obsolete("SystemPaths is deprecated; use BamHome instead if possible.  Otherwise move the required path to BamHome or BamProfile.")]
     public class SystemPaths
     {
         public SystemPaths()
         {
-            Root = BamPaths.BamHome;
-            Public = BamPaths.PublicPath;
+            Root = BamHome.Path;
+            Public = BamHome.PublicPath;
             SystemDrive = Paths.SystemDrive;
             WindowsBamDrive = Paths.WindowsDrive;
             Apps = Paths.Apps;

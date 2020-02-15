@@ -111,14 +111,8 @@ namespace Bam.Net.ServiceProxy
         ILogger _logger;
         public ILogger Logger
         {
-            get
-            {
-                return _logger ?? Log.Default;
-            }
-            set
-            {
-                _logger = value;
-            }
+            get => _logger ?? Log.Default;
+            set => _logger = value;
         }
 
         protected internal ProxyAlias[] ProxyAliases
@@ -217,10 +211,7 @@ namespace Bam.Net.ServiceProxy
         Decrypted _decrypted;
         internal Decrypted Decrypted
         {
-            get
-            {
-                return _decrypted;
-            }
+            get => _decrypted;
             private set
             {
                 _decrypted = value;
@@ -246,24 +237,18 @@ namespace Bam.Net.ServiceProxy
 
                 return _requestUrl;
             }
-            set
-            {
-                _requestUrl = value;
-            }
+            set => _requestUrl = value;
         }
 
         IApiKeyResolver _apiKeyResolver;
-        object _apiKeyResolverSync = new object();
+        readonly object _apiKeyResolverSync = new object();
         public IApiKeyResolver ApiKeyResolver
         {
             get
             {
                 return _apiKeyResolverSync.DoubleCheckLock(ref _apiKeyResolver, () => new ApiKeyResolver());
             }
-            set
-            {
-                _apiKeyResolver = value;
-            }
+            set => _apiKeyResolver = value;
         }
         
         /// <summary>
@@ -271,7 +256,7 @@ namespace Bam.Net.ServiceProxy
         /// </summary>
         protected internal virtual ExecutionTargetInfo ResolveExecutionTargetInfo()
         {
-            // TODO: to help debloat efforts stated in GetArguments(), these operations should be extracted into an IExecutionRequestTargetResolver interface.
+            // TODO: to help de-bloat efforts stated in GetArguments(), these operations should be extracted into an IExecutionRequestTargetResolver interface.
 
             // parse the request url to set the className, methodName and ext
             ExecutionTargetInfo executionTargetInfo = ResolveExecutionTarget(RequestUrl.AbsolutePath, ServiceProvider, ProxyAliases);
@@ -283,15 +268,15 @@ namespace Bam.Net.ServiceProxy
 
         private static ExecutionTargetInfo ResolveExecutionTarget(string path, Incubator serviceProvider, ProxyAlias[] proxyAliases)
         {
-            if (path.ToLowerInvariant().StartsWith("/get"))
+            if (path.StartsWith("/get", StringComparison.InvariantCultureIgnoreCase))
             {
                 path = path.TruncateFront("/get".Length);
             }
-            else if (path.ToLowerInvariant().StartsWith("/post"))
+            else if (path.StartsWith("/post", StringComparison.InvariantCultureIgnoreCase))
             {
                 path = path.TruncateFront("/post".Length);
             }
-            else if (path.ToLowerInvariant().StartsWith("/serviceproxy"))
+            else if (path.StartsWith("/serviceproxy", StringComparison.InvariantCultureIgnoreCase))
             {
                 path = path.TruncateFront("/serviceproxy".Length);
             }
@@ -311,10 +296,7 @@ namespace Bam.Net.ServiceProxy
 
                 return _className;
             }
-            set
-            {
-                _className = value;
-            }
+            set => _className = value;
         }
 
         string _methodName;
@@ -329,10 +311,7 @@ namespace Bam.Net.ServiceProxy
 
                 return _methodName;
             }
-            set
-            {
-                _methodName = value;
-            }
+            set => _methodName = value;
         }
 
         string _ext;
@@ -347,10 +326,7 @@ namespace Bam.Net.ServiceProxy
 
                 return _ext;
             }
-            set
-            {
-                _ext = value;
-            }
+            set => _ext = value;
         }
 
         /// <summary>
@@ -360,7 +336,7 @@ namespace Bam.Net.ServiceProxy
         public string JsonParams { get; set; }
 
         Incubator _serviceProvider;
-        object _serviceProviderLock = new object();
+        readonly object _serviceProviderLock = new object();
         public Incubator ServiceProvider
         {
             get
@@ -386,10 +362,7 @@ namespace Bam.Net.ServiceProxy
 
                 return _targetType;
             }
-            set
-            {
-                _targetType = value;
-            }
+            set => _targetType = value;
         }
         object _instance;
         public object Instance
@@ -402,10 +375,7 @@ namespace Bam.Net.ServiceProxy
                 }
                 return _instance;
             }
-            protected set
-            {
-                _instance = value;
-            }
+            protected set => _instance = value;
         }
 
         MethodInfo _methodInfo;
@@ -419,10 +389,7 @@ namespace Bam.Net.ServiceProxy
                 }
                 return _methodInfo;
             }
-            protected set
-            {
-                _methodInfo = value;
-            }
+            protected set => _methodInfo = value;
         }
 
         System.Reflection.ParameterInfo[] _parameterInfos;
@@ -450,10 +417,7 @@ namespace Bam.Net.ServiceProxy
                 }
                 return _arguments;
             }
-            set
-            {
-                _arguments = value;
-            }
+            set => _arguments = value;
         }
 
         public static int MaxRecursion
@@ -467,14 +431,14 @@ namespace Bam.Net.ServiceProxy
             // TODO: consider extracting this functionality into an ExecutionResponse class that takes the request and resolves the 
             // relevant bits using an IExecutionRequestTargetResolver stated in ResolveExecutionTargetInfo.
             //           AND/OR
-            // TODO: consider breaking this class up into specific ExecutionRequest implementations that encapsulate the style of intput parameters/arguments
+            // TODO: consider breaking this class up into specific ExecutionRequest implementations that encapsulate the style of input parameters/arguments
             //  JsonParamsExecutionRequest, OrderedHttpArgsExecutionRequest, FormEncodedPostExecutionRequest, QueryStringParametersExecutionRequest.
             //  The type of the request should be resolved by examining the ContentType
 
             // see ExecutionRequestResolver.ResolveExecutionRequest
 
             // This method is becoming a little bloated
-            // due to accomodating too many input paths.
+            // due to accommodating too many input paths.
             // This will need to be refactored IF
             // changes continue to be necessary
             // 07/29/2018 - +1 added notes -BA
@@ -571,18 +535,15 @@ namespace Bam.Net.ServiceProxy
 
 				return _callBack;
 			}
-			set
-			{
-				_callBack = value;
-			}
-		}
+			set => _callBack = value;
+        }
 
 		public string ViewName { get; set; }
 
         private string GetMessage(Exception ex, bool stack)
         {
             string st = stack ? ex.StackTrace : "";
-            return string.Format("{0}:\r\n\r\n{1}", ex.Message, st);
+            return $"{ex.Message}:\r\n\r\n{st}";
         }
 
         private object[] GetJsonArguments(string[] jsonStrings)
@@ -769,36 +730,14 @@ namespace Bam.Net.ServiceProxy
 
         protected internal IRequest Request
         {
-            get
-            {
-                if (Context != null)
-                {
-                    return Context.Request;
-                }
-
-                return null;
-            }
-            set
-            {
-                Context.Request = value;
-            }
+            get => Context?.Request;
+            set => Context.Request = value;
         }
 
         protected internal IResponse Response
         {
-            get
-            {
-                if (Context != null)
-                {
-                    return Context.Response;
-                }
-
-                return null;
-            }
-            set
-            {
-                Context.Response = value;
-            }
+            get => Context?.Response;
+            set => Context.Response = value;
         }
 
         public bool Success
