@@ -76,7 +76,7 @@ namespace Bam.Net.Server
         protected void InitializeFileExtensions()
         {
             FileExtensions = new List<string> { ".html", ".htm", ".js", ".json", ".css", ".yml", ".yaml", ".txt", ".md", ".layout", ".png", ".jpg", ".jpeg", ".gif", ".woff" };
-            TextFileExtensions = new List<string> { ".html", ".htm", ".js", ".json", ".css", ".yml", ".yaml", ".layout", ".txt", ".md", ".bmd" };
+            TextFileExtensions = new List<string> { ".html", ".htm", ".js", ".json", ".css", ".yml", ".yaml", ".layout", ".txt", ".md", ".bmd", ".bvm" };
         }
 
         protected void InitializeCaches()

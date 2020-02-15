@@ -165,14 +165,28 @@ namespace Bam.Net.Testing
             }
         }
 
-        protected static void InitLogger()
+        private static bool _loggerInitialized;
+        static object _initLoggerLock = new object();
+        protected static ConsoleLogger InitLogger()
         {
-            ConsoleLogger logger = (ConsoleLogger)Log.CreateLogger(typeof(ConsoleLogger));
-            logger.UseColors = true;
-            logger.ShowTime = true;
-			logger.StartLoggingThread();
-            logger.EntryAdded += new LogEntryAddedListener(LoggerEntryAdded);
-            Logger = logger;
+            lock (_initLoggerLock)
+            {
+                if (!_loggerInitialized)
+                {
+                    _loggerInitialized = true;
+                    
+                    ConsoleLogger logger = (ConsoleLogger)Log.CreateLogger(typeof(ConsoleLogger));
+                    logger.UseColors = true;
+                    logger.ShowTime = true;
+                    logger.AddDetails = false;
+                    logger.StartLoggingThread();
+                    logger.EntryAdded += new LogEntryAddedListener(LoggerEntryAdded);
+                    Logger = logger;
+                    Log.Default = Logger;
+                }
+            }
+
+            return Log.Default as ConsoleLogger;
         }
 
 		private static void TryInvoke<T>(ConsoleMethod cim)

@@ -53,7 +53,7 @@ namespace Bam.Net.Logging
             return this;
         }
 
-        object _threadLock = new object();
+        readonly object _threadLock = new object();
         bool _keepLogging = true;
         public virtual ILogger StopLoggingThread()
         {

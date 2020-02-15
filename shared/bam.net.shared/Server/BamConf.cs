@@ -330,15 +330,10 @@ namespace Bam.Net.Server
             return results.ToArray();
         }
 
-        int _maxThreads;
         /// <summary>
         /// Advice to subordinate components.  Not currently used ¯\_(ツ)_/¯
         /// </summary>
-        public int MaxThreads
-        {
-            get => _maxThreads;
-            set => _maxThreads = value;
-        }
+        public int MaxThreads { get; set; }
 
         List<SchemaInitializer> _schemaInitializers;
         public SchemaInitializer[] SchemaInitializers
@@ -348,10 +343,10 @@ namespace Bam.Net.Server
         }
 
         List<AppConf> _appConfigs;
-        object _appConfigsLock = new object();
+        readonly object _appConfigsLock = new object();
         /// <summary>
         /// Represents the configs for each application found in ~s:/apps 
-        /// (where each subdirectory is assumed to be a Bam application)
+        /// (where ~s is the server content folder and each subdirectory is assumed to be a Bam application)
         /// </summary>
         [YamlIgnore]
         [XmlIgnore]

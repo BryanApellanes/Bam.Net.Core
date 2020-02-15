@@ -52,7 +52,14 @@ namespace Bam.Net.Logging
         public static ILogger Default
         {
             get => _defaultLoggerLock.DoubleCheckLock(ref _defaultLogger, GetDefaultLogger);
-            set => _defaultLogger = value;
+            set
+            {
+                if (_defaultLogger != null)
+                {
+                    Task.Run(() => _defaultLogger.StopLoggingThread());
+                }
+                _defaultLogger = value;
+            }
         }
 
         public static void WarnIf(bool condition, string messageSignature, params object[] args)
