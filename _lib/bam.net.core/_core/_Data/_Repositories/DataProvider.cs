@@ -11,7 +11,7 @@ namespace Bam.Net.Data.Repositories
 {
     public partial class DataProvider
     {
-        public IRepository GetSysRepository()
+        public virtual IRepository GetSysRepository()
         {
             return new DaoRepository();
         }

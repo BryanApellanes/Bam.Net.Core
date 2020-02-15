@@ -23,7 +23,7 @@ namespace Bam.Net.Data
 
         public override int GetHashCode()
         {
-            return string.Format("{0}{1}{2}", DatabaseType, ConnectionString, ConnectionName).GetHashCode();
+            return $"{DatabaseType}{ConnectionString}{ConnectionName}".GetHashCode();
         }
 
         public override bool Equals(object obj)

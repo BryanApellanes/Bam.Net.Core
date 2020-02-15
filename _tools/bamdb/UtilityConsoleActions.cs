@@ -7,6 +7,7 @@ using System.Threading;
 using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
 using Bam.Net.Testing;
+using Bam.Shell.CodeGen;
 using Markdig.Helpers;
 
 namespace Bam.Net.Application
@@ -24,7 +25,7 @@ namespace Bam.Net.Application
                 string schemaPath = GetArgument(arg, true);
                 if (schemaPath.StartsWith("~/"))
                 {
-                    schemaPath = Path.Combine(BamPaths.UserHome, schemaPath.TruncateFront(2));
+                    schemaPath = Path.Combine(BamHome.UserHome, schemaPath.TruncateFront(2));
                 }
                 SchemaDefinition schemaDefinition = SchemaDefinition.Load(schemaPath);
                 
@@ -81,6 +82,33 @@ namespace Bam.Net.Application
             });            
 
             fixedMap.ToJsonFile($"{schema.File}.map.fixed");
+            Thread.Sleep(300);
+        }
+
+        [ConsoleAction("initDaoConfig", "write a dao config to the file system.")]
+        public void InitDaoConfig()
+        {
+            DaoConfig first = new DaoConfig
+            {
+                TemplatePath = "Optional path to custom templates",
+                Name = "A logical name used to refer to this config",
+                ConnectionString = "Database connection string",
+                PostgresTableSchema = "The table schema",
+                DbType = ExtractionTargetDbTypes.SQLite
+            };
+            DaoConfig second = new DaoConfig
+            {
+                TemplatePath = "Optional path to custom templates",
+                Name = "A logical name used to refer to this config",
+                ConnectionString = "Database connection string",
+                PostgresTableSchema = "The table schema",
+                DbType = ExtractionTargetDbTypes.SQLite
+            };
+
+            string outputDirectory = string.IsNullOrEmpty(Arguments["initDaoConfig"]) ? "." : Arguments["initDaoConfig"];
+            string outputPath = Path.Combine(outputDirectory, "DaoConfigs.yaml");
+            new DaoConfig[]{first, second}.ToYamlFile(outputPath);
+            OutLineFormat("Wrote config file {0}", outputPath);
             Thread.Sleep(300);
         }
         

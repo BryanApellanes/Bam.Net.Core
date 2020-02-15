@@ -108,7 +108,7 @@ namespace Bam.Net.Data.Repositories
             return InstanceFor(DefaultNamespace, typeName, dictionary);
         }
         
-        public static dynamic InstanceFor(string nameSpace, string typeName, Dictionary<object, object> dictionary)
+        public static dynamic InstanceFor(string nameSpace, string typeName, Dictionary<object, object> dictionary, Func<MetadataReference[]> getMetadataReferences = null)
         {
             Type type = TypeFor(nameSpace, typeName, dictionary);
             return dictionary.ToInstance(type);
@@ -136,7 +136,7 @@ namespace Bam.Net.Data.Repositories
         
         static readonly Dictionary<string, Assembly> _dtoAssemblies = new Dictionary<string, Assembly>();
         static readonly object _dtoAssemblyLock = new object();
-        public static Assembly AssemblyFor(string assemblyName, string nameSpace, string typeName, Dictionary<object, object> dictionary)
+        public static Assembly AssemblyFor(string assemblyName, string nameSpace, string typeName, Dictionary<object, object> dictionary, Func<MetadataReference[]> getMetaDataReferences = null)
         {
             nameSpace = nameSpace ?? DefaultNamespace;
             DtoModel dtoModel = new DtoModel(nameSpace, typeName, dictionary);
@@ -147,7 +147,7 @@ namespace Bam.Net.Data.Repositories
                 if (!_dtoAssemblies.ContainsKey(key))
                 {
                     RoslynCompiler compiler = new RoslynCompiler();
-                    _dtoAssemblies.Add(key, compiler.CompileAssembly(assemblyName, dtoSrc));
+                    _dtoAssemblies.Add(key, compiler.CompileAssembly(assemblyName, dtoSrc, () => dtoModel.MetadataReferenceResolver.GetMetaDataReferences().ToArray()));
                 }
             }
 

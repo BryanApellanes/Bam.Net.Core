@@ -27,7 +27,7 @@ namespace Bam.Net.Testing
         /// <value>
         /// The open cover.
         /// </value>
-        protected static string OpenCover => Path.Combine(BamPaths.Tools, "OpenCover", "OpenCover.Console.exe");
+        protected static string OpenCover => Path.Combine(BamHome.Tools, "OpenCover", "OpenCover.Console.exe");
 
         /// <summary>
         /// Gets the output root.
@@ -35,7 +35,7 @@ namespace Bam.Net.Testing
         /// <value>
         /// The output root.
         /// </value>
-        protected static string OutputRoot => BamPaths.Tests;
+        protected static string OutputRoot => BamHome.Tests;
 
         /// <summary>
         /// Runs the tests with coverage.
@@ -166,7 +166,7 @@ namespace Bam.Net.Testing
             }
             string testGroupName = GetArgument("Group", "Please enter the name of the test group to run.");
             string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
-            string testDirectoryName = GetArgumentOrDefault("dir", BamPaths.Home);
+            string testDirectoryName = GetArgumentOrDefault("dir", BamHome.Path);
             RunUnitTestGroupsInFolder(testDirectoryName, searchPattern, testGroupName);
         }
 

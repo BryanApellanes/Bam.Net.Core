@@ -38,7 +38,7 @@ namespace Bam.Shell.CodeGen
             AddValidArgument("namespace", false, true, "Dao: The namespace to place generated dao classes into.");
         }
 
-        public override void Gen(Action<string> output = null, Action<string> error = null)
+        public override void Generate(Action<string> output = null, Action<string> error = null)
         {
             string writeTo = DefaultOutput;
             if (Arguments.Contains("output"))
@@ -46,7 +46,7 @@ namespace Bam.Shell.CodeGen
                 writeTo = Arguments["output"];
                 if (writeTo.StartsWith("~"))
                 {
-                    writeTo = Path.Combine(BamPaths.UserHome, writeTo.TruncateFront(2));
+                    writeTo = Path.Combine(BamHome.UserHome, writeTo.TruncateFront(2));
                 }
             }
 
@@ -165,7 +165,7 @@ namespace Bam.Shell.CodeGen
 
             if(configFile.StartsWith("~/"))
             {
-                configFile = Path.Combine(BamPaths.UserHome, configFile.TruncateFront(2));
+                configFile = Path.Combine(BamHome.UserHome, configFile.TruncateFront(2));
             }
             
             if (!File.Exists(configFile))

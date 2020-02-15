@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Xml.Linq;
 using Bam.Net.Caching.File;
 using Bam.Net.Server;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Bam.Net.Presentation.AppRenderers
 {
@@ -61,6 +60,12 @@ namespace Bam.Net.Presentation.AppRenderers
         public object GetActionProvider(AppConf appConf)
         {
             string actionProviderName = ParseActionProviderName(appConf);
+            if (string.IsNullOrEmpty(actionProviderName))
+            {
+                Logging.Log.Warn("Unable to parse action provider for '{0}': \r\n\t html: \r\n{1}", FileSystemPath, Exec.Try(() => File.ReadAllText(FileSystemPath)));
+                return null;
+            }
+            
             if (!_actionProviderTypes.ContainsKey(actionProviderName))
             {
                 Type actionProviderType = ResolveActionProviderType(appConf);
@@ -100,7 +105,7 @@ namespace Bam.Net.Presentation.AppRenderers
             ViewModel result = new ViewModel
             {
                 Name = name, 
-                ActionProvider = GetActionProvider(appConf), 
+                ActionProvider = GetActionProvider(appConf) ?? new object(), 
                 ViewModelId = ViewModelId
             };
             return result;
@@ -112,16 +117,18 @@ namespace Bam.Net.Presentation.AppRenderers
             {
                 _viewModels = new Dictionary<string, ViewModel>();
             }
-
-            string viewModelKey = ViewModelId;
-            if (!_viewModels.ContainsKey(viewModelKey))
+            if (string.IsNullOrEmpty(ActionProvider))
             {
-                _viewModels.Add(viewModelKey, GetViewModel(appConf));
+                ParseActionProviderName(appConf);
+            }
+            if (!_viewModels.ContainsKey(ViewModelId))
+            {
+                _viewModels.Add(ViewModelId, GetViewModel(appConf));
             }
 
-            return _viewModels[viewModelKey];
+            return _viewModels[ViewModelId];
         }
-
+        
         /// <summary>
         /// Reads the provider name from the template file
         /// </summary>
@@ -129,10 +136,14 @@ namespace Bam.Net.Presentation.AppRenderers
         /// <returns></returns>
         public virtual string ParseActionProviderName(AppConf appConf)
         {
-            XDocument document = XDocument.Load(FileSystemPath);
-            ActionProvider = document.Element("html").DataAttribute("actionprovider");
+            ActionProvider = HtmlElement.DataAttribute("actionprovider");
             return ActionProvider;
         }
+
+        private XDocument _document;
+        protected virtual XDocument Document => _document ?? (_document = XDocument.Load(FileSystemPath));
+
+        protected virtual XElement HtmlElement => Document.Element("html");
 
         protected virtual Type ResolveActionProviderType(AppConf appConf)
         {

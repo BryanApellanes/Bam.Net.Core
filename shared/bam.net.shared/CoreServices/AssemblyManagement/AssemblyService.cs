@@ -39,13 +39,7 @@ namespace Bam.Net.CoreServices
         public event EventHandler ExceptionPersistingCurrentRuntime;
         public event EventHandler RuntimeRestored;
         public IDataDirectoryProvider DataDirectoryProvider { get; set; }
-        public string AssemblyDirectory
-        {
-            get
-            {
-                return DataDirectoryProvider.GetSysAssemblyDirectory().FullName;
-            }
-        }
+        public string AssemblyDirectory => DataDirectoryProvider.GetSysAssemblyDirectory().FullName;
         public IFileService FileService { get; set; }
         public Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository.AssemblyManagementRepository AssemblyManagementRepository { get; set; }    
 

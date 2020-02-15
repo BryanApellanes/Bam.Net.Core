@@ -141,7 +141,7 @@ namespace Bam.Net
         {
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             Log.Trace(typeof(Workspace), "Workspace using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
-            string directoryPath = System.IO.Path.Combine(BamPaths.Apps, applicationNameProvider.GetApplicationName());
+            string directoryPath = System.IO.Path.Combine(BamHome.Apps, applicationNameProvider.GetApplicationName());
             return new Workspace()
                 {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
         }
@@ -151,7 +151,7 @@ namespace Bam.Net
             return new Workspace()
             {
                 ApplicationNameProvider = new StaticApplicationNameProvider(applicationName),
-                Root = new DirectoryInfo(System.IO.Path.Combine(BamPaths.Apps, applicationName))
+                Root = new DirectoryInfo(System.IO.Path.Combine(BamHome.Apps, applicationName))
             };
         }
     }

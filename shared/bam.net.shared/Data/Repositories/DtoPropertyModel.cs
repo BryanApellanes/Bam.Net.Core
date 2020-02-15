@@ -23,5 +23,6 @@ namespace Bam.Net.Data.Repositories
 
 		public string PropertyName { get; set; }
 		public string PropertyType { get; set; }
+		internal PropertyInfo PropertyInfo { get; set; }
 	}
 }

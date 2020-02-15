@@ -18,10 +18,7 @@ namespace Bam.Net.Application
         HashSet<AppDataPropertyModel> _properties;
         public AppDataPropertyModel[] Properties
         {
-            get
-            {
-                return _properties.ToArray();
-            }
+            get => _properties.ToArray();
             set
             {
                 _properties = new HashSet<AppDataPropertyModel>();

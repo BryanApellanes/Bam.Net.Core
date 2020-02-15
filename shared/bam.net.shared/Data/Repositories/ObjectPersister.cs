@@ -52,7 +52,7 @@ namespace Bam.Net.Data.Repositories
 		{
 			get
 			{
-                return _readerWriterLock.DoubleCheckLock(ref _objectReaderWriter, () => new ObjectPersister(Path.Combine(BamPaths.DataPath, $"{nameof(ObjectPersister)}Data")));
+                return _readerWriterLock.DoubleCheckLock(ref _objectReaderWriter, () => new ObjectPersister(Path.Combine(BamHome.DataPath, $"{nameof(ObjectPersister)}Data")));
 			}
 			set
 			{

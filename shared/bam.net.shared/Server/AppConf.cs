@@ -73,7 +73,7 @@ namespace Bam.Net.Server
         {
             return new AppConf{ Name = Config.Current.ApplicationName};
         }
-
+        
         Fs _appRoot;
         readonly object _appRootLock = new object();
         [JsonIgnore]

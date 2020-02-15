@@ -77,14 +77,14 @@ namespace Bam.Net.CoreServices
         
         public static void SetDefaultSmtpSettings(SmtpSettings settings)
         {
-            FileInfo smtpSettingsFile = new FileInfo(Path.Combine(Paths.Local, SmtpSettingsFileName));
+            FileInfo smtpSettingsFile = new FileInfo(Path.Combine(BamHome.Local, SmtpSettingsFileName));
             settings.Password = Aes.Encrypt(settings.Password);
             settings.ToJsonFile(smtpSettingsFile);
         }
 
         private static DataProviderSmtpSettingsProvider LoadSmtpSettings()
         {
-            FileInfo smtpSettingsFile = new FileInfo(Path.Combine(Paths.Local, SmtpSettingsFileName));
+            FileInfo smtpSettingsFile = new FileInfo(Path.Combine(BamHome.Local, SmtpSettingsFileName));
             Console.WriteLine("Trying to load smtp settings from file: {0}", smtpSettingsFile.FullName);
             if (smtpSettingsFile.Exists)
             {

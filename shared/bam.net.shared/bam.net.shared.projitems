@@ -398,7 +398,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundThreadQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundThreadQueueEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BamEnvironmentVariables.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BamPaths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BamHome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BamSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Breve\BreveFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Breve\BreveGenerator.cs" />
@@ -613,6 +613,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserKeyDataPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserKeyDataQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\ResponseData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MetadataReferenceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemYamlJSchemaResolver.cs" />
@@ -846,6 +847,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Try.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UnixPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VersionSpec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebServiceAttribute.cs" />

@@ -19,7 +19,7 @@ namespace Bam.Net
             string result = Path;
             if (result.StartsWith("~/"))
             {
-                result = System.IO.Path.Combine(BamPaths.UserHome, result.TruncateFront(2));
+                result = System.IO.Path.Combine(BamHome.UserHome, result.TruncateFront(2));
             }
 
             return result;

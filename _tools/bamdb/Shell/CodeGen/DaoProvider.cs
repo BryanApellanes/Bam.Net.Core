@@ -17,7 +17,7 @@ namespace Bam.Shell.CodeGen
             AddValidArgument("schema", false, false, "Dao: The path to the schema definition file.");
         }
 
-        public override void Gen(Action<string> output = null, Action<string> error = null)
+        public override void Generate(Action<string> output = null, Action<string> error = null)
         {
             if (!Arguments.Contains("schema"))
             {
@@ -28,7 +28,7 @@ namespace Bam.Shell.CodeGen
             string schemaPath = Arguments["schema"];
             if (schemaPath.StartsWith("~/"))
             {
-                schemaPath = Path.Combine(BamPaths.UserHome, schemaPath.TruncateFront(2));
+                schemaPath = Path.Combine(BamHome.UserHome, schemaPath.TruncateFront(2));
             }
                 
             SchemaDefinition schema = SchemaDefinition.Load(schemaPath);
@@ -43,7 +43,7 @@ namespace Bam.Shell.CodeGen
                 writeTo = Arguments["output"];
                 if(writeTo.StartsWith("~/"))
                 {
-                    writeTo = Path.Combine(BamPaths.UserHome, writeTo.TruncateFront(2));
+                    writeTo = Path.Combine(BamHome.UserHome, writeTo.TruncateFront(2));
                 }
             }
 

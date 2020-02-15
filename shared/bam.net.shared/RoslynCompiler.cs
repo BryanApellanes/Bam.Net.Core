@@ -100,15 +100,23 @@ namespace Bam.Net
             return Compile(assemblyFileName, sourceFiles.Select(f => SyntaxFactory.ParseSyntaxTree(f.ReadAllText(), CSharpParseOptions.Default, f.FullName)).ToArray());
         }
 
-        public Assembly CompileAssembly(string assemblyName, string sourceCode)
+        public Assembly CompileAssembly(string assemblyName, string sourceCode, Func<MetadataReference[]> getMetaDataReferences = null)
         {
-            return Assembly.Load(Compile(assemblyName, sourceCode));
+            return Assembly.Load(Compile(assemblyName, sourceCode, getMetaDataReferences));
         }
-        
+
         public byte[] Compile(string assemblyName, string sourceCode)
         {
+            return Compile(assemblyName, sourceCode, GetMetaDataReferences);
+        }
+        
+        public byte[] Compile(string assemblyName, string sourceCode, Func<MetadataReference[]> getMetaDataReferences)
+        {
             SyntaxTree tree = SyntaxFactory.ParseSyntaxTree(sourceCode);
-            return Compile(assemblyName, tree);
+            HashSet<MetadataReference> metadataReferences = new HashSet<MetadataReference>();
+            getMetaDataReferences().Each(mdr => metadataReferences.Add(mdr));
+            GetMetaDataReferences().Each(mdr => metadataReferences.Add(mdr));
+            return Compile(assemblyName, () => metadataReferences.ToArray(), tree);
         }
 
         public byte[] Compile(string assemblyName, params SyntaxTree[] syntaxTrees)

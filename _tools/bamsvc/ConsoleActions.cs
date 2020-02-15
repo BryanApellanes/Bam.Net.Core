@@ -23,8 +23,8 @@ namespace Bam.Net.Application
     public class ConsoleActions : CommandLineTestInterface
     {
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultContentRoot = BamPaths.Content;
-        static string defaultSvcScriptsSrcPath = BamPaths.SvcScriptsSrcPath;
+        static string defaultContentRoot = BamHome.Content;
+        static string defaultSvcScriptsSrcPath = BamHome.SvcScriptsSrcPath;
 
         static BamSvcServer _bamSvcServer;
         
@@ -192,10 +192,10 @@ namespace Bam.Net.Application
 
         public static Assembly CompileBamSvcSource(string bamSvcDirectoryPath, string extension)
         {
-            string binPath = Path.Combine(BamPaths.ToolkitPath, "BamSvc_bin");
-            DirectoryInfo bamRpcSrcDirectory = new DirectoryInfo(bamSvcDirectoryPath.Or(defaultSvcScriptsSrcPath)).EnsureExists();
-            DirectoryInfo bamRpcBnDirectory = new DirectoryInfo(binPath).EnsureExists();
-            FileInfo[] files = bamRpcSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
+            string binPath = Path.Combine(BamHome.ToolkitPath, "BamSvc_bin");
+            DirectoryInfo bamSvcSrcDirectory = new DirectoryInfo(bamSvcDirectoryPath.Or(defaultSvcScriptsSrcPath)).EnsureExists();
+            DirectoryInfo bamSvcBnDirectory = new DirectoryInfo(binPath).EnsureExists();
+            FileInfo[] files = bamSvcSrcDirectory.GetFiles($"*.{extension}", SearchOption.AllDirectories);
             StringBuilder src = new StringBuilder();
             foreach (FileInfo file in files)
             {
@@ -203,25 +203,25 @@ namespace Bam.Net.Application
             }
             string hash = src.ToString().Sha1();
             string assemblyName = $"{hash}.dll";
-            Assembly bamRpcAssembly = null;
-            string csTvgAssemblyBinPath = Path.Combine(bamRpcBnDirectory.FullName, assemblyName);
-            if (!File.Exists(csTvgAssemblyBinPath))
+            Assembly bamSvcAssembly = null;
+            string svcAssemblyBinPath = Path.Combine(bamSvcBnDirectory.FullName, assemblyName);
+            if (!File.Exists(svcAssemblyBinPath))
             {
-                bamRpcAssembly = files.ToAssembly(assemblyName);
-                FileInfo assemblyFile = bamRpcAssembly.GetFileInfo();
-                FileInfo targetPath = new FileInfo(csTvgAssemblyBinPath);
+                bamSvcAssembly = files.ToAssembly(assemblyName);
+                FileInfo assemblyFile = bamSvcAssembly.GetFileInfo();
+                FileInfo targetPath = new FileInfo(svcAssemblyBinPath);
                 if (!targetPath.Directory.Exists)
                 {
                     targetPath.Directory.Create();
                 }
-                File.Copy(assemblyFile.FullName, csTvgAssemblyBinPath);
+                File.Copy(assemblyFile.FullName, svcAssemblyBinPath);
             }
             else
             {
-                bamRpcAssembly = Assembly.LoadFile(csTvgAssemblyBinPath);
+                bamSvcAssembly = Assembly.LoadFile(svcAssemblyBinPath);
             }
 
-            return bamRpcAssembly;
+            return bamSvcAssembly;
         }
 
         private static void ServeRegistries(ILogger logger, string registries)

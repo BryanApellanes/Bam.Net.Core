@@ -25,9 +25,9 @@ namespace Bam.Net.Automation
             NugetOutputDirectory = DefaultNugetOutputDirectory;
         }
 
-        public static string DefaultOutputDirectory => Path.Combine(BamPaths.ToolkitPath, OSInfo.Current.ToString());
+        public static string DefaultOutputDirectory => Path.Combine(BamHome.ToolkitPath, OSInfo.Current.ToString());
 
-        public static string DefaultNugetOutputDirectory => Path.Combine(BamPaths.NugetOutputPath, OSInfo.Current.ToString());
+        public static string DefaultNugetOutputDirectory => Path.Combine(BamHome.NugetOutputPath, OSInfo.Current.ToString());
 
         /// <summary>
         /// Create a recipe containing a single project.

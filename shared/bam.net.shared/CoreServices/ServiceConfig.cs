@@ -13,7 +13,7 @@ namespace Bam.Net.Server
 {
     public static class ServiceConfig
     {
-        public static string ContentRoot => DefaultConfiguration.GetAppSetting("ContentRoot").Or(BamPaths.Content);
+        public static string ContentRoot => DefaultConfiguration.GetAppSetting("ContentRoot").Or(BamHome.Content);
 
         public static string LogRoot => Path.Combine(ContentRoot, "logs");
 

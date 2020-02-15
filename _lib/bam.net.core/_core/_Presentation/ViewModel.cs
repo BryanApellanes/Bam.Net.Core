@@ -20,10 +20,12 @@ namespace Bam.Net.Presentation
     
     public class ViewModel
     {
+        public string ApplicationName => Application.Name;
+        public string OrganizationName => Application.Organization.Name;
         public string Name { get; set; }
-        
+        public string Scripts => Page.Scripts;
+        public string StyleSheets => Page.StyleSheets;
         public string ViewModelId { get; set; }
-
         public ViewModelUrl Url { get; set; }
 
         [XmlIgnore]
@@ -50,7 +52,7 @@ namespace Bam.Net.Presentation
                 Url = new ViewModelUrl
                 {
                     OrganizationName = _applicationModel?.Organization?.Name ?? ApplicationDiagnosticInfo.PublicOrganization,
-                    ApplicationName = _applicationModel?.ApplicationName ?? ApplicationDiagnosticInfo.UnknownApplication,
+                    ApplicationName = _applicationModel?.Name ?? ApplicationDiagnosticInfo.UnknownApplication,
                     HostName = Machine.Current.DnsName
                 };
             }

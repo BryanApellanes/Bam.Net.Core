@@ -4,6 +4,7 @@ using Bam.Net.ServiceProxy;
 using Bam.Net.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,10 +35,11 @@ namespace Bam.Net.Presentation
                 ApplicationNameSpace = startupType.Namespace;
             }
             WebServiceRegistry = ApplicationServiceRegistry.Get<WebServiceRegistry>();
-            ApplicationName = appConf.Name;
+            Name = appConf.Name;
             ApplicationServiceRegistry.SetInjectionProperties(this);
             RepositoryProviderResolver = ApplicationServiceRegistry.Get<IRepositoryResolver>();
             ApplicationNameProvider = new StaticApplicationNameProvider(appConf.Name);
+            Organization = new OrganizationModel();
         }
 
         protected IRepositoryResolver RepositoryProviderResolver { get; set; }
@@ -46,7 +48,7 @@ namespace Bam.Net.Presentation
         public OrganizationModel Organization { get; }
         public AppConf AppConf { get; set; }
         public string ApplicationNameSpace { get; set; }
-        public string ApplicationName { get; set; }
+        public string Name { get; private set; }
 
         private Database[] _databases;
         private readonly object _databasesLock = new object();
@@ -58,6 +60,30 @@ namespace Bam.Net.Presentation
                     () => Path.Combine(DataDirectory.FullName, $"{nameof(DatabaseConfig).Pluralize()}.yaml")
                         .FromYamlFile<DatabaseConfig[]>().Select(dc => dc.GetDatabase()).ToArray());
             }
+        }
+
+        private Dictionary<string, Database> _databasesBySchemaName;
+        private readonly object _databasesBySchemaNameLock = new object();
+        public Database Db(string schemaName)
+        {
+            return _databasesBySchemaNameLock.DoubleCheckLock(ref _databasesBySchemaName, 
+                () =>
+                {
+                    Dictionary<string, Database> result = new Dictionary<string, Database>();
+                    Databases.Each(db => { result.AddMissing(db.ConnectionName, db); });
+                    return result;
+                })
+                [schemaName];
+        }
+
+        public DbParameter DbParam(string schemaName, string name, object value)
+        {
+            return Db(schemaName).CreateParameter(name, value);
+        }
+        
+        public string[] DatabaseNames
+        {
+            get { return Databases.Select(db => db.ConnectionName).ToArray(); }
         }
         
         public string Home => AppConf.AppRoot.SpecifiedPath;
@@ -131,7 +157,7 @@ namespace Bam.Net.Presentation
             {
                 return null;
             }
-            return PersistenceModelProvider.GetPersistenceModel(ApplicationName, persistenceModelName);
+            return PersistenceModelProvider.GetPersistenceModel(Name, persistenceModelName);
         }
         
         public ViewModel GetViewModel(string viewModelName, string persistenceModelName = null)

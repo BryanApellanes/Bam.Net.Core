@@ -366,7 +366,7 @@ namespace Bam.Net.Server
             {
                 string firstPart = path.ReadUntil('~', out string secondPart);
                 
-                return Path.Combine(BamPaths.UserHome, secondPart.RemainderAfter('/'));
+                return Path.Combine(BamHome.UserHome, secondPart.RemainderAfter('/'));
             }
 
             return path;

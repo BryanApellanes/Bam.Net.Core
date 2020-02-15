@@ -46,7 +46,7 @@ namespace Bam.Net.UserAccounts
         public UserManager()
         {
             SmtpSettingsProvider = new SmtpSettingsProvider();
-            SmtpSettingsVaultPath = Path.Combine(BamPaths.DataPath, "SmtpSettings.vault.sqlite");
+            SmtpSettingsVaultPath = Path.Combine(BamHome.DataPath, "SmtpSettings.vault.sqlite");
             PasswordResetTokensExpireInThisManyMinutes = 15;
             LastException = new NullException();
         }

@@ -84,6 +84,21 @@ namespace Bam.Net
                 return null;
             }
         }
+
+        public static T Try<T>(Func<T> func, Action<Exception> onException = null)
+        {
+            Action<Exception> exceptionHandler = onException ?? ((ex) => { });
+            try
+            {
+                return func();
+            }
+            catch (Exception ex)
+            {
+                exceptionHandler(ex);
+                return default(T);
+            }
+        }
+        
         public static void Try(Action action, Action<Exception> onException = null)
         {
             Action<Exception> exceptionHandler = onException ?? ((ex) => { });

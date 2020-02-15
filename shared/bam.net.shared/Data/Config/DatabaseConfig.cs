@@ -6,6 +6,7 @@ using Bam.Net.Data.MsSql;
 using Bam.Net.Data.MySql;
 using Bam.Net.Data.Npgsql;
 using Bam.Net.Data.SQLite;
+using Bam.Net.Server;
 
 namespace Bam.Net.Data
 {
@@ -60,7 +61,7 @@ namespace Bam.Net.Data
         /// <returns></returns>
         public static DatabaseConfig[] LoadProfileConfigs()
         {
-            string databaseconfigsPath = Path.Combine(BamPaths.Profile, $"{nameof(DatabaseConfig).Pluralize()}.yaml");
+            string databaseconfigsPath = Path.Combine(BamHome.Profile, $"{nameof(DatabaseConfig).Pluralize()}.yaml");
             DatabaseConfig[] result = new DatabaseConfig[]{};
             if (File.Exists(databaseconfigsPath))
             {
@@ -73,7 +74,7 @@ namespace Bam.Net.Data
 
             return result;
         }
-        
+
         public static DatabaseConfig[] LoadConfigs(string filePath = null)
         {
             filePath = filePath ?? $"{nameof(DatabaseConfig).Pluralize()}.yaml";

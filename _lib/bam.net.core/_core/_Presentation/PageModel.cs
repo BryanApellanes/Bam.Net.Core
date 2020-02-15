@@ -71,9 +71,9 @@ namespace Bam.Net.Presentation
         /// in one object instance.
         /// </summary>
         /// <returns></returns>
-        public object TemplateData()
+        public virtual object TemplateData()
         {
-            return this.CombineToDynamic($"{Name}_{ViewModel.Name}", ViewModel);
+            return ViewModel;
         }
         
         public IRequest Request { get; set; }

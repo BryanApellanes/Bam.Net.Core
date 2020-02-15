@@ -384,7 +384,7 @@ namespace Bam.Net.Server
         [Verbosity(VerbosityLevel.Information)]
         public event EventHandler ServiceCompiled;
         
-        public void CompileProxiedClasses()
+        public void CompileAppServices()
         {
             BamConf.AppsToServe.Each(appConf =>
             {
@@ -632,7 +632,7 @@ namespace Bam.Net.Server
             protected set;
         }
 
-        object _initializeLock = new object();
+        readonly object _initializeLock = new object();
         public override void Initialize()
         {
             OnInitializing();
@@ -643,7 +643,7 @@ namespace Bam.Net.Server
                 lock (_initializeLock)
                 {
                     AddCommonService(new AppMetaManager(BamConf));
-                    CompileProxiedClasses();
+                    CompileAppServices();
                     ExecuteStartup();
                     RegisterProxiedClasses();
                 }
@@ -651,7 +651,7 @@ namespace Bam.Net.Server
             OnInitialized();
         }
         List<ILogger> _subscribers = new List<ILogger>();
-        object _subscriberLock = new object();
+        readonly object _subscriberLock = new object();
         public override ILogger[] Subscribers
         {
             get

@@ -11,7 +11,7 @@ namespace Bam.Shell.CodeGen
 {
     public class GraphQLProvider : CodeGenProvider
     {
-        public override void Gen(Action<string> output = null, Action<string> error = null)
+        public override void Generate(Action<string> output = null, Action<string> error = null)
         {
             // TODO: encapsulate GraphQLGenerationConfig provider logic; IGraphQLGenerationConfigProvider
             GraphQLGenerationConfig config = BamDbConsoleActions.GetGraphQLGenerationConfig(o=> OutLineFormat(o, ConsoleColor.Blue));
