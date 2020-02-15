@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../common/init.sh
+
 if [[ ! -f ${DIST}/${RUNTIME}-bamtoolkit.zip  ]]; then 
     printf "${DIST}/${RUNTIME}-bamtoolkit.zip not found, run build-toolkit.sh first.\r\n"
     exit 1

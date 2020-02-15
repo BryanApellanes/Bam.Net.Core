@@ -5,7 +5,7 @@
     <ApplicationIcon>bamsvc.ico</ApplicationIcon>
     <RootNamespace>Bam.Net.Application</RootNamespace>
     <PackageId>bamrpc.exe</PackageId>
-    <Version>1.0.5-test+fb59d5e</Version>
+    <Version>1.0.5-test+ef11c7f</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
