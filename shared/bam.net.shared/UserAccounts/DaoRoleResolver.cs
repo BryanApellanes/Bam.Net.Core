@@ -15,6 +15,7 @@ namespace Bam.Net.UserAccounts
         {
             get; set;
         }
+        
         [Exclude]
         public object Clone()
         {

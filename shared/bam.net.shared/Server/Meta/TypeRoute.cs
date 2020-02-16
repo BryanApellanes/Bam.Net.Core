@@ -8,11 +8,8 @@ namespace Bam.Net.Server.Meta
 {
     public abstract class TypeRoute
     {
-        public string Route
-        {
-            get { return string.Format("{Protocol}://{Domain}/{0}/{PathAndQuery}", PathPrefix); }
-        }
-        
+        public string Route => string.Format("{Protocol}://{Domain}/{0}/{PathAndQuery}", PathPrefix);
+
         public string PathPrefix { get; set; }
         public string Protocol { get; set; }
         public string Domain { get; set; }

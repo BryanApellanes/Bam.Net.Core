@@ -5,41 +5,41 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Configuration;
 using Bam.Net.Logging;
-using Bam.Net.CoreServices.OAuth.Data;
+using Bam.Net.CoreServices.Auth.Data;
 
-namespace Bam.Net.CoreServices.OAuth
+namespace Bam.Net.CoreServices.Auth
 {
-    public class OAuthProviderSettings: OAuthProviderSettingsData
+    public class AuthProviderSettings: AuthProviderSettingsData
     {
-        static Dictionary<string, Type> _settingsTypeMap;
-        static OAuthProviderSettings()
+        static readonly Dictionary<string, Type> _settingsTypeMap;
+        static AuthProviderSettings()
         {
             _settingsTypeMap = new Dictionary<string, Type>
             {
-                { "bamapps.net", typeof(OAuthProviderSettings) },
+                { "bamapps.net", typeof(AuthProviderSettings) },
                 { "facebook", typeof(FacebookOAuthSettings) }
             };
         }
 
-        public OAuthProviderSettings() : base()
+        public AuthProviderSettings() : base()
         {
             ClientId = "1282272511809831";
             AuthorizationEndpointFormat = "https://bamapps.net/oauth/authorize?clientId={ClientId}&callbackUrl={CallbackUrl}&code={Code}&state={State}";
             AuthorizationCallbackEndpointFormat = "https://bamapps.net/oauth/setaccesstoken?clientId={ClientId}&callbackUrl={TokenCallbackUrl}&clientSecret={ClientSecret}&code={Code}&state={State}";
         }
 
-        public OAuthProviderSettings(string clientId, string clientSecret) : this()
+        public AuthProviderSettings(string clientId, string clientSecret) : this()
         {
             ClientId = clientId;
             ClientSecret = clientSecret;
         }
 
-        public static OAuthProviderSettings FromData(OAuthProviderSettingsData data)
+        public static AuthProviderSettings FromData(AuthProviderSettingsData data)
         {
-            OAuthProviderSettings settings = null;
+            AuthProviderSettings settings = null;
             if (_settingsTypeMap.ContainsKey(data.ProviderName))
             {
-                settings = _settingsTypeMap[data.ProviderName].Construct<OAuthProviderSettings>();
+                settings = _settingsTypeMap[data.ProviderName].Construct<AuthProviderSettings>();
                 settings.CopyProperties(data);
             }
             return settings;
@@ -62,9 +62,9 @@ namespace Bam.Net.CoreServices.OAuth
 
         public string AccessToken { get; set; }
 
-        public OAuthProviderSettings WithAccessToken(string accessToken)
+        public AuthProviderSettings WithAccessToken(string accessToken)
         {
-            OAuthProviderSettings result = GetType().Construct<OAuthProviderSettings>();
+            AuthProviderSettings result = GetType().Construct<AuthProviderSettings>();
             result.CopyProperties(this);
             result.AccessToken = accessToken;
             return result;

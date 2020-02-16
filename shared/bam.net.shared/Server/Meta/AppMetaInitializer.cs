@@ -33,13 +33,7 @@ namespace Bam.Net.Server.Meta
             get; set;
         }
 
-        public Dictionary<string, AppContentResponder> AppContentResponders
-        {
-            get
-            {
-                return ContentResponder.AppContentResponders;
-            }
-        }
+        public Dictionary<string, AppContentResponder> AppContentResponders => ContentResponder.AppContentResponders;
 
         public event Action<AppMetaInitializer> Initializing;
         protected void OnInitializing()
@@ -75,7 +69,7 @@ namespace Bam.Net.Server.Meta
 
         protected Task InitializeAsync()
         {
-            return Task.Run(() => Initialize());
+            return Task.Run(Initialize);
         }
 
         public void Initialize()

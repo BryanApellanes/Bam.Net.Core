@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Bam.Net.Data;
 
-namespace Bam.Net.CoreServices.OAuth.Data.Dao
+namespace Bam.Net.CoreServices.Auth.Data.Dao
 {
     public class OAuthProviderSettingsDataColumns: QueryFilter<OAuthProviderSettingsDataColumns>, IFilterToken
     {

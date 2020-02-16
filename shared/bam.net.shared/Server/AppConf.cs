@@ -46,7 +46,7 @@ namespace Bam.Net.Server
 			ServiceSearchPattern = new string[] { "*Services.dll", "*Proxyables.dll" };
             ServiceReferences = new string[] { };
             ProcessMode = ProcessModes.Dev;
-            ServerConf = new AppServerConf(ServerKinds.Bam);
+            AppServerConf = new AppServerConf(ServerKinds.Bam);
             Name = ApplicationNameProvider.Default.GetApplicationName();
         }
 
@@ -173,7 +173,7 @@ namespace Bam.Net.Server
 
         public ProcessModes ProcessMode { get; set; } 
 
-        public AppServerConf ServerConf { get; set; }
+        public AppServerConf AppServerConf { get; set; }
         
         List<HostPrefix> _bindings;
         readonly object _bindingsLock = new object();

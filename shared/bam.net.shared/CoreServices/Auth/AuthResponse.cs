@@ -11,9 +11,9 @@ using Bam.Net;
 using Bam.Net.Web;
 using Bam.Net.ServiceProxy;
 
-namespace Bam.Net.CoreServices.OAuth
+namespace Bam.Net.CoreServices.Auth
 {
-    public class OAuthResponse: ServiceProxyResponse
+    public class AuthResponse: ServiceProxyResponse
     {
         
     }

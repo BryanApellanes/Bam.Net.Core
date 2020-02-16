@@ -61,6 +61,11 @@ namespace Bam.Net.Application
             }
         }
 
+        /// <summary>
+        /// Reads the specified BamConf and writes the default daemon process file for
+        /// all externally served apps defined.
+        /// </summary>
+        /// <param name="bamConf"></param>
         public static void SaveDefaultConfig(BamConf bamConf)
         {
             ForBamConf(bamConf).ToArray().ToJson(true).SafeWriteToFile(DefaultConfig.FullName, true);
@@ -108,9 +113,9 @@ namespace Bam.Net.Application
         /// <returns></returns>
         public static DaemonProcess ToServe(AppConf appConf)
         {
-            Args.ThrowIfNull(appConf.ServerConf, "appConf.ServerConf");
+            Args.ThrowIfNull(appConf.AppServerConf, "appConf.ServerConf");
             
-            AppServerConf serverConf = appConf.ServerConf;
+            AppServerConf serverConf = appConf.AppServerConf;
             return new DaemonProcess(serverConf.Command, serverConf.Arguments)
             {
                 WorkingDirectory = appConf.AppRoot.Root

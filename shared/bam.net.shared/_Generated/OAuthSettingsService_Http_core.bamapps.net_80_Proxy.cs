@@ -2,7 +2,7 @@
 This file was generated from http://core.bamapps.net/serviceproxy/csharpproxies.  This file should not be modified directly
 **/
 
-
+// TODO: Regen this file since the OAuthSettingsService was renamed to AuthSettingsService
 namespace Bam.Net.CoreServices
 {
 	using System;
@@ -12,7 +12,7 @@ namespace Bam.Net.CoreServices
 	using Bam.Net.CoreServices.Contracts;
 	using Bam.Net.CoreServices;
 	using System.Collections.Generic;
-	using Bam.Net.CoreServices.OAuth;
+	using Bam.Net.CoreServices.Auth;
 	using Bam.Net.CoreServices.ApplicationRegistration.Data;
 	using Bam.Net.UserAccounts;
 
@@ -29,15 +29,15 @@ namespace Bam.Net.CoreServices
         }
         
         
-        public CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.OAuth.OAuthClientSettings>> GetClientSettings(System.Boolean includeSecret)
+        public CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.Auth.AuthClientSettings>> GetClientSettings(System.Boolean includeSecret)
         {
             object[] parameters = new object[] { includeSecret };
-            return Invoke<CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.OAuth.OAuthClientSettings>>>("GetClientSettings", parameters);
+            return Invoke<CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.Auth.AuthClientSettings>>>("GetClientSettings", parameters);
         }
-        public CoreServiceResponse<Bam.Net.CoreServices.OAuth.OAuthClientSettings> SetProvider(System.String providerName, System.String clientId, System.String clientSecret)
+        public CoreServiceResponse<Bam.Net.CoreServices.Auth.AuthClientSettings> SetProvider(System.String providerName, System.String clientId, System.String clientSecret)
         {
             object[] parameters = new object[] { providerName, clientId, clientSecret };
-            return Invoke<CoreServiceResponse<Bam.Net.CoreServices.OAuth.OAuthClientSettings>>("SetProvider", parameters);
+            return Invoke<CoreServiceResponse<Bam.Net.CoreServices.Auth.AuthClientSettings>>("SetProvider", parameters);
         }
         public CoreServiceResponse RemoveProvider(System.String providerName)
         {
@@ -81,15 +81,15 @@ namespace Bam.Net.CoreServices.Contracts
 	using Bam.Net.CoreServices.Contracts;
 	using Bam.Net.CoreServices;
 	using System.Collections.Generic;
-	using Bam.Net.CoreServices.OAuth;
+	using Bam.Net.CoreServices.Auth;
 	using Bam.Net.CoreServices.ApplicationRegistration.Data;
 	using Bam.Net.UserAccounts;
 
     
         public interface IOAuthSettingsService
         {
-			CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.OAuth.OAuthClientSettings>> GetClientSettings(System.Boolean includeSecret);
-			CoreServiceResponse<Bam.Net.CoreServices.OAuth.OAuthClientSettings> SetProvider(System.String providerName, System.String clientId, System.String clientSecret);
+			CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.Auth.AuthClientSettings>> GetClientSettings(System.Boolean includeSecret);
+			CoreServiceResponse<Bam.Net.CoreServices.Auth.AuthClientSettings> SetProvider(System.String providerName, System.String clientId, System.String clientSecret);
 			CoreServiceResponse RemoveProvider(System.String providerName);
 			Dictionary<System.String, System.String> GetSettings();
 			LoginResponse ConnectClient(Bam.Net.CoreServices.ApplicationRegistration.Data.Client client);
@@ -116,7 +116,7 @@ namespace Bam.Net.CoreServices
 	using Bam.Net.UserAccounts;
 	using System;
 
-	public class OAuthSettingsServiceProxy: OAuthSettingsService, IProxy 
+	public class OAuthSettingsServiceProxy: AuthSettingsService, IProxy 
 	{
 		OAuthSettingsServiceClient _proxyClient;
 		public OAuthSettingsServiceProxy()
@@ -141,7 +141,7 @@ namespace Bam.Net.CoreServices
 		{
 			get
 			{
-				return typeof(OAuthSettingsService);
+				return typeof(AuthSettingsService);
 			}
 		}
 
@@ -175,12 +175,12 @@ namespace Bam.Net.CoreServices
 		}
 
 
-		public override CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.OAuth.OAuthClientSettings>> GetClientSettings(System.Boolean includeSecret)
+		public override CoreServiceResponse<System.Collections.Generic.List<Bam.Net.CoreServices.Auth.AuthClientSettings>> GetClientSettings(System.Boolean includeSecret)
 		{
 			return _proxyClient.GetClientSettings(includeSecret);
 		}
 
-		public override CoreServiceResponse<Bam.Net.CoreServices.OAuth.OAuthClientSettings> SetProvider(System.String providerName, System.String clientId, System.String clientSecret)
+		public override CoreServiceResponse<Bam.Net.CoreServices.Auth.AuthClientSettings> SetProvider(System.String providerName, System.String clientId, System.String clientSecret)
 		{
 			return _proxyClient.SetProvider(providerName, clientId, clientSecret);
 		}

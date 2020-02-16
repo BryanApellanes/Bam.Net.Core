@@ -19,7 +19,7 @@ using Bam.Net.Web;
 using Bam.Net.CoreServices;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
-using Bam.Net.CoreServices.OAuth;
+using Bam.Net.CoreServices.Auth;
 
 namespace Bam.Net.Services.Clients
 {
@@ -88,7 +88,7 @@ namespace Bam.Net.Services.Clients
         }
 
         static CoreClient _local;
-        static object _localLock = new object();
+        static readonly object _localLock = new object();
         /// <summary>
         /// A CoreClient configured for localhost on port 9100
         /// </summary>
@@ -101,7 +101,7 @@ namespace Bam.Net.Services.Clients
         }
 
         static CoreClient _heart;
-        static object _heartLock = new object();
+        static readonly object _heartLock = new object();
         public static CoreClient Heart
         {
             get
@@ -141,7 +141,7 @@ namespace Bam.Net.Services.Clients
         public string ApplicationName { get; set; }
         public string OrganizationName { get; set; }
         public string WorkspaceDirectory { get; internal set; }
-        public string ApiKeyFilePath { get { return Path.Combine(WorkspaceDirectory, HostName, Port.ToString(), $"{GetApplicationName()}.apikey"); } }
+        public string ApiKeyFilePath => Path.Combine(WorkspaceDirectory, HostName, Port.ToString(), $"{GetApplicationName()}.apikey");
         public ILogger Logger { get; set; }
         #region IApiKeyResolver
         public HashAlgorithms HashAlgorithm
@@ -304,7 +304,8 @@ namespace Bam.Net.Services.Clients
         {
             return UserRegistryService.Login(userName, passHash);
         }
-        object _registerLock = new object();
+
+        readonly object _registerLock = new object();
         /// <summary>
         /// Register the current application and ensure that the local ApiKeyInfo is set and 
         /// written to ApiKeyFilePath
@@ -347,30 +348,30 @@ namespace Bam.Net.Services.Clients
         public event EventHandler OAuthSettingsWritten;
         public event EventHandler OAuthSettingsLoaded;
 
-        public SupportedOAuthProviders GetSupportedOAuthProviders()
+        public SupportedAuthProviders GetSupportedOAuthProviders()
         {
-            string settingsPath = SupportedOAuthProviders.GetSettingsPath(this);
-            SupportedOAuthProviders providers = new SupportedOAuthProviders();
+            string settingsPath = SupportedAuthProviders.GetSettingsPath(this);
+            SupportedAuthProviders providers = new SupportedAuthProviders();
             if (!File.Exists(settingsPath))
             {
                 FireEvent(OAuthSettingsNotFound);
-                CoreServiceResponse response = OAuthSettingsService.GetClientSettings(true);
+                CoreServiceResponse response = AuthSettingsService.GetClientSettings(true);
                 if (!response.Success)
                 {
                     throw new ApplicationException(response.Message);
                 }
                 string json = response.Data.ToString();
-                OAuthClientSettings[] settings = json.FromJson<OAuthClientSettings[]>();                
-                foreach(OAuthClientSettings setting in settings)
+                AuthClientSettings[] settings = json.FromJson<AuthClientSettings[]>();                
+                foreach(AuthClientSettings setting in settings)
                 {
-                    providers.AddProvider(setting.CopyAs<OAuthProviderInfo>());
+                    providers.AddProvider(setting.CopyAs<AuthProviderInfo>());
                 }
                 providers.Save(settingsPath);
                 FireEvent(OAuthSettingsWritten);
             }
             else
             {
-                providers = SupportedOAuthProviders.LoadFrom(settingsPath);
+                providers = SupportedAuthProviders.LoadFrom(settingsPath);
                 FireEvent(OAuthSettingsLoaded);
             }
 
@@ -416,10 +417,7 @@ namespace Bam.Net.Services.Clients
 
         public bool UseServiceSubdomains
         {
-            get
-            {
-                return ProxyFactory.MungeHostNames;
-            }
+            get => ProxyFactory.MungeHostNames;
             set
             {
                 ProxyFactory.MungeHostNames = value;
@@ -483,13 +481,13 @@ namespace Bam.Net.Services.Clients
         public UserRegistryService UserRegistryService { get; set; }
         protected internal ApplicationRegistryService ApplicationRegistryService { get; set; }
         protected internal RoleService RoleService { get; set; }
-        protected internal OAuthService OAuthService { get; set; }
+        protected internal AuthService AuthService { get; set; }
         protected internal ConfigurationService ConfigurationService { get; set; }
         protected internal SystemLoggerService LoggerService { get; set; }
         protected internal DiagnosticService DiagnosticService { get; set; }
         protected internal ServiceRegistryService ServiceRegistryService { get; set; }
         protected internal SystemLogReaderService SystemLogReaderService { get; set; }
-        protected internal OAuthSettingsService OAuthSettingsService { get; set; }
+        protected internal AuthSettingsService AuthSettingsService { get; set; }
         protected internal ProxyAssemblyGeneratorService ProxyAssemblyGeneratorService { get; set; }
 
         /// <summary>
@@ -507,8 +505,8 @@ namespace Bam.Net.Services.Clients
                 yield return DiagnosticService;
                 yield return ServiceRegistryService;
                 yield return SystemLogReaderService;
-                yield return OAuthService;
-                yield return OAuthSettingsService;
+                yield return AuthService;
+                yield return AuthSettingsService;
                 yield return ProxyAssemblyGeneratorService;
             }
         }
@@ -525,8 +523,8 @@ namespace Bam.Net.Services.Clients
                 yield return typeof(DiagnosticService);
                 yield return typeof(ServiceRegistryService);
                 yield return typeof(SystemLogReaderService);
-                yield return typeof(OAuthService);
-                yield return typeof(OAuthSettingsService);
+                yield return typeof(AuthService);
+                yield return typeof(AuthSettingsService);
                 yield return typeof(ProxyAssemblyGeneratorService);
             }
         }
@@ -581,10 +579,10 @@ namespace Bam.Net.Services.Clients
             LoggerService = ProxyFactory.GetProxy<SystemLoggerService>();
             UserRegistryService = ProxyFactory.GetProxy<UserRegistryService>();
             RoleService = ProxyFactory.GetProxy<RoleService>();
-            OAuthService = ProxyFactory.GetProxy<OAuthService>();
+            AuthService = ProxyFactory.GetProxy<AuthService>();
             ServiceRegistryService = ProxyFactory.GetProxy<ServiceRegistryService>();
             SystemLogReaderService = ProxyFactory.GetProxy<SystemLogReaderService>();
-            OAuthSettingsService = ProxyFactory.GetProxy<OAuthSettingsService>();
+            AuthSettingsService = ProxyFactory.GetProxy<AuthSettingsService>();
             ProxyAssemblyGeneratorService = ProxyFactory.GetProxy<ProxyAssemblyGeneratorService>();
         }
 

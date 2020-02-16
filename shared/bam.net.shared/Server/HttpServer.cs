@@ -16,10 +16,10 @@ namespace Bam.Net.Server
 {
     public class HttpServer : Loggable, IDisposable
     {
-        private static ConcurrentDictionary<HostPrefix, HttpServer> _listening = new ConcurrentDictionary<HostPrefix, HttpServer>();
+        private static readonly ConcurrentDictionary<HostPrefix, HttpServer> _listening = new ConcurrentDictionary<HostPrefix, HttpServer>();
         private readonly HttpListener _listener;
         private readonly Thread _handlerThread;
-        private ILogger _logger;
+        private readonly ILogger _logger;
         
         public HttpServer(ILogger logger = null)
         {
@@ -34,14 +34,8 @@ namespace Bam.Net.Server
         HashSet<HostPrefix> _hostPrefixes;
         public HostPrefix[] HostPrefixes
         {
-            get
-            {
-                return _hostPrefixes.ToArray();
-            }
-            set
-            {
-                _hostPrefixes = new HashSet<HostPrefix>(value);
-            }
+            get => _hostPrefixes.ToArray();
+            set => _hostPrefixes = new HashSet<HostPrefix>(value);
         }
         
         /// <summary>
@@ -49,7 +43,7 @@ namespace Bam.Net.Server
         /// other HttpServers that are listening on 
         /// the same port and hostname as what
         /// the current HttpServer is configured for
-        /// when it is started
+        /// when it is started.
         /// </summary>
         public bool Usurped
         {

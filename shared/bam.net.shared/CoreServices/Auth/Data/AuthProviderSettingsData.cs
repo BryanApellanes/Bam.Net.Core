@@ -5,17 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Data.Repositories;
 
-namespace Bam.Net.CoreServices.OAuth.Data
+namespace Bam.Net.CoreServices.Auth.Data
 {
-    public class OAuthProviderSettingsData: AuditRepoData
+    public class AuthProviderSettingsData: CompositeKeyAuditRepoData
     {
-        public OAuthProviderSettingsData()
+        public AuthProviderSettingsData()
         {
             ProviderName = "bamapps.net";
         }
+        
+        [CompositeKey]
         public string ApplicationName { get; set; }
+        
+        /// <summary>
+        /// The Application Cuid as known by us.
+        /// </summary>
+        [CompositeKey]
         public string ApplicationIdentifier { get; set; }
         
+        [CompositeKey]
         public string ProviderName { get; set; }
 
         public string State { get; set; }
@@ -23,6 +31,7 @@ namespace Bam.Net.CoreServices.OAuth.Data
         /// <summary>
         /// The identifier used by the provider's system
         /// </summary>
+        [CompositeKey]
         public string ClientId { get; set; }
 
         /// <summary>

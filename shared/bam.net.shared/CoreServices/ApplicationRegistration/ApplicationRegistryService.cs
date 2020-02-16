@@ -46,7 +46,7 @@ namespace Bam.Net.CoreServices
         {
             get
             {
-                if(ApplicationRegistrationRepository != null && ApplicationRegistrationRepository.Database != null)
+                if(ApplicationRegistrationRepository?.Database != null)
                 {
                     _database = ApplicationRegistrationRepository.Database;
                 }

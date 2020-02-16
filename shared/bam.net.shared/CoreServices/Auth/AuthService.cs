@@ -14,14 +14,14 @@ using Bam.Net.Server;
 namespace Bam.Net.CoreServices
 {
     // TODO: fully implement this
-    [Proxy("oauthSvc")]
-    [ServiceSubdomain("oauth")]
-    public class OAuthService: ApplicationProxyableService // This is not fully implemented
+    [Proxy("authSvc")]
+    [ServiceSubdomain("auth")]
+    public class AuthService: ApplicationProxyableService // This is not fully implemented
     {
         [Exclude]
         public override object Clone()
         {
-            OAuthService clone = new OAuthService();
+            AuthService clone = new AuthService();
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;

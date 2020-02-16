@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bam.Net.CoreServices.OAuth
+namespace Bam.Net.CoreServices.Auth
 {
-    public class OAuthProviderInfo
+    public class AuthProviderInfo
     {
         public string ProviderName { get; set; }
         public string ClientId { get; set; }
@@ -12,12 +12,12 @@ namespace Bam.Net.CoreServices.OAuth
         public string AuthorizationEndpoint { get; set; }
         public override int GetHashCode()
         {
-            return $"{nameof(OAuthProviderInfo)}.{ProviderName}".GetHashCode();
+            return $"{nameof(AuthProviderInfo)}.{ProviderName}".GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is OAuthProviderInfo provider)
+            if (obj is AuthProviderInfo provider)
             {
                 return provider.ProviderName.Equals(ProviderName);
             }

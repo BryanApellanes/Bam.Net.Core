@@ -382,9 +382,9 @@ namespace Bam.Net.Server
                 return AppConfigs.Where(c =>
                 {
                     bool shouldServe = true;
-                    if (c.ServerConf != null)
+                    if (c.AppServerConf != null)
                     {
-                        shouldServe = c.ServerConf.ServerKind == ServerKinds.Bam;
+                        shouldServe = c.AppServerConf.ServerKind == ServerKinds.Bam;
                     }
                     
                     if (appsRequestedOnCommandLine.Count == 0)
@@ -406,7 +406,7 @@ namespace Bam.Net.Server
         [Exclude]
         public AppConf[] AppsServedExternally
         {
-            get { return AppConfigs.Where(c => c.ServerConf?.ServerKind == ServerKinds.External).ToArray(); }
+            get { return AppConfigs.Where(c => c.AppServerConf?.ServerKind == ServerKinds.External).ToArray(); }
         }
         
         protected internal AppConf[] ReloadAppConfigs()

@@ -13,7 +13,7 @@ using Bam.Net.UserAccounts.Data;
 
 namespace Bam.Net.UserAccounts
 {
-    public class DaoUserResolver : IUserResolver, IUserProvider
+    public class DaoUserResolver : IDaoUserResolver
     {
         [Exclude]
         public object Clone()
@@ -24,7 +24,7 @@ namespace Bam.Net.UserAccounts
         }
 
         static DaoUserResolver _instance;
-        static object _instanceLock = new object();
+        static readonly object _instanceLock = new object();
         public static DaoUserResolver Instance
         {
             get

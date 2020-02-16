@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.CoreServices.OAuth
+namespace Bam.Net.CoreServices.Auth
 {
-    public class FacebookOAuthSettings: OAuthProviderSettings
+    public class FacebookOAuthSettings: AuthProviderSettings
     {
         public FacebookOAuthSettings(string clientId, string clientSecret, string version = "v2.10") : base(clientId, clientSecret)
         {

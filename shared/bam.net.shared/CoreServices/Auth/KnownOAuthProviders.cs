@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.CoreServices.OAuth
+namespace Bam.Net.CoreServices.Auth
 {
     public enum KnownOAuthProviders
     {

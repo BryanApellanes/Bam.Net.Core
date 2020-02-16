@@ -157,7 +157,7 @@ namespace Bam.Net.CoreServices
                 .For<IAssemblyService>().Use<AssemblyService>()
                 .For<ServiceRegistryRepository>().Use(serviceRegistryRepo)
                 .For<ServiceRegistryService>().Use<ServiceRegistryService>()
-                .For<OAuthService>().Use<OAuthService>()
+                .For<AuthService>().Use<AuthService>()
                 .For<ILog>().Use(loggerSvc)
                 .For<SystemLoggerService>().Use(loggerSvc)
                 .For<IDataDirectoryProvider>().Use(DataProvider.Current)
@@ -169,7 +169,7 @@ namespace Bam.Net.CoreServices
                 .For<ILogReader>().Use<SystemLogReaderService>()
                 .For<SystemLogReaderService>().Use<SystemLogReaderService>()
                 .For<CredentialManagementService>().Use<CredentialManagementService>()
-                .For<OAuthSettingsService>().Use<OAuthSettingsService>()
+                .For<AuthSettingsService>().Use<AuthSettingsService>()
                 .For<ProxyAssemblyGeneratorService>().Use<ProxyAssemblyGeneratorService>();
 
             reg.For<ServiceRegistry>().Use(reg)

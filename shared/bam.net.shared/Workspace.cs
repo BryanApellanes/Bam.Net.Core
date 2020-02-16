@@ -111,7 +111,7 @@ namespace Bam.Net
         }
         
         static Workspace _current;
-        static object _currentLock = new object();
+        static readonly object _currentLock = new object();
         public static Workspace Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => ForApplication()); }
@@ -128,8 +128,7 @@ namespace Bam.Net
             Workspace applicationWorkspace = ForApplication(applicationNameProvider);
             string directoryPath =
                 System.IO.Path.Combine(applicationWorkspace.Root.FullName, ProcessMode.Current.Mode.ToString(), $"{type.Namespace}.{type.Name}");
-            return new Workspace()
-                {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
+            return new Workspace() {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
         }
 
         public static Workspace ForProcess()
@@ -142,8 +141,7 @@ namespace Bam.Net
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             Log.Trace(typeof(Workspace), "Workspace using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
             string directoryPath = System.IO.Path.Combine(BamHome.Apps, applicationNameProvider.GetApplicationName());
-            return new Workspace()
-                {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
+            return new Workspace() {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
         }
 
         public static Workspace ForApplication(string applicationName)

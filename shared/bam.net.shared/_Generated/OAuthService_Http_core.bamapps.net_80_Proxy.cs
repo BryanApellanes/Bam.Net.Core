@@ -2,7 +2,7 @@
 This file was generated from http://core.bamapps.net/serviceproxy/csharpproxies.  This file should not be modified directly
 **/
 
-
+// TODO: Regen this file since the OAuthService was renamed to AuthService
 namespace Bam.Net.CoreServices
 {
 	using System;
@@ -98,7 +98,7 @@ namespace Bam.Net.CoreServices
 	using System.Collections.Generic;
 	using Bam.Net.UserAccounts;
 
-	public class OAuthServiceProxy: OAuthService, IProxy 
+	public class OAuthServiceProxy: AuthService, IProxy 
 	{
 		OAuthServiceClient _proxyClient;
 		public OAuthServiceProxy()
@@ -123,7 +123,7 @@ namespace Bam.Net.CoreServices
 		{
 			get
 			{
-				return typeof(OAuthService);
+				return typeof(AuthService);
 			}
 		}
 

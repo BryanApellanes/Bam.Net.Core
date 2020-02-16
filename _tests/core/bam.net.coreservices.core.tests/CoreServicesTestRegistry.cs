@@ -60,7 +60,7 @@ namespace Bam.Net.CoreServices.Tests
             ApplicationRegistration.Data.Dao.Repository.ApplicationRegistrationRepository appRepo = new ApplicationRegistration.Data.Dao.Repository.ApplicationRegistrationRepository();
             appRepo.EnsureDaoAssemblyAndSchema();
 
-            OAuth.Data.Dao.Repository.OAuthSettingsRepository oauthRepo = new OAuth.Data.Dao.Repository.OAuthSettingsRepository();
+            Auth.Data.Dao.Repository.OAuthSettingsRepository oauthRepo = new Auth.Data.Dao.Repository.OAuthSettingsRepository();
             oauthRepo.EnsureDaoAssemblyAndSchema();
 
             IHttpContext ctx = Substitute.For<IHttpContext>();
@@ -75,8 +75,8 @@ namespace Bam.Net.CoreServices.Tests
 
             ServiceRegistry registry = new ServiceRegistry()
                 .For<ApplicationRegistration.Data.Dao.Repository.ApplicationRegistrationRepository>().Use(appRepo)
-                .For<OAuth.Data.Dao.Repository.OAuthSettingsRepository>().Use<OAuth.Data.Dao.Repository.OAuthSettingsRepository>() // not necessary since it has a parameterless ctor
-                .For<OAuthSettingsService>().Use<OAuthSettingsService>()
+                .For<Auth.Data.Dao.Repository.OAuthSettingsRepository>().Use<Auth.Data.Dao.Repository.OAuthSettingsRepository>() // not necessary since it has a parameterless ctor
+                .For<AuthSettingsService>().Use<AuthSettingsService>()
                 .For<IHttpContext>().Use(ctx);
 
             return registry;

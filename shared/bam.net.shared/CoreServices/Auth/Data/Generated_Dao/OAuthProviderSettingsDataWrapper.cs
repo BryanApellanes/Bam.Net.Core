@@ -9,14 +9,14 @@ using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Newtonsoft.Json;
-using Bam.Net.CoreServices.OAuth.Data;
-using Bam.Net.CoreServices.OAuth.Data.Dao;
+using Bam.Net.CoreServices.Auth.Data;
+using Bam.Net.CoreServices.Auth.Data.Dao;
 
-namespace Bam.Net.CoreServices.OAuth.Data.Wrappers
+namespace Bam.Net.CoreServices.Auth.Data.Wrappers
 {
 	// generated
 	[Serializable]
-	public class OAuthProviderSettingsDataWrapper: Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData, IHasUpdatedXrefCollectionProperties
+	public class OAuthProviderSettingsDataWrapper: Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData, IHasUpdatedXrefCollectionProperties
 	{
 		public OAuthProviderSettingsDataWrapper()
 		{

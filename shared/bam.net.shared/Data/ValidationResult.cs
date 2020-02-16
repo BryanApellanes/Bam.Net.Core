@@ -13,7 +13,7 @@ namespace Bam.Net.Data
 {
     public class ValidationResult
     {
-        ExecutionRequest _toValidate;
+        readonly ExecutionRequest _toValidate;
 
         public ValidationResult()
         {
@@ -54,11 +54,10 @@ namespace Bam.Net.Data
         }
         private void ValidateRequestFilters(IHttpContext context, List<ValidationFailures> failures, List<string> messages)
         {
-            RequestFilterAttribute filterAttr;
             if (_toValidate.TargetType != null &&
                 _toValidate.MethodInfo != null &&
                 (
-                    _toValidate.TargetType.HasCustomAttributeOfType(true, out filterAttr) ||
+                    _toValidate.TargetType.HasCustomAttributeOfType(true, out RequestFilterAttribute filterAttr) ||
                     _toValidate.MethodInfo.HasCustomAttributeOfType(true, out filterAttr)
                 ))
             {

@@ -11,7 +11,7 @@ namespace Bam.Net.Server
 {
     public class ResponderList: Responder
     {
-        List<IResponder> _responders;
+        readonly List<IResponder> _responders;
         public ResponderList(BamConf conf, IEnumerable<IResponder> responders)
             : base(conf)
         {

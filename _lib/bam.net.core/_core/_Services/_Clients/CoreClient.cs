@@ -19,7 +19,7 @@ using Bam.Net.Web;
 using Bam.Net.CoreServices;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
-using Bam.Net.CoreServices.OAuth;
+using Bam.Net.CoreServices.Auth;
 
 namespace Bam.Net.Services.Clients
 {
@@ -41,10 +41,10 @@ namespace Bam.Net.Services.Clients
             UserRegistryService = new UserRegistryServiceProxy();
             RoleService = new RoleServiceProxy();
 
-            OAuthService = new OAuthServiceProxy();
+            AuthService = new OAuthServiceProxy();
             ServiceRegistryService = new ServiceRegistryServiceProxy();
             SystemLogReaderService = new SystemLogReaderServiceProxy();
-            OAuthSettingsService = new OAuthSettingsServiceProxy();
+            AuthSettingsService = new OAuthSettingsServiceProxy();
             ProxyAssemblyGeneratorService = new ProxyAssemblyGeneratorServiceProxy();
         }
     }

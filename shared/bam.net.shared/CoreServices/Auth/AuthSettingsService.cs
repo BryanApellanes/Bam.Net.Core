@@ -5,22 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.CoreServices;
 using Bam.Net.ServiceProxy.Secure;
-using Bam.Net.CoreServices.OAuth.Data;
-using Bam.Net.CoreServices.OAuth.Data.Dao.Repository;
-using Bam.Net.CoreServices.OAuth;
+using Bam.Net.CoreServices.Auth.Data;
+using Bam.Net.CoreServices.Auth.Data.Dao.Repository;
+using Bam.Net.CoreServices.Auth;
 using Bam.Net.ServiceProxy;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 
 namespace Bam.Net.CoreServices
 {
-    [Proxy("oauthSettingsSvc")]    
+    [Proxy("authSettingsSvc")]    
     [ApiKeyRequired]
     [Authenticated]
-    public class OAuthSettingsService : ApplicationProxyableService
+    public class AuthSettingsService : ApplicationProxyableService
     {
-        protected OAuthSettingsService() { }
+        protected AuthSettingsService() { }
 
-        public OAuthSettingsService(OAuthSettingsRepository oauthRepo, ApplicationRegistrationRepository applicationRegistrationRepo)
+        public AuthSettingsService(OAuthSettingsRepository oauthRepo, ApplicationRegistrationRepository applicationRegistrationRepo)
         {
             OAuthSettingsRepository = oauthRepo;
             ApplicationRegistrationRepository = applicationRegistrationRepo;
@@ -29,19 +29,19 @@ namespace Bam.Net.CoreServices
         public OAuthSettingsRepository OAuthSettingsRepository { get; set; }
 
         [RoleRequired("/", "Admin")]
-        public virtual CoreServiceResponse<List<OAuthClientSettings>> GetClientSettings(bool includeSecret = false)
+        public virtual CoreServiceResponse<List<AuthClientSettings>> GetClientSettings(bool includeSecret = false)
         {
             try
             {
                 ApplicationRegistration.Data.Application app = ClientApplication;
-                return new CoreServiceResponse<List<OAuthClientSettings>>
+                return new CoreServiceResponse<List<AuthClientSettings>>
                     (
                         OAuthSettingsRepository
                             .OAuthProviderSettingsDatasWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name)
-                            .Select(sd => OAuthProviderSettings.FromData(sd))
+                            .Select(AuthProviderSettings.FromData)
                             .Select(os =>
                             {
-                                OAuthClientSettings setting = os.CopyAs<OAuthClientSettings>();
+                                AuthClientSettings setting = os.CopyAs<AuthClientSettings>();
                                 if (!includeSecret)
                                 {
                                     setting.ClientSecret = string.Empty;
@@ -56,18 +56,18 @@ namespace Bam.Net.CoreServices
             }
             catch(Exception ex)
             {
-                return new CoreServiceResponse<List<OAuthClientSettings>> { Success = false, Message = ex.Message };
+                return new CoreServiceResponse<List<AuthClientSettings>> { Success = false, Message = ex.Message };
             }
         }
 
         [RoleRequired("/", "Admin")]
-        public virtual CoreServiceResponse<OAuthClientSettings> SetProvider(string providerName, string clientId, string clientSecret)
+        public virtual CoreServiceResponse<AuthClientSettings> SetProvider(string providerName, string clientId, string clientSecret)
         {
             try
             {
                 ApplicationRegistration.Data.Application app = GetClientApplicationOrDie();
 
-                OAuthProviderSettingsData data = new OAuthProviderSettingsData()
+                AuthProviderSettingsData data = new AuthProviderSettingsData()
                 {
                     ApplicationName = app.Name,
                     ApplicationIdentifier = app.Cuid,
@@ -75,12 +75,12 @@ namespace Bam.Net.CoreServices
                     ClientId = clientId,
                     ClientSecret = clientSecret
                 };
-                OAuthClientSettings settings = OAuthSettingsRepository.Save(data).CopyAs<OAuthClientSettings>();
-                return new CoreServiceResponse<OAuthClientSettings> { Success = true, Data = settings };
+                AuthClientSettings settings = OAuthSettingsRepository.Save(data).CopyAs<AuthClientSettings>();
+                return new CoreServiceResponse<AuthClientSettings> { Success = true, Data = settings };
             }
             catch (Exception ex)
             {
-                return new CoreServiceResponse<OAuthClientSettings> { Success = false, Message = ex.Message };
+                return new CoreServiceResponse<AuthClientSettings> { Success = false, Message = ex.Message };
             }
         }
 
@@ -90,7 +90,7 @@ namespace Bam.Net.CoreServices
             try
             {
                 ApplicationRegistration.Data.Application app = GetClientApplicationOrDie();
-                OAuthProviderSettingsData data = OAuthSettingsRepository.OneOAuthProviderSettingsDataWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name && c.ProviderName == providerName);
+                AuthProviderSettingsData data = OAuthSettingsRepository.OneOAuthProviderSettingsDataWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name && c.ProviderName == providerName);
                 if(data != null)
                 {
                     bool success = OAuthSettingsRepository.Delete(data);
@@ -110,7 +110,7 @@ namespace Bam.Net.CoreServices
 
         public override object Clone()
         {
-            OAuthSettingsService clone = new OAuthSettingsService(OAuthSettingsRepository, ApplicationRegistrationRepository);
+            AuthSettingsService clone = new AuthSettingsService(OAuthSettingsRepository, ApplicationRegistrationRepository);
             clone.CopyProperties(this);
             clone.CopyEventHandlers(this);
             return clone;

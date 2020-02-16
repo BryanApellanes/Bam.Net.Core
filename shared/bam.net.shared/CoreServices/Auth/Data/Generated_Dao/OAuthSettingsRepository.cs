@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using Bam.Net;
 using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
-using Bam.Net.CoreServices.OAuth.Data;
+using Bam.Net.CoreServices.Auth.Data;
 
-namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
+namespace Bam.Net.CoreServices.Auth.Data.Dao.Repository
 {
 	[Serializable]
 	public class OAuthSettingsRepository: DaoRepository
@@ -22,9 +22,9 @@ namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
 		public OAuthSettingsRepository()
 		{
 			SchemaName = "OAuthSettings";
-			BaseNamespace = "Bam.Net.CoreServices.OAuth.Data";			
+			BaseNamespace = "Bam.Net.CoreServices.Auth.Data";			
 ﻿			
-			AddType<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>();
+			AddType<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>();
 			DaoAssembly = typeof(OAuthSettingsRepository).Assembly;
 		}
 
@@ -45,10 +45,10 @@ namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
-		public Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData GetOneOAuthProviderSettingsDataWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where)
+		public Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData GetOneOAuthProviderSettingsDataWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where)
 		{
-			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>();
-			return (Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData)Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
+			Type wrapperType = GetWrapperType<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>();
+			return (Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData)Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.GetOneWhere(where, Database)?.CopyAs(wrapperType, this);
 		}
 
 		/// <summary>
@@ -60,22 +60,22 @@ namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between OAuthProviderSettingsDataColumns and other values
 		/// </param>
-		public Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData OneOAuthProviderSettingsDataWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where)
+		public Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData OneOAuthProviderSettingsDataWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where)
         {
-            Type wrapperType = GetWrapperType<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>();
-            return (Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData)Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.OneWhere(where, Database)?.CopyAs(wrapperType, this);
+            Type wrapperType = GetWrapperType<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>();
+            return (Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData)Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.OneWhere(where, Database)?.CopyAs(wrapperType, this);
         }
 
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsDataColumns 
+		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.Auth.Data.OAuthProviderSettingsDataColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
-		/// between Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsDataColumns and other values
+		/// between Bam.Net.CoreServices.Auth.Data.OAuthProviderSettingsDataColumns and other values
 		/// </param>
-		public IEnumerable<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData> OAuthProviderSettingsDatasWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where, OrderBy<OAuthProviderSettingsDataColumns> orderBy = null)
+		public IEnumerable<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData> OAuthProviderSettingsDatasWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where, OrderBy<OAuthProviderSettingsDataColumns> orderBy = null)
         {
-            return Wrap<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>(Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.Where(where, orderBy, Database));
+            return Wrap<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>(Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.Where(where, orderBy, Database));
         }
 		
 		/// <summary>
@@ -91,9 +91,9 @@ namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between OAuthProviderSettingsDataColumns and other values
 		/// </param>
-		public IEnumerable<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData> TopOAuthProviderSettingsDatasWhere(int count, WhereDelegate<OAuthProviderSettingsDataColumns> where)
+		public IEnumerable<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData> TopOAuthProviderSettingsDatasWhere(int count, WhereDelegate<OAuthProviderSettingsDataColumns> where)
         {
-            return Wrap<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>(Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.Top(count, where, Database));
+            return Wrap<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>(Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.Top(count, where, Database));
         }
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
 		/// </summary>
 		public long CountOAuthProviderSettingsDatas()
         {
-            return Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.Count(Database);
+            return Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.Count(Database);
         }
 
 		/// <summary>
@@ -113,22 +113,22 @@ namespace Bam.Net.CoreServices.OAuth.Data.Dao.Repository
 		/// </param>
         public long CountOAuthProviderSettingsDatasWhere(WhereDelegate<OAuthProviderSettingsDataColumns> where)
         {
-            return Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.Count(where, Database);
+            return Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.Count(where, Database);
         }
         
-        public async Task BatchQueryOAuthProviderSettingsDatas(int batchSize, WhereDelegate<OAuthProviderSettingsDataColumns> where, Action<IEnumerable<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>> batchProcessor)
+        public async Task BatchQueryOAuthProviderSettingsDatas(int batchSize, WhereDelegate<OAuthProviderSettingsDataColumns> where, Action<IEnumerable<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>> batchProcessor)
         {
-            await Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.BatchQuery(batchSize, where, (batch) =>
+            await Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.BatchQuery(batchSize, where, (batch) =>
             {
-				batchProcessor(Wrap<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>(batch));
+				batchProcessor(Wrap<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>(batch));
             }, Database);
         }
 		
-        public async Task BatchAllOAuthProviderSettingsDatas(int batchSize, Action<IEnumerable<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>> batchProcessor)
+        public async Task BatchAllOAuthProviderSettingsDatas(int batchSize, Action<IEnumerable<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>> batchProcessor)
         {
-            await Bam.Net.CoreServices.OAuth.Data.Dao.OAuthProviderSettingsData.BatchAll(batchSize, (batch) =>
+            await Bam.Net.CoreServices.Auth.Data.Dao.OAuthProviderSettingsData.BatchAll(batchSize, (batch) =>
             {
-				batchProcessor(Wrap<Bam.Net.CoreServices.OAuth.Data.OAuthProviderSettingsData>(batch));
+				batchProcessor(Wrap<Bam.Net.CoreServices.Auth.Data.AuthProviderSettingsData>(batch));
             }, Database);
         }
 	}
