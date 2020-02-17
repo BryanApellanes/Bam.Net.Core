@@ -10,7 +10,7 @@ using Bam.Net.Presentation.Html;
 using Bam.Net.Configuration;
 using System.Threading.Tasks;
 using Bam.Net.Presentation;
-using Bam.Net.Server.Meta;
+using Bam.Net.Server.PathHandlers;
 
 namespace Bam.Net.Server
 {

@@ -18,10 +18,7 @@ namespace Bam.Net.Services
             Parse();
         }
 
-        public bool IsValid
-        {
-            get { return !string.IsNullOrEmpty(Protocol) && !string.IsNullOrEmpty(Domain); }
-        }
+        public bool IsValid => !string.IsNullOrEmpty(Protocol) && !string.IsNullOrEmpty(Domain);
 
         Dictionary<string, string> values; 
         

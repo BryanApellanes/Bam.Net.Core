@@ -19,7 +19,7 @@ using Bam.Net.UserAccounts.Data;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using Bam.Net.CommandLine;
-using Bam.Net.Server.Meta;
+using Bam.Net.Server.PathHandlers;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Configuration;
 using Bam.Net.Presentation;
@@ -35,7 +35,7 @@ namespace Bam.Net.Server
         public const string CommonFolder = "common";
         
         static string contentRootConfigKey = "ContentRoot";
-        static string defaultRoot = BamHome.Content;
+        static readonly string defaultRoot = BamHome.Content;
         public const string IncludeFileName = "include.js";
         public const string LayoutFileExtension = ".layout";
         public const string HostAppMapFile = "hostAppMaps.json";
@@ -88,7 +88,7 @@ namespace Bam.Net.Server
         }
 
         ConcurrentDictionary<string, byte[]> _pageMinCache;
-        object _pageMinCacheLock = new object();
+        readonly object _pageMinCacheLock = new object();
         protected ConcurrentDictionary<string, byte[]> MinCache
         {
             get
@@ -98,7 +98,7 @@ namespace Bam.Net.Server
         }
 
         ConcurrentDictionary<string, byte[]> _zippedPageMinCache;
-        object _zippedPageMinCacheLock = new object();
+        readonly object _zippedPageMinCacheLock = new object();
         protected ConcurrentDictionary<string, byte[]> ZippedMinCache
         {
             get
@@ -132,13 +132,7 @@ namespace Bam.Net.Server
         /// The server content root path, not to be confused with the 
         /// application root which should be [Root]\apps\[appName]
         /// </summary>
-        public string Root
-        {
-            get
-            {
-                return ServerRoot.Root;
-            }
-        }
+        public string Root => ServerRoot.Root;
 
         public override bool MayRespond(IHttpContext context)
         {

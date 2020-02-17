@@ -40,4 +40,15 @@
   <ItemGroup>
     <Folder Include="Html\Attributes" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="RouteHandlers\RouteHandlerManager.cs" />
+    <Compile Remove="RouteHandlers\Attributes\PathHandlerAttribute.cs" />
+    <Compile Remove="RouteHandlers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="RouteHandlers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="RouteHandlers\**" />
+  </ItemGroup>
 </Project>

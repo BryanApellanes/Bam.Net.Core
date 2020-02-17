@@ -7,7 +7,7 @@ namespace Bam.Net.Application.Verbs
 {
     public class Scan
     {
-        static Dictionary<Type, Scanner> _scanners;
+        static readonly Dictionary<Type, Scanner> _scanners;
         
         static Scan()
         {

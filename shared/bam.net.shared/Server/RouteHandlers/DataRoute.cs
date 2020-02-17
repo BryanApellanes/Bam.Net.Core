@@ -1,11 +1,12 @@
-﻿using Bam.Net.Configuration;
+﻿﻿using Bam.Net.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Server;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Server.PathHandlers
 {
     public class DataQueryRoute: DataRoute
     {

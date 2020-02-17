@@ -9,9 +9,10 @@ using Bam.Net.Logging;
 using System.Threading.Tasks;
 using Bam.Net.Presentation;
 using CsQuery;
-using Bam.Net.Server.Meta;
+using Bam.Net.Server.PathHandlers;
+using Bam.Net.Server;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Server.PathHandlers
 {
     /// <summary>
     /// Initializes meta data about an application given the applications

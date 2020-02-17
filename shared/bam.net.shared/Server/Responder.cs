@@ -256,21 +256,9 @@ namespace Bam.Net.Server
         }
             
 
-        protected Dictionary<string, string> ContentTypes
-        {
-            get
-            {
-                return this._contentTypes;
-            }
-        }
+        protected Dictionary<string, string> ContentTypes => this._contentTypes;
 
-        public virtual string Name
-        {
-            get
-            {
-                return this.GetType().Name;
-            }
-        }
+        public virtual string Name => this.GetType().Name;
 
         /// <summary>
         /// Set the status code, flush the response and close the output 

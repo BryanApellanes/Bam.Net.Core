@@ -28,7 +28,7 @@ using Bam.Net.Configuration;
 using Moq;
 using FakeItEasy;
 using Bam.Net.Testing.Unit;
-using Bam.Net.Server.Meta;
+using Bam.Net.Server.PathHandlers;
 using Bam.Net.Data;
 using UAParser;
 

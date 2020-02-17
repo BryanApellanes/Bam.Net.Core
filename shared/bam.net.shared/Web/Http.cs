@@ -21,18 +21,12 @@ namespace Bam.Net.Web
 
         public static Func<string, T> JsonParser<T>()
         {
-            return (s) =>
-            {
-                return s.FromJson<T>();
-            };
+            return (s) => s.FromJson<T>();
         }
 
         public static Func<string, T> XmlParser<T>()
         {
-            return (s) =>
-            {
-                return s.FromXml<T>();
-            };
+            return (s) => s.FromXml<T>();
         }
 
         /// <summary>

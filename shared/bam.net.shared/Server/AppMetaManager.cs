@@ -13,9 +13,10 @@ using Bam.Net;
 using Bam.Net.Server.Renderers;
 using Bam.Net.Logging;
 using Bam.Net.Presentation;
+using Bam.Net.Server;
 using Bam.Net.ServiceProxy;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Server
 {
     [Proxy("appMeta")]
     public class AppMetaManager: IRequiresHttpContext

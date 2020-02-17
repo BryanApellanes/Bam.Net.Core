@@ -55,11 +55,7 @@
     <EmbeddedResource Remove="Presentation\Html\Attributes\**" />
     <None Remove="Presentation\Html\Attributes\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\shared\bam.net.shared\Application\Files\FsFileIdentifier.cs">
-      <Link>bam.net.shared\Application\Files\FsFileIdentifier.cs</Link>
-    </Compile>
-  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="..\..\shared\bam.net.shared\Schema\Json">
       <Link>bam.net.shared\Schema\Json</Link>

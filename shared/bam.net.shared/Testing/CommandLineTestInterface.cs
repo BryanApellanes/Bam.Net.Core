@@ -56,7 +56,8 @@ namespace Bam.Net.Testing
         }
         
         /// <summary>
-        /// Prepares commandline arguments for reading.
+        /// Prepares commandline arguments for reading.  If this method completes without errors, parsed arguments
+        /// will be in the static Arguments property.
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="parseErrorHandler">The parse error handler.</param>

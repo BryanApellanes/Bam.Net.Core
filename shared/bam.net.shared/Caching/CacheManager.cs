@@ -14,7 +14,7 @@ namespace Bam.Net.Caching
 {
 	public class CacheManager : Loggable, ICacheManager
     {
-		ConcurrentDictionary<Type, Cache> _cacheDictionary;
+	    readonly ConcurrentDictionary<Type, Cache> _cacheDictionary;
 		public CacheManager(uint maxCacheSizeBytes = 524288000) // 500 megabytes
         {
 			_cacheDictionary = new ConcurrentDictionary<Type, Cache>();
@@ -107,7 +107,7 @@ namespace Bam.Net.Caching
         }
 
 		static CacheManager _defaultCacheManager;
-		static object _defaultCacheManagerLock = new object();
+		static readonly object _defaultCacheManagerLock = new object();
 		public static CacheManager Default
 		{
 			get

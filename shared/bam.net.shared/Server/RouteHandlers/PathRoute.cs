@@ -1,26 +1,27 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Server;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Server.PathHandlers
 {
-    public abstract class TypeRoute
+    public abstract class PathRoute
     {
-        public string Route => string.Format("{Protocol}://{Domain}/{0}/{PathAndQuery}", PathPrefix);
+        public string Route => string.Format("{Protocol}://{Domain}/{0}/{PathAndQuery}", HandlerName);
 
-        public string PathPrefix { get; set; }
+        public string HandlerName { get; set; }
         public string Protocol { get; set; }
         public string Domain { get; set; }
         public string PathAndQuery { get; set; }      
         public MethodRoute MethodRoute { get; set; }
         
 
-        public virtual TypeRoute ParseRoute(string uri)
+        public virtual PathRoute ParseRoute(string uri)
         {
             RouteParser parser = new RouteParser(Route);
-            TypeRoute route = (TypeRoute)parser.ParseRouteInstance(uri).ToInstance(this.GetType());
+            PathRoute route = (PathRoute)parser.ParseRouteInstance(uri).ToInstance(this.GetType());
             route.ParseMethod();
             return route;
         }

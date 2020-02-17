@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bam.Net.Server.Meta
+namespace Bam.Net.Server
 {
     public class AppMetaResult
     {
