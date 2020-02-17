@@ -12,12 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="databaseconfigs.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.net.data.core.tests.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
 
