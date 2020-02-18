@@ -1,11 +1,28 @@
+using Bam.Net.CommandLine;
+using Bam.Net.Logging;
 using Bam.Net.Server.PathHandlers.Attributes;
 using Bam.Net.Server;
 
 namespace Bam.Net.Presentation.Tests.PathHandler
-{
-    [Handles("test")]
+{ 
+    public class TestData
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
+    
+    [HandlerFor("test")]
     public class TestHandler
     {
+        public TestHandler()
+        {
+            ConsoleLogger logger = new ConsoleLogger {AddDetails = false, UseColors = true};
+            logger.StartLoggingThread();
+            Logger = logger;
+        }
+        
+        public ILogger Logger { get; set; }
+        
         [Get("/{version}/health")]
         public object GetHealth(string version)
         {
@@ -18,7 +35,13 @@ namespace Bam.Net.Presentation.Tests.PathHandler
             return $"ReadObjectType: objectType = {objectType}";
         }
         
-        [Get("/{objectType}/{objectProperty}/get")]
+        [Get("/{objectType}/get/{id}")]
+        public object ReadObjectType(string objectType, string id)
+        {
+            return $"ReadObjectType: objectType = {objectType}";
+        }
+        
+        [Get("/{objectType}/get/{objectProperty}")]
         public object ReadObjectProperty(string objectType, string objectProperty)
         {
             return $"ReadObjectType: objectType = {objectType}, objectProperty = {objectProperty}";
@@ -31,10 +54,17 @@ namespace Bam.Net.Presentation.Tests.PathHandler
         }
 
         [Post("/{objectType}/post")]
-        public object PostObjectType(string objectType, object value)
+        public object PostObjectType(string objectType, TestData value)
         {
             return $"PostObjectType: \r\n\tobjectType = {objectType}, \r\n\tvalue = {value.PropertiesToString()}";
         }
+        
+        /*[Post("/{objectType}/post")]
+        public T PostObjectType<T>(string objectType, T value)
+        {
+            Logger.Info($"PostObjectType: \r\n\tobjectType = {objectType}, \r\n\tvalue = {value.PropertiesToString()}");
+            return value;
+        }*/
 
         [Put("/{objectType}/put")]
         public object PutObjectType(string objectType, object value)

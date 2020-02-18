@@ -187,41 +187,6 @@ namespace Bam.Net.Server
             get;
             set;
         }
-
-        public Dictionary<string, AppRouteHandlerManager> ReloadAppRouteHandlerManagers()
-        {
-            _appRouteHandlerManagers = null;
-            return AppRouteHandlerManagers;
-        }
-
-        private Dictionary<string, AppRouteHandlerManager> _appRouteHandlerManagers;
-        private readonly object _appRouteHandlerManagersLock = new object();
-
-        public Dictionary<string, AppRouteHandlerManager> AppRouteHandlerManagers
-        {
-            get {
-                return _appRouteHandlerManagersLock.DoubleCheckLock(ref _appRouteHandlerManagers, () =>
-                {
-                    Dictionary<string, AppRouteHandlerManager> result = new Dictionary<string, AppRouteHandlerManager>();
-                    foreach (AppConf appToServe in _conf.AppsToServe)
-                    {
-                        if (string.IsNullOrEmpty(appToServe.Name))
-                        {
-                            Log.Warn("AppRouteHandlerManagers: Application name not specified in AppConf: \r\n{0}", appToServe.ToJson(true));
-                        }
-
-                        if (result.ContainsKey(appToServe.Name))
-                        {
-                            Log.Warn("AppRouteHandlerManagers: Duplicate app names found ({0})", appToServe.Name);
-                        }
-                        
-                        result.Add(appToServe.Name, new AppRouteHandlerManager(appToServe));
-                    }
-
-                    return result;
-                }); 
-            }
-        }
         
         public Dictionary<string, List<AppPageRendererManager>> ReloadAppPageRendererManagers()
         {

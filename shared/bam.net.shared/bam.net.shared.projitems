@@ -642,6 +642,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppMetaResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppServerConf.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\AppPageRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\BamRoutingServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\HostProcessInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IActionProviderResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\IDataDomainResolver.cs" />
@@ -654,7 +655,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\PathAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\PutAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\HandlesAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\HandlerForAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\BamPathRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\DataRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\MethodRoute.cs" />

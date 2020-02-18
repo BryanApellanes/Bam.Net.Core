@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bam.Net.Data;
 using Bam.Net.Logging;
 using Bam.Net.Server.PathHandlers.Attributes;
 using Bam.Net.ServiceProxy;
 using Bam.Net.Web;
+using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace Bam.Net.Server
 {
@@ -16,6 +18,7 @@ namespace Bam.Net.Server
     {
         public RouteHandlerManager(ILogger logger = null)
         {
+            TypeConverters = new Dictionary<ParameterInfo, Func<string, Type, object>>();
             RouteHandlers = new Dictionary<string, Dictionary<PathAttribute, MethodInfo>>();
             Logger = logger ?? Log.Default;
         }
@@ -32,6 +35,11 @@ namespace Bam.Net.Server
             }
         }
 
+        /// <summary>
+        /// Functions used to convert a string into an object of a specified type.  Used to convert method arguments. 
+        /// </summary>
+        public Dictionary<ParameterInfo, Func<string, Type, object>> TypeConverters { get; set; }
+        
         public Dictionary<string, Dictionary<PathAttribute, MethodInfo>> RouteHandlers { get; private set; }
 
         protected void AddHandler(string name, PathAttribute pathAttribute, MethodInfo method)
@@ -59,7 +67,7 @@ namespace Bam.Net.Server
                         Assembly assembly = Assembly.LoadFile(fileInfo.FullName);
                         foreach (Type type in assembly.GetTypes())
                         {
-                            if (type.HasCustomAttributeOfType<HandlesAttribute>(out HandlesAttribute handlesAttribute))
+                            if (type.HasCustomAttributeOfType<HandlerForAttribute>(out HandlerForAttribute handlesAttribute))
                             {
                                 foreach (MethodInfo method in type.GetMethods())
                                 {
@@ -78,13 +86,8 @@ namespace Bam.Net.Server
                 });
             });
         }
-        
-        public bool RegisterType(Type type)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public bool CanHandle(string url, out ExecutionRequest executionRequest)
+
+        public bool CanHandle(IRequest request, out ExecutionRequest executionRequest)
         {
             throw new NotImplementedException();
         }
@@ -94,7 +97,23 @@ namespace Bam.Net.Server
             throw new NotImplementedException();
         }
 
-        protected virtual MethodInfo ResolveHandlerMethod(string url, out Dictionary<string, string> parameters)
+        protected virtual MethodInfo ResolveHandlerMethod(IRequest request, out Dictionary<string, object> objectParameters)
+        {
+            MethodInfo method = ResolveHandlerMethod(request.Url.ToString(), out Dictionary<string, string> arguments);
+            if (method.HasObjectParameters(out ParameterInfo[] objectTypeParameters))
+            {
+                objectParameters = ConvertArgumentTypes(request, method, objectTypeParameters.ToDictionary(pi=> pi.Name), arguments);
+            }
+            else
+            {
+                objectParameters = new Dictionary<string, object>();
+                arguments.Keys.Each(key => arguments.Add(key, arguments[key]));
+            }
+
+            return method;
+        }
+        
+        protected virtual MethodInfo ResolveHandlerMethod(string url, out Dictionary<string, string> arguments)
         {
             string handlerName = GetHandlerName(url);
             MethodInfo result = null;
@@ -132,7 +151,7 @@ namespace Bam.Net.Server
                 }
             }
 
-            parameters = parameterResult;
+            arguments = parameterResult;
             return result;
         }
 
@@ -140,6 +159,21 @@ namespace Bam.Net.Server
         {
             Uri uri = new Uri(url);
             return uri.PathAndQuery.Split("/", StringSplitOptions.RemoveEmptyEntries).First();
+        }
+
+        protected Dictionary<string, object> ConvertArgumentTypes(IRequest request, MethodInfo methodInfo, Dictionary<string, ParameterInfo> parameterInfos, Dictionary<string, string> routeArgs)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            foreach (string key in routeArgs.Keys)
+            {
+                ParameterInfo parameterInfo = parameterInfos[key];
+                if (TypeConverters.ContainsKey(parameterInfo))
+                {
+                    result.Add(key, TypeConverters[parameterInfo](key, parameterInfo.ParameterType));
+                }
+            }
+            
+            return result;
         }
     }
 }

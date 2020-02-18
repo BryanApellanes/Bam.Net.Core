@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using Bam.Net.Server.PathHandlers;
 using Bam.Net.Server.PathHandlers.Attributes;
@@ -12,6 +13,7 @@ using Bam.Net.ServiceProxy;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 using Bam.Net.Web;
+using Microsoft.AspNetCore.Routing.Template;
 using NSubstitute;
 
 namespace Bam.Net.Presentation.Tests
@@ -19,6 +21,26 @@ namespace Bam.Net.Presentation.Tests
     [Serializable]
     public class PathHandlerTests: CommandLineTestInterface
     {
+        [UnitTest]
+        [TestGroup("RouteHandlers")]
+        public void ParameterInfosAsKey()
+        {
+            Dictionary<ParameterInfo, Func<string, Type, object>> converters = new Dictionary<ParameterInfo, Func<string, Type, object>>();
+            MethodInfo methodInfo = GetMethodInfo("PostObjectType");
+            Expect.IsNotNull(methodInfo);
+            ParameterInfo[] parameterInfos = methodInfo.GetParameters();
+            Expect.AreEqual(2, parameterInfos.Length);
+            ParameterInfo objectParameter = parameterInfos[1];
+            converters.Add(objectParameter, (value, type) => value.FromJson(type));
+            
+            MethodInfo methodInfo2 = GetMethodInfo("PostObjectType");
+            Expect.IsNotNull(methodInfo2);
+            ParameterInfo[] parameterInfos2 = methodInfo2.GetParameters();
+            ParameterInfo checkKey = parameterInfos2[1];
+            
+            converters.ContainsKey(checkKey).IsTrue();
+        }
+        
         [UnitTest]
         [TestGroup("RouteHandlers")]
         public void CanResolveHandlerName()
@@ -30,7 +52,7 @@ namespace Bam.Net.Presentation.Tests
 
         [UnitTest]
         [TestGroup("RouteHandlers")]
-        public void CanResolveHandlerMethod()
+        public void CanResolveGetHandlerMethod()
         {
             bool? thrown = false;
             TestRouteHandlerManager routeHandlerManager = GetRouteHandlerManager();
@@ -55,6 +77,27 @@ namespace Bam.Net.Presentation.Tests
 
             thrown.Value.IsFalse();
         }
+
+        [UnitTest]
+        [TestGroup("RouteHandlers")]
+        public void CanResolvePostHandlerMethod()
+        {
+            bool? thrown = false;
+            TestRouteHandlerManager routeHandlerManager = GetRouteHandlerManager();
+            routeHandlerManager
+                .ScanForRouteHandlers(".")
+                .ContinueWith((task, state) =>
+                {
+                    MethodInfo handlerMethod = routeHandlerManager.CallResolveHandlerMethod("http://localhost:8080/test/randomTypeName/post", out Dictionary<string, string> parameters);
+                    MethodInfo expected = GetMethodInfo("PostObjectType");
+                    Expect.AreEqual(handlerMethod.Name, expected.Name);
+                    (handlerMethod.Name.Equals(expected.Name)).IsTrue();
+                    (handlerMethod.GetParameters().Length == expected.GetParameters().Length).IsTrue("Parameter count didn't match");
+                }, routeHandlerManager)
+                .Wait();
+            
+            thrown.Value.IsFalse("An exception was thrown");
+        }        
         
         [UnitTest]
         [TestGroup("RouteHandlers")]
@@ -92,7 +135,7 @@ namespace Bam.Net.Presentation.Tests
                     {
                         (state is RouteHandlerManager rhManager).IsTrue();
                         RouteHandlerManager mgr = (RouteHandlerManager) state;
-                        string routeHandlerName = typeof(TestHandler).GetCustomAttributeOfType<HandlesAttribute>().Name;
+                        string routeHandlerName = typeof(TestHandler).GetCustomAttributeOfType<HandlerForAttribute>().Name;
                         (mgr.RouteHandlers.Count == 1).IsTrue();
                         mgr.RouteHandlers.ContainsKey("/test");
                         Expect.AreEqual(typeof(Dictionary<PathAttribute, MethodInfo>), mgr.RouteHandlers["/test"].GetType());
@@ -112,22 +155,6 @@ namespace Bam.Net.Presentation.Tests
             OutLine("scan test complete", ConsoleColor.Cyan);
         }
         
-        //     - register each route handler internally
-        [UnitTest]
-        [TestGroup("RouteHandlers")]
-        public void CanRegisterType()
-        {
-            RouteHandlerManager routeHandlerManager = GetRouteHandlerManager();
-            routeHandlerManager.RegisterType(typeof(TestHandler));
-            string routeHandlerName = typeof(TestHandler).GetCustomAttributeOfType<HandlesAttribute>().Name;
-            /*routeHandlerManager.RouteHandlers
-                .ContainsKey(HttpVerbs.Get)
-                .IsTrue("route handler manager did not contain GET route handler");
-            
-            routeHandlerManager.RouteHandlers[HttpVerbs.Get]
-                .ContainsKey("test")
-                .IsTrue("GET handlers did not contain 'test' handler");*/
-        }
 
         [UnitTest]
         [TestGroup("RouteHandlers")]
@@ -175,6 +202,25 @@ namespace Bam.Net.Presentation.Tests
         private TestRouteHandlerManager GetRouteHandlerManager()
         {
             return new TestRouteHandlerManager();
+        }
+        
+        private MethodInfo GetMethodInfo(string methodName)
+        {
+            foreach (MethodInfo methodInfo in typeof(TestHandler).GetMethods())
+            {
+                StringBuilder message = new StringBuilder();
+                message.AppendFormat("Method: {0}, Parameters:", methodInfo.Name);
+                ParameterInfo[] parameterInfos = methodInfo.GetParameters();
+                parameterInfos.Each(pi => message.AppendFormat("\t{0} {1}", pi.ParameterType.Name, pi.Name));
+
+                OutLine(message.ToString());
+                if (methodInfo.Name.Equals(methodName))
+                {
+                    return methodInfo;
+                }
+            }
+
+            throw new InvalidOperationException("Specified method not found");
         }
     }
 }

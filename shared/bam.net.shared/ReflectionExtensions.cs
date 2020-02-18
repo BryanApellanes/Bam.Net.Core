@@ -15,6 +15,28 @@ namespace Bam.Net
 {
     public static class ReflectionExtensions
     {
+        public static bool HasObjectParameters(this MethodInfo methodInfo)
+        {
+            return HasObjectParameters(methodInfo, out ParameterInfo[] ignore);
+        }
+        
+        public static bool HasObjectParameters(this MethodInfo methodInfo, out ParameterInfo[] objectParameters)
+        {
+            bool result = false;
+            List<ParameterInfo> outParams = new List<ParameterInfo>();
+            foreach (ParameterInfo parameterInfo in methodInfo.GetParameters())
+            {
+                if (!parameterInfo.ParameterType.IsPrimitive && parameterInfo.ParameterType != typeof(string))
+                {
+                    result = true;
+                    outParams.Add(parameterInfo);
+                }
+            }
+
+            objectParameters = outParams.ToArray();
+            return result;
+        }
+        
         /// <summary>
         /// Returns a hash representing the specified
         /// types using the specified HashAlgorithm 
