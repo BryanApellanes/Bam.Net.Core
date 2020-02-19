@@ -19,7 +19,7 @@ namespace Bam.Net.Data
         /// Create a json safe version of the object
         /// by creating a dynamic type that represents
         /// the properties on the original object
-        /// that are addorned with the ColumnAttribute
+        /// that are adorned with the ColumnAttribute
         /// custom attribute.
         /// </summary>
         /// <param name="obj"></param>

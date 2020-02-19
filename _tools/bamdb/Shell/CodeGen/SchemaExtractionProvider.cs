@@ -18,9 +18,9 @@ using KeyValuePair = Bam.Net.KeyValuePair;
 
 namespace Bam.Shell.CodeGen
 {
-    public class SchemaProvider : CodeGenProvider
+    public class SchemaExtractionProvider : CodeGenProvider
     {
-        public SchemaProvider()
+        public SchemaExtractionProvider()
         {
         }
 
@@ -125,7 +125,7 @@ namespace Bam.Shell.CodeGen
 
         private static DaoConfig GetConfig(Action<string> output, Action<string> error, string configFile)
         {
-            List<DaoConfig> configs = configFile.FromYamlFile<List<DaoConfig>>();
+            List<DaoConfig> configs = configFile.FromJsonFile<List<DaoConfig>>();
             DaoConfig config = null;
             if (Arguments.Contains("configName"))
             {

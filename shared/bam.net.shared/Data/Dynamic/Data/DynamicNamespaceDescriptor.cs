@@ -24,13 +24,7 @@ namespace Bam.Net.Data.Dynamic.Data
             }
         }
 
-        public static string DefaultNamespace
-        {
-            get
-            {
-                return "Bam.Net.Data.Dynamic.RuntimeTypes";
-            }
-        }
+        public static string DefaultNamespace => "Bam.Net.Data.Dynamic.RuntimeTypes";
 
         [CompositeKey]
         public string Namespace { get; set; }

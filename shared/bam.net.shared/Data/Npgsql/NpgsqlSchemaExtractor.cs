@@ -21,11 +21,11 @@ namespace Bam.Net.Data.Npgsql
             ConnectionString = database.ConnectionString;
             _keyColumns = new Dictionary<string, string>();
             _columnDefinitions = new Dictionary<string, Dictionary<string, DataRow>>();
-            _foreignKeyDefinitions = new Dictionary<string, NpgSqlForeignKeyDescriptor[]>();
+            _foreignKeyDefinitions = new Dictionary<string, NpgsqlForeignKeyDescriptor[]>();
         }
 
-        Dictionary<string, Dictionary<string, DataRow>> _columnDefinitions;
-        Dictionary<string, NpgSqlForeignKeyDescriptor[]> _foreignKeyDefinitions;
+        readonly Dictionary<string, Dictionary<string, DataRow>> _columnDefinitions;
+        readonly Dictionary<string, NpgsqlForeignKeyDescriptor[]> _foreignKeyDefinitions;
 
         public string TableCatalog { get; set; }
         public string TableSchema { get; set; }
@@ -66,7 +66,7 @@ namespace Bam.Net.Data.Npgsql
             List<ForeignKeyColumn> results = new List<ForeignKeyColumn>();
             foreach (string tableName in GetTableNames())
             {
-                foreach (NpgSqlForeignKeyDescriptor fk in GetForeignKeyInfo(tableName))
+                foreach (NpgsqlForeignKeyDescriptor fk in GetForeignKeyInfo(tableName))
                 {
                     results.Add(new ForeignKeyColumn
                     {
@@ -106,8 +106,7 @@ AND    i.indisprimary;";
         {
             if (_tableNames == null)
             {
-                string tableQuery =
-                    $"select table_name from information_schema.tables where table_schema = '{TableSchema}' order by table_name asc";
+                string tableQuery = $"select table_name from information_schema.tables where table_schema = '{TableSchema}' order by table_name asc";
 
                 _tableNames = Database.QuerySingleColumn<string>(tableQuery).ToArray();
             }
@@ -158,8 +157,7 @@ AND    i.indisprimary;";
 //  AND table_name   = '{1}'";
 
             SqlStringBuilder sql = Database.GetSqlStringBuilder();
-            sql
-                .Select("information_schema.columns", "*")
+            sql.Select("information_schema.columns", "*")
                 .Where("table_schema", TableSchema)
                 .And("table_name", tableName);
 
@@ -189,7 +187,7 @@ AND    i.indisprimary;";
             return _columnDefinitions[tableName][columnName][metaColumnName].ToString();
         }
 
-        private NpgSqlForeignKeyDescriptor[] GetForeignKeyInfo(string tableName)
+        private NpgsqlForeignKeyDescriptor[] GetForeignKeyInfo(string tableName)
         {
             if (!_foreignKeyDefinitions.ContainsKey(tableName))
             {
@@ -218,7 +216,7 @@ WHERE
     tc.table_schema = '{TableSchema}' AND 
     tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='{tableName}';";
 
-            _foreignKeyDefinitions.AddMissing(tableName, Database.ExecuteReader<NpgSqlForeignKeyDescriptor>(fkQuery).ToArray());
+            _foreignKeyDefinitions.AddMissing(tableName, Database.ExecuteReader<NpgsqlForeignKeyDescriptor>(fkQuery).ToArray());
         }
     }
 }

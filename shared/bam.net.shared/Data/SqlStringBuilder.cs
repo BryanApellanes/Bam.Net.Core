@@ -304,9 +304,9 @@ namespace Bam.Net.Data
             string top = string.Empty;
             if (topCount > 0)
             {
-                top = string.Format(" TOP {0} ", topCount);
+                top = $" TOP {topCount} ";
             }
-            string cols = columnNames.ToDelimited(s => string.Format("{0}", s));
+            string cols = columnNames.ToDelimited(s => $"{s}");
             _stringBuilder.AppendFormat("SELECT {0}{1} FROM {2} ", top, cols, TableNameFormatter(tableName));
             return this;
         }
@@ -515,15 +515,9 @@ namespace Bam.Net.Data
 		/// </summary>
 		protected StringBuilder Builder
 		{
-			get
-			{
-				return _stringBuilder;
-			}
-			set
-			{
-				_stringBuilder = value;
-			}
-		}
+			get => _stringBuilder;
+            set => _stringBuilder = value;
+        }
 
 		/// <summary>
 		/// Contains the Sql statement thus far for this
@@ -531,15 +525,9 @@ namespace Bam.Net.Data
 		/// </summary>
 		protected StringBuilder StringBuilder
 		{
-			get
-			{
-				return this._stringBuilder;
-			}
-			set
-			{
-				_stringBuilder = value;
-			}
-		}
+			get => this._stringBuilder;
+            set => _stringBuilder = value;
+        }
 
     }
 }

@@ -1097,7 +1097,7 @@ namespace Bam.Net.Server
         bool _enableDao;
         /// <summary>
         /// If true will cause the initialization of the 
-        /// DaoResponder which will process all *.db.js
+        /// DaoResponder which processes all *.db.js
         /// and *.db.json files.  See http://breviteedocs.wordpress.com/dao/
         /// for information about the expected format 
         /// of a *.db.js file.  The format of *db.json 

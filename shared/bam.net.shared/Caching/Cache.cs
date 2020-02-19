@@ -62,8 +62,7 @@ namespace Bam.Net.Caching
 	{
 		bool _keepGrooming;
 		Thread _groomerThread;
-		AutoResetEvent _groomerSignal;
-		ConcurrentQueue<CacheItem> _evictionQueue;
+		readonly ConcurrentQueue<CacheItem> _evictionQueue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cache"/> class.
@@ -108,7 +107,7 @@ namespace Bam.Net.Caching
 			MaxBytes = maxBytes;
 
 			_keepGrooming = true;
-			_groomerSignal = new AutoResetEvent(false);
+			GroomerSignal = new AutoResetEvent(false);
 			_evictionQueue = new ConcurrentQueue<CacheItem>();
 			
             if(evictionListener != null)
@@ -191,13 +190,7 @@ namespace Bam.Net.Caching
         /// <value>
         /// The groomer signal.
         /// </value>
-        protected AutoResetEvent GroomerSignal
-        {
-            get
-            {
-                return _groomerSignal;
-            }
-        }
+        protected AutoResetEvent GroomerSignal { get; }
 
         /// <summary>
         /// Gets or sets the maximum bytes.
@@ -394,7 +387,7 @@ namespace Bam.Net.Caching
         public IEnumerable<T> Query<T>(Func<T, bool> predicate, Func<IEnumerable<T>> sourceRetriever, bool refresh = true)
         {
             IEnumerable<T> results = Query<T>(predicate);
-            if (results.Count() == 0)
+            if (!results.Any())
             {
                 results = sourceRetriever();
                 Add(results);
@@ -597,7 +590,7 @@ namespace Bam.Net.Caching
         /// <summary>
         /// Get the count of items at the tail of the 
         /// cache that can be evicted if any.  This value is
-        /// determined by comparing the ammount of memory used
+        /// determined by comparing the amount of memory used
         /// by the cache vs the MaxBytes property value
         /// </summary>
         /// <returns></returns>

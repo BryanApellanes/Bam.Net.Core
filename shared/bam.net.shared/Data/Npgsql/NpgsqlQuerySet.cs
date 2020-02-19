@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Npgsql;
 
 namespace Bam.Net.Data
@@ -15,8 +16,15 @@ namespace Bam.Net.Data
             : base()
         {
             this.GoText = ";\r\n";
-            this.TableNameFormatter = (s) => "\"{0}\""._Format(s);
-            this.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            this.TableNameFormatter = (s) =>
+            {
+                if (this.Database is NpgsqlDatabase postgresDb && !string.IsNullOrEmpty(postgresDb.PostgresSchema))
+                {
+                    return $"{postgresDb.PostgresSchema}.\"{s}\"";
+                }
+                return $"\"{s}\"";
+            };
+            this.ColumnNameFormatter = (s) => $"\"{s}\"";
         }
 
         public override SqlStringBuilder Id(string idAs)
@@ -57,7 +65,7 @@ namespace Bam.Net.Data
             {
                 columnNames = new string[] { "*" };
             }
-            string cols = columnNames.ToDelimited(s => string.Format("{0}", s));
+            string cols = columnNames.ToDelimited(s => $"{s}");
             StringBuilder.AppendFormat("SELECT {0} FROM {1} ", cols, TableNameFormatter(tableName));
             return this;
         }

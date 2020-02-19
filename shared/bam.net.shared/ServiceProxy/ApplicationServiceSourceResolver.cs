@@ -11,12 +11,28 @@ namespace Bam.Net.ServiceProxy
     /// <summary>
     /// Responsible for resolving paths where proxyable services are found for an application .
     /// </summary>
-    public class ApplicationServiceResolver : Loggable, IApplicationServiceResolver
+    public class ApplicationServiceSourceResolver : Loggable, IApplicationServiceSourceResolver
     {
         private const string ServicesRelativePath = "~/services";
 
         [Verbosity(VerbosityLevel.Error)]
         public event EventHandler CompilationException;
+
+        public Dictionary<string, ApplicationServiceAssembly> CompileAppServices(string contentRoot)
+        {
+            return CompileAppServices(BamConf.Load(contentRoot));
+        }
+
+        public Dictionary<string, ApplicationServiceAssembly> CompileAppServices(BamConf bamConf)
+        {
+            Dictionary<string, ApplicationServiceAssembly> result = new Dictionary<string, ApplicationServiceAssembly>();
+            foreach (AppConf appConf in bamConf.AppConfigs)
+            {
+                result.Add(appConf.Name, CompileAppServices(appConf));
+            }
+
+            return result;
+        }
         
         public ApplicationServiceAssembly CompileAppServices(AppConf appConf)
         {

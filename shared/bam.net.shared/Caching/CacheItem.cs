@@ -36,13 +36,7 @@ namespace Bam.Net.Caching
         /// <value>
         /// The value.
         /// </value>
-        public new T Value
-        {
-            get
-            {
-                return (T)base.Value;
-            }            
-        }
+        public new T Value => (T)base.Value;
 
         /// <summary>
         /// Gets the size of the value in memory.

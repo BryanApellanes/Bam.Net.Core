@@ -500,9 +500,9 @@ namespace Bam.Net.CommandLine
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string GetPathArgument(string name)
+        public static string GetPathArgument(string name, string promptMessage = null)
         {
-            string argumentValue = GetArgument(name);
+            string argumentValue = GetArgument(name, promptMessage);
             if (argumentValue.StartsWith("~"))
             {
                 ProcessHomeDirectoryResolver homeDirectoryResolver = new ProcessHomeDirectoryResolver();
@@ -524,13 +524,8 @@ namespace Bam.Net.CommandLine
         /// <returns></returns>
         public static string GetArgument(string name)
         {
-            string value = Arguments.Contains(name) ? Arguments[name] : Prompt("Please enter a value for {0}"._Format(name));
+            string value = Arguments.Contains(name) ? Arguments[name] : Prompt($"Please enter a value for {name}");
             return value;
-        }
-
-        public static string Prompt(string message)
-        {
-            return Prompt(message, ConsoleColor.Cyan);
         }
 
         /// <summary>
@@ -538,7 +533,7 @@ namespace Bam.Net.CommandLine
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>string</returns>
-        public static string Prompt(string message, ConsoleColor textColor)
+        public static string Prompt(string message, ConsoleColor textColor = ConsoleColor.Cyan)
         {
             return Prompt(message, textColor, false);
         }
@@ -586,6 +581,15 @@ namespace Bam.Net.CommandLine
             return SelectFrom<T>(options, (t) => t.ToString(), prompt, color);
         }
 
+        /// <summary>
+        /// Prompt for a selection from the specified list of values, using the specified optionTextSelector to extract option text from the options.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="optionTextSelector"></param>
+        /// <param name="prompt"></param>
+        /// <param name="color"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T SelectFrom<T>(IEnumerable<T> options, Func<T, string> optionTextSelector, string prompt = "Select an option from the list", ConsoleColor color = ConsoleColor.DarkCyan)
         {
             T[] optionsArray = options.ToArray();

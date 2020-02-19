@@ -21,10 +21,7 @@ namespace Bam.Net.Caching
         /// </value>
         public bool Hits
         {
-            get
-            {
-                return _hits;
-            }
+            get => _hits;
             set
             {
                 _hits = value;
@@ -41,10 +38,7 @@ namespace Bam.Net.Caching
         /// </value>
         public bool Misses
         {
-            get
-            {
-                return _misses;
-            }
+            get => _misses;
             set
             {
                 _misses = value;

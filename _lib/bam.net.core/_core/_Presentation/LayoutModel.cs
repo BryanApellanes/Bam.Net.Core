@@ -62,12 +62,6 @@ namespace Bam.Net.Presentation
             }
         }
 
-        public string Year
-        {
-            get
-            {
-                return DateTime.UtcNow.Year.ToString();
-            }
-        }
+        public string Year => DateTime.UtcNow.Year.ToString();
     }
 }

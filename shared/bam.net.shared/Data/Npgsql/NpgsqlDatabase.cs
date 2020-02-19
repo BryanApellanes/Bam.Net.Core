@@ -27,7 +27,7 @@ namespace Bam.Net.Data.Npgsql
 
         public NpgsqlDatabase(string serverName, string databaseName, string connectionName, NpgsqlCredentials credentials = null)
         {
-            ColumnNameProvider = (c) => "\"{0}\""._Format(c.Name);
+            ColumnNameProvider = (c) => $"\"{c.Name}\"";
             ConnectionStringResolver = new NpgsqlConnectionStringResolver(serverName, databaseName, credentials);
             ConnectionName = connectionName;
             Register();
@@ -39,20 +39,14 @@ namespace Bam.Net.Data.Npgsql
             Register();
         }
 
-        private void Register()
-        {
-            ServiceProvider = new Incubator();
-            ServiceProvider.Set<DbProviderFactory>(NpgsqlFactory.Instance);
-            NpgsqlRegistrar.Register(this);
-            Infos.Add(new DatabaseInfo(this));
-        }
-
         public IConnectionStringResolver ConnectionStringResolver
         {
             get;
             set;
         }
 
+        public string PostgresSchema { get; set; }
+        
         string _connectionString;
         public override string ConnectionString
         {
@@ -60,15 +54,12 @@ namespace Bam.Net.Data.Npgsql
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = ConnectionStringResolver.Resolve(ConnectionName).ConnectionString;
+                    _connectionString = ConnectionStringResolver?.Resolve(ConnectionName)?.ConnectionString;
                 }
 
                 return _connectionString;
             }
-            set
-            {
-                _connectionString = value;
-            }
+            set => _connectionString = value;
         }
 
         public override long? GetLongValue(string columnName, System.Data.DataRow row)
@@ -84,6 +75,14 @@ namespace Bam.Net.Data.Npgsql
                 return Convert.ToInt64(d);
             }
             return null;
+        }
+        
+        private void Register()
+        {
+            ServiceProvider = new Incubator();
+            ServiceProvider.Set<DbProviderFactory>(NpgsqlFactory.Instance);
+            NpgsqlRegistrar.Register(this);
+            Infos.Add(new DatabaseInfo(this));
         }
     }
 }

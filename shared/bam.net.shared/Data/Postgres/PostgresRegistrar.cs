@@ -11,15 +11,15 @@ using Bam.Net.Data;
 
 namespace Bam.Net.Data
 {
-    public class NpgsqlRegistrar
+    public static class PostgresRegistrar
     {
-        static NpgsqlRegistrar()
+        static PostgresRegistrar()
         {
             
         }
 
         /// <summary>
-		/// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet for the 
+        /// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet for the 
         /// database associated with the specified connectionName.
         /// </summary>
         public static void Register(string connectionName)
@@ -28,7 +28,7 @@ namespace Bam.Net.Data
         }
 
         /// <summary>
-		/// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet for the 
+        /// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet for the 
         /// database associated with the specified type.
         /// </summary>
         public static void Register(Type daoType)
@@ -37,7 +37,7 @@ namespace Bam.Net.Data
         }
 
         /// <summary>
-		/// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet for the 
+        /// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet for the 
         /// database associated with the specified type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -61,7 +61,7 @@ namespace Bam.Net.Data
             NpgsqlParameterBuilder b = new NpgsqlParameterBuilder();
             incubator.Set<IParameterBuilder>(b);
 
-			incubator.Set<SqlStringBuilder>(() => new NpgsqlSqlStringBuilder());
+            incubator.Set<SqlStringBuilder>(() => new NpgsqlSqlStringBuilder());
             incubator.Set<SchemaWriter>(() => new NpgsqlSqlStringBuilder());
             incubator.Set<QuerySet>(() => new NpgsqlQuerySet());
             incubator.Set<IDataTypeTranslator>(() => new DataTypeTranslator());

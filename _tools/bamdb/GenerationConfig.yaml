@@ -1,4 +1,5 @@
-﻿SchemaName: ManagedApplication
+﻿# TODO: change this to TypeSchemaGenerationConfig
+SchemaName: ManagedApplication
 WriteSourceTo: C:\bam\src\_gen\ManagedApplication
 TypeAssembly: C:\bam\toolkit\Windows\bam.net.core.dll
 FromNameSpace: Bam.Net.Application.Data

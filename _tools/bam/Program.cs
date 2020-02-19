@@ -27,8 +27,9 @@ namespace Bam.Net
             RegisterArgZeroProviders<PackageProvider>(args);
             ExecuteArgZero(args);
             
-            DefaultMethod = typeof(Program).GetMethod("Start");
-            Initialize(args);
+            //DefaultMethod = typeof(Program).GetMethod("Start");
+            //Initialize(args);
+            ExecuteMain(args);
         }
 
         public static void AddArguments()
@@ -40,15 +41,19 @@ namespace Bam.Net
             
             AddValidArgument("assembly", "When executing command line switches in an external assembly, the path to the assembly");
             AddValidArgument("class", "When executing command line switches in an external assembly, the name of the class");
+            
+            AddValidArgument("app", "On application service compilation, the name of the application whose services are compiled.");
+            AddValidArgument("bamConf", "On application service compilation, the path to the bamConf to compile services for.  If specified, the services for all applications are compiled.");
         }
 
         [ConsoleAction]
         public void TestDaoRepoHbGen()
         {
             Database db = DataProvider.Current.GetAppDatabaseFor(ProcessApplicationNameProvider.Current, this);
-            DaoRepository repo = new DaoRepository(db);
-            repo.BaseNamespace = typeof(ShellDescriptor).Namespace;
-            repo.RequireCuid = true;
+            DaoRepository repo = new DaoRepository(db)
+            {
+                BaseNamespace = typeof(ShellDescriptor).Namespace, RequireCuid = true
+            };
             repo.AddType<ShellDescriptor>();
             ShellDescriptor d = new ShellDescriptor(){AssemblyName = "Ass", NameSpace = "Ns"};
             d = repo.Save(d);

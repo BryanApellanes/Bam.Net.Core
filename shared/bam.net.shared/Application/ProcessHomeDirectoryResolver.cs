@@ -16,7 +16,12 @@ namespace Bam.Net.Application
             {
                 path = path.TruncateFront(1);
             }
-            return Path.Combine(ResolveHomeDirectory(), path);
+            while (path.StartsWith("/"))
+            {
+                path = path.TruncateFront(1);
+            }
+            string result = Path.Combine(ResolveHomeDirectory(), path);
+            return result;
         }
     }
 }
