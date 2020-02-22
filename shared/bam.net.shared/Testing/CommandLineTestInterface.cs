@@ -353,19 +353,18 @@ namespace Bam.Net.Testing
             runner.TestFailed += (o, t) =>
             {
                 TestExceptionEventArgs args = (TestExceptionEventArgs)t;
-                Out("Test Failed: " + args.TestMethod.Information + "\r\n", ConsoleColor.Red);
-                Out(args.Exception.Message, ConsoleColor.Magenta);
-                Out();
-                Out(args.Exception.StackTrace, ConsoleColor.Red);
-                Out("---", ConsoleColor.Red);
-                Out();
+                OutLine("Test Failed: " + args.TestMethod.Information, ConsoleColor.Red);
+                OutLine(args.Exception.Message, ConsoleColor.Magenta);
+                OutLine();
+                OutLine(args.Exception.StackTrace, ConsoleColor.Red);
+                OutLine("---", ConsoleColor.Red);
             };
             runner.TestsFinished += (o, e) =>
             {
                 TestEventArgs<TTestMethod> args = (TestEventArgs<TTestMethod>)e;
                 TestRunnerSummary summary = args.TestRunner.TestSummary;
-                Out();
-                OutLine("********");
+
+                OutLine("********", ConsoleColor.Blue, ConsoleColor.Black);
                 if (summary.FailedTests.Count > 0)
                 {
                     OutLineFormat("({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
@@ -381,9 +380,9 @@ namespace Bam.Net.Testing
                 }
                 else
                 {
-                    OutLineFormat("All ({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
+                    OutLineFormat("All ({0}) tests passed", ConsoleColor.Green, ConsoleColor.Black, summary.PassedTests.Count);
                 }
-                OutLine("********");
+                OutLine("********", ConsoleColor.Blue, ConsoleColor.Black);
             };
             return runner;
         }

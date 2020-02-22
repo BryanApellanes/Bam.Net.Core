@@ -858,18 +858,12 @@ File Version: {1}
             {
                 if (_outProvider == null)
                 {
-                    _outProvider = () =>
-                    {
-                        Console.WriteLine();
-                    };
+                    _outProvider = Console.WriteLine;
                 }
 
                 return _outProvider;
             }
-            set
-            {
-                _outProvider = value;
-            }
+            set => _outProvider = value;
         }
 
         /// <summary>

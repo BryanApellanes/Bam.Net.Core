@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Bam.Net.Application.Json;
+using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
+using Bam.Net.Logging;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
+using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Schema.Json.Tests
@@ -14,10 +17,42 @@ namespace Bam.Net.Schema.Json.Tests
     public class UnitTests : CommandLineTestInterface
     {
         private UnixPath RootData = new UnixPath("~/_data/JsonSchema/");
+        private UnixPath ApplicationSchema = new UnixPath("~/_data/JsonSchema/application_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
 
         [UnitTest]
+        [TestGroup("JSchema")]
+        public void GeneratedSchemaHasSubTypes()
+        {
+            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
+            logger.StartLoggingThread();
+            Log.Default = logger;
+            
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaManager());
+            List<JSchema> schemas = generator.LoadJSchemas(ApplicationSchema);
+            (schemas.Count > 0).IsTrue();
+        }
+        
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void CanGenerateFromDirectory()
+        {
+            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
+            logger.StartLoggingThread();
+            Log.Default = logger;
+            
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaManager());
+            JSchemaSchemaDefinition schemaDefinition = generator.GenerateSchemaDefinition(new DirectoryInfo(RootData), out List<JSchemaLoadResult> loadResults);
+            
+            OutLineFormat("Load result count {0}", loadResults.Count);
+            OutLineFormat("Load success count {0}", loadResults.Count(lr => lr.Success));
+            
+            OutLine(schemaDefinition.ToJson(true), ConsoleColor.Cyan);
+        }
+        
+        [UnitTest]
+        [TestGroup("JSchema")]
         public void CanResolveUnixPath()
         {
             UnixPath path = new UnixPath("~/src");
@@ -159,19 +194,6 @@ namespace Bam.Net.Schema.Json.Tests
             OutLineFormat("Load success count {0}", ConsoleColor.Green, loadResults.Count(lr => lr.Success));
             OutLineFormat("Load error count {0}", ConsoleColor.Yellow, loadResults.Count(lr => !lr.Success));
             OutLineFormat("Errors: \r\n{0}", ConsoleColor.DarkYellow, loadResults.Where(lr=> !lr.Success).Select(lr=> $"{lr.Path}: {lr.Message}").ToArray().ToDelimited(v=> $"{v}\r\n"));
-        }
-        
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void CanGenerateFromDirectory()
-        {
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator();
-            JSchemaSchemaDefinition schemaDefinition = generator.GenerateSchemaDefinition(new DirectoryInfo(RootData), out List<JSchemaLoadResult> loadResults);
-            
-            OutLineFormat("Load result count {0}", loadResults.Count);
-            OutLineFormat("Load success count {0}", loadResults.Count(lr => lr.Success));
-            
-            OutLine(schemaDefinition.ToJson(true), ConsoleColor.Cyan);
         }
         
         private JSchema GetCompanyJSchema(out JSchemaManager jSchemaManager)

@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Bam.Net.Application.Json;
 using Bam.Net.CoreServices;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Schema.Json
@@ -23,7 +25,9 @@ namespace Bam.Net.Schema.Json
         {
             FileInfo fileInfo = new FileInfo(filePath);
             Dictionary<object, object> schemaAsDictionary = filePath.FromYamlFile() as Dictionary<object, object>;
+            schemaAsDictionary.ConvertJSchemaPropertyTypes();
             return JSchema.Parse(schemaAsDictionary.ToJson(), new FileSystemYamlJSchemaResolver(fileInfo.Directory.FullName));
         }
+
     }
 }

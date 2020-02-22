@@ -59,10 +59,7 @@ namespace Bam.Net.Data.Schema
                 return _currentSchemaLock.DoubleCheckLock<SchemaDefinition>(ref _currentSchema, () => LoadSchema($"Default_{DateTime.Now.ToJulianDate().ToString()}"));
             }
 
-            set
-            {
-                _currentSchema = value;
-            }
+            set => _currentSchema = value;
         }
 
         public void ManageSchema(string schemaFile)

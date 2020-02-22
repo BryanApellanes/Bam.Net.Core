@@ -16,6 +16,13 @@ namespace Bam.Net.Schema.Json
             Path = path;
             Exception = exception;
         }
+
+        public JSchemaLoadResult(JSchema jSchema, Exception exception)
+        {
+            Path = ".";
+            JSchema = jSchema;
+            Exception = exception;
+        }
         
         public string Path { get; set; }
         public JSchema JSchema { get; set; }

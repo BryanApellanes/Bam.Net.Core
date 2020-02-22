@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Bam.Net.Schema.Json;
 using MongoDB.Bson;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -30,7 +31,7 @@ namespace Bam.Net.Application.Json
 
             string filePath = Path.Combine(RootDirectory.FullName, baseUri);
             Dictionary<object, object> schema = filePath.FromYamlFile() as Dictionary<object, object>; 
-            ParseStrings(schema);
+            schema.ConvertJSchemaPropertyTypes();
             return schema.ToJsonStream();
         }
 
@@ -40,7 +41,8 @@ namespace Bam.Net.Application.Json
             {
                 foreach (string key in rootSchema.ExtensionData.Keys)
                 {
-                    ParseStrings(rootSchema.ExtensionData[key] as JObject);
+                    JObject jObject = rootSchema.ExtensionData[key] as JObject;
+                    jObject?.ConvertJSchemaPropertyTypes();
                 }
                 return rootSchema;
             }
@@ -65,44 +67,11 @@ namespace Bam.Net.Application.Json
                 }
             }
 
-            ParseStrings(node);
+            node.ConvertJSchemaPropertyTypes();
             return JSchema.Parse(node.ToJson());
         }
-        
-        private void ParseStrings(JObject root)
-        {
-            if (root == null)
-            {
-                return;
-            }
-            
-            foreach (JProperty property in root.Properties())
-            {
-                string value = root.Property(property.Name).Value.ToString();
-                if (int.TryParse(value, out int intValue))
-                {
-                    root[property.Name] = intValue;
-                }
-                else if (bool.TryParse(value, out bool boolValue))
-                {
-                    root[property.Name] = boolValue;
-                }
-                else if (value.Equals("true", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    root[property.Name] = true;
-                }
-                else if (value.Equals("false", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    root[property.Name] = true;
-                }
-                else if (root[property.Name] is JObject jObject)
-                {
-                    ParseStrings(jObject);
-                }
-            }
-        }
 
-        private void ParseStrings(Dictionary<object, object> schema)
+        private void ConvertValueTypes(Dictionary<object, object> schema)
         {
             schema.Keys.BackwardsEach(key =>
             {
@@ -127,7 +96,7 @@ namespace Bam.Net.Application.Json
                 }
                 else if (schema[key] is Dictionary<object, object> dictionary)
                 {
-                    ParseStrings(dictionary);
+                    ConvertValueTypes(dictionary);
                 }
             });
         }

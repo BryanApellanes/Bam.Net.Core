@@ -7,6 +7,7 @@ using Bam.Net.Logging;
 using Bam.Net.Schema.Json;
 using CsQuery.ExtensionMethods;
 using CsQuery.ExtensionMethods.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
 
@@ -26,6 +27,11 @@ namespace Bam.Net.Application.Json
             Logger = Log.Default;
         }
 
+        public JSchemaSchemaDefinitionGenerator(JSchemaManager jSchemaManager) : this()
+        {
+            JSchemaManager = jSchemaManager;
+        }
+        
         public JSchemaSchemaDefinitionGenerator(string schemaName):this()
         {
             SchemaManager = new SchemaManager(new SchemaDefinition(schemaName));
@@ -43,7 +49,7 @@ namespace Bam.Net.Application.Json
             DiscoveredEnums = new Dictionary<string, HashSet<string>>();
             Logger = Log.Default;
         }
-
+        
         private static SchemaManager _schemaManager;
         private static readonly object _schemaManagerLock = new object();
         public static SchemaManager DefaultSchemaManager
@@ -59,15 +65,15 @@ namespace Bam.Net.Application.Json
 
         public Dictionary<string, HashSet<string>> DiscoveredEnums { get; set; }
 
-        public void AddEnum(JSchema jSchema, string enumName, string[] enumValues)
+        public void AddEnum(string enumName, JSchema enumProperty)
         {
             if (!DiscoveredEnums.ContainsKey(enumName))
             {
                 DiscoveredEnums.Add(enumName, new HashSet<string>());
             }
-            DiscoveredEnums[enumName].AddRange(enumValues);
+            DiscoveredEnums[enumName].AddRange(JSchemaManager.GetEnumValues(enumProperty));
         }
-
+        
         public JSchemaSchemaDefinition GenerateSchemaDefinition(string directoryPath)
         {
             return GenerateSchemaDefinition(new DirectoryInfo(directoryPath));
@@ -85,9 +91,57 @@ namespace Bam.Net.Application.Json
             return GenerateSchemaDefinition(jSchemas.ToArray());
         }
 
+        // public List<JSchema> LoadJSchema(string filePath, out List<JSchemaLoadResult> loadResults)
+        // {
+        //     JSchemaLoader loader = null;
+        //     FileInfo file = new FileInfo(filePath);
+        //     List<JSchema> jSchemas = new List<JSchema>();
+        //     loadResults = new List<JSchemaLoadResult>();
+        //
+        //     if (file.Extension.Equals(".yaml", StringComparison.InvariantCultureIgnoreCase))
+        //     {
+        //         loader = JSchemaLoader.ForFormat(SerializationFormat.Yaml);
+        //     }
+        //     else if (file.Extension.Equals(".json", StringComparison.InvariantCultureIgnoreCase))
+        //     {
+        //         loader = JSchemaLoader.ForFormat(SerializationFormat.Json);
+        //     }
+        //     
+        //     JSchema jSchema = loader.LoadSchema(filePath);
+        //     // only add the jSchema if it is an object
+        //     if (jSchema.IsObject())
+        //     {
+        //         jSchemas.Add(jSchema);
+        //     }
+        //     JSchemaManager.GetSubSchemas(jSchema).Each(s=>
+        //     {
+        //         if (s.IsObject())
+        //         {
+        //             jSchemas.Add(s);
+        //         }
+        //     });
+        //     loadResults.Add(new JSchemaLoadResult(file.FullName, jSchema));
+        //     return jSchemas;
+        // }
+        
         public List<JSchema> LoadJSchemas(DirectoryInfo jsonSchemaContainingFolder, out List<JSchemaLoadResult> loadResults)
         {
             FileInfo[] files = jsonSchemaContainingFolder.GetFiles();
+            return LoadJSchemas(files, out loadResults);
+        }
+
+        public List<JSchema> LoadJSchemas(params string[] filePaths)
+        {
+            return LoadJSchemas(out List<JSchemaLoadResult> loadResults, filePaths);
+        }
+        
+        public List<JSchema> LoadJSchemas(out List<JSchemaLoadResult> loadResults,  params string[] filePaths)
+        {
+            return LoadJSchemas(filePaths.Select(fp=> new FileInfo(fp)).ToArray(), out loadResults);
+        }
+        
+        public List<JSchema> LoadJSchemas(FileInfo[] files, out List<JSchemaLoadResult> loadResults)
+        {
             List<JSchema> jSchemas = new List<JSchema>();
             loadResults = new List<JSchemaLoadResult>();
             foreach (FileInfo file in files)
@@ -111,7 +165,19 @@ namespace Bam.Net.Application.Json
                 try
                 {
                     JSchema jSchema = loader.LoadSchema(file.FullName);
-                    jSchemas.Add(jSchema);
+                    // only add the jSchema if it is an object
+                    if (jSchema.IsObject())
+                    {
+                        jSchemas.Add(jSchema);
+                    }
+
+                    JSchemaManager.GetSubSchemas(jSchema).Each(s =>
+                    {
+                        if (s.IsObject())
+                        {
+                            jSchemas.Add(s);
+                        }
+                    });
                     loadResults.Add(new JSchemaLoadResult(file.FullName, jSchema));
                 }
                 catch (Exception ex)
@@ -123,11 +189,49 @@ namespace Bam.Net.Application.Json
             return jSchemas;
         }
 
+        public List<JSchema> AddSubJSchemas(List<JSchemaLoadResult> loadResults, JSchema jSchema)
+        {
+            List<JSchema> subSchemas = JSchemaManager.GetSubSchemas(jSchema).ToList();
+            List<JSchema> schemas = new List<JSchema>();
+            while (subSchemas.Count > 0)
+            {
+                foreach (JSchema subSchema in subSchemas)
+                {
+                    try
+                    {
+                        if (subSchema.IsObject())
+                        {
+                            schemas.Add(subSchema);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        loadResults.Add(new JSchemaLoadResult(subSchema, ex));
+                    }
+                }
+            }
+
+            return schemas;
+        }
+        
+        public JSchemaSchemaDefinition GenerateCombinedSchemaDefinition(SchemaDefinition schemaDefinition, params JSchema[] schemas)
+        {
+            JSchemaSchemaDefinition jSchemaSchemaDefinition = GenerateSchemaDefinition(schemas);
+            return jSchemaSchemaDefinition.CombineWith(schemaDefinition);
+        }
+        
         public JSchemaSchemaDefinition GenerateSchemaDefinition(params JSchema[] schemas)
         {
+            return GenerateSchemaDefinition("JSchemaSchemaDefinition", schemas);
+        }
+        
+        public JSchemaSchemaDefinition GenerateSchemaDefinition(string schemaName, params JSchema[] schemas)
+        {
+            SchemaDefinition schemaDefinition = new SchemaDefinition(schemaName);
+            
             foreach (JSchema schema in schemas)
             {
-                AddJSchema(SchemaManager.CurrentSchema, schema);
+                AddJSchema(schemaDefinition, schema);
             }
 
             return new JSchemaSchemaDefinition()
@@ -140,8 +244,14 @@ namespace Bam.Net.Application.Json
 
         public void AddJSchema(SchemaDefinition schemaDefinition, JSchema schema)
         {
-            SchemaManager.CurrentSchema = schemaDefinition;
             string className = JSchemaManager.GetObjectClassName(schema);
+            if (string.IsNullOrEmpty(className))
+            {
+                Log.Warn("Unable to determine class name for schema: \r\n{0}", schema.ToJson(true));
+                return;
+            }
+            SchemaManager.CurrentSchema = schemaDefinition;
+
             string[] propertyNames = JSchemaManager.GetPropertyNames(schema);
             SchemaManager.AddTable(className);
             propertyNames.Each(pn => SchemaManager.AddColumn(className, pn));
@@ -153,6 +263,12 @@ namespace Bam.Net.Application.Json
                 AddJSchema(schemaDefinition, propertySchema);
             }
 
+            Dictionary<string, JSchema> enumProperties = JSchemaManager.GetEnumProperties(schema);
+            foreach (string enumPropertyName in enumProperties.Keys)
+            {
+                AddEnum(enumPropertyName.PascalCase(), enumProperties[enumPropertyName]);
+            }
+            
             string[] arrayPropertyNames = JSchemaManager.GetArrayPropertyNames(schema);
             foreach (string arrayPropertyName in arrayPropertyNames)
             {
@@ -164,7 +280,7 @@ namespace Bam.Net.Application.Json
                 }
                 else if (arrayItemSchema.IsEnum(out string[] enumValues))
                 {
-                    AddEnum(arrayItemSchema, arrayPropertyName.PascalCase(), enumValues);
+                    AddEnum(arrayPropertyName.PascalCase(), arrayItemSchema);
                 }
             }
         }

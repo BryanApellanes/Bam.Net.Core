@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Bam.Net.Application.Json;
 using Bam.Net.Logging;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Schema.Json

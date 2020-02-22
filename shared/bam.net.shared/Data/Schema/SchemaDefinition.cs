@@ -11,6 +11,7 @@ using Bam.Net;
 using Bam.Net.Data;
 using Newtonsoft.Json;
 using Bam.Net.Configuration;
+using Bam.Net.Data.Repositories;
 using YamlDotNet.Serialization;
 
 namespace Bam.Net.Data.Schema
@@ -125,7 +126,7 @@ namespace Bam.Net.Data.Schema
             return table;
         }
 
-        List<ForeignKeyColumn> _foreignKeys = new List<ForeignKeyColumn>();
+        readonly List<ForeignKeyColumn> _foreignKeys = new List<ForeignKeyColumn>();
         public ForeignKeyColumn[] ForeignKeys
         {
             get => this._foreignKeys.ToArray();
@@ -331,6 +332,26 @@ namespace Bam.Net.Data.Schema
             Save(this);
         }
 
+        public SchemaDefinition CombineWith(SchemaDefinition schemaDefinition)
+        {
+            foreach (Table table in schemaDefinition.Tables)
+            {
+                AddTable(table);
+            }
+
+            foreach(ForeignKeyColumn foreignKey in schemaDefinition.ForeignKeys)
+            {
+                AddForeignKey(foreignKey);
+            }
+            
+            foreach (XrefTable xref in schemaDefinition.Xrefs)
+            {
+                AddXref(xref);
+            }
+
+            return this;
+        }
+        
         static readonly object _saveLock = new object();
         private static void Save(SchemaDefinition schema)
         {

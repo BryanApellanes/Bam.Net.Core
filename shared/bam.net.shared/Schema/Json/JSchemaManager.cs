@@ -4,6 +4,7 @@ using System.Linq;
 using Bam.Net.Data.Schema;
 using Bam.Net.Schema.Json;
 using Markdig.Helpers;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Application.Json
@@ -32,17 +33,19 @@ namespace Bam.Net.Application.Json
         /// </summary>
         public Func<string, string> ParseClassNameFunction { get; set; }
         
+        public Func<JSchema, string> ExtractClassName { get; set; }
+        
+        public Func<JSchema, string> ExtractEnumName { get; set; }
         /// <summary>
         /// A function used to further parse a property name when it is found.  This is intended to
         /// apply any conventions to the name that are not enforced in the JSchema.  Parse the
         /// inbound string and return an appropriate property name based on it.
         /// </summary>
         public Func<string, string> ParsePropertyNameFunction { get; set; }
-        public string GetObjectClassName(JSchema jSchema)
+        public virtual string GetObjectClassName(JSchema jSchema)
         {
             Args.ThrowIfNull(jSchema, nameof(jSchema));
-            Args.ThrowIfNull(jSchema.Type, nameof(jSchema.Type));
-            string schemaType = jSchema.Type.ToString();
+            string schemaType = jSchema.Type?.ToString() ?? "object"; // if no type is specified try to parse the class name properties
             
             if (!schemaType.Equals("object", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -56,8 +59,14 @@ namespace Bam.Net.Application.Json
                     return ParseClassNameFunction == null ? value.ToString(): ParseClassNameFunction(value.ToString());
                 }
             }
-
-            return string.Empty;
+            
+            string className = string.Empty;
+            if (ExtractClassName != null)
+            {
+                className = ExtractClassName(jSchema);
+            }
+            
+            return className;
         }
 
         /// <summary>
@@ -137,15 +146,13 @@ namespace Bam.Net.Application.Json
 
                 if (primitiveTypes.Contains(property.Type.ToString().ToLowerInvariant()))
                 {
-                    propertyNames.Add(propertyName);
+                    propertyNames.Add(propertyName.PascalCase());
                 }
             }
 
             return propertyNames.ToArray();
         }
 
-        
-        
         /// <summary>
         /// Get the names of the properties that are of type object.
         /// </summary>
@@ -189,8 +196,69 @@ namespace Bam.Net.Application.Json
             return jSchema.Properties[key];
         }
 
+        public IEnumerable<JSchema> GetSubSchemas(JSchema jSchema)
+        {
+            return GetSubSchemas(jSchema, "definitions");
+        }
+        
+        public IEnumerable<JSchema> GetSubSchemas(JSchema jSchema, string key)
+        {
+            foreach (JToken token in jSchema.ExtensionData[key])
+            {
+                Dictionary<object, object> result= new Dictionary<object, object>();
+                result.AddMissing("$schema", "http://json-schema.org/draft-04/schema#");
+                foreach (JObject child in token.Children<JObject>())
+                {
+                    foreach (JProperty property in child.Properties())
+                    {
+                        result.Add(property.Name, child[property.Name]);
+                    }
+                }
+                result.ConvertJSchemaPropertyTypes();
+                yield return JSchema.Parse(result.ToJson());
+            }
+        }
+
+        public string[] GetEnumValues(JSchema enumSchema)
+        {
+            List<string> values = new List<string>();
+            foreach (JValue val in enumSchema.Enum)
+            {
+                values.Add(val.Value?.ToString());
+            }
+
+            return values.ToArray();
+        }
+
+        public string GetEnumName(JSchema enumDefinition)
+        {
+            if (ExtractEnumName != null)
+            {
+                return ExtractEnumName(enumDefinition);
+            }
+
+            return string.Empty;
+        }
+
+        public Dictionary<string, JSchema> GetEnumProperties(JSchema jSchema)
+        {
+            Dictionary<string, JSchema> enumProperties = new Dictionary<string, JSchema>();
+            foreach (string propertyName in jSchema.Properties.Keys)
+            {
+                JSchema property = jSchema.Properties[propertyName];
+                if (property.Enum.Count > 0)
+                {
+                    enumProperties.Add(propertyName, property);
+                }
+            }
+
+            return enumProperties;
+        }
+        
+        
         protected string[] GetPropertyNamesOfType(JSchema jSchema, string typeName)
-        {List<string> propertyNames = new List<string>();
+        {
+            List<string> propertyNames = new List<string>();
             foreach(string propertyName in jSchema.Properties.Keys)
             {
                 JSchema property = jSchema.Properties[propertyName];
