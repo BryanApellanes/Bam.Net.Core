@@ -18,6 +18,7 @@ namespace Bam.Net.Schema.Json.Tests
     {
         private UnixPath RootData = new UnixPath("~/_data/JsonSchema/");
         private UnixPath ApplicationSchema = new UnixPath("~/_data/JsonSchema/application_v1.yaml");
+        private UnixPath CommonSchema = new UnixPath("~/_data/JsonSchema/common_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
 
@@ -31,6 +32,19 @@ namespace Bam.Net.Schema.Json.Tests
             
             JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaManager());
             List<JSchema> schemas = generator.LoadJSchemas(ApplicationSchema);
+            (schemas.Count > 0).IsTrue();
+        }
+        
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void GetsSubTypesFromCommon()
+        {
+            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
+            logger.StartLoggingThread();
+            Log.Default = logger;
+            
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaManager());
+            List<JSchema> schemas = generator.LoadJSchemas(CommonSchema);
             (schemas.Count > 0).IsTrue();
         }
         
@@ -72,7 +86,7 @@ namespace Bam.Net.Schema.Json.Tests
 
         [UnitTest]
         [TestGroup("JSchema")]
-        public void CanGetAllTableNames()
+        public void CanGetAllClassNames()
         {
             JSchema jSchema = GetOrganizationJSchema(out JSchemaManager jSchemaSchemaManager);
             string[] tableNames = jSchemaSchemaManager.GetAllClassNames(jSchema);

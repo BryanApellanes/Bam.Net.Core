@@ -90,39 +90,6 @@ namespace Bam.Net.Application.Json
 
             return GenerateSchemaDefinition(jSchemas.ToArray());
         }
-
-        // public List<JSchema> LoadJSchema(string filePath, out List<JSchemaLoadResult> loadResults)
-        // {
-        //     JSchemaLoader loader = null;
-        //     FileInfo file = new FileInfo(filePath);
-        //     List<JSchema> jSchemas = new List<JSchema>();
-        //     loadResults = new List<JSchemaLoadResult>();
-        //
-        //     if (file.Extension.Equals(".yaml", StringComparison.InvariantCultureIgnoreCase))
-        //     {
-        //         loader = JSchemaLoader.ForFormat(SerializationFormat.Yaml);
-        //     }
-        //     else if (file.Extension.Equals(".json", StringComparison.InvariantCultureIgnoreCase))
-        //     {
-        //         loader = JSchemaLoader.ForFormat(SerializationFormat.Json);
-        //     }
-        //     
-        //     JSchema jSchema = loader.LoadSchema(filePath);
-        //     // only add the jSchema if it is an object
-        //     if (jSchema.IsObject())
-        //     {
-        //         jSchemas.Add(jSchema);
-        //     }
-        //     JSchemaManager.GetSubSchemas(jSchema).Each(s=>
-        //     {
-        //         if (s.IsObject())
-        //         {
-        //             jSchemas.Add(s);
-        //         }
-        //     });
-        //     loadResults.Add(new JSchemaLoadResult(file.FullName, jSchema));
-        //     return jSchemas;
-        // }
         
         public List<JSchema> LoadJSchemas(DirectoryInfo jsonSchemaContainingFolder, out List<JSchemaLoadResult> loadResults)
         {
@@ -171,14 +138,7 @@ namespace Bam.Net.Application.Json
                         jSchemas.Add(jSchema);
                     }
 
-                    JSchemaManager.GetSubSchemas(jSchema).Each(s =>
-                    {
-                        if (s.IsObject())
-                        {
-                            jSchemas.Add(s);
-                        }
-                    });
-                    loadResults.Add(new JSchemaLoadResult(file.FullName, jSchema));
+                    jSchemas.AddRange(AddSubJSchemas(loadResults, jSchema));
                 }
                 catch (Exception ex)
                 {
@@ -192,26 +152,28 @@ namespace Bam.Net.Application.Json
         public List<JSchema> AddSubJSchemas(List<JSchemaLoadResult> loadResults, JSchema jSchema)
         {
             List<JSchema> subSchemas = JSchemaManager.GetSubSchemas(jSchema).ToList();
-            List<JSchema> schemas = new List<JSchema>();
-            while (subSchemas.Count > 0)
+            Queue<JSchema> subSchemaQueue = new Queue<JSchema>(subSchemas);
+            while (subSchemaQueue.Count > 0)
             {
-                foreach (JSchema subSchema in subSchemas)
+                JSchema subSchema = subSchemaQueue.Dequeue();
+                try
                 {
-                    try
+                    if (subSchema.IsObject())
                     {
-                        if (subSchema.IsObject())
-                        {
-                            schemas.Add(subSchema);
-                        }
+                        subSchemas.Add(subSchema);
                     }
-                    catch (Exception ex)
-                    {
-                        loadResults.Add(new JSchemaLoadResult(subSchema, ex));
-                    }
+                    JSchemaManager.GetSubSchemas(subSchema).Each(ss => subSchemaQueue.Enqueue(ss));
+                }
+                catch (Exception ex)
+                {
+                    loadResults.Add(new JSchemaLoadResult(subSchema, ex));
                 }
             }
 
-            return schemas;
+            // ensure we have unique JSchema instances
+            HashSet<string> subSchemaJson = new HashSet<string>();
+            subSchemas.Each(s => subSchemaJson.Add(s.ToJson()));
+            return subSchemaJson.Select(JSchema.Parse).ToList();
         }
         
         public JSchemaSchemaDefinition GenerateCombinedSchemaDefinition(SchemaDefinition schemaDefinition, params JSchema[] schemas)
