@@ -7,13 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace Bam.Net.Server
 {
-    // TODO: replace uses of this class with https://blog.markvincze.com/matching-route-templates-manually-in-asp-net-core/
-    // Microsoft.AspNetCore.Routing.Template.TemplateMatcher
-    // Microsoft.AspNetCore.Routing.Template.TemplateParser
-    
     // Taken from: https://gist.github.com/wcharczuk/2284226
     /// <summary>
-    /// Utiltiy to parse routes based on a token format.
+    /// Utility to parse routes based on a token format.
     /// </summary>
     /// <remarks>
     /// Casing doesn't matter!

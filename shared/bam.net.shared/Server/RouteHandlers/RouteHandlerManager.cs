@@ -67,7 +67,7 @@ namespace Bam.Net.Server
                         Assembly assembly = Assembly.LoadFile(fileInfo.FullName);
                         foreach (Type type in assembly.GetTypes())
                         {
-                            if (type.HasCustomAttributeOfType<HandlerForAttribute>(out HandlerForAttribute handlesAttribute))
+                            if (type.HasCustomAttributeOfType<RouteHandlerForAttribute>(out RouteHandlerForAttribute handlesAttribute))
                             {
                                 foreach (MethodInfo method in type.GetMethods())
                                 {
@@ -97,9 +97,9 @@ namespace Bam.Net.Server
             throw new NotImplementedException();
         }
 
-        protected virtual MethodInfo ResolveHandlerMethod(IRequest request, out Dictionary<string, object> objectParameters)
+        protected virtual MethodInfo ResolveHandlerMethod(IRequest request, out Dictionary<string, ParameterInfo> parameterInfos, out Dictionary<string, object> objectParameters)
         {
-            MethodInfo method = ResolveHandlerMethod(request.Url.ToString(), out Dictionary<string, string> arguments);
+            MethodInfo method = ResolveHandlerMethod(request.Url.ToString(), out parameterInfos, out Dictionary<string, string> arguments);
             if (method.HasObjectParameters(out ParameterInfo[] objectTypeParameters))
             {
                 objectParameters = ConvertArgumentTypes(request, method, objectTypeParameters.ToDictionary(pi=> pi.Name), arguments);
@@ -113,13 +113,14 @@ namespace Bam.Net.Server
             return method;
         }
         
-        protected virtual MethodInfo ResolveHandlerMethod(string url, out Dictionary<string, string> arguments)
+        protected virtual MethodInfo ResolveHandlerMethod(string url, out Dictionary<string, ParameterInfo> parameterInfos, out Dictionary<string, string> arguments)
         {
             string handlerName = GetHandlerName(url);
             MethodInfo result = null;
-            Dictionary<string, string> parameterResult = null;
+            Dictionary<string, string> argumentResults = null;
+            Dictionary<string, ParameterInfo> parameterResults = null;
             Uri uri = new Uri(url);
-            string parameterPath = uri.PathAndQuery.TruncateFront($"/{handlerName}".Length);
+            string parameterPath = uri.AbsolutePath.TruncateFront($"/{handlerName}".Length);
             if (RouteHandlers.ContainsKey(handlerName))
             {
                 Dictionary<PathAttribute, MethodInfo> handlerMethods = RouteHandlers[handlerName];
@@ -127,34 +128,24 @@ namespace Bam.Net.Server
                 foreach (PathAttribute pathAttribute in handlerMethods.Keys)
                 {
                     MethodInfo method = handlerMethods[pathAttribute];
+                    Dictionary<string, ParameterInfo> actualMethodParameters = method.GetParameters().Where(pi=> pi.ParameterType.IsPrimitiveNullableOrString()).ToDictionary(p => p.Name);
                     HashSet<string> parameterNames = new HashSet<string>(method.GetParameters().Select(p=>p.Name).ToArray());
-                    Dictionary<string, string> methodParameters = pathAttribute.ParsePath(parameterPath);
-                    if (methodParameters.Count == method.GetParameters().Length)
+                    Dictionary<string, string> parsedArguments = pathAttribute.ParsePath(parameterPath);
+                    if (pathAttribute.IsMatch(parameterPath) && HasMatchingKeys(actualMethodParameters, parsedArguments))
                     {
-                        // if all the parameters are in the keys then add
-                        bool oneIsMissing = false;
-                        foreach (string parameterName in parameterNames)
-                        {
-                            if (!methodParameters.ContainsKey(parameterName))
-                            {
-                                oneIsMissing = true;
-                            }
-                        }
-
-                        if (!oneIsMissing)
-                        {
-                            parameterResult = methodParameters;
-                            result = method;
-                            break;
-                        }
+                        parameterResults = actualMethodParameters;
+                        argumentResults = parsedArguments;
+                        result = method;
+                        break;
                     }
                 }
             }
 
-            arguments = parameterResult;
+            parameterInfos = parameterResults;
+            arguments = argumentResults;
             return result;
         }
-
+        
         protected virtual string GetHandlerName(string url)
         {
             Uri uri = new Uri(url);
@@ -174,6 +165,24 @@ namespace Bam.Net.Server
             }
             
             return result;
+        }
+        
+        private bool HasMatchingKeys(Dictionary<string, ParameterInfo> parameterInfos, Dictionary<string, string> arguments)
+        {
+            if (parameterInfos.Count == arguments.Count)
+            {
+                foreach (string key in parameterInfos.Keys)
+                {
+                    if (!arguments.ContainsKey(key))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

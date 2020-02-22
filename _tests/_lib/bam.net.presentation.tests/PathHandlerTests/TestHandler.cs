@@ -11,7 +11,7 @@ namespace Bam.Net.Presentation.Tests.PathHandler
         public string Value { get; set; }
     }
     
-    [HandlerFor("test")]
+    [RouteHandlerFor("test")]
     public class TestHandler
     {
         public TestHandler()
@@ -41,16 +41,10 @@ namespace Bam.Net.Presentation.Tests.PathHandler
             return $"ReadObjectType: objectType = {objectType}";
         }
         
-        [Get("/{objectType}/get/{objectProperty}")]
+        [Get("/{objectType}/get-property/{objectProperty}")]
         public object ReadObjectProperty(string objectType, string objectProperty)
         {
             return $"ReadObjectType: objectType = {objectType}, objectProperty = {objectProperty}";
-        }
-        
-        [Get("/{objectType}/{objectProperty}/get?filter={filter}")]
-        public object ReadObjectProperty(string objectType, string objectProperty, string filter)
-        {
-            return $"ReadObjectType: objectType = {objectType}, objectProperty = {objectProperty}, filter = {filter}";
         }
 
         [Post("/{objectType}/post")]
@@ -58,13 +52,6 @@ namespace Bam.Net.Presentation.Tests.PathHandler
         {
             return $"PostObjectType: \r\n\tobjectType = {objectType}, \r\n\tvalue = {value.PropertiesToString()}";
         }
-        
-        /*[Post("/{objectType}/post")]
-        public T PostObjectType<T>(string objectType, T value)
-        {
-            Logger.Info($"PostObjectType: \r\n\tobjectType = {objectType}, \r\n\tvalue = {value.PropertiesToString()}");
-            return value;
-        }*/
 
         [Put("/{objectType}/put")]
         public object PutObjectType(string objectType, object value)

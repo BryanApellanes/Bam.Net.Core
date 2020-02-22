@@ -7,9 +7,9 @@ namespace bam.net.presentation.tests.PathHandlerTests
 {
     public class TestRouteHandlerManager: RouteHandlerManager
     {
-        public MethodInfo CallResolveHandlerMethod(string url, out Dictionary<string, string> parameters)
+        public MethodInfo CallResolveHandlerMethod(string url, out Dictionary<string, ParameterInfo> parameterInfos, out Dictionary<string, string> parameters)
         {
-            return ResolveHandlerMethod(url, out parameters);
+            return ResolveHandlerMethod(url, out parameterInfos, out parameters);
         }
 
         public string CallGetHandlerName(string url)

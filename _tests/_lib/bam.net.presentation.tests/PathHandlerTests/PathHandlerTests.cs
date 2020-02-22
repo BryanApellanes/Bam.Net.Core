@@ -13,6 +13,7 @@ using Bam.Net.ServiceProxy;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 using Bam.Net.Web;
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Routing.Template;
 using NSubstitute;
 
@@ -52,7 +53,7 @@ namespace Bam.Net.Presentation.Tests
 
         [UnitTest]
         [TestGroup("RouteHandlers")]
-        public void CanResolveGetHandlerMethod()
+        public void CanResolvePostHandlerMethod()
         {
             bool? thrown = false;
             TestRouteHandlerManager routeHandlerManager = GetRouteHandlerManager();
@@ -62,10 +63,19 @@ namespace Bam.Net.Presentation.Tests
                 {
                     try
                     {
-                        MethodInfo handlerMethod = routeHandlerManager.CallResolveHandlerMethod("https://localhost:8080/test/1/health", out Dictionary<string, string> parameters);
-                        MethodInfo expected = typeof(TestHandler).GetMethod("GetHealth", new Type[] {typeof(string)});
-                        (handlerMethod.Name.Equals(expected.Name)).IsTrue("Method names didn't match");
-                        (handlerMethod.GetParameters().Length == expected.GetParameters().Length).IsTrue("Parameter count didn't match");
+                        MethodInfo handlerMethod = routeHandlerManager.CallResolveHandlerMethod("https://localhost:8080/test/ObjectName/post", out Dictionary<string, ParameterInfo> parameterInfos, out Dictionary<string, string> parameters);
+                        (handlerMethod.Name.Equals(nameof(TestHandler.PostObjectType))).IsTrue("Method names didn't match");
+                        (handlerMethod.GetParameters().Length == 2).IsTrue("Parameter count didn't match");
+                        MethodInfo shouldBeNull = routeHandlerManager.CallResolveHandlerMethod("https://localhost:8080/test/shouldNot/be/found", out Dictionary<string, ParameterInfo> parameterInfosShouldBeNull, out Dictionary<string, string> shouldBeNullAlso);
+                        shouldBeNull.IsNull();
+                        shouldBeNullAlso.IsNull();
+                        parameterInfosShouldBeNull.IsNull();
+                        
+                        MethodInfo shouldBeNullAgain = routeHandlerManager.CallResolveHandlerMethod("https://localhost:8080/anotherOne/that/shouldNot/be/found", out Dictionary<string, ParameterInfo> parameterInfosShouldBeNullAlso, out Dictionary<string, string> shouldBeNullAlsoAlso);
+                        shouldBeNull.IsNull();
+                        shouldBeNullAlsoAlso.IsNull();
+                        parameterInfosShouldBeNullAlso.IsNull();
+                        OutLineFormat("test {0} complete", nameof(CanResolvePostHandlerMethod));
                     }
                     catch (Exception ex)
                     {
@@ -80,7 +90,7 @@ namespace Bam.Net.Presentation.Tests
 
         [UnitTest]
         [TestGroup("RouteHandlers")]
-        public void CanResolvePostHandlerMethod()
+        public void CanResolveGetMethodWithProperty()
         {
             bool? thrown = false;
             TestRouteHandlerManager routeHandlerManager = GetRouteHandlerManager();
@@ -88,11 +98,12 @@ namespace Bam.Net.Presentation.Tests
                 .ScanForRouteHandlers(".")
                 .ContinueWith((task, state) =>
                 {
-                    MethodInfo handlerMethod = routeHandlerManager.CallResolveHandlerMethod("http://localhost:8080/test/randomTypeName/post", out Dictionary<string, string> parameters);
-                    MethodInfo expected = GetMethodInfo("PostObjectType");
-                    Expect.AreEqual(handlerMethod.Name, expected.Name);
-                    (handlerMethod.Name.Equals(expected.Name)).IsTrue();
-                    (handlerMethod.GetParameters().Length == expected.GetParameters().Length).IsTrue("Parameter count didn't match");
+                    MethodInfo handlerMethod = routeHandlerManager.CallResolveHandlerMethod("http://localhost:8080/test/randomTypeName/get-property/hasBaloney", out Dictionary<string, ParameterInfo> parameterInfos, out Dictionary<string, string> arguments);
+                    handlerMethod.Name.IsEqualTo(nameof(TestHandler.ReadObjectProperty), $"method name was not as expected: expected {nameof(TestHandler.ReadObjectProperty)}, actual {handlerMethod.Name}");
+                    handlerMethod.GetParameters().Length.IsEqualTo(2, "wrong method resolved, parameter count mismatch");
+                    arguments.Count.IsEqualTo(2, "wrong number of parameters resolved");
+                    arguments.ContainsKey("objectType").IsTrue("arguments didn't contain objectType");
+                    arguments.ContainsKey("objectProperty").IsTrue("arguments didn't contain objectProperty");
                 }, routeHandlerManager)
                 .Wait();
             
@@ -135,7 +146,7 @@ namespace Bam.Net.Presentation.Tests
                     {
                         (state is RouteHandlerManager rhManager).IsTrue();
                         RouteHandlerManager mgr = (RouteHandlerManager) state;
-                        string routeHandlerName = typeof(TestHandler).GetCustomAttributeOfType<HandlerForAttribute>().Name;
+                        string routeHandlerName = typeof(TestHandler).GetCustomAttributeOfType<RouteHandlerForAttribute>().Name;
                         (mgr.RouteHandlers.Count == 1).IsTrue();
                         mgr.RouteHandlers.ContainsKey("/test");
                         Expect.AreEqual(typeof(Dictionary<PathAttribute, MethodInfo>), mgr.RouteHandlers["/test"].GetType());
@@ -154,7 +165,6 @@ namespace Bam.Net.Presentation.Tests
             Thread.Sleep(3);
             OutLine("scan test complete", ConsoleColor.Cyan);
         }
-        
 
         [UnitTest]
         [TestGroup("RouteHandlers")]
@@ -162,7 +172,7 @@ namespace Bam.Net.Presentation.Tests
         {
             string url = "http://localhost:8080/test/1/health";
             TestRouteHandlerManager routeHandlerManager = (TestRouteHandlerManager)GetRouteHandlerManager();
-            object handler = routeHandlerManager.CallResolveHandlerMethod(url, out Dictionary<string, string> parameters);
+            object handler = routeHandlerManager.CallResolveHandlerMethod(url, out Dictionary<string, ParameterInfo> parameterInfos, out Dictionary<string, string> parameters);
             Expect.AreEqual(typeof(TestHandler), handler.GetType());
         }
         
@@ -178,6 +188,14 @@ namespace Bam.Net.Presentation.Tests
             Expect.AreEqual(typeof(TestHandler), executionRequest.TargetType);
             Expect.AreEqual(1, executionRequest.ParameterInfos.Length);
         }
+
+        /*
+        [UnitTest]
+        [TestGroup("RouteHandlers")]
+        public void CanMatchRoute()
+        {
+            
+        }*/
         
         // BamServer should short circuit the response pipeline to determine if it should use the RouteManager or the Responder track
         [UnitTest]

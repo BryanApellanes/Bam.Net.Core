@@ -235,7 +235,32 @@ namespace Bam.Net
                 throw new ExpectFailedException(failureMessage, ShouldHtmlEncodeExceptions);
             }
         }
+        
+        public static void IsEqualTo(this int actual, int expected, string failureMessage = "")
+        {
+            AreEqual(expected, actual, failureMessage);
+        }
 
+        public static void AreEqual(int expected, int actual, string failureMessage = "")
+        {
+            if (expected != actual)
+            {
+                if (string.IsNullOrEmpty(failureMessage))
+                {
+                    throw new ExpectFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
+                }
+                else
+                {
+                    throw new ExpectFailedException(failureMessage);
+                }
+            }
+        }
+        
+        public static void IsEqualTo(this long actual, long expected)
+        {
+            AreEqual(expected, actual);
+        }
+        
         public static void AreEqual(long expected, long actual)
         {
             AreEqual(expected, actual, "");
@@ -266,6 +291,11 @@ namespace Bam.Net
             AreEqual(expected, actual, "");
         }
 
+        public static void IsEqualTo(this string actual, string expected, string failureMessage = "")
+        {
+            AreEqual(expected, actual, failureMessage);
+        }
+        
         /// <summary>
         /// Does an equality comparison using expected.Equals()
         /// </summary>
@@ -446,12 +476,12 @@ namespace Bam.Net
         public static void Extends<T>(object objectToCheck)
         {
             if (!(objectToCheck is T))
-                throw new ExpectFailedException(string.Format("{0} doesn't extend {1}", objectToCheck.GetType().Name, typeof(T).Name), ShouldHtmlEncodeExceptions);
+                throw new ExpectFailedException($"{objectToCheck.GetType().Name} doesn't extend {typeof(T).Name}", ShouldHtmlEncodeExceptions);
         }
 
-        public static void IsNull(object objectToCheck)
+        public static void IsNull(this object objectToCheck)
         {
-            IsNull(objectToCheck, "");
+            IsNull(objectToCheck, "objectToCheck was not null as expected");
         }
         
         /// <summary>
