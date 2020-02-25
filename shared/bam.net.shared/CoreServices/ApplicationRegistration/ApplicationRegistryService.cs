@@ -216,7 +216,7 @@ namespace Bam.Net.CoreServices
         public string CreateKeyToken(string stringToHash)
         {
             ApiKeyInfo apiKey = GetApiKeyInfo(this);
-            return $"{apiKey.ApiKey}:{stringToHash}".Hash(HashAlgorithm);
+            return $"{apiKey.ApiKey}:{stringToHash}".HashHexString(HashAlgorithm);
         }
 
         [Exclude]

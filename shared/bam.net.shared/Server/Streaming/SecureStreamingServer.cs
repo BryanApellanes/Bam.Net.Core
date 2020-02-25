@@ -96,7 +96,7 @@ namespace Bam.Net.Server.Streaming
                 AesKeyVectorPair aes = new AesKeyVectorPair { Key = secureSession.PlainSymmetricKey, IV = secureSession.PlainSymmetricIV };
                 byte[] messageBytes = response.Body.ToBinaryBytes();
                 string messageBase64 = messageBytes.ToBase64();
-                string hmac = messageBase64.Hmac(aes.Key, HmacAlgorithm, Encoding);
+                string hmac = messageBase64.HmacHexString(aes.Key, HmacAlgorithm, Encoding);
                 string encryptedBase64Message = aes.Encrypt(messageBase64);
 
                 response.Cipher = encryptedBase64Message;
@@ -162,7 +162,7 @@ namespace Bam.Net.Server.Streaming
             AesKeyVectorPair aesKey = new AesKeyVectorPair { Key = session.PlainSymmetricKey, IV = session.PlainSymmetricIV };
             string encryptedBase64Message = Encoding.GetString(request.Body);
             string messageBase64 = aesKey.Decrypt(encryptedBase64Message);
-            string hmac = messageBase64.Hmac(aesKey.Key, HmacAlgorithm, Encoding);
+            string hmac = messageBase64.HmacHexString(aesKey.Key, HmacAlgorithm, Encoding);
             byte[] messageBytes = messageBase64.FromBase64();                       
 
             request.Validated = hmac.Equals(request.Hmac);

@@ -34,7 +34,7 @@ namespace Bam.Net.Data.Repositories
         {
             CheckArgs(instance, compositeKeyProperties);
             return string.Join(propertyDelimiter, compositeKeyProperties.Select(prop => instance.Property(prop)))
-                .Hash(algorithm);
+                .HashHexString(algorithm);
         }
 
         internal static int GetIntKeyHash(object instance, string propertyDelimiter, string[] compositeKeyProperties)

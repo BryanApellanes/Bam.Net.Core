@@ -44,7 +44,7 @@ namespace Bam.Net.Server.Streaming
             }
             byte[] messageBytes = message.ToBinaryBytes();
             string messageBase64 = messageBytes.ToBase64();
-            string hmac = messageBase64.Hmac(AesKeyVectorPair.Key, HmacAlgorithm, Encoding);
+            string hmac = messageBase64.HmacHexString(AesKeyVectorPair.Key, HmacAlgorithm, Encoding);
 
             string encryptedBase64Message = AesKeyVectorPair.Encrypt(messageBase64);
             byte[] encryptedMessageBytes = Encoding.GetBytes(encryptedBase64Message);

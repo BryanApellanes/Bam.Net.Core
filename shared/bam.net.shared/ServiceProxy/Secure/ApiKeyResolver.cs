@@ -120,7 +120,7 @@ namespace Bam.Net.ServiceProxy.Secure
         protected string CreateKeyTokenFx(string stringToHash)
         {
             ApiKeyInfo apiKey = this.GetApiKeyInfo(this);
-            return "{0}:{1}"._Format(apiKey.ApiKey, stringToHash).Hash(HashAlgorithm);
+            return "{0}:{1}"._Format(apiKey.ApiKey, stringToHash).HashHexString(HashAlgorithm);
         }
 
         public bool IsValidRequest(ExecutionRequest request)

@@ -22,7 +22,7 @@ namespace Bam.Net.Services
         {
             // TODO: cache this
             string shouldBeCode = TemplateRenderer.Render(templateName, model);
-            byte[] assemblyBytes = Compiler.Compile(shouldBeCode.Hash(HashAlgorithm), shouldBeCode);
+            byte[] assemblyBytes = Compiler.Compile(shouldBeCode.HashHexString(HashAlgorithm), shouldBeCode);
             Assembly assembly = Assembly.Load(assemblyBytes);
             Type type = assembly.GetTypes().FirstOrDefault(t => t.ExtendsType<T>());
             return type.Construct() as T;

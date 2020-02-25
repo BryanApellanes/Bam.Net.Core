@@ -152,7 +152,7 @@ namespace Bam.Net.Services.Clients
         public string CreateKeyToken(string stringToHash)
         {
             ApiKeyInfo keyInfo = GetApiKeyInfo(this);
-            return $"{keyInfo.ApiKey}:{stringToHash}".Hash(HashAlgorithm);
+            return $"{keyInfo.ApiKey}:{stringToHash}".HashHexString(HashAlgorithm);
         }
 
         public bool IsValidRequest(ExecutionRequest request)

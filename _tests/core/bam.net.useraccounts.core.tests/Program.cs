@@ -1,5 +1,6 @@
 ﻿using Bam.Net.Testing;
 using System;
+using Bam.Net.Application.Verbs;
 
 namespace Bam.Net.UserAccounts.Tests
 {
@@ -8,7 +9,7 @@ namespace Bam.Net.UserAccounts.Tests
     {
         static void Main(string[] args)
         {
-            Initialize(args);
+            ExecuteMain(args);
         }
     }
 }

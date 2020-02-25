@@ -25,6 +25,7 @@ using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Testing.Data;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -523,6 +524,21 @@ namespace Bam.Net
             return Convert.FromBase64String(data);
         }
 
+        public static string ToBase64UrlEncoded(this string data)
+        {
+            return ToBase64UrlEncoded(data.ToBytes());
+        }
+        
+        public static string ToBase64UrlEncoded(this byte[] data)
+        {
+            return WebEncoders.Base64UrlEncode(data);
+        }
+        
+        public static byte[] FromBase64UrlEncoded(this string data)
+        {
+            return WebEncoders.Base64UrlDecode(data);
+        }
+        
         public static string ReadAllText(this FileInfo file)
         {
             using (StreamReader reader = new StreamReader(file.FullName))

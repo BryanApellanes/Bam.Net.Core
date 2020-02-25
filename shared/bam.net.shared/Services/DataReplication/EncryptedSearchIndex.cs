@@ -31,17 +31,14 @@ namespace Bam.Net.Services.DataReplication
         public ILogger Logger { get; set; }
 
         IFeatureExtractor _featureExtractor;
-        object _featureExtractorLock = new object();
+        readonly object _featureExtractorLock = new object();
         public IFeatureExtractor FeatureExtractor
         {
             get
             {
                 return _featureExtractorLock.DoubleCheckLock(ref _featureExtractor, () => new WordFeatureExtractor());
             }
-            set
-            {
-                _featureExtractor = value;
-            }
+            set => _featureExtractor = value;
         }
 
         /// <summary>
@@ -65,7 +62,7 @@ namespace Bam.Net.Services.DataReplication
         public string Retrieve(string key)
         {
             string secret = KeySet.GetAesKey();
-            string keyHmac = key.Hmac(secret, HmacAlgorithm, Encoding);
+            string keyHmac = key.HmacHexString(secret, HmacAlgorithm, Encoding);
             string kvpCipher = PublicKeyValueStore.Get(keyHmac);
             KeyValuePair<string, string> kvp = DecipherKeyValuePair(kvpCipher);
             if (kvp.Key.Equals(key))
@@ -89,8 +86,8 @@ namespace Bam.Net.Services.DataReplication
             try
             {
                 string secret = KeySet.GetAesKey();
-                string keyHmac = key.Hmac(secret, HmacAlgorithm, Encoding);
-                string valueHmac = value.Hmac(secret, HmacAlgorithm, Encoding);
+                string keyHmac = key.HmacHexString(secret, HmacAlgorithm, Encoding);
+                string valueHmac = value.HmacHexString(secret, HmacAlgorithm, Encoding);
                 // localstore(hmac(key), hmac(value))
                 PrivateKeyValueStore.Set(keyHmac, valueHmac);
                 // remotestore(hmac(key):aes(value))
@@ -102,7 +99,7 @@ namespace Bam.Net.Services.DataReplication
                 //    foreach(feature) localstorekeys(hmac(feature), hmac(key))
                 Parallel.ForEach(features, (feature) =>
                 {
-                    string featureHmac = feature.Hmac(secret, HmacAlgorithm, Encoding);
+                    string featureHmac = feature.HmacHexString(secret, HmacAlgorithm, Encoding);
                     HashSet<string> hmacKeys = new HashSet<string>();
                     PrivateKeyValueStore.Get(featureHmac).DelimitSplit("\r\n").Each(hmacKey => hmacKeys.Add(hmacKey));
                     hmacKeys.Add(keyHmac);
@@ -131,7 +128,7 @@ namespace Bam.Net.Services.DataReplication
         protected string[] Search(string feature)
         {
             string secret = KeySet.GetAesKey();
-            string featureHmac = feature.Hmac(secret, HmacAlgorithm, Encoding);            
+            string featureHmac = feature.HmacHexString(secret, HmacAlgorithm, Encoding);            
             return PrivateKeyValueStore.Get(featureHmac).DelimitSplit("\r\n"); // should be a new line delimited list of key hmacs            
         }
 
