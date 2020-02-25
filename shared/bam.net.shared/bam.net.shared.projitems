@@ -544,6 +544,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\WindowsReferenceAssemblyResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\AccessToken.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenSigningAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenStandardClaims.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ApplicationServiceHostResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ServiceHostResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\DnsServerDescriptorClient.cs" />
