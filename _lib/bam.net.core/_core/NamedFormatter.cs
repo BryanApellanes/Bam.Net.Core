@@ -15,14 +15,27 @@ namespace Bam.Net
 {
     public static class NamedFormatter
     {
-        public static string NamedFormat(this string format, object source)
+        public static string NamedFormat(this string format, object dataSource, string opener = "{{", string closer = "}}")
         {
-            PropertyInfo[] props = source.GetType().GetProperties();
+            Args.ThrowIfNull(dataSource, nameof(dataSource));
+            PropertyInfo[] props = dataSource.GetType().GetProperties();
             string returnValue = format;
             foreach (PropertyInfo prop in props)
             {
-                returnValue = returnValue.Replace($"{{{prop.Name}}}", prop.GetValue(source)?.ToString());
+                returnValue = returnValue.Replace($"{opener}{prop.Name}{closer}", prop.GetValue(dataSource)?.ToString());
             }
+            return returnValue;
+        }
+
+        public static string NamedFormat(this string format, Dictionary<string, string> dataSource, string opener = "{{", string closer = "}}")
+        {
+            Args.ThrowIfNull(dataSource, nameof(dataSource));
+            string returnValue = format;
+            foreach (string key in dataSource.Keys)
+            {
+                returnValue = returnValue.Replace($"{opener}{key}{closer}", dataSource[key]);
+            }
+
             return returnValue;
         }
     }

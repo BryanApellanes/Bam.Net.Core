@@ -25,6 +25,17 @@ namespace Bam.Net.Server.PathHandlers.Attributes
            return routeParser.ParseRouteInstance(uriPath);
        }
 
+       public bool IsMatch(string uriPath)
+       {
+           return IsMatch(uriPath, out Dictionary<string, string> ignore);
+       }
+       
+       public bool IsMatch(string uriPath, out Dictionary<string, string> routeVariables)
+       {
+           routeVariables = ParsePath(uriPath);
+           return Path.NamedFormat(routeVariables, "{", "}").Equals(uriPath, StringComparison.InvariantCultureIgnoreCase);
+       }
+       
        public override string ToString()
        {
            return Path;

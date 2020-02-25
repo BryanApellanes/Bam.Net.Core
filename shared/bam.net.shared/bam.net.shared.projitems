@@ -669,7 +669,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\PathAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\PostAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\PutAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\HandlerForAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\Attributes\RouteHandlerForAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\BamPathRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\DataRoute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server\RouteHandlers\MethodRoute.cs" />
