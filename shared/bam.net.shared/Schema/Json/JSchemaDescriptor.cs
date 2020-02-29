@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -20,6 +21,7 @@ namespace Bam.Net.Schema.Json
                 {
                     
                 }
+                throw new NotImplementedException();
             } 
             
         }
@@ -28,7 +30,8 @@ namespace Bam.Net.Schema.Json
 
         private IDictionary<string, JSchemaDescriptor> GetProperties(JSchema jSchema)
         {
-            if(_jSchema!.Properties != null)
+            //if(_jSchema!.Properties != null)
+            throw new NotImplementedException();
         }
     }
 }
