@@ -31,21 +31,22 @@ namespace Bam.Net.Application.Json
         {
             JSchemaManager = jSchemaManager;
         }
-        
-        public JSchemaSchemaDefinitionGenerator(string schemaName):this()
+
+        public JSchemaSchemaDefinitionGenerator(string schemaName) : this()
         {
             SchemaManager = new SchemaManager(new SchemaDefinition(schemaName));
         }
-        
-        public JSchemaSchemaDefinitionGenerator(JSchemaSchemaDefinitionGenerationSettings settings) : this(new SchemaManager(new SchemaDefinition(settings.Name)), settings.SerializationFormat, settings.JSchemaManager)
+
+        public JSchemaSchemaDefinitionGenerator(JSchemaSchemaDefinitionGenerationSettings settings) : this(new SchemaManager(new SchemaDefinition(settings.Name)), settings.SerializationFormat, settings.JSchemaManager, settings.JSchemaResolver)
         {
         }
 
-        public JSchemaSchemaDefinitionGenerator(SchemaManager schemaManager, SerializationFormat serializationFormat, JSchemaManager jSchemaManager = null)
+        public JSchemaSchemaDefinitionGenerator(SchemaManager schemaManager, SerializationFormat serializationFormat, JSchemaManager jSchemaManager = null, JSchemaResolver resolver = null)
         {
             SchemaManager = schemaManager;
             JSchemaLoader = JSchemaLoader.ForFormat(serializationFormat);
             JSchemaManager = jSchemaManager ?? new JSchemaManager();
+            JSchemaManager.JSchemaResolver = resolver ?? FileSystemJSchemaResolver.Default;
             DiscoveredEnums = new Dictionary<string, HashSet<string>>();
             Logger = Log.Default;
         }
@@ -74,26 +75,26 @@ namespace Bam.Net.Application.Json
             DiscoveredEnums[enumName].AddRange(JSchemaManager.GetEnumValues(enumProperty));
         }
         
-        public JSchemaSchemaDefinition GenerateSchemaDefinition(string directoryPath)
+        public JSchemaSchemaDefinition GenerateSchemaDefinition(string folderPathContainingJsonSchemas)
         {
-            return GenerateSchemaDefinition(new DirectoryInfo(directoryPath));
+            return GenerateSchemaDefinition(new DirectoryInfo(folderPathContainingJsonSchemas));
         }
 
-        public JSchemaSchemaDefinition GenerateSchemaDefinition(DirectoryInfo jsonSchemaContainingFolder)
+        public JSchemaSchemaDefinition GenerateSchemaDefinition(DirectoryInfo folderContainingJsonSchemas)
         {
-            return GenerateSchemaDefinition(jsonSchemaContainingFolder, out List<JSchemaLoadResult> ignore);
+            return GenerateSchemaDefinition(folderContainingJsonSchemas, out List<JSchemaLoadResult> ignore);
         }
         
-        public JSchemaSchemaDefinition GenerateSchemaDefinition(DirectoryInfo jsonSchemaContainingFolder, out List<JSchemaLoadResult> loadResults)
+        public JSchemaSchemaDefinition GenerateSchemaDefinition(DirectoryInfo folderContainingJsonSchemas, out List<JSchemaLoadResult> loadResults)
         {
-            List<JSchema> jSchemas = LoadJSchemas(jsonSchemaContainingFolder, out loadResults);
+            List<JSchema> jSchemas = LoadJSchemas(folderContainingJsonSchemas, out loadResults);
 
             return GenerateSchemaDefinition(jSchemas.ToArray());
         }
         
-        public List<JSchema> LoadJSchemas(DirectoryInfo jsonSchemaContainingFolder, out List<JSchemaLoadResult> loadResults)
+        public List<JSchema> LoadJSchemas(DirectoryInfo folderContainingJsonSchemas, out List<JSchemaLoadResult> loadResults)
         {
-            FileInfo[] files = jsonSchemaContainingFolder.GetFiles();
+            FileInfo[] files = folderContainingJsonSchemas.GetFiles();
             return LoadJSchemas(files, out loadResults);
         }
 
@@ -151,7 +152,7 @@ namespace Bam.Net.Application.Json
 
         public List<JSchema> AddSubJSchemas(List<JSchemaLoadResult> loadResults, JSchema jSchema)
         {
-            List<JSchema> subSchemas = JSchemaManager.GetSubSchemas(jSchema).ToList();
+            List<JSchema> subSchemas = JSchemaManager.ExtractDefinitionSchemas(jSchema).ToList();
             Queue<JSchema> subSchemaQueue = new Queue<JSchema>(subSchemas);
             while (subSchemaQueue.Count > 0)
             {
@@ -162,7 +163,7 @@ namespace Bam.Net.Application.Json
                     {
                         subSchemas.Add(subSchema);
                     }
-                    JSchemaManager.GetSubSchemas(subSchema).Each(ss => subSchemaQueue.Enqueue(ss));
+                    JSchemaManager.ExtractDefinitionSchemas(subSchema).Each(ss => subSchemaQueue.Enqueue(ss));
                 }
                 catch (Exception ex)
                 {
@@ -256,7 +257,7 @@ namespace Bam.Net.Application.Json
         public static JSchemaSchemaDefinitionGenerator Create(JSchemaSchemaDefinitionGenerationSettings settings)
         {
             SchemaManager schemaManager = new SchemaManager(new SchemaDefinition(settings.Name));
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(schemaManager, settings.SerializationFormat)
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(schemaManager, settings.SerializationFormat, settings.JSchemaManager, settings.JSchemaResolver)
             {
                 JSchemaManager = settings.JSchemaManager
             };

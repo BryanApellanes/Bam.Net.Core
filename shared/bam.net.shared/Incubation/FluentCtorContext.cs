@@ -8,10 +8,10 @@ namespace Bam.Net.Incubation
 {
     public class FluentCtorContext<I>
     {
-        public FluentCtorContext(Incubator inc, string parametrerName)
+        public FluentCtorContext(Incubator inc, string parameterName)
         {
             Incubator = inc;
-            ParameterName = parametrerName;
+            ParameterName = parameterName;
         }
         public Incubator Use(object value)
         {

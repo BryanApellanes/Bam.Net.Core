@@ -26,6 +26,8 @@ namespace Bam.Net.Application.Json
             _classNameProperties = new List<string>(classNameProperties);
         }
 
+        public JSchemaResolver JSchemaResolver { get; set; }
+        
         /// <summary>
         /// A function used to further parse a class name when it is found.  This is intended
         /// to apply any conventions to the name that are not enforced in the JSchema.  Parse the
@@ -196,13 +198,17 @@ namespace Bam.Net.Application.Json
             return jSchema.Properties[key];
         }
 
-        public IEnumerable<JSchema> GetSubSchemas(JSchema jSchema)
+        public IEnumerable<JSchema> ExtractDefinitionSchemas(JSchema jSchema)
         {
-            return GetSubSchemas(jSchema, "definitions");
+            return ExtractSchemas(jSchema, "definitions");
         }
         
-        public IEnumerable<JSchema> GetSubSchemas(JSchema jSchema, string key)
+        public IEnumerable<JSchema> ExtractSchemas(JSchema jSchema, string key)
         {
+            if (!jSchema.ExtensionData.ContainsKey(key))
+            {
+                yield break;
+            }
             foreach (JToken token in jSchema.ExtensionData[key])
             {
                 Dictionary<object, object> result= new Dictionary<object, object>();
@@ -215,7 +221,7 @@ namespace Bam.Net.Application.Json
                     }
                 }
                 result.ConvertJSchemaPropertyTypes();
-                yield return JSchema.Parse(result.ToJson());
+                yield return JSchema.Parse(result.ToJson(), new NoopJSchemaResolver());
             }
         }
 

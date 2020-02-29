@@ -12,17 +12,13 @@ namespace Bam.Net.Application.Json
     /// <summary>
     /// A resolver for json schema entities defined in yaml files in the file system.
     /// </summary>
-    public class FileSystemYamlJSchemaResolver: FileSystemJSchemaResolver
+    public class FileSystemJsonJSchemaResolver: FileSystemJSchemaResolver
     {
-        public FileSystemYamlJSchemaResolver(UnixPath path) : this(path.Resolve())
-        {
-        }
-
-        public FileSystemYamlJSchemaResolver(string path): this(new DirectoryInfo(path))
+        public FileSystemJsonJSchemaResolver(string path): this(new DirectoryInfo(path))
         {
         }
         
-        public FileSystemYamlJSchemaResolver(DirectoryInfo rootDirectory): base(rootDirectory)
+        public FileSystemJsonJSchemaResolver(DirectoryInfo rootDirectory): base(rootDirectory)
         {
             RootDirectory = rootDirectory;
         }
@@ -32,9 +28,7 @@ namespace Bam.Net.Application.Json
             string baseUri = reference.BaseUri.ToString(); // path to the file
 
             string filePath = Path.Combine(RootDirectory.FullName, baseUri);
-            Dictionary<object, object> schema = filePath.FromYamlFile() as Dictionary<object, object>; 
-            schema.ConvertJSchemaPropertyTypes();
-            return schema.ToJsonStream();
+            return File.OpenRead(filePath);
         }
     }
 }

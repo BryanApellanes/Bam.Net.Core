@@ -780,8 +780,6 @@ namespace Bam.Net.Incubation
             }
         }
         
-        //public void SetCtor
-
         /// <summary>
         /// Set the value to pass into the constructor when 
         /// constructing the specified type

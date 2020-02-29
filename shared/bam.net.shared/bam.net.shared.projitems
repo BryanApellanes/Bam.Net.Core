@@ -546,7 +546,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebToken.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenHeader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenSigningAlgorithm.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenStandardClaims.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\RegisteredClaimNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ApplicationServiceHostResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\Data\ServiceHostResponse.cs" />
@@ -638,10 +638,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)MetadataReferenceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemJSchemaResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemJsonJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemYamlJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JavaJSchemaManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaLoadResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaManager.cs" />
@@ -650,6 +653,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JsonJSchemaLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\NoopJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\YamlJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Org\SchemaDotOrgProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SemanticLifecycle.cs" />

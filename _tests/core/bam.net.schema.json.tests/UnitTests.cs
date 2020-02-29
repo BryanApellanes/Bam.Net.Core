@@ -18,6 +18,7 @@ namespace Bam.Net.Schema.Json.Tests
     {
         private UnixPath RootData = new UnixPath("~/_data/JsonSchema/");
         private UnixPath ApplicationSchema = new UnixPath("~/_data/JsonSchema/application_v1.yaml");
+        private UnixPath CensusSchema = new UnixPath("~/_data/JsonSchema/census_v1.yaml");
         private UnixPath CommonSchema = new UnixPath("~/_data/JsonSchema/common_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
@@ -30,8 +31,21 @@ namespace Bam.Net.Schema.Json.Tests
             logger.StartLoggingThread();
             Log.Default = logger;
             
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaManager());
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(GetJSchemaManager<JavaJSchemaManager>());
             List<JSchema> schemas = generator.LoadJSchemas(ApplicationSchema);
+            (schemas.Count > 0).IsTrue();
+        }
+        
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void CanLoadCensusSchema()
+        {
+            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
+            logger.StartLoggingThread();
+            Log.Default = logger;
+            
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(GetJSchemaManager<JavaJSchemaManager>());
+            List<JSchema> schemas = generator.LoadJSchemas(CensusSchema);
             (schemas.Count > 0).IsTrue();
         }
         
@@ -235,9 +249,24 @@ namespace Bam.Net.Schema.Json.Tests
                 JSchemas = dataPaths.Select(JSchemaLoader.LoadYamlJSchema).ToList(), 
                 SerializationFormat = SerializationFormat.Yaml,
                 JSchemaManager = GetJSchemaManager(),
+                JSchemaResolver = GetJSchemaResolver()
             };
         }
 
+        private JSchemaManager GetJSchemaManager<T>() where T : JSchemaManager, new()
+        {
+            T result = new T {JSchemaResolver = GetJSchemaResolver()};
+            return result;
+        }
+        
+        private JSchemaResolver GetJSchemaResolver()
+        {
+            return new FileSystemYamlJSchemaResolver(RootData)
+            {
+                JSchemaLoader = JSchemaLoader.ForFormat(SerializationFormat.Yaml)
+            };
+        }
+        
         private JSchemaManager GetJSchemaManager()
         {
             return new JavaJSchemaManager();

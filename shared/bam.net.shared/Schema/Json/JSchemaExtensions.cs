@@ -90,6 +90,10 @@ namespace Bam.Net.Schema.Json
                     if (int.TryParse(value, out int intValue))
                     {
                         schema[key] = intValue;
+                    } 
+                    else if (double.TryParse(value, out double doubleValue))
+                    {
+                        schema[key] = doubleValue;
                     }
                     else if (bool.TryParse(value, out bool boolValue))
                     {
