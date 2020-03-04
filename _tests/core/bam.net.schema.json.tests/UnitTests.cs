@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Bam.Net.Application.Json;
 using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
@@ -215,8 +216,13 @@ namespace Bam.Net.Schema.Json.Tests
         [TestGroup("JSchema")]
         public void CanLoadDirectory()
         {
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator();
-            generator.LoadJSchemas(new DirectoryInfo(RootData), out List<JSchemaLoadResult> loadResults);
+            JSchemaManager jSchemaManager = new JSchemaManager();
+            FileSystemJSchemaResolver.Default = new FileSystemYamlJSchemaResolver(RootData);
+            HashSet<JSchema> jSchemas = jSchemaManager.LoadJSchemas(new DirectoryInfo(RootData), out List<JSchemaLoadResult> loadResults);
+
+            StringBuilder output = new StringBuilder();
+            jSchemas.Each(s => output.AppendLine(s.Id?.ToString() ?? "null"));
+            OutLineFormat("Loaded {0} schemas:\r\n{1}", jSchemas.Count, output.ToString());
             
             OutLineFormat("Load result count {0}", ConsoleColor.Cyan, loadResults.Count);
             OutLineFormat("Load success count {0}", ConsoleColor.Green, loadResults.Count(lr => lr.Success));

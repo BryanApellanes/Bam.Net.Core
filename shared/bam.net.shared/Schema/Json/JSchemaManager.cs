@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Bam.Net.Data.Schema;
+using Bam.Net.Logging;
 using Bam.Net.Schema.Json;
+using CsQuery.ExtensionMethods.Internal;
 using Markdig.Helpers;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
@@ -14,6 +17,7 @@ namespace Bam.Net.Application.Json
         private readonly List<string> _classNameProperties;
         public JSchemaManager():this("className")
         {
+            Logger = Log.Default;
         }
 
         /// <summary>
@@ -28,6 +32,7 @@ namespace Bam.Net.Application.Json
 
         public JSchemaResolver JSchemaResolver { get; set; }
         
+        public ILogger Logger { get; set; }
         /// <summary>
         /// A function used to further parse a class name when it is found.  This is intended
         /// to apply any conventions to the name that are not enforced in the JSchema.  Parse the
@@ -198,32 +203,83 @@ namespace Bam.Net.Application.Json
             return jSchema.Properties[key];
         }
 
-        public IEnumerable<JSchema> ExtractDefinitionSchemas(JSchema jSchema)
+        public HashSet<JSchema> LoadJSchemas(string directoryPath)
         {
-            return ExtractSchemas(jSchema, "definitions");
+            return LoadJSchemas(new DirectoryInfo(directoryPath), out List<JSchemaLoadResult> loadResults);
+        }
+
+
+        public HashSet<JSchema> LoadJSchemas(DirectoryInfo directoryInfo, out List<JSchemaLoadResult> loadResults)
+        {
+            return LoadJSchemas(directoryInfo, FileSystemJSchemaResolver.Default, out loadResults);
         }
         
-        public IEnumerable<JSchema> ExtractSchemas(JSchema jSchema, string key)
+        public HashSet<JSchema> LoadJSchemas(DirectoryInfo directoryInfo, FileSystemJSchemaResolver jSchemaResolver, out List<JSchemaLoadResult> loadResults)
         {
-            if (!jSchema.ExtensionData.ContainsKey(key))
+            Args.ThrowIfNull(directoryInfo, "directoryInfo");
+            loadResults = new List<JSchemaLoadResult>();
+            
+            HashSet<JSchema> results = new HashSet<JSchema>();
+            foreach(FileInfo fileInfo in directoryInfo.GetFiles())
             {
-                yield break;
-            }
-            foreach (JToken token in jSchema.ExtensionData[key])
-            {
-                Dictionary<object, object> result= new Dictionary<object, object>();
-                result.AddMissing("$schema", "http://json-schema.org/draft-04/schema#");
-                foreach (JObject child in token.Children<JObject>())
+                JSchemaLoader loader = null;
+                if (fileInfo.Extension.Equals(".yaml", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foreach (JProperty property in child.Properties())
-                    {
-                        result.Add(property.Name, child[property.Name]);
-                    }
+                    loader = JSchemaLoader.ForFormat(SerializationFormat.Yaml);
                 }
-                result.ConvertJSchemaPropertyTypes();
-                yield return JSchema.Parse(result.ToJson(), new NoopJSchemaResolver());
+                else if (fileInfo.Extension.Equals(".json", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    loader = JSchemaLoader.ForFormat(SerializationFormat.Json);
+                }
+
+                if (loader == null)
+                {
+                    Logger.Warning("No loader for file {0}", fileInfo.FullName);
+                    continue;
+                }
+
+                loader.JSchemaResolver = jSchemaResolver;
+                try
+                {
+                    JSchema jSchema = loader.LoadSchema(fileInfo.FullName);
+                    results.Add(jSchema);
+                    results.AddRange(jSchemaResolver.Collected);
+                    loadResults.Add(new JSchemaLoadResult(fileInfo.FullName, jSchema));
+                }
+                catch (Exception ex)
+                {
+                    loadResults.Add(new JSchemaLoadResult(fileInfo.FullName, ex));
+                }
             }
+            
+            return results;
         }
+        // public IEnumerable<JSchema> ExtractDefinitionSchemas(JSchema jSchema)
+        // {
+        //     return ExtractSchemas(jSchema, "definitions");
+        // }
+        //
+        // public IEnumerable<JSchema> ExtractSchemas(JSchema jSchema, string key)
+        // {
+        //     if (!jSchema.ExtensionData.ContainsKey(key))
+        //     {
+        //         yield break;
+        //     }
+        //     foreach (JToken token in jSchema.ExtensionData[key])
+        //     {
+        //         Dictionary<object, object> result= new Dictionary<object, object>();
+        //         result.AddMissing("$schema", "http://json-schema.org/draft-04/schema#");
+        //         foreach (JObject child in token.Children<JObject>())
+        //         {
+        //             foreach (JProperty property in child.Properties())
+        //             {
+        //                 result.Add(property.Name, child[property.Name]);
+        //             }
+        //         }
+        //         result.ConvertJSchemaPropertyTypes();
+        //         yield return JSchema.Parse(result.ToJson(), new NoopJSchemaResolver());
+        //     }
+        // }
 
         public string[] GetEnumValues(JSchema enumSchema)
         {

@@ -644,6 +644,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JavaJSchemaManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaLoadResult.cs" />

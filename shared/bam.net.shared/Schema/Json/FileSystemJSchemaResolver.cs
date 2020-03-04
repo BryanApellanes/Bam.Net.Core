@@ -16,11 +16,13 @@ namespace Bam.Net.Application.Json
     {
         public FileSystemJSchemaResolver(string path): this(new DirectoryInfo(path))
         {
+            Collected = new HashSet<JSchema>();
         }
         
         public FileSystemJSchemaResolver(DirectoryInfo rootDirectory)
         {
             RootDirectory = rootDirectory;
+            Collected = new HashSet<JSchema>();
         }
         
         public static FileSystemJSchemaResolver Default { get; set; }
@@ -29,11 +31,15 @@ namespace Bam.Net.Application.Json
         
         public DirectoryInfo RootDirectory { get; set; }
         
+        public HashSet<JSchema> Collected { get; set; }
+        
         public override JSchema GetSubschema(SchemaReference reference, JSchema rootSchema)
         {
             if (JSchemaLoader != null && reference?.BaseUri != null)
             {
-                return JSchemaLoader.LoadSchema(Path.Combine(RootDirectory.FullName, reference.BaseUri.ToString()));
+                JSchema referenced = JSchemaLoader.LoadSchema(Path.Combine(RootDirectory.FullName, reference.BaseUri.ToString()));
+                Collected.Add(referenced);
+                return referenced;
             }
             if (reference?.SubschemaId == null)
             {
@@ -42,6 +48,8 @@ namespace Bam.Net.Application.Json
                     JObject jObject = rootSchema.ExtensionData[key] as JObject;
                     jObject?.ConvertJSchemaPropertyTypes();
                 }
+
+                Collected.Add(rootSchema);
                 return rootSchema;
             }
             
@@ -66,7 +74,9 @@ namespace Bam.Net.Application.Json
             }
 
             node.ConvertJSchemaPropertyTypes();
-            return JSchema.Parse(node.ToJson(), this);
+            JSchema result = JSchema.Parse(node.ToJson(), this);
+            Collected.Add(result);
+            return result;
         }
 
         private void ConvertValueTypes(Dictionary<object, object> schema)

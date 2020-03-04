@@ -139,7 +139,7 @@ namespace Bam.Net.Application.Json
                         jSchemas.Add(jSchema);
                     }
 
-                    jSchemas.AddRange(AddSubJSchemas(loadResults, jSchema));
+                    //jSchemas.AddRange(AddSubJSchemas(loadResults, jSchema));
                 }
                 catch (Exception ex)
                 {
@@ -150,32 +150,32 @@ namespace Bam.Net.Application.Json
             return jSchemas;
         }
 
-        public List<JSchema> AddSubJSchemas(List<JSchemaLoadResult> loadResults, JSchema jSchema)
-        {
-            List<JSchema> subSchemas = JSchemaManager.ExtractDefinitionSchemas(jSchema).ToList();
-            Queue<JSchema> subSchemaQueue = new Queue<JSchema>(subSchemas);
-            while (subSchemaQueue.Count > 0)
-            {
-                JSchema subSchema = subSchemaQueue.Dequeue();
-                try
-                {
-                    if (subSchema.IsObject())
-                    {
-                        subSchemas.Add(subSchema);
-                    }
-                    JSchemaManager.ExtractDefinitionSchemas(subSchema).Each(ss => subSchemaQueue.Enqueue(ss));
-                }
-                catch (Exception ex)
-                {
-                    loadResults.Add(new JSchemaLoadResult(subSchema, ex));
-                }
-            }
-
-            // ensure we have unique JSchema instances
-            HashSet<string> subSchemaJson = new HashSet<string>();
-            subSchemas.Each(s => subSchemaJson.Add(s.ToJson()));
-            return subSchemaJson.Select(JSchema.Parse).ToList();
-        }
+        // public List<JSchema> AddSubJSchemas(List<JSchemaLoadResult> loadResults, JSchema jSchema)
+        // {
+        //     List<JSchema> subSchemas = JSchemaManager.ExtractDefinitionSchemas(jSchema).ToList();
+        //     Queue<JSchema> subSchemaQueue = new Queue<JSchema>(subSchemas);
+        //     while (subSchemaQueue.Count > 0)
+        //     {
+        //         JSchema subSchema = subSchemaQueue.Dequeue();
+        //         try
+        //         {
+        //             if (subSchema.IsObject())
+        //             {
+        //                 subSchemas.Add(subSchema);
+        //             }
+        //             JSchemaManager.ExtractDefinitionSchemas(subSchema).Each(ss => subSchemaQueue.Enqueue(ss));
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             loadResults.Add(new JSchemaLoadResult(subSchema, ex));
+        //         }
+        //     }
+        //
+        //     // ensure we have unique JSchema instances
+        //     HashSet<string> subSchemaJson = new HashSet<string>();
+        //     subSchemas.Each(s => subSchemaJson.Add(s.ToJson()));
+        //     return subSchemaJson.Select(JSchema.Parse).ToList();
+        // }
         
         public JSchemaSchemaDefinition GenerateCombinedSchemaDefinition(SchemaDefinition schemaDefinition, params JSchema[] schemas)
         {
