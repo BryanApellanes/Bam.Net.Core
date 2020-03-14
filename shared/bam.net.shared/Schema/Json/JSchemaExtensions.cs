@@ -36,7 +36,7 @@ namespace Bam.Net.Schema.Json
         /// <returns></returns>
         public static bool HasTypeProperty(this JSchema jSchema)
         {
-            return HasJSchemaProperty(jSchema, "type");
+            return HasProperty(jSchema, "type");
         }
         
         public static bool HasDefinitions(this JSchema jSchema)
@@ -46,14 +46,21 @@ namespace Bam.Net.Schema.Json
 
         public static bool HasDefinitions(this JSchema jSchema, out JSchema definitions)
         {
-            bool result = HasJSchemaProperty(jSchema, "definitions", out object definitionz);
+            bool result = HasProperty(jSchema, "definitions", out object definitionz);
             definitions = (JSchema)definitionz;
             return result;
         }
         
-        public static bool HasJSchemaProperty(this JSchema jSchema, string propertyName)
+        /// <summary>
+        /// Determines if the specified JSchema has the specified property in its
+        /// ExtensionData dictionary property.
+        /// </summary>
+        /// <param name="jSchema"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public static bool HasProperty(this JSchema jSchema, string propertyName)
         {
-            return HasJSchemaProperty(jSchema, propertyName, out object ignore);
+            return HasProperty(jSchema, propertyName, out object ignore);
         }
         
         /// <summary>
@@ -64,7 +71,7 @@ namespace Bam.Net.Schema.Json
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool HasJSchemaProperty(this JSchema jSchema, string propertyName, out object value)
+        public static bool HasProperty(this JSchema jSchema, string propertyName, out object value)
         {
             bool result = (bool) (jSchema?.ExtensionData.ContainsKey(propertyName));
             value = null;

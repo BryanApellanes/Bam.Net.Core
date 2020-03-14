@@ -20,16 +20,16 @@ namespace Bam.Net.Application.Json
     {
         public JSchemaSchemaDefinitionGenerator()
         {
-            JSchemaManager = new JSchemaManager();
+            JSchemaClassManager = new JSchemaClassManager();
             DiscoveredEnums = new Dictionary<string, HashSet<string>>();
             SchemaManager = new SchemaManager();
             JSchemaLoader = JSchemaLoader.ForFormat(SerializationFormat.Json);
             Logger = Log.Default;
         }
 
-        public JSchemaSchemaDefinitionGenerator(JSchemaManager jSchemaManager) : this()
+        public JSchemaSchemaDefinitionGenerator(JSchemaClassManager jSchemaClassManager) : this()
         {
-            JSchemaManager = jSchemaManager;
+            JSchemaClassManager = jSchemaClassManager;
         }
 
         public JSchemaSchemaDefinitionGenerator(string schemaName) : this()
@@ -37,16 +37,16 @@ namespace Bam.Net.Application.Json
             SchemaManager = new SchemaManager(new SchemaDefinition(schemaName));
         }
 
-        public JSchemaSchemaDefinitionGenerator(JSchemaSchemaDefinitionGenerationSettings settings) : this(new SchemaManager(new SchemaDefinition(settings.Name)), settings.SerializationFormat, settings.JSchemaManager, settings.JSchemaResolver)
+        public JSchemaSchemaDefinitionGenerator(JSchemaSchemaDefinitionGenerationSettings settings) : this(new SchemaManager(new SchemaDefinition(settings.Name)), settings.SerializationFormat, settings.JSchemaClassManager, settings.JSchemaResolver)
         {
         }
 
-        public JSchemaSchemaDefinitionGenerator(SchemaManager schemaManager, SerializationFormat serializationFormat, JSchemaManager jSchemaManager = null, JSchemaResolver resolver = null)
+        public JSchemaSchemaDefinitionGenerator(SchemaManager schemaManager, SerializationFormat serializationFormat, JSchemaClassManager jSchemaClassManager = null, JSchemaResolver resolver = null)
         {
             SchemaManager = schemaManager;
             JSchemaLoader = JSchemaLoader.ForFormat(serializationFormat);
-            JSchemaManager = jSchemaManager ?? new JSchemaManager();
-            JSchemaManager.JSchemaResolver = resolver ?? FileSystemJSchemaResolver.Default;
+            JSchemaClassManager = jSchemaClassManager ?? new JSchemaClassManager();
+            JSchemaClassManager.JSchemaResolver = resolver ?? FileSystemJSchemaResolver.Default;
             DiscoveredEnums = new Dictionary<string, HashSet<string>>();
             Logger = Log.Default;
         }
@@ -62,7 +62,7 @@ namespace Bam.Net.Application.Json
         public ILogger Logger { get; set; }
         public SchemaManager SchemaManager { get; set; }
         public JSchemaLoader JSchemaLoader { get; set; }
-        public JSchemaManager JSchemaManager { get; set; }
+        public JSchemaClassManager JSchemaClassManager { get; set; }
 
         public Dictionary<string, HashSet<string>> DiscoveredEnums { get; set; }
 
@@ -72,7 +72,7 @@ namespace Bam.Net.Application.Json
             {
                 DiscoveredEnums.Add(enumName, new HashSet<string>());
             }
-            DiscoveredEnums[enumName].AddRange(JSchemaManager.GetEnumValues(enumProperty));
+            DiscoveredEnums[enumName].AddRange(JSchemaClassManager.GetEnumValues(enumProperty));
         }
         
         public JSchemaSchemaDefinition GenerateSchemaDefinition(string folderPathContainingJsonSchemas)
@@ -207,7 +207,7 @@ namespace Bam.Net.Application.Json
 
         public void AddJSchema(SchemaDefinition schemaDefinition, JSchema schema)
         {
-            string className = JSchemaManager.GetObjectClassName(schema);
+            string className = JSchemaClassManager.GetObjectClassName(schema);
             if (string.IsNullOrEmpty(className))
             {
                 Log.Warn("Unable to determine class name for schema: \r\n{0}", schema.ToJson(true));
@@ -215,28 +215,28 @@ namespace Bam.Net.Application.Json
             }
             SchemaManager.CurrentSchema = schemaDefinition;
 
-            string[] propertyNames = JSchemaManager.GetPropertyNames(schema);
+            string[] propertyNames = JSchemaClassManager.GetPropertyNames(schema);
             SchemaManager.AddTable(className);
             propertyNames.Each(pn => SchemaManager.AddColumn(className, pn));
                 
-            string[] objectPropertyNames = JSchemaManager.GetObjectPropertyNames(schema);
+            string[] objectPropertyNames = JSchemaClassManager.GetObjectPropertyNames(schema);
             foreach (string objectPropertyName in objectPropertyNames)
             {
-                JSchema propertySchema = JSchemaManager.GetPropertySchema(schema, objectPropertyName);
+                JSchema propertySchema = JSchemaClassManager.GetPropertySchema(schema, objectPropertyName);
                 AddJSchema(schemaDefinition, propertySchema);
             }
 
-            Dictionary<string, JSchema> enumProperties = JSchemaManager.GetEnumProperties(schema);
+            Dictionary<string, JSchema> enumProperties = JSchemaClassManager.GetEnumProperties(schema);
             foreach (string enumPropertyName in enumProperties.Keys)
             {
                 AddEnum(enumPropertyName.PascalCase(), enumProperties[enumPropertyName]);
             }
             
-            string[] arrayPropertyNames = JSchemaManager.GetArrayPropertyNames(schema);
+            string[] arrayPropertyNames = JSchemaClassManager.GetArrayPropertyNames(schema);
             foreach (string arrayPropertyName in arrayPropertyNames)
             {
-                JSchema arrayPropertySchema = JSchemaManager.GetPropertySchema(schema, arrayPropertyName);
-                JSchema arrayItemSchema = JSchemaManager.GetArrayItemSchema(arrayPropertySchema);
+                JSchema arrayPropertySchema = JSchemaClassManager.GetPropertySchema(schema, arrayPropertyName);
+                JSchema arrayItemSchema = JSchemaClassManager.GetArrayItemSchema(arrayPropertySchema);
                 if (arrayItemSchema.IsObject())
                 {
                     AddJSchema(schemaDefinition, arrayItemSchema);
@@ -257,9 +257,9 @@ namespace Bam.Net.Application.Json
         public static JSchemaSchemaDefinitionGenerator Create(JSchemaSchemaDefinitionGenerationSettings settings)
         {
             SchemaManager schemaManager = new SchemaManager(new SchemaDefinition(settings.Name));
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(schemaManager, settings.SerializationFormat, settings.JSchemaManager, settings.JSchemaResolver)
+            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(schemaManager, settings.SerializationFormat, settings.JSchemaClassManager, settings.JSchemaResolver)
             {
-                JSchemaManager = settings.JSchemaManager
+                JSchemaClassManager = settings.JSchemaClassManager
             };
             return generator;
         }
@@ -270,17 +270,17 @@ namespace Bam.Net.Application.Json
         /// <param name="jSchemaFilePath">The path to the json schema</param>
         /// <param name="serializationFormat">The format that the json schema is in; either yaml or json</param>
         /// <returns></returns>
-        public static JSchemaSchemaDefinition GenerateSchemaDefinition(string jSchemaFilePath, SerializationFormat serializationFormat, JSchemaManager jSchemaManager = null)
+        public static JSchemaSchemaDefinition GenerateSchemaDefinition(string jSchemaFilePath, SerializationFormat serializationFormat, JSchemaClassManager jSchemaClassManager = null)
         {
             JSchema jSchema = JSchemaLoader.LoadJSchema(jSchemaFilePath, serializationFormat);
-            return GenerateSchemaDefinition(jSchema, serializationFormat, jSchemaManager);
+            return GenerateSchemaDefinition(jSchema, serializationFormat, jSchemaClassManager);
         }
 
-        public static JSchemaSchemaDefinition GenerateSchemaDefinition(JSchema jSchema, SerializationFormat serializationFormat, JSchemaManager jSchemaNameProvider)
+        public static JSchemaSchemaDefinition GenerateSchemaDefinition(JSchema jSchema, SerializationFormat serializationFormat, JSchemaClassManager jSchemaClassNameProvider)
         {
             JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new SchemaManager(), serializationFormat)
             {
-                JSchemaManager = jSchemaNameProvider
+                JSchemaClassManager = jSchemaClassNameProvider
             };
             return generator.GenerateSchemaDefinition(jSchema);
         }

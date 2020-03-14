@@ -6,11 +6,11 @@ using GraphQL.Types;
 
 namespace Bam.Net.Schema.Json
 {
-    public class JavaJSchemaManager : JSchemaManager
+    public class JavaJSchemaClassManager : JSchemaClassManager
     {
         private List<string> _truncations;
 
-        public JavaJSchemaManager() : base("@type", "title", "javaType")
+        public JavaJSchemaClassManager() : base("@type", "title", "javaType")
         {            
             _truncations = new List<string>()
             {
@@ -19,7 +19,7 @@ namespace Bam.Net.Schema.Json
                 "_v1",
                 "_v1.yaml"
             };
-            ParseClassNameFunction = cn =>
+            MungeClassName = cn =>
             {
                 string className = cn.DelimitSplit(".").Last();
                 foreach (string truncation in _truncations)
@@ -32,7 +32,7 @@ namespace Bam.Net.Schema.Json
 
                 return className;
             };
-            ParsePropertyNameFunction = pn => pn.PascalCase();
+            ParsePropertyName = pn => pn.PascalCase();
             ExtractClassName = jSchema =>
             {
                 if (!string.IsNullOrEmpty(jSchema?.Title))

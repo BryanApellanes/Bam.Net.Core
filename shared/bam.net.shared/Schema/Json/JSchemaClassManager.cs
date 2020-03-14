@@ -12,11 +12,13 @@ using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Application.Json
 {
-    public class JSchemaManager : IJSchemaManager
+    public class JSchemaClassManager : IJSchemaClassManager
     {
         private readonly List<string> _classNameProperties;
-        public JSchemaManager():this("className")
+
+        public JSchemaClassManager(JSchemaResolver jSchemaResolver):this("className")
         {
+            JSchemaResolver = jSchemaResolver;
             Logger = Log.Default;
         }
 
@@ -25,12 +27,38 @@ namespace Bam.Net.Application.Json
         /// </summary>
         /// <param name="classNameProperties">The property names to look for the class name in.  JsonSchema doesn't specify where or how to declare
         /// the strongly typed name for a given schema, so we must specify that as part of our custom/proprietary implementation.</param>
-        public JSchemaManager(params string[] classNameProperties)
+        public JSchemaClassManager(params string[] classNameProperties)
         {
+            JSchemaNameParser = new JSchemaNameParser();
             _classNameProperties = new List<string>(classNameProperties);
+            Func<JSchema, string> defaultClassNameExtractor = JSchemaNameParser.ExtractClassName;
+            JSchemaNameParser.ExtractClassName = jSchema =>
+            {
+                string defaultClassName = defaultClassNameExtractor(jSchema);
+                string fromClassNameProperties = ExtractClassNameFromClassNameProperties(jSchema);
+                if (!defaultClassName.Equals(fromClassNameProperties))
+                {
+                    return fromClassNameProperties;
+                }
+
+                return defaultClassName;
+            };
         }
 
+        protected string ExtractClassNameFromClassNameProperties(JSchema jSchema)
+        {
+            foreach (string tableNameProperty in _classNameProperties)
+            {
+                if (jSchema.HasProperty(tableNameProperty, out object value))
+                {
+                    return MungeClassName == null ? value.ToString(): MungeClassName(value.ToString());
+                }
+            }
+
+            return string.Empty;
+        }
         public JSchemaResolver JSchemaResolver { get; set; }
+        public JSchemaNameParser JSchemaNameParser { get; set; }
         
         public ILogger Logger { get; set; }
         /// <summary>
@@ -38,17 +66,36 @@ namespace Bam.Net.Application.Json
         /// to apply any conventions to the name that are not enforced in the JSchema.  Parse the
         /// inbound string and return an appropriate class name based on it.
         /// </summary>
-        public Func<string, string> ParseClassNameFunction { get; set; }
-        
-        public Func<JSchema, string> ExtractClassName { get; set; }
-        
-        public Func<JSchema, string> ExtractEnumName { get; set; }
+        public Func<string, string> MungeClassName
+        {
+            get => JSchemaNameParser.MungeClassName;
+            set => JSchemaNameParser.MungeClassName = value;
+        }
+
+
+        public Func<JSchema, string> ExtractClassName
+        {
+            get => JSchemaNameParser.ExtractClassName;
+            set => JSchemaNameParser.ExtractClassName = value;
+        }
+
+        public Func<string, string> MungeEnumName
+        {
+            get => JSchemaNameParser.MungeEnumName;
+            set => JSchemaNameParser.MungeEnumName = value;
+        }
+
         /// <summary>
         /// A function used to further parse a property name when it is found.  This is intended to
         /// apply any conventions to the name that are not enforced in the JSchema.  Parse the
         /// inbound string and return an appropriate property name based on it.
         /// </summary>
-        public Func<string, string> ParsePropertyNameFunction { get; set; }
+        public Func<string, string> ParsePropertyName
+        {
+            get => JSchemaNameParser.ParsePropertyName;
+            set => JSchemaNameParser.ParsePropertyName = value;
+        }
+        
         public virtual string GetObjectClassName(JSchema jSchema)
         {
             Args.ThrowIfNull(jSchema, nameof(jSchema));
@@ -61,9 +108,9 @@ namespace Bam.Net.Application.Json
             
             foreach (string tableNameProperty in _classNameProperties)
             {
-                if (jSchema.HasJSchemaProperty(tableNameProperty, out object value))
+                if (jSchema.HasProperty(tableNameProperty, out object value))
                 {
-                    return ParseClassNameFunction == null ? value.ToString(): ParseClassNameFunction(value.ToString());
+                    return MungeClassName == null ? value.ToString(): MungeClassName(value.ToString());
                 }
             }
             
@@ -129,9 +176,9 @@ namespace Bam.Net.Application.Json
             results.AddRange(GetPrimitivePropertyNames(jSchema));
             results.AddRange(GetObjectPropertyNames(jSchema).Select(op=> $"{op}Id")); // objects are referenced by id
             
-            if (ParsePropertyNameFunction != null)
+            if (ParsePropertyName != null)
             {
-                return results.Select(ParsePropertyNameFunction).ToArray();
+                return results.Select(ParsePropertyName).ToArray();
             }
             return results.ToArray();
         }
@@ -203,34 +250,32 @@ namespace Bam.Net.Application.Json
             return jSchema.Properties[key];
         }
 
-        public HashSet<JSchema> LoadJSchemas(string directoryPath)
+
+        public JSchemaClass LoadJSchemaClass(string filePath)
         {
-            return LoadJSchemas(new DirectoryInfo(directoryPath), out List<JSchemaLoadResult> loadResults);
+            JSchemaLoader loader = GetJSchemaLoader(new FileInfo(filePath));
+            if (loader == null)
+            {
+                string msgFormat = "No loader for file {0}";
+                Logger.Warning(msgFormat, filePath);
+                return new JSchemaClass(this, string.Format(msgFormat, filePath));
+            }
+            
+            loader.JSchemaResolver = JSchemaResolver;
+            JSchema result = loader.LoadSchema(filePath);
+            JSchemaClass resultClass = new JSchemaClass(result, this);
+            return resultClass;
         }
 
-
-        public HashSet<JSchema> LoadJSchemas(DirectoryInfo directoryInfo, out List<JSchemaLoadResult> loadResults)
-        {
-            return LoadJSchemas(directoryInfo, FileSystemJSchemaResolver.Default, out loadResults);
-        }
-        
-        public HashSet<JSchema> LoadJSchemas(DirectoryInfo directoryInfo, FileSystemJSchemaResolver jSchemaResolver, out List<JSchemaLoadResult> loadResults)
+        public HashSet<JSchema> LoadJSchemas(DirectoryInfo directoryInfo, JSchemaResolver jSchemaResolver, out List<JSchemaLoadResult> loadResults)
         {
             Args.ThrowIfNull(directoryInfo, "directoryInfo");
             loadResults = new List<JSchemaLoadResult>();
-            
+
             HashSet<JSchema> results = new HashSet<JSchema>();
-            foreach(FileInfo fileInfo in directoryInfo.GetFiles())
+            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
             {
-                JSchemaLoader loader = null;
-                if (fileInfo.Extension.Equals(".yaml", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    loader = JSchemaLoader.ForFormat(SerializationFormat.Yaml);
-                }
-                else if (fileInfo.Extension.Equals(".json", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    loader = JSchemaLoader.ForFormat(SerializationFormat.Json);
-                }
+                JSchemaLoader loader = GetJSchemaLoader(fileInfo);
 
                 if (loader == null)
                 {
@@ -243,7 +288,6 @@ namespace Bam.Net.Application.Json
                 {
                     JSchema jSchema = loader.LoadSchema(fileInfo.FullName);
                     results.Add(jSchema);
-                    results.AddRange(jSchemaResolver.Collected);
                     loadResults.Add(new JSchemaLoadResult(fileInfo.FullName, jSchema));
                 }
                 catch (Exception ex)
@@ -251,35 +295,24 @@ namespace Bam.Net.Application.Json
                     loadResults.Add(new JSchemaLoadResult(fileInfo.FullName, ex));
                 }
             }
-            
+
             return results;
         }
-        // public IEnumerable<JSchema> ExtractDefinitionSchemas(JSchema jSchema)
-        // {
-        //     return ExtractSchemas(jSchema, "definitions");
-        // }
-        //
-        // public IEnumerable<JSchema> ExtractSchemas(JSchema jSchema, string key)
-        // {
-        //     if (!jSchema.ExtensionData.ContainsKey(key))
-        //     {
-        //         yield break;
-        //     }
-        //     foreach (JToken token in jSchema.ExtensionData[key])
-        //     {
-        //         Dictionary<object, object> result= new Dictionary<object, object>();
-        //         result.AddMissing("$schema", "http://json-schema.org/draft-04/schema#");
-        //         foreach (JObject child in token.Children<JObject>())
-        //         {
-        //             foreach (JProperty property in child.Properties())
-        //             {
-        //                 result.Add(property.Name, child[property.Name]);
-        //             }
-        //         }
-        //         result.ConvertJSchemaPropertyTypes();
-        //         yield return JSchema.Parse(result.ToJson(), new NoopJSchemaResolver());
-        //     }
-        // }
+
+        private static JSchemaLoader GetJSchemaLoader(FileInfo fileInfo)
+        {
+            JSchemaLoader loader = null;
+            if (fileInfo.Extension.Equals(".yaml", StringComparison.InvariantCultureIgnoreCase))
+            {
+                loader = JSchemaLoader.ForFormat(SerializationFormat.Yaml);
+            }
+            else if (fileInfo.Extension.Equals(".json", StringComparison.InvariantCultureIgnoreCase))
+            {
+                loader = JSchemaLoader.ForFormat(SerializationFormat.Json);
+            }
+
+            return loader;
+        }
 
         public string[] GetEnumValues(JSchema enumSchema)
         {
@@ -290,16 +323,6 @@ namespace Bam.Net.Application.Json
             }
 
             return values.ToArray();
-        }
-
-        public string GetEnumName(JSchema enumDefinition)
-        {
-            if (ExtractEnumName != null)
-            {
-                return ExtractEnumName(enumDefinition);
-            }
-
-            return string.Empty;
         }
 
         public Dictionary<string, JSchema> GetEnumProperties(JSchema jSchema)

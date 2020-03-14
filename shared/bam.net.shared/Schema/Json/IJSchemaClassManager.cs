@@ -4,7 +4,7 @@ using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Application.Json
 {
-    public interface IJSchemaManager
+    public interface IJSchemaClassManager
     {
         string[] GetObjectPropertyNames(JSchema jSchema);
         JSchema GetArrayItemSchema(JSchema jSchema);

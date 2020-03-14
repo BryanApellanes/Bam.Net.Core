@@ -36,13 +36,7 @@ namespace Bam.Net
             Process = process;
         }
 
-        public int WriteQueueCount
-        {
-            get
-            {
-                return _processQueue.Count;
-            }
-        }
+        public int WriteQueueCount => _processQueue.Count;
 
         readonly ConcurrentQueue<T> _processQueue = new ConcurrentQueue<T>();
         readonly object _procLock = new object();
