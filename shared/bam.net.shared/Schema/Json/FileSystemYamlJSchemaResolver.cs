@@ -34,6 +34,7 @@ namespace Bam.Net.Application.Json
             string filePath = Path.Combine(RootDirectory.FullName, baseUri);
             Dictionary<object, object> schema = filePath.FromYamlFile() as Dictionary<object, object>; 
             schema.ConvertJSchemaPropertyTypes();
+            
             return schema.ToJsonStream();
         }
     }

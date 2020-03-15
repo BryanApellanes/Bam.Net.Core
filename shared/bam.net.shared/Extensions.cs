@@ -3744,8 +3744,7 @@ namespace Bam.Net
         /// <param name="objectsToStringify">The objects</param>
         /// <param name="toDelimiteder">The ToDelimitedDelegate used to represent each object</param>
         /// <returns>string</returns>
-        public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder,
-            string delimiter)
+        public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder, string delimiter)
         {
             return string.Join(delimiter, objectsToStringify.Select(v => toDelimiteder(v)).ToArray());
         }

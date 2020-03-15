@@ -22,8 +22,8 @@ namespace Bam.Net.Schema.Json
         }
         
         public SerializationFormat Format { get; protected set; }
-        
-        object loadLock = new object();
+
+        readonly object loadLock = new object();
         public override JSchema LoadSchema(string filePath)
         {
             if (!_fileSchemas.ContainsKey(filePath))
@@ -33,10 +33,15 @@ namespace Bam.Net.Schema.Json
                     FileInfo fileInfo = new FileInfo(filePath);
                     Dictionary<object, object> schemaAsDictionary = filePath.FromYamlFile() as Dictionary<object, object>;
                     schemaAsDictionary.ConvertJSchemaPropertyTypes();
-                    JSchemaResolver resolver = new FileSystemYamlJSchemaResolver(fileInfo.Directory.FullName)
+                    if (JSchemaResolver is FileSystemJSchemaResolver fileSystemJSchemaResolver)
+                    {
+                        fileSystemJSchemaResolver.JSchemaLoader = this;
+                    }
+                    JSchemaResolver resolver = JSchemaResolver ?? new FileSystemYamlJSchemaResolver(fileInfo.Directory.FullName)
                     {
                         JSchemaLoader = this
                     };
+                    
                     _fileSchemas.Add(filePath, JSchema.Parse(schemaAsDictionary.ToJson(), resolver));
                 }
             }

@@ -74,11 +74,76 @@ namespace Bam.Net.Application.Json
             }
 
             node.ConvertJSchemaPropertyTypes();
+            string refValue = string.Empty;
+            if (node["$ref"] != null)
+            {
+                refValue = node["$ref"].ToString();
+            }
+            else if (node["type"] != null)
+            {
+                JSchemaType type = Enum.Parse<JSchemaType>(node["type"].ToString(), true);
+                if (type == JSchemaType.Array)
+                {
+                    if (node["items"]?["$ref"] != null)
+                    {
+                        refValue = node["items"]["$ref"].ToString();
+                    }
+                }
+                else if (type == JSchemaType.Object)
+                {
+                    node = ResolveRefs(node, reference, rootSchema);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(refValue))
+            {
+                SchemaReference schemaReference = CreateSchemaReference(reference, refValue);
+
+                return GetSubschema(schemaReference, rootSchema);
+            }
+            
             JSchema result = JSchema.Parse(node.ToJson(), this);
             Collected.Add(result);
             return result;
         }
 
+        private static SchemaReference CreateSchemaReference(SchemaReference rootReference, string refValue)
+        {
+            SchemaReference schemaReference = new SchemaReference();
+            if (refValue.StartsWith("#"))
+            {
+                schemaReference.BaseUri = rootReference.BaseUri;
+                schemaReference.SubschemaId = new Uri(refValue, UriKind.Relative);
+            }
+            else
+            {
+                string[] split = refValue.DelimitSplit("#");
+                if (split.Length == 2)
+                {
+                    schemaReference.BaseUri = new Uri(split[0], UriKind.Relative);
+                    schemaReference.SubschemaId = new Uri(split[1], UriKind.Relative);
+                }
+            }
+
+            return schemaReference;
+        }
+
+        private JObject ResolveRefs(JObject node, SchemaReference rootReference, JSchema rootSchema)
+        {
+            JObject result = JObject.Parse(node.ToString());
+            foreach (JProperty property in ((JObject) node["properties"]).Properties())
+            {
+                if (property.Value["$ref"] != null)
+                {
+                    SchemaReference subRef = CreateSchemaReference(rootReference, property.Value["$ref"].ToString());
+                    JSchema jSchema = GetSubschema(subRef, rootSchema);
+                    result["properties"][property.Name] = JObject.Parse(jSchema.ToString());
+                }
+            }
+
+            return result;
+        }
+        
         private void ConvertValueTypes(Dictionary<object, object> schema)
         {
             schema.Keys.BackwardsEach(key =>

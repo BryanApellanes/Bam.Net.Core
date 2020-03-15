@@ -12,9 +12,10 @@ using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Application.Json
 {
-    public class JSchemaClassManager : IJSchemaClassManager
+    public class JSchemaClassManager 
     {
         private readonly List<string> _classNameProperties;
+        private readonly Dictionary<string, Func<string, string>> _classNamePropertyMungers;
 
         public JSchemaClassManager(JSchemaResolver jSchemaResolver):this("className")
         {
@@ -31,32 +32,38 @@ namespace Bam.Net.Application.Json
         {
             JSchemaNameParser = new JSchemaNameParser();
             _classNameProperties = new List<string>(classNameProperties);
-            Func<JSchema, string> defaultClassNameExtractor = JSchemaNameParser.ExtractClassName;
-            JSchemaNameParser.ExtractClassName = jSchema =>
-            {
-                string defaultClassName = defaultClassNameExtractor(jSchema);
-                string fromClassNameProperties = ExtractClassNameFromClassNameProperties(jSchema);
-                if (!defaultClassName.Equals(fromClassNameProperties))
-                {
-                    return fromClassNameProperties;
-                }
-
-                return defaultClassName;
-            };
+            _classNamePropertyMungers = new Dictionary<string, Func<string, string>>();
+            SetClassNameExtractor();
         }
 
+        public JSchemaClassManager(Dictionary<string, Func<string, string>> classNamePropertyMungers)
+        {
+            JSchemaNameParser = new JSchemaNameParser();
+            _classNameProperties = new List<string>(classNamePropertyMungers.Keys.ToArray());
+            _classNamePropertyMungers = classNamePropertyMungers;
+            SetClassNameExtractor();
+        }
+        
         protected string ExtractClassNameFromClassNameProperties(JSchema jSchema)
         {
-            foreach (string tableNameProperty in _classNameProperties)
+            foreach (string classNameProperty in _classNameProperties)
             {
-                if (jSchema.HasProperty(tableNameProperty, out object value))
+                if (jSchema.HasProperty(classNameProperty, out object value))
                 {
-                    return MungeClassName == null ? value.ToString(): MungeClassName(value.ToString());
+                    if (_classNamePropertyMungers.ContainsKey(classNameProperty))
+                    {
+                        return _classNamePropertyMungers[classNameProperty](value.ToString());
+                    }
+                    else
+                    {
+                        return MungeClassName == null ? value.ToString(): MungeClassName(value.ToString());
+                    }
                 }
             }
 
             return string.Empty;
         }
+        
         public JSchemaResolver JSchemaResolver { get; set; }
         public JSchemaNameParser JSchemaNameParser { get; set; }
         
@@ -72,11 +79,16 @@ namespace Bam.Net.Application.Json
             set => JSchemaNameParser.MungeClassName = value;
         }
 
-
-        public Func<JSchema, string> ExtractClassName
+        public Func<JSchema, string> ExtractJSchemaClassName
         {
-            get => JSchemaNameParser.ExtractClassName;
-            set => JSchemaNameParser.ExtractClassName = value;
+            get => JSchemaNameParser.ExtractJSchemaClassName;
+            set => JSchemaNameParser.ExtractJSchemaClassName = value;
+        }
+
+        public Func<JObject, string> ExtractJObjectClassName
+        {
+            get => JSchemaNameParser.ExtractJObjectClassName;
+            set => JSchemaNameParser.ExtractJObjectClassName = value;
         }
 
         public Func<string, string> MungeEnumName
@@ -95,208 +107,100 @@ namespace Bam.Net.Application.Json
             get => JSchemaNameParser.ParsePropertyName;
             set => JSchemaNameParser.ParsePropertyName = value;
         }
-        
-        public virtual string GetObjectClassName(JSchema jSchema)
+
+        public JSchemaClassManager SetClassNameMunger(string classNameProperty, Func<string, string> munger)
         {
-            Args.ThrowIfNull(jSchema, nameof(jSchema));
-            string schemaType = jSchema.Type?.ToString() ?? "object"; // if no type is specified try to parse the class name properties
-            
-            if (!schemaType.Equals("object", StringComparison.InvariantCultureIgnoreCase))
+            if (_classNamePropertyMungers.ContainsKey(classNameProperty))
             {
-                Args.Throw<InvalidOperationException>("Specified JSchema not an object: Actual type is ({0})", schemaType);
+                Logger.Warning("Replacing class name munger for class name property :{0}", classNameProperty);
+                _classNamePropertyMungers[classNameProperty] = munger;
             }
-            
-            foreach (string tableNameProperty in _classNameProperties)
+            else
             {
-                if (jSchema.HasProperty(tableNameProperty, out object value))
+                _classNamePropertyMungers.Add(classNameProperty, munger);
+            }
+
+            return this;
+        }
+        
+        public HashSet<JSchemaClass> LoadJSchemaClasses(string directoryPath)
+        {
+            return LoadJSchemaClasses(new DirectoryInfo(directoryPath));
+        }
+        
+        public HashSet<JSchemaClass> LoadJSchemaClasses(DirectoryInfo directoryInfo)
+        {
+            HashSet<JSchemaClass> results = new HashSet<JSchemaClass>();
+            foreach (JSchemaClass jSchemaClass in LoadJSchemaClassFiles(directoryInfo))
+            {
+                if (!jSchemaClass.Properties.Any())
                 {
-                    return MungeClassName == null ? value.ToString(): MungeClassName(value.ToString());
-                }
-            }
-            
-            string className = string.Empty;
-            if (ExtractClassName != null)
-            {
-                className = ExtractClassName(jSchema);
-            }
-            
-            return className;
-        }
-
-        /// <summary>
-        /// Get the JSchema for the item definition of the specified array JSchema.
-        /// </summary>
-        /// <param name="jSchema"></param>
-        /// <returns></returns>
-        public JSchema GetArrayItemSchema(JSchema jSchema)
-        {
-            Args.ThrowIfNull(jSchema, nameof(jSchema));
-            Args.ThrowIfNull(jSchema.Type, nameof(jSchema.Type));
-            string schemaType = jSchema.Type.ToString();
-
-            if (!schemaType.Equals("array", StringComparison.InvariantCultureIgnoreCase))
-            {
-                Args.Throw<InvalidOperationException>("Specified JSchema not an array: Actual type is ({0})", schemaType);
-            }
-
-            return jSchema.Items.FirstOrDefault();
-        }
-        
-        public string GetArrayClassName(JSchema jSchema)
-        {
-            JSchema arraySchema = GetArrayItemSchema(jSchema);
-            if (arraySchema == null)
-            {
-                Args.Throw<ArgumentNullException>("The items property of the specified array schema was null: \r\n{0}", jSchema);
-            }
-
-            return GetObjectClassName(arraySchema);
-        }
-
-        public string[] GetAllClassNames(JSchema jSchema)
-        {
-            HashSet<string> tableNames = new HashSet<string> {GetObjectClassName(jSchema)};
-
-            foreach (string objectPropertyName in GetObjectPropertyNames(jSchema))
-            {
-                tableNames.Add(GetPropertyClassName(jSchema, objectPropertyName));
-            }
-            return tableNames.ToArray();
-        }
-
-        public string[] GetPropertyColumnNames(JSchema jSchema, string propertyName)
-        {
-            JSchema propertySchema = GetPropertySchema(jSchema, propertyName);
-            return GetPropertyNames(propertySchema);
-        }
-
-        public string[] GetPropertyNames(JSchema jSchema)
-        {
-            List<string> results = new List<string>();
-            results.AddRange(GetPrimitivePropertyNames(jSchema));
-            results.AddRange(GetObjectPropertyNames(jSchema).Select(op=> $"{op}Id")); // objects are referenced by id
-            
-            if (ParsePropertyName != null)
-            {
-                return results.Select(ParsePropertyName).ToArray();
-            }
-            return results.ToArray();
-        }
-
-        private object _schemaNameMapLock = new object();
-
-        protected HashSet<string> PrimitiveTypes
-        {
-            get { return new HashSet<string>(new[] {"number", "string", "boolean"}); }
-        }
-        
-        public string[] GetPrimitivePropertyNames(JSchema jSchema)
-        {
-            HashSet<string> primitiveTypes = PrimitiveTypes;
-            List<string> propertyNames = new List<string>();
-            foreach (string propertyName in jSchema.Properties.Keys)
-            {
-                JSchema property = jSchema.Properties[propertyName];
-
-                if (primitiveTypes.Contains(property.Type.ToString().ToLowerInvariant()))
-                {
-                    propertyNames.Add(propertyName.PascalCase());
-                }
-            }
-
-            return propertyNames.ToArray();
-        }
-
-        /// <summary>
-        /// Get the names of the properties that are of type object.
-        /// </summary>
-        /// <param name="jSchema"></param>
-        /// <returns></returns>
-        public string[] GetObjectPropertyNames(JSchema jSchema)
-        {
-            return GetPropertyNamesOfType(jSchema, "object");
-        }
-
-        public string[] GetArrayPropertyNames(JSchema jSchema)
-        {
-            return GetPropertyNamesOfType(jSchema, "array");
-        }
-
-        public string GetArrayPropertyClassName(JSchema jSchema, string propertyName)
-        {
-            JSchema propertySchema = GetPropertySchema(jSchema, propertyName);
-            return GetArrayClassName(propertySchema);
-        }
-
-        public string GetPropertyClassName(JSchema rootSchema, string propertyName)
-        {
-            JSchema propertySchema = GetPropertySchema(rootSchema, propertyName);
-            return GetObjectClassName(propertySchema);
-        }
-        
-        public JSchema GetPropertySchema(JSchema jSchema, string propertyName)
-        {
-            Args.ThrowIfNullOrEmpty(propertyName, nameof(propertyName));
-            string key = propertyName;
-            if (!jSchema.Properties.ContainsKey(key) && IsAlphaUpper(propertyName[0]))
-            {
-                key = propertyName.CamelCase();
-            }
-
-            if (!jSchema.Properties.ContainsKey(key))
-            {
-                Args.Throw<InvalidOperationException>("Specified property not found in specified schema: {0}\r\n{1}", key, jSchema.ToString());
-            }
-            return jSchema.Properties[key];
-        }
-
-
-        public JSchemaClass LoadJSchemaClass(string filePath)
-        {
-            JSchemaLoader loader = GetJSchemaLoader(new FileInfo(filePath));
-            if (loader == null)
-            {
-                string msgFormat = "No loader for file {0}";
-                Logger.Warning(msgFormat, filePath);
-                return new JSchemaClass(this, string.Format(msgFormat, filePath));
-            }
-            
-            loader.JSchemaResolver = JSchemaResolver;
-            JSchema result = loader.LoadSchema(filePath);
-            JSchemaClass resultClass = new JSchemaClass(result, this);
-            return resultClass;
-        }
-
-        public HashSet<JSchema> LoadJSchemas(DirectoryInfo directoryInfo, JSchemaResolver jSchemaResolver, out List<JSchemaLoadResult> loadResults)
-        {
-            Args.ThrowIfNull(directoryInfo, "directoryInfo");
-            loadResults = new List<JSchemaLoadResult>();
-
-            HashSet<JSchema> results = new HashSet<JSchema>();
-            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
-            {
-                JSchemaLoader loader = GetJSchemaLoader(fileInfo);
-
-                if (loader == null)
-                {
-                    Logger.Warning("No loader for file {0}", fileInfo.FullName);
                     continue;
                 }
+                results.Add(jSchemaClass);
+                foreach (JSchemaProperty property in jSchemaClass.Properties)
+                {
+                    if (property.ClassOfArrayItems != null)
+                    {
+                        JSchemaClass classOfArrayItems = property.ClassOfArrayItems;
+                        if (classOfArrayItems.Properties.Any())
+                        {
+                            if (string.IsNullOrEmpty(classOfArrayItems.ClassName))
+                            {
+                                classOfArrayItems.ClassName = property.PropertyName;
+                            }
+                            results.Add(classOfArrayItems);
+                        }
+                    }
 
-                loader.JSchemaResolver = jSchemaResolver;
-                try
-                {
-                    JSchema jSchema = loader.LoadSchema(fileInfo.FullName);
-                    results.Add(jSchema);
-                    loadResults.Add(new JSchemaLoadResult(fileInfo.FullName, jSchema));
-                }
-                catch (Exception ex)
-                {
-                    loadResults.Add(new JSchemaLoadResult(fileInfo.FullName, ex));
+                    if (property.ClassOfProperty != null)
+                    {
+                        JSchemaClass classOfProperty = property.ClassOfProperty;
+                        if (classOfProperty.Properties.Any())
+                        {
+                            if (string.IsNullOrEmpty(classOfProperty.ClassName))
+                            {
+                                classOfProperty.ClassName = property.PropertyName;
+                            }
+                            results.Add(classOfProperty);
+                        }
+                    }
                 }
             }
 
             return results;
+        }
+        
+        public IEnumerable<JSchemaClass> LoadJSchemaClassFiles(DirectoryInfo directoryInfo)
+        {
+            Args.ThrowIfNull(directoryInfo, "directoryInfo");
+
+            foreach (FileInfo fileInfo in directoryInfo.GetFiles())
+            {
+                yield return LoadJSchemaClassFile(fileInfo);
+            }
+        }
+        
+        public JSchemaClass LoadJSchemaClassFile(string filePath)
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+            return LoadJSchemaClassFile(fileInfo);
+        }
+
+        public JSchemaClass LoadJSchemaClassFile(FileInfo fileInfo)
+        {
+            JSchemaLoader loader = GetJSchemaLoader(fileInfo);
+            if (loader == null)
+            {
+                string msgFormat = "No loader for file {0}";
+                Logger.Warning(msgFormat, fileInfo.FullName);
+                return new JSchemaClass(this, string.Format(msgFormat, fileInfo.FullName));
+            }
+
+            loader.JSchemaResolver = JSchemaResolver;
+            JSchema result = loader.LoadSchema(fileInfo.FullName);
+            JSchemaClass resultClass = new JSchemaClass(result, this, fileInfo.FullName);
+            return resultClass;
         }
 
         private static JSchemaLoader GetJSchemaLoader(FileInfo fileInfo)
@@ -313,52 +217,21 @@ namespace Bam.Net.Application.Json
 
             return loader;
         }
-
-        public string[] GetEnumValues(JSchema enumSchema)
+        
+        private void SetClassNameExtractor()
         {
-            List<string> values = new List<string>();
-            foreach (JValue val in enumSchema.Enum)
+            Func<JSchema, string> defaultClassNameExtractor = JSchemaNameParser.ExtractJSchemaClassName;
+            JSchemaNameParser.ExtractJSchemaClassName = jSchema =>
             {
-                values.Add(val.Value?.ToString());
-            }
-
-            return values.ToArray();
-        }
-
-        public Dictionary<string, JSchema> GetEnumProperties(JSchema jSchema)
-        {
-            Dictionary<string, JSchema> enumProperties = new Dictionary<string, JSchema>();
-            foreach (string propertyName in jSchema.Properties.Keys)
-            {
-                JSchema property = jSchema.Properties[propertyName];
-                if (property.Enum.Count > 0)
+                string defaultClassName = defaultClassNameExtractor(jSchema);
+                string fromClassNameProperties = ExtractClassNameFromClassNameProperties(jSchema);
+                if (!defaultClassName.Equals(fromClassNameProperties))
                 {
-                    enumProperties.Add(propertyName, property);
+                    return fromClassNameProperties;
                 }
-            }
 
-            return enumProperties;
-        }
-        
-        
-        protected string[] GetPropertyNamesOfType(JSchema jSchema, string typeName)
-        {
-            List<string> propertyNames = new List<string>();
-            foreach(string propertyName in jSchema.Properties.Keys)
-            {
-                JSchema property = jSchema.Properties[propertyName];
-                if (property.Type.ToString().Equals(typeName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    propertyNames.Add(propertyName);
-                }
-            }
-
-            return propertyNames.ToArray();
-        }
-        
-        private static bool IsAlphaUpper(char c)
-        {
-            return c >= 'A' && c <= 'Z';
+                return defaultClassName;
+            };
         }
     }
 }

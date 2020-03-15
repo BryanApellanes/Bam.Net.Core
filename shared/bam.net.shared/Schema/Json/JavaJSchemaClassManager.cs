@@ -33,7 +33,7 @@ namespace Bam.Net.Schema.Json
                 return className;
             };
             ParsePropertyName = pn => pn.PascalCase();
-            ExtractClassName = jSchema =>
+            ExtractJSchemaClassName = jSchema =>
             {
                 if (!string.IsNullOrEmpty(jSchema?.Title))
                 {

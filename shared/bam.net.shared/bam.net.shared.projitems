@@ -654,7 +654,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JsonJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\NoopJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\YamlJSchemaLoader.cs" />

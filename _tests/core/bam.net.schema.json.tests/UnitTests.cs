@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using Bam.Net;
 using Bam.Net.Application.Json;
 using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
 using Bam.Net.Logging;
+using Bam.Net.Server.PathHandlers.Attributes;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json.Schema;
 
@@ -23,62 +27,6 @@ namespace Bam.Net.Schema.Json.Tests
         private UnixPath CommonSchema = new UnixPath("~/_data/JsonSchema/common_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
-
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void GeneratedSchemaHasSubTypes()
-        {
-            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
-            logger.StartLoggingThread();
-            Log.Default = logger;
-            
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(GetJSchemaManager<JavaJSchemaClassManager>());
-            List<JSchema> schemas = generator.LoadJSchemas(ApplicationSchema);
-            (schemas.Count > 0).IsTrue();
-        }
-        
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void CanLoadCensusSchema()
-        {
-            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
-            logger.StartLoggingThread();
-            Log.Default = logger;
-            
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(GetJSchemaManager<JavaJSchemaClassManager>());
-            List<JSchema> schemas = generator.LoadJSchemas(CensusSchema);
-            (schemas.Count > 0).IsTrue();
-        }
-        
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void GetsSubTypesFromCommon()
-        {
-            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
-            logger.StartLoggingThread();
-            Log.Default = logger;
-            
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaClassManager());
-            List<JSchema> schemas = generator.LoadJSchemas(CommonSchema);
-            (schemas.Count > 0).IsTrue();
-        }
-        
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void CanGenerateFromDirectory()
-        {
-            ConsoleLogger logger = new ConsoleLogger(){AddDetails = false, UseColors = true};
-            logger.StartLoggingThread();
-            Log.Default = logger;
-            
-            JSchemaSchemaDefinitionGenerator generator = new JSchemaSchemaDefinitionGenerator(new JavaJSchemaClassManager());
-            JSchemaSchemaDefinition schemaDefinition = generator.GenerateSchemaDefinition(new DirectoryInfo(RootData), out List<JSchemaLoadResult> loadResults);
-            
-            OutLineFormat("Load result count {0}", loadResults.Count);
-            OutLineFormat("Load success count {0}", loadResults.Count(lr => lr.Success));
-            
-            OutLine(schemaDefinition.ToJson(true), ConsoleColor.Cyan);
-        }
         
         [UnitTest]
         [TestGroup("JSchema")]
@@ -97,20 +45,6 @@ namespace Bam.Net.Schema.Json.Tests
         {
             JSchema jSchema = JSchemaLoader.LoadJSchema(OrganizationDataPath, SerializationFormat.Yaml);
             OutLine(jSchema.ToString(), ConsoleColor.Cyan);
-        }
-
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void CanGetAllClassNames()
-        {
-            JSchema jSchema = GetOrganizationJSchema(out JSchemaClassManager jSchemaSchemaManager);
-            string[] tableNames = jSchemaSchemaManager.GetAllClassNames(jSchema);
-            (tableNames.Length > 0).IsTrue("No table names returned");
-            HashSet<string> names = new HashSet<string>(tableNames);
-            names.Contains("Organization").IsTrue("Organization wasn't included");
-            names.Contains("BusinessName").IsTrue("BusinessName wasn't included");
-            names.Contains("TaxIds").IsTrue("TaxIds wasn't included");
-            names.Contains("IndustryCodes").IsTrue("IndustryCodes wasn't included");
         }
 
         [UnitTest]
@@ -139,7 +73,7 @@ namespace Bam.Net.Schema.Json.Tests
         {
              JSchemaManagementRegistry registry = new JSchemaManagementRegistry(RootData);
              JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
-             JSchemaClass common = classManager.LoadJSchemaClass(new UnixPath("~/_data/JsonSchema/common_v1.yaml"));
+             JSchemaClass common = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/common_v1.yaml"));
              OutLine(common.ToJson(true));
              IEnumerable<JSchemaClass> definitions = JSchemaClass.FromDefinitions(common.JSchema, classManager);
              OutLine(definitions.ToJson(true), ConsoleColor.Yellow);
@@ -151,20 +85,75 @@ namespace Bam.Net.Schema.Json.Tests
         {
             JSchemaManagementRegistry registry = JSchemaManagementRegistry.ForJSchemasWithClassNamePropertiesOf(RootData, "@type", "class", "className");
             JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
-            JSchemaClass app = classManager.LoadJSchemaClass(new UnixPath("~/_data/JsonSchema/application_v1.yaml"));
+            JSchemaClass app = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/application_v1.yaml"));
             Expect.IsNotNull(app);
             Expect.AreEqual("Application", app.ClassName);
+            Expect.AreEqual(22, app.Properties.Count());
+            
+            OutLineFormat("Properties: {0}", app.Properties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Value properties: {0}", app.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Array properties: {0}", app.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Object properties: {0}", app.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Enum properties: \r\n\t{0}", ConsoleColor.Blue, app.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
         }
         
         [UnitTest]
         [TestGroup("JSchema")]
-        public void CanGetPropertySchema()
+        public void CanLoadJSchemaClassWithClassName2()
         {
-            JSchema root = GetOrganizationJSchema(out JSchemaClassManager jSchemaSchemaManager);
-            JSchema jSchema = jSchemaSchemaManager.GetPropertySchema(root, "BusinessName");
-            Expect.IsNotNull(jSchema, "schema not found");
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.ForJSchemasWithClassNamePropertiesOf(RootData, "@type", "javaType", "class", "className");
+            JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
+            classManager.SetClassNameMunger("javaType", javaType =>
+            {
+                string[] split = javaType.DelimitSplit(".");
+                return split[split.Length - 1];
+            });
+            JSchemaClass census = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/census_v1.yaml"));
+            Expect.IsNotNull(census);
+            Expect.AreEqual("Census", census.ClassName);
+            Expect.AreEqual(4, census.Properties.Count());
+            
+            OutLineFormat("Properties: {0}", census.Properties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Value properties: {0}", census.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Array properties: {0}", census.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Object properties: {0}", census.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Enum properties: \r\n\t{0}", ConsoleColor.Blue, census.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
         }
 
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void CanLoadAllJSchemaClasses()
+        {
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.ForJSchemasWithClassNamePropertiesOf(RootData, "@type", "javaType", "class", "className");
+            JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
+            classManager.SetClassNameMunger("javaType", javaType =>
+            {
+                string[] split = javaType.DelimitSplit(".");
+                string typeName = split[split.Length - 1];
+                if (typeName.EndsWith("Entity"))
+                {
+                    typeName = typeName.Truncate("Entity".Length);
+                }
+
+                return typeName;
+            });
+            HashSet<JSchemaClass> results = classManager.LoadJSchemaClasses(RootData);
+            
+            Console.WriteLine($"Result count = {results.Count}");
+            StringBuilder output = new StringBuilder();
+            foreach (JSchemaClass jSchemaClass in results)
+            {
+                output.AppendFormat("ClassName={0}\r\n", jSchemaClass.ClassName);
+                output.AppendLine(jSchemaClass.ToJson(true));
+                output.AppendLine("****");
+                //OutLine("***");
+                //Thread.Sleep(30);
+            }
+            FileInfo outputFile = new FileInfo("./testoutput.txt");
+            output.ToString().SafeWriteToFile(outputFile.FullName, true);
+            Console.WriteLine("Wrote file {0}", outputFile.FullName);
+        }
+        
         [UnitTest]
         [TestGroup("JSchema")]
         public void CanGetRootClassName()
@@ -174,10 +163,11 @@ namespace Bam.Net.Schema.Json.Tests
             // check javaType
             // check _tableNameProperties
             JSchema jSchema = JSchemaLoader.LoadYamlJSchema(OrganizationDataPath);
-            JSchemaClassManager nameProvider = new JSchemaClassManager("@type", "title", "javaType");
-            string tableName = nameProvider.GetObjectClassName(jSchema);
-            Expect.IsNotNullOrEmpty(tableName);
-            Expect.AreEqual("Organization", tableName);
+            JSchemaClassManager classManager = new JSchemaClassManager("@type", "title", "javaType");
+            JSchemaClass orgClass = classManager.LoadJSchemaClassFile(OrganizationDataPath);
+            string className = orgClass.ClassName;
+            Expect.IsNotNullOrEmpty(className);
+            Expect.AreEqual("Organization", className);
         }
 
         [UnitTest]
@@ -185,11 +175,9 @@ namespace Bam.Net.Schema.Json.Tests
         public void CanGetPropertyNames()
         {
             JSchema jSchema = JSchemaLoader.LoadYamlJSchema(OrganizationDataPath);
-            JSchemaClassManager jSchemaClassManager = new JSchemaClassManager("@type", "title", "javaType")
-            {
-                ParsePropertyName = propertyName => propertyName.PascalCase()
-            };
-            string[] propertyNames = jSchemaClassManager.GetPropertyNames(jSchema);
+            JSchemaClassManager jSchemaClassManager = new JSchemaClassManager("@type", "title", "javaType");
+            JSchemaClass jSchemaClass = jSchemaClassManager.LoadJSchemaClassFile(OrganizationDataPath);
+            string[] propertyNames = jSchemaClass.Properties.Select(p => p.PropertyName).ToArray();
             HashSet<string> propertyNameHashSet = new HashSet<string>(propertyNames);
             propertyNameHashSet.Contains("FriendlyId").IsTrue("FriendlyId not found");
             propertyNameHashSet.Contains("WebsiteUrl").IsTrue("WebsiteUrl not found");
@@ -197,61 +185,6 @@ namespace Bam.Net.Schema.Json.Tests
             propertyNameHashSet.Contains("BusinessNameId").IsTrue("BusinessNameId not found");
             propertyNameHashSet.Contains("TaxIdsId").IsTrue("TaxIdsId");
             propertyNameHashSet.Contains("IndustryCodesId").IsTrue("IndustryCodesId");
-        }
-
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void SameReferenceFromTwoSchemasAreEqual()
-        {
-            JSchema orgSchema = GetOrganizationJSchema(out JSchemaClassManager jSchemaManager);
-            JSchema companySchema = GetCompanyJSchema(out JSchemaClassManager ignore);
-            
-            JSchema businessNameFromOrg = jSchemaManager.GetPropertySchema(orgSchema, "BusinessName");
-            Expect.IsNotNull(businessNameFromOrg);
-            Expect.IsNotNullOrEmpty(businessNameFromOrg.ToString());
-
-            JSchema businessNameFromCompany = jSchemaManager.GetPropertySchema(companySchema, "BusinessName");
-            Expect.IsNotNull(businessNameFromCompany);
-            Expect.IsNotNullOrEmpty(businessNameFromCompany.ToString());
-            
-            Expect.AreEqual(businessNameFromOrg.ToString(), businessNameFromCompany.ToString());
-            Expect.AreEqual(businessNameFromOrg.ToJson(), businessNameFromCompany.ToJson());
-            Expect.AreEqual(businessNameFromOrg.ToJson().Sha256(), businessNameFromCompany.ToJson().Sha256());
-        }
-
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void CanGetArrayPropertyClassName()
-        {
-            JSchemaSchemaDefinitionGenerationSettings settings = GetGenerationSettings(nameof(CanGetArrayPropertyClassName), OrganizationDataPath);
-            JSchemaClassManager jSchemaClassManager = settings.JSchemaClassManager;
-            JSchema schema = settings.JSchemas.First();
-            string className = jSchemaClassManager.GetArrayPropertyClassName(schema, "contacts");
-            Expect.AreEqual("Contact", className);
-        }
-
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void AddJSchemaAddsColumns()
-        {
-            JSchemaSchemaDefinitionGenerationSettings settings = GetGenerationSettings(nameof(GenerateSchemaDefinitionTest), OrganizationDataPath, CompanyDataPath);
-            JSchemaSchemaDefinitionGenerator generator = JSchemaSchemaDefinitionGenerator.Create(settings);
-            JSchemaSchemaDefinition result = generator.GenerateSchemaDefinition(settings.JSchemas.ToArray());
-            SchemaDefinition schemaDefinition = result.SchemaDefinition;
-            Table orgTable = schemaDefinition.Tables.FirstOrDefault(t => t.Name.Equals("Organization"));
-            Expect.IsNotNull(orgTable, "Organization table not found");
-            Expect.AreEqual(5, orgTable.Columns.Length);
-            OutLineFormat("Columns: \r\n{0}", orgTable.Columns.ToJson(true));
-        }
-        
-        [UnitTest]
-        [TestGroup("JSchema")]
-        public void GenerateSchemaDefinitionTest()
-        {
-            JSchemaSchemaDefinitionGenerationSettings settings = GetGenerationSettings(nameof(GenerateSchemaDefinitionTest), OrganizationDataPath, CompanyDataPath);
-            JSchemaSchemaDefinition schemaDefinition =  JSchemaSchemaDefinitionGenerator.GenerateSchemaDefinition(settings);
-            
-            OutLine(schemaDefinition.ToJson(true), ConsoleColor.Cyan);
         }
 
         private JSchema GetCompanyJSchema(out JSchemaClassManager jSchemaClassManager)
@@ -269,18 +202,6 @@ namespace Bam.Net.Schema.Json.Tests
             JSchema jSchema = JSchemaLoader.LoadYamlJSchema(dataPath);
             jSchemaClassManager = GetJSchemaManager();
             return jSchema;
-        }
-
-        private JSchemaSchemaDefinitionGenerationSettings GetGenerationSettings(string schemaName, params string[] dataPaths)
-        {
-            return new JSchemaSchemaDefinitionGenerationSettings()
-            {
-                Name = schemaName,
-                JSchemas = dataPaths.Select(JSchemaLoader.LoadYamlJSchema).ToList(), 
-                SerializationFormat = SerializationFormat.Yaml,
-                JSchemaClassManager = GetJSchemaManager(),
-                JSchemaResolver = GetJSchemaResolver()
-            };
         }
 
         private JSchemaClassManager GetJSchemaManager<T>() where T : JSchemaClassManager, new()
