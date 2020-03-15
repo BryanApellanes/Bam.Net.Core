@@ -69,6 +69,9 @@ namespace Bam.Net.Schema.Json
 
         [JsonConverter(typeof(StringEnumConverter))]
         public JSchemaType? Type => JSchemaOfProperty.Type;
+
+        public string PropertyClassName => Type == JSchemaType.Object ? ClassOfProperty.ClassName : null;
+
         public string PropertyName { get; set; }
 
         public override string ToString()

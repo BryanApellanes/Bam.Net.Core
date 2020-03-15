@@ -122,6 +122,11 @@ namespace Bam.Net.Schema.Json
             return Properties.Where(p => p.JSchemaOfProperty.Type == type);
         }
 
+        public JSchemaProperty this[string propertyName]
+        {
+            get { return Properties.FirstOrDefault(p => p.PropertyName.Equals(propertyName)); }
+        }
+        
         public override bool Equals(object obj)
         {
             if (obj is JSchemaClass other)

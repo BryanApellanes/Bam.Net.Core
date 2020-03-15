@@ -78,6 +78,7 @@ namespace Bam.Net.Application.Json
             if (node["$ref"] != null)
             {
                 refValue = node["$ref"].ToString();
+                node = JObject.Parse(GetSubschema(CreateSchemaReference(reference, refValue), rootSchema).ToString());
             }
             else if (node["type"] != null)
             {
@@ -87,19 +88,13 @@ namespace Bam.Net.Application.Json
                     if (node["items"]?["$ref"] != null)
                     {
                         refValue = node["items"]["$ref"].ToString();
+                        node["items"] = JObject.Parse(GetSubschema(CreateSchemaReference(reference, refValue), rootSchema).ToString());
                     }
                 }
                 else if (type == JSchemaType.Object)
                 {
                     node = ResolveRefs(node, reference, rootSchema);
                 }
-            }
-
-            if (!string.IsNullOrEmpty(refValue))
-            {
-                SchemaReference schemaReference = CreateSchemaReference(reference, refValue);
-
-                return GetSubschema(schemaReference, rootSchema);
             }
             
             JSchema result = JSchema.Parse(node.ToJson(), this);

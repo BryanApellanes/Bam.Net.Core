@@ -92,9 +92,15 @@ namespace Bam.Net.Schema.Json.Tests
             
             OutLineFormat("Properties: {0}", app.Properties.ToArray().ToDelimited(p=> p.PropertyName));
             OutLineFormat("Value properties: {0}", app.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Array properties: {0}", app.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            OutLineFormat("Array properties: {0}", app.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName + $"[{p.ClassOfArrayItems.ClassName}]"));
             OutLineFormat("Object properties: {0}", app.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
             OutLineFormat("Enum properties: \r\n\t{0}", ConsoleColor.Blue, app.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
+
+            JSchemaProperty proposalDetail = app["ProposalDetail"];
+            
+            Expect.IsNotNull(proposalDetail);
+            OutLine(proposalDetail.ToJson(true), ConsoleColor.Yellow);
+            OutLine(proposalDetail.JSchemaOfProperty.ToJson(true), ConsoleColor.DarkYellow);
         }
         
         [UnitTest]
