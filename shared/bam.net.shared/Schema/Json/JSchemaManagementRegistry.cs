@@ -1,6 +1,7 @@
 using System;
 using Bam.Net.Application.Json;
 using Bam.Net.CoreServices;
+using Bam.Net.Incubation;
 using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Schema.Json
@@ -15,21 +16,31 @@ namespace Bam.Net.Schema.Json
         public JSchemaManagementRegistry(JSchemaResolver resolver, SerializationFormat format)
         {
             For<JSchemaResolver>().Use(resolver)
-                .For<JSchemaLoader>().Use(JSchemaLoader.ForFormat(format));
-            
+                .For<JSchemaLoader>().Use(JSchemaLoader.ForFormat(format))
+                .For<JavaJSchemaClassManager>().Use(new JavaJSchemaClassManager() {JSchemaResolver = resolver});
         }
 
-        public static JSchemaManagementRegistry ForJSchemasWithClassNamePropertiesOf(string rootData, params string[] classNameProperties)
+        public static JSchemaManagementRegistry Create(string rootData, SerializationFormat format, params string[] classNameProperties)
         {
-            JSchemaManagementRegistry registry = new JSchemaManagementRegistry(rootData, SerializationFormat.Yaml);
-            JSchemaResolver resolver = new FileSystemYamlJSchemaResolver(rootData);
-            JSchemaLoader loader = JSchemaLoader.ForFormat(SerializationFormat.Yaml);
+            if (classNameProperties == null || classNameProperties.Length == 0)
+            {
+                classNameProperties = new string[] {"class", "className", "@type", "javaType"};
+            }
+            JSchemaManagementRegistry registry = new JSchemaManagementRegistry(rootData, format);
+            JSchemaResolver resolver = FileSystemJSchemaResolver.ForFormat(rootData, format);
+            JSchemaLoader loader = JSchemaLoader.ForFormat(format);
             registry
                 .For<JSchemaResolver>().Use(resolver)
                 .For<JSchemaLoader>().Use(loader)
-                .For<JSchemaClassManager>().Use(new JSchemaClassManager(classNameProperties) {JSchemaResolver = resolver});
-            
+                .For<JSchemaClassManager>().Use(new JSchemaClassManager(classNameProperties) {JSchemaResolver = resolver})
+                .For<JavaJSchemaClassManager>().Use(new JavaJSchemaClassManager(){JSchemaResolver = resolver});
+
             return registry;
+        }
+        
+        public static JSchemaManagementRegistry CreateForYaml(string rootData, params string[] classNameProperties)
+        {
+            return Create(rootData, SerializationFormat.Yaml, classNameProperties);
         }
     }
 }

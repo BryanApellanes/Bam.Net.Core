@@ -10,39 +10,19 @@ namespace Bam.Net.Schema.Json
     {
         private List<string> _truncations;
 
-        public JavaJSchemaClassManager() : base("@type", "title", "javaType")
+        public JavaJSchemaClassManager() : base("@type", "javaType", "class", "className")
         {            
-            _truncations = new List<string>()
+            SetClassNameMunger("javaType", javaType =>
             {
-
-                "Entity",
-                "_v1",
-                "_v1.yaml"
-            };
-            MungeClassName = cn =>
-            {
-                string className = cn.DelimitSplit(".").Last();
-                foreach (string truncation in _truncations)
+                string[] split = javaType.DelimitSplit(".");
+                string typeName = split[split.Length - 1];
+                if (typeName.EndsWith("Entity"))
                 {
-                    if (className.EndsWith(truncation))
-                    {
-                        className = className.Truncate(truncation.Length);
-                    }
+                    typeName = typeName.Truncate("Entity".Length);
                 }
 
-                return className;
-            };
-            ParsePropertyName = pn => pn.PascalCase();
-            ExtractJSchemaClassName = jSchema =>
-            {
-                if (!string.IsNullOrEmpty(jSchema?.Title))
-                {
-                    FileInfo fi = new FileInfo(jSchema.Title);
-                    return Path.GetFileNameWithoutExtension(fi.Name).PascalCase();
-                }
-
-                return string.Empty;
-            };
+                return typeName;
+            });
         }
     }
 }

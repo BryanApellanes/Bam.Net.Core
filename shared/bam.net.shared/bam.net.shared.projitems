@@ -656,6 +656,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JsonJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\NoopJSchemaResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\UnsupportedFormatException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\YamlJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Org\SchemaDotOrgProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SemanticLifecycle.cs" />

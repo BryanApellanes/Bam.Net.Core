@@ -83,7 +83,7 @@ namespace Bam.Net.Schema.Json.Tests
         [TestGroup("JSchema")]
         public void CanLoadJSchemaClassWithClassName()
         {
-            JSchemaManagementRegistry registry = JSchemaManagementRegistry.ForJSchemasWithClassNamePropertiesOf(RootData, "@type", "class", "className");
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData, "@type", "class", "className");
             JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
             JSchemaClass app = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/application_v1.yaml"));
             Expect.IsNotNull(app);
@@ -107,7 +107,7 @@ namespace Bam.Net.Schema.Json.Tests
         [TestGroup("JSchema")]
         public void CanLoadJSchemaClassWithClassName2()
         {
-            JSchemaManagementRegistry registry = JSchemaManagementRegistry.ForJSchemasWithClassNamePropertiesOf(RootData, "@type", "javaType", "class", "className");
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData, "@type", "javaType", "class", "className");
             JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
             classManager.SetClassNameMunger("javaType", javaType =>
             {
@@ -130,7 +130,7 @@ namespace Bam.Net.Schema.Json.Tests
         [TestGroup("JSchema")]
         public void CanLoadAllJSchemaClasses()
         {
-            JSchemaManagementRegistry registry = JSchemaManagementRegistry.ForJSchemasWithClassNamePropertiesOf(RootData, "@type", "javaType", "class", "className");
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData, "@type", "javaType", "class", "className");
             JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
             classManager.SetClassNameMunger("javaType", javaType =>
             {
@@ -144,7 +144,7 @@ namespace Bam.Net.Schema.Json.Tests
                 return typeName;
             });
             HashSet<JSchemaClass> results = classManager.LoadJSchemaClasses(RootData);
-            
+            Expect.AreEqual(35, results.Count);
             Console.WriteLine($"Result count = {results.Count}");
             StringBuilder output = new StringBuilder();
             foreach (JSchemaClass jSchemaClass in results)
@@ -152,10 +152,30 @@ namespace Bam.Net.Schema.Json.Tests
                 output.AppendFormat("ClassName={0}\r\n", jSchemaClass.ClassName);
                 output.AppendLine(jSchemaClass.ToJson(true));
                 output.AppendLine("****");
-                //OutLine("***");
-                //Thread.Sleep(30);
             }
-            FileInfo outputFile = new FileInfo("./testoutput.txt");
+            FileInfo outputFile = new FileInfo(new UnixPath("~/.bam/data/testoutput.txt"));
+            output.ToString().SafeWriteToFile(outputFile.FullName, true);
+            Console.WriteLine("Wrote file {0}", outputFile.FullName);
+        }
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void CanLoadAllJSchemaClassesWithJavaJSchemaClassManager()
+        {
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.Create(RootData, SerializationFormat.Yaml, "@type", "javaType", "class", "className");
+            JSchemaClassManager classManager = registry.Get<JavaJSchemaClassManager>();
+            HashSet<JSchemaClass> results = classManager.LoadJSchemaClasses(RootData);
+            
+            Expect.AreEqual(35, results.Count);
+            Console.WriteLine($"Result count = {results.Count}");
+            
+            StringBuilder output = new StringBuilder();
+            foreach (JSchemaClass jSchemaClass in results)
+            {
+                output.AppendFormat("ClassName={0}\r\n", jSchemaClass.ClassName);
+                output.AppendLine(jSchemaClass.ToJson(true));
+                output.AppendLine("****");
+            }
+            FileInfo outputFile = new FileInfo(new UnixPath("~/.bam/data/javaTestOutput.txt"));
             output.ToString().SafeWriteToFile(outputFile.FullName, true);
             Console.WriteLine("Wrote file {0}", outputFile.FullName);
         }
@@ -188,9 +208,9 @@ namespace Bam.Net.Schema.Json.Tests
             propertyNameHashSet.Contains("FriendlyId").IsTrue("FriendlyId not found");
             propertyNameHashSet.Contains("WebsiteUrl").IsTrue("WebsiteUrl not found");
             
-            propertyNameHashSet.Contains("BusinessNameId").IsTrue("BusinessNameId not found");
-            propertyNameHashSet.Contains("TaxIdsId").IsTrue("TaxIdsId");
-            propertyNameHashSet.Contains("IndustryCodesId").IsTrue("IndustryCodesId");
+            propertyNameHashSet.Contains("BusinessName").IsTrue("BusinessName not found");
+            propertyNameHashSet.Contains("TaxIds").IsTrue("TaxIds");
+            propertyNameHashSet.Contains("IndustryCodes").IsTrue("IndustryCodes");
         }
 
         private JSchema GetCompanyJSchema(out JSchemaClassManager jSchemaClassManager)

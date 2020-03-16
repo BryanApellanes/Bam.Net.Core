@@ -26,7 +26,22 @@ namespace Bam.Net.Application.Json
         }
         
         public static FileSystemJSchemaResolver Default { get; set; }
-        
+
+        public static FileSystemJSchemaResolver ForFormat(string rootDirectory, SerializationFormat format)
+        {
+            switch (format)
+            {
+                case SerializationFormat.Json:
+                    return new FileSystemJsonJSchemaResolver(rootDirectory);
+                case SerializationFormat.Yaml:
+                    return new FileSystemYamlJSchemaResolver(rootDirectory);
+                case SerializationFormat.Xml:
+                case SerializationFormat.Binary:
+                case SerializationFormat.Invalid:
+                    throw new UnsupportedFormatException(format);
+            }
+            throw new UnsupportedFormatException(format);
+        }
         public JSchemaLoader JSchemaLoader { get; set; }
         
         public DirectoryInfo RootDirectory { get; set; }

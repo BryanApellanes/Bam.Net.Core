@@ -36,17 +36,16 @@ namespace Bam.Net.Schema.Json
                     if (JSchemaResolver is FileSystemJSchemaResolver fileSystemJSchemaResolver)
                     {
                         fileSystemJSchemaResolver.JSchemaLoader = this;
+                        fileSystemJSchemaResolver.RootDirectory = fileInfo.Directory;
                     }
                     JSchemaResolver resolver = JSchemaResolver ?? new FileSystemYamlJSchemaResolver(fileInfo.Directory.FullName)
                     {
                         JSchemaLoader = this
                     };
-                    
                     _fileSchemas.Add(filePath, JSchema.Parse(schemaAsDictionary.ToJson(), resolver));
                 }
             }
             return _fileSchemas[filePath];
         }
-
     }
 }

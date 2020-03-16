@@ -98,7 +98,7 @@ namespace Bam.Net.Schema.Json
         [JsonIgnore]
         public IEnumerable<JSchemaProperty> EnumProperties
         {
-            get { return Properties.Where(p => p.ClassOfProperty.IsEnum); }
+            get { return Properties.Where(p => p.ClassOfProperty?.IsEnum ?? false); }
         }
         
         [Exclude]
@@ -125,6 +125,11 @@ namespace Bam.Net.Schema.Json
         public JSchemaProperty this[string propertyName]
         {
             get { return Properties.FirstOrDefault(p => p.PropertyName.Equals(propertyName)); }
+        }
+
+        public string[] PropertyNames()
+        {
+            return Properties.Select(p => p.PropertyName).ToArray();
         }
         
         public override bool Equals(object obj)
