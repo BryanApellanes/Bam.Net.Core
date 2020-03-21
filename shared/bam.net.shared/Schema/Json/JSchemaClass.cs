@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using Bam.Net.Application.Json;
-using Bam.Net.Data;
-using Microsoft.CodeAnalysis.CSharp;
-using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Schema.Json
 {
@@ -67,6 +63,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [XmlIgnore]
         [JsonIgnore]
+        [YamlIgnore]
         public JSchema JSchema { get; private set; }
 
         public IEnumerable<JSchemaProperty> Properties
@@ -75,7 +72,7 @@ namespace Bam.Net.Schema.Json
             {
                 foreach (string propertyName in JSchema?.Properties?.Keys)
                 {
-                    yield return new JSchemaProperty(JSchema.Properties[propertyName]){DeclaringClass = this, PropertyName = ClassManager.ParsePropertyName(propertyName)};
+                    yield return new JSchemaProperty(JSchema.Properties[propertyName]){DeclaringClass = this, PropertyName = ClassManager.MungePropertyName(propertyName)};
                 }
             }
         }
@@ -83,6 +80,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [XmlIgnore]
         [JsonIgnore]
+        [YamlIgnore]
         public IEnumerable<JSchemaProperty> ValueProperties
         {
             get
@@ -96,6 +94,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [XmlIgnore]
         [JsonIgnore]
+        [YamlIgnore]
         public IEnumerable<JSchemaProperty> EnumProperties
         {
             get { return Properties.Where(p => p.ClassOfProperty?.IsEnum ?? false); }
@@ -104,6 +103,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [XmlIgnore]
         [JsonIgnore]
+        [YamlIgnore]
         public IEnumerable<JSchemaProperty> ObjectProperties
         {
             get
@@ -115,6 +115,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [XmlIgnore]
         [JsonIgnore]
+        [YamlIgnore]
         public IEnumerable<JSchemaProperty> ArrayProperties => PropertiesOfType(JSchemaType.Array);
 
         public IEnumerable<JSchemaProperty> PropertiesOfType(JSchemaType type)

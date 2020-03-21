@@ -641,7 +641,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemJsonJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemYamlJSchemaResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaClassManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JavaJSchemaClassManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaClass.cs" />
@@ -652,11 +651,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaManagementRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaProperty.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGeneratorEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JsonJSchemaLoader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\NoopJSchemaResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\UnsupportedFormatException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\UnsupportedSerializationFormatException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\YamlJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Org\SchemaDotOrgProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SemanticLifecycle.cs" />

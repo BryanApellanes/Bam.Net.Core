@@ -5,6 +5,7 @@ using Bam.Net.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Schema;
+using YamlDotNet.Serialization;
 
 namespace Bam.Net.Schema.Json
 {
@@ -21,6 +22,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [XmlIgnore]
         [JsonIgnore]
+        [YamlIgnore]
         public JSchemaClass DeclaringClass { get; set; }
         
         public bool? IsEnum => ClassOfProperty?.IsEnum;
@@ -43,6 +45,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [JsonIgnore]
         [XmlIgnore]
+        [YamlIgnore]
         public JSchema JSchemaOfArrayItems => JSchemaOfProperty?.Items?.FirstOrDefault();
         
         public JSchemaClass ClassOfArrayItems
@@ -65,6 +68,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [JsonIgnore]
         [XmlIgnore]
+        [YamlIgnore]
         public JSchema JSchemaOfProperty { get; }
 
         /// <summary>
@@ -73,6 +77,7 @@ namespace Bam.Net.Schema.Json
         [Exclude]
         [JsonIgnore]
         [XmlIgnore]
+        [YamlIgnore]
         public JSchemaClass ClassOfProperty
         {
             get

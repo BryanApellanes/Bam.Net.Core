@@ -1,8 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Bam.Net.Application.Json;
-using GraphQL.Types;
 
 namespace Bam.Net.Schema.Json
 {

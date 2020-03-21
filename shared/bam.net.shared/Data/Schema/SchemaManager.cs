@@ -65,6 +65,12 @@ namespace Bam.Net.Data.Schema
         public void ManageSchema(string schemaFile)
         {
             SchemaDefinition schemaDefinition = schemaFile.FromJsonFile<SchemaDefinition>();
+            if (schemaDefinition == null)
+            {
+                schemaDefinition = new SchemaDefinition();
+                schemaDefinition.ToJsonFile(schemaFile);
+            }
+
             schemaDefinition.File = schemaFile;
             ManageSchema(schemaDefinition);
         }
@@ -401,7 +407,7 @@ namespace Bam.Net.Data.Schema
                     select f).ToArray();
         }
 
-        object _sync = new object();
+        readonly object _sync = new object();
         public void Save()
         {
             lock (_sync)

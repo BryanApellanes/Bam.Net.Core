@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using Bam.Net.Application.Json;
-using Bam.Net.CoreServices;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
 namespace Bam.Net.Schema.Json

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Bam.Net;
-using Bam.Net.Application.Json;
+using Bam.Net.Schema.Json;
 using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
 using Bam.Net.Logging;
@@ -29,7 +29,6 @@ namespace Bam.Net.Schema.Json.Tests
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
         
         [UnitTest]
-        [TestGroup("JSchema")]
         public void CanResolveUnixPath()
         {
             UnixPath path = new UnixPath("~/src");
@@ -38,7 +37,19 @@ namespace Bam.Net.Schema.Json.Tests
             path.Resolve().StartsWith(BamHome.UserHome);
             OutLineFormat("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
         }
-        
+
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void CanGetGenerator()
+        {
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData);
+            JSchemaSchemaDefinitionGenerator generator = registry.Get<JSchemaSchemaDefinitionGenerator>();
+            Expect.IsNotNull(generator, "generator was null");
+            Expect.IsNotNull(generator.SchemaManager, "SchemaManager was null");
+            Expect.IsNotNull(generator.JSchemaClassManager, "JSchemaSchemaClassManager was null");
+            Expect.IsNotNull(generator.Logger, "Logger was null");
+        }
+
         [UnitTest]
         [TestGroup("JSchema")]
         public void CanLoadJSchemaWithoutExceptions()
@@ -143,7 +154,7 @@ namespace Bam.Net.Schema.Json.Tests
 
                 return typeName;
             });
-            HashSet<JSchemaClass> results = classManager.LoadJSchemaClasses(RootData);
+            HashSet<JSchemaClass> results = classManager.GetAllJSchemaClasses(RootData);
             Expect.AreEqual(35, results.Count);
             Console.WriteLine($"Result count = {results.Count}");
             StringBuilder output = new StringBuilder();
@@ -163,7 +174,7 @@ namespace Bam.Net.Schema.Json.Tests
         {
             JSchemaManagementRegistry registry = JSchemaManagementRegistry.Create(RootData, SerializationFormat.Yaml, "@type", "javaType", "class", "className");
             JSchemaClassManager classManager = registry.Get<JavaJSchemaClassManager>();
-            HashSet<JSchemaClass> results = classManager.LoadJSchemaClasses(RootData);
+            HashSet<JSchemaClass> results = classManager.GetAllJSchemaClasses(RootData);
             
             Expect.AreEqual(35, results.Count);
             Console.WriteLine($"Result count = {results.Count}");

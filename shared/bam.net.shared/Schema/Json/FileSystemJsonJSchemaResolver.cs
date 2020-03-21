@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Bam.Net.Schema.Json;
-using MongoDB.Bson;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Bam.Net.Application.Json
+namespace Bam.Net.Schema.Json
 {
     /// <summary>
     /// A resolver for json schema entities defined in yaml files in the file system.

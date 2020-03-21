@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bam.Net.Schema.Json;
-using MongoDB.Bson;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Bam.Net.Application.Json
+namespace Bam.Net.Schema.Json
 {
     /// <summary>
     /// A resolver for json schema entities defined in yaml files in the file system.
@@ -38,9 +36,9 @@ namespace Bam.Net.Application.Json
                 case SerializationFormat.Xml:
                 case SerializationFormat.Binary:
                 case SerializationFormat.Invalid:
-                    throw new UnsupportedFormatException(format);
+                    throw new UnsupportedSerializationFormatException(format);
             }
-            throw new UnsupportedFormatException(format);
+            throw new UnsupportedSerializationFormatException(format);
         }
         public JSchemaLoader JSchemaLoader { get; set; }
         

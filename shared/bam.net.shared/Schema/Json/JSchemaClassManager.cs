@@ -2,15 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bam.Net.Data.Schema;
 using Bam.Net.Logging;
-using Bam.Net.Schema.Json;
-using CsQuery.ExtensionMethods.Internal;
-using Markdig.Helpers;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Bam.Net.Application.Json
+namespace Bam.Net.Schema.Json
 {
     public class JSchemaClassManager 
     {
@@ -102,12 +98,19 @@ namespace Bam.Net.Application.Json
         /// apply any conventions to the name that are not enforced in the JSchema.  Parse the
         /// inbound string and return an appropriate property name based on it.
         /// </summary>
-        public Func<string, string> ParsePropertyName
+        public Func<string, string> MungePropertyName
         {
-            get => JSchemaNameParser.ParsePropertyName;
-            set => JSchemaNameParser.ParsePropertyName = value;
+            get => JSchemaNameParser.MungePropertyName;
+            set => JSchemaNameParser.MungePropertyName = value;
         }
 
+        /// <summary>
+        /// When extracting a class name from the specified property, munge the value using the specified
+        /// munger.
+        /// </summary>
+        /// <param name="classNameProperty"></param>
+        /// <param name="munger"></param>
+        /// <returns></returns>
         public JSchemaClassManager SetClassNameMunger(string classNameProperty, Func<string, string> munger)
         {
             if (_classNamePropertyMungers.ContainsKey(classNameProperty))
@@ -123,12 +126,24 @@ namespace Bam.Net.Application.Json
             return this;
         }
         
-        public HashSet<JSchemaClass> LoadJSchemaClasses(string directoryPath)
+        /// <summary>
+        /// Loads all class files and returns all unique JSchemaClasses found including those that
+        /// represent properties not found in their own file.
+        /// </summary>
+        /// <param name="directoryInfo"></param>
+        /// <returns></returns>
+        public HashSet<JSchemaClass> GetAllJSchemaClasses(string directoryPath)
         {
-            return LoadJSchemaClasses(new DirectoryInfo(directoryPath));
+            return GetAllJSchemaClasses(new DirectoryInfo(directoryPath));
         }
         
-        public HashSet<JSchemaClass> LoadJSchemaClasses(DirectoryInfo directoryInfo)
+        /// <summary>
+        /// Loads all class files and returns all unique JSchemaClasses found including those that
+        /// represent properties not found in their own file.
+        /// </summary>
+        /// <param name="directoryInfo"></param>
+        /// <returns></returns>
+        public HashSet<JSchemaClass> GetAllJSchemaClasses(DirectoryInfo directoryInfo)
         {
             HashSet<JSchemaClass> results = new HashSet<JSchemaClass>();
             foreach (JSchemaClass jSchemaClass in LoadJSchemaClassFiles(directoryInfo))
@@ -171,6 +186,11 @@ namespace Bam.Net.Application.Json
             return results;
         }
         
+        /// <summary>
+        /// Load and return all JSchemaClasses found in files in the specified directory.
+        /// </summary>
+        /// <param name="directoryInfo"></param>
+        /// <returns></returns>
         public IEnumerable<JSchemaClass> LoadJSchemaClassFiles(DirectoryInfo directoryInfo)
         {
             Args.ThrowIfNull(directoryInfo, "directoryInfo");
