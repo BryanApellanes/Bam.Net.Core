@@ -1,0 +1,366 @@
+ProductPlan:
+  javaType: "com.vimly.entitystore.schema.ProductPlanEntity"
+  type: object
+  properties: 
+    planId: 
+      type: string
+      example: pG8Jy7tBmN
+      description: "Plan Id"
+    premium: 
+      type: number
+      format: float
+      example: 17.5
+      description: Premium
+
+
+QuoteStatus:
+  javaType: "com.vimly.entitystore.schema.QuoteStatusEntity"
+  type: object
+  required: 
+  - 
+    effectiveDateTime
+  properties: 
+    statusId: 
+      type: string
+      format: uuid
+      description: "Status Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    effectiveDateTime: 
+      type: string
+      format: date-time
+      example: "2018-05-14T22:48:25.020Z"
+      description: "Effective Date"
+    comments: 
+      type: string
+      example: "Example comment"
+      description: Comment
+    statusCode: 
+      type: string
+      enum: 
+      - DRAFT
+      - QUOTED
+      - REJECTED
+      - ARCHIVED
+      - ACCEPTED
+
+
+
+ProcessCensusRequest:
+  javaType: "com.vimly.entitystore.schema.ProcessCensusRequestEntity"
+  type: object
+  properties: 
+    membership: 
+      type: array
+      items: 
+        "$ref": "#/definitions/CensusMember"
+
+
+
+CensusMembershipInfo:
+  javaType: "com.vimly.entitystore.schema.CensusMembershipInfoEntity"
+  type: object
+  properties: 
+    employeeCount: 
+      type: integer
+      format: int64
+    memberCount: 
+      type: integer
+      format: int64
+    medicalCount: 
+      type: integer
+      format: int64
+    medicalIncludedWaiverReasonCount: 
+      type: integer
+      format: int64
+    dentalCount: 
+      type: integer
+      format: int64
+    dentalIncludedWaiverReasonCount: 
+      type: integer
+      format: int64
+    visionCount: 
+      type: integer
+      format: int64
+    visionIncludedWaiverReasonCount: 
+      type: integer
+      format: int64
+    medicalTotalEligibility: 
+      type: integer
+      format: int64
+    medicalParticipation: 
+      type: number
+      format: float
+    dentalTotalEligibility: 
+      type: integer
+      format: int64
+    dentalParticipation: 
+      type: number
+      format: float
+    visionTotalEligibility: 
+      type: integer
+      format: int64
+    visionParticipation: 
+      type: number
+      format: float
+
+
+Quote:
+  javaType: "com.vimly.entitystore.schema.QuoteEntity"
+  type: object
+  required: 
+  - agencyId
+  - agentId
+  - effectiveDateTime
+  - expirationDateTime
+  - prospectId
+  properties: 
+    transaction: 
+      "$ref": "#/definitions/Transaction"
+    friendlyId: 
+      type: string
+      example: "AUD-03454-123"
+      description: "Friendly Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    quoteId: 
+      type: string
+      format: uuid
+      description: "Quote Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    quoteStatuses: 
+      type: array
+      items: 
+        "$ref": "#/definitions/QuoteStatus"
+    effectiveDateTime: 
+      type: string
+      format: date-time
+      example: "2018-05-14T22:48:25.020Z"
+      description: "Effective DateTime"
+    productLines: 
+      type: array
+      uniqueItems: true
+      items: 
+        type: string
+        enum: 
+          - MEDICAL
+          - DENTAL
+          - VISION
+    plans: 
+      type: object
+      additionalProperties: 
+        type: array
+        items: 
+          "$ref": "#/definitions/ProductPlan"
+    expirationDateTime: 
+      type: string
+      format: date-time
+      example: "2018-05-14T22:48:25.020Z"
+      description: "Expiration DateTime"
+    agentId: 
+      type: string
+      format: uuid
+      example: "7c98bbd9-b8a0-4ea8-83cb-a1fb9d9eab0e"
+      description: "Agent Id"
+    agencyId: 
+      type: string
+      format: uuid
+      example: "f14c8c3e-799c-45e8-b410-1883bd8011c0"
+      description: "Agency Id"
+    prospectId: 
+      type: string
+      format: uuid
+      example: "23714054-b8cf-4f08-83db-7ee4c07ca85b\n"
+      description: "Prospect Id"
+    census: 
+      "$ref": "#/definitions/Census"
+
+Census:
+  javaType: "com.vimly.entitystore.schema.CensusEntity"
+  type: object
+  properties: 
+    transaction: 
+      "$ref": "#/definitions/Transaction"
+    friendlyId: 
+      type: string
+      example: "AUD-03454-123"
+      description: "Friendly Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    censusId: 
+      type: string
+      format: uuid
+      description: "Census Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    info: 
+      description: "Census stats and info)"
+      "$ref": "#/definitions/CensusMembershipInfo"
+    membership: 
+      type: array
+      description: "Census membership collection"
+      items: 
+        "$ref": "#/definitions/CensusMember"
+QuoteReference:
+  javaType: "com.vimly.entitystore.schema.QuoteReferenceEntity"
+  type: object
+  properties: 
+    friendlyQuoteId: 
+      type: string
+      example: "QTE-03454-123"
+      description: "Friendly Quote Id"
+    internalQuoteId: 
+      type: string
+      format: uuid
+      example: "7c98bbd9-b8a0-4ea8-83cb-a1fb9d9eab0e"
+      description: "Internal Quote Id"
+    externalQuoteId: 
+      type: string
+      example: "QUOTE-44458"
+      description: "External Quote Id"
+Transaction:
+  javaType: "com.vimly.entitystore.schema.TransactionEntity"
+  type: object
+  properties: 
+    createdDate: 
+      type: string
+      format: date-time
+      example: "2018-05-14T22:48:25.020Z"
+    createdBy: 
+      type: string
+    modifiedDate: 
+      type: string
+      format: date-time
+      example: "2018-05-14T22:48:25.020Z"
+    modifiedBy: 
+      type: string
+ApplicationStatus:
+  javaType: "com.vimly.entitystore.schema.ApplicationStatusEntity"
+  type: object
+  required: 
+  - effectiveDateTime
+  properties: 
+    statusId: 
+      type: string
+      format: uuid
+      description: "Status Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    effectiveDateTime: 
+      type: string
+      format: date-time
+      example: "2018-05-14T22:48:25.020Z"
+      description: "Effective Date"
+    comments: 
+      type: string
+      example: "Example comment"
+      description: Comment
+    statusCode: 
+      type: string
+      enum: 
+      - APP_IN_PROGRESS
+      - SUBMITTED_IN_REVIEW
+      - APP_MISSING_INFO
+      - APP_DENIED
+      - NEEDS_SIGNATURE
+      - SOLD
+ApplicationFile:
+  javaType: "com.vimly.entitystore.schema.ApplicationFileEntity"
+  type: object
+  required: 
+  - 
+    fileType
+  properties: 
+    applicationFileId: 
+      type: string
+      format: uuid
+      description: "Application File Id (System Generated, do not include on POST requests)"
+      readOnly: true
+    name: 
+      type: string
+      example: "dental.pdf"
+      description: "Name of file"
+    fileType: 
+      type: string
+      example: TAX_AND_WAGE_STATEMENT
+      description: "Application File Type"
+      enum: 
+      - TAX_AND_WAGE_STATEMENT
+      - MEDICAL
+      - DENTAL
+      - VISION
+      - SMALL_GROUP_SURVEY
+      - UNION_COLLECTIVE_BARGAINING_AGREEMENT
+      - CONTROLLED_GROUP_INFORMATION_FORM
+
+CensusMember:
+  javaType: "com.vimly.entitystore.schema.CensusMemberEntity"
+  type: object
+  required: 
+  - dateOfBirth
+  - membershipType
+  properties: 
+    dateOfBirth: 
+      type: string
+      format: date
+      example: "2001-03-13"
+      description: "Date of birth for the member"
+    membershipType: 
+      type: string
+      description: "Membership type"
+      enum: 
+      - EE
+      - SP
+      - CH
+    firstName: 
+      type: string
+      description: "First name of the member"
+    middleName: 
+      type: string
+      description: "Middle name of the member"
+    lastName: 
+      type: string
+      description: "Last name of the member"
+    gender: 
+      type: string
+      description: "Gender of the member"
+      enum: 
+      - M
+      - F
+    smokingStatus: 
+      type: string
+      description: "Smoking status for the member"
+      enum: 
+      - Y
+      - N
+      - NA
+    medicalWaiverReason: 
+      type: string
+      description: "Medical waiver reason code"
+      enum: 
+      - SPOUSE_PARTNER_COVERAGE
+      - TRICARE_VA
+      - INDIVIDUAL_COVERAGE
+      - GROUP_COVERAGE_CONT
+      - NO_OTHER
+      - MEDICARE
+      - MEDICAL_ASSISTANCE
+      - GENERAL_ASSISTANCE_MEDICAL_CARE
+      - TRICARE
+      - OTHER
+    dentalWaiverReason: 
+      type: string
+      description: "Dental waiver reason code"
+      enum: 
+      - OTHER
+      - NO_OTHER
+    visionWaiverReason: 
+      type: string
+      description: "Vision waiver reason code"
+      enum: 
+      - OTHER
+      - NO_OTHER
+    enrollMedical: 
+      type: boolean
+      default: false
+    enrollDental: 
+      type: boolean
+      default: false
+    enrollVision: 
+      type: boolean
+      default: false

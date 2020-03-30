@@ -1,0 +1,144 @@
+"$schema": http://json-schema.org/draft-04/schema#
+id: taskmanagement_v1.yaml
+
+title: Application Case Management
+javaType: "com.vimly.entitystore.schema.TaskWorkItemEntity"
+type: object
+"@type": "TaskWorkItem"
+extends: 
+  "$ref": "entity_v1.yaml"
+
+additionalProperties: false
+
+properties:
+  title:
+    type: string
+    description: "Task Title"
+  body:
+    type: string
+    description: "Task Body"
+    minLength: 0
+    maxLength: 1000
+
+  applicationFriendlyId:
+    type: string
+    description: "The friendly id of the application"
+
+  primaryCompanyName:
+    type: string
+    description: "The legal name of the primary company"
+
+  createdDateTime:
+    type: string
+    format: date-time
+    example: "2008-12-01T01:02:03.789Z"
+
+  lastUpdatedDateTime:
+    type: string
+    format: date-time
+    example: "2008-12-01T01:02:03.789Z"
+
+  statuses: 
+    type: array
+    items: 
+      "$ref": "#/definitions/TaskStatus"
+
+  assignment: 
+    type: array
+    description: "Array of case assignments, the first item in the array is always the current assignment"
+    items: 
+      "$ref": "taskmanagement_case_v1.yaml#/definitions/CaseAssignment"
+
+  author:
+    "$ref": "common_v1.yaml#/definitions/TaskUserInfo"
+
+  comments:
+    type: array
+    items: 
+      "$ref": "#/definitions/TaskComment"
+
+  workItemType:
+    type: string
+    enum:
+      - TASK
+      - UNDERWRITER_NOTES
+
+definitions:
+  TaskStatus:
+    javaType: "com.vimly.entitystore.schema.TaskStatus"
+    type: object
+    additionalProperties: false
+    required: 
+    - effectiveDateTime
+    properties:
+      statusId: 
+        type: string
+        format: uuid
+        description: "Status Id (System Generated, do not include on POST requests)"
+        readOnly: true
+      effectiveDateTime: 
+        type: string
+        format: date-time
+        example: "2008-12-01T01:02:03.789Z"
+        #customDateTimePattern: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        description: "Effective Date"
+      endDateTime: 
+        type: string
+        format: date-time
+        example: "2008-12-01T01:02:03.789Z"
+        #customDateTimePattern: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        description: "End Date"
+      comments: 
+        type: string
+        example: "Example comment"
+        description: Comment
+      statusCode:
+        type: string
+        enum:
+          - TO_DO
+          - REPLIED
+          - DONE
+          - DELETED
+
+  TaskComment:
+    javaType: "com.vimly.entitystore.schema.TaskComment"
+    type: object
+    additionalProperties: false
+    required: 
+      - createdDateTime
+    properties:
+      createdDateTime: 
+        type: string
+        format: date-time
+        example: "2008-12-01T01:02:03.789Z"
+        #customDateTimePattern: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        description: "Created Date/Time"
+      modifiedDateTime: 
+        type: string
+        format: date-time
+        example: "2008-12-01T01:02:03.789Z"
+        #customDateTimePattern: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        description: "Modified Date/Time"
+
+      visibility:
+        type: string
+        enum:
+          - ALL
+          - INTERNAL_ONLY
+          - DELETED
+      body:
+        type: string
+        minLength: 0
+        maxLength: 8096
+        description: "Body of the comment"
+
+      author:
+        "$ref": "common_v1.yaml#/definitions/TaskUserInfo"
+
+      # Embedded/reentrant entities are not supported 
+      #comments:
+      ##  type: array
+      #  description: "Threaded comment support"
+      #  items: 
+      #    "$ref": "#/definitions/TaskComment"
+

@@ -1,0 +1,70 @@
+"$schema": http://json-schema.org/draft-04/schema#
+id: agency_v1.yaml
+
+title: Agency
+javaType: "com.vimly.entitystore.schema.AgencyEntity"
+type: object
+"@type": "Agency"
+extends: 
+  "$ref": "entity_v1.yaml"
+
+properties: 
+  friendlyId: 
+    type: string
+    example: "AUD-03454-123"
+    description: "Friendly Id (System Generated, do not include on POST requests)"
+    readOnly: true
+  name: 
+    type: string
+    example: "My New Agency"
+    description: "Agency Name"
+  address: 
+    description: The address of this agency.  Note that this assumes mailing
+    "$ref": "address_v1.yaml"
+  externalIds: 
+    description: A list of external IDs for this agency
+    type: object
+    existingJavaType: "java.util.Map<String, String>"
+  agencyStatuses: 
+    description: A list of status codes for this agency, with the 0 index being the latest
+    type: array
+    items: 
+      "$ref": "#/definitions/AgencyStatus"
+  communications: 
+    description: A list of communication methods for this agency
+    type: array
+    items: 
+      "$ref": "communication_v1.yaml"
+  salesRepresentative:
+      description: The internal sales representative of the partner.
+      "$ref": "contact_v1.yaml"
+  salesAssociate:
+      description: The internal sales associate of the partner.
+      "$ref": "contact_v1.yaml"
+
+definitions:
+  AgencyStatus: 
+    javaType: "com.vimly.entitystore.schema.AgencyStatusEntity"
+    type: object
+    required: 
+    - effectiveDateTime
+    properties: 
+      statusId: 
+        type: string
+        format: uuid
+        description: "Status Id (System Generated, do not include on POST requests)"
+        readOnly: true
+      effectiveDateTime: 
+        type: string
+        format: date-time
+        example: "2008-12-01T01:02:03.789Z"
+        description: "Effective Date"
+      comments: 
+        type: string
+        example: "Example comment"
+        description: Comment
+      statusCode: 
+        type: string
+        enum: 
+        - ACTIVE
+        - INACTIVE
