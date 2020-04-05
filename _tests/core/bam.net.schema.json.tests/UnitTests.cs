@@ -168,6 +168,7 @@ namespace Bam.Net.Schema.Json.Tests
             output.ToString().SafeWriteToFile(outputFile.FullName, true);
             Console.WriteLine("Wrote file {0}", outputFile.FullName);
         }
+        
         [UnitTest]
         [TestGroup("JSchema")]
         public void CanLoadAllJSchemaClassesWithJavaJSchemaClassManager()
