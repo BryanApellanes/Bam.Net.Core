@@ -3,8 +3,7 @@
 if [[ $1 = "-help" ]] || [[ $1 = "-?" ]] || [[ $1 = "-h" ]]; then
     printf "usage: test <implementation>\r\n"
     printf "\r\n"
-    printf "Call test for the specified context; the default is 'docker'.\r\n"
-    printf "Possible implementation values are found in the `pwd`/ci directory.\r\n"
+    printf "Call test for the specified context; the default is 'tools'.\r\n"
     printf "\r\n"
     exit 0
 fi

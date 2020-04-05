@@ -1,4 +1,4 @@
-name: Build Lib & Tools
+name: Build Lib, Tools & Tests
 
 on: 
   push:
@@ -15,4 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build 
-      run: ./build-dev.sh
+      run: ./build-all.sh
+    - uses: actions/upload-artifact@v1
+      with:
+        name: DIST
+        path: /tmp/bam
