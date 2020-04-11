@@ -952,10 +952,7 @@ File Version: {1}
                     };
                 });
             }
-            set
-            {
-                _coloredMessageProvider = value;
-            }
+            set => _coloredMessageProvider = value;
         }
 
         static object _queueLock = new object();

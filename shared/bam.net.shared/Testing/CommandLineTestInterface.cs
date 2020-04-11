@@ -276,8 +276,13 @@ namespace Bam.Net.Testing
             }
         }
 
+        public static EventHandler DefaultPassedHandler;
+        public static EventHandler DefaultFailedHandler;
+        
         public static void RunAllSpecTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<SpecTestMethod> runner = GetSpecTestRunner(assembly, logger);
             AttachHandlers<SpecTestMethod>(passedHandler, failedHandler, runner);
             AttachSpecTestRunListeners(runner);
@@ -286,15 +291,18 @@ namespace Bam.Net.Testing
 
         public static void RunSpecTestGroup(Assembly assembly, string testGroup, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<SpecTestMethod> runner = GetSpecTestRunner(assembly, logger);
             AttachHandlers<SpecTestMethod>(passedHandler, failedHandler, runner);
             AttachSpecTestRunListeners(runner);
             runner.RunTestGroup(testGroup);
         }
 
-        public static void RunAllUnitTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null,
-            EventHandler failedHandler = null)
+        public static void RunAllUnitTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<UnitTestMethod> runner = GetUnitTestRunner(assembly, logger);
             AttachHandlers<UnitTestMethod>(passedHandler, failedHandler, runner);
             AttachUnitTestRunListeners(runner);
@@ -303,6 +311,8 @@ namespace Bam.Net.Testing
 
         public static void RunUnitTestGroup(Assembly assembly, string testGroup, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<UnitTestMethod> runner = GetUnitTestRunner(assembly, logger);
             AttachHandlers<UnitTestMethod>(passedHandler, failedHandler, runner);
             AttachUnitTestRunListeners(runner);
@@ -369,14 +379,16 @@ namespace Bam.Net.Testing
                 {
                     OutLineFormat("({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
                     OutLineFormat("({0}) tests failed", ConsoleColor.Red, summary.FailedTests.Count);
+                    StringBuilder failedTests = new StringBuilder();
                     summary.FailedTests.ForEach(cim =>
                     {
-                        Out("\t");
+                        failedTests.Append("\t");
                         MethodInfo method = cim.Test.Method;
                         Type type = method.DeclaringType;
                         string testIdentifier = $"{type.Namespace}.{type.Name}.{method.Name}";
-                        OutLineFormat("{0}: ({1})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), cim.Test.Information, testIdentifier);
+                        failedTests.AppendFormat("{0}: ({1})", testIdentifier, cim.Test.Information);
                     });
+                    OutLineFormat("FAILED TESTS: \r\n {0})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), failedTests.ToString());
                 }
                 else
                 {

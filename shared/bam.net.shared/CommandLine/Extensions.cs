@@ -154,7 +154,7 @@ namespace Bam.Net.CommandLine
         /// <returns></returns>
         public static ProcessOutput Run(this string command, Action<string> onStandardOutput, int? timeout = 600000)
         {
-            return Run(command, null, onStandardOutput, (s) => { }, false, timeout);
+            return Run(command, null, onStandardOutput, onStandardOutput, false, timeout);
         }
 
         public static ProcessOutput Run(this string command, Action<string> onStandardOut, Action<string> onErrorOut, int? timeout = null)
