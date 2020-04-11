@@ -38,7 +38,7 @@ function add_to_path(){
 
 function add_symlinks_to_path(){
     if [[ -z ${BAMTOOLKITSYMLINKS} ]]; then
-        printf "BAMTOOLKITSYMLINKS is not set"
+        printf "BAMTOOLKITSYMLINKS is not set\r\n"
         return 1
     fi
     printf "adding BAMTOOLKITSYMLINKS to the PATH\r\n\r\n"
@@ -51,4 +51,12 @@ function add_symlinks_to_path(){
         [[ ":$PATH:" != *":${BAMTOOLKITSYMLINKS}:"* ]] && export PATH="${BAMTOOLKITSYMLINKS}:${PATH}"
     fi
     printf "PATH = ${PATH}\r\n\r\n"
+}
+
+function set_git_commit(){
+    if [[ -z ${GITCOMMIT} ]]; then
+        printf "Setting GITCOMMIT\r\n"
+        export GITCOMMIT=`git rev-parse --short HEAD`
+    fi
+    printf "GITCOMMIT = ${GITCOMMIT}\r\n"
 }
