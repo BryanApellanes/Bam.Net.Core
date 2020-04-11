@@ -1,4 +1,4 @@
-# Lifecycle scripts
+# Lifecycle scripts (.bam/build/lifecycle)
 
 The scripts contained here represent development lifecycle activities used to facilitate development.  To ensure proper behavior, these scripts must be executed from the .bam/build directory using the symlinks found there.
 
@@ -6,7 +6,7 @@ The scripts contained here represent development lifecycle activities used to fa
 Configures the specified context; see -? for a specific context for additional help.
 
 # Build
-Bulds the specified context; see -? for a specific context for additional help.
+Builds the specified context; see -? for a specific context for additional help.
 
 # Debug
 Debugs the specified context; see -? for a specific context for additional help.

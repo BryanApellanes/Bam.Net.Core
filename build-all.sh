@@ -8,3 +8,7 @@ cd .bam/build
 ./configure tools
 ./clean tools
 ./build tools
+
+./configure tests
+./clean tests
+./build tests

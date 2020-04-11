@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Bam.Net</RootNamespace>
     <PackageId>bam.net.core</PackageId>
-    <Version>1.0.5-test+ef11c7f</Version>
+    <Version>1.0.5-test+babf83e</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -55,7 +55,6 @@
     <EmbeddedResource Remove="Presentation\Html\Attributes\**" />
     <None Remove="Presentation\Html\Attributes\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="..\..\shared\bam.net.shared\Schema\Json">
       <Link>bam.net.shared\Schema\Json</Link>
