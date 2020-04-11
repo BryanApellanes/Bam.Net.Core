@@ -47,6 +47,10 @@ namespace Bam.Net.Bake
                 DirectoryInfo projectDirectory = new FileInfo(projectFile).Directory;
                 Environment.CurrentDirectory = projectDirectory.FullName;
                 DirectoryInfo projectOutputDirectory = new DirectoryInfo(Path.Combine(outputDirectory, projectName));
+                if (!projectOutputDirectory.Exists)
+                {
+                    projectOutputDirectory.Create();
+                }
                 string outputDirectoryPath = projectOutputDirectory.FullName;
                 string dotNetArgs = $"publish {projectFile} -c {buildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectoryPath}";
                 OutLineFormat("dotnet {0}", ConsoleColor.Blue, dotNetArgs);
