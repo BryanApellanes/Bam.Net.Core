@@ -17,9 +17,6 @@ namespace Bam.Net.Data
 {
     public static partial class DataExtensions
     {
-        public static object _toJsonSafeLock = new object();
-        public static readonly Dictionary<object, JObject> _visited = new Dictionary<object, JObject>();
-
         public static object ToJsonSafe(this object obj)
         {
             return ToJsonSafe(obj, 5);
@@ -42,10 +39,6 @@ namespace Bam.Net.Data
         private static object ToJsonSafe(this object obj, int maxRecursion, int recursionThusFar)
         {
             Args.ThrowIfNull(obj, "obj");
-            if (_visited.ContainsKey(obj))
-            {
-                return _visited[obj];
-            }
 
             if (recursionThusFar >= maxRecursion)
             {
@@ -66,8 +59,7 @@ namespace Bam.Net.Data
                     }
                     else
                     {
-                        _visited.Add(val, (JObject)ToJsonSafe(val, maxRecursion, ++recursionThusFar));
-                        jobj.Add(prop.Name, _visited[val]);                        
+                        jobj.Add(prop.Name, (JObject)ToJsonSafe(val, maxRecursion, ++recursionThusFar));                        
                     }
                 }
                 else
@@ -75,6 +67,7 @@ namespace Bam.Net.Data
                     jobj.Add(prop.Name, null);
                 }
             }
+            
             return jobj;
         }
     }
