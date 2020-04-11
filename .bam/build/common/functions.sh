@@ -21,6 +21,19 @@ function build_bake(){
     export BAKE=~/.bam/tmp/bake/bake
 }
 
+function ensure_bamtest(){
+    if [[ -z ${BAMTEST} || !(-f ${BAMTEST}) ]]; then
+        build_bamtest
+    fi
+}
+
+function build_bamtest(){
+    rm -fr ~/.bam/tmp/build_bamtest
+    dotnet publish ${BAMSRCROOT}/_tools/bamtest/bamtest.csproj -c Release -r ${RUNTIME} -o ~/.bam/tmp/bamtest
+    
+    export BAMTEST=~/.bam/tmp/bamtest/bamtest
+}
+
 function expand_tildes(){    
     export BAMTOOLKITBIN="${BAMTOOLKITBIN/#\~/$HOME}"
     export BAMTOOLKITSYMLINKS="${BAMTOOLKITSYMLINKS/#\~/$HOME}"

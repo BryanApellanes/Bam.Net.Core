@@ -6,11 +6,12 @@ ensure_bake
 set_git_commit
 
 echo ${GITCOMMIT} > ${OUTPUTBIN}/${GITCOMMIT}
+echo ${RUNTIME} > ${OUTPUTBIN}/${RUNTIME}
 ${BAKE} /zip:${RUNTIME}-bamtoolkit-${GITCOMMIT}.zip /zipRecipe:./recipes/${RUNTIME}-bamtoolkit.json /output:${OUTPUTBIN}
 
-# add a symlink for artifact upload
-if [[ -f ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit.zip ]]; then
-    rm ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit.zip
+# copy for artifact upload
+if [[ -f ${OUTPUTBIN}/../bamtoolkit.zip ]]; then
+    rm ${OUTPUTBIN}/../bamtoolkit.zip
 fi
-ln -s ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit-${GITCOMMIT}.zip ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit.zip
-ln -s ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit-${GITCOMMIT}.zip ${OUTPUTBIN}/../latest.zip
+mv ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit-${GITCOMMIT}.zip ${OUTPUTBIN}/../bamtoolkit.zip
+ln -s ${OUTPUTBIN}/../bamtoolkit.zip ${OUTPUTBIN}/../${RUNTIME}-bamtoolkit.zip

@@ -4,7 +4,7 @@ source ../common/init.sh
 
 ensure_bake
 
-printf "deleting ${OUTPUTBIN}\r\n"
-rm -fr ${OUTPUTBIN}
+printf "deleting ${OUTPUTBIN}/tests\r\n"
+rm -fr ${OUTPUTBIN}/tests
 
 ${BAKE} /recipe:./recipes/${RUNTIME}-bamtoolkit-tests.json
