@@ -4194,7 +4194,7 @@ namespace Bam.Net
         /// </returns>
         public static bool IsNullable<T>(this Type type)
         {
-            return IsNullable<T>(type);
+            return IsNullable<T>(type, out Type ignore);
         }
 
         /// <summary>

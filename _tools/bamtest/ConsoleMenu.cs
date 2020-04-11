@@ -71,7 +71,7 @@ namespace Bam.Net.Testing
                 tag = GetArgument("tag", "Enter a tag to use to identify test results");
             }
             DirectoryInfo outputDirectory = EnsureOutputDirectories(tag);
-            FileInfo[] testAssemblies = GetTestFiles(GetTestDirectory());
+            FileInfo[] testAssemblies = GetTestAssemblies(GetTestDirectory());
             foreach(FileInfo file in testAssemblies)
             {
                 OutLineFormat("{0}:Running tests in: {1}", ConsoleColor.Cyan, DateTime.Now.ToLongTimeString(), file.FullName);
@@ -98,13 +98,13 @@ namespace Bam.Net.Testing
 
             if (!File.Exists(recipePath))
             {
-                OutLineFormat("Recipe not found: {0}\r\nSpecify /Recipe:[path_to_bake_recipe_dot_json]", recipePath);
+                OutLineFormat("Recipe not found: {0}\r\nSpecify /Recipe:[path_to_bake_recipe_dot_json]", ConsoleColor.Magenta, recipePath);
                 Exit(1);
             }
 
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
             string testGroupName = Arguments["Group"];
-            string searchPattern = GetArgumentOrDefault("search", "*Tests.*");
+            string searchPattern = GetArgumentOrDefault("search", "*tests.*");
             HashSet<string> projects = new HashSet<string>();
             if (Arguments.Contains("projects"))
             {
@@ -133,10 +133,24 @@ namespace Bam.Net.Testing
                 }
                 else
                 {
-                    foreach (FileInfo testAssembly in GetTestAssemblies(testDirectory.GetFiles(searchPattern)))
+                    FileInfo[] testAssemblies = GetTestAssemblies(testDirectory.GetFiles(searchPattern)).ToArray();
+                    foreach (FileInfo testAssembly in testAssemblies)
                     {
                         OutLineFormat("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
                         RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
+                    }
+
+                    if (testAssemblies.Length == 0)
+                    {
+                        string testDll = Path.Combine(testDirectoryPath, $"{projectName}.dll");
+                        OutLineFormat("No test assemblies were found, checking for project assembly {0}", ConsoleColor.Yellow, testDll);
+                        if (File.Exists(testDll))
+                        {
+                            OutLineFormat("Project file found {0}", ConsoleColor.Cyan, testDll);
+                            string testCommand = $"dotnet {testDll} /t";
+                            OutLineFormat("Running {0}", ConsoleColor.DarkCyan, testCommand);
+                            testCommand.Run(OutLine);
+                        }
                     }
                 }
             }
