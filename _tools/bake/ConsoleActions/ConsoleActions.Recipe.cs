@@ -52,7 +52,7 @@ namespace Bam.Net.Bake
                     projectOutputDirectory.Create();
                 }
                 string outputDirectoryPath = projectOutputDirectory.FullName;
-                string dotNetArgs = $"publish {projectFile} -c {buildConfig.ToString()} -r {RuntimeNames[recipe.OsName]} -o {outputDirectoryPath}";
+                string dotNetArgs = $"publish {projectFile} -c {buildConfig.ToString()} -o {outputDirectoryPath}";
                 OutLineFormat("dotnet {0}", ConsoleColor.Blue, dotNetArgs);
                 ProcessStartInfo startInfo = settings.DotNetPath.ToStartInfo(dotNetArgs);
                 startInfo.Run(msg => OutLine(msg, ConsoleColor.DarkYellow));
