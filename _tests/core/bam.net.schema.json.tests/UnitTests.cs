@@ -21,10 +21,10 @@ namespace Bam.Net.Schema.Json.Tests
     [Serializable]
     public class UnitTests : CommandLineTestInterface
     {
-        private UnixPath RootData = new UnixPath("~/_data/JsonSchema/");
-        private UnixPath ApplicationSchema = new UnixPath("~/_data/JsonSchema/application_v1.yaml");
-        private UnixPath CensusSchema = new UnixPath("~/_data/JsonSchema/census_v1.yaml");
-        private UnixPath CommonSchema = new UnixPath("~/_data/JsonSchema/common_v1.yaml");
+        private UnixPath RootData = new UnixPath("~/.data/JsonSchema/");
+        private UnixPath ApplicationSchema = new UnixPath("~/.data/JsonSchema/application_v1.yaml");
+        private UnixPath CensusSchema = new UnixPath("~/.data/JsonSchema/census_v1.yaml");
+        private UnixPath CommonSchema = new UnixPath("~/.data/JsonSchema/common_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
         
@@ -84,7 +84,7 @@ namespace Bam.Net.Schema.Json.Tests
         {
              JSchemaManagementRegistry registry = new JSchemaManagementRegistry(RootData);
              JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
-             JSchemaClass common = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/common_v1.yaml"));
+             JSchemaClass common = classManager.LoadJSchemaClassFile(new UnixPath("~/.data/JsonSchema/common_v1.yaml"));
              OutLine(common.ToJson(true));
              IEnumerable<JSchemaClass> definitions = JSchemaClass.FromDefinitions(common.JSchema, classManager);
              OutLine(definitions.ToJson(true), ConsoleColor.Yellow);
@@ -96,7 +96,7 @@ namespace Bam.Net.Schema.Json.Tests
         {
             JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData, "@type", "class", "className");
             JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
-            JSchemaClass app = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/application_v1.yaml"));
+            JSchemaClass app = classManager.LoadJSchemaClassFile(new UnixPath("~/.data/JsonSchema/application_v1.yaml"));
             Expect.IsNotNull(app);
             Expect.AreEqual("Application", app.ClassName);
             Expect.AreEqual(22, app.Properties.Count());
@@ -125,7 +125,7 @@ namespace Bam.Net.Schema.Json.Tests
                 string[] split = javaType.DelimitSplit(".");
                 return split[split.Length - 1];
             });
-            JSchemaClass census = classManager.LoadJSchemaClassFile(new UnixPath("~/_data/JsonSchema/census_v1.yaml"));
+            JSchemaClass census = classManager.LoadJSchemaClassFile(new UnixPath("~/.data/JsonSchema/census_v1.yaml"));
             Expect.IsNotNull(census);
             Expect.AreEqual("Census", census.ClassName);
             Expect.AreEqual(4, census.Properties.Count());

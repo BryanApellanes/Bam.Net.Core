@@ -25,9 +25,10 @@ bake /all:.\path_to_tools.core\
 
 `bake` recognizes the following command line options.  All options are assumed to be in the format /name:value or just /name if a value is not required.
 
-- output    Specify the directory to build to
-- recipe    Specify the recipe file to use
+- output - Specify the directory to build to
+- recipe - Specify the recipe file to use
 
 # Recipe File
 
 The recipe file describes what project files to build by providing an array of csproj file paths.
+

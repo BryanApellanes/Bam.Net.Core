@@ -30,7 +30,7 @@ namespace Bam.Net.Bake
                 }
             }
             DirectoryInfo dirInfo = new DirectoryInfo(recipe.OutputDirectory);
-            string fileName = $"{recipe.Name}.zip";
+            string fileName = GetArgumentOrDefault("zip", $"{recipe.Name}.zip");
             string output = $"./{fileName}";
             FileInfo outputFile = new FileInfo(output);
             if (Arguments.Contains("output"))
@@ -50,6 +50,6 @@ namespace Bam.Net.Bake
             ZipFile.CreateFromDirectory(new DirectoryInfo(recipe.OutputDirectory).FullName, outputFile.FullName);
             OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(300);
-        } 
+        }
     }
 }
