@@ -14,9 +14,9 @@ jobs:
       DIST: /tmp/bam
     steps:
     - uses: actions/checkout@v1
-    - name: Build 
+    - name: Build All
       run: ./build-all.sh
     - uses: actions/upload-artifact@v1
       with:
-        name: DIST
-        path: /tmp/bam
+        name: BamToolkit
+        path: /tmp/bam/latest.zip
