@@ -30,7 +30,8 @@ namespace Bam.Net.Bake
                 }
             }
             DirectoryInfo dirInfo = new DirectoryInfo(recipe.OutputDirectory);
-            string fileName = GetArgumentOrDefault("zip", $"{recipe.Name}.zip");
+            string defaultFileName = $"{recipe.Name}.zip";
+            string fileName = GetArgumentOrDefault("zip", defaultFileName);
             string output = $"./{fileName}";
             FileInfo outputFile = new FileInfo(output);
             if (Arguments.Contains("output"))
@@ -39,7 +40,7 @@ namespace Bam.Net.Bake
                 outputFile = new FileInfo(Path.Combine(output, "..", fileName));
             }
 
-            if (outputFile.Exists)
+            if (outputFile.Exists && outputFile.Name.Equals(defaultFileName))
             {
                 OutLineFormat("File {0} exists, deleting...", ConsoleColor.DarkYellow, outputFile.FullName);
                 Thread.Sleep(300);
