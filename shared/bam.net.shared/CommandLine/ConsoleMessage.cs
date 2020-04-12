@@ -29,8 +29,7 @@ namespace Bam.Net.CommandLine
 
         public ConsoleMessage(string messageSignature, ConsoleColor textColor, params object[] msgArgs) : this(messageSignature, new ConsoleColorCombo(textColor, ConsoleColor.Black))
         {
-            MessageSignature = messageSignature;
-            MessageArgs = msgArgs;
+            SetText(messageSignature, msgArgs);
         }
 
         private string _text;
