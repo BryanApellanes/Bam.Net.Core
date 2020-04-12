@@ -110,6 +110,10 @@ namespace Bam.Net.Testing
             {
                 projects = new HashSet<string>(Arguments["projects"].DelimitSplit(new[] {","}, true).ToArray());
             }
+
+            BamUnitTestRunListener testListener = new BamUnitTestRunListener(Arguments["results"].Or("./BamTests"));
+            UnitTestRunListeners.Clear();
+            UnitTestRunListeners.Add(testListener);
             
             foreach (string projectFilePath in recipe.ProjectFilePaths)
             {
@@ -123,7 +127,7 @@ namespace Bam.Net.Testing
                 DirectoryInfo testDirectory = new DirectoryInfo(testDirectoryPath);
                 if (!testDirectory.Exists)
                 {
-                    OutLineFormat("Directory not found: {0}", ConsoleColor.Yellow, testDirectory.FullName);
+                    Message.PrintLine("Directory not found: {0}", ConsoleColor.Yellow, testDirectory.FullName);
                     continue;
                 }
                 
@@ -136,23 +140,29 @@ namespace Bam.Net.Testing
                     FileInfo[] testAssemblies = GetTestAssemblies(testDirectory.GetFiles(searchPattern)).ToArray();
                     foreach (FileInfo testAssembly in testAssemblies)
                     {
-                        OutLineFormat("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
+                        Message.PrintLine("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
                         RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
                     }
 
                     if (testAssemblies.Length == 0)
                     {
                         string testDll = Path.Combine(testDirectoryPath, $"{projectName}.dll");
-                        OutLineFormat("No test assemblies were found, checking for project assembly {0}", ConsoleColor.Yellow, testDll);
+                        Message.PrintLine("No test assemblies were found, checking for project assembly {0}", ConsoleColor.Yellow, testDll);
                         if (File.Exists(testDll))
                         {
-                            OutLineFormat("Project assembly found {0}", ConsoleColor.Cyan, testDll);
+                            Message.PrintLine("Project assembly found {0}", ConsoleColor.Cyan, testDll);
                             string testCommand = $"dotnet {testDll} /t";
-                            OutLineFormat("Running {0}", ConsoleColor.DarkCyan, testCommand);
+                            Message.PrintLine("Running {0}", ConsoleColor.DarkCyan, testCommand);
                             testCommand.Run(msg=> OutLine(msg, ConsoleColor.DarkCyan));
                         }
                     }
                 }
+            }
+
+            if (testListener.FailuresOccurred)
+            {
+                testListener.LogSummary();
+                Exit(1);
             }
         }
         

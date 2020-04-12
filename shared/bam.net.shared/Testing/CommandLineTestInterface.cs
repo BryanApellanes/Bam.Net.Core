@@ -318,7 +318,7 @@ namespace Bam.Net.Testing
             AttachUnitTestRunListeners(runner);
             runner.RunTestGroup(testGroup);
         }
-        
+  
         protected internal static Func<IEnumerable<ITestRunListener<UnitTestMethod>>> GetUnitTestRunListeners
         {
             get;
@@ -377,16 +377,15 @@ namespace Bam.Net.Testing
                 OutLine("********", ConsoleColor.Blue, ConsoleColor.Black);
                 if (summary.FailedTests.Count > 0)
                 {
-                    OutLineFormat("({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
-                    OutLineFormat("({0}) tests failed", ConsoleColor.Red, summary.FailedTests.Count);
+                    Message.PrintLine("({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
+                    Message.PrintLine("({0}) tests failed", ConsoleColor.Red, summary.FailedTests.Count);
                     StringBuilder failedTests = new StringBuilder();
                     summary.FailedTests.ForEach(cim =>
                     {
-                        failedTests.Append("\t");
                         MethodInfo method = cim.Test.Method;
                         Type type = method.DeclaringType;
                         string testIdentifier = $"{type.Namespace}.{type.Name}.{method.Name}";
-                        failedTests.AppendFormat("{0}: ({1})", testIdentifier, cim.Test.Information);
+                        failedTests.AppendFormat("\t{0}: ({1})\r\n", testIdentifier, cim.Test.Information);
                     });
                     OutLineFormat("FAILED TESTS: \r\n {0})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), failedTests.ToString());
                 }
@@ -481,6 +480,16 @@ namespace Bam.Net.Testing
             if (failedHandler != null)
             {
                 runner.TestFailed += failedHandler;
+            }
+
+            if (DefaultPassedHandler != null)
+            {
+                runner.TestPassed += DefaultPassedHandler;
+            }
+            
+            if (DefaultFailedHandler != null)
+            {
+                runner.TestFailed += DefaultFailedHandler;
             }
         }
     }

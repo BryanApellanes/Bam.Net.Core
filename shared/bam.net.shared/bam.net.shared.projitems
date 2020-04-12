@@ -456,11 +456,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ConsoleMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ConsoleMenuDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ConsoleMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ConsoleMessages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ConsoleMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ExecutableDirectory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ExitDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\IInfoAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandLine\Message.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ParsedArguments.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\PidFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ProcessExitEventArgs.cs" />
@@ -890,6 +892,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Hosts\HostClientServiceRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Testing\UnitTestFailure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Try.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UnixPath.cs" />
