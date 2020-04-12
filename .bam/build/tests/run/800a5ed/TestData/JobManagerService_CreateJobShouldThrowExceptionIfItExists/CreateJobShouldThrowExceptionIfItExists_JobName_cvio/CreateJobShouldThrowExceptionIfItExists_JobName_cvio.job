@@ -1,0 +1,6 @@
+{
+  "Name": "CreateJobShouldThrowExceptionIfItExists_JobName_cvio",
+  "WorkerConfs": {},
+  "WorkerFiles": [],
+  "JobDirectory": "/media/data/src/Bam.Net.Core/.bam/build/tests/run/800a5ed/TestData/JobManagerService_CreateJobShouldThrowExceptionIfItExists/CreateJobShouldThrowExceptionIfItExists_JobName_cvio"
+}

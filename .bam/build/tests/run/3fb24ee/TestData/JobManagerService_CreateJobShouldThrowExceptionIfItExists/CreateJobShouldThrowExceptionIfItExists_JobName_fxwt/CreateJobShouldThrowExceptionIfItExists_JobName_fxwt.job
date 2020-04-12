@@ -1,0 +1,6 @@
+{
+  "Name": "CreateJobShouldThrowExceptionIfItExists_JobName_fxwt",
+  "WorkerConfs": {},
+  "WorkerFiles": [],
+  "JobDirectory": "/media/data/src/Bam.Net.Core/.bam/build/tests/run/3fb24ee/TestData/JobManagerService_CreateJobShouldThrowExceptionIfItExists/CreateJobShouldThrowExceptionIfItExists_JobName_fxwt"
+}

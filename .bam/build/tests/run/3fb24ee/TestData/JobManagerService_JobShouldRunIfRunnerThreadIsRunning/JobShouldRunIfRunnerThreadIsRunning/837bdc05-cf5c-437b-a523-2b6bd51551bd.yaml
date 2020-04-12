@@ -1,0 +1,4 @@
+WorkerTypeName: Bam.Net.Automation.Tests.JobManagerUnitTests+TestWorker, bam.net.automation.core.tests, Version=1.0.5.0, Culture=neutral, PublicKeyToken=null
+Name: 837bdc05-cf5c-437b-a523-2b6bd51551bd
+Properties:
+  RequiredProperties: '[]'

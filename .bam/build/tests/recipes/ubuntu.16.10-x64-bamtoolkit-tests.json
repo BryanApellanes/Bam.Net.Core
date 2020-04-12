@@ -23,7 +23,7 @@
     "/media/data/src/Bam.Net.Core/_tests/core/bam.net.analytics.core.tests/bam.net.analytics.core.tests.csproj",
     "/media/data/src/Bam.Net.Core/_tests/core/bam.net.core.tests/bam.net.core.tests.csproj"
   ],
-  "OutputDirectory": "/tmp/bam/bin/tests",
+  "OutputDirectory": "/tmp/bam/tests/bin",
   "NugetOutputDirectory": "/home/bryan/.bam/nupkg/Linux",
   "BuildConfig": "Debug",
   "OsName": "Linux"

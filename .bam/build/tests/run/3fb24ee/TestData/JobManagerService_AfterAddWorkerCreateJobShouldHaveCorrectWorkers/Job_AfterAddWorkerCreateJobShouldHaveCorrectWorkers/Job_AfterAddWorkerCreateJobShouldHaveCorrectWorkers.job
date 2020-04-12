@@ -1,0 +1,26 @@
+{
+  "Name": "Job_AfterAddWorkerCreateJobShouldHaveCorrectWorkers",
+  "WorkerConfs": {
+    "two": {
+      "WorkerTypeName": "Bam.Net.Automation.Tests.JobManagerUnitTests+TestWorker, bam.net.automation.core.tests, Version=1.0.5.0, Culture=neutral, PublicKeyToken=null",
+      "StepNumber": 1,
+      "Name": "two",
+      "Properties": {
+        "RequiredProperties": "[]"
+      }
+    },
+    "one": {
+      "WorkerTypeName": "Bam.Net.Automation.Tests.JobManagerUnitTests+TestWorker, bam.net.automation.core.tests, Version=1.0.5.0, Culture=neutral, PublicKeyToken=null",
+      "StepNumber": 0,
+      "Name": "one",
+      "Properties": {
+        "RequiredProperties": "[]"
+      }
+    }
+  },
+  "WorkerFiles": [
+    "/media/data/src/Bam.Net.Core/.bam/build/tests/run/3fb24ee/TestData/JobManagerService_AfterAddWorkerCreateJobShouldHaveCorrectWorkers/Job_AfterAddWorkerCreateJobShouldHaveCorrectWorkers/two.yaml",
+    "/media/data/src/Bam.Net.Core/.bam/build/tests/run/3fb24ee/TestData/JobManagerService_AfterAddWorkerCreateJobShouldHaveCorrectWorkers/Job_AfterAddWorkerCreateJobShouldHaveCorrectWorkers/one.yaml"
+  ],
+  "JobDirectory": "/media/data/src/Bam.Net.Core/.bam/build/tests/run/3fb24ee/TestData/JobManagerService_AfterAddWorkerCreateJobShouldHaveCorrectWorkers/Job_AfterAddWorkerCreateJobShouldHaveCorrectWorkers"
+}
