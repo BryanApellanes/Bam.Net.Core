@@ -1,6 +1,0 @@
-{
-  "Name": "GetJobShouldCreateNewJob",
-  "WorkerConfs": {},
-  "WorkerFiles": [],
-  "JobDirectory": "/media/data/src/Bam.Net.Core/.bam/build/tests/run/800a5ed/TestData/JobManagerService_GetJobShouldCreateNewJob/GetJobShouldCreateNewJob"
-}

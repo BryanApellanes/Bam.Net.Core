@@ -1,6 +1,0 @@
-{
-  "Name": "JobManagerShouldCreateJobConfWithJobDirectorySet",
-  "WorkerConfs": {},
-  "WorkerFiles": [],
-  "JobDirectory": "/media/data/src/Bam.Net.Core/.bam/build/tests/run/20f1622/TestData/JobManagerService_JobManagerShouldCreateJobConfWithJobDirectorySet/JobManagerShouldCreateJobConfWithJobDirectorySet"
-}

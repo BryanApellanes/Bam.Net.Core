@@ -1,6 +1,0 @@
-{
-  "Name": "JobConfTest_msmx",
-  "WorkerConfs": {},
-  "WorkerFiles": [],
-  "JobDirectory": "/media/data/src/Bam.Net.Core/.bam/build/tests/run/3fb24ee/TestData/JobManagerService_JobConductorShouldCreateJobConf/JobConfTest_msmx"
-}

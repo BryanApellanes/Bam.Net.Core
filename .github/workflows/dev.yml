@@ -18,9 +18,9 @@ jobs:
       run: ./build.sh
     - uses: actions/upload-artifact@v1
       with:
-        name: Upload-BamToolkit
+        name: BamToolkit
         path: /tmp/bam/bamtoolkit.zip
     - uses: actions/upload-artifact@v1
       with:
-        name: Upload-BamToolkit-Tests
+        name: BamToolkit-Tests
         path: /tmp/bam/tests/bamtoolkit-tests.zip
