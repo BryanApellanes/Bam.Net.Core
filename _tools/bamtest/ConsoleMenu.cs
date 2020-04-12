@@ -114,7 +114,7 @@ namespace Bam.Net.Testing
             BamUnitTestRunListener testListener = new BamUnitTestRunListener(Arguments["results"].Or("./BamTests"));
             UnitTestRunListeners.Clear();
             UnitTestRunListeners.Add(testListener);
-            
+            HashSet<string> assemblyHashes = new HashSet<string>();
             foreach (string projectFilePath in recipe.ProjectFilePaths)
             {
                 FileInfo projectFile = new FileInfo(projectFilePath);
@@ -140,8 +140,17 @@ namespace Bam.Net.Testing
                     FileInfo[] testAssemblies = GetTestAssemblies(testDirectory.GetFiles(searchPattern)).ToArray();
                     foreach (FileInfo testAssembly in testAssemblies)
                     {
-                        Message.PrintLine("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
-                        RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
+                        string assemblyHash = testAssembly.ContentHash(HashAlgorithms.SHA1);
+                        if (!assemblyHashes.Contains(assemblyHash))
+                        {
+                            assemblyHashes.Add(assemblyHash);
+                            Message.PrintLine("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
+                            RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
+                        }
+                        else
+                        {
+                            Message.PrintLine("Tests in {0} already run", ConsoleColor.DarkGreen, testAssembly.FullName);
+                        }
                     }
 
                     if (testAssemblies.Length == 0)
