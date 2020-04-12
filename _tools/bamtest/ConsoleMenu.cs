@@ -146,10 +146,10 @@ namespace Bam.Net.Testing
                         OutLineFormat("No test assemblies were found, checking for project assembly {0}", ConsoleColor.Yellow, testDll);
                         if (File.Exists(testDll))
                         {
-                            OutLineFormat("Project file found {0}", ConsoleColor.Cyan, testDll);
+                            OutLineFormat("Project assembly found {0}", ConsoleColor.Cyan, testDll);
                             string testCommand = $"dotnet {testDll} /t";
                             OutLineFormat("Running {0}", ConsoleColor.DarkCyan, testCommand);
-                            testCommand.Run(OutLine);
+                            testCommand.Run(msg=> OutLine(msg, ConsoleColor.DarkCyan));
                         }
                     }
                 }
