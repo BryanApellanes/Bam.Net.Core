@@ -27,15 +27,35 @@ namespace Bam.Net.Schema.Json.Tests
         private UnixPath CommonSchema = new UnixPath("~/.data/JsonSchema/common_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
+
+        [UnitTest]
+        [TestGroup("JSchema")]
+        public void CanGenerateDaoSource()
+        {
+            Workspace workspace = Workspace.ForProcess();
+            string testSrcPath = workspace.Path("src", nameof(CanGenerateDaoSource));
+            if (Directory.Exists(testSrcPath))
+            {
+                Directory.Delete(testSrcPath, true);
+            }
+            DirectoryInfo testSrcDir = new DirectoryInfo(testSrcPath);
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData);
+            JSchemaDaoAssemblyGenerator jSchemaDaoAssemblyGenerator = registry.Get<JSchemaDaoAssemblyGenerator>();
+            FileInfo[] files = testSrcDir.GetFiles();
+            (files.Length == 0).IsTrue("There were files already in the target directory");
+            jSchemaDaoAssemblyGenerator.GenerateSource(testSrcPath);
+            files = testSrcDir.GetFiles();
+            (files.Length > 0).IsTrue("No files were in the target directory");
+        }
         
         [UnitTest]
-        public void CanResolveUnixPath()
+        [TestGroup("JSchema")]
+        public void CanGenerateSchemaDefinition()
         {
-            UnixPath path = new UnixPath("~/src");
-            path.Resolve().StartsWith("~").IsFalse();
-            path.Path.StartsWith("~/").IsTrue();
-            path.Resolve().StartsWith(BamHome.UserHome);
-            OutLineFormat("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
+            JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData);
+            JSchemaSchemaDefinitionGenerator generator = registry.Get<JSchemaSchemaDefinitionGenerator>();
+            JSchemaSchemaDefinition jSchemaSchemaDefinition = generator.GenerateSchemaDefinition();
+            Expect.IsNotNull(jSchemaSchemaDefinition, "jSchemaSchemaDefinition was null");
         }
 
         [UnitTest]
@@ -223,6 +243,16 @@ namespace Bam.Net.Schema.Json.Tests
             propertyNameHashSet.Contains("BusinessName").IsTrue("BusinessName not found");
             propertyNameHashSet.Contains("TaxIds").IsTrue("TaxIds");
             propertyNameHashSet.Contains("IndustryCodes").IsTrue("IndustryCodes");
+        }
+        
+        [UnitTest]
+        public void CanResolveUnixPath()
+        {
+            UnixPath path = new UnixPath("~/src");
+            path.Resolve().StartsWith("~").IsFalse();
+            path.Path.StartsWith("~/").IsTrue();
+            path.Resolve().StartsWith(BamHome.UserHome);
+            OutLineFormat("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
         }
 
         private JSchema GetCompanyJSchema(out JSchemaClassManager jSchemaClassManager)

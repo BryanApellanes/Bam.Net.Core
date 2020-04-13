@@ -61,10 +61,7 @@ namespace Bam.Net.Data.Schema
         string _connectionString;
         public virtual string ConnectionString
         {
-            get
-            {
-                return _connectionString;
-            }
+            get => _connectionString;
             set
             {
                 _connectionString = value;

@@ -16,7 +16,7 @@ namespace Bam.Net.Data.Dynamic
     {
         public DaoAssemblyGenerator(SchemaExtractor schemaExtractor, string workspacePath = null)
         {
-            this.SchemaExtractor = schemaExtractor ?? ServiceRegistry.Default.Get<SchemaExtractor>();
+            this.SchemaExtractor = schemaExtractor ?? ServiceRegistry.Default.Get<ISchemaExtractor>();
             this.ReferenceAssemblies = new Assembly[] { };
             this._referenceAssemblyPaths = new List<string>(AdHocCSharpCompiler.DefaultReferenceAssemblies);
 

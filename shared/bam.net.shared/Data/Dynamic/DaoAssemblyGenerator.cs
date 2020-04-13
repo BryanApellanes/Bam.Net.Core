@@ -1,51 +1,51 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.Data.Schema;
-using Bam.Net.Data.MsSql;
-using System.IO;
+
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using Bam.Net.CoreServices;
+using Bam.Net.Data.Schema;
 
 namespace Bam.Net.Data.Dynamic
 {
     public partial class DaoAssemblyGenerator: IAssemblyGenerator
     {
-
-        public DaoAssemblyGenerator(SchemaDefinition schema, SchemaNameMap nameMap, string workspacePath = null)
+        public DaoAssemblyGenerator(string workspacePath = null)
         {
             this.ReferenceAssemblies = new Assembly[] { };
             this._referenceAssemblyPaths = new List<string>(AdHocCSharpCompiler.DefaultReferenceAssemblies);
 
-            this.Workspace = workspacePath ?? ".";
+            this.Workspace = workspacePath ?? $"./{nameof(DaoAssemblyGenerator)}";
+            SchemaExtractor = ServiceRegistry.Default.Get<ISchemaExtractor>();
+        }
+
+        public DaoAssemblyGenerator(SchemaDefinition schema, SchemaNameMap nameMap, string workspacePath = null) : this()
+        {
             this.Schema = schema;
             this.NameMap = nameMap;
         }
 
-        public SchemaExtractor SchemaExtractor { get; private set; }
+        public ISchemaExtractor SchemaExtractor { get; private set; }
         SchemaDefinition schema;
-        object schemaDefinitionLock = new object();
+        readonly object schemaDefinitionLock = new object();
         public SchemaDefinition Schema
         {
             get
             {
                 return schemaDefinitionLock.DoubleCheckLock(ref schema, () => SchemaExtractor.Extract());
             }
-            set
-            {
-                schema = value;
-            }
+            set => schema = value;
         }
+        
         public SchemaNameMap NameMap { get; set; }
         public string FileName { get; private set; }
         public string Workspace { get; set; }
         Assembly assembly;
-        object assemblyLock = new object();
+        readonly object assemblyLock = new object();
         public Assembly Assembly
         {
             get
@@ -78,7 +78,7 @@ namespace Bam.Net.Data.Dynamic
 
         protected Assembly[] ReferenceAssemblies { get; set; }
 
-        List<string> _referenceAssemblyPaths;
+        readonly List<string> _referenceAssemblyPaths;
         protected string[] ReferenceAssemblyPaths
         {
             get
@@ -89,7 +89,7 @@ namespace Bam.Net.Data.Dynamic
             }
         }
 
-        protected SchemaDefinition GetSchemaDefinition()
+        protected virtual SchemaDefinition GetSchemaDefinition()
         {
             if (NameMap != null)
             {
@@ -109,13 +109,13 @@ namespace Bam.Net.Data.Dynamic
 
         public GeneratedAssemblyInfo GetAssemblyInfo()
         {
-            FileName = "{0}Dao"._Format(Schema.Name);
+            FileName = $"{Schema.Name}Dao";
             string fileName = Path.GetFileNameWithoutExtension(FileName);
-            FilePath = Path.Combine(Workspace, "{0}.dll");
+            FilePath = Path.Combine(Workspace, $"{fileName}.dll");
             return GeneratedAssemblyInfo.GetGeneratedAssembly(FilePath, this);
         }
 
-        object _generateLock = new object();
+        readonly object _generateLock = new object();
         public GeneratedAssemblyInfo GenerateAssembly()
         {
             lock (_generateLock)
@@ -133,7 +133,7 @@ namespace Bam.Net.Data.Dynamic
             GenerateSource(writeSourceTo);
         }
 
-        public void GenerateSource(string sourcePath)
+        public virtual void GenerateSource(string sourcePath)
         {
             DirectoryInfo sourceDir = new DirectoryInfo(sourcePath);
             if (!sourceDir.Exists)

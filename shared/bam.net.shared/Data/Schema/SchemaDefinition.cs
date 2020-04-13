@@ -299,8 +299,7 @@ namespace Bam.Net.Data.Schema
         /// <returns></returns>
         public static SchemaDefinition Load(string schemaFile)
         {
-            SchemaDefinition schema = new SchemaDefinition();
-            schema.File = schemaFile;
+            SchemaDefinition schema = new SchemaDefinition {File = schemaFile};
             if (System.IO.File.Exists(schemaFile)) 
 			{
 	            schema = schemaFile.FromJsonFile<SchemaDefinition>();

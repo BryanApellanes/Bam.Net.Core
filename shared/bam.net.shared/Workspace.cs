@@ -8,7 +8,7 @@ using Bam.Net.Presentation.Handlebars;
 namespace Bam.Net
 {
     /// <summary>
-    /// Provides an interface to a specific place in the filesystem for an application.
+    /// Provides an interface to a specific place in the filesystem.
     /// </summary>
     public class Workspace
     {
@@ -54,8 +54,7 @@ namespace Bam.Net
         
         public string Path(params string[] pathSegments)
         {
-            List<string> fileSegments = new List<string>();
-            fileSegments.Add(Root.FullName);
+            List<string> fileSegments = new List<string> {Root.FullName};
             fileSegments.AddRange(pathSegments);
             return System.IO.Path.Combine(fileSegments.ToArray());
         }
@@ -103,8 +102,7 @@ namespace Bam.Net
         {
             if (_logger == null)
             {
-                _logger = new T();
-                _logger.Folder = Root;
+                _logger = new T {Folder = Root};
             }
 
             return _logger;

@@ -640,12 +640,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)MetadataReferenceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\EnumModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemJsonJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\FileSystemYamlJSchemaResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\IJSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JavaJSchemaClassManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaDaoAssemblyGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaEnumGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaEnumGeneratorEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaNameParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaLoadResult.cs" />
@@ -653,6 +657,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaManagementRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JSchemaSchemaDefinitionGeneratorEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Json\JsonJSchemaLoader.cs" />
@@ -3228,5 +3233,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Translation\Translation.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)UserAccounts\UserAccounts.db.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Schema\Json\Templates" />
   </ItemGroup>
 </Project>

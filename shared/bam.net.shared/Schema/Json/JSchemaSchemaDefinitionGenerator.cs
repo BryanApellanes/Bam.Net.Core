@@ -19,9 +19,12 @@ namespace Bam.Net.Schema.Json
             Args.ThrowIfNull(jSchemaClassManager, "jSchemaClassManager");
             SchemaManager = schemaManager;
             JSchemaClassManager = jSchemaClassManager;
+            JsonSchemaRootPath = "./JsonSchema/";
             Logger = Log.Default;
             SchemaManager.ManageSchema(Path.Combine(BamProfile.Data, "SchemaDefinition_FromJSchemas.json"));
         }
+        
+        public string JsonSchemaRootPath { get; set; }
         
         [Verbosity(VerbosityLevel.Information)]
         public event EventHandler GenerateSchemaDefinitionStarted;
@@ -53,13 +56,19 @@ namespace Bam.Net.Schema.Json
         public SchemaManager SchemaManager { get; private set; }
         public JSchemaClassManager JSchemaClassManager { get; private set; }
 
-        public SchemaDefinition GenerateSchemaDefinition(string jsonSchemaRoot)
+        public JSchemaSchemaDefinition GenerateSchemaDefinition()
         {
+            return GenerateSchemaDefinition(JsonSchemaRootPath);
+        }
+        
+        public JSchemaSchemaDefinition GenerateSchemaDefinition(string jsonSchemaRoot)
+        {
+            HashSet<JSchemaClass> jSchemaClasses = new HashSet<JSchemaClass>();
             try
             {
                 SchemaManager.AutoSave = false;
                 FireEvent(GenerateSchemaDefinitionStarted, this, GetEventArgs());
-                HashSet<JSchemaClass> jSchemaClasses = JSchemaClassManager.GetAllJSchemaClasses(jsonSchemaRoot);
+                jSchemaClasses = JSchemaClassManager.GetAllJSchemaClasses(jsonSchemaRoot);
 
                 // for all classes
                 foreach (JSchemaClass jSchemaClass in jSchemaClasses.Where(js=> !js.IsEnum))
@@ -109,8 +118,7 @@ namespace Bam.Net.Schema.Json
                         SchemaManager.SetForeignKey(targetTable, tableToAddFkTo, referencingColumnName);
                     }
                 }
-                
-                // generate enums
+
                 SchemaManager.Save();
                 FireEvent(GenerateSchemaDefinitionComplete, GetEventArgs(SchemaManager.GetCurrentSchema()));
             }
@@ -120,14 +128,9 @@ namespace Bam.Net.Schema.Json
                 FireEvent(GenerateSchemaDefinitionException, this, GetEventArgs(ex));
             }
 
-            return SchemaManager.CurrentSchema;
+            return new JSchemaSchemaDefinition(SchemaManager.CurrentSchema, jSchemaClasses);
         }
 
-        private void GenerateEnums(HashSet<JSchemaClass> jSchemaClasses)
-        {
-            
-        }
-        
         private EventArgs GetEventArgs(Exception ex)
         {
             return GetEventArgs(null, null, ex);

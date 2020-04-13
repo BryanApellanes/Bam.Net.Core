@@ -47,7 +47,7 @@ namespace Bam.Net.Data.Intersystems
         }
 
         Dictionary<string, List<InterSystemsFieldDescriptor>> _fieldDescriptorsByTable;
-        object _fieldDescriptorsByTableLock = new object();
+        readonly object _fieldDescriptorsByTableLock = new object();
         protected Dictionary<string, List<InterSystemsFieldDescriptor>> FieldDescriptorsByTable
         {
             get

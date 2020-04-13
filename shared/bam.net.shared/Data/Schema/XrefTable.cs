@@ -24,10 +24,7 @@ namespace Bam.Net.Data.Schema
         string _left;
         public string Left
         {
-            get
-            {
-                return _left;
-            }
+            get => _left;
             set
             {
                 _left = value;
@@ -38,10 +35,7 @@ namespace Bam.Net.Data.Schema
         string _right;        
         public string Right
         {
-            get
-            {
-                return _right;
-            }
+            get => _right;
             set
             {
                 _right = value;
@@ -51,7 +45,7 @@ namespace Bam.Net.Data.Schema
 
         private void SetName()
         {
-            Name = string.Format("{0}{1}", Left, Right);
+            Name = $"{Left}{Right}";
         }
     }
 }

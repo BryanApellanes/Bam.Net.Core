@@ -38,7 +38,8 @@ namespace Bam.Net.Schema.Json
                 .For<JSchemaResolver>().Use(resolver)
                 .For<JSchemaLoader>().Use(loader)
                 .For<JSchemaClassManager>().Use(new JSchemaClassManager(classNameProperties) {JSchemaResolver = resolver})
-                .For<JavaJSchemaClassManager>().Use(new JavaJSchemaClassManager(){JSchemaResolver = resolver});
+                .For<JavaJSchemaClassManager>().Use(new JavaJSchemaClassManager() {JSchemaResolver = resolver})
+                .For<JSchemaDaoAssemblyGenerator>().Use<JSchemaDaoAssemblyGenerator>();
 
             return registry;
         }

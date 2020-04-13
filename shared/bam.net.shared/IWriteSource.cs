@@ -9,6 +9,6 @@ namespace Bam.Net
 {
     public interface IWriteSource
     {
-        void WriteSource(string writeSourceDir);
+        void WriteSource(string writeSourceToDir);
     }
 }
