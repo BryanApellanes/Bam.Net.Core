@@ -56,7 +56,7 @@ namespace Bam.Net
 
         static readonly Dictionary<OSNames, string> _buildRuntimeNames = new Dictionary<OSNames, string>
         {
-            {OSNames.Invalid, "win10-x64"},
+            {OSNames.Invalid, "ubuntu.16.10-x64"},
             {OSNames.Windows, "win10-x64"},
             {OSNames.Linux, "ubuntu.16.10-x64"},
             {OSNames.OSX, "osx-x64"}

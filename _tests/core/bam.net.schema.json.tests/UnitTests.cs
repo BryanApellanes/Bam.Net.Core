@@ -21,10 +21,10 @@ namespace Bam.Net.Schema.Json.Tests
     [Serializable]
     public class UnitTests : CommandLineTestInterface
     {
-        private UnixPath RootData = new UnixPath("~/_data/JsonSchema/");
-        private UnixPath ApplicationSchema = new UnixPath("~/_data/JsonSchema/application_v1.yaml");
-        private UnixPath CensusSchema = new UnixPath("~/_data/JsonSchema/census_v1.yaml");
-        private UnixPath CommonSchema = new UnixPath("~/_data/JsonSchema/common_v1.yaml");
+        private UnixPath RootData = new UnixPath("~/.data/JsonSchema/");
+        private UnixPath ApplicationSchema = new UnixPath("~/.data/JsonSchema/application_v1.yaml");
+        private UnixPath CensusSchema = new UnixPath("~/.data/JsonSchema/census_v1.yaml");
+        private UnixPath CommonSchema = new UnixPath("~/.data/JsonSchema/common_v1.yaml");
         private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
         private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
         
