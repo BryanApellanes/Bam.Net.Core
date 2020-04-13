@@ -1,0 +1,60 @@
+"$schema": http://json-schema.org/draft-04/schema#
+id: contact_v1.yaml
+
+title: Contact
+javaType: "com.vimly.entitystore.schema.ContactEntity"
+type: object
+"@type": "Contact"
+extends: 
+  "$ref": "entity_v1.yaml"
+
+properties:
+    firstName:
+        type: string
+        faker: name.firstName
+    middleName:
+        type: string
+        faker: name.middleName
+    lastName:
+        type: string
+        faker: name.lastName
+    externalIds: 
+      type: object
+      "existingJavaType": "java.util.Map<String, String>"
+    title:
+        type: string
+        faker: name.jobTitle
+    communications:
+        type: array
+        items:
+          "$ref": "communication_v1.yaml"
+    # Address needs to be moved to an edge relationship
+    addresses:
+        type: array
+        items:
+          "$ref": "address_v1.yaml"
+
+    #Contact Type needs to be moved to an edge relationship model
+    contactTypes: 
+        type: array
+        uniqueItems: true
+        items: 
+            type: string
+            enum: 
+                - PRIMARY_CONTACT
+                - CONTRACT_SIGNER
+                - BILLING_CONTACT
+                - CORRESPONDENCE_CONTACT
+                - REPORTS_CONTACT
+                - BENEFIT_ADMINISTRATOR
+                - OWNER
+                - LEGACY_SALES_REPRESENTATIVE
+                - LEGACY_SALES_ASSOCIATE
+
+required:
+    - firstName
+    - lastName
+    - telephoneNumber
+    - emailAddress
+    - address
+    - contactType
