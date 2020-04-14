@@ -10,7 +10,7 @@ namespace Bam.Net.Schema.Json
 {
     public class JSchemaClassManager 
     {
-        private readonly List<string> _classNameProperties;
+        private readonly HashSet<string> _classNameProperties;
         private readonly Dictionary<string, Func<string, string>> _classNamePropertyMungers;
 
         public JSchemaClassManager(JSchemaResolver jSchemaResolver):this("className")
@@ -27,7 +27,7 @@ namespace Bam.Net.Schema.Json
         public JSchemaClassManager(params string[] classNameProperties)
         {
             JSchemaNameParser = new JSchemaNameParser();
-            _classNameProperties = new List<string>(classNameProperties);
+            _classNameProperties = new HashSet<string>(classNameProperties);
             _classNamePropertyMungers = new Dictionary<string, Func<string, string>>();
             SetClassNameExtractor();
         }
@@ -35,7 +35,7 @@ namespace Bam.Net.Schema.Json
         public JSchemaClassManager(Dictionary<string, Func<string, string>> classNamePropertyMungers)
         {
             JSchemaNameParser = new JSchemaNameParser();
-            _classNameProperties = new List<string>(classNamePropertyMungers.Keys.ToArray());
+            _classNameProperties = new HashSet<string>(classNamePropertyMungers.Keys.ToArray());
             _classNamePropertyMungers = classNamePropertyMungers;
             SetClassNameExtractor();
         }
@@ -64,6 +64,16 @@ namespace Bam.Net.Schema.Json
         public JSchemaNameParser JSchemaNameParser { get; set; }
         
         public ILogger Logger { get; set; }
+
+        public JSchemaClassNameExtraction GetClassNameExtraction(JSchema jSchema)
+        {
+            return new JSchemaClassNameExtraction()
+            {
+                JSchema = jSchema,
+                JSchemaClassManager = this,
+                ClassName = ExtractJSchemaClassName(jSchema)
+            };
+        }
         /// <summary>
         /// A function used to further parse a class name when it is found.  This is intended
         /// to apply any conventions to the name that are not enforced in the JSchema.  Parse the
@@ -93,6 +103,17 @@ namespace Bam.Net.Schema.Json
             set => JSchemaNameParser.MungeEnumName = value;
         }
 
+        public void AddClassNameProperty(string classNameProperty)
+        {
+            _classNameProperties.Add(classNameProperty);
+            JSchemaNameParser.AddClassNameProperty(classNameProperty);
+        }
+
+        public void AddClassNameExtractor(Func<JSchema, string> classNameExtractor)
+        {
+            JSchemaNameParser.AddClassNameExtractor(classNameExtractor);
+        }
+        
         /// <summary>
         /// A function used to further parse a property name when it is found.  This is intended to
         /// apply any conventions to the name that are not enforced in the JSchema.  Parse the
@@ -245,7 +266,7 @@ namespace Bam.Net.Schema.Json
             {
                 string defaultClassName = defaultClassNameExtractor(jSchema);
                 string fromClassNameProperties = ExtractClassNameFromClassNameProperties(jSchema);
-                if (!defaultClassName.Equals(fromClassNameProperties))
+                if (!string.IsNullOrEmpty(fromClassNameProperties) && !defaultClassName.Equals(fromClassNameProperties))
                 {
                     return fromClassNameProperties;
                 }

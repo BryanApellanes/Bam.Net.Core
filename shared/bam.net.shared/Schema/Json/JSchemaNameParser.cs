@@ -7,23 +7,36 @@ namespace Bam.Net.Schema.Json
 {
     public class JSchemaNameParser
     {
-        private List<string> _classNameProperties;
+        private readonly List<Func<JSchema, string>> _classNameExtractors;
+        private readonly List<string> _classNameProperties;
         public JSchemaNameParser()
         {
+            _classNameExtractors = new List<Func<JSchema, string>>();
             _classNameProperties = new List<string> {"class", "className"};
-            MungeClassName = (s) => s.PascalCase(true, " ", "_", "/", "\\", "-", ".", ",");
+            MungeClassName = (s) => s.PascalCase(true, " ", "_", "/", "\\", "-", ".", ",", "@");
             ExtractJSchemaClassName = schema =>
             {
-                if (!string.IsNullOrEmpty(schema?.Id?.ToString()))
+                string result = string.Empty;
+                string extracted = ExtractClassName(schema);
+                if (!string.IsNullOrEmpty(extracted))
                 {
-                    return MungeClassName(schema.Id.ToString());
+                    result = MungeClassName(extracted);
+                }
+                else if (!string.IsNullOrEmpty(schema?.Id?.ToString()))
+                {
+                    result = MungeClassName(schema.Id.ToString());
                 }
                 else if (!string.IsNullOrEmpty(schema?.Title))
                 {
-                    return MungeClassName(schema.Title);
+                    result = MungeClassName(schema.Title);
                 }
 
-                return MungeClassName(schema.ToJson().Sha256());
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = MungeClassName(schema.ToJson().Sha256());
+                }
+
+                return result;
             };
             ExtractJObjectClassName = jObject =>
             {
@@ -49,5 +62,32 @@ namespace Bam.Net.Schema.Json
         public Func<JObject, string> ExtractJObjectClassName { get; set; }
         public Func<string, string> MungeEnumName { get; set; }
         public Func<string, string> MungePropertyName { get; set; }
+
+        public JSchemaNameParser AddClassNameProperty(string classNameProperty)
+        {
+            _classNameProperties.Add(classNameProperty);
+            return this;
+        }
+        public JSchemaNameParser AddClassNameExtractor(Func<JSchema, string> extractor)
+        {
+            _classNameExtractors.Add(extractor);
+            return this;
+        }
+
+        public string ExtractClassName(JSchema jSchema)
+        {
+            string className = string.Empty;
+            foreach(Func<JSchema, string> func in _classNameExtractors)
+            {
+                if (!string.IsNullOrEmpty(className))
+                {
+                    break;
+                }
+
+                className = func(jSchema);
+            }
+
+            return className;
+        }
     }
 }

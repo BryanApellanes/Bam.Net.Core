@@ -33,13 +33,20 @@ namespace Bam.Net.Schema.Json
             JSchemaResolver resolver = FileSystemJSchemaResolver.ForFormat(rootData, format);
             JSchemaLoader loader = JSchemaLoader.ForFormat(format);
             SchemaManager schemaManager = new SchemaManager(new UnixPath($"~/.bam/data/JSchema_{nameof(SchemaManager)}.json"));
+            JSchemaClassManager jSchemaClassManager = new JavaJSchemaClassManager() {JSchemaResolver = resolver};
+            classNameProperties.Each(cnp => jSchemaClassManager.AddClassNameProperty(cnp));
             registry
                 .For<SchemaManager>().Use(schemaManager)
                 .For<JSchemaResolver>().Use(resolver)
                 .For<JSchemaLoader>().Use(loader)
-                .For<JSchemaClassManager>().Use(new JSchemaClassManager(classNameProperties) {JSchemaResolver = resolver})
-                .For<JavaJSchemaClassManager>().Use(new JavaJSchemaClassManager() {JSchemaResolver = resolver})
-                .For<JSchemaDaoAssemblyGenerator>().Use<JSchemaDaoAssemblyGenerator>();
+                .For<JSchemaClassManager>().Use(jSchemaClassManager)
+                .For<JavaJSchemaClassManager>().Use(jSchemaClassManager)
+                .For<JSchemaSchemaDefinitionGenerator>().Use<JSchemaSchemaDefinitionGenerator>()
+                .For<JSchemaEnumGenerator>().Use<JSchemaEnumGenerator>()
+                .For<JSchemaDaoAssemblyGenerator>().Use(new JSchemaDaoAssemblyGenerator(registry.Get<JSchemaSchemaDefinitionGenerator>(), registry.Get<JSchemaEnumGenerator>())
+                        {
+                            JsonSchemaRootPath = rootData
+                        });
 
             return registry;
         }

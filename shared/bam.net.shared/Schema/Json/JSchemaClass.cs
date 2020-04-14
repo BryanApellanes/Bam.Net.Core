@@ -19,25 +19,24 @@ namespace Bam.Net.Schema.Json
         public JSchemaClass(JSchema jSchema, JSchemaClassManager classManager, string filePath = null) : this(classManager, filePath)
         {
             JSchema = jSchema;
-            ClassName = classManager.ExtractJSchemaClassName(JSchema);
+            _className = classManager.GetClassNameExtraction(JSchema);
+            _className.JSchemaClass = this;
         }
 
         protected internal JSchemaClassManager ClassManager { get; private set; }
         public string FilePath { get; set; }
 
-        private string _className;
+        private JSchemaClassNameExtraction _className;
+        [Exclude]
+        [XmlIgnore]
+        [JsonIgnore]
+        [YamlIgnore]
+        public JSchemaClassNameExtraction ClassNameExtraction => _className;
+
         public string ClassName
         {
-            get
-            {
-                if (string.IsNullOrEmpty(_className))
-                {
-                    _className = ClassManager.ExtractJSchemaClassName(JSchema);
-                }
-
-                return _className;
-            }
-            set => _className = value;
+            get => _className ?? (_className = ClassManager.GetClassNameExtraction(JSchema));
+            set => _className = new JSchemaClassNameExtraction(value);
         }
 
         public bool IsEnum => JSchema.Enum?.Count > 0;

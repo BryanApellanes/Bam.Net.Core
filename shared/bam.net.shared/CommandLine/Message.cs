@@ -50,6 +50,11 @@ namespace Bam.Net.CommandLine
             ConsoleMessage.Log(logger, messageSignature, textColor, messageArgs);
         }
 
+        public static void PrintLine()
+        {
+            PrintLine("");
+        }
+        
         public static void PrintLine(string messageSignature, params object[] messageArgs)
         {
             Print($"{messageSignature}\r\n", messageArgs);

@@ -236,13 +236,7 @@ namespace Bam.Net.Testing
 
         protected Assembly Assembly { get; set; }
 
-        protected List<TTestMethod> Tests
-        {
-            get
-            {
-                return _tests.Value;
-            }
-        }
+        protected List<TTestMethod> Tests => _tests.Value;
 
         protected bool IsInRange(string testNumber, out int selectedNumber)
         {

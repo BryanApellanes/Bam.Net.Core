@@ -39,8 +39,13 @@ namespace Bam.Net.Schema.Json.Tests
                 Directory.Delete(testSrcPath, true);
             }
             DirectoryInfo testSrcDir = new DirectoryInfo(testSrcPath);
+            if (!testSrcDir.Exists)
+            {
+                testSrcDir.Create();
+            }
             JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData);
             JSchemaDaoAssemblyGenerator jSchemaDaoAssemblyGenerator = registry.Get<JSchemaDaoAssemblyGenerator>();
+            jSchemaDaoAssemblyGenerator.Namespace = "Bam.Net.JSchema.Generated.Classes";
             FileInfo[] files = testSrcDir.GetFiles();
             (files.Length == 0).IsTrue("There were files already in the target directory");
             jSchemaDaoAssemblyGenerator.GenerateSource(testSrcPath);
