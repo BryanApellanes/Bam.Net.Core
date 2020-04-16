@@ -13,23 +13,24 @@ namespace Bam.Net.CommandLine
         {
         }
 
-        public ConsoleMessage(string msg)
+        public ConsoleMessage(string message)
         {
-            Text = msg;
+            Text = message;
         }
 
-        public ConsoleMessage(string msg, ConsoleColorCombo colors): this(msg)
+        public ConsoleMessage(string message, ConsoleColorCombo colors, params object[] messageSignatureArgs)
         {
             Colors = colors;
+            SetText(message, messageSignatureArgs);
         }
 
-        public ConsoleMessage(string msg, ConsoleColor textColor, ConsoleColor background = ConsoleColor.Black) : this(msg, new ConsoleColorCombo(textColor, background))
+        public ConsoleMessage(string message, ConsoleColor textColor, ConsoleColor background = ConsoleColor.Black) : this(message, new ConsoleColorCombo(textColor, background))
         {
         }
 
-        public ConsoleMessage(string messageSignature, ConsoleColor textColor, params object[] msgArgs) : this(messageSignature, new ConsoleColorCombo(textColor, ConsoleColor.Black))
+        public ConsoleMessage(string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs) : this(messageSignature, new ConsoleColorCombo(textColor, ConsoleColor.Black))
         {
-            SetText(messageSignature, msgArgs);
+            SetText(messageSignature, messageSignatureArgs);
         }
 
         private string _text;
@@ -37,7 +38,7 @@ namespace Bam.Net.CommandLine
         public string Text
         {
             get => GetText();
-            set => _text = value;
+            private set => _text = value;
         }
 
         public void SetText(string messageSignature, params object[] messageSignatureArgs)
@@ -96,6 +97,16 @@ namespace Bam.Net.CommandLine
             Log(logger, new ConsoleMessage(messageSignature, textColor, messageArgs));
         }
 
+        public static void Log(string messageSignature, ConsoleColorCombo colors, params object[] messageSignatureArgs)
+        {
+            Log(Logging.Log.Default, messageSignature, colors, messageSignatureArgs);
+        }
+        
+        public static void Log(ILogger logger, string messageSignature, ConsoleColorCombo colors, params object[] messageSignatureArgs)
+        {
+            Log(logger, new ConsoleMessage(messageSignature, colors, messageSignatureArgs));
+        }
+
         public static void Log(params ConsoleMessage[] consoleMessages)
         {
             foreach (ConsoleMessage consoleMessage in consoleMessages)
@@ -117,15 +128,22 @@ namespace Bam.Net.CommandLine
             Log(Logging.Log.Default, consoleMessage);
         }
         
+        static readonly HashSet<ConsoleColor> _errorBackgrounds = new HashSet<ConsoleColor>(new ConsoleColor[]{ConsoleColor.Red, ConsoleColor.DarkRed, ConsoleColor.Magenta, ConsoleColor.DarkMagenta});
+        static readonly HashSet<ConsoleColor> _warningBackgrounds = new HashSet<ConsoleColor>(new ConsoleColor[]{ConsoleColor.Yellow, ConsoleColor.DarkYellow});
         public static void Log(ILogger logger, ConsoleMessage consoleMessage)
         {
             Print(consoleMessage);
             Task.Run(() =>
             {
-                HashSet<ConsoleColor> errorBackgrounds = new HashSet<ConsoleColor>(new ConsoleColor[]{ConsoleColor.Red, ConsoleColor.DarkRed, ConsoleColor.Magenta, ConsoleColor.DarkMagenta});
-                if (errorBackgrounds.Contains(consoleMessage.Colors.BackgroundColor))
+                if (_errorBackgrounds.Contains(consoleMessage.Colors.BackgroundColor))
                 {
                     logger.Error(consoleMessage.MessageSignature ?? consoleMessage.Text, consoleMessage.MessageArgs ?? new object[]{});
+                    return;
+                }
+
+                if (_warningBackgrounds.Contains(consoleMessage.Colors.BackgroundColor))
+                {
+                    logger.Warning(consoleMessage.MessageSignature ?? consoleMessage.Text, consoleMessage.MessageArgs ?? new object[]{});
                     return;
                 }
                 
@@ -169,6 +187,10 @@ namespace Bam.Net.CommandLine
         }
         
         // TODO: Add signature Print(string, ConsoleColorCombo, params object[])
+        public static void Print(string messageSignature, ConsoleColorCombo colors, params object[] messageArgs)
+        {
+            Print(new ConsoleMessage(messageSignature, colors, messageArgs));
+        }
         public static void Print(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
         {
             Print(new ConsoleMessage(messageSignature, textColor, messageArgs));

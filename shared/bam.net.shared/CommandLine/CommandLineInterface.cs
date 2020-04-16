@@ -994,10 +994,7 @@ File Version: {1}
                 }
                 return _colorBackgroundMessageProvider;
             }
-            set
-            {
-                _colorBackgroundMessageProvider = value;
-            }
+            set => _colorBackgroundMessageProvider = value;
         }
 
         public static void Out(string message, ConsoleColorCombo colors)

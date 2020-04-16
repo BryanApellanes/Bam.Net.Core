@@ -10,44 +10,49 @@ namespace Bam.Net.CommandLine
             ConsoleMessage.Log(messages);
         }
         
-        public static void LogLine(string messageSignature, params object[] messageArgs)
+        public static void LogLine(string messageSignature, params object[] messageSignatureArgs)
         {
-            Log($"{messageSignature}\r\n", messageArgs);
+            Log($"{messageSignature}\r\n", messageSignatureArgs);
         }
         
-        public static void Log(string messageSignature, params object[] messageArgs)
+        public static void Log(string messageSignature, params object[] messageSignatureArgs)
         {
-            ConsoleMessage.Log(messageSignature, messageArgs);
+            ConsoleMessage.Log(messageSignature, messageSignatureArgs);
         }
 
-        public static void LogLine(ILogger logger, string messageSignature, params object[] messageArgs)
+        public static void LogLine(ILogger logger, string messageSignature, params object[] messageSignatureArgs)
         {
-            Log(logger, $"{messageSignature}\r\n", messageArgs);
+            Log(logger, $"{messageSignature}\r\n", messageSignatureArgs);
         }
         
-        public static void Log(ILogger logger, string messageSignature, params object[] messageArgs)
+        public static void Log(ILogger logger, string messageSignature, params object[] messageSignatureArgs)
         {
-            ConsoleMessage.Log(logger, messageSignature, messageArgs);
+            ConsoleMessage.Log(logger, messageSignature, messageSignatureArgs);
         }
 
-        public static void LogLine(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
+        public static void LogLine(string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs)
         {
-            Log($"{messageSignature}", textColor, messageArgs);
+            Log($"{messageSignature}", textColor, messageSignatureArgs);
         }
         
-        public static void Log(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
+        public static void Log(string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs)
         {
-            ConsoleMessage.Log(Logging.Log.Default, messageSignature, textColor, messageArgs);
+            ConsoleMessage.Log(Logging.Log.Default, messageSignature, textColor, messageSignatureArgs);
         }
 
-        public static void LogLine(ILogger logger, string messageSignature, ConsoleColor textColor, params object[] messageArgs)
+        public static void Log(string messageSignature, ConsoleColorCombo colors, params object[] messageSignatureArgs)
         {
-            Log(logger, $"{messageSignature}\r\n", textColor, messageArgs);
+            ConsoleMessage.Log(messageSignature, colors, messageSignatureArgs);
+        }
+
+        public static void LogLine(ILogger logger, string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs)
+        {
+            Log(logger, $"{messageSignature}\r\n", textColor, messageSignatureArgs);
         }
         
-        public static void Log(ILogger logger, string messageSignature, ConsoleColor textColor, params object[] messageArgs)
+        public static void Log(ILogger logger, string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs)
         {
-            ConsoleMessage.Log(logger, messageSignature, textColor, messageArgs);
+            ConsoleMessage.Log(logger, messageSignature, textColor, messageSignatureArgs);
         }
 
         public static void PrintLine()
@@ -55,26 +60,29 @@ namespace Bam.Net.CommandLine
             PrintLine("");
         }
         
-        public static void PrintLine(string messageSignature, params object[] messageArgs)
+        public static void PrintLine(string messageSignature, params object[] messageSignatureArgs)
         {
-            Print($"{messageSignature}\r\n", messageArgs);
+            Print($"{messageSignature}\r\n", messageSignatureArgs);
         }
         
-        public static void Print(string messageSignature, params object[] messageArgs)
+        public static void Print(string messageSignature, params object[] messageSignatureArgs)
         {
-            ConsoleMessage.Print(messageSignature, messageArgs);
+            ConsoleMessage.Print(messageSignature, messageSignatureArgs);
         }
         
-        // TODO: Add signature PrintLine(string, ConsoleColorCombo, params object[])
-        public static void PrintLine(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
+        public static void PrintLine(string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs)
         {
-            Print($"{messageSignature}\r\n", textColor, messageArgs);
+            Print($"{messageSignature}\r\n", textColor, messageSignatureArgs);
         }
         
-        // TODO: Add signature Print(string, ConsoleColorCombo, params object[])
-        public static void Print(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
+        public static void Print(string messageSignature, ConsoleColorCombo colors, params object[] messageSignatureArgs)
         {
-            ConsoleMessage.Print(messageSignature, textColor, messageArgs);
+            ConsoleMessage.Print(messageSignature, colors, messageSignatureArgs);
+        }
+        
+        public static void Print(string messageSignature, ConsoleColor textColor, params object[] messageSignatureArgs)
+        {
+            ConsoleMessage.Print(messageSignature, textColor, messageSignatureArgs);
         }
     }
 }

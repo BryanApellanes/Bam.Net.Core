@@ -98,17 +98,24 @@ namespace Bam.Net.Testing
 
             if (!File.Exists(recipePath))
             {
-                OutLineFormat("Recipe not found: {0}\r\nSpecify /Recipe:[path_to_bake_recipe_dot_json]", ConsoleColor.Magenta, recipePath);
+                Message.PrintLine("Recipe not found: {0}\r\nSpecify /Recipe:[path_to_bake_recipe_dot_json]", ConsoleColor.Magenta, recipePath);
                 Exit(1);
+            }
+            else
+            {
+                Message.PrintLine("Running tests for recipe: {0}", ConsoleColor.Cyan, recipePath);
             }
 
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
             string testGroupName = Arguments["Group"];
             string searchPattern = GetArgumentOrDefault("search", "*tests.*");
             HashSet<string> projects = new HashSet<string>();
+            Queue<string> projectsToRun = new Queue<string>();
             if (Arguments.Contains("projects"))
             {
                 projects = new HashSet<string>(Arguments["projects"].DelimitSplit(new[] {","}, true).ToArray());
+                projects.Each(project=> projectsToRun.Enqueue(project));
+                Message.PrintLine("Limiting test runs to the specified projects: {0}\r\n\t", string.Join("\r\n\t", projects));
             }
 
             BamUnitTestRunListener testListener = new BamUnitTestRunListener(Arguments["results"].Or("./BamTests"));
@@ -121,18 +128,24 @@ namespace Bam.Net.Testing
                 string projectName = Path.GetFileNameWithoutExtension(projectFile.Name);
                 if (projects.Count > 0 && !projects.Contains(projectName))
                 {
+                    Message.PrintLine("Skipping project [{0}]({1})...", ConsoleColor.Cyan, projectName, projectFilePath);
                     continue;
+                }
+                else
+                {
+                    Message.PrintLine("Running tests for project [{0}]({1})", ConsoleColor.DarkCyan, projectName, projectFilePath);
                 }
                 string testDirectoryPath = Path.Combine(recipe.OutputDirectory, projectName);
                 DirectoryInfo testDirectory = new DirectoryInfo(testDirectoryPath);
                 if (!testDirectory.Exists)
                 {
-                    Message.PrintLine("Directory not found: {0}", ConsoleColor.Yellow, testDirectory.FullName);
+                    Message.PrintLine("Test directory not found: {0}", ConsoleColor.Yellow, testDirectory.FullName);
                     continue;
                 }
                 
                 if (!string.IsNullOrEmpty(testGroupName))
                 {
+                    Message.PrintLine("Running test group [{0}]", ConsoleColor.Blue, testGroupName);
                     RunUnitTestGroupsInFolder(testDirectoryPath, searchPattern, testGroupName);
                 }
                 else
