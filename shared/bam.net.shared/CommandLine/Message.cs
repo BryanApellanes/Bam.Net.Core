@@ -74,6 +74,11 @@ namespace Bam.Net.CommandLine
         {
             Print($"{messageSignature}\r\n", textColor, messageSignatureArgs);
         }
+
+        public static void PrintLine(string messageSignature, ConsoleColorCombo colors, params object[] messageSignatureArgs)
+        {
+            Print($"{messageSignature}\r\n", colors, messageSignatureArgs);
+        }
         
         public static void Print(string messageSignature, ConsoleColorCombo colors, params object[] messageSignatureArgs)
         {

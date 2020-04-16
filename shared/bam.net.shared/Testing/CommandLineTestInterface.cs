@@ -352,8 +352,8 @@ namespace Bam.Net.Testing
             runner.TestsDiscovered += (o, e) =>
             {
                 TestsDiscoveredEventArgs<TTestMethod> args = (TestsDiscoveredEventArgs<TTestMethod>)e;
-                OutLineFormat("Running all tests in {0}", ConsoleColor.Green, args.Assembly.FullName);
-                OutLineFormat("\tFound {0} tests", ConsoleColor.Cyan, args.Tests.Count);
+                Message.PrintLine("Running all tests in {0}", ConsoleColor.Green, args.Assembly.FullName);
+                Message.PrintLine("\tFound {0} tests", ConsoleColor.Cyan, args.Tests.Count);
             };
             runner.TestPassed += (o, e) =>
             {
@@ -385,9 +385,9 @@ namespace Bam.Net.Testing
                         MethodInfo method = cim.Test.Method;
                         Type type = method.DeclaringType;
                         string testIdentifier = $"{type.Namespace}.{type.Name}.{method.Name}";
-                        failedTests.AppendFormat("\t{0}: ({1})\r\n", testIdentifier, cim.Test.Information);
+                        failedTests.AppendFormat("\t{0}: ({1}) => {2}\r\n", testIdentifier, cim.Test.Information, cim.Exception?.Message ?? "[no message]");
                     });
-                    OutLineFormat("FAILED TESTS: \r\n {0})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), failedTests.ToString());
+                    Message.PrintLine("FAILED TESTS: \r\n {0})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), failedTests.ToString());
                 }
                 else
                 {

@@ -209,8 +209,7 @@ namespace Bam.Net.Testing
             }
             catch (Exception ex)
             {
-                ex = ex.GetInnerException();
-                FireTestFailed(test, ex);
+                FireTestFailed(test, ex.GetBaseException());
             }
             FireEvent(TestFinished, args);
         }

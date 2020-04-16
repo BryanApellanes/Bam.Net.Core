@@ -59,7 +59,7 @@ namespace Bam.Net.Testing
             {
                 Colors = new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red)
             };
-            message.SetText("({0})[\"{1}\"]: *** {2} ***\r\n\tStackTrace: {3}", methodName, information, exceptionMessage, stackTrace);
+            message.SetText("({0})[\"{1}\"]: *** {2} ***\r\n\tStackTrace: {3}\r\n", methodName, information, exceptionMessage, stackTrace);
             return message;
         }
     }

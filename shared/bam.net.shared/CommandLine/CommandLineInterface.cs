@@ -887,9 +887,10 @@ File Version: {1}
         /// <param name="message"></param>
         /// <param name="color"></param>
         /// <param name="formatArgs"></param>
+        [Obsolete("Use Message.PrintLine instead")]
         public static void OutLineFormat(string message, ConsoleColor color, params object[] formatArgs)
         {
-            OutLine(string.Format(message, formatArgs), color);
+            Message.PrintLine(message, color, formatArgs);
         }
 
         /// <summary>

@@ -118,6 +118,7 @@ namespace Bam.Net.Testing
                 Message.PrintLine("Limiting test runs to the specified projects: {0}\r\n\t", string.Join("\r\n\t", projects));
             }
 
+            string returnToDirectory = Environment.CurrentDirectory;
             BamUnitTestRunListener testListener = new BamUnitTestRunListener(Arguments["results"].Or("./BamTests"));
             UnitTestRunListeners.Clear();
             UnitTestRunListeners.Add(testListener);
@@ -128,44 +129,33 @@ namespace Bam.Net.Testing
                 string projectName = Path.GetFileNameWithoutExtension(projectFile.Name);
                 if (projects.Count > 0 && !projects.Contains(projectName))
                 {
-                    Message.PrintLine("Skipping project [{0}]({1})...", ConsoleColor.Cyan, projectName, projectFilePath);
+                    Message.PrintLine("Skipping project [{0}]({1})...", ConsoleColor.Blue, projectName, projectFilePath);
                     continue;
                 }
                 else
                 {
-                    Message.PrintLine("Running tests for project [{0}]({1})", ConsoleColor.DarkCyan, projectName, projectFilePath);
+                    Message.PrintLine("Running tests for project [{0}]({1})", ConsoleColor.DarkBlue, projectName, projectFilePath);
                 }
+                
                 string testDirectoryPath = Path.Combine(recipe.OutputDirectory, projectName);
                 DirectoryInfo testDirectory = new DirectoryInfo(testDirectoryPath);
+                
                 if (!testDirectory.Exists)
                 {
                     Message.PrintLine("Test directory not found: {0}", ConsoleColor.Yellow, testDirectory.FullName);
                     continue;
                 }
-                
+
+                Environment.CurrentDirectory = testDirectoryPath;
                 if (!string.IsNullOrEmpty(testGroupName))
                 {
-                    Message.PrintLine("Running test group [{0}]", ConsoleColor.Blue, testGroupName);
+                    Message.PrintLine("Running test group [{0}]", ConsoleColor.DarkGreen, testGroupName);
                     RunUnitTestGroupsInFolder(testDirectoryPath, searchPattern, testGroupName);
                 }
                 else
                 {
                     FileInfo[] testAssemblies = GetTestAssemblies(testDirectory.GetFiles(searchPattern)).ToArray();
-                    foreach (FileInfo testAssembly in testAssemblies)
-                    {
-                        string assemblyHash = testAssembly.ContentHash(HashAlgorithms.SHA1);
-                        if (!assemblyHashes.Contains(assemblyHash))
-                        {
-                            assemblyHashes.Add(assemblyHash);
-                            Message.PrintLine("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
-                            RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
-                        }
-                        else
-                        {
-                            Message.PrintLine("Tests in {0} already run", ConsoleColor.DarkGreen, testAssembly.FullName);
-                        }
-                    }
-
+                    
                     if (testAssemblies.Length == 0)
                     {
                         string testDll = Path.Combine(testDirectoryPath, $"{projectName}.dll");
@@ -177,10 +167,32 @@ namespace Bam.Net.Testing
                             Message.PrintLine("Running {0}", ConsoleColor.DarkCyan, testCommand);
                             testCommand.Run(msg=> OutLine(msg, ConsoleColor.DarkCyan));
                         }
+                        else
+                        {
+                            Message.PrintLine("Project assembly NOT found {0}", ConsoleColor.Yellow, testDll);
+                        }
+                    }
+                    else
+                    {
+                        foreach (FileInfo testAssembly in testAssemblies)
+                        {
+                            string assemblyHash = testAssembly.ContentHash(HashAlgorithms.SHA1);
+                            if (!assemblyHashes.Contains(assemblyHash))
+                            {
+                                assemblyHashes.Add(assemblyHash);
+                                Message.PrintLine("Running tests in {0}", ConsoleColor.DarkBlue, testAssembly.FullName);
+                                RunUnitTestsInFile(testAssembly.FullName, testDirectory.FullName);
+                            }
+                            else
+                            {
+                                Message.PrintLine("Tests in {0} already run", ConsoleColor.DarkGreen, testAssembly.FullName);
+                            }
+                        }
                     }
                 }
             }
 
+            Environment.CurrentDirectory = returnToDirectory;
             if (testListener.FailuresOccurred)
             {
                 testListener.LogSummary();
@@ -305,7 +317,7 @@ namespace Bam.Net.Testing
         /// <param name="endDirectory">The end directory.</param>
         public static void RunUnitTestsInFile(string assemblyPath, string endDirectory)
         {
-            OutLineFormat("Running UnitTests: {0}", ConsoleColor.DarkGreen, assemblyPath);
+            Message.PrintLine("Running UnitTests: {0}", ConsoleColor.DarkGreen, assemblyPath);
             assemblyPath = assemblyPath ?? Arguments["UnitTests"];
             endDirectory = endDirectory ?? Environment.CurrentDirectory;
             try
@@ -314,7 +326,7 @@ namespace Bam.Net.Testing
                 Assembly assembly = Assembly.LoadFrom(assemblyPath);
                 RunAllUnitTests(assembly, Log.Default, (o, a) => _passedCount++, (o, a) => _failedCount++);
                 Environment.CurrentDirectory = endDirectory;
-                OutLineFormat("Test run complete: {0}", ConsoleColor.DarkYellow, assemblyPath);
+                Message.PrintLine("Test run complete: {0}", ConsoleColor.DarkYellow, assemblyPath);
             }
             catch (Exception ex)
             {
@@ -328,7 +340,7 @@ namespace Bam.Net.Testing
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="endDirectory">The end directory.</param>
-        [ConsoleAction("IntegrationTests", "[path_to_test_assembly]", "Run integration tests in the specified assemlby")]
+        [ConsoleAction("IntegrationTests", "[path_to_test_assembly]", "Run integration tests in the specified assembly")]
         public static void RunIntegrationTestsInFile(string assemblyPath = null, string endDirectory = null)
         {
             assemblyPath = assemblyPath ?? Arguments["IntegrationTests"];
