@@ -109,13 +109,12 @@ namespace Bam.Net.Testing
             Recipe recipe = recipePath.FromJsonFile<Recipe>();
             string testGroupName = Arguments["Group"];
             string searchPattern = GetArgumentOrDefault("search", "*tests.*");
-            HashSet<string> projects = new HashSet<string>();
-            Queue<string> projectsToRun = new Queue<string>();
+            HashSet<string> projectsSpecified = new HashSet<string>();
+            HashSet<string> projectsRun = new HashSet<string>();
             if (Arguments.Contains("projects"))
             {
-                projects = new HashSet<string>(Arguments["projects"].DelimitSplit(new[] {","}, true).ToArray());
-                projects.Each(project=> projectsToRun.Enqueue(project));
-                Message.PrintLine("Limiting test runs to the specified projects: {0}\r\n\t", string.Join("\r\n\t", projects));
+                projectsSpecified = new HashSet<string>(Arguments["projects"].DelimitSplit(new[] {","}, true).ToArray());
+                Message.PrintLine("Limiting test runs to the specified projects: {0}\r\n\t", string.Join("\r\n\t", projectsSpecified));
             }
 
             string returnToDirectory = Environment.CurrentDirectory;
@@ -127,9 +126,11 @@ namespace Bam.Net.Testing
             {
                 FileInfo projectFile = new FileInfo(projectFilePath);
                 string projectName = Path.GetFileNameWithoutExtension(projectFile.Name);
-                if (projects.Count > 0 && !projects.Contains(projectName))
+                projectsRun.Add(projectName);
+                
+                if (projectsSpecified.Count > 0 && !projectsSpecified.Contains(projectName))
                 {
-                    Message.PrintLine("Skipping project [{0}]({1})...", ConsoleColor.Blue, projectName, projectFilePath);
+                    Message.PrintLine("Skipping project in recipe [{0}]({1})...", ConsoleColor.Blue, projectName, projectFilePath);
                     continue;
                 }
                 else
@@ -159,7 +160,7 @@ namespace Bam.Net.Testing
                     if (testAssemblies.Length == 0)
                     {
                         string testDll = Path.Combine(testDirectoryPath, $"{projectName}.dll");
-                        Message.PrintLine("No test assemblies were found, checking for project assembly {0}", ConsoleColor.Yellow, testDll);
+                        Message.PrintLine("No test assemblies found (/search:{0}), checking for project assembly {1}", ConsoleColor.Yellow, searchPattern, testDll);
                         if (File.Exists(testDll))
                         {
                             Message.PrintLine("Project assembly found {0}", ConsoleColor.Cyan, testDll);
@@ -192,6 +193,14 @@ namespace Bam.Net.Testing
                 }
             }
 
+            foreach (string project in projectsSpecified)
+            {
+                if (!projectsRun.Contains(project))
+                {
+                    Message.PrintLine("Project specified on command line was not in recipe: {0}", ConsoleColor.Yellow, project);
+                }
+            }
+            
             Environment.CurrentDirectory = returnToDirectory;
             if (testListener.FailuresOccurred)
             {
