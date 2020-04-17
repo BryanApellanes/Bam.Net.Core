@@ -1,5 +1,24 @@
 #!/bin/bash
 
+BLACK='\033[0;30m'
+DARKRED='\033[0;31m'
+DARKGREEN='\033[0;32m'
+DARKYELLOW='\033[0;33m'
+DARKBLUE='\033[0;34m'
+DARKPURPLE='\033[0;35m'
+DARKCYAN='\033[0;36m'
+GRAY='\033[0;37m'
+DARKGRAY='\033[1;30m'
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+PURPLE='\033[1;35m'
+CYAN='\033[1;36m'
+WHITE='\033[1;37m'
+NOCOLOR='\033[0m'
+NC='\033[0m'
+
 function initialize_defaults() {
     if [[ -d ./env ]]; then
         cd ./env
