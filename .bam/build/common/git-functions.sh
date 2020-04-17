@@ -17,7 +17,8 @@ function git_checkout(){
 function git_merge(){
     OTHERBRANCH=$1
     git_current_branch
-    
+    echo "merging ${OTHERBRANCH} with ${GITCURRENTBRANCH}"
+    git merge ${OTHERBRANCH}
 }
 
 function git_add(){

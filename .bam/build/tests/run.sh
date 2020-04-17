@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd ./run
-./run.sh /projects:$1
+./run.sh $1 $2
 cd ..
