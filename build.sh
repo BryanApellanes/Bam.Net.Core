@@ -1,8 +1,18 @@
 #!/bin/bash
 
+cd .bam/build
 
-./build-lib.sh
+./configure lib
+./clean lib
+./build lib
 
-./build-toolkit.sh
+./configure tools
+./clean tools
+./build tools
 
-./build-tests.sh
+./configure tests
+./clean tests
+./build tests
+
+cd ../../
+
