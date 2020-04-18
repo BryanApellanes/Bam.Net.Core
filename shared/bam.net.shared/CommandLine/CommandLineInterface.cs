@@ -316,7 +316,7 @@ namespace Bam.Net.CommandLine
         }
 
         /// <summary>
-        /// Runs the current process again, prompting for admin rights
+        /// Runs the current process again, prompting for admin rights. This is WINDOWS ONLY
         /// </summary>
         public static void Elevate()
         {

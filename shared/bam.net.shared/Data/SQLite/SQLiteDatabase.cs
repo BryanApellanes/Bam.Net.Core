@@ -82,15 +82,12 @@ namespace Bam.Net.Data.SQLite
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = ConnectionStringResolver.Resolve(ConnectionName).ConnectionString;
+                    _connectionString = ConnectionStringResolver?.Resolve(ConnectionName).ConnectionString;
                 }
 
                 return _connectionString;
             }
-            set
-            {
-                _connectionString = value;
-            }
+            set => _connectionString = value;
         }
 
         FileInfo _databaseFile;

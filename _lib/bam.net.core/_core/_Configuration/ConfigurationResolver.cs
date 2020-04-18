@@ -80,7 +80,7 @@ namespace Bam.Net.Configuration
                 if (!string.IsNullOrEmpty(value))
                 {
                     Config.AppSettings.AddMissing(key, value);
-                    Config.Write();
+                    Config.Save();
                 }
                 return value;
             }       

@@ -92,7 +92,7 @@ namespace Bam.Net
             get { return _currentLock.DoubleCheckLock(ref _current, () => new Config()); }
             set => _current = value;
         }
-
+        
         public static Config For(string applicationName)
         {
             return new Config(applicationName);
@@ -102,10 +102,7 @@ namespace Bam.Net
         public event EventHandler ConfigChanged;
         public FileInfo File { get; set; }
         
-        public Workspace Workspace
-        {
-            get { return Workspace.Current; }
-        }
+        public Workspace Workspace => Workspace.Current;
 
         public Dictionary<string, string> AppSettings { get; set; }
         
@@ -130,30 +127,22 @@ namespace Bam.Net
             {
                 if (AppSettings.ContainsKey(key))
                 {
-                    AppSettings[key] = value;
+                    AppSettings[key] = string.IsNullOrEmpty(value) ? defaultValue: value;
                 }
                 else
                 {
-                    AppSettings.Add(key, value);
+                    AppSettings.Add(key, string.IsNullOrEmpty(value) ? defaultValue: value);
                 }
-                Write();
+                Save();
             }
         }
 
         static IApplicationNameProvider _applicationNameProvider;
         public static IApplicationNameProvider ApplicationNameProvider
         {
-            get
-            {
-                if (_applicationNameProvider == null)
-                {
-                    _applicationNameProvider = ProcessApplicationNameProvider.Current;
-                }
+            get => _applicationNameProvider ?? (_applicationNameProvider = ProcessApplicationNameProvider.Current);
 
-                return _applicationNameProvider;
-            }
-            
-            set { _applicationNameProvider = value; }
+            set => _applicationNameProvider = value;
         }
         
         public static Dictionary<string, string> Read()
@@ -178,7 +167,7 @@ namespace Bam.Net
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
 
-        public void Write()
+        public void Save()
         {
             if (File == null)
             {

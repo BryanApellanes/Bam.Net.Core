@@ -17,7 +17,7 @@ using Bam.Net.Configuration;
 using Bam.Net.Server;
 using System.Threading;
 
-namespace Bam.Net.Application
+namespace Bam.Net.System
 {
     [Serializable]
     class Program : CommandLineTestInterface

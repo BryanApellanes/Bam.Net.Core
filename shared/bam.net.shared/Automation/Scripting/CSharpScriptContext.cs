@@ -13,7 +13,7 @@ namespace Bam.Net.Automation.Scripting
         public CSharpScriptContext()
         {
             Model = new CSharpScriptContextModel();
-            ReferenceAssemblyResolver = new LocalReferenceAssemblyResolver();
+            ReferenceAssemblyResolver = Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
         }
 
         public CSharpScriptContext(IReferenceAssemblyResolver referenceAssemblyResolver): this()

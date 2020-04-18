@@ -9,9 +9,10 @@ namespace Bam.Net.CoreServices.AssemblyManagement
 {
     public class LinuxReferenceAssemblyResolver: IReferenceAssemblyResolver
     {
+        private const string _dotnetAssemblyPath = "/usr/share/dotnet/shared/Microsoft.NETCore.App";
         public LinuxReferenceAssemblyResolver()
         { 
-            NugetReferenceAssemblyResolver = new NugetReferenceAssemblyResolver("/usr/local/share/dotnet/sdk/NugetFallbackFolder");
+            NugetReferenceAssemblyResolver = new NugetReferenceAssemblyResolver(_dotnetAssemblyPath);
             RuntimeSettingsConfigReferenceAssemblyResolver = new RuntimeSettingsConfigReferenceAssemblyResolver();
         }
 
@@ -19,12 +20,17 @@ namespace Bam.Net.CoreServices.AssemblyManagement
         private RuntimeSettingsConfigReferenceAssemblyResolver RuntimeSettingsConfigReferenceAssemblyResolver { get; set; }
         public Assembly ResolveReferenceAssembly(Type type)
         {
-            return NugetReferenceAssemblyResolver.ResolveReferenceAssembly(type);
+            return Assembly.LoadFrom(ResolveReferenceAssemblyPath(type));
         }
 
         public string ResolveReferenceAssemblyPath(Type type)
         {
-            return NugetReferenceAssemblyResolver.ResolveReferenceAssemblyPath(type);
+            FileInfo assemblyFile = new FileInfo(Path.Combine(_dotnetAssemblyPath, OSInfo.CoreVersion, $"{type.Namespace}.{type.Name}.dll"));
+            if (assemblyFile.Exists)
+            {
+                return assemblyFile.FullName;
+            }
+            throw new ReferenceAssemblyNotFoundException(type); 
         }
 
         public string ResolveReferenceAssemblyPath(string nameSpace, string typeName)

@@ -30,7 +30,7 @@ namespace Bam.Net.Server
     /// <summary>
     /// The core BamServer
     /// </summary>
-    public partial class BamServer : IInitialize<BamServer>
+    public partial class BamServer : Loggable, IInitialize<BamServer>
     {
         private readonly HashSet<IResponder> _responders;
         private readonly Dictionary<string, IResponder> _respondersByName;

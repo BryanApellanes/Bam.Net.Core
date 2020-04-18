@@ -1,4 +1,5 @@
 using System.Text;
+using Bam.Net.Bake;
 
 namespace Bam.Net.Bake
 {

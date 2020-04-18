@@ -110,6 +110,10 @@ namespace Bam.Net
         
         static Workspace _current;
         static readonly object _currentLock = new object();
+        
+        /// <summary>
+        /// Workspace for the current application, see also ForProcess().
+        /// </summary>
         public static Workspace Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => ForApplication()); }

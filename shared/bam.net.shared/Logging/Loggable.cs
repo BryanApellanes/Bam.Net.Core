@@ -24,18 +24,27 @@ namespace Bam.Net.Logging
 	[Serializable]
     public abstract class Loggable: ILoggable
     {
+        private static HashSet<Loggable> _allInstances = new HashSet<Loggable>();
         public Loggable()
         {
             this._subscribers = new HashSet<ILogger>();
-            this.LogVerbosity = LogEventType.Custom;
+            this.LogVerbosity = VerbosityLevel.Custom;
+            _allInstances.Add(this);
         }
+
+        public static void SetVerbosity(VerbosityLevel level)
+        {
+            _allInstances.Each(l=> l.LogVerbosity = level);
+        }
+        
+        public static IEnumerable<ILoggable> AllInstances => _allInstances.ToArray();
 
         /// <summary>
         /// A value from 0 - 5, represented by the LogEventType enum.
         /// The higher the value the more log entries will 
         /// be logged.
         /// </summary>
-        public LogEventType LogVerbosity { get; set; }
+        public VerbosityLevel LogVerbosity { get; set; }
 
         HashSet<ILogger> _subscribers;
         /// <summary>

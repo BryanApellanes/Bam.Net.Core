@@ -2,7 +2,7 @@
 using Bam.Net.Services;
 using Bam.Net.Testing;
 
-namespace Bam.Net.Application
+namespace Bam.Net.System
 {
     [Serializable]
     public class Program : CommandLineTestInterface
