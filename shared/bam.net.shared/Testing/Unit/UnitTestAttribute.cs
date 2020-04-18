@@ -27,10 +27,7 @@ namespace Bam.Net.Testing.Unit
         {
         }  
         
-        public bool Ignore
-        {
-            get { return !string.IsNullOrEmpty(IgnoreBecause); }
-        }
+        public bool Ignore => !string.IsNullOrEmpty(IgnoreBecause);
 
         public string IgnoreBecause { get; set; }
     }

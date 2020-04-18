@@ -93,7 +93,6 @@ namespace Bam.Net
             {
                 directoryPath = new FileInfo(directoryPath).Directory.FullName;
             }
-            directoryPath = directoryPath.ToLowerInvariant();
             if (!_watchers.ContainsKey(directoryPath))
             {
                 try

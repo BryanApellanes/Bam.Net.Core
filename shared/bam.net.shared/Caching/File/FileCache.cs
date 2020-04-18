@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Bam.Net;
 using System.Collections.Concurrent;
+using Bam.Net.CommandLine;
 
 namespace Bam.Net.Caching.File
 {
@@ -56,8 +57,12 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public virtual byte[] GetZippedBytes(FileInfo file)
         {
-            EnsureFileIsLoaded(file);
-            return _cachedFiles[file.FullName].GetZippedBytes();
+            if (EnsureFileIsLoaded(file))
+            {
+                return _cachedFiles[file.FullName].GetZippedBytes();
+            }
+
+            return System.IO.File.ReadAllBytes(file.FullName).GZip();
         }
 
         /// <summary>
@@ -67,8 +72,12 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public virtual byte[] GetBytes(FileInfo file)
         {
-            EnsureFileIsLoaded(file);
-            return _cachedFiles[file.FullName].GetBytes();
+            if (EnsureFileIsLoaded(file))
+            {
+                return _cachedFiles[file.FullName].GetBytes();
+            }
+
+            return System.IO.File.ReadAllBytes(file.FullName);
         }
 
         /// <summary>
@@ -112,6 +121,7 @@ namespace Bam.Net.Caching.File
             {
                 if (HashChanged(file))
                 {
+                    Task.Run(() => Message.Log("FileCache: {0} hash changed, reloading file.", file.FullName));
                     Reload(file);
                 }
             });
@@ -129,7 +139,7 @@ namespace Bam.Net.Caching.File
             if (_hashes.TryGetValue(file.FullName, out string hash) && 
                 _cachedFiles.TryGetValue(file.FullName, out CachedFile cachedFile))
             {
-                return !string.IsNullOrEmpty(hash) && cachedFile.ContentHash.Equals(hash);
+                return !string.IsNullOrEmpty(hash) && !cachedFile.ContentHash.Equals(hash);
             }
             return false;
         }
@@ -138,9 +148,9 @@ namespace Bam.Net.Caching.File
         /// Removes the specified file.
         /// </summary>
         /// <param name="file">The file.</param>
-        public void Remove(FileInfo file)
+        public bool Remove(FileInfo file)
         {
-            _cachedFiles.TryRemove(file.FullName, out CachedFile value);
+            return _cachedFiles.TryRemove(file.FullName, out CachedFile value);
         }
 
         /// <summary>
@@ -149,7 +159,6 @@ namespace Bam.Net.Caching.File
         /// <param name="file">The file.</param>
         public virtual CachedFile Reload(FileInfo file)
         {
-            _cachedFiles.TryRemove(file.FullName, out CachedFile value);
             return Load(file);
         }
 
@@ -159,15 +168,11 @@ namespace Bam.Net.Caching.File
         /// <param name="file">The file.</param>
         public virtual CachedFile Load(FileInfo file)
         {
-            string fullName = file.FullName;
-
-            CachedFile cachedFile = new CachedFile(file);
-            if (_cachedFiles.TryAdd(fullName, cachedFile))
-            {
-                _hashes[fullName] = cachedFile.ContentHash;
-            }
-
-            return cachedFile;
+            string cacheKey = file.FullName;
+            CachedFile newValue = new CachedFile(file);
+            _cachedFiles.AddOrUpdate(cacheKey, (key)=> newValue, (key, oldValue) => newValue);
+            _hashes.AddOrUpdate(cacheKey, (key) => newValue.ContentHash, (key, oldValue) => newValue.ContentHash);
+            return newValue;
         }      
     }
 }

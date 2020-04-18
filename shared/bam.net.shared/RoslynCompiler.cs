@@ -45,11 +45,8 @@ namespace Bam.Net
         }
 
         readonly HashSet<string> _referenceAssemblyPaths;
-        public string[] ReferenceAssemblyPaths
-        {
-            get { return _referenceAssemblyPaths.ToArray(); }
-        }
-        
+        public string[] ReferenceAssemblyPaths => _referenceAssemblyPaths.ToArray();
+
         public OutputKind OutputKind { get; set; }
 
         public RoslynCompiler AddAssemblyReference(Type type)

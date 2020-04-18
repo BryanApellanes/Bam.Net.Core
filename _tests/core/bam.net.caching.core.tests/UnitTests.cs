@@ -24,10 +24,11 @@ namespace Bam.Net.Caching.Tests
 	[Serializable]
 	public class UnitTests: CommandLineTestInterface
 	{
+        string _testFilePath = "./TestFile1.txt";
         [UnitTest]
         public void GetStringFromCacheIsFasterThanFromFile()
         {
-            string testFilePath = ".\\TestFile1.txt";
+            string testFilePath = _testFilePath;
             FileInfo testFile = new FileInfo(testFilePath);
             FileCache cache = new TextFileCache();
             cache.Load(testFile);
@@ -63,25 +64,19 @@ namespace Bam.Net.Caching.Tests
         [UnitTest]
         public void GetBytesFromCacheIsFasterThanFromFile()
         {
-            string testFilePath = ".\\TestFile1.txt";
+            string testFilePath = _testFilePath;
             FileInfo testFile = new FileInfo(testFilePath);
             FileCache cache = new BinaryFileCache();
             cache.Load(testFile);
 
-            Func<string, byte[]> readFromFile = (filePath) =>
-            {
-                return System.IO.File.ReadAllBytes(filePath);
-            };
-            Func<dynamic, byte[]> readFromCache = (context) =>
-            {
-                return context.BinaryFileCache.GetBytes(testFile);
-            };
+            Func<string, byte[]> readFromFile = System.IO.File.ReadAllBytes;
+            Func<byte[]> readFromCache = () => cache.GetBytes(testFile);
             readFromFile(testFilePath); // prime
-            readFromCache(new { BinaryFileCache = cache }); //prime
+            readFromCache(); //prime
             TimeSpan fromFileTime = readFromFile.TimeExecution(testFilePath, out byte[] bytesFromFile);
-            TimeSpan fromCacheTime = readFromCache.TimeExecution(new { BinaryFileCache = cache }, out byte[] bytesFromCache);
+            TimeSpan fromCacheTime = readFromCache.TimeExecution(out byte[] bytesFromCache);
 
-            Expect.IsTrue(fromFileTime.CompareTo(fromCacheTime) == 1);
+            (fromFileTime.CompareTo(fromCacheTime) == 1).IsTrue($"Expected the time from cache to be faster: cacheTime={fromCacheTime}, fileTime={fromFileTime}");
             
             OutLine("****", ConsoleColor.DarkGreen);
 
@@ -96,7 +91,7 @@ namespace Bam.Net.Caching.Tests
         [UnitTest]
         public void GetZippedBytesFromCacheIsFasterThanFromFile()
         {
-            string testFilePath = ".\\TestFile1.txt";
+            string testFilePath = _testFilePath;
             FileInfo testFile = new FileInfo(testFilePath);
             FileCache cache = new BinaryFileCache();
             cache.Load(testFile);
@@ -146,10 +141,10 @@ namespace Bam.Net.Caching.Tests
             bool reloaded = false;
             cache.Reloaded += (o, c) => reloaded = true;
             IEnumerable<object> results = cache.Results(typeof(TestMonkey), mongoRepo, Filter.Where("Name") == name);
-            Expect.IsTrue(reloaded);
+            reloaded.IsTrue();
             reloaded = false;
             results = cache.Results(typeof(TestMonkey), mongoRepo, Filter.Where("Name") == name);
-            Expect.IsFalse(reloaded);
+            reloaded.IsFalse();
             Expect.AreEqual(1, results.Count());
         }
 
