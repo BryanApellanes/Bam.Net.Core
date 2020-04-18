@@ -18,42 +18,28 @@ namespace Bam.Net.Application
     [Serializable]
     public class BamDbConsoleActions : CommandLineTestInterface
     {
+        [ConsoleAction("RegenAllDaoCode", "Regenerate all dao code by recursively searching for DaoGenerationConfig.yaml files and processing each.")]
+        public static void RegenerateAllDaoCode()
+        {
+            string rootDirectoryPath = GetArgumentOrDefault("RegenAllDaoCode", GetArgumentOrDefault("radc", "."));
+            DirectoryInfo rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
+            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles("DaoGenerationConfig.yaml", SearchOption.AllDirectories))
+            {
+                
+            }
+        }
+        
         [ConsoleAction("generateSchemaRepository", "Generate a schema specific DaoRepository")]
         public static void GenerateSchemaRepository()
         {
             ConsoleLogger logger = new ConsoleLogger();
             logger.StartLoggingThread();
 
-            GenerationConfig config = GetGenerationConfig(o=> OutLine(o, ConsoleColor.Cyan));
+            DaoRepoGenerationConfig config = GetGenerationConfig(o=> OutLine(o, ConsoleColor.Cyan));
 
-            string targetDir = config.WriteSourceTo;
-            DaoGenerationServiceRegistry registry = DaoGenerationServiceRegistry.ForConfiguration(config, logger);
-            SchemaRepositoryGenerator schemaRepositoryGenerator = registry.Get<SchemaRepositoryGenerator>();
+            SchemaRepositoryGenerator schemaRepositoryGenerator = GenerateRepositorySource(config, logger);
 
-            if (Directory.Exists(targetDir))
-            {
-                Directory.Move(targetDir, targetDir.GetNextDirectoryName());
-            }
-
-            schemaRepositoryGenerator.GenerateRepositorySource();
-
-            if (schemaRepositoryGenerator.Warnings.MissingKeyColumns.Length > 0)
-            {
-                OutLine("Missing key/id columns", ConsoleColor.Yellow);
-                schemaRepositoryGenerator.Warnings.MissingKeyColumns.Each(kc =>
-                {
-                    OutLineFormat("\t{0}", kc.TableClassName, ConsoleColor.DarkYellow);
-                });
-            }
-
-            if (schemaRepositoryGenerator.Warnings.MissingForeignKeyColumns.Length > 0)
-            {
-                OutLine("Missing ForeignKey columns", ConsoleColor.Cyan);
-                schemaRepositoryGenerator.Warnings.MissingForeignKeyColumns.Each(fkc =>
-                {
-                    OutLineFormat("\t{0}.{1}", ConsoleColor.DarkCyan, fkc.TableClassName, fkc.Name);
-                });
-            }
+            OutputWarnings(schemaRepositoryGenerator);
         }
 
         [ConsoleAction("generateDaoAssemblyForTypes", "Generate Dao Assembly for types")]
@@ -216,12 +202,12 @@ namespace Bam.Net.Application
             return config;
         }
 
-        internal static GenerationConfig GetGenerationConfig(Action<string> output)
+        internal static DaoRepoGenerationConfig GetGenerationConfig(Action<string> output)
         {
-            GenerationConfig config = new GenerationConfig();
+            DaoRepoGenerationConfig config = new DaoRepoGenerationConfig();
             if (Arguments.Contains("config"))
             {
-                config = DeserializeConfigArg<GenerationConfig>(output);
+                config = DeserializeConfigArg<DaoRepoGenerationConfig>(output);
                 if (config == null)
                 {
                     Exit(1);
@@ -254,6 +240,42 @@ namespace Bam.Net.Application
             string json = config.ToJson(true);
             output(json);
             return config;
+        }
+        
+        private static SchemaRepositoryGenerator GenerateRepositorySource(DaoRepoGenerationConfig config, ConsoleLogger logger)
+        {
+            string targetDir = config.WriteSourceTo;
+            DaoGenerationServiceRegistry registry = DaoGenerationServiceRegistry.ForConfiguration(config, logger);
+            SchemaRepositoryGenerator schemaRepositoryGenerator = registry.Get<SchemaRepositoryGenerator>();
+
+            if (Directory.Exists(targetDir))
+            {
+                Directory.Move(targetDir, targetDir.GetNextDirectoryName());
+            }
+
+            schemaRepositoryGenerator.GenerateRepositorySource();
+            return schemaRepositoryGenerator;
+        }
+
+        private static void OutputWarnings(SchemaRepositoryGenerator schemaRepositoryGenerator)
+        {
+            if (schemaRepositoryGenerator.Warnings.MissingKeyColumns.Length > 0)
+            {
+                Message.PrintLine("Missing key/id columns", ConsoleColor.Yellow);
+                schemaRepositoryGenerator.Warnings.MissingKeyColumns.Each(kc =>
+                {
+                    Message.PrintLine("\t{0}", ConsoleColor.DarkYellow, kc.TableClassName);
+                });
+            }
+
+            if (schemaRepositoryGenerator.Warnings.MissingForeignKeyColumns.Length > 0)
+            {
+                Message.PrintLine("Missing ForeignKey columns", ConsoleColor.Cyan);
+                schemaRepositoryGenerator.Warnings.MissingForeignKeyColumns.Each(fkc =>
+                {
+                    Message.PrintLine("\t{0}.{1}", ConsoleColor.DarkCyan, fkc.TableClassName, fkc.Name);
+                });
+            }
         }
     }
 }

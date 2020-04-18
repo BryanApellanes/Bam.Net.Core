@@ -138,6 +138,7 @@ namespace Bam.Net.CoreServices
                 .For<IUserManager>().Use(userMgr)
                 .For<UserManager>().Use(userMgr)
                 .For<IUserResolver>().Use(userResolver)
+                .For<IDaoUserResolver>().Use(userResolver)
                 .For<DaoUserResolver>().Use(userResolver)
                 .For<IRoleResolver>().Use(roleResolver)
                 .For<DaoRoleResolver>().Use(roleResolver)

@@ -23,9 +23,9 @@ namespace Bam.Net.Data.Repositories
         public IDaoCodeWriter DaoCodeWriter { get; set; }
         public IDaoTargetStreamResolver DaoTargetStreamResolver { get; set; }
         public IWrapperGenerator WrapperGenerator { get; set; }
-        public GenerationConfig Config { get; set; }
+        public DaoRepoGenerationConfig Config { get; set; }
 
-        public static SchemaRepositoryGeneratorSettings FromConfig(GenerationConfig config)
+        public static SchemaRepositoryGeneratorSettings FromConfig(DaoRepoGenerationConfig config)
         {
             HandlebarsDirectory handlebarsDirectory = new HandlebarsDirectory(config.TemplatePath);
             HandlebarsEmbeddedResources embeddedResources = new HandlebarsEmbeddedResources(typeof(SchemaRepositoryGenerator).Assembly);

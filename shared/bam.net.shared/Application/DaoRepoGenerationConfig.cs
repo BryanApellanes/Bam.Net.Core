@@ -8,9 +8,9 @@ namespace Bam.Net.Application
     /// <summary>
     /// Configuration for generating a dao repository.
     /// </summary>
-    public class GenerationConfig
+    public class DaoRepoGenerationConfig
     {
-        public GenerationConfig()
+        public DaoRepoGenerationConfig()
         {
             CheckForIds = true;
             TemplatePath = Path.Combine(AppPaths.Data, "Templates");

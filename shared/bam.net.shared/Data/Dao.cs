@@ -258,7 +258,7 @@ namespace Bam.Net.Data
         }
 
         protected Database _database;
-        object _databaseSync = new object();
+        readonly object _databaseSync = new object();
         public Database Database
         {
             get
@@ -272,7 +272,7 @@ namespace Bam.Net.Data
         }
 
         List<string> _columns;
-        object _columnsLock = new object();
+        readonly object _columnsLock = new object();
         public string[] Columns
         {
             get
@@ -539,10 +539,7 @@ namespace Bam.Net.Data
 
                 return _validator;
             }
-            set
-            {
-                _validator = value;
-            }
+            set => _validator = value;
         }
 
         static Func<Dao, ValidationResult> _globalValidator;
@@ -552,18 +549,12 @@ namespace Bam.Net.Data
             {
                 if (_globalValidator == null)
                 {
-                    return (dao) =>
-                    {
-                        return new ValidationResult();
-                    };
+                    return (dao) => new ValidationResult();
                 }
 
                 return _globalValidator;
             }
-            set
-            {
-                _globalValidator = value;
-            }
+            set => _globalValidator = value;
         }
 
         /// <summary>
@@ -584,7 +575,7 @@ namespace Bam.Net.Data
                     string propTypeName = prop.PropertyType.Name;
                     MethodInfo getter = type.GetMethod("Get{0}Value"._Format(propTypeName));
                     object val = getter.Invoke(this, new object[] { ca.Name });
-                    if (val == null || (val is string && string.IsNullOrEmpty((string)val)))
+                    if (val == null || (val is string s && string.IsNullOrEmpty(s)))
                     {
                         msgs.Add("{0} can't be null"._Format(prop.Name));
                     }

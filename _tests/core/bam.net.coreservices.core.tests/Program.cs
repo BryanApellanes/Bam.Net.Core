@@ -8,7 +8,7 @@ namespace Bam.Net.CoreServices.Tests
     {
         static void Main(string[] args)
         {
-            Initialize(args);
+            ExecuteMain(args);
         }
     }
 }

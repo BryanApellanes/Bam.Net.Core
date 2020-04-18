@@ -228,7 +228,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\SplitKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DeployInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Application\GenerationConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\DaoRepoGenerationConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\GenerationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\PageRenderModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\RenderableModel.cs" />
@@ -3214,6 +3214,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\ServiceRegistration\README.md" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\WebHooks\Data\Generated_Dao\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\AES.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA1.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />

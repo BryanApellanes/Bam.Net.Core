@@ -27,9 +27,9 @@ namespace Bam.Net.Application
         public bool UseInheritanceSchema { get; set; }
         public string WriteSourceTo { get; set; }
 
-        public GenerationConfig ToConfig()
+        public DaoRepoGenerationConfig ToConfig()
         {
-            return new GenerationConfig
+            return new DaoRepoGenerationConfig
             {
                 TypeAssembly = Assembly.GetFilePath(),
                 SchemaName = SchemaName,
@@ -45,17 +45,17 @@ namespace Bam.Net.Application
         {
             if(configPath.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase))
             {
-                return FromConfig(configPath.FromJsonFile<GenerationConfig>());
+                return FromConfig(configPath.FromJsonFile<DaoRepoGenerationConfig>());
             }
             else if(configPath.EndsWith(".yaml", StringComparison.InvariantCultureIgnoreCase) ||
                 configPath.EndsWith(".yml", StringComparison.InvariantCultureIgnoreCase))
             {
-                return FromConfig(configPath.FromYamlFile<GenerationConfig>());
+                return FromConfig(configPath.FromYamlFile<DaoRepoGenerationConfig>());
             }
             throw new InvalidOperationException($"Unrecognized file extension: {configPath}");
         }
 
-        public static GenerationSettings FromConfig(GenerationConfig config)
+        public static GenerationSettings FromConfig(DaoRepoGenerationConfig config)
         {
             return new GenerationSettings
             {

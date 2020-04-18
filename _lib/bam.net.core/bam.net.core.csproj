@@ -60,5 +60,10 @@
       <Link>bam.net.shared\Schema\Json</Link>
     </Folder>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\shared\bam.net.shared\CoreServices\WebHooks\Data\GenerationConfig.yaml">
+      <Link>bam.net.shared\CoreServices\WebHooks\Data\GenerationConfig.yaml</Link>
+    </Content>
+  </ItemGroup>
   <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
 </Project>

@@ -376,7 +376,7 @@ namespace Bam.Net.Data.Repositories
 
 		public override T Retrieve<T>(int id)
 		{
-			return Retrieve<T>((long)id);
+			return Retrieve<T>((ulong)id);
 		}
 
 		public override T Retrieve<T>(long id)
@@ -1129,7 +1129,6 @@ namespace Bam.Net.Data.Repositories
             }
 			object wrapper = ConstructWrapper(pocoType);
 			wrapper.CopyProperties(daoInstance);
-			poco.CopyProperties(wrapper);
 			return wrapper;  
 		}
 		
