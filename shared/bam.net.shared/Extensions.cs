@@ -3769,6 +3769,16 @@ namespace Bam.Net
             return DelimitSplit(valueToSplit, new string[] {delimiter}, trimValues);
         }
 
+        /// <summary>
+        /// Replace a specified string with another string where that string occurs
+        /// between the startDelimiter and endDelimiter.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="toReplace"></param>
+        /// <param name="replaceWith"></param>
+        /// <param name="startDelimiter"></param>
+        /// <param name="endDelimiter"></param>
+        /// <returns></returns>
         public static string DelimitedReplace(this string input, string toReplace, string replaceWith,
             string startDelimiter = "$$~", string endDelimiter = "~$$")
         {
@@ -3776,6 +3786,15 @@ namespace Bam.Net
                 endDelimiter);
         }
 
+        /// <summary>
+        /// Replace a specified string with another string where that string occurs
+        /// between the startDelimiter and endDelimiter.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="replacements"></param>
+        /// <param name="startDelimiter"></param>
+        /// <param name="endDelimiter"></param>
+        /// <returns></returns>
         public static string DelimitedReplace(this string input, Dictionary<string, string> replacements,
             string startDelimiter = "$$~", string endDelimiter = "~$$")
         {

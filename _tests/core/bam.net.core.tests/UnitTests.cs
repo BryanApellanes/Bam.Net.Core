@@ -35,7 +35,7 @@ namespace Bam.Net.Tests
         {
             public bool AddCalled { get; set; }
 
-            public override void AddEntry(string messageSignature, int verbosity)
+            public override void AddEntry(string messageSignature, int verbosity, params string[] variableMessageValues)
             {
                 AddCalled = true;
                 OutLineFormat(messageSignature, ConsoleColor.Cyan);
