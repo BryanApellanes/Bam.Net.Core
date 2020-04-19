@@ -2165,6 +2165,11 @@ namespace Bam.Net
             return filePath.SafeReadFile().FromJson<T>();
         }
 
+        public static object FromJsonFile(this string filePath, Type type)
+        {
+            return filePath.SafeReadFile().FromJson(type);
+        }
+        
         public static T FromJsonStream<T>(this Stream stream)
         {
             MemoryStream ms = new MemoryStream();

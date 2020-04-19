@@ -9,6 +9,7 @@ using System.IO;
 using Bam.Net;
 using System.Reflection;
 using System.Collections;
+using System.Security.Cryptography;
 using YamlDotNet.Serialization;
 
 namespace Bam.Net
@@ -77,6 +78,17 @@ namespace Bam.Net
         {
             Deserializer deserializer = new Deserializer();
             return deserializer.Deserialize<T>(fileInfo.FullName.SafeReadFile());
+        }
+
+        public static object FromYamlFile(this string path, Type type)
+        {
+            return FromYamlFile(new FileInfo(path), type);
+        }
+
+        public static object FromYamlFile(this FileInfo fileInfo, Type type)
+        {
+            Deserializer deserializer = new Deserializer();
+            return deserializer.Deserialize(fileInfo.FullName.SafeReadFile(), type);
         }
 
         public static object FromYaml(this string yaml, Type type)

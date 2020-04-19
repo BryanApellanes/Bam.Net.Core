@@ -485,10 +485,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\DefaultConfigurer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\EnvironmentApplicationNameProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\EnvironmentConfigurationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\FilePersistable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IConfigurable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IConfigurationProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IConfigurer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ICoreConfigurationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\IFilePersistable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\IHasRequiredProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\InvalidIHasRequiredPropertiesImplementationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\RequiredPropertiesNotSetException.cs" />
@@ -563,6 +565,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseCredentials.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\DaoId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IHasKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IHasUniversalDeterministicId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlJavaScriptSqlProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Postgres\PostgresConnectionStringResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Postgres\PostgresCredentials.cs" />

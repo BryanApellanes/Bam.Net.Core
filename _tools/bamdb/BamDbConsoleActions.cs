@@ -18,14 +18,23 @@ namespace Bam.Net.Application
     [Serializable]
     public class BamDbConsoleActions : CommandLineTestInterface
     {
-        [ConsoleAction("RegenAllDaoCode", "Regenerate all dao code by recursively searching for DaoGenerationConfig.yaml files and processing each.")]
+        [ConsoleAction("regenerate", "Regenerate all dao code by recursively searching for DaoGenerationConfig.yaml files and processing each.")]
         public static void RegenerateAllDaoCode()
         {
-            string rootDirectoryPath = GetArgumentOrDefault("RegenAllDaoCode", GetArgumentOrDefault("radc", "."));
+            ConsoleLogger logger = new ConsoleLogger();
+            logger.StartLoggingThread();
+            string rootDirectoryPath = GetArgumentOrDefault("regenerate",".");
             DirectoryInfo rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
-            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles("DaoGenerationConfig.yaml", SearchOption.AllDirectories))
+            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles($"{nameof(DaoRepoGenerationConfig)}.yaml", SearchOption.AllDirectories))
             {
-                
+                DaoRepoGenerationConfig config = daoGenConfig.FromYamlFile<DaoRepoGenerationConfig>();
+                if (config.WriteSourceTo.StartsWith("."))
+                {
+                    config.WriteSourceTo = Path.Combine(rootDirectoryPath, config.WriteSourceTo.TruncateFront(1));
+                }
+                SchemaRepositoryGenerator schemaRepositoryGenerator = GenerateRepositorySource(config, logger);
+                bool hasWarnings = OutputWarnings(schemaRepositoryGenerator);
+                Expect.IsFalse(hasWarnings);
             }
         }
         
@@ -39,7 +48,8 @@ namespace Bam.Net.Application
 
             SchemaRepositoryGenerator schemaRepositoryGenerator = GenerateRepositorySource(config, logger);
 
-            OutputWarnings(schemaRepositoryGenerator);
+            bool hasWarnings = OutputWarnings(schemaRepositoryGenerator);
+            Expect.IsFalse(hasWarnings);
         }
 
         [ConsoleAction("generateDaoAssemblyForTypes", "Generate Dao Assembly for types")]
@@ -257,10 +267,12 @@ namespace Bam.Net.Application
             return schemaRepositoryGenerator;
         }
 
-        private static void OutputWarnings(SchemaRepositoryGenerator schemaRepositoryGenerator)
+        private static bool OutputWarnings(SchemaRepositoryGenerator schemaRepositoryGenerator)
         {
+            bool result = false;
             if (schemaRepositoryGenerator.Warnings.MissingKeyColumns.Length > 0)
             {
+                result = true;
                 Message.PrintLine("Missing key/id columns", ConsoleColor.Yellow);
                 schemaRepositoryGenerator.Warnings.MissingKeyColumns.Each(kc =>
                 {
@@ -270,12 +282,15 @@ namespace Bam.Net.Application
 
             if (schemaRepositoryGenerator.Warnings.MissingForeignKeyColumns.Length > 0)
             {
+                result = true;
                 Message.PrintLine("Missing ForeignKey columns", ConsoleColor.Cyan);
                 schemaRepositoryGenerator.Warnings.MissingForeignKeyColumns.Each(fkc =>
                 {
                     Message.PrintLine("\t{0}.{1}", ConsoleColor.DarkCyan, fkc.TableClassName, fkc.Name);
                 });
             }
+
+            return result;
         }
     }
 }

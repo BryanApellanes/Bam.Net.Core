@@ -1,0 +1,5 @@
+SchemaName: WebHooks
+WriteSourceTo: ./Generated_Dao
+FromNameSpace: Bam.Net.CoreServices.WebHooks.Data
+ToNameSpace: Bam.Net.CoreServices.WebHooks.Data.Dao
+UseInheritanceSchema: false

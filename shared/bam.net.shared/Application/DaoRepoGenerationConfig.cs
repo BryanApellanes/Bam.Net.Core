@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Bam.Net.Configuration;
+using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.Application
 {
@@ -14,10 +16,16 @@ namespace Bam.Net.Application
         {
             CheckForIds = true;
             TemplatePath = Path.Combine(AppPaths.Data, "Templates");
+            WriteSourceTo = "Generated_Dao";
+            TypeAssembly = GetType().Assembly.GetFileInfo().FullName;
         }
 
         public string TemplatePath { get; set; }
+        
+        [CompositeKey]
         public string TypeAssembly { get; set; }
+        
+        [CompositeKey]
         public string SchemaName { get; set; }
 
         /// <summary>
@@ -26,7 +34,10 @@ namespace Bam.Net.Application
         /// <value>
         /// From name space.
         /// </value>
+        [CompositeKey]
         public string FromNameSpace { get; set; }
+        
+        [CompositeKey]
         public string ToNameSpace { get; set; }
         public string WriteSourceTo { get; set; }
 
