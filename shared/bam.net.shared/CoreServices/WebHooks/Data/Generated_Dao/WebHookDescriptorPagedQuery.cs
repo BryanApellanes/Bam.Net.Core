@@ -12,6 +12,6 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 {
     public class WebHookDescriptorPagedQuery: PagedQuery<WebHookDescriptorColumns, WebHookDescriptor>
     { 
-		public WebHookDescriptorPagedQuery(WebHookDescriptorColumns orderByColumn, WebHookDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public WebHookDescriptorPagedQuery(WebHookDescriptorColumns orderByColumn,WebHookDescriptorQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

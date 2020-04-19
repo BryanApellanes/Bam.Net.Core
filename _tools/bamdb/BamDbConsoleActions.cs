@@ -25,8 +25,7 @@ namespace Bam.Net.Application
             logger.StartLoggingThread();
             string rootDirectoryPath = GetArgumentOrDefault("regenerate",".");
             DirectoryInfo rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
-            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles($"{nameof(DaoRepoGenerationConfig)}.yaml",
-                SearchOption.AllDirectories))
+            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles($"{nameof(DaoRepoGenerationConfig)}.yaml", SearchOption.AllDirectories))
             {
                 DaoRepoGenerationConfig config = daoGenConfig.FromYamlFile<DaoRepoGenerationConfig>();
                 if (config.WriteSourceTo.StartsWith("./"))

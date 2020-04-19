@@ -1310,7 +1310,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found
@@ -1344,7 +1344,7 @@ File Version: {1}
             return executed;
         }
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found
@@ -1365,7 +1365,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found
@@ -1382,7 +1382,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found

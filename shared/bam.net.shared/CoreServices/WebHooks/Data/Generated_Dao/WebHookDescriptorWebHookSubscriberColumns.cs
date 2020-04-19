@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 			}
 		}	
 
-				
         public WebHookDescriptorWebHookSubscriberColumns Id
         {
             get
@@ -35,6 +34,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
                 return new WebHookDescriptorWebHookSubscriberColumns("Uuid");
             }
         }
+
 
         public WebHookDescriptorWebHookSubscriberColumns WebHookDescriptorId
         {

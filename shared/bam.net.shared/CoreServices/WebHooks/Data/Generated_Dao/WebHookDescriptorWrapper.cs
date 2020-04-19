@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 
 		public WebHookDescriptorWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -46,14 +46,14 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 			}
 		}
 
-System.Collections.Generic.List<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> _calls;
+        System.Collections.Generic.List<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> _calls;
 		public override System.Collections.Generic.List<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> Calls
 		{
 			get
 			{
 				if (_calls == null)
 				{
-					_calls = Repository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor, Bam.Net.CoreServices.WebHooks.Data.WebHookCall>(this).ToList();
+					_calls = DaoRepository.ForeignKeyCollectionLoader<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor, Bam.Net.CoreServices.WebHooks.Data.WebHookCall>(this).ToList();
 				}
 				return _calls;
 			}
@@ -63,8 +63,9 @@ System.Collections.Generic.List<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> 
 			}
 		}
 
-// Xref property: Left -> WebHookDescriptor ; Right -> WebHookSubscriber
+        // left xref
 
+// Left Xref property: Left -> WebHookDescriptor ; Right -> WebHookSubscriber
 		List<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber> _webHookSubscribers;
 		public override List<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber> Subscribers
 		{
@@ -72,8 +73,8 @@ System.Collections.Generic.List<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> 
 			{
 				if(_webHookSubscribers == null || _webHookSubscribers.Count == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptorWebHookSubscriber,  Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptorWebHookSubscriber, Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_webHookSubscribers = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber>().ToList();
 					SetUpdatedXrefCollectionProperty("WebHookSubscribers", this.GetType().GetProperty("Subscribers"));					
 				}
@@ -86,6 +87,8 @@ System.Collections.Generic.List<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> 
 				SetUpdatedXrefCollectionProperty("WebHookSubscribers", this.GetType().GetProperty("Subscribers"));
 			}
 		}
+
+
 	}
 	// -- generated
 }																								

@@ -3222,7 +3222,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\ServiceRegistration\README.md" />
-    <Content Include="$(MSBuildThisFileDirectory)CoreServices\WebHooks\Data\Generated_Dao\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\AES.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA1.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />

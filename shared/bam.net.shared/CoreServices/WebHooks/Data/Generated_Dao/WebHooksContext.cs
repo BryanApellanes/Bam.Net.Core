@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 {
-	// schema = WebHooks 
+	// schema = WebHooks
     public static class WebHooksContext
     {
 		public static string ConnectionName
@@ -238,5 +238,6 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 		{
 			return _webHookDescriptorWebHookSubscribersLock.DoubleCheckLock<WebHookDescriptorWebHookSubscriberQueryContext>(ref _webHookDescriptorWebHookSubscribers, () => new WebHookDescriptorWebHookSubscriberQueryContext());
 		}
-	}    }
+	}
+    }
 }																								
