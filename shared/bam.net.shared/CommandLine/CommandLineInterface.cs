@@ -1225,8 +1225,7 @@ File Version: {1}
             {
                 if (parameterInfo.ParameterType != typeof(string))
                 {
-                    OutLine(string.Format("The method {0} can't be invoked because it takes parameters that are not of type string.", method.Name)
-                        , ConsoleColor.Red);
+                    OutLine($"The method {method.Name} can't be invoked because it takes parameters that are not of type string.", ConsoleColor.Red);
                 }
 
                 if (generate)
@@ -1235,7 +1234,7 @@ File Version: {1}
                 }
                 else
                 {
-                    parameterValues.Add(GetArgument(parameterInfo.Name, string.Format("{0}: ", parameterInfo.Name)));
+                    parameterValues.Add(GetArgument(parameterInfo.Name, $"{parameterInfo.Name}: "));
                 }
             }
             return parameterValues.ToArray();
@@ -1326,14 +1325,19 @@ File Version: {1}
             return ExecuteSwitches(arguments, instance.GetType(), instance, logger);
         }
 
+        static HashSet<Type> _executedSwitches = new HashSet<Type>();
         public static bool ExecuteSwitches(bool isolateMethodCalls = false, ILogger logger = null)
         {
             bool executed = false;
             foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
             {
-                if (!executed && ExecuteSwitches(Arguments, type, false, logger))
+                if (!_executedSwitches.Contains(type))
                 {
-                    executed = true;
+                    _executedSwitches.Add(type);
+                    if (ExecuteSwitches(Arguments, type, isolateMethodCalls, logger))
+                    {
+                        executed = true;
+                    }
                 }
             }
 

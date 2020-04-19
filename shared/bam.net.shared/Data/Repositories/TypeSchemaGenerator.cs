@@ -24,6 +24,7 @@ namespace Bam.Net.Data.Repositories
             DefaultDataTypeBehavior = DefaultDataTypeBehaviors.Exclude;
             TypeSchemaTempPathProvider = schemaTempPathProvider ?? ((sd, ts) => RuntimeSettings.ProcessDataFolder);
             SchemaManager = new CuidSchemaManager(false);            
+            TypeSchemaWarnings = new HashSet<TypeSchemaWarning>();
             _tableNameProvider = tableNameProvider ?? new EchoTypeTableNameProvider();
         }
 
@@ -31,14 +32,8 @@ namespace Bam.Net.Data.Repositories
 
         public ITypeTableNameProvider TableNameProvider
         {
-            get
-            {
-                return _tableNameProvider;
-            }
-            set
-            {
-                _tableNameProvider = value;
-            }
+            get => _tableNameProvider;
+            set => _tableNameProvider = value;
         }
 
         public Func<SchemaDefinition, TypeSchema, string> TypeSchemaTempPathProvider { get; set; }
@@ -108,7 +103,7 @@ namespace Bam.Net.Data.Repositories
         public IEnumerable<Type> Types { get; set; }
         public SchemaDefinitionCreateResult CreateSchemaDefinition(string schemaName = null)
         {
-            Args.ThrowIf(Types.Count() == 0, "No types specified");
+            Args.ThrowIf(!Types.Any(), "No types specified");
             return CreateSchemaDefinition(Types, schemaName);
         }
         public SchemaDefinitionCreateResult CreateSchemaDefinition(IEnumerable<Type> types, string schemaName = null)
@@ -132,8 +127,7 @@ namespace Bam.Net.Data.Repositories
             WriteDaoSchema(typeSchema, SchemaManager, missingKeyColumns, missingForeignKeyColumns, TableNameProvider);
             FireEvent(WritingDaoSchemaFinished, EventArgs.Empty);
 
-            SchemaDefinitionCreateResult result = new SchemaDefinitionCreateResult(SchemaManager.GetCurrentSchema(), typeSchema,
-                missingKeyColumns.ToArray(), missingForeignKeyColumns.ToArray());
+            SchemaDefinitionCreateResult result = new SchemaDefinitionCreateResult(SchemaManager.GetCurrentSchema(), typeSchema, missingKeyColumns.ToArray(), missingForeignKeyColumns.ToArray()){TypeSchemaWarnings = TypeSchemaWarnings };
 
             return result;
         }
@@ -153,6 +147,8 @@ namespace Bam.Net.Data.Repositories
             return CreateSchemaDefinition(Types, schemaName).SchemaDefinition;
         }
         
+        public HashSet<TypeSchemaWarning> TypeSchemaWarnings { get; set; }
+        
         /// <summary>
         /// Create a TypeSchema from the specified types
         /// </summary>
@@ -161,6 +157,8 @@ namespace Bam.Net.Data.Repositories
         /// <returns></returns>
         public TypeSchema CreateTypeSchema(IEnumerable<Type> types, string name = null)
         {
+            SubscribeToTypeSchemaWarnings();
+            
             HashSet<Type> tableTypes = new HashSet<Type>();
             HashSet<TypeFk> foreignKeyTypes = new HashSet<TypeFk>();
             HashSet<TypeXref> xrefTypes = new HashSet<TypeXref>();
@@ -183,7 +181,7 @@ namespace Bam.Net.Data.Repositories
                 xrefTypes.Add(xref);
             }
 
-            return new TypeSchema { Name = name, Tables = tableTypes, ForeignKeys = foreignKeyTypes, Xrefs = xrefTypes, DefaultDataTypeBehavior = DefaultDataTypeBehavior };
+            return new TypeSchema { Name = name, Tables = tableTypes, ForeignKeys = foreignKeyTypes, Xrefs = xrefTypes, DefaultDataTypeBehavior = DefaultDataTypeBehavior, Warnings = TypeSchemaWarnings};
         }
 
         protected internal virtual void WriteDaoSchema(TypeSchema typeSchema, SchemaManager schemaManager, List<KeyColumn> missingKeyColumns = null, List<ForeignKeyColumn> missingForeignKeyColumns = null, ITypeTableNameProvider tableNameProvider = null)
@@ -204,10 +202,7 @@ namespace Bam.Net.Data.Repositories
                     KeyColumn key = keyInfo.ToKeyColumn();
                     schemaManager.AddColumn(key.TableName, key);
                     schemaManager.SetKeyColumn(key.TableName, key.Name);
-                    if (missingKeyColumns != null)
-                    {
-                        missingKeyColumns.Add(key);
-                    }
+                    missingKeyColumns?.Add(key);
                 }
             }
 
@@ -223,10 +218,7 @@ namespace Bam.Net.Data.Repositories
                     fk.AllowNull = true;
                     schemaManager.AddColumn(fk.TableName, fk);
                     schemaManager.SetForeignKey(fk.ReferencedTable, fk.TableName, fk.Name, referencedKeyName);
-                    if (missingForeignKeyColumns != null)
-                    {
-                        missingForeignKeyColumns.Add(fk);
-                    }
+                    missingForeignKeyColumns?.Add(fk);
                 }
             }
             // /end - accounting for missing columns
@@ -260,8 +252,7 @@ namespace Bam.Net.Data.Repositories
 
         protected internal HashSet<Type> GetTableTypes(Type type)
         {
-            HashSet<Type> results = new HashSet<Type>();
-            results.Add(type);
+            HashSet<Type> results = new HashSet<Type> {type};
             Traverse(type, results);
             return results;
         }
@@ -345,10 +336,7 @@ namespace Bam.Net.Data.Repositories
         /// A string representation of the UtcNow at the time
         /// of reference.  <see cref="Bam.Net.Instant" />
         /// </summary>
-        public string Instant
-        {
-            get { return new Instant(DateTime.UtcNow).ToString(); }
-        }
+        public string Instant => new Instant(DateTime.UtcNow).ToString();
 
         public string Message { get; set; }
 
@@ -404,7 +392,7 @@ namespace Bam.Net.Data.Repositories
                     if (keyProperty == null)
                     {
                         Message = "KeyProperty not found for type {0}"._Format(parentType.FullName);
-                        FireEvent(KeyPropertyNotFound, EventArgs.Empty);
+                        FireEvent(KeyPropertyNotFound, new TypeSchemaWarningEventArgs(){Warning = Bam.Net.Data.Repositories.TypeSchemaWarnings.KeyPropertyNotFound, ParentType = parentType});
                         keyProperty = new TypeSchemaPropertyInfo("Id", parentType, TableNameProvider);
                     }
 
@@ -414,7 +402,7 @@ namespace Bam.Net.Data.Repositories
                     if (referencingProperty == null)
                     {
                         Message = "Referencing property not found {0}: Parent type ({1}), ForeignKeyType ({2})"._Format(referencingPropertyName, parentType.FullName, foreignKeyType.FullName);
-                        FireEvent(ReferencingPropertyNotFound, EventArgs.Empty);
+                        FireEvent(ReferencingPropertyNotFound, new TypeSchemaWarningEventArgs(){Warning = Bam.Net.Data.Repositories.TypeSchemaWarnings.ReferencingPropertyNotFound, ParentType = parentType, ForeignKeyType = foreignKeyType});
                         referencingProperty = new TypeSchemaPropertyInfo(referencingPropertyName, parentType, foreignKeyType, TableNameProvider);
                     }
 
@@ -422,7 +410,7 @@ namespace Bam.Net.Data.Repositories
                     if (childParentProperty == null)
                     {
                         Message = "ChildParentProperty was not found {0}.{1}: Parent type({2}), ForeignKeyType ({3})"._Format(foreignKeyType.Name, parentType.Name, parentType.FullName, foreignKeyType.FullName);
-                        FireEvent(ChildParentPropertyNotFound, EventArgs.Empty);
+                        FireEvent(ChildParentPropertyNotFound, new TypeSchemaWarningEventArgs(){Warning = Bam.Net.Data.Repositories.TypeSchemaWarnings.ChildParentPropertyNotFound, ParentType = parentType, ForeignKeyType = foreignKeyType});
                         childParentProperty = new TypeSchemaPropertyInfo(parentType.Name, foreignKeyType, TableNameProvider);
                     }
 
@@ -563,6 +551,25 @@ namespace Bam.Net.Data.Repositories
             }
         }
 
+        private bool _subscribedToTypeSchemaWarnings;
+        private void SubscribeToTypeSchemaWarnings()
+        {
+            if (!_subscribedToTypeSchemaWarnings)
+            {
+                _subscribedToTypeSchemaWarnings = true;
+
+                void Handler(object o, EventArgs a)
+                {
+                    TypeSchemaWarning warning = TypeSchemaWarning.FromEventArgs((TypeSchemaWarningEventArgs) a);
+                    TypeSchemaWarnings.Add(warning);
+                }
+
+                KeyPropertyNotFound += Handler;
+                ReferencingPropertyNotFound += Handler;
+                ChildParentPropertyNotFound += Handler;
+            }
+        }
+        
         private void Traverse(Type type, HashSet<Type> results)
         {
             Queue<Type> queue = new Queue<Type>();

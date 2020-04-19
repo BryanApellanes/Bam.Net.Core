@@ -37,11 +37,13 @@ namespace Bam.Net.Data.Repositories
             _namespace = "TypeDaos";
             _daoGenerator = new DaoGenerator(codeWriter, targetStreamResolver) { Namespace = DaoNamespace };
             _wrapperGenerator = new RazorWrapperGenerator(WrapperNamespace, DaoNamespace);
+            _typeSchemaGenerator = new TypeSchemaGenerator();
             _types = new HashSet<Type>();
             _additionalReferenceAssemblies = new HashSet<Assembly>();
             _additionalReferenceTypes = new HashSet<Type>();
             
             SetTempPathProvider();
+            SubscribeToSchemaWarnings();
         }
 
         /// <summary>
@@ -59,6 +61,7 @@ namespace Bam.Net.Data.Repositories
             _additionalReferenceTypes = new HashSet<Type>();
 
             SetTempPathProvider();
+            SubscribeToSchemaWarnings();
             _types = new HashSet<Type>();
             if (logger != null)
             {
@@ -69,7 +72,7 @@ namespace Bam.Net.Data.Repositories
                 AddTypes(types);
             }
         }
-
+        
         /// <summary>
         /// Instantiate a new instance of TypeDaoGenerator
         /// </summary>
@@ -92,39 +95,21 @@ namespace Bam.Net.Data.Repositories
         [Inject]
         public DaoGenerator DaoGenerator
         {
-            get
-            {
-                return _daoGenerator;
-            }
-            set
-            {
-                _daoGenerator = value;
-            }
+            get => _daoGenerator;
+            set => _daoGenerator = value;
         }
 
         [Inject]
         public IWrapperGenerator WrapperGenerator
         {
-            get
-            {
-                return _wrapperGenerator;
-            }
-            set
-            {
-                _wrapperGenerator = value;
-            }
+            get => _wrapperGenerator;
+            set => _wrapperGenerator = value;
         }
 
         protected TypeSchemaGenerator TypeSchemaGenerator
         {
-            get
-            {
-                return _typeSchemaGenerator;
-            }
-            set
-            {
-                _typeSchemaGenerator = value;
-            }
+            get => _typeSchemaGenerator;
+            set => _typeSchemaGenerator = value;
         }
 
         /// <summary>
@@ -163,8 +148,8 @@ namespace Bam.Net.Data.Repositories
         /// </value>
         public string TargetNamespace
         {
-            get { return BaseNamespace; }
-            set { BaseNamespace = value; }
+            get => BaseNamespace;
+            set => BaseNamespace = value;
         }
 
         /// <summary>
@@ -174,10 +159,7 @@ namespace Bam.Net.Data.Repositories
         /// </summary>
         public string BaseNamespace
         {
-            get
-            {
-                return _namespace;
-            }
+            get => _namespace;
             set
             {
                 _namespace = value;
@@ -190,7 +172,7 @@ namespace Bam.Net.Data.Repositories
         string _daoNamespace;
         public string DaoNamespace
         {
-            get { return _daoNamespace ?? $"{_namespace}.Dao"; }
+            get => _daoNamespace ?? $"{_namespace}.Dao";
             set
             {
                 _daoNamespace = value;
@@ -202,7 +184,7 @@ namespace Bam.Net.Data.Repositories
         string _wrapperNamespace;
         public string WrapperNamespace
         {
-            get { return _wrapperNamespace ?? $"{_namespace}.Wrappers"; }
+            get => _wrapperNamespace ?? $"{_namespace}.Wrappers";
             set
             {
                 _wrapperNamespace = value;
@@ -217,15 +199,12 @@ namespace Bam.Net.Data.Repositories
             {
                 if (string.IsNullOrEmpty(_schemaName))
                 {
-                    _schemaName = string.Format("_{0}_Dao", _types.ToInfoHash());
+                    _schemaName = $"_{_types.ToInfoHash()}_Dao";
                 }
 
                 return _schemaName;
             }
-            set
-            {
-                _schemaName = value;
-            }
+            set => _schemaName = value;
         }
 
         public override void Subscribe(ILogger logger)
@@ -235,13 +214,7 @@ namespace Bam.Net.Data.Repositories
         }
 
         HashSet<Type> _types;
-        public Type[] Types
-        {
-            get
-            {
-                return _types.ToArray();
-            }
-        }
+        public Type[] Types => _types.ToArray();
 
         public bool KeepSource { get; set; }
 
@@ -384,13 +357,21 @@ namespace Bam.Net.Data.Repositories
         public event EventHandler SchemaDifferenceDetected;
         public string OldInfoString { get; set; }
         public string NewInfoString { get; set; }
-        public bool MissingColumns { get { return SchemaDefinitionCreateResult.MissingColumns; } }
-        public SchemaWarnings Warnings { get { return SchemaDefinitionCreateResult.Warnings; } }
+
+        /// <summary>
+        /// Warnings related to the type definitions, see TypeSchemaWarnings enum for possible warnings.
+        /// </summary>
+        public HashSet<TypeSchemaWarning> TypeSchemaWarnings => SchemaDefinitionCreateResult.TypeSchemaWarnings;
+        public bool MissingColumns => SchemaDefinitionCreateResult.MissingColumns;
+        public SchemaWarnings Warnings => SchemaDefinitionCreateResult.Warnings;
 
         public bool WarningsAsErrors
         {
             get; set;
         }
+
+        [Verbosity(VerbosityLevel.Warning, EventArgsMessageFormat = "{Warning}: ParentType={ParentType}, ForeignKeyType={ForeignKeyType}")]
+        public event EventHandler TypeSchemaWarning;
 
         [Verbosity(VerbosityLevel.Warning, SenderMessageFormat = "Missing {PropertyType} property: {ClassName}.{PropertyName}")]
         public event EventHandler SchemaWarning;
@@ -414,6 +395,14 @@ namespace Bam.Net.Data.Repositories
                         DaoRepositorySchemaWarningEventArgs drswea = GetEventArgs(keyColumn);
                         FireEvent(SchemaWarning, drswea);
                     }
+                }
+            }
+
+            if (TypeSchemaWarnings.Count > 0)
+            {
+                foreach (TypeSchemaWarning warning in TypeSchemaWarnings)
+                {
+                    FireEvent(TypeSchemaWarning, warning.ToEventArgs());
                 }
             }
         }
@@ -442,6 +431,11 @@ namespace Bam.Net.Data.Repositories
                     }
                     throw new NoIdPropertyException(classNames);
                 }
+            }
+
+            if (TypeSchemaWarnings.Count > 0 && WarningsAsErrors)
+            {
+                throw new TypeSchemaException(TypeSchemaWarnings.ToArray());
             }
         }
 
@@ -620,7 +614,7 @@ namespace Bam.Net.Data.Repositories
                     Message = ex.Message;
                     if (!string.IsNullOrEmpty(ex.StackTrace))
                     {
-                        Message = string.Format("{0}\r\nStackTrace: {1}", Message, ex.StackTrace);
+                        Message = $"{Message}\r\nStackTrace: {ex.StackTrace}";
                     }
                     FireEvent(DeleteDaoTempFailed, EventArgs.Empty);
                     return false;
@@ -640,6 +634,14 @@ namespace Bam.Net.Data.Repositories
             FireEvent(SchemaDifferenceDetected, new SchemaDifferenceEventArgs { GeneratedDaoAssemblyInfo = info, TypeSchema = typeSchema, DiffReport = diff });
         }
 
+        private void SubscribeToSchemaWarnings()
+        {
+            _typeSchemaGenerator.Subscribe(VerbosityLevel.Warning, (l, a) =>
+            {
+                FireEvent(TypeSchemaWarning, l, a);
+            });
+        }
+        
         private void SetTempPathProvider()
         {
             TypeSchemaTempPathProvider = (schemaDef, typeSchema) =>

@@ -15,7 +15,17 @@ namespace Bam.Net
 {
     public static class NamedFormatter
     {
-        public static string NamedFormat(this string format, object dataSource, string opener = "{{", string closer = "}}")
+        /// <summary>
+        /// Replaces instances of named properties in the specified format with the property values of the specified dataSource.
+        /// Named properties in the specified format string should be in the form "{PropertyName}".  This uses a basic string
+        /// replacement mechanism, for more robust templating use a template engine.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="dataSource"></param>
+        /// <param name="opener"></param>
+        /// <param name="closer"></param>
+        /// <returns></returns>
+        public static string NamedFormat(this string format, object dataSource, string opener = "{", string closer = "}")
         {
             Args.ThrowIfNull(dataSource, nameof(dataSource));
             PropertyInfo[] props = dataSource.GetType().GetProperties();
@@ -27,7 +37,17 @@ namespace Bam.Net
             return returnValue;
         }
 
-        public static string NamedFormat(this string format, Dictionary<string, string> dataSource, string opener = "{{", string closer = "}}")
+        /// <summary>
+        /// Replaces instances of named properties in the specified format with the property values of the specified dataSource.
+        /// Named properties in the specified format string should be in the form "{PropertyName}".  This uses a basic string
+        /// replacement mechanism, for more robust templating use a template engine.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="dataSource"></param>
+        /// <param name="opener"></param>
+        /// <param name="closer"></param>
+        /// <returns></returns>
+        public static string NamedFormat(this string format, Dictionary<string, string> dataSource, string opener = "{", string closer = "}")
         {
             Args.ThrowIfNull(dataSource, nameof(dataSource));
             string returnValue = format;

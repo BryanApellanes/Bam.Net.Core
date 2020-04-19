@@ -25,13 +25,19 @@ namespace Bam.Net.Application
             logger.StartLoggingThread();
             string rootDirectoryPath = GetArgumentOrDefault("regenerate",".");
             DirectoryInfo rootDirectoryInfo = new DirectoryInfo(rootDirectoryPath);
-            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles($"{nameof(DaoRepoGenerationConfig)}.yaml", SearchOption.AllDirectories))
+            foreach (FileInfo daoGenConfig in rootDirectoryInfo.GetFiles($"{nameof(DaoRepoGenerationConfig)}.yaml",
+                SearchOption.AllDirectories))
             {
                 DaoRepoGenerationConfig config = daoGenConfig.FromYamlFile<DaoRepoGenerationConfig>();
-                if (config.WriteSourceTo.StartsWith("."))
+                if (config.WriteSourceTo.StartsWith("./"))
                 {
-                    config.WriteSourceTo = Path.Combine(rootDirectoryPath, config.WriteSourceTo.TruncateFront(1));
+                    config.WriteSourceTo = Path.Combine(rootDirectoryPath, config.WriteSourceTo.TruncateFront(2));
                 }
+                else if (config.WriteSourceTo.StartsWith("~/"))
+                {
+                    config.WriteSourceTo = Path.Combine(rootDirectoryPath, new UnixPath(config.WriteSourceTo));
+                }
+
                 SchemaRepositoryGenerator schemaRepositoryGenerator = GenerateRepositorySource(config, logger);
                 bool hasWarnings = OutputWarnings(schemaRepositoryGenerator);
                 Expect.IsFalse(hasWarnings);
@@ -258,6 +264,7 @@ namespace Bam.Net.Application
             DaoGenerationServiceRegistry registry = DaoGenerationServiceRegistry.ForConfiguration(config, logger);
             SchemaRepositoryGenerator schemaRepositoryGenerator = registry.Get<SchemaRepositoryGenerator>();
 
+            
             if (Directory.Exists(targetDir))
             {
                 Directory.Move(targetDir, targetDir.GetNextDirectoryName());
@@ -288,6 +295,15 @@ namespace Bam.Net.Application
                 {
                     Message.PrintLine("\t{0}.{1}", ConsoleColor.DarkCyan, fkc.TableClassName, fkc.Name);
                 });
+            }
+
+            if (schemaRepositoryGenerator.TypeSchemaWarnings.Count > 0)
+            {
+                result = true;
+                foreach (TypeSchemaWarning warning in schemaRepositoryGenerator.TypeSchemaWarnings)
+                {
+                    Message.PrintLine(warning.ToString(), ConsoleColor.Yellow);
+                }
             }
 
             return result;

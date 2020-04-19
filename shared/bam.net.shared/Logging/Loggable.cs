@@ -71,6 +71,32 @@ namespace Bam.Net.Logging
             loggable.Subscribers.Each(Subscribe);
 		}
 
+        public virtual void Subscribe(VerbosityLevel levelToSubscribe, Action<Loggable, LoggableEventArgs> handler)
+        {
+            Type emittingType = this.GetType();
+            EventInfo[] eventInfos = emittingType.GetEvents();
+            eventInfos.Each(eventInfo =>
+            {
+                if (eventInfo.HasCustomAttributeOfType(out VerbosityAttribute verbosityAttribute))
+                {
+                    if (verbosityAttribute.Value == levelToSubscribe)
+                    {
+                        eventInfo.AddEventHandler(this, (EventHandler)((s, a) =>
+                        {
+                            handler(this, LoggableEventArgs.ForLoggable(this, verbosityAttribute));
+                        }));
+                    }
+                }
+            });
+        }
+        
+        [Exclude]
+        [DebuggerStepThrough]
+        public virtual void Subscribe(ILogger logger)
+        {
+            Subscribe(logger, LogVerbosity);
+        }
+        
         /// <summary>
         /// Subscribe the specified logger to
         /// all the events of the current type
@@ -84,22 +110,22 @@ namespace Bam.Net.Logging
         /// <param name="logger"></param>
         [Exclude]
         [DebuggerStepThrough]
-        public virtual void Subscribe(ILogger logger)
+        public virtual void Subscribe(ILogger logger, VerbosityLevel levelToSubscribe)
         {
             lock (_subscriberLock)
             {
                 if (logger != null && !IsSubscribed(logger))
                 {
                     _subscribers.Add(logger);
-                    Type currentType = this.GetType();
-                    EventInfo[] eventInfos = currentType.GetEvents();
+                    Type emittingType = this.GetType();
+                    EventInfo[] eventInfos = emittingType.GetEvents();
                     eventInfos.Each(eventInfo =>
                     {
                         bool shouldSubscribe = true;
                         VerbosityLevel logEventType = VerbosityLevel.Information;
                         if (eventInfo.HasCustomAttributeOfType(out VerbosityAttribute verbosity))
                         {
-                            shouldSubscribe = (int)verbosity.Value <= (int)LogVerbosity;
+                            shouldSubscribe = (int)verbosity.Value <= (int)levelToSubscribe;
                             logEventType = verbosity.Value;
                         }
 
@@ -128,7 +154,7 @@ namespace Bam.Net.Logging
                                         }
                                         else
                                         {
-                                            logger.AddEntry("Event {0} raised on type {1}::{2}", (int)logEventType, logEventType.ToString(), currentType.Name, eventInfo.Name);
+                                            logger.AddEntry("Event {0} raised on type {1}::{2}", (int)logEventType, logEventType.ToString(), emittingType.Name, eventInfo.Name);
                                         }
                                     }
                                 }));

@@ -615,6 +615,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ObjectPersister.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ObjectPersisterDirectoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\ObjectReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarningEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarning.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarnings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
@@ -640,6 +644,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserKeyDataPagedQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\Generated_Dao\UserKeyDataQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\ResponseData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\LoggableEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MetadataReferenceResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />

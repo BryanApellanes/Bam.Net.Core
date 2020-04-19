@@ -21,17 +21,10 @@ namespace Bam.Net.Data.Repositories
 		}
 
 		public TypeSchema TypeSchema { get; private set; }
-
+		public HashSet<TypeSchemaWarning> TypeSchemaWarnings { get; set; }
 		public SchemaDefinition SchemaDefinition { get; private set; }
-
 		public SchemaWarnings Warnings { get; private set; }
 
-		public bool MissingColumns 
-		{
-			get 
-			{
-				return Warnings.MissingKeyColumns.Length > 0 || Warnings.MissingForeignKeyColumns.Length > 0; 
-			}
-		}
+		public bool MissingColumns => Warnings.MissingKeyColumns.Length > 0 || Warnings.MissingForeignKeyColumns.Length > 0;
 	}
 }

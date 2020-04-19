@@ -10,7 +10,7 @@ using Bam.Net.Data.Schema;
 
 namespace Bam.Net.Data.Repositories
 {
-	public sealed class SchemaWarnings
+	public class SchemaWarnings
 	{
 		public SchemaWarnings(KeyColumn[] missingKeyColumns, ForeignKeyColumn[] missingForeignKeyColumns) 
 		{
