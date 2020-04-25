@@ -17,26 +17,51 @@ namespace Bam.Net.Data
 {
     public static partial class DataExtensions
     {
-        public static object ToJsonSafe(this object obj)
-        {
-            return ToJsonSafe(obj, 5);
-        }
-        
         /// <summary>
         /// Create a json safe version of the object
-        /// by creating a dynamic type that represents
-        /// the properties on the original object
-        /// that are adorned with the ColumnAttribute
-        /// custom attribute.
+        /// by creating a JObject representing
+        /// properties on the object that are adorned
+        /// with the ColumnAttribute custom attribute.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static object ToJsonSafe(this object obj, int maxRecursion)
+        public static object ToJsonSafe(this object obj, int maxRecursion = 5)
         {
             return ToJsonSafe(obj, maxRecursion, 0);
         }
         
+        /// <summary>
+        /// Create a json safe version of the object
+        /// by creating a JObject representing
+        /// properties on the object that are adorned
+        /// with the custom attribute of type T.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="maxRecursion"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static object ToJsonSafe<T>(this object obj, int maxRecursion = 5) where T: Attribute
+        {
+            return ToJsonSafe<T>(obj, maxRecursion, 0);
+        }
+
         private static object ToJsonSafe(this object obj, int maxRecursion, int recursionThusFar)
+        {
+            return ToJsonSafe<ColumnAttribute>(obj, maxRecursion, recursionThusFar);
+        }
+        
+        /// <summary>
+        /// Create a json safe version of the object
+        /// by creating a JObject that represents
+        /// the properties on the original object
+        /// that are adorned with the custom attribute of type T.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="maxRecursion"></param>
+        /// <param name="recursionThusFar"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private static object ToJsonSafe<T>(this object obj, int maxRecursion, int recursionThusFar) where T: Attribute
         {
             Args.ThrowIfNull(obj, "obj");
 
@@ -47,7 +72,7 @@ namespace Bam.Net.Data
             }
             JObject jobj = new JObject();
             Type type = obj.GetType();
-            IEnumerable<PropertyInfo> properties = type.GetProperties().Where(pi => pi.HasCustomAttributeOfType<ColumnAttribute>());
+            IEnumerable<PropertyInfo> properties = type.GetProperties().Where(pi => pi.HasCustomAttributeOfType<T>());
             foreach (PropertyInfo prop in properties)
             {
                 object val = prop.GetValue(obj);

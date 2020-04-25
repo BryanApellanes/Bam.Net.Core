@@ -20,7 +20,6 @@ namespace Bam.Net.DaoRef
 			}
 		}	
 
-				
         public DaoReferenceObjectColumns Id
         {
             get
@@ -63,6 +62,13 @@ namespace Bam.Net.DaoRef
                 return new DaoReferenceObjectColumns("LongProperty");
             }
         }
+        public DaoReferenceObjectColumns ULongProperty
+        {
+            get
+            {
+                return new DaoReferenceObjectColumns("ULongProperty");
+            }
+        }
         public DaoReferenceObjectColumns DateTimeProperty
         {
             get
@@ -91,6 +97,7 @@ namespace Bam.Net.DaoRef
                 return new DaoReferenceObjectColumns("StringProperty");
             }
         }
+
 
 
 		protected internal Type TableType

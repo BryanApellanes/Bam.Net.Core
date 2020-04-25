@@ -502,9 +502,10 @@ namespace Bam.Net.Data.Schema
             }
             catch (Exception ex)
             {
-                SchemaManagerResult r = new SchemaManagerResult(ex.Message);
-                r.StackTrace = ex.StackTrace ?? "";
-                r.Success = false;
+                SchemaManagerResult r = new SchemaManagerResult(ex.Message)
+                {
+                    StackTrace = ex.StackTrace ?? "", Success = false
+                };
                 return r;
             }
         }

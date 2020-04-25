@@ -4167,7 +4167,8 @@ namespace Bam.Net
 
         public static bool IsPrimitiveOrNullable(this Type type)
         {
-            return type.IsPrimitive || Nullable.GetUnderlyingType(type).IsPrimitive;
+            Type underlyingType = Nullable.GetUnderlyingType(type);
+            return type.IsPrimitive || underlyingType == null ? type.IsPrimitive : underlyingType.IsPrimitive;
         }
 
         public static bool IsNullable(this Type type, out Type underlyingType)

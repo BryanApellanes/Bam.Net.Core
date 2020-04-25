@@ -20,7 +20,6 @@ namespace Bam.Net.DaoRef
 			}
 		}	
 
-				
         public LeftRightColumns Id
         {
             get
@@ -35,6 +34,7 @@ namespace Bam.Net.DaoRef
                 return new LeftRightColumns("Uuid");
             }
         }
+
 
         public LeftRightColumns LeftId
         {

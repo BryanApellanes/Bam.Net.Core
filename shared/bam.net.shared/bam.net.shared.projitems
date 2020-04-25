@@ -1889,7 +1889,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExistingFileAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Expect.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExpectFailedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExpectationFailedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileLock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemWatchingExtensions.cs" />
@@ -3227,6 +3227,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Dao.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Qi.js" />
+    <Content Include="$(MSBuildThisFileDirectory)Data\Schema\Templates\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Documentation\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Logging\Http\GenerationConfig.yaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Javascript\json2.js" />

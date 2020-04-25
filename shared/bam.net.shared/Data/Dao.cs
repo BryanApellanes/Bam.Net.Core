@@ -265,10 +265,7 @@ namespace Bam.Net.Data
             {
                 return _databaseSync.DoubleCheckLock(ref _database, () => Db.For(this.GetType()));
             }
-            set
-            {
-                _database = value;
-            }
+            set => _database = value;
         }
 
         List<string> _columns;
@@ -1264,14 +1261,8 @@ namespace Bam.Net.Data
         [Exclude]
         public bool ForceUpdate
         {
-            get
-            {
-                return !ForceInsert;
-            }
-            set
-            {
-                ForceInsert = !value;
-            }
+            get => !ForceInsert;
+            set => ForceInsert = !value;
         }
 
         bool _isNew;
@@ -1291,10 +1282,7 @@ namespace Bam.Net.Data
 
                 return _isNew;
             }
-            set
-            {
-                _isNew = value;
-            }
+            set => _isNew = value;
         }
 
         Incubator _incubator;
@@ -1326,13 +1314,7 @@ namespace Bam.Net.Data
         /// current Dao instance have been set
         /// since its instanciation.
         /// </summary>
-        protected internal bool HasNewValues
-        {
-            get
-            {
-                return NewValues.Count > 0;
-            }
-        }
+        protected internal bool HasNewValues => NewValues.Count > 0;
 
         protected internal Dictionary<string, object> NewValues
         {
@@ -1427,12 +1409,12 @@ namespace Bam.Net.Data
             return new long?();
         }
 
-        internal static long MapUlongToLong(ulong ulongValue)
+        public static long MapUlongToLong(ulong ulongValue)
         {
             return unchecked((long)ulongValue + long.MinValue);
         }
 
-        internal static ulong MapLongToUlong(long longValue)
+        public static ulong MapLongToUlong(long longValue)
         {
             return unchecked((ulong)(longValue - long.MinValue));
         }
@@ -1526,7 +1508,7 @@ namespace Bam.Net.Data
             }
         }
 
-        protected internal void SetValue(string columnName, object value)
+        protected internal void SetValue(string columnName, object value, bool mapUlongToLong = true)
         {
             // Note To Self: Please don't mess with this logic.  You've faced the consequences of that decision 
             // too many times now.  Trust that this moronic looking logic is needed for all to function correctly.
@@ -1540,7 +1522,7 @@ namespace Bam.Net.Data
             }
             else
             {
-                if (value is ulong ulongVal)
+                if (mapUlongToLong && value is ulong ulongVal)
                 {
                     value = MapUlongToLong(ulongVal);
                 }

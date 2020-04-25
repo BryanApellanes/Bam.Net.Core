@@ -34,11 +34,8 @@ namespace Bam.Net.Data
         int? number;
         public int? Number
         {
-            get { return number; }
-            set
-            {
-                number = value;
-            }
+            get => number;
+            set => number = value;
         }
 
         public int? SetNumber(int? value)
@@ -55,16 +52,13 @@ namespace Bam.Net.Data
 
         public string Operator
         {
-            get
-            {
-                return "=";
-            }
+            get => "=";
             set { }
         }        
 
         public override string ToString()
         {
-            return string.Format("{0} {1} {2} ", ColumnNameFormatter(ColumnName), this.Operator, string.Format("{0}{1}{2}", ParameterPrefix, ColumnName, Number));
+            return $"{ColumnNameFormatter(ColumnName)} {this.Operator} {ParameterPrefix}{ColumnName}{Number} ";
         }
 
         public static IEnumerable<AssignValue> FromDynamic(dynamic obj, Func<string, string> columnNameFormatter = null)

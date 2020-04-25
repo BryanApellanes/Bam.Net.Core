@@ -105,6 +105,10 @@ namespace Bam.Net.Data.SQLite
             }
         }
 
+        /// <summary>
+        /// If true, causes a call to GC.Collect() when
+        /// ReleaseConnection is called on this SQLiteDatabase instance.
+        /// </summary>
         public bool GCOnRelease { get; set; }
 
         public override void ReleaseConnection(DbConnection conn)

@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.DaoRef
 {
-	// schema = DaoRef 
+	// schema = DaoRef
     public static class DaoRefContext
     {
 		public static string ConnectionName
@@ -394,5 +394,6 @@ namespace Bam.Net.DaoRef
 		{
 			return _leftRightsLock.DoubleCheckLock<LeftRightQueryContext>(ref _leftRights, () => new LeftRightQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

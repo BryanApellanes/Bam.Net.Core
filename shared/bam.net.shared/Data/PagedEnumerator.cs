@@ -28,14 +28,8 @@ namespace Bam.Net.Data
 
         public List<T> CurrentPage
         {
-            get
-            {
-                return this.currentPage;
-            }
-            protected set
-            {
-                this.currentPage = value;
-            }
+            get => this.currentPage;
+            protected set => this.currentPage = value;
         }
 
         /// <summary>
@@ -44,14 +38,8 @@ namespace Bam.Net.Data
         /// </summary>
         public int CurrentItemIndex
         {
-            get
-            {
-                return this.currentItemIndex;
-            }
-            protected set
-            {
-                this.currentItemIndex = value;
-            }
+            get => this.currentItemIndex;
+            protected set => this.currentItemIndex = value;
         }
 
         /// <summary>
@@ -59,14 +47,8 @@ namespace Bam.Net.Data
         /// </summary>
         public int CurrentPageIndex
         {
-            get
-            {
-                return this.currentPageIndex;
-            }
-            protected set
-            {
-                this.currentPageIndex = value;
-            }
+            get => this.currentPageIndex;
+            protected set => this.currentPageIndex = value;
         }
         
         #region IEnumerator<T> Members
@@ -75,10 +57,7 @@ namespace Bam.Net.Data
         /// Returns the item of the current page at 
         /// the current item index.
         /// </summary>
-        public T Current
-        {
-            get { return CurrentPage != null ? CurrentPage[CurrentItemIndex] : default(T); }
-        }
+        public T Current => CurrentPage != null ? CurrentPage[CurrentItemIndex] : default(T);
 
         #endregion
 
@@ -93,10 +72,7 @@ namespace Bam.Net.Data
 
         #region IEnumerator Members
 
-        object System.Collections.IEnumerator.Current
-        {
-            get { return Current; }
-        }
+        object System.Collections.IEnumerator.Current => Current;
 
         public bool MoveNext()
         {

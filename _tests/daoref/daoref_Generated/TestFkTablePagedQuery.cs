@@ -12,6 +12,6 @@ namespace Bam.Net.DaoRef
 {
     public class TestFkTablePagedQuery: PagedQuery<TestFkTableColumns, TestFkTable>
     { 
-		public TestFkTablePagedQuery(TestFkTableColumns orderByColumn, TestFkTableQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public TestFkTablePagedQuery(TestFkTableColumns orderByColumn,TestFkTableQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

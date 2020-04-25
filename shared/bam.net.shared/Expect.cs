@@ -27,11 +27,11 @@ namespace Bam.Net
             {
                 if (string.IsNullOrEmpty(failureMessage))
                 {
-                    throw new ExpectFailedException(true, boolToCheck, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(true, boolToCheck, ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -57,11 +57,11 @@ namespace Bam.Net
             {
                 if (string.IsNullOrEmpty(failureMessage))
                 {
-                    throw new ExpectFailedException(false, boolToCheck, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(false, boolToCheck, ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace Bam.Net
             {
                 string o = instance == null ? "[null]" : instance.GetType().Name;
                 string exceptionMessage = failureMessage == null ? $"Couldn't cast object {o} to type {typeof(T).Name}: {ex.Message}" : $"{failureMessage}: {ex.Message}";
-                throw new ExpectFailedException(exceptionMessage);
+                throw new ExpectationFailedException(exceptionMessage);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Bam.Net
                     failureMessage = "Exception was not thrown";
                 }
 
-                throw new ExpectFailedException(failureMessage);
+                throw new ExpectationFailedException(failureMessage);
             }
         }
 
@@ -163,7 +163,7 @@ namespace Bam.Net
         public static void IsGreaterThan(long left, long right, string failureMessage)
         {
             if (!(left > right))
-                throw new ExpectFailedException(failureMessage);
+                throw new ExpectationFailedException(failureMessage);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Bam.Net
         public static void IsGreaterThan(ulong left, ulong right, string failureMessage)
         {
             if (!(left > right))
-                throw new ExpectFailedException(failureMessage);
+                throw new ExpectationFailedException(failureMessage);
         }
 
         public static void IsGreaterThanOrEqualTo(int left, int right)
@@ -189,7 +189,7 @@ namespace Bam.Net
         public static void IsGreaterThanOrEqualTo(int left, int right, string failureMessage)
         {
             if (!(left >= right))
-                throw new ExpectFailedException(failureMessage);
+                throw new ExpectationFailedException(failureMessage);
         }
 
         /// <summary>
@@ -212,9 +212,9 @@ namespace Bam.Net
             if (expected != actual)
             {
                 if (!string.IsNullOrEmpty(failureMessage))
-                    throw new ExpectFailedException(failureMessage, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(failureMessage, ShouldHtmlEncodeExceptions);
 
-                throw new ExpectFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
+                throw new ExpectationFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
             }
         }
 
@@ -229,10 +229,10 @@ namespace Bam.Net
             {
                 if (string.IsNullOrWhiteSpace(failureMessage))
                 {
-                    throw new ExpectFailedException("References weren't equal");
+                    throw new ExpectationFailedException("References weren't equal");
                 }
 
-                throw new ExpectFailedException(failureMessage, ShouldHtmlEncodeExceptions);
+                throw new ExpectationFailedException(failureMessage, ShouldHtmlEncodeExceptions);
             }
         }
         
@@ -247,11 +247,11 @@ namespace Bam.Net
             {
                 if (string.IsNullOrEmpty(failureMessage))
                 {
-                    throw new ExpectFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -272,11 +272,11 @@ namespace Bam.Net
             {
                 if (string.IsNullOrEmpty(failureMessage))
                 {
-                    throw new ExpectFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(expected.ToString(), actual.ToString(), ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -333,11 +333,11 @@ namespace Bam.Net
                 {
                     string expectString = expected == null ? "null" : expected.ToString();
                     string actualString = actual == null ? "null" : actual.ToString();
-                    throw new ExpectFailedException(expectString, actualString, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(expectString, actualString, ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -360,11 +360,11 @@ namespace Bam.Net
             {
                 if (string.IsNullOrEmpty(failureMessage))
                 {
-                    throw new ExpectFailedException(typeof(T), objectToCheck, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(typeof(T), objectToCheck, ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -390,9 +390,9 @@ namespace Bam.Net
             if (objectToCheck.GetType() != typeof(T))
             {
                 if (string.IsNullOrEmpty(failureMessage))
-                    throw new ExpectFailedException(typeof(T), objectToCheck, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(typeof(T), objectToCheck, ShouldHtmlEncodeExceptions);
                 else
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
             }
         }
 
@@ -408,11 +408,11 @@ namespace Bam.Net
             {
                 if (string.IsNullOrWhiteSpace(failureMessage))
                 {
-                    throw new ExpectFailedException(typeof(T), objectToCheck, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException(typeof(T), objectToCheck, ShouldHtmlEncodeExceptions);
                 }
                 else
                 {
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 }
             }
         }
@@ -436,9 +436,9 @@ namespace Bam.Net
             if (!string.IsNullOrEmpty(stringToCheck))
             {
                 if (string.IsNullOrEmpty(failureMessage))
-                    throw new ExpectFailedException("null or empty string", stringToCheck);
+                    throw new ExpectationFailedException("null or empty string", stringToCheck);
                 else
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
             }
         }
 
@@ -452,9 +452,9 @@ namespace Bam.Net
             if (string.IsNullOrEmpty(stringToCheck))
             {
                 if (string.IsNullOrEmpty(failureMessage))
-                    throw new ExpectFailedException("string with value", "null or empty string");
+                    throw new ExpectationFailedException("string with value", "null or empty string");
                 else
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
             }
         }
 
@@ -476,9 +476,14 @@ namespace Bam.Net
         public static void Extends<T>(object objectToCheck)
         {
             if (!(objectToCheck is T))
-                throw new ExpectFailedException($"{objectToCheck.GetType().Name} doesn't extend {typeof(T).Name}", ShouldHtmlEncodeExceptions);
+                throw new ExpectationFailedException($"{objectToCheck.GetType().Name} doesn't extend {typeof(T).Name}", ShouldHtmlEncodeExceptions);
         }
 
+        public static void ShouldBeNull(this object objectToCheck, string failureMessage = null)
+        {
+            IsNull(objectToCheck, failureMessage);
+        }
+        
         public static void IsNull(this object objectToCheck)
         {
             IsNull(objectToCheck, "objectToCheck was not null as expected");
@@ -495,13 +500,18 @@ namespace Bam.Net
             if (objectToCheck != null)
             {
                 if (!string.IsNullOrEmpty(failureMessage))
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 else
-                    throw new ExpectFailedException("null", objectToCheck.GetType().Name, ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException("null", objectToCheck.GetType().Name, ShouldHtmlEncodeExceptions);
             }
         }
 
-        public static void IsNotNull(object objectToCheck)
+        public static void ShouldNotBeNull(this object objectToCheck, string failureMessage)
+        {
+            IsNotNull(objectToCheck, failureMessage);
+        }
+        
+        public static void IsNotNull(this object objectToCheck)
         {
             IsNotNull(objectToCheck, string.Empty);
         }
@@ -511,9 +521,9 @@ namespace Bam.Net
             if (objectToCheck == null)
             {
                 if (!string.IsNullOrEmpty(failureMessage))
-                    throw new ExpectFailedException(failureMessage);
+                    throw new ExpectationFailedException(failureMessage);
                 else
-                    throw new ExpectFailedException("object", "null", ShouldHtmlEncodeExceptions);
+                    throw new ExpectationFailedException("object", "null", ShouldHtmlEncodeExceptions);
             }
         }   
         
@@ -523,7 +533,7 @@ namespace Bam.Net
         /// <param name="failureMessage"></param>
         public static void Fail(string failureMessage = "Expect.Fail() was called to throw this exception.")
         {
-            throw new ExpectFailedException(failureMessage, ShouldHtmlEncodeExceptions);
+            throw new ExpectationFailedException(failureMessage, ShouldHtmlEncodeExceptions);
         }
     }
 }

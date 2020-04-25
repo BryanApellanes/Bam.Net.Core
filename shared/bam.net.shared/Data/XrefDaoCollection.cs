@@ -47,21 +47,9 @@ namespace Bam.Net.Data
             set;
         }
 
-        protected string ParentColumnName
-        {
-            get
-            {
-                return string.Format("{0}Id", Dao.TableName(Parent));
-            }
-        }
+        protected string ParentColumnName => $"{Dao.TableName(Parent)}Id";
 
-        protected string ListColumnName
-        {
-            get
-            {
-                return string.Format("{0}Id", Dao.TableName(typeof(L)));
-            }
-        }
+        protected string ListColumnName => $"{Dao.TableName(typeof(L))}Id";
 
         protected Dictionary<ulong, X> XrefsByListId
         {
@@ -69,13 +57,7 @@ namespace Bam.Net.Data
             set;
         }
 
-        public bool Loaded
-        {
-            get
-            {
-                return _loaded;
-            }
-        }
+        public bool Loaded => _loaded;
 
         bool _loaded;
         public void Reload()
@@ -108,7 +90,7 @@ namespace Bam.Net.Data
             Load(Database);
         }
 
-        object _loadLock = new object();
+        readonly object _loadLock = new object();
         public void Load(Database db)
         {
             if (!_loaded && Parent != null)
@@ -120,7 +102,7 @@ namespace Bam.Net.Data
                         XrefsByListId = new Dictionary<ulong, X>();
 
                         QuerySet q = Dao.GetQuerySet(db);
-                        q.Select<X>().Where(new AssignValue(ParentColumnName, Parent.IdValue, q.ColumnNameFormatter));
+                        q.Select<X>().Where(new AssignValue(ParentColumnName, Parent.IdValue.Value, q.ColumnNameFormatter));
                         q.Execute(db);
 
                         // should have all the ids of L that should be retrieved
@@ -154,13 +136,7 @@ namespace Bam.Net.Data
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return _book.ItemCount;
-            }
-        }
+        public int Count => _book.ItemCount;
 
         public void Save()
         {
@@ -357,19 +333,18 @@ namespace Bam.Net.Data
 
                 X result = null;
                 QuerySet q = Dao.GetQuerySet(db);
-                q.Select<X>().Where(new QueryFilter(ListColumnName) == item.IdValue.Value && new QueryFilter(ParentColumnName) == Parent.IdValue);
+                q.Select<X>().Where(new QueryFilter(ListColumnName) == item.IdValue.Value && new QueryFilter(ParentColumnName) == Parent.IdValue.Value);
 
                 q.Execute(db);
                 if (q.Results[0].DataTable.Rows.Count > 0)
                 {
-                    result = new X();
-                    result.DataRow = q.Results[0].DataTable.Rows[0];
+                    result = new X {DataRow = q.Results[0].DataTable.Rows[0]};
                 }
                 else
                 {
                     result = new X();
-                    result.SetValue(string.Format("{0}Id", Parent.GetType().Name), Parent.IdValue);
-                    result.SetValue(string.Format("{0}Id", typeof(L).Name), item.IdValue);
+                    result.SetValue($"{Parent.GetType().Name}Id", Parent.IdValue, false);
+                    result.SetValue($"{typeof(L).Name}Id", item.IdValue, false);
                     result.Save(db);
 
                     XrefsByListId.Add(item.IdValue.Value, result);
@@ -478,7 +453,7 @@ namespace Bam.Net.Data
 
         #endregion
 
-        bool _setDatabases; // set to true after ctor completes
+        readonly bool _setDatabases; // set to true after ctor completes
         private void SetEachDatabase(Database db)
         {
             if (_setDatabases)

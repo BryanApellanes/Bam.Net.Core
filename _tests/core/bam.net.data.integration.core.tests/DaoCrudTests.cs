@@ -16,6 +16,7 @@ using Bam.Net.CommandLine;
 using Bam.Net.Data.MsSql;
 using Bam.Net.Data.SQLite;
 using Bam.Net.Testing.Integration;
+using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Data.Tests.Integration
 {
@@ -39,20 +40,75 @@ namespace Bam.Net.Data.Tests.Integration
 			DataTools.Cleanup(_testDatabases);
 		}
 
+		[UnitTest]
+		public void SaveAndQueryTest()
+		{
+			Database db = new SQLiteDatabase(nameof(SaveAndQueryTest));
+			db.TryEnsureSchema<DaoReferenceObject>();
+			
+			DaoReferenceObject referenceObject = new DaoReferenceObject()
+			{
+				IntProperty = 10,
+				DecimalProperty = 10,
+				LongProperty = 10,
+				ULongProperty = 10,
+				DateTimeProperty = Instant.Now,
+				BoolProperty = true,
+				ByteArrayProperty = "This is the byte array property".ToBytes(),
+				StringProperty = "This is the string property"
+			};
+
+			referenceObject.Id.ShouldBeNull("Id should have been null");
+			referenceObject.Save(db);
+			string referenceJson = referenceObject.ToJsonSafe().ToJson();
+			referenceObject.Id.ShouldNotBeNull("Id should not have been null");
+
+			DaoReferenceObject retrievedById = DaoReferenceObject.OneWhere(c => c.Id == referenceObject.Id, db);
+			retrievedById.ShouldNotBeNull("failed to retrieve object by id");
+			Expect.AreSame(retrievedById.ULongProperty, referenceObject.ULongProperty);
+			Expect.AreEqual(referenceObject, retrievedById);
+			Expect.AreEqual(referenceJson, retrievedById.ToJsonSafe().ToJson());
+			
+			Message.PrintLine(db.ConnectionString);
+		}
+
+		[UnitTest]
+		public void XrefsFunctionCorrectly()
+		{
+			SQLiteDatabase db = new SQLiteDatabase(nameof(XrefListTest));
+			db.TryEnsureSchema<LeftRight>();
+			Left.LoadAll(db).Delete();
+			Right.LoadAll(db).Delete();
+			LeftRight.LoadAll(db).Delete();
+			
+			Message.PrintLine(db.DatabaseFile.FullName);
+
+			Left left = new Left {Name = "LeftName_".RandomLetters(4)};
+			left.Id.ShouldBeNull("left.Id should have been null");
+			left.Save(db);
+			left.Id.ShouldNotBeNull("left.Id should not have been null");
+			Right right = new Right {Name = "RightName_".RandomLetters(4)};
+			left.Rights.Add(right);
+			left.Save(db);
+			
+			Left retrievedLeft = Left.GetById(left.Id, db);
+			(retrievedLeft.Rights.Count > 0).ShouldBeTrue("There were no items in the xref collection");
+		}
+		
 		[IntegrationTest]
 		public void CreateTest()
 		{
-			Expect.IsTrue(_testDatabases.Count > 0);
+			(_testDatabases.Count > 0).ShouldBeTrue();
+			
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
-				TestTable test = new TestTable(db);
-				test.Name = 8.RandomLetters();
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				TestTable test = new TestTable(db) {Name = 8.RandomLetters()};
 				test.Save(db);
 
 				Expect.IsGreaterThan(test.Id.Value, 0, "Id should have been greater than 0");
-				OutLineFormat("{0}", ConsoleColor.Cyan, test.PropertiesToString());
+				Message.PrintLine("{0}", ConsoleColor.Cyan, test.PropertiesToString());
 			});
 		}
 
@@ -63,7 +119,7 @@ namespace Bam.Net.Data.Tests.Integration
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				string name = 6.RandomLetters();
 				TestTable test = new TestTable(db);
 				test.Name = name;
@@ -88,7 +144,7 @@ namespace Bam.Net.Data.Tests.Integration
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				string name = 6.RandomLetters();
 				TestTable test = new TestTable(db);
 				test.Name = name;
@@ -113,7 +169,7 @@ namespace Bam.Net.Data.Tests.Integration
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				string name = 6.RandomLetters();
 				TestTable test = new TestTable(db);
 				test.Name = name;
@@ -145,14 +201,16 @@ namespace Bam.Net.Data.Tests.Integration
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				DateTime utc = DateTime.UtcNow;
-				DaoReferenceObject obj = new DaoReferenceObject(db);
-				obj.IntProperty = RandomNumber.Between(0, 100);
-				obj.DecimalProperty = 10.15m;
-				obj.LongProperty = 99999;
-				obj.DateTimeProperty = utc;
-				obj.BoolProperty = true;
+				DaoReferenceObject obj = new DaoReferenceObject(db)
+				{
+					IntProperty = RandomNumber.Between(0, 100),
+					DecimalProperty = 10.15m,
+					LongProperty = 99999,
+					DateTimeProperty = utc,
+					BoolProperty = true
+				};
 				string testName = 16.RandomLetters();
 				obj.ByteArrayProperty = new TestSerializable(testName).ToBinaryBytes();
 				Instant now = new Instant();
@@ -184,7 +242,7 @@ namespace Bam.Net.Data.Tests.Integration
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				TestTable parent = new TestTable(db);
 				parent.Name = "Parent Test";
 				parent.Save(db);
@@ -217,7 +275,7 @@ namespace Bam.Net.Data.Tests.Integration
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				List<Left> lefts = new List<Left>();
 				4.Times(i =>
 				{

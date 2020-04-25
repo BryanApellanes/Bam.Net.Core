@@ -20,7 +20,6 @@ namespace Bam.Net.DaoRef
 			}
 		}	
 
-				
         public LeftColumns Id
         {
             get
@@ -49,6 +48,7 @@ namespace Bam.Net.DaoRef
                 return new LeftColumns("Name");
             }
         }
+
 
 
 		protected internal Type TableType

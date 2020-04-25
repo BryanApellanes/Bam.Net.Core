@@ -20,7 +20,6 @@ namespace Bam.Net.DaoRef
 			}
 		}	
 
-				
         public TestTableColumns Id
         {
             get
@@ -56,6 +55,7 @@ namespace Bam.Net.DaoRef
                 return new TestTableColumns("Description");
             }
         }
+
 
 
 		protected internal Type TableType

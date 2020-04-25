@@ -39,17 +39,13 @@ namespace Bam.Net.Data.Tests.Integration
                 initializer = db => Db.TryEnsureSchema<TestTable>(db);
             }
 
-            MsSqlDatabase msDatabase = new MsSqlDatabase("chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
-            initializer(msDatabase);
-            _testDatabases.Add(msDatabase);
-
             SQLiteDatabase sqliteDatabase = new SQLiteDatabase(".\\Chumsql2", databaseName);
             initializer(sqliteDatabase);
             _testDatabases.Add(sqliteDatabase);
-
-            /*OleDbDatabase oleDatabase = new OleDbDatabase("Microsoft.ACE.OLEDB.12.0", databaseName.RandomLetters(4));
-            initializer(oleDatabase);
-            _testDatabases.Add(oleDatabase);*/
+            
+            /*MsSqlDatabase msDatabase = new MsSqlDatabase("chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
+            initializer(msDatabase);
+            _testDatabases.Add(msDatabase);
 
             OracleDatabase oracleDatabase = new OracleDatabase("chumsql2", databaseName, new OracleCredentials { UserId = "C##ORACLEUSER", Password = "oracleP455w0rd" });
             initializer(oracleDatabase);
@@ -61,7 +57,7 @@ namespace Bam.Net.Data.Tests.Integration
 
             NpgsqlDatabase npgsqlDatabase = new NpgsqlDatabase("chumsql2", databaseName, new NpgsqlCredentials { UserId = "postgres", Password = "postgresP455w0rd" });
             initializer(npgsqlDatabase);
-            _testDatabases.Add(npgsqlDatabase);
+            _testDatabases.Add(npgsqlDatabase);*/
 
             return _testDatabases;
 		}

@@ -10,45 +10,45 @@ using System.Runtime.Serialization;
 
 namespace Bam.Net
 {
-    public partial class ExpectFailedException: Exception
+    public partial class ExpectationFailedException: Exception
     {        
         private const string defaultMessage = "Unexpected result: Expected <{0}>, Actual <{1}>";
 
-        public ExpectFailedException(SerializationInfo info, StreamingContext context)
+        public ExpectationFailedException(SerializationInfo info, StreamingContext context)
             : base(info.GetString("Message"))
         {
         }
 
-        public ExpectFailedException(string message)
+        public ExpectationFailedException(string message)
             : base(message)
         {             
         }
 
-        public ExpectFailedException(string message, bool htmlEncode) :
+        public ExpectationFailedException(string message, bool htmlEncode) :
             this(htmlEncode ? HttpUtility.HtmlEncode(message) : message)
         { }
 
-        public ExpectFailedException(string expected, string actual)
+        public ExpectationFailedException(string expected, string actual)
             : this(expected, actual, false)
         { }
 
-        public ExpectFailedException(string expected, string actual, bool htmlEncode)
+        public ExpectationFailedException(string expected, string actual, bool htmlEncode)
             : this(string.Format(htmlEncode ? HttpUtility.HtmlEncode(defaultMessage) : defaultMessage, expected, actual))
         { }
 
-        public ExpectFailedException(bool expected, bool actual)
+        public ExpectationFailedException(bool expected, bool actual)
             : this(expected.ToString(), actual.ToString())
         { }
 
-        public ExpectFailedException(bool expected, bool actual, bool htmlEncode)
+        public ExpectationFailedException(bool expected, bool actual, bool htmlEncode)
             : this(expected.ToString(), actual.ToString(), htmlEncode)
         { }
         
-        public ExpectFailedException(Type expected, object actual)
+        public ExpectationFailedException(Type expected, object actual)
             : this(expected.Name, actual == null ? "null": actual.GetType().Name)
         { }
 
-        public ExpectFailedException(Type expected, object actual, bool htmlEncode)
+        public ExpectationFailedException(Type expected, object actual, bool htmlEncode)
             : this(expected.Name, actual == null ? "null": actual.GetType().Name, htmlEncode)
         { }
     }

@@ -12,6 +12,6 @@ namespace Bam.Net.DaoRef
 {
     public class LeftPagedQuery: PagedQuery<LeftColumns, Left>
     { 
-		public LeftPagedQuery(LeftColumns orderByColumn, LeftQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public LeftPagedQuery(LeftColumns orderByColumn,LeftQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

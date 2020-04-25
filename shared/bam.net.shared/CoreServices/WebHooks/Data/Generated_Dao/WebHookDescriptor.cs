@@ -422,21 +422,49 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 			});
 		}
 
+		public static WebHookDescriptor GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified WebHookDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}
+
 		public static WebHookDescriptor GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
+		public static WebHookDescriptor GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified WebHookDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static WebHookDescriptor GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static WebHookDescriptor GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified WebHookDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static WebHookDescriptor GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static WebHookDescriptor GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified WebHookDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static WebHookDescriptor GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);

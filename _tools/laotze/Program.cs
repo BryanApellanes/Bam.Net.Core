@@ -24,12 +24,12 @@ namespace laotze
     {
         static TargetTableEventDelegate BeforeTableHandler = (ns, t) =>
         {
-            OutLineFormat("Writing {0}.{1}", ConsoleColor.Yellow, ns, t.ClassName);
+            Message.PrintLine("Writing {0}.{1}", ConsoleColor.Yellow, ns, t.ClassName);
         };
 
         static TargetTableEventDelegate AfterTableHandler = (ns, t) =>
         {
-            OutLineFormat("Done Writing {0}.{1}", ConsoleColor.Green, ns, t.ClassName);
+            Message.PrintLine("Done Writing {0}.{1}", ConsoleColor.Green, ns, t.ClassName);
         };
 
         static void Main(string[] args)
@@ -43,10 +43,10 @@ namespace laotze
             }
             else if (Arguments.Contains("examples"))
             {
-                Out("For extraction:\r\n");
-                Out("LaoTze /f:<file> /conn:<connectionNameFromConfig> /gen:<dirPath> /ns:<defaultNamespace> /dll:<assemblyName> [/v|/s]");
-                Out("\r\n or To generate from *.db.js\r\n");
-                Out("LaoTze /root:<project_root_to_search_for_database.db.js>\r\n");
+                Message.Print("For extraction:\r\n");
+                Message.Print("LaoTze /f:<file> /conn:<connectionNameFromConfig> /gen:<dirPath> /ns:<defaultNamespace> /dll:<assemblyName> [/v|/s]");
+                Message.Print("\r\n or To generate from *.db.js\r\n");
+                Message.Print("LaoTze /root:<project_root_to_search_for_database.db.js>\r\n");
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace laotze
                 DirectoryInfo rootDirectory = new DirectoryInfo(Arguments["root"]);
                 if (!rootDirectory.Exists)
                 {
-                    OutLineFormat("Specified root directory does not exist: {0}", ConsoleColor.Red, rootDirectory.FullName);
+                    Message.PrintLine("Specified root directory does not exist: {0}", ConsoleColor.Red, rootDirectory.FullName);
                     Pause();
                     Environment.Exit(1);
                 }
@@ -70,10 +70,10 @@ namespace laotze
                 {
                     if (dbjs.Length > 1)
                     {
-                        OutLine("Multiple *.db.js files found", ConsoleColor.Red);
+                        Message.PrintLine("Multiple *.db.js files found", ConsoleColor.Red);
                         if (!Arguments.Contains("s"))
                         {
-                            OutLineFormat("{0}", ConsoleColor.Yellow, dbjs.ToDelimited<FileInfo>(f => f.FullName, "\r\n"));
+                            Message.PrintLine("{0}", ConsoleColor.Yellow, dbjs.ToDelimited<FileInfo>(f => f.FullName, "\r\n"));
                             string answer = Prompt("Process each? [y N]", ConsoleColor.Yellow);
                             if (!answer.ToLowerInvariant().Equals("y"))
                             {
@@ -82,7 +82,7 @@ namespace laotze
                         }
                         else
                         {
-                            OutLineFormat("Processing each: {0}", ConsoleColor.Yellow, dbjs.ToDelimited<FileInfo>(f => f.FullName, "\r\n\t"));
+                            Message.PrintLine("Processing each: {0}", ConsoleColor.Yellow, dbjs.ToDelimited<FileInfo>(f => f.FullName, "\r\n\t"));
                         }
                     }
 
@@ -90,7 +90,7 @@ namespace laotze
                     {
                         try
                         {
-                            OutLineFormat("Processing {0}...", ConsoleColor.Yellow, file.FullName);
+                            Message.PrintLine("Processing {0}...", ConsoleColor.Yellow, file.FullName);
 							CuidSchemaManager manager = new CuidSchemaManager();                        
 
                             DirectoryInfo fileParent = file.Directory;
@@ -121,7 +121,7 @@ namespace laotze
 								WriteSqlFile(managerResult);
 							}
 
-                            OutLine(managerResult.Message, ConsoleColor.Green);
+                            Message.PrintLine(managerResult.Message, ConsoleColor.Green);
 							if (managerResult.DaoAssembly != null)
 							{
 								OutLineFormat("Compiled to: {0}", managerResult.DaoAssembly.FullName, ConsoleColor.Yellow);
@@ -129,7 +129,7 @@ namespace laotze
                         }
                         catch (Exception ex)
                         {
-                            OutLineFormat("{0}\r\n\r\n***\r\n{1}", ConsoleColor.Red, ex.Message, ex.StackTrace ?? "");
+                            Message.PrintLine("{0}\r\n\r\n***\r\n{1}", ConsoleColor.Red, ex.Message, ex.StackTrace ?? "");
                             Pause("Press enter to exit\r\n");
                             Exit(1);
                         }
@@ -181,7 +181,7 @@ namespace laotze
 		{
 			if (managerResult.DaoAssembly == null)
 			{
-				OutLine("Unable to locate Dao assembly for sql schema generation, specify dll argument", ConsoleColor.Red);
+                Message.PrintLine("Unable to locate Dao assembly for sql schema generation, specify dll argument", ConsoleColor.Red);
 			}
 			else
 			{
@@ -192,7 +192,7 @@ namespace laotze
 					dialect = (SqlDialect)Enum.Parse(typeof(SqlDialect), Arguments["dialect"]);
 				}
 				WriteSqlFile(managerResult.DaoAssembly, sqlFile, dialect);
-				OutLineFormat("Sql script written: {0}", sqlFile.FullName);
+                Message.PrintLine("Sql script written: {0}", sqlFile.FullName);
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace laotze
 		}
 
 		static Dictionary<SqlDialect, Func<SchemaWriter>> _schemaWriters;
-		static object _schemaWriterLock = new object();
+		static readonly object _schemaWriterLock = new object();
 		private static Dictionary<SqlDialect, Func<SchemaWriter>> SchemaWriters
 		{
 			get
