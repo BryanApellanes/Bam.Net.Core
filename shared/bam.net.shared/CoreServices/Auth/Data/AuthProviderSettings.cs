@@ -7,13 +7,8 @@ using Bam.Net.Data.Repositories;
 
 namespace Bam.Net.CoreServices.Auth.Data
 {
-    public class AuthProviderSettingsData: CompositeKeyAuditRepoData
+    public partial class AuthProviderSettings: CompositeKeyAuditRepoData
     {
-        public AuthProviderSettingsData()
-        {
-            ProviderName = "bamapps.net";
-        }
-        
         [CompositeKey]
         public string ApplicationName { get; set; }
         
