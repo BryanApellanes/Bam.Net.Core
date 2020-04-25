@@ -20,13 +20,13 @@ namespace Bam.Net.CoreServices
     {
         protected AuthSettingsService() { }
 
-        public AuthSettingsService(OAuthSettingsRepository oauthRepo, ApplicationRegistrationRepository applicationRegistrationRepo)
+        public AuthSettingsService(AuthRepository oauthRepo, ApplicationRegistrationRepository applicationRegistrationRepo)
         {
             OAuthSettingsRepository = oauthRepo;
             ApplicationRegistrationRepository = applicationRegistrationRepo;
         }
 
-        public OAuthSettingsRepository OAuthSettingsRepository { get; set; }
+        public AuthRepository OAuthSettingsRepository { get; set; }
 
         [RoleRequired("/", "Admin")]
         public virtual CoreServiceResponse<List<AuthClientSettings>> GetClientSettings(bool includeSecret = false)
@@ -37,8 +37,7 @@ namespace Bam.Net.CoreServices
                 return new CoreServiceResponse<List<AuthClientSettings>>
                     (
                         OAuthSettingsRepository
-                            .OAuthProviderSettingsDatasWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name)
-                            .Select(AuthProviderSettings.FromData)
+                            .AuthProviderSettingsesWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name)
                             .Select(os =>
                             {
                                 AuthClientSettings setting = os.CopyAs<AuthClientSettings>();
@@ -67,7 +66,7 @@ namespace Bam.Net.CoreServices
             {
                 ApplicationRegistration.Data.Application app = GetClientApplicationOrDie();
 
-                AuthProviderSettingsData data = new AuthProviderSettingsData()
+                AuthProviderSettings data = new AuthProviderSettings()
                 {
                     ApplicationName = app.Name,
                     ApplicationIdentifier = app.Cuid,
@@ -90,7 +89,7 @@ namespace Bam.Net.CoreServices
             try
             {
                 ApplicationRegistration.Data.Application app = GetClientApplicationOrDie();
-                AuthProviderSettingsData data = OAuthSettingsRepository.OneOAuthProviderSettingsDataWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name && c.ProviderName == providerName);
+                AuthProviderSettings data = OAuthSettingsRepository.OneAuthProviderSettingsWhere(c => c.ApplicationIdentifier == app.Cuid && c.ApplicationName == app.Name && c.ProviderName == providerName);
                 if(data != null)
                 {
                     bool success = OAuthSettingsRepository.Delete(data);

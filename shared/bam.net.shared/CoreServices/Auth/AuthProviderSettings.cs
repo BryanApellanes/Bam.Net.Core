@@ -7,9 +7,9 @@ using Bam.Net.Configuration;
 using Bam.Net.Logging;
 using Bam.Net.CoreServices.Auth.Data;
 
-namespace Bam.Net.CoreServices.Auth
+namespace Bam.Net.CoreServices.Auth.Data
 {
-    public class AuthProviderSettings: AuthProviderSettingsData
+    public partial class AuthProviderSettings
     {
         static readonly Dictionary<string, Type> _settingsTypeMap;
         static AuthProviderSettings()
@@ -23,6 +23,7 @@ namespace Bam.Net.CoreServices.Auth
 
         public AuthProviderSettings() : base()
         {
+            ProviderName = "bamapps.net";
             ClientId = "1282272511809831";
             AuthorizationEndpointFormat = "https://bamapps.net/oauth/authorize?clientId={ClientId}&callbackUrl={CallbackUrl}&code={Code}&state={State}";
             AuthorizationCallbackEndpointFormat = "https://bamapps.net/oauth/setaccesstoken?clientId={ClientId}&callbackUrl={TokenCallbackUrl}&clientSecret={ClientSecret}&code={Code}&state={State}";
@@ -32,17 +33,6 @@ namespace Bam.Net.CoreServices.Auth
         {
             ClientId = clientId;
             ClientSecret = clientSecret;
-        }
-
-        public static AuthProviderSettings FromData(AuthProviderSettingsData data)
-        {
-            AuthProviderSettings settings = null;
-            if (_settingsTypeMap.ContainsKey(data.ProviderName))
-            {
-                settings = _settingsTypeMap[data.ProviderName].Construct<AuthProviderSettings>();
-                settings.CopyProperties(data);
-            }
-            return settings;
         }
 
         /// <summary>

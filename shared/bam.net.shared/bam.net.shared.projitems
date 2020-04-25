@@ -547,6 +547,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\TypeIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\WindowsReferenceAssemblyResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\AccessToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AccessToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AccessTokenCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AccessTokenColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AccessTokenPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AccessTokenQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AccessTokenWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthProviderSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthProviderSettingsCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthProviderSettingsColumns.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthProviderSettingsPagedQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthProviderSettingsQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthProviderSettingsWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\AuthRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebToken.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenHeader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\JsonWebTokenSigningAlgorithm.cs" />
@@ -1220,15 +1234,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Notification\NotificationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\ApplicationUserNotFoundException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\AuthenticatedAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthProviderSettingsData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthProviderSettingsDataCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthProviderSettingsDataColumns.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthProviderSettingsDataPagedQuery.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthProviderSettingsDataQuery.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthProviderSettingsDataWrapper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthSettingsContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\Generated_Dao\OAuthSettingsRepository.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\AuthProviderSettingsData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\AuthProviderSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\FacebookOAuthSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\KnownOAuthProviders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CoreServices\Auth\AuthClientSettings.cs" />
@@ -3149,7 +3155,6 @@
     <None Include="$(MSBuildThisFileDirectory)Automation\Testing\Data\regen_testing_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\regen_accesscontrol_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\regen_assemblymanagement_dao.cmd" />
-    <None Include="$(MSBuildThisFileDirectory)CoreServices\Auth\regen_oauth_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\README.md" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\regen.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\ServiceRegistration\regen_applicationserviceregistry_dao.cmd" />
@@ -3215,7 +3220,8 @@
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\DaoRepoGenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regenerate_assemblymanagement_dao.sh" />
-    <Content Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\DapRepoGenerationConfig.yaml" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\DaoRepoGenerationConfig.yaml" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\regen_auth_dao.sh" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\root-servers.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
