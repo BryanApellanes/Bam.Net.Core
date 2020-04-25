@@ -3148,7 +3148,6 @@
     <None Include="$(MSBuildThisFileDirectory)Automation\nuspec.2011.8.xsd" />
     <None Include="$(MSBuildThisFileDirectory)Automation\Testing\Data\regen_testing_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\regen_accesscontrol_dao.cmd" />
-    <None Include="$(MSBuildThisFileDirectory)CoreServices\ApplicationRegistration\regen_applicationregistration_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\regen_assemblymanagement_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\Auth\regen_oauth_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)CoreServices\README.md" />
@@ -3156,7 +3155,7 @@
     <None Include="$(MSBuildThisFileDirectory)CoreServices\ServiceRegistration\regen_applicationserviceregistry_dao.cmd" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)CoreServices\Templates\Proxy.tmpl" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)CoreServices\Templates\ProxyMethod.tmpl" />
-    <None Include="$(MSBuildThisFileDirectory)CoreServices\WebHooks\regen_webhooks_dao.cmd" />
+    <None Include="$(MSBuildThisFileDirectory)CoreServices\WebHooks\regenerate_webhooks_dao.sh" />
     <None Include="$(MSBuildThisFileDirectory)Data\Dynamic\dynamic_type_data_gen_config.yaml" />
     <None Include="$(MSBuildThisFileDirectory)Data\Dynamic\regen_data_dynamic_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)Data\README.md" />
@@ -3194,7 +3193,6 @@
     <None Include="$(MSBuildThisFileDirectory)Messaging\messaging.db.js" />
     <None Include="$(MSBuildThisFileDirectory)Server\README.md" />
     <None Include="$(MSBuildThisFileDirectory)Services\AsyncCallback\regen_asyncecallback_dao.cmd" />
-    <None Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\regen_datareplication_dao.cmd" />
     <None Include="$(MSBuildThisFileDirectory)Services\Hosts\README.md" />
     <None Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.sqlite" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Services\OpenApi\Templates\FixedField.tmpl" />
@@ -3215,9 +3213,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Automation\NodeScripts\ln.node.js" />
     <Content Include="$(MSBuildThisFileDirectory)Automation\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\README.md" />
-    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\GenerationConfig.yaml" />
-    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regen_dao_repo.sh" />
-    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regen_dao_repo.cmd" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\DaoRepoGenerationConfig.yaml" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regenerate_assemblymanagement_dao.sh" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\root-servers.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -3238,7 +3235,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\GenerationConfig.yaml" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\regen_dao_repo.cmd" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\regen_dao_repo.sh" />
     <Content Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Translation\Translation.db.js" />

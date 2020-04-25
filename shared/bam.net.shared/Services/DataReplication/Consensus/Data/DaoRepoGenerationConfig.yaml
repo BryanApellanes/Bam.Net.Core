@@ -1,0 +1,5 @@
+SchemaName: RaftConsensus
+WriteSourceTo: ./Generated_Dao
+#TypeAssembly: ./bam.net.core.dll # only necessary for external assemblies
+FromNameSpace: Bam.Net.Services.DataReplication.Consensus.Data
+ToNameSpace: Bam.Net.Services.DataReplication.Consensus.Data.Dao

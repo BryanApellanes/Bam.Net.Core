@@ -1,5 +1,0 @@
-SchemaName: HttpLogging
-WriteSourceTo: /Users/bapellanes/src/BamFrameworkCore/Bam.Net/shared/bam.net.shared/Logging/Http/Data/Generated_Dao #/opt/bam/src/_gen/HttpLogging
-TypeAssembly: /opt/bam/bin/bam.net.core.dll
-FromNameSpace: Bam.Net.Logging.Http.Data
-ToNameSpace: Bam.Net.Logging.Http.Data.Dao
