@@ -187,6 +187,48 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		}
 	}
 
+	// property:Key, columnName: Key	
+	[Bam.Net.Data.Column(Name="Key", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? Key
+	{
+		get
+		{
+			return GetULongValue("Key");
+		}
+		set
+		{
+			SetValue("Key", value);
+		}
+	}
+
+	// property:CompositeKeyId, columnName: CompositeKeyId	
+	[Bam.Net.Data.Column(Name="CompositeKeyId", DbDataType="BigInt", MaxLength="19", AllowNull=true)]
+	public ulong? CompositeKeyId
+	{
+		get
+		{
+			return GetULongValue("CompositeKeyId");
+		}
+		set
+		{
+			SetValue("CompositeKeyId", value);
+		}
+	}
+
+	// property:CompositeKey, columnName: CompositeKey	
+	[Bam.Net.Data.Column(Name="CompositeKey", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+	public string CompositeKey
+	{
+		get
+		{
+			return GetStringValue("CompositeKey");
+		}
+		set
+		{
+			SetValue("CompositeKey", value);
+		}
+	}
+
 	// property:CreatedBy, columnName: CreatedBy	
 	[Bam.Net.Data.Column(Name="CreatedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string CreatedBy
@@ -421,21 +463,49 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 			});
 		}
 
+		public static DataPoint GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified DataPoint.Id was null");
+			return GetById(id.Value, database);
+		}
+
 		public static DataPoint GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
+		public static DataPoint GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified DataPoint.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static DataPoint GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static DataPoint GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified DataPoint.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static DataPoint GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static DataPoint GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified DataPoint.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static DataPoint GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
@@ -607,7 +677,7 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
 		/// Execute a query that should return only one result.  If more
 		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single @Model.ClassName instance by its Id/Key value
+		/// single DataPoint instance by its Id/Key value
 		/// </summary>
 		/// <param name="where">A WhereDelegate that recieves a DataPointColumns
 		/// and returns a IQueryFilter which is the result of any comparisons

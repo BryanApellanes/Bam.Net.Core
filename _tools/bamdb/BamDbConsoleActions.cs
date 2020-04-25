@@ -18,7 +18,7 @@ namespace Bam.Net.Application
     [Serializable]
     public class BamDbConsoleActions : CommandLineTestInterface
     {
-        [ConsoleAction("regenerate", "Regenerate all dao code by recursively searching for DaoGenerationConfig.yaml files and processing each.")]
+        [ConsoleAction("regenerate", "Regenerate all dao code by recursively searching for DaoRepoGenerationConfig.yaml files and processing each.")]
         public static void RegenerateAllDaoCode()
         {
             ConsoleLogger logger = new ConsoleLogger();
@@ -30,11 +30,12 @@ namespace Bam.Net.Application
                 DaoRepoGenerationConfig config = daoGenConfig.FromYamlFile<DaoRepoGenerationConfig>();
                 if (config.WriteSourceTo.StartsWith("./"))
                 {
-                    config.WriteSourceTo = Path.Combine(rootDirectoryPath, config.WriteSourceTo.TruncateFront(2));
+                    DirectoryInfo configDirectory = daoGenConfig.Directory;
+                    config.WriteSourceTo = Path.Combine(configDirectory.FullName, config.WriteSourceTo.TruncateFront(2));
                 }
                 else if (config.WriteSourceTo.StartsWith("~/"))
                 {
-                    config.WriteSourceTo = Path.Combine(rootDirectoryPath, new UnixPath(config.WriteSourceTo));
+                    config.WriteSourceTo = new UnixPath(config.WriteSourceTo);
                 }
 
                 SchemaRepositoryGenerator schemaRepositoryGenerator = GenerateRepositorySource(config, logger);

@@ -3215,6 +3215,7 @@
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AccessControl\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\DaoRepoGenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\AssemblyManagement\Data\regenerate_assemblymanagement_dao.sh" />
+    <Content Include="$(MSBuildThisFileDirectory)CoreServices\Auth\Data\DapRepoGenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)CoreServices\NameResolution\root-servers.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

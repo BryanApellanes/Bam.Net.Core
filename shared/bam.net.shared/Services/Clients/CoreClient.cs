@@ -418,10 +418,7 @@ namespace Bam.Net.Services.Clients
         public bool UseServiceSubdomains
         {
             get => ProxyFactory.MungeHostNames;
-            set
-            {
-                ProxyFactory.MungeHostNames = value;
-            }
+            set => ProxyFactory.MungeHostNames = value;
         }
 
         public List<LogEntry> GetLogEntries(DateTime from, DateTime to)
