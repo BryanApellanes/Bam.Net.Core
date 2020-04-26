@@ -934,7 +934,7 @@ namespace Bam.Net.Data.Repositories
                 Logger.AddEntry("IdValue not found for specified parent instance: Type={0}.{1}, {2}", pocoType.Namespace, pocoType.Name, poco.ToString());
                 return new List<TChildType>();
             }
-            QueryFilter filter = Bam.Net.Data.Query.Where(foreignKeyName) == parentId;
+            QueryFilter filter = Bam.Net.Data.Query.Where(foreignKeyName) == Dao.MapUlongToLong(parentId);
             Type childDaoType = GetDaoType(typeof(TChildType));
             MethodInfo whereMethod = childDaoType.GetMethod("Where", new Type[] { typeof(QueryFilter), typeof(Database) });
             IEnumerable daoResults = (IEnumerable)whereMethod.Invoke(null, new object[] { filter, Database });

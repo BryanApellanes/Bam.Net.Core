@@ -186,14 +186,8 @@ namespace Bam.Net.Data
 
         public Dao Parent
         {
-            get
-            {
-                return this._parent;
-            }
-            protected set
-            {
-                this._parent = value;
-            }
+            get => this._parent;
+            protected set => this._parent = value;
         }
         
         private void Initialize(DataTable table)
@@ -210,17 +204,11 @@ namespace Bam.Net.Data
         
         public DataTable DataTable
         {
-            get { return this._table; }
-            set { this._table = value; }
+            get => this._table;
+            set => this._table = value;
         }
 
-        public T this[int index]
-        {
-            get
-            {
-                return this._values[index];
-            }
-        }
+        public T this[int index] => this._values[index];
 
         public T AddNew()
         {
@@ -235,7 +223,7 @@ namespace Bam.Net.Data
 
         /// <summary>
         /// Add the specified instance to the current
-        /// collection.  Will be automatically commited
+        /// collection.  Will be automatically committed
         /// if a parent is associated with this collection
         /// </summary>
         /// <param name="instance"></param>
@@ -307,7 +295,7 @@ namespace Bam.Net.Data
         {
             if (_parent == null)
             {
-                throw new ArgumentNullException(string.Format("{0}.Parent", this.GetType().Name));
+                throw new ArgumentNullException($"{this.GetType().Name}.Parent");
             }
 
             if (_parent.IsNew || _parent.IdValue == null)
