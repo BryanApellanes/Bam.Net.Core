@@ -363,7 +363,7 @@ namespace Bam.Net.Testing
             runner.TestFailed += (o, t) =>
             {
                 TestExceptionEventArgs args = (TestExceptionEventArgs)t;
-                Message.PrintLine("Test Failed: " + args.TestMethod.Information, ConsoleColor.Red);
+                Message.PrintLine("Test Failed: ({0})", ConsoleColor.Red,  args.TestMethod.ToString());
                 Message.PrintLine(args.Exception.Message, ConsoleColor.Magenta);
                 Message.PrintLine();
                 Message.PrintLine(args.Exception.StackTrace, ConsoleColor.Red);

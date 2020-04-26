@@ -59,7 +59,7 @@ namespace Bam.Net.CoreServices
         {
             foreach (Type type in ClassNameTypes)
             {
-                object instance = Get(type);
+                object instance = this[type];
                 Expect.IsNotNull(instance, $"{type.Name} returned null");
             }
         }

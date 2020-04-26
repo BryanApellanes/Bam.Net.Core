@@ -1419,12 +1419,12 @@ namespace Bam.Net.Data
             return unchecked((ulong)(longValue - long.MinValue));
         }
 
-        protected ulong? GetULongValue(string columnName)
+        protected ulong? GetULongValue(string columnName, bool mapLongToUlong = true)
         {
             object val = GetCurrentValue(columnName);
             if (val != null && val != DBNull.Value)
             {
-                if(val is long longVal)
+                if(val is long longVal && mapLongToUlong)
                 {
                     return new ulong?(MapLongToUlong(longVal));
                 }

@@ -613,13 +613,7 @@ namespace Bam.Net.Incubation
             }
         }
 
-        public string[] ClassNames
-        {
-            get
-            {
-                return _classNameTypeDictionary.Keys.ToArray();
-            }
-        }
+        public string[] ClassNames => _classNameTypeDictionary.Keys.ToArray();
 
         /// <summary>
         /// Types as they would be resolved when using 
@@ -661,13 +655,7 @@ namespace Bam.Net.Incubation
         /// All the Types that are mapped to instances
         /// or instanciators
         /// </summary>
-        public Type[] MappedTypes
-        {
-            get
-            {
-                return _typeInstanceDictionary.Keys.ToArray();
-            }
-        }
+        public Type[] MappedTypes => _typeInstanceDictionary.Keys.ToArray();
 
         public void Remove<T>()
         {
@@ -762,7 +750,7 @@ namespace Bam.Net.Incubation
                     lock (_accessLock)
                     {
                         _typeInstanceDictionary.Add(type, value);
-                        string fullyQualifiedTypeName = string.Format("{0}.{1}", type.Namespace, type.Name);
+                        string fullyQualifiedTypeName = $"{type.Namespace}.{type.Name}";
                         if (!_classNameTypeDictionary.ContainsKey(type.Name))
                         {
                             _classNameTypeDictionary.Add(type.Name, type);
@@ -773,7 +761,7 @@ namespace Bam.Net.Incubation
                         }
                         else
                         {
-                            throw new InvalidOperationException(string.Format("The specified type {0} conflicts with an existing type registration.", type.Name));
+                            throw new InvalidOperationException($"The specified type {type.Name} conflicts with an existing type registration.");
                         }
                     }
                 }

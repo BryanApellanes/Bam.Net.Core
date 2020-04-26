@@ -8,6 +8,7 @@ using System.Text;
 using System.Reflection;
 using Bam.Net;
 using System.Diagnostics;
+using Bam.Net.Logging;
 
 namespace Bam.Net.CommandLine
 {
@@ -53,10 +54,7 @@ namespace Bam.Net.CommandLine
                 }
                 return _provider;
             }
-            set
-            {
-                _provider = value;
-            }
+            set => _provider = value;
         }
 
         public string Information
@@ -74,6 +72,11 @@ namespace Bam.Net.CommandLine
 
                 return info;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{Method.DeclaringType.Namespace}.{Method.DeclaringType.Name}.{Method.Name}: ({Information})";
         }
 
         public Attribute Attribute { get; set; }

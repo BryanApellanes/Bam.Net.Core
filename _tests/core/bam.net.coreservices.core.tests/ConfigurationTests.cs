@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.CommandLine;
 using Bam.Net.Data;
 using Bam.Net.Data.SQLite;
 using Bam.Net.ServiceProxy;
@@ -119,12 +120,39 @@ namespace Bam.Net.CoreServices.Tests
             Expect.AreEqual("value2", config["key2"]);
         }
 
+        [UnitTest]
+        public void CanGetCommonConfiguration()
+        {
+            string appName = $"{nameof(ConfigurationAggregatesCommonMachineAndApplication)}_TestAppName";
+            string machineName = $"{nameof(ConfigurationAggregatesCommonMachineAndApplication)}_TestMachineName";
+            ConfigurationService configSvc = GetTestCoreConfigurationService(appName);
+            Database db = configSvc.DaoRepository.Database;
+            Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Configuration.LoadAll(db).Delete(db);
+            Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ConfigurationSetting.LoadAll(db).Delete(db);
+
+            Dictionary<string, string> settings = new Dictionary<string, string>
+            {
+                {"CommonKey1", "CommonValue1"},
+                {"CommonKey2", "CommonValue2"}
+            };
+            configSvc.SetCommonConfiguration(settings);
+
+            Dictionary<string, string> commonConfiguration = configSvc.GetCommonConfiguration();
+            Expect.AreEqual(2, commonConfiguration.Count);
+            Expect.AreEqual(settings.ToJson(), commonConfiguration.ToJson());
+            Message.PrintLine(commonConfiguration.ToJson());
+        }
+        
         [UnitTest("Config: aggregates settings")]
         public void ConfigurationAggregatesCommonMachineAndApplication()
         {
             string appName = $"{nameof(ConfigurationAggregatesCommonMachineAndApplication)}_TestAppName";
             string machineName = $"{nameof(ConfigurationAggregatesCommonMachineAndApplication)}_TestMachineName";
             ConfigurationService configSvc = GetTestCoreConfigurationService(appName);
+            Database db = configSvc.DaoRepository.Database;
+            Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Configuration.LoadAll(db).Delete(db);
+            Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.ConfigurationSetting.LoadAll(db).Delete(db);
+            
             configSvc.SetCommonConfiguration(new Dictionary<string, string>
             {
                 {"CommonKey1", "CommonValue1" },

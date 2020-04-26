@@ -3357,11 +3357,7 @@ namespace Bam.Net
         /// <param name="value"></param>
         public static void Set<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
-            if (!dictionary.ContainsKey(key))
-            {
-                AddMissing(dictionary, key, value);
-            }
-            else
+            if (!AddMissing(dictionary, key, value))
             {
                 dictionary[key] = value;
             }
@@ -4072,11 +4068,25 @@ namespace Bam.Net
 
             foreach (PropertyInfo destProp in destinationType.GetProperties())
             {
-                PropertyInfo sourceProp = sourceType.GetProperty(destProp.Name);
+                PropertyInfo sourceProp = TryGetSourcePropNamed(sourceType, destProp.Name);
                 action(destination, source, destProp, sourceProp);
             }
         }
 
+        private static PropertyInfo TryGetSourcePropNamed(Type sourceType, string propertyName)
+        {
+            try
+            {
+                return sourceType.GetProperty(propertyName);
+            }
+            catch (AmbiguousMatchException ame)
+            {
+                return sourceType.GetProperties().FirstOrDefault(p => p.DeclaringType == sourceType && p.Name == propertyName);
+            }
+
+            return null;
+        }
+        
         /// <summary>
         /// Copy the value of the specified property from the source
         /// to the destination

@@ -71,6 +71,42 @@ namespace Bam.Net.Data.Tests.Integration
 			
 			Message.PrintLine(db.ConnectionString);
 		}
+		
+		[UnitTest]
+		public void CanQueryByUlongProperty()
+		{
+			Database db = new SQLiteDatabase(nameof(SaveAndQueryTest));
+			db.TryEnsureSchema<DaoReferenceObject>();
+			DaoReferenceObject.LoadAll(db).Delete(db);
+			ulong testValue = 8374384738473847;
+			
+			DaoReferenceObject referenceObject = new DaoReferenceObject()
+			{
+				IntProperty = 10,
+				DecimalProperty = 10,
+				LongProperty = 10,
+				ULongProperty = testValue,
+				DateTimeProperty = Instant.Now,
+				BoolProperty = true,
+				ByteArrayProperty = "This is the byte array property".ToBytes(),
+				StringProperty = "This is the string property"
+			};
+
+			referenceObject.Id.ShouldBeNull("Id should have been null");
+			referenceObject.Save(db);
+			string referenceJson = referenceObject.ToJsonSafe().ToJson();
+			referenceObject.Id.ShouldNotBeNull("Id should not have been null");
+
+			DaoReferenceObject[] retrieved = DaoReferenceObject.Where(c => c.ULongProperty == testValue, db).ToArray();
+			Expect.AreEqual(1, retrieved.Length);
+			DaoReferenceObject instance = retrieved[0];
+			Expect.AreEqual(instance.ULongProperty, referenceObject.ULongProperty);
+			Expect.AreEqual(referenceObject, instance);
+			Expect.AreEqual(referenceJson, instance.ToJsonSafe().ToJson());
+			Expect.AreEqual(testValue, instance.ULongProperty);
+			
+			Message.PrintLine(db.ConnectionString);
+		}
 
 		[UnitTest]
 		public void XrefsFunctionCorrectly()
@@ -93,6 +129,28 @@ namespace Bam.Net.Data.Tests.Integration
 			
 			Left retrievedLeft = Left.GetById(left.Id, db);
 			(retrievedLeft.Rights.Count > 0).ShouldBeTrue("There were no items in the xref collection");
+		}
+
+		[UnitTest]
+		public void ChildCollectionsFunctionCorrectly()
+		{
+			SQLiteDatabase db = new SQLiteDatabase(nameof(XrefListTest));
+			db.TryEnsureSchema<TestTable>();
+			TestTable.LoadAll(db).Delete();
+			TestFkTable.LoadAll(db).Delete();
+
+			TestTable testTable = new TestTable {Name = "TestTable_".RandomLetters(4)};
+			TestFkTable fkTable = new TestFkTable {Name = "TestFkTable_".RandomLetters(6)};
+			testTable.Save(db);
+			testTable.TestFkTablesByTestTableId.Add(fkTable);
+			
+			fkTable.Id.ShouldBeNull();
+			testTable.Save(db);
+			fkTable.Id.ShouldNotBeNull();
+			
+			TestTable retrieved = TestTable.GetById(testTable.Id, db);
+			Expect.AreEqual(1, retrieved.TestFkTablesByTestTableId.Count);
+			Expect.AreEqual(fkTable.ToJsonSafe().ToJson(), retrieved.TestFkTablesByTestTableId[0].ToJsonSafe().ToJson());
 		}
 		
 		[IntegrationTest]

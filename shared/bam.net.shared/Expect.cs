@@ -506,7 +506,7 @@ namespace Bam.Net
             }
         }
 
-        public static void ShouldNotBeNull(this object objectToCheck, string failureMessage)
+        public static void ShouldNotBeNull(this object objectToCheck, string failureMessage = null)
         {
             IsNotNull(objectToCheck, failureMessage);
         }
