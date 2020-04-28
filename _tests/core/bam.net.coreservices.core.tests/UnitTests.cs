@@ -200,7 +200,7 @@ namespace Bam.Net.CoreServices.Tests
         public void SavingMachineSavesNicsAndHostAddresses()
         {
             Machine machine = new Machine();
-            Database db = new SQLiteDatabase($".\\{nameof(SavingMachineSavesNicsAndHostAddresses)}", "CoreRegistryRepository");
+            Database db = new SQLiteDatabase($"./{nameof(SavingMachineSavesNicsAndHostAddresses)}", "CoreRegistryRepository");
             db.TryEnsureSchema<ApplicationRegistration.Data.Dao.Nic>();
             ApplicationRegistrationRepository repo = new ApplicationRegistrationRepository() { Database = db };
 

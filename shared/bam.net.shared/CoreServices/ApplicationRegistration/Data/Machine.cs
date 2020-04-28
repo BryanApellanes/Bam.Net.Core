@@ -54,7 +54,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
         public string DnsName { get; set; }
         public virtual List<ProcessDescriptor> Processes { get; set; }
 
-        List<Nic> _nics;
+        private List<Nic> _nics;
         public virtual List<Nic> NetworkInterfaces
         {
             get

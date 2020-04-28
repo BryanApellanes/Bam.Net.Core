@@ -388,7 +388,7 @@ namespace Bam.Net.Data
                         .Go();
                 }
                 
-                foreach (Dao d in this)
+                foreach (T d in this)
                 {
                     if (d.AutoDeleteChildren)
                     {

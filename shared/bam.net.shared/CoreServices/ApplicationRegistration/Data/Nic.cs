@@ -11,18 +11,26 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     public class Nic: KeyedRepoData
     {
         public ulong MachineId { get; set; }
+        
         public virtual Machine Machine { get; set; }
+        
+        [CompositeKey]
         public string AddressFamily { get; set; }
+        
+        [CompositeKey]
         public string Address { get; set; }
+        
+        [CompositeKey]
         public string MacAddress { get; set; }
+        
         public override int GetHashCode()
         {
-            return $"{AddressFamily}:{Address}".GetHashCode();
+            return $"{AddressFamily}:{Address}:{MacAddress}".GetHashCode();
         }
+        
         public override bool Equals(object obj)
         {
-            Nic input = obj as Nic;
-            if(input != null)
+            if(obj is Nic input)
             {
                 return input.AddressFamily.Equals(AddressFamily) && input.Address.Equals(Address);
             }
