@@ -267,7 +267,7 @@ namespace Bam.Net.CoreServices.Tests
             repo.Delete(machine);
         }
 
-        [UnitTest]
+        /*[UnitTest]
         public void CoreClientCanSignup()
         {
             //throw new NotImplementedException();
@@ -277,7 +277,7 @@ namespace Bam.Net.CoreServices.Tests
         public void CoreClientCanRegisterCurrentApp()
         {
             //throw new NotImplementedException();
-        }
+        }*/
 
         //      - if more than one organization for a user then fail if not premium
         [UnitTest]

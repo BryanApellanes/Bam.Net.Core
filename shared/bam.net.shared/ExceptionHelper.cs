@@ -49,15 +49,16 @@ namespace Bam.Net
         }
 
 		public static Exception GetInnerException(this Exception exception)
-		{
-			if (exception.InnerException == null)
+        {
+            return exception.GetBaseException();
+			/*if (exception.InnerException == null)
 			{
 				return exception;
 			}
 			else
 			{
 				return GetInnerException(exception.InnerException);
-			}
+			}*/
 		}
     }
 }

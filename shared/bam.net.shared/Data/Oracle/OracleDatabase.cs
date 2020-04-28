@@ -77,7 +77,7 @@ namespace Bam.Net.Data.Oracle
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = ConnectionStringResolver.Resolve(ConnectionName).ConnectionString;
+                    _connectionString = ConnectionStringResolver?.Resolve(ConnectionName)?.ConnectionString;
                 }
 
                 return _connectionString;
@@ -223,7 +223,7 @@ namespace Bam.Net.Data.Oracle
 
         protected override void ReaderPropertySetter(object instance, string propertyName, object propertyValue)
         {
-            PropertyInfo prop = instance.GetType().GetProperties().Where(p => p.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            PropertyInfo prop = instance.GetType().GetProperties().FirstOrDefault(p => p.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
             ReflectionExtensions.SetProperty(instance, prop, propertyValue);
         }
 
