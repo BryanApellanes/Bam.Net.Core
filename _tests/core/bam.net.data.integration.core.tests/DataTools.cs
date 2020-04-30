@@ -38,27 +38,28 @@ namespace Bam.Net.Data.Tests.Integration
             {
                 initializer = db => Db.TryEnsureSchema<TestTable>(db);
             }
-
-            SQLiteDatabase sqliteDatabase = new SQLiteDatabase(".\\Chumsql2", databaseName);
-            initializer(sqliteDatabase);
-            _testDatabases.Add(sqliteDatabase);
             
-            /*MsSqlDatabase msDatabase = new MsSqlDatabase("chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
+            /*MsSqlDatabase msDatabase = new MsSqlDatabase("Chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
             initializer(msDatabase);
             _testDatabases.Add(msDatabase);
-
-            OracleDatabase oracleDatabase = new OracleDatabase("chumsql2", databaseName, new OracleCredentials { UserId = "C##ORACLEUSER", Password = "oracleP455w0rd" });
-            initializer(oracleDatabase);
-            _testDatabases.Add(oracleDatabase);
-
-            MySqlDatabase mySqlDatabase = new MySqlDatabase("chumsql2", databaseName, new MySqlCredentials { UserId = "mysql", Password = "mysqlP455w0rd" }, false);
-            initializer(mySqlDatabase);
-            _testDatabases.Add(mySqlDatabase);
-
+            
             NpgsqlDatabase npgsqlDatabase = new NpgsqlDatabase("chumsql2", databaseName, new NpgsqlCredentials { UserId = "postgres", Password = "postgresP455w0rd" });
             initializer(npgsqlDatabase);
             _testDatabases.Add(npgsqlDatabase);*/
-
+            
+            
+            /*SQLiteDatabase sqliteDatabase = new SQLiteDatabase("./chumsql2", databaseName);
+            initializer(sqliteDatabase);
+            _testDatabases.Add(sqliteDatabase);
+            
+             OracleDatabase oracleDatabase = new OracleDatabase("chumsql2", databaseName, new OracleCredentials { UserId = "C##ORACLEUSER", Password = "oracleP455w0rd" });
+            initializer(oracleDatabase);
+            _testDatabases.Add(oracleDatabase);*/
+            
+            MySqlDatabase mySqlDatabase = new MySqlDatabase("chumsql2", databaseName, new MySqlCredentials { UserId = "mysql", Password = "mysqlP455w0rd" }, false);
+            initializer(mySqlDatabase);
+            _testDatabases.Add(mySqlDatabase);
+            
             return _testDatabases;
 		}
 

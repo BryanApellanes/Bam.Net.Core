@@ -3,6 +3,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Bam.Net.Data.Repositories;
 using System.IO;
 using System.Reflection;
 using Bam.Net.DaoRef;
+using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Data.Tests.Integration
 {
@@ -34,12 +36,12 @@ namespace Bam.Net.Data.Tests.Integration
 		public RepositoryTests()
 		{		
 		}
-
+		
 		[IntegrationTestSetup]
 		public void Setup()
 		{
-			_sqliteDir = new DirectoryInfo(".\\RepositoryTests_SQLite");
-			_objectDir = new DirectoryInfo(".\\RepositoryTests_ObjectRepo");
+			_sqliteDir = new DirectoryInfo("./RepositoryTests_SQLite");
+			_objectDir = new DirectoryInfo("./RepositoryTests_ObjectRepo");
 			_repos = new HashSet<IRepository>();
 			_repos.Add(new DaoRepository(new SQLiteDatabase(_sqliteDir.FullName, "RepositoryTests")));
 			//_repos.Add(new ObjectRepository(_objectDir.FullName));	

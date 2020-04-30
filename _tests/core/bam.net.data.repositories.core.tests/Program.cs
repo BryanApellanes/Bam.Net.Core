@@ -8,7 +8,7 @@ namespace Bam.Net.Data.Repositories.Tests
     {
         static void Main(string[] args)
         {
-            Initialize(args);
+            ExecuteMain(args);
         }
     }
 }

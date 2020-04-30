@@ -411,9 +411,7 @@ namespace Bam.Net.Testing
         /// <param name="signatureVariableValues"></param>
         public static void Warn(string messageSignature, params object[] signatureVariableValues)
         {
-            Logger.AddEntry(messageSignature, LogEventType.Warning, ToStringArray(signatureVariableValues));
-            Logger.BlockUntilEventQueueIsEmpty();
-            Logger.RestartLoggingThread();
+            Message.PrintLine(messageSignature, ConsoleColor.Yellow, ToStringArray(signatureVariableValues));
         }
 
         public static void Error(string message, Exception ex)
@@ -428,9 +426,8 @@ namespace Bam.Net.Testing
         /// <param name="signatureVariableValues"></param>
         public static void Error(string messageSignature, Exception ex, params object[] signatureVariableValues)
         {
-            Logger.AddEntry(messageSignature, ex, ToStringArray(signatureVariableValues));
-            Logger.BlockUntilEventQueueIsEmpty();
-            Logger.RestartLoggingThread();
+            Message.PrintLine(messageSignature, ConsoleColor.Magenta, ToStringArray(signatureVariableValues));
+            Message.PrintLine("{0}\r\n\t{1}", ConsoleColor.DarkMagenta, ex.StackTrace);
         }
 
 		private static string[] ToStringArray(object[] signatureVariableValues)

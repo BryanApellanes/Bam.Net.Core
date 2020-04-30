@@ -76,28 +76,16 @@ namespace Bam.Net.Encryption
         static object _systemVaultDatabaseSync = new object();
         public static Database SystemVaultDatabase
         {
-            get
-            {
-                return _systemVaultDatabaseSync.DoubleCheckLock(ref _systemVaultDatabase, () => InitializeSystemVaultDatabase());
-            }
-            set
-            {
-                _systemVaultDatabase = value;
-            }
+            get => _systemVaultDatabaseSync.DoubleCheckLock(ref _systemVaultDatabase, InitializeSystemVaultDatabase);
+            set => _systemVaultDatabase = value;
         }
 
         static Database _applicationVaultDatabase;
         static object _applicationVaultDatabaseSync = new object();
         public static Database ApplicationVaultDatabase
         {
-            get
-            {
-                return _applicationVaultDatabaseSync.DoubleCheckLock(ref _applicationVaultDatabase, () => InitializeApplicationVaultDatabase());
-            }
-            set
-            {
-                _applicationVaultDatabase = value;
-            }
+            get => _applicationVaultDatabaseSync.DoubleCheckLock(ref _applicationVaultDatabase, InitializeApplicationVaultDatabase);
+            set => _applicationVaultDatabase = value;
         }
 
         internal static Database InitializeSystemVaultDatabase()
@@ -129,13 +117,7 @@ namespace Bam.Net.Encryption
             return db;
         }
 
-        protected static internal string Password
-        {
-            get
-            {
-                return "287802b5ca734821";
-            }
-        }
+        protected internal static string Password => "287802b5ca734821";
 
         static Vault _systemVault;
         static object _systemVaultSync = new object();

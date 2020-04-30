@@ -1,43 +1,28 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Data;
-using System.Data.Common;
-using System.Data.Sql;
-using System.Data.SqlClient;
-using System.IO;
 using System.Net;
-using Bam.Net.Configuration;
-using Bam.Net.Encryption;
+using System.Reflection;
 using Bam.Net.CommandLine;
-using Bam.Net.Incubation;
-using Bam.Net;
+using Bam.Net.Configuration;
 using Bam.Net.Data;
-using Bam.Net.Testing;
-using Bam.Net.Javascript;
+using Bam.Net.Data.SQLite;
+using Bam.Net.Encryption;
+using Bam.Net.Incubation;
 using Bam.Net.Server;
-using Bam.Net.ServiceProxy;
 using Bam.Net.ServiceProxy.Secure;
-using Org.BouncyCastle.OpenSsl;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities;
-using Org.BouncyCastle.X509;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Crypto.Engines;
+using Bam.Net.Testing;
+using Bam.Net.Testing.Unit;
 using Bam.Net.UserAccounts;
 using Bam.Net.UserAccounts.Data;
 using Bam.Net.Web;
-using Bam.Net.Testing.Unit;
 using NSubstitute;
-using Bam.Net.Data.SQLite;
+using Org.BouncyCastle.Crypto;
 
 namespace Bam.Net.ServiceProxy.Tests
 {
@@ -404,7 +389,7 @@ namespace Bam.Net.ServiceProxy.Tests
                 MethodInfo = typeof(Echo).GetMethod(m);
                 Request = Substitute.For<IRequest>();
                 Request.Url.Returns(new Uri($"http://localhost/{c}/{m}.{f}"));
-                Request.QueryString.Returns(new System.Collections.Specialized.NameValueCollection());
+                Request.QueryString.Returns(new NameValueCollection());
             }
 
             public bool Called { get; set; }
@@ -468,7 +453,7 @@ namespace Bam.Net.ServiceProxy.Tests
         {
             ServiceProxySystem.Register<TestClass>();
             IRequest request = Substitute.For<IRequest>();
-            request.QueryString.Returns(new System.Collections.Specialized.NameValueCollection());
+            request.QueryString.Returns(new NameValueCollection());
             request.UserHostAddress.Returns("192.168.0.80:80");
             IResponse response = Substitute.For<IResponse>();
             IHttpContext context = Substitute.For<IHttpContext>();
@@ -485,7 +470,7 @@ namespace Bam.Net.ServiceProxy.Tests
         {
             ServiceProxySystem.Register<TestClass>();
             IRequest request = Substitute.For<IRequest>();
-            request.QueryString.Returns(new System.Collections.Specialized.NameValueCollection());
+            request.QueryString.Returns(new NameValueCollection());
             request.UserHostAddress.Returns("127.0.0.1:80");
             IResponse response = Substitute.For<IResponse>();
             IHttpContext context = Substitute.For<IHttpContext>();

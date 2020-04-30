@@ -145,13 +145,7 @@ namespace Bam.Net.Data
             }
         }
 
-        public IEnumerable<IFilterToken> Filters
-        {
-            get
-            {
-                return this.parameters.ToArray();
-            }
-        }
+        public IEnumerable<IFilterToken> Filters => this.parameters.ToArray();
 
         public string GoText { get; set; }
 

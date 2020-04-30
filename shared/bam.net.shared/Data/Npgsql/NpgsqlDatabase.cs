@@ -1,15 +1,11 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.Incubation;
+using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using Bam.Net.Data;
+using Bam.Net.Incubation;
 using Npgsql;
 
 namespace Bam.Net.Data.Npgsql
@@ -62,7 +58,7 @@ namespace Bam.Net.Data.Npgsql
             set => _connectionString = value;
         }
 
-        public override long? GetLongValue(string columnName, System.Data.DataRow row)
+        public override long? GetLongValue(string columnName, DataRow row)
         {
             object value = row[columnName];
             if (value is long || value is long?)

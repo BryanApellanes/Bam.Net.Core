@@ -58,7 +58,7 @@ namespace Bam.Net.Data
                 columnNames = new string[] { "*" };
             }
 
-            string cols = columnNames.ToDelimited(s => string.Format("{0}", s));
+            string cols = columnNames.ToDelimited(s => $"{s}");
             StringBuilder.AppendFormat("SELECT {0} FROM `{1}` ", cols, tableName);
             return this;
         }

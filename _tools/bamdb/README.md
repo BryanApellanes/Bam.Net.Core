@@ -37,7 +37,7 @@ Accepts a `config` command line argument specifying the path to a yaml serialize
 bamdb /config:<pathToConfig>
 ```
 
-An example of a GenerationConfig.yaml file:
+An example of a DaoRepoGenerationConfig.yaml file:
 
 ```yaml
 SchemaName: MyApplicationSchema
@@ -59,5 +59,7 @@ A bamdb schema file is a json formatted file containing meta data that describes
 ## Database Server
 
 The following describes the options available to serve data using bamdb.
+
+TODO: finish this
 
  
