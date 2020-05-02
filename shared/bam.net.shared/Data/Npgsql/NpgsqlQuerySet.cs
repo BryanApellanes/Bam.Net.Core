@@ -20,16 +20,15 @@ namespace Bam.Net.Data
             {
                 if (this.Database is NpgsqlDatabase postgresDb && !string.IsNullOrEmpty(postgresDb.PostgresSchema))
                 {
-                    return $"{postgresDb.PostgresSchema}.\"{s}\"";
+                    return $"{postgresDb.PostgresSchema}.{s}";
                 }
-                return $"\"{s}\"";
+                return $"{s}";
             };
-            this.ColumnNameFormatter = (s) => $"\"{s}\"";
+            this.ColumnNameFormatter = NpgsqlFormatProvider.ColumnNameFormatter;
         }
-
         public override SqlStringBuilder Id(string idAs)
         {
-            Builder.AppendFormat(" RETURNING \"Id\" AS \"{0}\"{1}", idAs, this.GoText);
+            Builder.AppendFormat(" RETURNING Id AS {0}{1}", idAs, this.GoText);
             return this;
         }
 
@@ -49,7 +48,6 @@ namespace Bam.Net.Data
             this.parameters.AddRange(set.Parameters);
             return this;
         }
-
 
         public int Limit
         {

@@ -32,14 +32,8 @@ namespace Bam.Net.Data
         int _maxConnections;
         public override int MaxConnections
         {
-            get
-            {
-                return _maxConnections;
-            }
-            set
-            {
-                _maxConnections = value;
-            }
+            get => _maxConnections;
+            set => _maxConnections = value;
         }
 
         public override DbConnection GetDbConnection()
@@ -90,7 +84,7 @@ namespace Bam.Net.Data
             }
         }
 
-        object _nextLock = new object();
+        readonly object _nextLock = new object();
         protected int GetNext()
         {
             lock (_nextLock)

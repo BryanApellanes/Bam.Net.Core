@@ -17,10 +17,21 @@ namespace Bam.Net.Data.Npgsql
     /// </summary>
     internal class NpgsqlFormatProvider
     {
+        static NpgsqlFormatProvider()
+        {
+            ColumnNameFormatter = (s) => $"\"{s}\"";
+        }
+        
+        public static Func<string, string> ColumnNameFormatter
+        {
+            get;
+            set;
+        }
+        
         public static SetFormat GetSetFormat(string tableName, StringBuilder stringBuilder, int? startNumber, params AssignValue[] values)
         {
             SetFormat set = new SetFormat();
-            set.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            set.ColumnNameFormatter = ColumnNameFormatter;
             set.ParameterPrefix = ":";
             foreach (AssignValue value in values)
             {
@@ -36,7 +47,7 @@ namespace Bam.Net.Data.Npgsql
         public static WhereFormat GetWhereFormat(IQueryFilter filter, StringBuilder stringBuilder, int? startNumber)
         {
             WhereFormat where = new WhereFormat(filter);
-            where.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            where.ColumnNameFormatter = ColumnNameFormatter;
             where.ParameterPrefix = ":";
             where.StartNumber = startNumber;
             stringBuilder.Append(where.Parse());
@@ -46,7 +57,7 @@ namespace Bam.Net.Data.Npgsql
         public static WhereFormat GetWhereFormat(AssignValue filter, StringBuilder stringBuilder, int? startNumber)
         {
             WhereFormat where = new WhereFormat();
-            where.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            where.ColumnNameFormatter = ColumnNameFormatter;
             where.ParameterPrefix = ":";
             where.StartNumber = startNumber;
             where.AddAssignment(filter);
@@ -57,7 +68,7 @@ namespace Bam.Net.Data.Npgsql
         public static AndFormat GetAndFormat(AssignValue filter, StringBuilder stringBuilder, int? startNumber)
         {
             AndFormat and = new AndFormat();
-            and.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            and.ColumnNameFormatter = ColumnNameFormatter;
             and.ParameterPrefix = ":";
             and.StartNumber = startNumber;
             and.AddAssignment(filter);
@@ -68,7 +79,7 @@ namespace Bam.Net.Data.Npgsql
         public static AndFormat GetAndFormat(IQueryFilter filter, StringBuilder stringBuilder, int? startNumber)
         {
             AndFormat and = new AndFormat(filter);
-            and.ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            and.ColumnNameFormatter = ColumnNameFormatter;
             and.ParameterPrefix = ":";
             and.StartNumber = startNumber;
             stringBuilder.Append(and.Parse());

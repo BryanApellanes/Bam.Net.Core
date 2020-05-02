@@ -41,9 +41,10 @@ namespace Bam.Net.Data
                 return false;
             }
 
-            return dbInfo.DatabaseType.Equals(this.DatabaseType) &&
-                   dbInfo.ConnectionString.Equals(this.ConnectionString) &&
-                   dbInfo.ConnectionName.Equals(this.ConnectionName);
+            
+            return dbInfo.DatabaseType.Or("").Equals(this.DatabaseType) &&
+                   dbInfo.ConnectionString.Or("").Equals(this.ConnectionString) &&
+                   dbInfo.ConnectionName.Or("").Equals(this.ConnectionName);
         }
     }
 }

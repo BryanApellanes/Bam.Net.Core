@@ -58,8 +58,7 @@ namespace Bam.Net.Data
         }
 
         public event SqlExecuteDelegate Executed;
-
-
+        
         public DataTable GetDataTable(Database db)
         {
             if (!string.IsNullOrEmpty(this))

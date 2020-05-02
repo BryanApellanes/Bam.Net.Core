@@ -23,8 +23,8 @@ namespace Bam.Net.Data.Npgsql
 
         public NpgsqlDatabase(string serverName, string databaseName, string connectionName, NpgsqlCredentials credentials = null)
         {
-            ColumnNameProvider = (c) => $"\"{c.Name}\"";
-            ConnectionStringResolver = new NpgsqlConnectionStringResolver(serverName, databaseName, credentials);
+            ColumnNameProvider = (c) => $"{c.Name}";
+            ConnectionStringResolver = new NpgsqlConnectionStringResolver(serverName, databaseName.ToLowerInvariant(), credentials);
             ConnectionName = connectionName;
             Register();
         }
@@ -40,7 +40,28 @@ namespace Bam.Net.Data.Npgsql
             get;
             set;
         }
-
+        
+        public override void ExecuteSql(string sqlStatement, System.Data.CommandType commandType, params DbParameter[] dbParameters)
+        {
+            string[] commands = sqlStatement.DelimitSplit("\r", "\n");
+            foreach (string command in commands)
+            {
+                base.ExecuteSql(command, commandType, dbParameters);
+            }
+        }
+        
+        public static void Create(string serverName, string databaseName, NpgsqlCredentials credentials, int port = 5432)
+        {
+            NpgsqlDatabase db = new NpgsqlDatabase($"User Id={credentials.UserId}; Password={credentials.Password}; Host={serverName}; Port={port};");
+            db.CreateDatabase(databaseName);
+        }
+        
+        public void CreateDatabase(string databaseName)
+        {
+            DbConnection connection = GetDbConnection();
+            ExecuteSql($"CREATE DATABASE {databaseName}");
+        }
+        
         public string PostgresSchema { get; set; }
         
         string _connectionString;
