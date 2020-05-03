@@ -267,10 +267,8 @@ namespace Bam.Net.Encryption
             {
                 result = Create(database, vaultName, password);
             }
-            if (result != null)
-            {
-                result.Decrypt();
-            }
+
+            result?.Decrypt();
             return result;
         }
 
@@ -344,13 +342,7 @@ namespace Bam.Net.Encryption
             return result;
         }
 
-        public string ConnectionString
-        {
-            get
-            {
-                return Database.ConnectionString;
-            }
-        }
+        public string ConnectionString => Database.ConnectionString;
 
         Dictionary<string, DecryptedVaultItem> _items;
         object _itemsLock = new object();
@@ -364,26 +356,33 @@ namespace Bam.Net.Encryption
 
         private bool Decrypt()
         {
-            _items = null; // will cause it to reinitiailize above
-            if(Key != null)
+            _items = null; // will cause it to reinitialize above
+            if(VaultKey != null)
             {
-                string password = Key.PrivateKeyDecrypt(Key.Password);
+                string password = VaultKey.PrivateKeyDecrypt(VaultKey.Password);
+                VaultItemsByVaultId.Reload();
                 VaultItemsByVaultId.Each(item =>
                 {
                     string key = item.Key.AesPasswordDecrypt(password);
-                    DecryptedVaultItem value = new DecryptedVaultItem(item, Key);
+                    DecryptedVaultItem value = new DecryptedVaultItem(item, VaultKey);
                     Items.Add(key, value);
                 });
                 return true;
             }
             return false;
         }
-        
-        protected VaultKey Key
+
+        private VaultKey _vaultKey;
+        protected VaultKey VaultKey
         {
             get
             {
-                return VaultKeysByVaultId.FirstOrDefault();
+                if (_vaultKey == null)
+                {
+                    _vaultKey = VaultKeysByVaultId.FirstOrDefault();
+                }
+
+                return _vaultKey;
             }
         }
 
@@ -457,11 +456,11 @@ namespace Bam.Net.Encryption
                         else
                         {
                             VaultItem item = VaultItemsByVaultId.AddNew();
-                            string password = Key.PrivateKeyDecrypt(Key.Password);
+                            string password = VaultKey.PrivateKeyDecrypt(VaultKey.Password);
                             item.Key = key.AesPasswordEncrypt(password);
                             item.Value = value.AesPasswordEncrypt(password);
                             item.Save();
-                            Items[key] = new DecryptedVaultItem(item, Key);
+                            Items[key] = new DecryptedVaultItem(item, VaultKey);
                         }
                     }
                 }

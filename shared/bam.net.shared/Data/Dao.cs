@@ -497,13 +497,7 @@ namespace Bam.Net.Data
             AfterDeleteAny?.Invoke(db, this);
         }
 
-        protected internal Dictionary<string, ILoadable> ChildCollections
-        {
-            get
-            {
-                return _childCollections;
-            }
-        }
+        protected internal Dictionary<string, ILoadable> ChildCollections => _childCollections;
 
         public virtual void Hydrate(Database database = null)
         {
@@ -1191,10 +1185,7 @@ namespace Bam.Net.Data
                 }
                 return _idValue;
             }
-            set
-            {
-                _idValue = value;
-            }
+            set => _idValue = value;
         }
 
         [Exclude]
@@ -1275,7 +1266,7 @@ namespace Bam.Net.Data
         {
             get
             {
-                if (IdValue != null && IdValue.HasValue && IdValue > 0)
+                if (IdValue.HasValue && IdValue > 0)
                 {
                     _isNew = false;
                 }
@@ -1300,10 +1291,7 @@ namespace Bam.Net.Data
                 }
                 return _incubator;
             }
-            protected internal set
-            {
-                _incubator = value;
-            }
+            protected internal set => _incubator = value;
         }
 
         [Exclude]
@@ -1419,7 +1407,12 @@ namespace Bam.Net.Data
             return unchecked((ulong)(longValue - long.MinValue));
         }
 
-        protected ulong? GetULongValue(string columnName, bool mapLongToUlong = true)
+        protected ulong? GetULongValue(string columnName)
+        {
+            return GetULongValue(columnName, true);
+        }
+        
+        protected ulong? GetULongValue(string columnName, bool mapLongToUlong)
         {
             object val = GetCurrentValue(columnName);
             if (val != null && val != DBNull.Value)
@@ -1450,17 +1443,17 @@ namespace Bam.Net.Data
             object val = GetCurrentValue(columnName);
             if (val != null && val != DBNull.Value)
             {
-                if (val is long)
+                if (val is long l)
                 {
-                    return new bool?((long)val > 0);
+                    return new bool?(l > 0);
                 }
-                else if (val is int)
+                else if (val is int i)
                 {
-                    return new bool?((int)val > 0);
+                    return new bool?(i > 0);
                 }
                 else if (val is string str)
                 {
-                    return new bool?(str.ToLowerInvariant().Equals("true") || str.Equals("1"));
+                    return str.IsAffirmative();
                 }
                 else
                 {
@@ -1508,17 +1501,19 @@ namespace Bam.Net.Data
             }
         }
 
-        protected internal void SetValue(string columnName, object value, bool mapUlongToLong = true)
+        protected internal void SetValue(string columnName, object value)
+        {
+            SetValue(columnName, value, true);
+        }
+        
+        protected internal void SetValue(string columnName, object value, bool mapUlongToLong)
         {
             // Note To Self: Please don't mess with this logic.  You've faced the consequences of that decision 
             // too many times now.  Trust that this moronic looking logic is needed for all to function correctly.
             // - BA (07/14/2018)
             if (columnName.Equals(KeyColumnName))
             {
-                if (value != null && value != DBNull.Value)
-                {
-                    IdValue = new ulong?(Convert.ToUInt64(value));
-                }
+                SetId(value);
             }
             else
             {
@@ -1538,6 +1533,14 @@ namespace Bam.Net.Data
             }
         }
 
+        public virtual void SetId(object value)
+        {
+            if (value != null && value != DBNull.Value)
+            {
+                IdValue = new ulong?(Convert.ToUInt64(value));
+            }
+        }
+        
         private void Initialize()
         {
             this._childCollections = new Dictionary<string, ILoadable>();

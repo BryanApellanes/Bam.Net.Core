@@ -240,6 +240,7 @@ namespace Bam.Net.Encryption.Tests
         public void CanExportVaultKey()
         {
             SQLiteDatabase db = GetVaultDatabase();
+            
             string password = "This is my awesome password";
             string sensitiveValue = "Sensitive Value";
             string keyName = "SensitiveInformation";
@@ -556,12 +557,24 @@ namespace Bam.Net.Encryption.Tests
             });
         }
 
+        static string vaultDataDb = Path.Combine(BamHome.DataPath, "TestVaultData.sqlite");
+        static string testVaults = Path.Combine(BamHome.DataPath, "TestVaults.vault.sqlite");
         [AfterUnitTests]
         public static void CleanUp()
         {
             OutLine("Cleaning up test vaults...", ConsoleColor.Yellow);
             GetTestCredentialVault(out VaultDatabase db);
             Vault.LoadAll(db).Delete(db);
+            if (File.Exists(vaultDataDb))
+            {
+                File.Delete(vaultDataDb);
+            }
+
+            if (File.Exists(testVaults))
+            {
+                File.Delete(testVaults);
+            }
+            
             OutLine("Clean up test vaults complete", ConsoleColor.Green);
         }
 
@@ -576,10 +589,7 @@ namespace Bam.Net.Encryption.Tests
         private static void DeleteVault(string name)
         {
             Vault toDelete = Vault.Retrieve(name);
-            if (toDelete != null)
-            {
-                toDelete.Delete();
-            }
+            toDelete?.Delete();
         }
 
         private static Vault GetTestCredentialVault()
@@ -589,13 +599,17 @@ namespace Bam.Net.Encryption.Tests
 
         private static Vault GetTestCredentialVault(out VaultDatabase db)
         {
-            string filePath = Path.Combine(Paths.Data, "TestVaults.vault.sqlite");
+            string filePath = Path.Combine(BamHome.DataPath, "TestVaults.vault.sqlite");
             return Vault.Load(new FileInfo(filePath), 8.RandomLetters(), out db);
         }
 
         private static SQLiteDatabase GetVaultDatabase()
         {
-            SQLiteDatabase db = new SQLiteDatabase(Paths.Data, "TestVaultData");
+            SQLiteDatabase db = new SQLiteDatabase(BamHome.DataPath, "TestVaultData");
+            if (db.DatabaseFile.Exists)
+            {
+                File.Delete(db.DatabaseFile.FullName);
+            }
             db.TryEnsureSchema<Vault>();
             return db;
         }

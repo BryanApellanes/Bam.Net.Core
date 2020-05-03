@@ -86,20 +86,14 @@ namespace Bam.Net.Data
 					}
 					else
 					{
-						_columnNameProvider = (c) =>
-						{
-							return string.Format("[{0}]", c.Name);
-						};
+						_columnNameProvider = (c) => $"[{c.Name}]";
 					}
 				}
 
 				return _columnNameProvider;
 			}
-			set
-			{
-				_columnNameProvider = value;
-			}
-		}
+			set => _columnNameProvider = value;
+        }
         protected internal Delegate FilterDelegate
         {
             get;

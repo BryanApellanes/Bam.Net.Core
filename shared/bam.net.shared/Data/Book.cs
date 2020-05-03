@@ -15,8 +15,8 @@ namespace Bam.Net.Data
     /// <typeparam name="T"></typeparam>
     public class Book<T>
     {
-        List<List<T>> allPages;
-        List<T> allItems;
+        readonly List<List<T>> allPages;
+        readonly List<T> allItems;
 
         public Book()
             : base()
@@ -47,10 +47,7 @@ namespace Bam.Net.Data
         int pageSize;
         public int PageSize
         {
-            get
-            {
-                return this.pageSize;
-            }
+            get => this.pageSize;
             set
             {
                 this.pageSize = value;
@@ -64,13 +61,7 @@ namespace Bam.Net.Data
             set;
         }
 
-        public int ItemCount
-        {
-            get
-            {
-                return this.allItems.Count;
-            }
-        }
+        public int ItemCount => this.allItems.Count;
 
         public void Add(T item)
         {
@@ -82,13 +73,7 @@ namespace Bam.Net.Data
         /// A list of lists representing the individual
         /// pages
         /// </summary>
-        public List<List<T>> AllPages
-        {
-            get
-            {
-                return allPages;
-            }
-        }
+        public List<List<T>> AllPages => allPages;
 
         /// <summary>
         /// Retrieve the set of values on the specified

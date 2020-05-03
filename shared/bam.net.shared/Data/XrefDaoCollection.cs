@@ -186,13 +186,7 @@ namespace Bam.Net.Data
             _book = new Book<L>(_values);
         }
 
-        public L this[int index]
-        {
-            get
-            {
-                return _values[index];
-            }
-        }
+        public L this[int index] => _values[index];
 
         /// <summary>
         /// Removes the specified item from this collection, deletes the xref entry but
@@ -458,7 +452,7 @@ namespace Bam.Net.Data
         {
             if (_setDatabases)
             {
-                foreach (Dao dao in this)
+                foreach (L dao in this)
                 {
                     dao.Database = db;
                 }

@@ -30,7 +30,7 @@ namespace Bam.Net.Encryption
         }
 
         string _key;
-        object _keySync = new object();
+        readonly object _keySync = new object();
         public string Key
         {
             get
@@ -40,7 +40,7 @@ namespace Bam.Net.Encryption
         }
 
         string _value;
-        object _valueSync = new object();
+        readonly object _valueSync = new object();
         public string Value
         {
             get

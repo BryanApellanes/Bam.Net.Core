@@ -101,10 +101,7 @@ namespace Bam.Net.Data
 
         public DataRow DataRow
         {
-            get
-            {
-                return DataTable?.Rows?[0] ?? typeof(T).ToDataRow(Dao.TableName(typeof(T)));
-            }
+            get => DataTable?.Rows?[0] ?? typeof(T).ToDataRow(Dao.TableName(typeof(T)));
             set { }
         }
 
@@ -152,7 +149,7 @@ namespace Bam.Net.Data
             get;
             set;
         }
-
+        
         public void Load()
         {
             Load(Database);
@@ -210,6 +207,11 @@ namespace Bam.Net.Data
 
         public T this[int index] => this._values[index];
 
+        /// <summary>
+        /// Instantiate a new instance of T and associate it to
+        /// the parent of this DaoCollection.
+        /// </summary>
+        /// <returns></returns>
         public T AddNew()
         {
             T dao = new T()
@@ -231,7 +233,7 @@ namespace Bam.Net.Data
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (_parent != null)
@@ -243,6 +245,11 @@ namespace Bam.Net.Data
             this._book = new Book<T>(this._values);
         }
 
+        /// <summary>
+        /// Clears all the values in this DaoCollection by deleting
+        /// values from the specified database.
+        /// </summary>
+        /// <param name="db"></param>
         public virtual void Clear(Database db = null)
         {
             Delete(db);
@@ -254,7 +261,7 @@ namespace Bam.Net.Data
         {
             if (values == null)
             {
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             }
 
             if (_parent != null)
@@ -285,7 +292,7 @@ namespace Bam.Net.Data
                     if (fk.ReferencedTable.Equals(Dao.TableName(_parent)) && fk.Name.Equals(ReferencingColumn))
                     {
                         Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
+                        instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), false);
                     }
                 }
             }
@@ -403,7 +410,6 @@ namespace Bam.Net.Data
                         sql.Go();
                     }
                 }
-                
             }
         }
 
@@ -433,8 +439,7 @@ namespace Bam.Net.Data
         /// Gets one value if it exists, creates it if it doesn't.  Throws MultipleEntriesFoundException
         /// if more than one value is in this collection.
         /// </summary>
-        /// <param name="saveIfNew">If true and a new entry is required, the Dao value will 
-        /// be saved prior to being returned </param>
+        /// <param name="saveIfNew">If true and a new entry is required, the Dao value is saved prior to being returned.</param>
         /// <returns></returns>
         public T JustOne(Database db, bool saveIfNew = false)
         {
@@ -476,32 +481,14 @@ namespace Bam.Net.Data
             return _book[pageNum - 1];
         }    
 
-        public int PageCount
-        {
-            get
-            {
-                return this._book.PageCount;
-            }
-        }
+        public int PageCount => this._book.PageCount;
 
-        public int Count
-        {
-            get
-            {
-                return this._book.ItemCount;
-            }
-        }
+        public int Count => this._book.ItemCount;
 
         public int PageSize
         {
-            get
-            {
-                return this._book.PageSize;
-            }
-            set
-            {
-                this._book.PageSize = value;
-            }
+            get => this._book.PageSize;
+            set => this._book.PageSize = value;
         }
 
         public override bool MoveNextPage()
@@ -546,7 +533,7 @@ namespace Bam.Net.Data
 
 		private void SetEachDatabase()
 		{
-			foreach(Dao dao in this)
+			foreach(T dao in this)
 			{
 				dao.Database = Database;
 			}
