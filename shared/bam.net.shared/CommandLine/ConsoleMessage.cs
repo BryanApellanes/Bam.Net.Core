@@ -183,14 +183,21 @@ namespace Bam.Net.CommandLine
 
         public static void Print(string messageSignature, params object[] messageArgs)
         {
-            Print(messageSignature, ConsoleColor.Cyan, messageArgs);
+            if (messageArgs != null && messageArgs.Length == 0)
+            {
+                PrintMessage(messageSignature, ConsoleColor.Cyan);
+            }
+            else
+            {
+                Print(messageSignature, ConsoleColor.Cyan, messageArgs);
+            }
         }
         
-        // TODO: Add signature Print(string, ConsoleColorCombo, params object[])
         public static void Print(string messageSignature, ConsoleColorCombo colors, params object[] messageArgs)
         {
             Print(new ConsoleMessage(messageSignature, colors, messageArgs));
         }
+        
         public static void Print(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
         {
             Print(new ConsoleMessage(messageSignature, textColor, messageArgs));
@@ -212,6 +219,14 @@ namespace Bam.Net.CommandLine
             }
         }
 
+        private static void PrintMessage(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor = ConsoleColor.Black)
+        {
+            Console.ForegroundColor = foregroundColor;
+            Console.BackgroundColor = backgroundColor;
+            Console.WriteLine(message);
+            Console.ResetColor();
+        }
+        
         private static void PrintMessage(ConsoleMessage message)
         {
             Console.ForegroundColor = message.Colors.ForegroundColor;
