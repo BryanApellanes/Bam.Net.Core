@@ -455,7 +455,7 @@ namespace Bam.Net.Encryption
                         }
                         else
                         {
-                            VaultItem item = VaultItemsByVaultId.AddNew();
+                            VaultItem item = VaultItemsByVaultId.AddNew(false);
                             string password = VaultKey.PrivateKeyDecrypt(VaultKey.Password);
                             item.Key = key.AesPasswordEncrypt(password);
                             item.Value = value.AesPasswordEncrypt(password);

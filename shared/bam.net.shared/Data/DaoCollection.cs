@@ -212,13 +212,13 @@ namespace Bam.Net.Data
         /// the parent of this DaoCollection.
         /// </summary>
         /// <returns></returns>
-        public T AddNew()
+        public T AddNew(bool mapUlongParentIdToLong = false)
         {
             T dao = new T()
             {
                 Database = Database
             };
-            Add(dao);
+            Add(dao, mapUlongParentIdToLong);
 
             return dao;
         }
@@ -229,7 +229,7 @@ namespace Bam.Net.Data
         /// if a parent is associated with this collection
         /// </summary>
         /// <param name="instance"></param>
-        public virtual void Add(T instance)
+        public virtual void Add(T instance, bool mapUlongParentIdToLong = false)
         {
             if (instance == null)
             {
@@ -238,7 +238,7 @@ namespace Bam.Net.Data
 
             if (_parent != null)
             {
-                AssociateToParent(instance);
+                AssociateToParent(instance, mapUlongParentIdToLong);
             }
 
             this._values.Add(instance);
@@ -276,18 +276,23 @@ namespace Bam.Net.Data
             this._book = new Book<T>(this._values);
         }
 
-        protected internal bool MapUlongParentIdToLong
+        public bool? MapUlongParentIdToLong
         {
             get;
             set;
         }
-        
+
         private void AssociateToParent(T instance)
+        {
+            AssociateToParent(instance, MapUlongParentIdToLong ?? false);
+        }
+        
+        private void AssociateToParent(T instance, bool mapUlongParentIdToLong)
         {
             Type childType = instance.GetType();
 
             ValidateParent();
-
+            
             // from the parent get the ReferencedBy Attribute that matches the referencingClass name
             PropertyInfo[] properties = childType.GetProperties();
 
@@ -298,7 +303,7 @@ namespace Bam.Net.Data
                     if (fk.ReferencedTable.Equals(Dao.TableName(_parent)) && fk.Name.Equals(ReferencingColumn))
                     {
                         Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        if (MapUlongParentIdToLong)
+                        if (mapUlongParentIdToLong)
                         {
                             instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
                         }
