@@ -276,6 +276,12 @@ namespace Bam.Net.Data
             this._book = new Book<T>(this._values);
         }
 
+        protected internal bool MapUlongParentIdToLong
+        {
+            get;
+            set;
+        }
+        
         private void AssociateToParent(T instance)
         {
             Type childType = instance.GetType();
@@ -292,7 +298,14 @@ namespace Bam.Net.Data
                     if (fk.ReferencedTable.Equals(Dao.TableName(_parent)) && fk.Name.Equals(ReferencingColumn))
                     {
                         Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), false);
+                        if (MapUlongParentIdToLong)
+                        {
+                            instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
+                        }
+                        else
+                        {
+                            property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
+                        }
                     }
                 }
             }
