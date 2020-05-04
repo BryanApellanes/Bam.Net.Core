@@ -1409,7 +1409,8 @@ namespace Bam.Net.Data
 
         protected ulong? GetULongValue(string columnName)
         {
-            return GetULongValue(columnName, true);
+            Args.ThrowIfNullOrEmpty(columnName, nameof(columnName));
+            return GetULongValue(columnName, !columnName.Equals(KeyColumnName));
         }
         
         protected ulong? GetULongValue(string columnName, bool mapLongToUlong)

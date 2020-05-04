@@ -30,6 +30,7 @@ namespace Bam.Net.Data
 
         public DaoCollection()
         {
+            this.MapUlongParentIdToLong = true;
             this._book = new Book<T>();
             this._values = new List<T>();
         }
@@ -284,7 +285,7 @@ namespace Bam.Net.Data
 
         private void AssociateToParent(T instance)
         {
-            AssociateToParent(instance, MapUlongParentIdToLong ?? false);
+            AssociateToParent(instance, MapUlongParentIdToLong ?? true);
         }
         
         private void AssociateToParent(T instance, bool mapUlongParentIdToLong)
@@ -303,13 +304,18 @@ namespace Bam.Net.Data
                     if (fk.ReferencedTable.Equals(Dao.TableName(_parent)) && fk.Name.Equals(ReferencingColumn))
                     {
                         Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        //instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), mapUlongParentIdToLong);
+                        
+                        // TODO: figure out how to fix this; it works for configuration service to mapulongtolong but not for Vault
                         if (mapUlongParentIdToLong)
                         {
                             instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
                         }
                         else
                         {
-                            property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
+                            
+                            instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
+                            //property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
                         }
                     }
                 }
