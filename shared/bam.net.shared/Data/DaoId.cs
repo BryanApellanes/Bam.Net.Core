@@ -4,7 +4,7 @@ using Bam.Net.Services.DataReplication;
 
 namespace Bam.Net.Data
 {
-    public class DaoId : QueryValue, IIdentifier
+    public class DaoId : QueryValue
     {
         public DaoId(object value) : base(value)
         {
@@ -33,19 +33,18 @@ namespace Bam.Net.Data
             return dao.IdValue.Value;
         }
 
-        public ulong GetCompositeKey(object obj)
+        public IUniversalIdResolver GetUniversalIdentifier(Dao data)
         {
-            return CompositeKeyHashProvider.GetUniversalDeterministicId(obj);
+            return new UniversalIdResolver(data);
         }
-
-        public ulong GetUdi(object obj)
+        
+        public ulong GetId(object obj)
         {
             if (obj is Dao dao)
             {
-                
+                return GetDaoId(dao);
             }
-            
-            throw new NotImplementedException();
+            throw new InvalidOperationException("The specified object must be a Dao instance.");
         }
     }
 }

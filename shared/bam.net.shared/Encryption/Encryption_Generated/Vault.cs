@@ -62,7 +62,11 @@ namespace Bam.Net.Encryption
 			}
 			if(_database != null)
 			{
-				this.ChildCollections.Add("VaultKey_VaultId", new VaultKeyCollection(Database.GetQuery<VaultKeyColumns, VaultKey>((c) => c.VaultId == GetULongValue("Id")), this, "VaultId"));				
+				this.ChildCollections.Add("VaultKey_VaultId", new VaultKeyCollection(Database.GetQuery<VaultKeyColumns, VaultKey>((c) =>
+				{
+					ulong? id = GetULongValue("Id", false);
+					return c.VaultId == id;
+				}), this, "VaultId"));				
 			}						
 		}
 

@@ -578,9 +578,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Config\DatabaseCredentials.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\DaoId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Identifiers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IHasKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IHasUniversalDeterministicId.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\IIdentifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IUniversalIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlJavaScriptSqlProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Postgres\PostgresConnectionStringResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Postgres\PostgresCredentials.cs" />
@@ -634,7 +635,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarningEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarning.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarnings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Udi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UniversalDeterministicIdResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UniversalIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />

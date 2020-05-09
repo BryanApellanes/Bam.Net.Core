@@ -55,6 +55,7 @@ namespace Bam.Net.Encryption
         {
             db = db ?? Database;
             VaultKey key = VaultKeysByVaultId.FirstOrDefault();
+            _vaultKey = null;
             _items = null;
             VaultKeysByVaultId.Delete(db);
             ChildCollections.Clear();
@@ -373,18 +374,7 @@ namespace Bam.Net.Encryption
         }
 
         private VaultKey _vaultKey;
-        protected VaultKey VaultKey
-        {
-            get
-            {
-                if (_vaultKey == null)
-                {
-                    _vaultKey = VaultKeysByVaultId.FirstOrDefault();
-                }
-
-                return _vaultKey;
-            }
-        }
+        public VaultKey VaultKey => _vaultKey ?? (_vaultKey = VaultKeysByVaultId.FirstOrDefault());
 
         public string[] Keys
         {
@@ -455,7 +445,7 @@ namespace Bam.Net.Encryption
                         }
                         else
                         {
-                            VaultItem item = VaultItemsByVaultId.AddNew(false);
+                            VaultItem item = VaultItemsByVaultId.AddNew();
                             string password = VaultKey.PrivateKeyDecrypt(VaultKey.Password);
                             item.Key = key.AesPasswordEncrypt(password);
                             item.Value = value.AesPasswordEncrypt(password);

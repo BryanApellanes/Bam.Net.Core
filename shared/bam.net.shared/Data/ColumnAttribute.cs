@@ -29,8 +29,8 @@ namespace Bam.Net.Data
 
         public override string ToString()
         {
-            string maxLength = string.IsNullOrEmpty(MaxLength) ? "" : string.Format("({0})", MaxLength);
-            return string.Format("\"{0}\" {1}{2}{3}", Name, DbDataType, maxLength, AllowNull ? "" : " NOT NULL");
+            string maxLength = string.IsNullOrEmpty(MaxLength) ? "" : $"({MaxLength})";
+            return $"\"{Name}\" {DbDataType}{maxLength}{(AllowNull ? "" : " NOT NULL")}";
         }
 
         public string ToString(SchemaWriter builder)

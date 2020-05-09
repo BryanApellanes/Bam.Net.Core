@@ -30,7 +30,6 @@ namespace Bam.Net.Data
 
         public DaoCollection()
         {
-            this.MapUlongParentIdToLong = true;
             this._book = new Book<T>();
             this._values = new List<T>();
         }
@@ -94,7 +93,7 @@ namespace Bam.Net.Data
             set;
         }
 
-        protected internal Query<C, T> Query
+        public Query<C, T> Query
         {
             get;
             set;
@@ -213,13 +212,13 @@ namespace Bam.Net.Data
         /// the parent of this DaoCollection.
         /// </summary>
         /// <returns></returns>
-        public T AddNew(bool mapUlongParentIdToLong = false)
+        public T AddNew()
         {
             T dao = new T()
             {
                 Database = Database
             };
-            Add(dao, mapUlongParentIdToLong);
+            Add(dao);
 
             return dao;
         }
@@ -230,7 +229,7 @@ namespace Bam.Net.Data
         /// if a parent is associated with this collection
         /// </summary>
         /// <param name="instance"></param>
-        public virtual void Add(T instance, bool mapUlongParentIdToLong = false)
+        public virtual void Add(T instance)
         {
             if (instance == null)
             {
@@ -239,7 +238,7 @@ namespace Bam.Net.Data
 
             if (_parent != null)
             {
-                AssociateToParent(instance, mapUlongParentIdToLong);
+                AssociateToParent(instance);
             }
 
             this._values.Add(instance);
@@ -277,22 +276,11 @@ namespace Bam.Net.Data
             this._book = new Book<T>(this._values);
         }
 
-        public bool? MapUlongParentIdToLong
-        {
-            get;
-            set;
-        }
-
         private void AssociateToParent(T instance)
-        {
-            AssociateToParent(instance, MapUlongParentIdToLong ?? true);
-        }
-        
-        private void AssociateToParent(T instance, bool mapUlongParentIdToLong)
         {
             Type childType = instance.GetType();
 
-            ValidateParent();
+            Validate();
             
             // from the parent get the ReferencedBy Attribute that matches the referencingClass name
             PropertyInfo[] properties = childType.GetProperties();
@@ -304,25 +292,19 @@ namespace Bam.Net.Data
                     if (fk.ReferencedTable.Equals(Dao.TableName(_parent)) && fk.Name.Equals(ReferencingColumn))
                     {
                         Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        //instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), mapUlongParentIdToLong);
-                        
-                        // TODO: figure out how to fix this; it works for configuration service to mapulongtolong but not for Vault
-                        if (mapUlongParentIdToLong)
-                        {
-                            instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
-                        }
-                        else
-                        {
-                            
-                            instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
-                            //property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
-                        }
+                        //instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
+                        property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
                     }
                 }
             }
         }
 
-        protected void ValidateParent()
+        protected virtual void Validate()
+        {
+            ValidateParent();
+        }
+
+        private void ValidateParent()
         {
             if (_parent == null)
             {
@@ -332,9 +314,9 @@ namespace Bam.Net.Data
             if (_parent.IsNew || _parent.IdValue == null)
             {
                 throw new InvalidOperationException("The parent hasn't been committed, unable to associate child by id");
-            }            
+            }   
         }
-
+        
         public void Save()
         {
             Commit();

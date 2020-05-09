@@ -31,7 +31,7 @@ namespace Bam.Net.Data.Tests.Integration
 
         [ConsoleAction]
         [IntegrationTest]
-        public void CreateTest()
+        public void SqlStringBuilderCreateTest()
         {
             HashSet<Database> dbs = DataTools.Setup();
             dbs.Each(db =>

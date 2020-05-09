@@ -65,7 +65,7 @@ namespace Bam.Net.Data.Tests.Integration
 
 			DaoReferenceObject retrievedById = DaoReferenceObject.OneWhere(c => c.Id == referenceObject.Id, db);
 			retrievedById.ShouldNotBeNull("failed to retrieve object by id");
-			Expect.AreSame(retrievedById.ULongProperty, referenceObject.ULongProperty);
+			Expect.AreEqual(retrievedById.ULongProperty, referenceObject.ULongProperty);
 			Expect.AreEqual(referenceObject, retrievedById);
 			Expect.AreEqual(referenceJson, retrievedById.ToJsonSafe().ToJson());
 			
@@ -153,8 +153,9 @@ namespace Bam.Net.Data.Tests.Integration
 			Expect.AreEqual(fkTable.ToJsonSafe().ToJson(), retrieved.TestFkTablesByTestTableId[0].ToJsonSafe().ToJson());
 		}
 		
+		[ConsoleAction]
 		[IntegrationTest]
-		public void CreateTest()
+		public void DaoCrudCreateTest()
 		{
 			(_testDatabases.Count > 0).ShouldBeTrue();
 			
@@ -171,7 +172,7 @@ namespace Bam.Net.Data.Tests.Integration
 		}
 
 		[IntegrationTest]
-		public void RetrieveTest()
+		public void DaoCrudRetrieveTest()
 		{
 			Expect.IsTrue(_testDatabases.Count > 0);
 			string methodName = MethodBase.GetCurrentMethod().Name;
@@ -196,7 +197,7 @@ namespace Bam.Net.Data.Tests.Integration
 		}
 
 		[IntegrationTest]
-		public void UpdateTest()
+		public void DaoCrudUpdateTest()
 		{
 			Expect.IsTrue(_testDatabases.Count > 0);
 			string methodName = MethodBase.GetCurrentMethod().Name;
@@ -221,7 +222,7 @@ namespace Bam.Net.Data.Tests.Integration
 		}
 
 		[IntegrationTest]
-		public void DeleteTest()
+		public void DaoCrudDeleteTest()
 		{
 			Expect.IsTrue(_testDatabases.Count > 0);
 			string methodName = MethodBase.GetCurrentMethod().Name;

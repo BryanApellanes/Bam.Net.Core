@@ -237,6 +237,44 @@ namespace Bam.Net.Encryption.Tests
         }
 
         [UnitTest]
+        public void SetShouldCreateVaultItem()
+        {
+            SQLiteDatabase db = GetVaultDatabase();
+            VaultItemCollection items = VaultItem.LoadAll(db);
+            Expect.AreEqual(0, items.Count);
+            
+            string password = "This is my awesome password";
+            string sensitiveValue = "Sensitive Value";
+            string keyName = "SensitiveInformation";
+            Vault v = Vault.Retrieve(db, "EncryptedData", password);
+            v.Set(keyName, sensitiveValue);
+
+            items = VaultItem.LoadAll(db);
+            Expect.AreEqual(1, items.Count);
+            Message.PrintLine(items.ToJsonSafe().ToJson());
+        }
+
+        [UnitTest]
+        public void VaultShouldHaveOneKey()
+        {
+            SQLiteDatabase db = GetVaultDatabase();
+            string password = "My secret password";
+            Vault v = Vault.Retrieve(db, "EncryptedData", password);
+            Expect.IsGreaterThan(v.VaultKeysByVaultId.Count, 0);
+            Expect.AreEqual(1, v.VaultKeysByVaultId.Count);
+        }
+
+        [UnitTest]
+        public void ExportShouldNullifyKey()
+        {
+            SQLiteDatabase db = GetVaultDatabase();
+            string password = "My secret password";
+            Vault v = Vault.Retrieve(db, "EncryptedData", password);
+            VaultKeyInfo keyInfo = v.ExportKey();
+            v.VaultKey.ShouldBeNull();
+        }
+        
+        [UnitTest]
         public void CanExportVaultKey()
         {
             SQLiteDatabase db = GetVaultDatabase();
@@ -252,7 +290,7 @@ namespace Bam.Net.Encryption.Tests
             string data = v[keyName];
             Expect.IsNull(data);
 
-            OutLine(keyInfo.ToJson());
+            Message.PrintLine(keyInfo.ToJson());
 
             v.ImportKey(keyInfo);
             data = v[keyName];
@@ -603,9 +641,9 @@ namespace Bam.Net.Encryption.Tests
             return Vault.Load(new FileInfo(filePath), 8.RandomLetters(), out db);
         }
 
-        private static SQLiteDatabase GetVaultDatabase()
+        private static SQLiteDatabase GetVaultDatabase(string name = "TestVaultData")
         {
-            SQLiteDatabase db = new SQLiteDatabase(BamHome.DataPath, "TestVaultData");
+            SQLiteDatabase db = new SQLiteDatabase(BamHome.DataPath, name);
             if (db.DatabaseFile.Exists)
             {
                 File.Delete(db.DatabaseFile.FullName);

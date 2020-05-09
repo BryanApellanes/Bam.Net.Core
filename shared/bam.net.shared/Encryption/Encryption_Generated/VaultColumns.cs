@@ -12,7 +12,7 @@ namespace Bam.Net.Encryption
             : base(columnName)
         { }
 		
-		public VaultColumns KeyColumn
+        public VaultColumns KeyColumn
 		{
 			get
 			{
@@ -51,7 +51,7 @@ namespace Bam.Net.Encryption
         }
 
 
-		protected internal Type TableType
+		public Type DaoType
 		{
 			get
 			{

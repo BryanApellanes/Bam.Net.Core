@@ -1160,7 +1160,43 @@ namespace Bam.Net.Data
             return name;
         }
 
-        ulong? _idValue;
+        ulong? _id;
+        public virtual ulong? TryGetId(Action<Exception> exceptionHandler = null)
+        {
+            try
+            {
+                return GetId();
+            }
+            catch (Exception ex)
+            {
+                exceptionHandler = exceptionHandler ?? (Action<Exception>)(e =>{ });
+                exceptionHandler(ex);
+                return null;
+            }
+        }
+        
+        public virtual ulong? GetId()
+        {
+            object value = PrimaryKey;
+            if (value != null && value != DBNull.Value)
+            {
+                if (value.IsNumber() || value is string)
+                {
+                    _id = new ulong?(Convert.ToUInt64(value));
+                }
+            }
+
+            return _id;
+        }
+
+        public virtual void SetId(ulong? id)
+        {
+            _id = id;
+        }
+        
+        // TODO: deprecate this property in favor of a new GetId() method
+        // TODO: update code generation templates to address the above
+        [Obsolete("Use GetId() instead")]
         [Exclude]
         public ulong? IdValue
         {
@@ -1173,7 +1209,7 @@ namespace Bam.Net.Data
                     {
                         if (value.IsNumber() || value is string)
                         {
-                            _idValue = new ulong?(Convert.ToUInt64(value));
+                            _id = new ulong?(Convert.ToUInt64(value));
                         }                        
                     }
                     catch (Exception ex)
@@ -1183,9 +1219,9 @@ namespace Bam.Net.Data
                         Log.AddEntry("Exception getting IdValue for Dao instance of type ({0}.{1}) in Assembly ({2}) with hash (sha256) ({3})", ex, type.Namespace, type.Name, assembly.FullName, assembly.GetFileInfo().Sha256());
                     }
                 }
-                return _idValue;
+                return _id;
             }
-            set => _idValue = value;
+            set => _id = value;
         }
 
         [Exclude]
