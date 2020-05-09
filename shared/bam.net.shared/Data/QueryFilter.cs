@@ -938,11 +938,6 @@ namespace Bam.Net.Data
         {
             return false;
         }
-
-        public static QueryValue Value(object value)
-        {
-            return new QueryValue(value);
-        }
         
         private static QueryFilter ParenConcat(QueryFilter one, string middle, QueryFilter two)
         {
@@ -1008,9 +1003,9 @@ namespace Bam.Net.Data
             QueryFilter keyColumnFilter = this.Property<QueryFilter>("KeyColumn"); 
             if ((keyColumnFilter?.ColumnName?.Equals(ColumnName)).Value)
             {
-                return new DaoId(value){IdentifierName = keyColumnFilter.ColumnName};
+                return new DaoId(value, this){IdentifierName = keyColumnFilter.ColumnName};
             }
-            return new QueryValue(value);
+            return new QueryValue(value, this);
         }
         
         internal QueryFilter<C> AddRange(IEnumerable<IFilterToken> filters)

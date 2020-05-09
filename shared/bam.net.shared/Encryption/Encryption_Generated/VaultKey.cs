@@ -145,11 +145,11 @@ namespace Bam.Net.Encryption
 	{
 		get
 		{
-			return GetULongValue("VaultId");
+			return GetULongValue("VaultId", false);
 		}
 		set
 		{
-			SetValue("VaultId", value);
+			SetValue("VaultId", value, false);
 		}
 	}
 

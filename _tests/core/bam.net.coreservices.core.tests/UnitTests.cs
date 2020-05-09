@@ -237,7 +237,7 @@ namespace Bam.Net.CoreServices.Tests
         [UnitTest]
         public void NicsWillSerialize()
         {
-            Out(Machine.Current.NetworkInterfaces.ToJson(true));
+            Message.Print(Machine.Current.NetworkInterfaces.ToJson(true));
         }
 
         [UnitTest]

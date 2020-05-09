@@ -1194,7 +1194,7 @@ namespace Bam.Net.Data
             _id = id;
         }
         
-        // TODO: deprecate this property in favor of a new GetId() method
+        // TODO: deprecate this property in favor of GetId() method
         // TODO: update code generation templates to address the above
         [Obsolete("Use GetId() instead")]
         [Exclude]

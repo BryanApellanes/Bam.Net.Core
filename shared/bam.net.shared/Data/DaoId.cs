@@ -6,7 +6,7 @@ namespace Bam.Net.Data
 {
     public class DaoId : QueryValue
     {
-        public DaoId(object value) : base(value)
+        public DaoId(object value, QueryFilter filter) : base(value, filter)
         {
             IdentifierName = "Id";
         }
@@ -30,7 +30,7 @@ namespace Bam.Net.Data
         {
             Args.ThrowIfNull(dao, "dao");
             Args.ThrowIfNull(dao.IdValue, "dao.IdValue");
-            return dao.IdValue.Value;
+            return dao.GetId().Value;
         }
 
         public IUniversalIdResolver GetUniversalIdentifier(Dao data)

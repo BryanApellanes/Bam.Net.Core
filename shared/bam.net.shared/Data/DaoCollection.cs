@@ -292,7 +292,6 @@ namespace Bam.Net.Data
                     if (fk.ReferencedTable.Equals(Dao.TableName(_parent)) && fk.Name.Equals(ReferencingColumn))
                     {
                         Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        //instance.SetValue(ReferencingColumn, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), true);
                         property.SetValue(instance, System.Convert.ChangeType(_parent.IdValue.Value, propertyType), null);
                     }
                 }
