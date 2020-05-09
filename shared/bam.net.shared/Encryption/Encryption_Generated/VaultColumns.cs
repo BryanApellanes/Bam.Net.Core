@@ -11,7 +11,7 @@ namespace Bam.Net.Encryption
         public VaultColumns(string columnName)
             : base(columnName)
         { }
-		
+
         public VaultColumns KeyColumn
 		{
 			get

@@ -171,6 +171,7 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
 
+		[ConsoleAction]
 		[IntegrationTest]
 		public void DaoCrudRetrieveTest()
 		{
@@ -196,6 +197,7 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
 
+		[ConsoleAction]
 		[IntegrationTest]
 		public void DaoCrudUpdateTest()
 		{
@@ -221,6 +223,7 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
 
+		[ConsoleAction]
 		[IntegrationTest]
 		public void DaoCrudDeleteTest()
 		{
@@ -253,6 +256,7 @@ namespace Bam.Net.Data.Tests.Integration
 			public string Name { get; set; }
 		}
 
+		[ConsoleAction]
 		[IntegrationTest]
 		public void PropertyTypeTest()
 		{
@@ -294,6 +298,7 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
 
+		[ConsoleAction]
 		[IntegrationTest]
 		public void ChildListTest()
 		{
@@ -327,6 +332,7 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
 
+		[ConsoleAction]
 		[IntegrationTest]
 		public void XrefListTest()
 		{

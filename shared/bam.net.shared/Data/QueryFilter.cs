@@ -12,7 +12,7 @@ namespace Bam.Net.Data
 {
     public class QueryFilter : IParameterInfoParser, IQueryFilter
     {
-        protected List<IFilterToken> _filters;
+        protected readonly List<IFilterToken> _filters;
         public QueryFilter()
         {
             this._filters = new List<IFilterToken>();

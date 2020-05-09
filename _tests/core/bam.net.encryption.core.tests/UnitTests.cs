@@ -288,7 +288,7 @@ namespace Bam.Net.Encryption.Tests
             VaultKeyInfo keyInfo = v.ExportKey();
 
             string data = v[keyName];
-            Expect.IsNull(data);
+            Expect.IsNull(data, "data should have been null");
 
             Message.PrintLine(keyInfo.ToJson());
 
