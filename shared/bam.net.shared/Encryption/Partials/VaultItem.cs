@@ -1,3 +1,6 @@
+/*
+	Copyright © Bryan Apellanes 2015  
+*/
 // Model is Table
 using System;
 using System.Data;
@@ -8,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.Encryption
 {
-	public partial class VaultKey
+	public partial class VaultItem
 	{
 		  // Your code here
 	}

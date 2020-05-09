@@ -12,6 +12,6 @@ namespace Bam.Net.Encryption
 {
     public class VaultPagedQuery: PagedQuery<VaultColumns, Vault>
     { 
-		public VaultPagedQuery(VaultColumns orderByColumn, VaultQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public VaultPagedQuery(VaultColumns orderByColumn,VaultQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

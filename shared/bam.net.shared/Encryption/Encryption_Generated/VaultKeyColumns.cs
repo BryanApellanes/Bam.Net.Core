@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
@@ -10,13 +9,10 @@ namespace Bam.Net.Encryption
     public class VaultKeyColumns: QueryFilter<VaultKeyColumns>, IFilterToken
     {
         public VaultKeyColumns() { }
-
         public VaultKeyColumns(string columnName)
             : base(columnName)
-        {
-            
-        }
-		
+        { }
+        
         public bool IsKey()
         {
             return (bool)ColumnName?.Equals(KeyColumn.ColumnName);
@@ -43,7 +39,7 @@ namespace Bam.Net.Encryption
                 return _isForeignKey.Value;
             }
         }
-
+        
 		public VaultKeyColumns KeyColumn
 		{
 			get
@@ -52,7 +48,6 @@ namespace Bam.Net.Encryption
 			}
 		}	
 
-				
         public VaultKeyColumns Id
         {
             get
@@ -89,6 +84,7 @@ namespace Bam.Net.Encryption
             }
         }
 
+
         public VaultKeyColumns VaultId
         {
             get
@@ -97,7 +93,7 @@ namespace Bam.Net.Encryption
             }
         }
 
-		protected internal Type DaoType
+		public Type DaoType
 		{
 			get
 			{

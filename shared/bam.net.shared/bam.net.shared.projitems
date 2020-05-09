@@ -637,6 +637,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarnings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UniversalDeterministicIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UniversalIdResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\Vault.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\VaultItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\VaultKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />

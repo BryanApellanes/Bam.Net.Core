@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
 
@@ -11,8 +12,35 @@ namespace Bam.Net.Encryption
         public VaultColumns(string columnName)
             : base(columnName)
         { }
+        
+        public bool IsKey()
+        {
+            return (bool)ColumnName?.Equals(KeyColumn.ColumnName);
+        }
 
-        public VaultColumns KeyColumn
+        private bool? _isForeignKey;
+        public bool IsForeignKey
+        {
+            get
+            {
+                if (_isForeignKey == null)
+                {
+                    PropertyInfo[] props = DaoType.GetProperties();
+                    foreach (PropertyInfo propertyInfo in props)
+                    {
+                        if (propertyInfo.HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute))
+                        {
+                            _isForeignKey = foreignKeyAttribute.Name.Equals(ColumnName);
+                            break;
+                        }
+                    }
+                }
+
+                return _isForeignKey.Value;
+            }
+        }
+        
+		public VaultColumns KeyColumn
 		{
 			get
 			{
@@ -20,7 +48,6 @@ namespace Bam.Net.Encryption
 			}
 		}	
 
-				
         public VaultColumns Id
         {
             get
@@ -49,6 +76,7 @@ namespace Bam.Net.Encryption
                 return new VaultColumns("Name");
             }
         }
+
 
 
 		public Type DaoType

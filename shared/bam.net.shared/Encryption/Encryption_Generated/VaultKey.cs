@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,89 +55,90 @@ namespace Bam.Net.Encryption
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
-	public ulong? Id
-	{
-		get
-		{
-			return GetULongValue("Id");
-		}
-		set
-		{
-			SetValue("Id", value);
-		}
-	}
 
-	// property:Uuid, columnName:Uuid	
-	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
-	public string Uuid
-	{
-		get
-		{
-			return GetStringValue("Uuid");
-		}
-		set
-		{
-			SetValue("Uuid", value);
-		}
-	}
 
-	// property:Cuid, columnName:Cuid	
-	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string Cuid
-	{
-		get
-		{
-			return GetStringValue("Cuid");
-		}
-		set
-		{
-			SetValue("Cuid", value);
-		}
-	}
 
-	// property:RsaKey, columnName:RsaKey	
-	[Bam.Net.Data.Column(Name="RsaKey", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
-	public string RsaKey
-	{
-		get
-		{
-			return GetStringValue("RsaKey");
-		}
-		set
-		{
-			SetValue("RsaKey", value);
-		}
-	}
+		} // end SetChildren
 
-	// property:Password, columnName:Password	
-	[Bam.Net.Data.Column(Name="Password", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string Password
-	{
-		get
-		{
-			return GetStringValue("Password");
-		}
-		set
-		{
-			SetValue("Password", value);
-		}
-	}
+    // property:Id, columnName: Id	
+    [Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
+    public ulong? Id
+    {
+        get
+        {
+            return GetULongValue("Id");
+        }
+        set
+        {
+            SetValue("Id", value);
+        }
+    }
 
+    // property:Uuid, columnName: Uuid	
+    [Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
+    public string Uuid
+    {
+        get
+        {
+            return GetStringValue("Uuid");
+        }
+        set
+        {
+            SetValue("Uuid", value);
+        }
+    }
+
+    // property:Cuid, columnName: Cuid	
+    [Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+    public string Cuid
+    {
+        get
+        {
+            return GetStringValue("Cuid");
+        }
+        set
+        {
+            SetValue("Cuid", value);
+        }
+    }
+
+    // property:RsaKey, columnName: RsaKey	
+    [Bam.Net.Data.Column(Name="RsaKey", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
+    public string RsaKey
+    {
+        get
+        {
+            return GetStringValue("RsaKey");
+        }
+        set
+        {
+            SetValue("RsaKey", value);
+        }
+    }
+
+    // property:Password, columnName: Password	
+    [Bam.Net.Data.Column(Name="Password", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+    public string Password
+    {
+        get
+        {
+            return GetStringValue("Password");
+        }
+        set
+        {
+            SetValue("Password", value);
+        }
+    }
 
 
 	// start VaultId -> VaultId
 	[Bam.Net.Data.ForeignKey(
         Table="VaultKey",
-		Name="VaultId", 
-		DbDataType="BigInt", 
+		Name="VaultId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="Vault",
 		Suffix="1")]
@@ -153,7 +154,7 @@ namespace Bam.Net.Encryption
 		}
 	}
 
-	Vault _vaultOfVaultId;
+    Vault _vaultOfVaultId;
 	public Vault VaultOfVaultId
 	{
 		get
@@ -165,16 +166,18 @@ namespace Bam.Net.Encryption
 			return _vaultOfVaultId;
 		}
 	}
-	
-				
-		
+
+
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -185,111 +188,118 @@ namespace Bam.Net.Encryption
 			{
 				var colFilter = new VaultKeyColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the VaultKey table.
-		/// </summary>
+        /// Return every record in the VaultKey table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static VaultKeyCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<VaultKey>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<VaultKey>();
-			var results = new VaultKeyCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<VaultKey>();
+            var results = new VaultKeyCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<VaultKey>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<VaultKey>> batchProcessor, Database database = null)
 		{
-			await System.Threading.Tasks.Task.Run(async ()=>
+			await Task.Run(async ()=>
 			{
 				VaultKeyColumns columns = new VaultKeyColumns();
 				var orderBy = Bam.Net.Data.Order.By<VaultKeyColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, (c) => c.KeyColumn > 0, orderBy, database);
 				while(results.Count > 0)
 				{
-					await System.Threading.Tasks.Task.Run(()=>
+					await Task.Run(()=>
 					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<VaultKey>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<VaultKeyColumns> where, Action<IEnumerable<VaultKey>> batchProcessor, Database database = null)
 		{
-			await System.Threading.Tasks.Task.Run(async ()=>
+			await Task.Run(async ()=>
 			{
 				VaultKeyColumns columns = new VaultKeyColumns();
 				var orderBy = Bam.Net.Data.Order.By<VaultKeyColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
-					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					await Task.Run(()=>
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (VaultKeyColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<VaultKey>> batchProcessor, Bam.Net.Data.OrderBy<VaultKeyColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<VaultKeyColumns> where, Action<IEnumerable<VaultKey>> batchProcessor, Bam.Net.Data.OrderBy<VaultKeyColumns> orderBy, Database database = null)
 		{
-			await System.Threading.Tasks.Task.Run(async ()=>
+			await Task.Run(async ()=>
 			{
 				VaultKeyColumns columns = new VaultKeyColumns();
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
-					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					await Task.Run(()=>
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (VaultKeyColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
+		}
+
+		public static VaultKey GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified VaultKey.Id was null");
+			return GetById(id.Value, database);
 		}
 
 		public static VaultKey GetById(uint id, Database database = null)
@@ -297,16 +307,37 @@ namespace Bam.Net.Encryption
 			return GetById((ulong)id, database);
 		}
 
+		public static VaultKey GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified VaultKey.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static VaultKey GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static VaultKey GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified VaultKey.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static VaultKey GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static VaultKey GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified VaultKey.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static VaultKey GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
@@ -328,7 +359,7 @@ namespace Bam.Net.Encryption
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static VaultKeyCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<VaultKeyColumns> whereDelegate = (c) => filter;
@@ -336,9 +367,9 @@ namespace Bam.Net.Encryption
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a VaultKeyColumns 
+		/// <param name="where">A Func delegate that recieves a VaultKeyColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -349,27 +380,27 @@ namespace Bam.Net.Encryption
 			database = database ?? Db.For<VaultKey>();
 			return new VaultKeyCollection(database.GetQuery<VaultKeyColumns, VaultKey>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static VaultKeyCollection Where(WhereDelegate<VaultKeyColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<VaultKey>();
 			var results = new VaultKeyCollection(database, database.GetQuery<VaultKeyColumns, VaultKey>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -379,7 +410,7 @@ namespace Bam.Net.Encryption
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static VaultKeyCollection Where(WhereDelegate<VaultKeyColumns> where, OrderBy<VaultKeyColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<VaultKey>();
 			var results = new VaultKeyCollection(database, database.GetQuery<VaultKeyColumns, VaultKey>(where, orderBy), true);
 			return results;
@@ -387,9 +418,9 @@ namespace Bam.Net.Encryption
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;VaultKeyColumns&gt;.
+		/// WhereDelegate`VaultKeyColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -398,9 +429,9 @@ namespace Bam.Net.Encryption
 			var results = new VaultKeyCollection(database, Select<VaultKeyColumns>.From<VaultKey>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -418,8 +449,8 @@ namespace Bam.Net.Encryption
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -432,7 +463,29 @@ namespace Bam.Net.Encryption
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<VaultKeyColumns> where, Database database = null)
+		{
+			SetOneWhere(where, out VaultKey ignore, database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<VaultKeyColumns> where, out VaultKey result, Database database = null)
+		{
+			result = GetOneWhere(where, database);
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -445,7 +498,7 @@ namespace Bam.Net.Encryption
 			if(result == null)
 			{
 				VaultKeyColumns c = new VaultKeyColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -454,11 +507,11 @@ namespace Bam.Net.Encryption
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
 		/// single VaultKey instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -469,12 +522,12 @@ namespace Bam.Net.Encryption
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<VaultKeyColumns>.
+		/// WhereDelegate`VaultKeyColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -485,10 +538,10 @@ namespace Bam.Net.Encryption
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -506,12 +559,12 @@ namespace Bam.Net.Encryption
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -533,7 +586,7 @@ namespace Bam.Net.Encryption
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -555,14 +608,14 @@ namespace Bam.Net.Encryption
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -579,10 +632,10 @@ namespace Bam.Net.Encryption
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -596,10 +649,10 @@ namespace Bam.Net.Encryption
 		public static VaultKeyCollection Top(int count, WhereDelegate<VaultKeyColumns> where, OrderBy<VaultKeyColumns> orderBy, Database database = null)
 		{
 			VaultKeyColumns c = new VaultKeyColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<VaultKey>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<VaultKey>(count);
 			query.Where(filter);
 
@@ -626,10 +679,10 @@ namespace Bam.Net.Encryption
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -683,10 +736,10 @@ namespace Bam.Net.Encryption
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -705,7 +758,7 @@ namespace Bam.Net.Encryption
 		}
 
 		/// <summary>
-		/// Return the count of VaultKeys
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -722,7 +775,7 @@ namespace Bam.Net.Encryption
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a VaultKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between VaultKeyColumns and other values
 		/// </param>
@@ -736,26 +789,26 @@ namespace Bam.Net.Encryption
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<VaultKey>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<VaultKey>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<VaultKey>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<VaultKey>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static VaultKey CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<VaultKey>();			
+			Database db = database ?? Db.For<VaultKey>();
 			var dao = new VaultKey();
 			filter.Parameters.Each(p=>
 			{
@@ -764,7 +817,7 @@ namespace Bam.Net.Encryption
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static VaultKey OneOrThrow(VaultKeyCollection c)
 		{
 			if(c.Count == 1)
@@ -780,4 +833,4 @@ namespace Bam.Net.Encryption
 		}
 
 	}
-}																								
+}
