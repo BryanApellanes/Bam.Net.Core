@@ -61,20 +61,20 @@ namespace Bam.Net.Encryption
 
 		} // end SetChildren
 
-    // property:Id, columnName: Id	
-    [Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
-    public ulong? Id
-    {
-        get
-        {
-            return GetULongValue("Id");
-        }
-        set
-        {
-            SetValue("Id", value);
-        }
-    }
-
+	// property: Id, columnName: Id
+	[Bam.Net.Exclude]
+	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+	public ulong? Id
+	{
+		get
+		{
+			return GetULongValue("Id");
+		}
+		set
+		{
+			SetValue("Id", value);
+		}
+	}
     // property:Uuid, columnName: Uuid	
     [Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
     public string Uuid
