@@ -263,7 +263,7 @@ namespace Bam.Net.UserAccounts.Data
                 SessionState state = this.SessionStatesBySessionId.FirstOrDefault(ss => ss.Name == key);
                 if (state == null)
                 {
-                    state = this.SessionStatesBySessionId.AddNew();
+                    state = this.SessionStatesBySessionId.AddChild();
                     state.Name = key;
                 }
 

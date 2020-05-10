@@ -310,7 +310,7 @@ namespace Bam.Net.Data.Tests.Integration
 				TestTable parent = new TestTable(db);
 				parent.Name = "Parent Test";
 				parent.Save(db);
-				TestFkTable child = parent.TestFkTablesByTestTableId.AddNew();
+				TestFkTable child = parent.TestFkTablesByTestTableId.AddChild();
 				child.Name = "Child ({0})"._Format(6.RandomLetters());
 
 				parent.Save(db);

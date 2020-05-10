@@ -640,6 +640,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\Vault.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\VaultItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\VaultKey.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\VaultKeyNotSetException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
@@ -3238,6 +3239,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Data\Js\SHA256.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Dao.js" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Qi\Qi.js" />
+    <Content Include="$(MSBuildThisFileDirectory)Encryption\regen_db_js.sh" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\Schema\Handlebars\Templates\ForeignKeyColumnsProperty.hbs" />
     <Content Include="$(MSBuildThisFileDirectory)Data\Schema\Templates\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Documentation\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Logging\Http\GenerationConfig.yaml" />

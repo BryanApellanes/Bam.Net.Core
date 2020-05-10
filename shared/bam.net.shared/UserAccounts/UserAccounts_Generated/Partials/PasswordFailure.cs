@@ -16,7 +16,7 @@ namespace Bam.Net.UserAccounts.Data
         public static PasswordFailure Add(string userName, Database db = null)
         {
             User user = User.GetByUserNameOrDie(userName, db);
-            PasswordFailure failure = user.PasswordFailuresByUserId.AddNew();
+            PasswordFailure failure = user.PasswordFailuresByUserId.AddChild();
             failure.DateTime = System.DateTime.UtcNow;
             failure.Save(db);
             return failure;

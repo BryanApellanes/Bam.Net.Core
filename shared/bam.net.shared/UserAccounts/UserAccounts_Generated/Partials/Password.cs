@@ -35,7 +35,7 @@ namespace Bam.Net.UserAccounts.Data
             Password passwordEntry = user.PasswordsByUserId.FirstOrDefault();//Password.OneWhere(c => c.UserId == user.Id);
             if (passwordEntry == null)
             {
-                passwordEntry = user.PasswordsByUserId.AddNew();
+                passwordEntry = user.PasswordsByUserId.AddChild();
             }
             
             passwordEntry.Value = password.Sha1();

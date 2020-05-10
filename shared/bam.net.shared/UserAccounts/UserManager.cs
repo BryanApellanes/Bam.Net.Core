@@ -349,7 +349,7 @@ namespace Bam.Net.UserAccounts
             try
             {
                 User user = User.GetByEmail(emailAddress, Database);
-                PasswordReset reset = user.PasswordResetsByUserId.AddNew();
+                PasswordReset reset = user.PasswordResetsByUserId.AddChild();
                 reset.Token = Guid.NewGuid().ToString();
                 reset.DateTime = new Instant();
                 reset.ExpiresInMinutes = PasswordResetTokensExpireInThisManyMinutes;

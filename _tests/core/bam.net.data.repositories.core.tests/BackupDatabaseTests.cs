@@ -129,7 +129,7 @@ namespace Bam.Net.Data.Repositories.Tests
 				OutLineFormat("\tAdding secondary...", ConsoleColor.Yellow);				
 				RandomNumber.Between(1, 3).Times(n =>
 				{
-					SecondaryObject s = m.SecondaryObjectsByMainId.AddNew();
+					SecondaryObject s = m.SecondaryObjectsByMainId.AddChild();
 					s.Created = DateTime.UtcNow;
 					s.Name = "\tSecondaryObject: {0}"._Format(n + 1);
 				});

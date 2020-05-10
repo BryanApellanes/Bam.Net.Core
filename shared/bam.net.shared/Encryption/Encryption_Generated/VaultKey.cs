@@ -187,7 +187,7 @@ namespace Bam.Net.Encryption
 			else
 			{
 				var colFilter = new VaultKeyColumns();
-				return (colFilter.KeyColumn == IdValue);
+				return (colFilter.KeyColumn == GetId());
 			}
 		}
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
@@ -9,9 +10,11 @@ namespace Bam.Net.Encryption
     public class VaultColumns: QueryFilter<VaultColumns>, IFilterToken
     {
         public VaultColumns() { }
-        public VaultColumns(string columnName)
+        public VaultColumns(string columnName, bool isForeignKey = false)
             : base(columnName)
-        { }
+        { 
+            _isForeignKey = isForeignKey;
+        }
         
         public bool IsKey()
         {
@@ -25,67 +28,29 @@ namespace Bam.Net.Encryption
             {
                 if (_isForeignKey == null)
                 {
-                    PropertyInfo[] props = DaoType.GetProperties();
-                    foreach (PropertyInfo propertyInfo in props)
-                    {
-                        if (propertyInfo.HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute))
-                        {
-                            _isForeignKey = foreignKeyAttribute.Name.Equals(ColumnName);
-                            break;
-                        }
-                    }
+                    PropertyInfo prop = DaoType
+                        .GetProperties()
+                        .FirstOrDefault(pi => ((MemberInfo) pi)
+                            .HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute)
+                                && foreignKeyAttribute.Name.Equals(ColumnName));
+                        _isForeignKey = prop != null;
                 }
 
                 return _isForeignKey.Value;
             }
+            set => _isForeignKey = value;
         }
         
-		public VaultColumns KeyColumn
-		{
-			get
-			{
-				return new VaultColumns("Id");
-			}
-		}	
+		public VaultColumns KeyColumn => new VaultColumns("Id");
 
-        public VaultColumns Id
-        {
-            get
-            {
-                return new VaultColumns("Id");
-            }
-        }
-        public VaultColumns Uuid
-        {
-            get
-            {
-                return new VaultColumns("Uuid");
-            }
-        }
-        public VaultColumns Cuid
-        {
-            get
-            {
-                return new VaultColumns("Cuid");
-            }
-        }
-        public VaultColumns Name
-        {
-            get
-            {
-                return new VaultColumns("Name");
-            }
-        }
+        public VaultColumns Id => new VaultColumns("Id");
+        public VaultColumns Uuid => new VaultColumns("Uuid");
+        public VaultColumns Cuid => new VaultColumns("Cuid");
+        public VaultColumns Name => new VaultColumns("Name");
 
 
 
-		public Type DaoType
-		{
-			get
-			{
-				return typeof(Vault);
-			}
-		}
+		public Type DaoType => typeof(Vault);
 
 		public string Operator { get; set; }
 

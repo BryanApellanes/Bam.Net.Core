@@ -51,6 +51,15 @@ namespace Bam.Net.Encryption
             }
         }
 
+        public string RuntimePassword { internal get; set; }
+        
+        /// <summary>
+        /// Exports the VaultKey from the current vault.  The VaultKey consists of
+        /// an Rsa key pair and an Aes password used to encrypt the current vault.
+        /// VaultKey is null after this operation.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
         public VaultKeyInfo ExportKey(Database db = null)
         {
             db = db ?? Database;
@@ -63,9 +72,14 @@ namespace Bam.Net.Encryption
             return result;
         }
 
+        /// <summary>
+        /// Imports the specified key.  VaultKey is not null after this operation.
+        /// </summary>
+        /// <param name="keyInfo"></param>
+        /// <param name="db"></param>
         public void ImportKey(VaultKeyInfo keyInfo, Database db = null)
         {
-            VaultKey key = VaultKeysByVaultId.AddNew();
+            VaultKey key = VaultKeysByVaultId.AddChild();
             key.RsaKey = keyInfo.RsaKey;
             key.Password = keyInfo.Password;
             key.Save(db);
@@ -270,6 +284,7 @@ namespace Bam.Net.Encryption
             }
 
             result?.Decrypt();
+            result.RuntimePassword = password;
             return result;
         }
 
@@ -300,10 +315,10 @@ namespace Bam.Net.Encryption
             return Create(name, password);
         }
 
-        public static string GeneratePassword()
+        public static string GeneratePassword(int length = 64)
         {
             SecureRandom random = new SecureRandom();
-            string password = random.GenerateSeed(64).ToBase64();
+            string password = random.GenerateSeed(length).ToBase64();
             return password;
         }
 
@@ -320,10 +335,10 @@ namespace Bam.Net.Encryption
         /// </summary>
         /// <param name="database"></param>
         /// <param name="name"></param>
-        /// <param name="password"></param>
+        /// <param name="password">The password that is used as a key if the vault of the specified name does not exist.</param>
         /// <param name="rsaKeyLength"></param>
         /// <returns></returns>
-        public static Vault Create(Database database, string name, string password, RsaKeyLength rsaKeyLength = RsaKeyLength._1024)
+        public static Vault Create(Database database, string name, string password, RsaKeyLength rsaKeyLength = RsaKeyLength._4096)
         {
             Vault result = Vault.OneWhere(c => c.Name == name, database);
             if (result == null)
@@ -333,14 +348,39 @@ namespace Bam.Net.Encryption
                     Name = name
                 };
                 result.Save(database);
-                VaultKey key = result.VaultKeysByVaultId.JustOne(database, false);
-                AsymmetricCipherKeyPair keys = RsaKeyGen.GenerateKeyPair(rsaKeyLength);
-                key.RsaKey = keys.ToPem();
-                key.Password = password.EncryptWithPublicKey(keys);
-                key.Save(database);
+                SetVaultKey(result, password, rsaKeyLength, database);
             }
 
             return result;
+        }
+
+        public void ResetVaultKey(string password, RsaKeyLength rsaKeyLength = RsaKeyLength._4096)
+        {
+            // get all the current decrypted values
+            // delete all the current encrypted values from the database
+            // set the VaultKey
+            // add all the decrypted values back using the new key
+            throw new NotImplementedException();
+        }
+        
+        public void SetVaultKey(string password, RsaKeyLength rsaKeyLength = RsaKeyLength._4096)
+        {
+            SetVaultKey(this, password, rsaKeyLength);
+        }
+
+        public static void SetVaultKey(Vault vault, string password, RsaKeyLength rsaKeyLength)
+        {
+            Args.ThrowIfNull(vault.Database, "vault.Database");
+            SetVaultKey(vault, password, rsaKeyLength, vault.Database);
+        }
+        
+        public static void SetVaultKey(Vault vault, string password, RsaKeyLength rsaKeyLength, Database database)
+        {
+            VaultKey key = vault.VaultKeysByVaultId.JustOne(database, false);
+            AsymmetricCipherKeyPair keys = RsaKeyGen.GenerateKeyPair(rsaKeyLength);
+            key.RsaKey = keys.ToPem();
+            key.Password = password.EncryptWithPublicKey(keys);
+            key.Save(database);
         }
 
         public string ConnectionString => Database.ConnectionString;
@@ -437,6 +477,10 @@ namespace Bam.Net.Encryption
             {
                 lock (writeLock)
                 {
+                    if (VaultKey == null)
+                    {
+                        throw new VaultKeyNotSetException(this);
+                    }
                     if (Decrypt())
                     {
                         if (Items.ContainsKey(key))
@@ -445,7 +489,7 @@ namespace Bam.Net.Encryption
                         }
                         else
                         {
-                            VaultItem item = VaultItemsByVaultId.AddNew();
+                            VaultItem item = VaultItemsByVaultId.AddChild();
                             string password = VaultKey.PrivateKeyDecrypt(VaultKey.Password);
                             item.Key = key.AesPasswordEncrypt(password);
                             item.Value = value.AesPasswordEncrypt(password);

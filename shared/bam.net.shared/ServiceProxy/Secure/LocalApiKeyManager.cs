@@ -162,7 +162,7 @@ namespace Bam.Net.ServiceProxy.Secure
 
         public static ApiKey AddKey(Application app, IUserResolver userResolver, IHttpContext context, Database database = null)
         {
-            ApiKey key = app.ApiKeysByApplicationId.AddNew();
+            ApiKey key = app.ApiKeysByApplicationId.AddChild();
             key.ClientId = GetClientId(app.Name);
             key.Disabled = false;
             key.SharedSecret = ServiceProxySystem.GenerateId();

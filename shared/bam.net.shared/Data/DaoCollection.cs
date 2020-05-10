@@ -212,7 +212,7 @@ namespace Bam.Net.Data
         /// the parent of this DaoCollection.
         /// </summary>
         /// <returns></returns>
-        public T AddNew()
+        public T AddChild()
         {
             T dao = new T()
             {
@@ -456,7 +456,7 @@ namespace Bam.Net.Data
             T result = this.FirstOrDefault();
             if (result == null)
             {
-                result = AddNew();
+                result = AddChild();
                 if (saveIfNew)
                 {
                     result.Save(db);

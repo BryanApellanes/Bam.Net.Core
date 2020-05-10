@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
@@ -9,9 +10,11 @@ namespace {{Namespace}}
     public class {{Model.ClassName}}Columns: QueryFilter<{{Model.ClassName}}Columns>, IFilterToken
     {
         public {{Model.ClassName}}Columns() { }
-        public {{Model.ClassName}}Columns(string columnName)
+        public {{Model.ClassName}}Columns(string columnName, bool isForeignKey = false)
             : base(columnName)
-        { }
+        { 
+            _isForeignKey = isForeignKey;
+        }
         
         public bool IsKey()
         {
@@ -25,45 +28,30 @@ namespace {{Namespace}}
             {
                 if (_isForeignKey == null)
                 {
-                    PropertyInfo[] props = DaoType.GetProperties();
-                    foreach (PropertyInfo propertyInfo in props)
-                    {
-                        if (propertyInfo.HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute))
-                        {
-                            _isForeignKey = foreignKeyAttribute.Name.Equals(ColumnName);
-                            break;
-                        }
-                    }
+                    PropertyInfo prop = DaoType
+                        .GetProperties()
+                        .FirstOrDefault(pi => ((MemberInfo) pi)
+                            .HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute)
+                                && foreignKeyAttribute.Name.Equals(ColumnName));
+                        _isForeignKey = prop != null;
                 }
 
                 return _isForeignKey.Value;
             }
+            set => _isForeignKey = value;
         }
         
-		public {{Model.ClassName}}Columns KeyColumn
-		{
-			get
-			{
-				return new {{Model.ClassName}}Columns("{{Model.Key.Name}}");
-			}
-		}	
+		public {{Model.ClassName}}Columns KeyColumn => new {{Model.ClassName}}Columns("{{Model.Key.Name}}");
 
 {{#each NonForeignKeyColumns}}
 {{> ColumnsProperty }}
 {{/each}}
 
-
 {{#each Model.ForeignKeys }}
-{{> ColumnsProperty }}
+{{> ForeignKeyColumnsProperty }}
 {{/each}}
 
-		public Type DaoType
-		{
-			get
-			{
-				return typeof({{Model.ClassName}});
-			}
-		}
+		public Type DaoType => typeof({{Model.ClassName}});
 
 		public string Operator { get; set; }
 

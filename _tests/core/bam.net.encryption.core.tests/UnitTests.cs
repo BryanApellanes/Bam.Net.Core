@@ -230,7 +230,7 @@ namespace Bam.Net.Encryption.Tests
             Expect.AreEqual(1, items.Count);
             foreach (VaultItem item in items)
             {
-                OutLineFormat("Should be gibberish: Key={0}, Value={1}", item.Key, item.Value);
+                Message.PrintLine("Should be gibberish: Key={0}, Value={1}", item.Key, item.Value);
                 Expect.IsFalse(item.Value.Equals(sensitiveValue));
                 Expect.AreEqual(sensitiveValue, v[keyName]);
             }
@@ -313,7 +313,7 @@ namespace Bam.Net.Encryption.Tests
             string data = v[keyName];
             Expect.IsNull(data);
 
-            OutLine(keyInfo.ToJson());
+            Message.PrintLine(keyInfo.ToJson());
 
             v.ImportKey(keyInfo);
 
@@ -521,35 +521,49 @@ namespace Bam.Net.Encryption.Tests
         }
 
         [UnitTest]
-        public void _1_ShouldBeAbleToCreateVault()
+        public void _1_ShouldBeAbleToCreateByRetrievingVault()
         {
-            Vault testVault = Vault.Retrieve("TestVault", "sometandomtext");
-            testVault["smtphost"] = "smtp.live.com";
-            Expect.AreEqual("smtp.live.com", testVault["smtphost"]);
+            Vault testVault = Vault.Retrieve(nameof(_1_ShouldBeAbleToCreateByRetrievingVault), "somerandomtext_".RandomLetters(8));
+            Expect.IsNotNull(testVault);
         }
 
         [UnitTest]
-        public void _2_ShouldBeAbleToReadVault()
+        public void _1_2_VaultKeyShouldNotBeNullOnRetrieve()
         {
-            Vault testVault = Vault.Retrieve("TestVault");
-            Expect.AreEqual("smtp.live.com", testVault["smtphost"]);
+            Vault testVault = Vault.Retrieve(nameof(_1_2_VaultKeyShouldNotBeNullOnRetrieve), "somerandomtext_".RandomLetters(8));
+            Expect.IsNotNull(testVault?.VaultKey);
+        }
+
+        [UnitTest]
+        public void _1_1_ShouldThrowIfVaultKeyNotSet()
+        {
+            Expect.Throws(() =>
+            {
+                Vault testVault = Vault.Retrieve(nameof(_1_1_ShouldThrowIfVaultKeyNotSet),
+                    $"{nameof(_1_1_ShouldThrowIfVaultKeyNotSet)}_password".RandomLetters(8));
+                VaultKeyInfo keyInfo = testVault.ExportKey();
+                testVault["should fail"] = "this shouldn't make it into the database";
+            }, ex =>
+            {
+                ex.IsObjectOfType<VaultKeyNotSetException>();
+            });
         }
 
         [UnitTest]
         public void ShouldBeAbleToSetNotifyCredentials()
         {
-            OutLine(Notify.CredentialVault["smtphost"]);
-            Notify.CredentialVault["smtphost"] = "smtp.live.com";
-            OutLine(Notify.CredentialVault["smtphost"]);
+            Message.PrintLine(Notify.Credentials["smtphost"]);
+            Notify.Credentials["smtphost"] = "smtp.live.com";
+            Message.PrintLine(Notify.Credentials["smtphost"]);
         }
 
         [UnitTest]
         public void ShouldBeAbleToEnumerateVaultByKeys()
         {
-            Notify.CredentialVault.Keys.Each(key =>
+            Notify.Credentials.Keys.Each(key =>
             {
-                string value = Notify.CredentialVault[key];
-                OutLineFormat("{0}={1}", key, value);
+                string value = Notify.Credentials[key];
+                Message.PrintLine("{0}={1}", key, value);
             });
         }
 
@@ -566,7 +580,7 @@ namespace Bam.Net.Encryption.Tests
             Expect.AreEqual(1, retrieved.Count);
         }
 
-        static string testFile = ".\\TestVaultFile.vault.sqlite";
+        static string testFile = "./TestVaultFile.vault.sqlite";
         [UnitTest]
         public void _3_ShouldBeAbleToCreateVaultInSpecificFile()
         {
@@ -579,9 +593,10 @@ namespace Bam.Net.Encryption.Tests
         public void _4_ShouldBeAbleToReadVaultInSpecificFile()
         {
             FileInfo testFileInfo = new FileInfo(testFile);
-            Vault test = Vault.Load(testFileInfo, "TestVault");
-            OutLine(test["smtphost"]);
-            Expect.AreEqual("smtp.live.com", test["smtphost"]);
+            Vault test = Vault.Load(testFileInfo, nameof(_4_ShouldBeAbleToReadVaultInSpecificFile));
+            test["smtphost"] = "smtp.bamapps.com";
+            Message.PrintLine(test["smtphost"]);
+            Expect.AreEqual("smtp.bamapps.com", test["smtphost"]);
         }
 
         [UnitTest]

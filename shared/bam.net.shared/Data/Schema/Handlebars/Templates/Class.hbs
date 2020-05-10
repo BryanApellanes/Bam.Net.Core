@@ -110,7 +110,7 @@ namespace {{Namespace}}
 			else
 			{
 				var colFilter = new {{Model.ClassName}}Columns();
-				return (colFilter.KeyColumn == IdValue);
+				return (colFilter.KeyColumn == GetId());
 			}
 		}
 
