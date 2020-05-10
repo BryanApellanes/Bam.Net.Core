@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
@@ -9,9 +10,12 @@ namespace Bam.Net.Encryption
     public class VaultKeyColumns: QueryFilter<VaultKeyColumns>, IFilterToken
     {
         public VaultKeyColumns() { }
-        public VaultKeyColumns(string columnName)
+
+        public VaultKeyColumns(string columnName, bool isForeignKey = false)
             : base(columnName)
-        { }
+        {
+            
+        }
         
         public bool IsKey()
         {
@@ -25,36 +29,23 @@ namespace Bam.Net.Encryption
             {
                 if (_isForeignKey == null)
                 {
-                    PropertyInfo[] props = DaoType.GetProperties();
-                    foreach (PropertyInfo propertyInfo in props)
-                    {
-                        if (propertyInfo.HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute))
-                        {
-                            _isForeignKey = foreignKeyAttribute.Name.Equals(ColumnName);
-                            break;
-                        }
-                    }
+                    PropertyInfo prop = DaoType
+                        .GetProperties()
+                        .FirstOrDefault(pi => ((MemberInfo) pi)
+                            .HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute) 
+                                && foreignKeyAttribute.Name.Equals(ColumnName));
+                    _isForeignKey = prop != null;
                 }
 
                 return _isForeignKey.Value;
             }
+            set => _isForeignKey = value;
         }
         
-		public VaultKeyColumns KeyColumn
-		{
-			get
-			{
-				return new VaultKeyColumns("Id");
-			}
-		}	
+		public VaultKeyColumns KeyColumn => new VaultKeyColumns("Id");
 
-        public VaultKeyColumns Id
-        {
-            get
-            {
-                return new VaultKeyColumns("Id");
-            }
-        }
+        public VaultKeyColumns Id => new VaultKeyColumns("Id");
+
         public VaultKeyColumns Uuid
         {
             get
@@ -93,15 +84,9 @@ namespace Bam.Net.Encryption
             }
         }
 
-		public Type DaoType
-		{
-			get
-			{
-				return typeof(VaultKey);
-			}
-		}
+		public Type DaoType => typeof(VaultKey);
 
-		public string Operator { get; set; }
+        public string Operator { get; set; }
 
         public override string ToString()
         {
