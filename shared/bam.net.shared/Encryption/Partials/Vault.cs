@@ -23,6 +23,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Crypto.Engines;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Bam.Net.Encryption
 {
@@ -303,10 +304,10 @@ namespace Bam.Net.Encryption
             return Create(file, name, password);
         }
 
-        public static Vault Create(FileInfo file, string name, string password)
+        public static Vault Create(FileInfo file, string name, string password, RsaKeyLength rsaKeyLength = RsaKeyLength._4096)
         {
             Database db = InitializeVaultDatabase(file.FullName, Log.Default);
-            return Create(db, name, password);
+            return Create(db, name, password, rsaKeyLength);
         }
 
         public static Vault Create(string name)
@@ -322,10 +323,10 @@ namespace Bam.Net.Encryption
             return password;
         }
 
-        public static Vault Create(string name, string password)
+        public static Vault Create(string name, string password, RsaKeyLength rsaKeyLength = RsaKeyLength._4096)
         {
             Database db = InitializeSystemVaultDatabase();
-            return Create(db, name, password);
+            return Create(db, name, password, rsaKeyLength);
         }
 
         /// <summary>
@@ -348,6 +349,10 @@ namespace Bam.Net.Encryption
                     Name = name
                 };
                 result.Save(database);
+            }
+
+            if (result.VaultKey == null)
+            {
                 SetVaultKey(result, password, rsaKeyLength, database);
             }
 

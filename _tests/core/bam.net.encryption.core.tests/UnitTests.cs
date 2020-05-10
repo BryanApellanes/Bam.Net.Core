@@ -552,8 +552,10 @@ namespace Bam.Net.Encryption.Tests
         [UnitTest]
         public void ShouldBeAbleToSetNotifyCredentials()
         {
+            Vault testVault = Vault.Create(nameof(ShouldBeAbleToSetNotifyCredentials), Vault.GeneratePassword(), RsaKeyLength._1024);
+            Notify.Credentials = testVault;
             Message.PrintLine(Notify.Credentials["smtphost"]);
-            Notify.Credentials["smtphost"] = "smtp.live.com";
+            Notify.Credentials["smtphost"] = "smtp.bamapps.com";
             Message.PrintLine(Notify.Credentials["smtphost"]);
         }
 

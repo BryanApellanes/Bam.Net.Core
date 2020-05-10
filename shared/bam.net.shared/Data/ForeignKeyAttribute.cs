@@ -17,13 +17,7 @@ namespace Bam.Net.Data
 			this.AllowNull = true;
         }
 
-        public string ForeignKeyName
-        {
-            get
-            {
-                return string.Format("FK_{0}_{1}{2}", Table, ReferencedTable, Suffix);
-            }
-        }
+        public string ForeignKeyName => $"FK_{Table}_{ReferencedTable}{Suffix}";
 
         public string ReferencedKey { get; set; }
         public string ReferencedTable { get; set; }
