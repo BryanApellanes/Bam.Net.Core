@@ -17,16 +17,16 @@ namespace Bam.Net.Data.Repositories
     /// types that extend other types in a schema that reflects
     /// the inheritance chain.
     /// </summary>
-    public class DatabaseRepository : DaoRepository
+    public class DaoInheritanceRepository : DaoRepository
     {
-        public DatabaseRepository(ITypeTableNameProvider tableNameProvider = null, Func<SchemaDefinition, TypeSchema, string> schemaTempPathProvider = null)
+        public DaoInheritanceRepository(ITypeTableNameProvider tableNameProvider = null, Func<SchemaDefinition, TypeSchema, string> schemaTempPathProvider = null)
             :base(tableNameProvider, schemaTempPathProvider)
         {
             BlockOnChildWrites = true;
             BackgroundThreadQueue = new BackgroundThreadQueue<SqlStringBuilder> { Process = Execute };
         }
 
-        public DatabaseRepository(Database database, ILogger logger = null, ITypeTableNameProvider tableNameProvider = null, Func<SchemaDefinition, TypeSchema, string> schemaTempPathProvider = null) : this(tableNameProvider, schemaTempPathProvider)
+        public DaoInheritanceRepository(Database database, ILogger logger = null, ITypeTableNameProvider tableNameProvider = null, Func<SchemaDefinition, TypeSchema, string> schemaTempPathProvider = null) : this(tableNameProvider, schemaTempPathProvider)
         {
             Database = database;
             TypeSchemaGenerator = new TypeInheritanceSchemaGenerator(tableNameProvider, schemaTempPathProvider);

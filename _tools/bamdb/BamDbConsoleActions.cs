@@ -264,7 +264,6 @@ namespace Bam.Net.Application
             DaoGenerationServiceRegistry registry = DaoGenerationServiceRegistry.ForConfiguration(config, logger);
             SchemaRepositoryGenerator schemaRepositoryGenerator = registry.Get<SchemaRepositoryGenerator>();
 
-            
             if (Directory.Exists(targetDir))
             {
                 Directory.Move(targetDir, targetDir.GetNextDirectoryName());

@@ -22,7 +22,7 @@ namespace Bam.Net.Application
             AddValidArgument("writeTo", false, addAcronym: true, description: "Copy the resulting assembly to the specified directory");
             AddValidArgument("writeSource", false, addAcronym: true, description: "The path to write source files to");            
             AddValidArgument("checkForIds", false, addAcronym: true, description: "Check the specified data classes for Id properties");
-            AddValidArgument("useInheritanceSchema", false, addAcronym: true, description: "If yes the generated Repository will inherit from DatabaseRepository otherwise DaoRepository");
+            AddValidArgument("useInheritanceSchema", false, addAcronym: true, description: "If yes the generated Repository will inherit from DaoInheritanceRepository otherwise DaoRepository");
         }
     }
 }

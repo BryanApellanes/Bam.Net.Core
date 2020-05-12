@@ -37,7 +37,7 @@ namespace Bam.Net.Data.Repositories.Tests
     }
 
     [Serializable]
-    public class DatabaseRepositoryUnitTests: CommandLineTestInterface
+    public class DaoInheritanceRepositoryUnitTests: CommandLineTestInterface
     {
         // Determine from type if it extends something other than object
         // if so create a TableTypeInheritanceChain

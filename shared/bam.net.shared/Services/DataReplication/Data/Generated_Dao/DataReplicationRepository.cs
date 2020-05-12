@@ -17,7 +17,7 @@ using Bam.Net.Services.DataReplication.Data;
 namespace Bam.Net.Services.DataReplication.Data.Dao.Repository
 {
 	[Serializable]
-	public class DataReplicationRepository: DatabaseRepository
+	public class DataReplicationRepository: DaoInheritanceRepository
 	{
 		public DataReplicationRepository()
 		{

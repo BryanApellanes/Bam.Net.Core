@@ -28,7 +28,7 @@ namespace Bam.Net.CoreServices.NameResolution
             _clients = new HashSet<DnsServerDescriptorClient>();
             _recordTypeHandlers = new Dictionary<RecordType, List<Action<IResponse>>>();
             
-            Repository = new DatabaseRepository();
+            Repository = new DaoInheritanceRepository();
             Repository.AddType<DnsResponse>();
             Repository.AddType<RootDnsServerDescriptor>();
             
@@ -36,7 +36,7 @@ namespace Bam.Net.CoreServices.NameResolution
             AddRootServerARecordResolver();
         }
         
-        public DatabaseRepository Repository { get; set; }
+        public DaoInheritanceRepository Repository { get; set; }
         
         public Task<IResponse> Resolve(IRequest request)
         {

@@ -1650,7 +1650,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DaoToDtoGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DatabaseRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DaoInheritanceRepository.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DataProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultDataTypeBehaviors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\DefaultRepoDataHydrator.cs" />

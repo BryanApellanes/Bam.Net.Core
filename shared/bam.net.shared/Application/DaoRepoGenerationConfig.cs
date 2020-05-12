@@ -47,7 +47,7 @@ namespace Bam.Net.Application
         public bool CheckForIds { get; set; }
 
         /// <summary>
-        /// If yes the when generating a Repository, it will inherit from DatabaseRepository otherwise DaoRepository
+        /// If yes the when generating a Repository, it will inherit from DaoInheritanceRepository otherwise DaoRepository
         /// </summary>
         public bool UseInheritanceSchema { get; set; }
     }

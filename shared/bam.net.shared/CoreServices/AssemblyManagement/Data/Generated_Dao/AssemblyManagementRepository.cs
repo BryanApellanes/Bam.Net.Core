@@ -17,7 +17,7 @@ using Bam.Net.CoreServices.AssemblyManagement.Data;
 namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao.Repository
 {
 	[Serializable]
-	public class AssemblyManagementRepository: DatabaseRepository
+	public class AssemblyManagementRepository: DaoInheritanceRepository
 	{
 		public AssemblyManagementRepository()
 		{

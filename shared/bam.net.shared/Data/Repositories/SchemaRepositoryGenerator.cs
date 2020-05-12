@@ -61,7 +61,7 @@ namespace Bam.Net.Data.Repositories
             }
             Config = config;
             CheckIdField = config.CheckForIds;
-            BaseRepositoryType = config.UseInheritanceSchema ? "DatabaseRepository" : "DaoRepository";
+            BaseRepositoryType = config.UseInheritanceSchema ? "DaoInheritanceRepository" : "DaoRepository";
             TargetNamespace = Config.FromNameSpace;
         }
 
