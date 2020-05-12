@@ -36,7 +36,7 @@ namespace Bam.Net.UserAccounts.Data
 
             result.IsConfirmed = isConfirmed;
             result.UserId = user.Id;
-            result.Token = ServiceProxySystem.GenerateId();
+            result.Token = ServiceProxySystem.GenerateSecureRandomString();
             result.IsConfirmed = false;
             result.Save(db);
             user.AccountsByUserId.Reload();

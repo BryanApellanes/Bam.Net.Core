@@ -14,7 +14,7 @@ namespace Bam.Net.Data.Schema
 {
     public abstract class SchemaExtractor : Loggable, ISchemaExtractor, IHasSchemaTempPathProvider
     {
-        Dictionary<SchemaExtractorNamingCollisionStrategy, Func<string, string, string, string>> _namingCollisionHandlers = new Dictionary<SchemaExtractorNamingCollisionStrategy, Func<string, string, string, string>>();
+        readonly Dictionary<SchemaExtractorNamingCollisionStrategy, Func<string, string, string, string>> _namingCollisionHandlers = new Dictionary<SchemaExtractorNamingCollisionStrategy, Func<string, string, string, string>>();
         public SchemaExtractor()
         {
             NameMap = new SchemaNameMap();

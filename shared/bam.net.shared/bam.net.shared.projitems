@@ -635,6 +635,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarningEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarning.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Repositories\TypeSchemaWarnings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Schema\ReverseDaoSchemaExtractor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UniversalDeterministicIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UniversalIdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\Vault.cs" />

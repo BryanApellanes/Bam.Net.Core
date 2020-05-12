@@ -53,13 +53,7 @@ namespace Bam.Net.ServiceProxy.Secure
         /// The name of the cookie used to hold the 
         /// session identifier.  Returns ServiceProxySystem.SessionName
         /// </summary>
-        public static string CookieName
-        {
-            get
-            {
-                return "SPSSESS";
-            }
-        }
+        public static string CookieName => "SPSSESS"; // TODO: rename this to bam-sps-sess
 
         AsymmetricKeyParameter _privateKeyParameter;
         object _privateKeyLock = new object();
@@ -101,7 +95,7 @@ namespace Bam.Net.ServiceProxy.Secure
 
         public static string GenerateId()
         {
-            return ServiceProxySystem.GenerateId();
+            return ServiceProxySystem.GenerateSecureRandomString();
         }
 
         /// <summary>

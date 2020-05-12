@@ -346,7 +346,7 @@ namespace Bam.Net.CoreServices
             {
                 ApplicationNameProvider = new StaticApplicationNameProvider(app.Name),
                 ApplicationClientId = app.Cuid,
-                ApiKey = ServiceProxySystem.GenerateId()
+                ApiKey = ServiceProxySystem.GenerateSecureRandomString()
             };
             return info;
         }

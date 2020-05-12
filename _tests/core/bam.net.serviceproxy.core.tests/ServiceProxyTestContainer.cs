@@ -21,8 +21,10 @@ using Bam.Net.Testing.Unit;
 using Bam.Net.UserAccounts;
 using Bam.Net.UserAccounts.Data;
 using Bam.Net.Web;
+using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using Org.BouncyCastle.Crypto;
+using Type = System.Type;
 
 namespace Bam.Net.ServiceProxy.Tests
 {
@@ -554,8 +556,7 @@ namespace Bam.Net.ServiceProxy.Tests
 			CleanUp();
             BamServer server;
             SecureChannel.Debug = true;
-            SecureServiceProxyClient<ApiKeyRequiredEcho> sspc;
-            ServiceProxyTestHelpers.StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out server, out sspc);
+            ServiceProxyTestHelpers.StartSecureChannelTestServerGetApiKeyRequiredEchoClient(out server, out SecureServiceProxyClient<ApiKeyRequiredEcho> sspc);
             
             string value = "InputValue_".RandomLetters(8);
             bool? thrown = false;
@@ -568,7 +569,7 @@ namespace Bam.Net.ServiceProxy.Tests
             sspc.ApiKeyResolver = resolver;
             string result = sspc.Invoke<string>("Send", new object[] { value });            
 
-            Expect.IsTrue(thrown.Value);
+            thrown.Value.IsTrue();
 			CleanUp();
         }
 
@@ -590,11 +591,9 @@ namespace Bam.Net.ServiceProxy.Tests
         {
 			CleanUp();
             string methodName = MethodBase.GetCurrentMethod().Name;
-            BamServer server;
             SecureChannel.Debug = true;
-            
-            string baseAddress;
-            ServiceProxyTestHelpers.CreateServer(out baseAddress, out server);
+
+            ServiceProxyTestHelpers.CreateServer(out string baseAddress, out BamServer server);
             ServiceProxyTestHelpers.Servers.Add(server); // makes sure it gets stopped after test run
             SecureServiceProxyClient<ApiKeyRequiredEcho> sspc = new SecureServiceProxyClient<ApiKeyRequiredEcho>(baseAddress);
 
@@ -602,8 +601,7 @@ namespace Bam.Net.ServiceProxy.Tests
             IApiKeyProvider keyProvider = new LocalApiKeyProvider();
             ApiKeyResolver keyResolver = new ApiKeyResolver(keyProvider, nameProvider);
 
-            SecureChannel channel = new SecureChannel();
-            channel.ApiKeyResolver = keyResolver;
+            SecureChannel channel = new SecureChannel {ApiKeyResolver = keyResolver};
 
             server.AddCommonService<SecureChannel>(channel);
             server.AddCommonService<ApiKeyRequiredEcho>();
@@ -620,7 +618,7 @@ namespace Bam.Net.ServiceProxy.Tests
             sspc.ApiKeyResolver = keyResolver;
             string result = sspc.Invoke<string>("Send", new object[] { value });
             
-            Expect.IsFalse(thrown.Value, "Exception was thrown");
+            thrown.Value.IsFalse("Exception was thrown");
             Expect.AreEqual(value, result);
 			CleanUp();
         }
@@ -632,20 +630,26 @@ namespace Bam.Net.ServiceProxy.Tests
 			RegisterDb();
             ServiceProxySystem.Register<ApiKeyRequiredEcho>();
             string testName = MethodBase.GetCurrentMethod().Name;
+            IUserResolver mockUserResolver = Substitute.For<IUserResolver>();
+            mockUserResolver.GetUser(Arg.Any<IHttpContext>()).Returns("testUser");
+            LocalApiKeyManager.Default.UserResolver = mockUserResolver;
+            
             IApplicationNameProvider nameProvider = new TestApplicationNameProvider(testName.RandomLetters(6));
             IApiKeyProvider keyProvider = new LocalApiKeyProvider();
 
-            ExecutionRequest er = new ExecutionRequest("ApiKeyRequiredEcho", "Send", "json");
-            er.ApiKeyResolver = new ApiKeyResolver(keyProvider, nameProvider);
+            ExecutionRequest er = new ExecutionRequest("ApiKeyRequiredEcho", "Send", "json")
+            {
+                ApiKeyResolver = new ApiKeyResolver(keyProvider, nameProvider),
+                Request = new ServiceProxyTestHelpers.JsonTestRequest()
+            };
 
-            er.Request = new ServiceProxyTestHelpers.JsonTestRequest();
             string data = ApiParameters.ParametersToJsonParamsObjectString("some random data");
             er.InputString = data;
 
             ValidationResult result = er.Validate();
-            Expect.IsFalse(result.Success);
+            result.Success.IsFalse();
             List<ValidationFailures> failures = new List<ValidationFailures>(result.ValidationFailures);
-            Expect.IsTrue(failures.Contains(ValidationFailures.InvalidApiKeyToken));
+            failures.Contains(ValidationFailures.InvalidApiKeyToken).IsTrue();
         }
 
         [UnitTest]
@@ -661,11 +665,13 @@ namespace Bam.Net.ServiceProxy.Tests
             string className = "ApiKeyRequiredEcho";
             string method= "Send";
             string data = ApiParameters.ParametersToJsonParamsArray("some random data").ToJson();
-            ExecutionRequest er = new ExecutionRequest(className, method, "json");
-            er.JsonParams = data;
-            er.ApiKeyResolver = new ApiKeyResolver(keyProvider, nameProvider);
-            er.Request = new ServiceProxyTestHelpers.FormUrlEncodedTestRequest();   
-            
+            ExecutionRequest er = new ExecutionRequest(className, method, "json")
+            {
+                JsonParams = data,
+                ApiKeyResolver = new ApiKeyResolver(keyProvider, nameProvider),
+                Request = new ServiceProxyTestHelpers.FormUrlEncodedTestRequest()
+            };
+
             er.ApiKeyResolver.SetKeyToken(er.Request.Headers, ApiParameters.GetStringToHash(className, method, data));
 
             ValidationResult result = er.Validate();
@@ -678,6 +684,10 @@ namespace Bam.Net.ServiceProxy.Tests
 			RegisterDb();
             ServiceProxySystem.Register<ApiKeyRequiredEcho>();
 
+            IUserResolver mockUserResolver = Substitute.For<IUserResolver>();
+            mockUserResolver.GetUser(Arg.Any<IHttpContext>()).Returns("testUser");
+            LocalApiKeyManager.Default.UserResolver = mockUserResolver;
+            
             string methodName = MethodBase.GetCurrentMethod().Name;
             IApplicationNameProvider nameProvider = new TestApplicationNameProvider(methodName.RandomLetters(4));
             IApiKeyProvider keyProvider = new LocalApiKeyProvider();
@@ -755,7 +765,7 @@ namespace Bam.Net.ServiceProxy.Tests
             string generatedId;
             TimeSpan generateTime = Exec.Time(() =>
             {
-                generatedId = ServiceProxySystem.GenerateId();
+                generatedId = ServiceProxySystem.GenerateSecureRandomString();
             });
 
             string guid;
@@ -792,12 +802,12 @@ namespace Bam.Net.ServiceProxy.Tests
         }
 
         [ConsoleAction]
-        public void OutputDaoUsersContextAssemblyQaulifiedName()
+        public void OutputDaoUsersContextAssemblyQualifiedName()
         {
             string name = typeof(UserAccountsContext).AssemblyQualifiedName;
             Out(name);
-            name.SafeWriteToFile(".\\UserAccountsContext", true);
-            "notepad .\\UserAccountsContext".Run();
+            name.SafeWriteToFile("./UserAccountsContext", true);
+            "notepad ./UserAccountsContext".Run();
         }
     }
 

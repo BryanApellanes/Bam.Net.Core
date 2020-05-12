@@ -32,10 +32,10 @@ namespace Bam.Net.ServiceProxy
             RoleResolvers.AddResolver(new DefaultRoleResolver());
         }
         
-        public static string GenerateId()
+        public static string GenerateSecureRandomString(int seedLength = 64)
         {
             SecureRandom random = new SecureRandom();            
-            return random.GenerateSeed(64).ToBase64().Sha256();            
+            return random.GenerateSeed(seedLength).ToBase64().Sha256();            
         }
 
 
