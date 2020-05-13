@@ -103,7 +103,7 @@ WHERE
             return Database.GetDataTypeTranslator().TranslateDataType(sqlDataType);
         }
 
-        Dictionary<string, DataTable> _tableIndexes;
+        readonly Dictionary<string, DataTable> _tableIndexes;
         private DataTable GetTableIndex(string tableName)
         {
             if (!_tableIndexes.ContainsKey(tableName))
