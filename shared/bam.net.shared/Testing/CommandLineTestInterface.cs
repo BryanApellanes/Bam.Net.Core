@@ -34,20 +34,33 @@ namespace Bam.Net.Testing
 
         protected static MethodInfo DefaultMethod { get; set; }
 
-        public static void ExecuteMain(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        /// <summary>
+        /// Parses command arguments and executes any switches specified.  Returns true if command line switches were
+        /// specified, otherwise false.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="parseErrorHandler"></param>
+        /// <returns></returns>
+        public static bool ExecuteMain(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
         {
-            ExecuteMain(args, () => { }, parseErrorHandler);
+            return ExecuteMain(args, () => { }, parseErrorHandler);
         }
         
-        public static void ExecuteMain(string[] args, Action preInit, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        /// <summary>
+        /// Parses command arguments and executes any switches specified.  Returns true if command line switches were
+        /// specified, otherwise false.
+        /// </summary>
+        public static bool ExecuteMain(string[] args, Action preInit, ConsoleArgsParsedDelegate parseErrorHandler = null)
         {
             AddSwitches();
             AddConfigurationSwitches();
             Initialize(args, preInit, parseErrorHandler);
             if (Arguments.Length > 0 && !Arguments.Contains("i"))
             {
-                ExecuteSwitches(false, new ConsoleLogger());
+                return ExecuteSwitches(false, new ConsoleLogger());
             }
+
+            return false;
         }
 
         public static void Initialize(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Bam.Net.ServiceProxy.Secure;
 using CsQuery.ExtensionMethods;
 
 namespace Bam.Net.Data.Schema
@@ -21,7 +22,7 @@ namespace Bam.Net.Data.Schema
         private Dictionary<string, Type> _daoTypes;
         private Dictionary<string, List<ColumnAttribute>> _columnAttributes;
         protected DataTypeTranslator DataTypeTranslator { get; }
-        protected void Analyze()
+        public void Analyze()
         {
             if (_daoTypes == null)
             {
@@ -29,9 +30,11 @@ namespace Bam.Net.Data.Schema
                 Args.ThrowIfNullOrEmpty(Namespace, nameof(Namespace));
 
                 _daoTypes = new Dictionary<string, Type>();
+                
                 Assembly
                     .GetTypes()
                     .Where(type =>
+                        type.Namespace != null && 
                         type.Namespace.Equals(Namespace) &&
                         type.ExtendsType(typeof(Dao)) &&
                         type.HasCustomAttributeOfType<TableAttribute>())
@@ -63,7 +66,8 @@ namespace Bam.Net.Data.Schema
             if (uniqueSchemaNames.Count > 1)
             {
                 throw new InvalidOperationException($"Multiple schema names were found in the specified assembly ({Assembly.FullName}) and namespace ({Namespace}): {string.Join(", ", uniqueSchemaNames.ToArray())}");
-            }else if (uniqueSchemaNames.Count == 0)
+            }
+            else if (uniqueSchemaNames.Count == 0)
             {
                 throw new InvalidOperationException($"No dao types were found in the specified namespace ({Namespace}) of the specified assembly ({Assembly.FullName}).");
             }

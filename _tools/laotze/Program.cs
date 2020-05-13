@@ -17,10 +17,11 @@ using System.IO;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using Bam.Net.Data.Repositories;
+using Bam.Net.Testing;
 
-namespace laotze
+namespace Bam.Net.Data
 {
-    class Program: CommandLineInterface
+    public partial class LaoTze: CommandLineTestInterface
     {
         static TargetTableEventDelegate BeforeTableHandler = (ns, t) =>
         {
@@ -55,13 +56,39 @@ namespace laotze
                 Pause("Press a key to continue...");
             }
 
+            AddValidArguments();
+            if (!ExecuteMain(args))
+            {
+                GenerateDaoCode();
+            }
+        }
+
+        [ConsoleAction("reverseDao", "Generate a bam schema file from existing dao code.")]
+        public static void ReverseDao()
+        {
+            string assemblyPath = GetArgument("assembly");
+            string nameSpace = GetArgument("nameSpace");
+            Args.ThrowIfNullOrEmpty(assemblyPath, "assemblyPath");
+            Args.ThrowIfNullOrEmpty(nameSpace, "nameSpace");
+            FileInfo fileInfo = new FileInfo(assemblyPath);
+            Assembly assembly = Assembly.LoadFrom(fileInfo.FullName);
+            ReverseDaoSchemaExtractor extractor = new ReverseDaoSchemaExtractor(assembly, nameSpace);
+            extractor.Analyze();
+            SchemaDefinition schemaDefinition = extractor.Extract();
+            FileInfo schemaFile = new FileInfo($"./{nameSpace}.schema.json");
+            schemaDefinition.Save(schemaFile.FullName);
+            Message.PrintLine("Wrote schema file: {0}", ConsoleColor.Cyan, schemaFile.FullName);
+        }
+        
+        [ConsoleAction("gen", "Generate dao code from *.db.js file.")]
+        public static void GenerateDaoCode()
+        {
             if (Arguments.Contains("root"))
             {
                 DirectoryInfo rootDirectory = new DirectoryInfo(Arguments["root"]);
                 if (!rootDirectory.Exists)
                 {
                     Message.PrintLine("Specified root directory does not exist: {0}", ConsoleColor.Red, rootDirectory.FullName);
-                    Pause();
                     Environment.Exit(1);
                 }
 
@@ -82,7 +109,8 @@ namespace laotze
                         }
                         else
                         {
-                            Message.PrintLine("Processing each: {0}", ConsoleColor.Yellow, dbjs.ToDelimited<FileInfo>(f => f.FullName, "\r\n\t"));
+                            Message.PrintLine("Processing each: {0}", ConsoleColor.Yellow,
+                                dbjs.ToDelimited<FileInfo>(f => f.FullName, "\r\n\t"));
                         }
                     }
 
@@ -91,7 +119,7 @@ namespace laotze
                         try
                         {
                             Message.PrintLine("Processing {0}...", ConsoleColor.Yellow, file.FullName);
-							CuidSchemaManager manager = new CuidSchemaManager();                        
+                            CuidSchemaManager manager = new CuidSchemaManager();
 
                             DirectoryInfo fileParent = file.Directory;
                             DirectoryInfo genToDir = GetTargetDirectory(file);
@@ -100,32 +128,34 @@ namespace laotze
 
                             DirectoryInfo partialsDir = GetPartialsDir(genToDir);
 
-							SchemaManagerResult managerResult = null;
-							if (!Arguments.Contains("dll"))
-							{
-								bool compile = !keep;
-								managerResult = manager.GenerateDaoAssembly(file, compile, keep, genToDir.FullName, partialsDir.FullName);
-							}
-							else
-							{
-								managerResult = manager.GenerateDaoAssembly(file, new DirectoryInfo(Arguments["dll"]), keep, genToDir.FullName, partialsDir.FullName);
-							}
+                            SchemaManagerResult managerResult = null;
+                            if (!Arguments.Contains("dll"))
+                            {
+                                bool compile = !keep;
+                                managerResult = manager.GenerateDaoAssembly(file, compile, keep, genToDir.FullName,
+                                    partialsDir.FullName);
+                            }
+                            else
+                            {
+                                managerResult = manager.GenerateDaoAssembly(file, new DirectoryInfo(Arguments["dll"]), keep,
+                                    genToDir.FullName, partialsDir.FullName);
+                            }
 
                             if (!managerResult.Success)
                             {
                                 throw new Exception(managerResult.Message);
                             }
 
-							if (Arguments.Contains("sql"))
-							{
-								WriteSqlFile(managerResult);
-							}
+                            if (Arguments.Contains("sql"))
+                            {
+                                WriteSqlFile(managerResult);
+                            }
 
                             Message.PrintLine(managerResult.Message, ConsoleColor.Green);
-							if (managerResult.DaoAssembly != null)
-							{
-								OutLineFormat("Compiled to: {0}", managerResult.DaoAssembly.FullName, ConsoleColor.Yellow);
-							}
+                            if (managerResult.DaoAssembly != null)
+                            {
+                                Message.PrintLine("Compiled to: {0}", managerResult.DaoAssembly.FullName, ConsoleColor.Yellow);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -139,15 +169,16 @@ namespace laotze
                 }
                 else
                 {
-                    OutLine("No *.db.js files were found", ConsoleColor.Yellow);
+                    Message.PrintLine("No *.db.js files were found", ConsoleColor.Yellow);
                 }
             }
             else
             {
                 if (string.IsNullOrEmpty(Arguments["conn"]))
                 {
-                    OutLine("Please specify a connection name from the config or a directory to search", ConsoleColor.Yellow);
-                    Pause();
+                    Message.PrintLine("Please specify a connection name from the config or a directory to search",
+                        ConsoleColor.Yellow);
+                    Exit(1);
                 }
                 else
                 {
@@ -275,20 +306,19 @@ namespace laotze
                 connectionName = Arguments["conn"];
             }
 
-            OutLineFormat("Extracting schema using the connection ({0})", connectionName);
+            Message.PrintLine("Extracting schema using the connection ({0})", connectionName);
             SchemaDefinition schema = ExtractSchema(connectionName, filePath);
             OutLine("Extraction complete...");
 
             if (gen)
             {
-                OutLineFormat("Generating csharp for ({0})", schema.File);
+                Message.PrintLine("Generating csharp for ({0})", schema.File);
                 Generate(schema, inspector, silent);
-                OutLine("Generation complete...");
+                Message.PrintLine("Generation complete...");
                 if (compile)
                 {
                     DirectoryInfo dir = new DirectoryInfo(Arguments["gen"]);
-                    List<DirectoryInfo> dirs = new List<DirectoryInfo>();
-                    dirs.Add(dir);
+                    List<DirectoryInfo> dirs = new List<DirectoryInfo> {dir};
                     if (!string.IsNullOrEmpty(Arguments["p"]))
                     {
                         dirs.Add(GetPartialsDir(dir));
@@ -296,9 +326,9 @@ namespace laotze
 
                     FileInfo file = new FileInfo(Arguments["dll"]);
 
-                    OutLineFormat("Compiling sources in ({0})", dir.FullName);
+                    Message.PrintLine("Compiling sources in ({0})", dir.FullName);
                     Compile(dirs.ToArray(), file);
-                    OutLineFormat("Compilation complete...");
+                    Message.PrintLine("Compilation complete...");
                 }
             }
         }
