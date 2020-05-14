@@ -59,29 +59,43 @@ namespace Bam.Net.Data
             AddValidArguments();
             if (!ExecuteMain(args))
             {
-                GenerateDaoCode();
+                GenerateDaoFromDbJs();
             }
         }
 
-        [ConsoleAction("reverseDao", "Generate a bam schema file from existing dao code.")]
-        public static void ReverseDao()
+        [ConsoleAction("genSchemaFromDao", "Generate a bam schema file from existing dao code.")]
+        public static void GenerateSchemaFromDao()
         {
             string assemblyPath = GetArgument("assembly");
             string nameSpace = GetArgument("nameSpace");
-            Args.ThrowIfNullOrEmpty(assemblyPath, "assemblyPath");
-            Args.ThrowIfNullOrEmpty(nameSpace, "nameSpace");
+            Args.ThrowIfNullOrEmpty(assemblyPath, "assembly");
+            Args.ThrowIfNullOrEmpty(nameSpace, "specify /nameSpace:<value>");
+            
             FileInfo fileInfo = new FileInfo(assemblyPath);
             Assembly assembly = Assembly.LoadFrom(fileInfo.FullName);
             ReverseDaoSchemaExtractor extractor = new ReverseDaoSchemaExtractor(assembly, nameSpace);
-            extractor.Analyze();
             SchemaDefinition schemaDefinition = extractor.Extract();
             FileInfo schemaFile = new FileInfo($"./{nameSpace}.schema.json");
             schemaDefinition.Save(schemaFile.FullName);
             Message.PrintLine("Wrote schema file: {0}", ConsoleColor.Cyan, schemaFile.FullName);
         }
+
+        [ConsoleAction("genDaoFromSchema", "Generate dao code from a bam schema file.")]
+        public static void GenerateDaoFromSchema()
+        {
+            string schemaPath = GetArgument("schema");
+            string nameSpace = GetArgument("nameSpace");
+            string outputPath = GetPathArgument("output");
+            outputPath = string.IsNullOrEmpty(outputPath) ? "./Dao_Generated" : outputPath;
+            Args.ThrowIfNullOrEmpty(nameSpace, "specify /nameSpace:<value>");
+
+            DaoGenerator daoGenerator = new DaoGenerator(nameSpace) {GenerateQiClasses = false};
+            daoGenerator.Generate(SchemaDefinition.Load(schemaPath), new HomePath(outputPath));
+            Message.PrintLine("Generation complete: {0}", ConsoleColor.Green, outputPath);
+        }
         
-        [ConsoleAction("gen", "Generate dao code from *.db.js file.")]
-        public static void GenerateDaoCode()
+        [ConsoleAction("genDaoFromDbJs", "Generate dao code from *.db.js file.")]
+        public static void GenerateDaoFromDbJs()
         {
             if (Arguments.Contains("root"))
             {

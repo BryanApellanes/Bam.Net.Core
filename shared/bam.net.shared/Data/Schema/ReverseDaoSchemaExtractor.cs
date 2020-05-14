@@ -22,37 +22,55 @@ namespace Bam.Net.Data.Schema
         private Dictionary<string, Type> _daoTypes;
         private Dictionary<string, List<ColumnAttribute>> _columnAttributes;
         protected DataTypeTranslator DataTypeTranslator { get; }
+
+        private bool _analyzed;
+        private readonly object _analyzeLock = new object();
         public void Analyze()
         {
-            if (_daoTypes == null)
+            if (!_analyzed)
             {
-                Args.ThrowIfNull(Assembly, nameof(Assembly));
-                Args.ThrowIfNullOrEmpty(Namespace, nameof(Namespace));
-
-                _daoTypes = new Dictionary<string, Type>();
-                
-                Assembly
-                    .GetTypes()
-                    .Where(type =>
-                        type.Namespace != null && 
-                        type.Namespace.Equals(Namespace) &&
-                        type.ExtendsType(typeof(Dao)) &&
-                        type.HasCustomAttributeOfType<TableAttribute>())
-                    .Each(type => _daoTypes.Add(Dao.TableName(type), type));
-            }
-
-            if (_columnAttributes == null)
-            {
-                _columnAttributes = new Dictionary<string, List<ColumnAttribute>>();
-                foreach (Type daoType in _daoTypes.Values)
+                lock (_analyzeLock)
                 {
-                    _columnAttributes.Add(Dao.TableName(daoType), 
-                        daoType.GetProperties()
-                            .Where(prop=> prop.HasCustomAttributeOfType<ColumnAttribute>())
-                            .Select(prop=> prop.GetCustomAttributeOfType<ColumnAttribute>())
-                            .ToList());
+                    if (_daoTypes == null)
+                    {
+                        Args.ThrowIfNull(Assembly, nameof(Assembly));
+                        Args.ThrowIfNullOrEmpty(Namespace, nameof(Namespace));
+
+                        _daoTypes = new Dictionary<string, Type>();
+                
+                        Assembly
+                            .GetTypes()
+                            .Where(type =>
+                                type.Namespace != null && 
+                                type.Namespace.Equals(Namespace) &&
+                                type.ExtendsType(typeof(Dao)) &&
+                                type.HasCustomAttributeOfType<TableAttribute>())
+                            .Each(type => _daoTypes.Add(Dao.TableName(type), type));
+                    }
+
+                    if (_columnAttributes == null)
+                    {
+                        _columnAttributes = new Dictionary<string, List<ColumnAttribute>>();
+                        foreach (Type daoType in _daoTypes.Values)
+                        {
+                            _columnAttributes.Add(Dao.TableName(daoType), 
+                                daoType.GetProperties()
+                                    .Where(prop=> prop.HasCustomAttributeOfType<ColumnAttribute>())
+                                    .Select(prop=> prop.GetCustomAttributeOfType<ColumnAttribute>())
+                                    .ToList());
+                        }
+                    }
                 }
             }
+        }
+
+        public override SchemaDefinition Extract()
+        {
+            if (!_analyzed)
+            {
+                Analyze();
+            }
+            return base.Extract();
         }
 
         public override string GetSchemaName()

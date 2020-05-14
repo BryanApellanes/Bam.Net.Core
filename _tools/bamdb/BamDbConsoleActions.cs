@@ -35,7 +35,7 @@ namespace Bam.Net.Application
                 }
                 else if (config.WriteSourceTo.StartsWith("~/"))
                 {
-                    config.WriteSourceTo = new UnixPath(config.WriteSourceTo);
+                    config.WriteSourceTo = new HomePath(config.WriteSourceTo);
                 }
 
                 SchemaRepositoryGenerator schemaRepositoryGenerator = GenerateRepositorySource(config, logger);

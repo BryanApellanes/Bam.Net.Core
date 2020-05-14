@@ -293,7 +293,7 @@ namespace Bam.Net.Data.Schema
         
         /// <summary>
         /// Loads a SchemaDefinition from the specified file, the file
-        /// will be created if it doesn't exist.
+        /// is created if it doesn't exist.
         /// </summary>
         /// <param name="schemaFile"></param>
         /// <returns></returns>

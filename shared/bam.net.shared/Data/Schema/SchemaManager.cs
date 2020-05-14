@@ -450,7 +450,7 @@ namespace Bam.Net.Data.Schema
         /// </summary>
         /// <param name="simpleSchemaJson"></param>
         /// <returns></returns>
-        public SchemaManagerResult GenerateDaoAssembly(string simpleSchemaJson, DirectoryInfo compileTo = null, bool keepSource = false, string tempDir = ".\\tmp", string partialsDir = null)
+        public SchemaManagerResult GenerateDaoAssembly(string simpleSchemaJson, DirectoryInfo compileTo = null, bool keepSource = false, string tempDir = "./tmp", string partialsDir = null)
         {
             try
             {
@@ -530,13 +530,7 @@ namespace Bam.Net.Data.Schema
             set;
         }
 
-        public string BinDir
-        {
-            get
-            {
-                return Path.Combine(RootDir, "bin");
-            }
-        }
+        public string BinDir => Path.Combine(RootDir, "bin");
 
         /// <summary>
         /// Adds a cross reference table (xref) which creates a many
@@ -546,9 +540,9 @@ namespace Bam.Net.Data.Schema
         /// <param name="rightTableName"></param>
         public void SetXref(string leftTableName, string rightTableName)
         {
-            string xrefTableName = string.Format("{0}{1}", leftTableName, rightTableName);
-            string leftColumnName = string.Format("{0}Id", leftTableName);
-            string rightColumnName = string.Format("{0}Id", rightTableName);
+            string xrefTableName = $"{leftTableName}{rightTableName}";
+            string leftColumnName = $"{leftTableName}Id";
+            string rightColumnName = $"{rightTableName}Id";
             AddXref(leftTableName, rightTableName);
             AddTable(xrefTableName);
             AddColumn(xrefTableName, new Column("Id", DataTypes.ULong, false));
@@ -705,9 +699,9 @@ namespace Bam.Net.Data.Schema
 
         private static void SetXref(SchemaManager manager, List<dynamic> foreignKeys, string leftTableName, string rightTableName)
         {
-            string xrefTableName = string.Format("{0}{1}", leftTableName, rightTableName);
-            string leftColumnName = string.Format("{0}Id", leftTableName);
-            string rightColumnName = string.Format("{0}Id", rightTableName);
+            string xrefTableName = $"{leftTableName}{rightTableName}";
+            string leftColumnName = $"{leftTableName}Id";
+            string rightColumnName = $"{rightTableName}Id";
 
             manager.AddXref(leftTableName, rightTableName);
 
@@ -743,7 +737,7 @@ namespace Bam.Net.Data.Schema
                 referenceAssemblies[i] = File.Exists(binPath) ? binPath : assembly;
             }
 
-            CompilerResults results = AdHocCSharpCompiler.CompileDirectories(dirs, string.Format("{0}.dll", nameSpace), referenceAssemblies, false);
+            CompilerResults results = AdHocCSharpCompiler.CompileDirectories(dirs, $"{nameSpace}.dll", referenceAssemblies, false);
             if (results.Errors.Count > 0)
             {
                 CompilerErrors = results.Errors;
@@ -787,7 +781,7 @@ namespace Bam.Net.Data.Schema
             FileInfo backupFile = new FileInfo(Path.Combine(
                         binFileInfo.Directory.FullName,
                         "backup",
-                        string.Format("{0}_{1}_{2}.dll", Path.GetFileNameWithoutExtension(fileName), "".RandomLetters(4), DateTime.Now.ToJulianDate().ToString())));
+                        $"{Path.GetFileNameWithoutExtension(fileName)}_{"".RandomLetters(4)}_{DateTime.Now.ToJulianDate().ToString()}.dll"));
 
             if (!backupFile.Directory.Exists)
             {
@@ -829,8 +823,7 @@ namespace Bam.Net.Data.Schema
 
                 generator.GenerateComplete += (gen, s) =>
                 {
-                    List<DirectoryInfo> daoDirs = new List<DirectoryInfo>();
-                    daoDirs.Add(daoDir);
+                    List<DirectoryInfo> daoDirs = new List<DirectoryInfo> {daoDir};
                     if (!string.IsNullOrEmpty(partialsDir))
                     {
                         daoDirs.Add(new DirectoryInfo(partialsDir));
@@ -844,13 +837,12 @@ namespace Bam.Net.Data.Schema
                         managerResult.Message = string.Empty;
                         foreach (CompilerError err in GetErrors())
                         {
-                            managerResult.Message = string.Format("{0}\r\nFile=>{1}\r\n{2}:::Line {3}, Column {4}::{5}",
-                                    managerResult.Message, err.FileName, err.ErrorNumber, err.Line, err.Column, err.ErrorText);
+                            managerResult.Message = $"{managerResult.Message}\r\nFile=>{err.FileName}\r\n{err.ErrorNumber}:::Line {err.Line}, Column {err.Column}::{err.ErrorText}";
                         }
                     }
                     else
                     {
-                        managerResult.Message = string.Format("{0}\r\n{1}", managerResult.Message, "Dao compiled");
+                        managerResult.Message = $"{managerResult.Message}\r\nDao Compiled";
                         managerResult.Success = true;
                     }
 

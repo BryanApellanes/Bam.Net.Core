@@ -1,18 +1,21 @@
 namespace Bam.Net
 {
-    public class UnixPath
+    /// <summary>
+    /// If the specified path starts with tilde (~), resolves ~ to the user's home directory.
+    /// </summary>
+    public class HomePath
     {
-        public static implicit operator string(UnixPath unixPath)
+        public static implicit operator string(HomePath homePath)
         {
-            return unixPath.Resolve();
+            return homePath.Resolve();
         }
         
-        public UnixPath(string path)
+        public HomePath(string path)
         {
             Path = path;
         }
         
-        public string Path { get; set; }
+        public string Path { get; private set; }
         
         public string Resolve()
         {

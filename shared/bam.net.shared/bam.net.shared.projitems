@@ -932,7 +932,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Testing\UnitTestFailure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Try.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UnixPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HomePath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UserAccounts\IDaoUserResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VersionSpec.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebServiceAttribute.cs" />

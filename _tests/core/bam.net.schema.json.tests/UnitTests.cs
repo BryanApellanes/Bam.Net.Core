@@ -21,12 +21,12 @@ namespace Bam.Net.Schema.Json.Tests
     [Serializable]
     public class UnitTests : CommandLineTestInterface
     {
-        private UnixPath RootData = new UnixPath("~/.data/JsonSchema/");
-        private UnixPath ApplicationSchema = new UnixPath("~/.data/JsonSchema/application_v1.yaml");
-        private UnixPath CensusSchema = new UnixPath("~/.data/JsonSchema/census_v1.yaml");
-        private UnixPath CommonSchema = new UnixPath("~/.data/JsonSchema/common_v1.yaml");
-        private UnixPath OrganizationDataPath => new UnixPath(Path.Combine(RootData, "organization_v1.yaml"));
-        private UnixPath CompanyDataPath => new UnixPath(Path.Combine(RootData, "company_v1.yaml"));
+        private HomePath RootData = new HomePath("~/.data/JsonSchema/");
+        private HomePath ApplicationSchema = new HomePath("~/.data/JsonSchema/application_v1.yaml");
+        private HomePath CensusSchema = new HomePath("~/.data/JsonSchema/census_v1.yaml");
+        private HomePath CommonSchema = new HomePath("~/.data/JsonSchema/common_v1.yaml");
+        private HomePath OrganizationDataPath => new HomePath(Path.Combine(RootData, "organization_v1.yaml"));
+        private HomePath CompanyDataPath => new HomePath(Path.Combine(RootData, "company_v1.yaml"));
 
         [UnitTest]
         [TestGroup("JSchema")]
@@ -109,7 +109,7 @@ namespace Bam.Net.Schema.Json.Tests
         {
              JSchemaManagementRegistry registry = new JSchemaManagementRegistry(RootData);
              JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
-             JSchemaClass common = classManager.LoadJSchemaClassFile(new UnixPath("~/.data/JsonSchema/common_v1.yaml"));
+             JSchemaClass common = classManager.LoadJSchemaClassFile(new HomePath("~/.data/JsonSchema/common_v1.yaml"));
              OutLine(common.ToJson(true));
              IEnumerable<JSchemaClass> definitions = JSchemaClass.FromDefinitions(common.JSchema, classManager);
              OutLine(definitions.ToJson(true), ConsoleColor.Yellow);
@@ -121,7 +121,7 @@ namespace Bam.Net.Schema.Json.Tests
         {
             JSchemaManagementRegistry registry = JSchemaManagementRegistry.CreateForYaml(RootData, "@type", "class", "className");
             JSchemaClassManager classManager = registry.Get<JSchemaClassManager>();
-            JSchemaClass app = classManager.LoadJSchemaClassFile(new UnixPath("~/.data/JsonSchema/application_v1.yaml"));
+            JSchemaClass app = classManager.LoadJSchemaClassFile(new HomePath("~/.data/JsonSchema/application_v1.yaml"));
             Expect.IsNotNull(app);
             Expect.AreEqual("Application", app.ClassName);
             Expect.AreEqual(22, app.Properties.Count());
@@ -150,7 +150,7 @@ namespace Bam.Net.Schema.Json.Tests
                 string[] split = javaType.DelimitSplit(".");
                 return split[split.Length - 1];
             });
-            JSchemaClass census = classManager.LoadJSchemaClassFile(new UnixPath("~/.data/JsonSchema/census_v1.yaml"));
+            JSchemaClass census = classManager.LoadJSchemaClassFile(new HomePath("~/.data/JsonSchema/census_v1.yaml"));
             Expect.IsNotNull(census);
             Expect.AreEqual("Census", census.ClassName);
             Expect.AreEqual(4, census.Properties.Count());
@@ -189,7 +189,7 @@ namespace Bam.Net.Schema.Json.Tests
                 output.AppendLine(jSchemaClass.ToJson(true));
                 output.AppendLine("****");
             }
-            FileInfo outputFile = new FileInfo(new UnixPath("~/.bam/data/testoutput.txt"));
+            FileInfo outputFile = new FileInfo(new HomePath("~/.bam/data/testoutput.txt"));
             output.ToString().SafeWriteToFile(outputFile.FullName, true);
             Console.WriteLine("Wrote file {0}", outputFile.FullName);
         }
@@ -212,7 +212,7 @@ namespace Bam.Net.Schema.Json.Tests
                 output.AppendLine(jSchemaClass.ToJson(true));
                 output.AppendLine("****");
             }
-            FileInfo outputFile = new FileInfo(new UnixPath("~/.bam/data/javaTestOutput.txt"));
+            FileInfo outputFile = new FileInfo(new HomePath("~/.bam/data/javaTestOutput.txt"));
             output.ToString().SafeWriteToFile(outputFile.FullName, true);
             Console.WriteLine("Wrote file {0}", outputFile.FullName);
         }
@@ -253,7 +253,7 @@ namespace Bam.Net.Schema.Json.Tests
         [UnitTest]
         public void CanResolveUnixPath()
         {
-            UnixPath path = new UnixPath("~/src");
+            HomePath path = new HomePath("~/src");
             path.Resolve().StartsWith("~").IsFalse();
             path.Path.StartsWith("~/").IsTrue();
             path.Resolve().StartsWith(BamHome.UserHome);

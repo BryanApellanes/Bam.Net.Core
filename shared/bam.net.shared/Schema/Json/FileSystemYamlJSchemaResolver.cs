@@ -9,7 +9,7 @@ namespace Bam.Net.Schema.Json
     /// </summary>
     public class FileSystemYamlJSchemaResolver: FileSystemJSchemaResolver
     {
-        public FileSystemYamlJSchemaResolver(UnixPath path) : this(path.Resolve())
+        public FileSystemYamlJSchemaResolver(HomePath path) : this(path.Resolve())
         {
         }
 
