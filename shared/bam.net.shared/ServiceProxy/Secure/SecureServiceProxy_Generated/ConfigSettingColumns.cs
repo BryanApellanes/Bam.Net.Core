@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
 
@@ -8,70 +10,48 @@ namespace Bam.Net.ServiceProxy.Secure
     public class ConfigSettingColumns: QueryFilter<ConfigSettingColumns>, IFilterToken
     {
         public ConfigSettingColumns() { }
-        public ConfigSettingColumns(string columnName)
+        public ConfigSettingColumns(string columnName, bool isForeignKey = false)
             : base(columnName)
-        { }
-		
-		public ConfigSettingColumns KeyColumn
-		{
-			get
-			{
-				return new ConfigSettingColumns("Id");
-			}
-		}	
-
-				
-        public ConfigSettingColumns Id
-        {
-            get
-            {
-                return new ConfigSettingColumns("Id");
-            }
+        { 
+            _isForeignKey = isForeignKey;
         }
-        public ConfigSettingColumns Uuid
+        
+        public bool IsKey()
         {
-            get
-            {
-                return new ConfigSettingColumns("Uuid");
-            }
-        }
-        public ConfigSettingColumns Cuid
-        {
-            get
-            {
-                return new ConfigSettingColumns("Cuid");
-            }
-        }
-        public ConfigSettingColumns Key
-        {
-            get
-            {
-                return new ConfigSettingColumns("Key");
-            }
-        }
-        public ConfigSettingColumns Value
-        {
-            get
-            {
-                return new ConfigSettingColumns("Value");
-            }
+            return (bool)ColumnName?.Equals(KeyColumn.ColumnName);
         }
 
-        public ConfigSettingColumns ConfigurationId
+        private bool? _isForeignKey;
+        public bool IsForeignKey
         {
             get
             {
-                return new ConfigSettingColumns("ConfigurationId");
-            }
-        }
+                if (_isForeignKey == null)
+                {
+                    PropertyInfo prop = DaoType
+                        .GetProperties()
+                        .FirstOrDefault(pi => ((MemberInfo) pi)
+                            .HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute)
+                                && foreignKeyAttribute.Name.Equals(ColumnName));
+                        _isForeignKey = prop != null;
+                }
 
-		protected internal Type TableType
-		{
-			get
-			{
-				return typeof(ConfigSetting);
-			}
-		}
+                return _isForeignKey.Value;
+            }
+            set => _isForeignKey = value;
+        }
+        
+		public ConfigSettingColumns KeyColumn => new ConfigSettingColumns("Id");
+
+        public ConfigSettingColumns Id => new ConfigSettingColumns("Id");
+        public ConfigSettingColumns Uuid => new ConfigSettingColumns("Uuid");
+        public ConfigSettingColumns Cuid => new ConfigSettingColumns("Cuid");
+        public ConfigSettingColumns Key => new ConfigSettingColumns("Key");
+        public ConfigSettingColumns Value => new ConfigSettingColumns("Value");
+
+        public ConfigSettingColumns ConfigurationId => new ConfigSettingColumns("ConfigurationId", true);
+
+		public Type DaoType => typeof(ConfigSetting);
 
 		public string Operator { get; set; }
 

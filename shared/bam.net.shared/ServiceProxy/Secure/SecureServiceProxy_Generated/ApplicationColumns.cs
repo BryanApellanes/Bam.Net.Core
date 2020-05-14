@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
 
@@ -8,56 +10,46 @@ namespace Bam.Net.ServiceProxy.Secure
     public class ApplicationColumns: QueryFilter<ApplicationColumns>, IFilterToken
     {
         public ApplicationColumns() { }
-        public ApplicationColumns(string columnName)
+        public ApplicationColumns(string columnName, bool isForeignKey = false)
             : base(columnName)
-        { }
-		
-		public ApplicationColumns KeyColumn
-		{
-			get
-			{
-				return new ApplicationColumns("Id");
-			}
-		}	
-
-				
-        public ApplicationColumns Id
-        {
-            get
-            {
-                return new ApplicationColumns("Id");
-            }
+        { 
+            _isForeignKey = isForeignKey;
         }
-        public ApplicationColumns Uuid
+        
+        public bool IsKey()
         {
-            get
-            {
-                return new ApplicationColumns("Uuid");
-            }
-        }
-        public ApplicationColumns Cuid
-        {
-            get
-            {
-                return new ApplicationColumns("Cuid");
-            }
-        }
-        public ApplicationColumns Name
-        {
-            get
-            {
-                return new ApplicationColumns("Name");
-            }
+            return (bool)ColumnName?.Equals(KeyColumn.ColumnName);
         }
 
+        private bool? _isForeignKey;
+        public bool IsForeignKey
+        {
+            get
+            {
+                if (_isForeignKey == null)
+                {
+                    PropertyInfo prop = DaoType
+                        .GetProperties()
+                        .FirstOrDefault(pi => ((MemberInfo) pi)
+                            .HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute)
+                                && foreignKeyAttribute.Name.Equals(ColumnName));
+                        _isForeignKey = prop != null;
+                }
 
-		protected internal Type TableType
-		{
-			get
-			{
-				return typeof(Application);
-			}
-		}
+                return _isForeignKey.Value;
+            }
+            set => _isForeignKey = value;
+        }
+        
+		public ApplicationColumns KeyColumn => new ApplicationColumns("Id");
+
+        public ApplicationColumns Id => new ApplicationColumns("Id");
+        public ApplicationColumns Uuid => new ApplicationColumns("Uuid");
+        public ApplicationColumns Cuid => new ApplicationColumns("Cuid");
+        public ApplicationColumns Name => new ApplicationColumns("Name");
+
+
+		public Type DaoType => typeof(Application);
 
 		public string Operator { get; set; }
 
