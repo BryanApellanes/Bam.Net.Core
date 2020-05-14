@@ -35,11 +35,29 @@ namespace Bam.Net.Data.Schema
             }
         }
 
+        private HashSet<string> _foreignKeyNames;
+        protected HashSet<string> ForeignKeyNames
+        {
+            get
+            {
+                if (_foreignKeyNames == null)
+                {
+                    _foreignKeyNames = new HashSet<string>();
+                    foreach (ForeignKeyColumn fk in Model.ForeignKeys)
+                    {
+                        _foreignKeyNames.Add(fk.Name);
+                    }
+                }
+
+                return _foreignKeyNames;
+            }
+        }
+        
         public NonForeignKeyColumnModel[] NonForeignKeyColumns
         {
             get
             {
-                return Model.Columns.Where(c => !(c is ForeignKeyColumn)).Select(c => new NonForeignKeyColumnModel(c)).ToArray();
+                return Model.Columns.Where(c => !(c is ForeignKeyColumn) && !ForeignKeyNames.Contains(c.Name)).Select(c => new NonForeignKeyColumnModel(c)).ToArray();
             }
         }
 
