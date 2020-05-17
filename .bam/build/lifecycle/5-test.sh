@@ -8,14 +8,10 @@ if [[ $1 = "-help" ]] || [[ $1 = "-?" ]] || [[ $1 = "-h" ]]; then
     exit 0
 fi
 
-CONTEXT=$1
 
-if [[ -z $1 ]]; then
-    export CONTEXT="tools"
-fi
-
+export CONTEXT="tools"
 export COMMAND="test"
 
 cd ./common
-./exec.sh ${CONTEXT} ${COMMAND} $2 $3 $4 $5
+./exec.sh ${CONTEXT} ${COMMAND} $1 $2 $3 $4
 cd ..

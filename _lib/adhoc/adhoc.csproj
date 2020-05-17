@@ -6,7 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Bam.Net.Adhoc</RootNamespace>
     <PackageId>bam.net.adhoc</PackageId>
-    <Version>1.0.5-test+616459c</Version>
+    <Version>1.0.5-test+cf862df</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
   </PropertyGroup>
