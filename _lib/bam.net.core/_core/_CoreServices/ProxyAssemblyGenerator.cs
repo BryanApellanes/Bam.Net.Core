@@ -16,7 +16,7 @@ namespace Bam.Net.CoreServices
             return GenerateAssembly();
         }
 
-        static Dictionary<Type, GeneratedAssemblyInfo> _generatedAssemblyInfos = new Dictionary<Type, GeneratedAssemblyInfo>();
+        static readonly Dictionary<Type, GeneratedAssemblyInfo> _generatedAssemblyInfos = new Dictionary<Type, GeneratedAssemblyInfo>();
 
         public GeneratedAssemblyInfo GenerateAssembly()
         {
