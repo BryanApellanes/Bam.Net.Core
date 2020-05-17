@@ -2,7 +2,6 @@ using System;
 using Bam.Net.Presentation.Handlebars;
 using Bam.Net.Testing.Unit;
 using Bam.Net.Presentation.Html;
-using Bam.Net.Schema.Org.Things;
 using Bam.Net.Testing;
 using static Bam.Net.Presentation.Html.Tags;
 
