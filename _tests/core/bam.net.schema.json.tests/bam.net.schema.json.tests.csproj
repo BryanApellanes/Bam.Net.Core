@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+      <ProjectReference Include="..\..\..\_lib\bam.net.data.dynamic\bam.net.data.dynamic.csproj" />
     </ItemGroup>
 
     <ItemGroup>

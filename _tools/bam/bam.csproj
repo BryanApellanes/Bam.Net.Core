@@ -268,5 +268,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
+    <ProjectReference Include="..\..\_lib\bam.net.data.dynamic\bam.net.data.dynamic.csproj" />
   </ItemGroup>
 </Project>

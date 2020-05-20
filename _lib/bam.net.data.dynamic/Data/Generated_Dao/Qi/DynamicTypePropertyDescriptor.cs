@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Bam.Net;
-using System.Web.Mvc;
 using Bam.Net.Data;
 using Bam.Net.Data.Qi;
 using Bam.Net.Data.Dynamic.Data.Dao;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 {

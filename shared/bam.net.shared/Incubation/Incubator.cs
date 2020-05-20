@@ -1,14 +1,12 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
-using Bam.Net;
-using System.Diagnostics;
-using Bam.Net.Data.Dynamic;
+using Bam.Net.Logging;
 using Bam.Net.Services;
 
 namespace Bam.Net.Incubation
@@ -18,10 +16,10 @@ namespace Bam.Net.Incubation
     /// </summary>
     public class Incubator: ISetupContext
     {
-        object _accessLock = new object();
-        Dictionary<Type, object> _typeInstanceDictionary;
-        Dictionary<string, Type> _classNameTypeDictionary;
-        Dictionary<Type, Dictionary<string, object>> _ctorParams;
+        readonly object _accessLock = new object();
+        readonly Dictionary<Type, object> _typeInstanceDictionary;
+        readonly Dictionary<string, Type> _classNameTypeDictionary;
+        readonly Dictionary<Type, Dictionary<string, object>> _ctorParams;
 
         static Incubator()
         {
@@ -237,7 +235,7 @@ namespace Bam.Net.Incubation
                 {
                     if (!prop.CanWrite)
                     {
-                        Logging.Log.Warn("Property {0}.{1} is addorned with the Inject attribute but it is read only");
+                        Log.Warn("Property {0}.{1} is addorned with the Inject attribute but it is read only");
                         continue;
                     }
                     prop.SetValue(instance, GetInjectValue(prop, attr));

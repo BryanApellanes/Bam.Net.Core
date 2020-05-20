@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using Microsoft.AspNetCore.Mvc;
 using YamlDotNet.Serialization;
 using Timer = Bam.Net.Logging.Counters.Timer;
 
@@ -391,6 +392,14 @@ namespace Bam.Net.Data.Dynamic
                 }
                 return typeDescriptor;
             }
+        }
+        protected void SetReferenceAssemblies()
+        {
+            List<Assembly> assemblies = new List<Assembly>(Compiler.AssembliesToReference)
+            {
+                typeof(ActionResult).Assembly
+            };
+            Compiler.AssembliesToReference = assemblies.ToArray();
         }
     }
 }

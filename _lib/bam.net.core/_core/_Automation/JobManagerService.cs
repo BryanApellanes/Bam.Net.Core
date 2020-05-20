@@ -1,24 +1,9 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.IO;
-using Bam.Net;
-using Bam.Net.Profiguration;
-using Bam.Net.ServiceProxy;
-using Bam.Net.Data;
-using Bam.Net.Analytics;
-using Bam.Net.Logging;
-using Bam.Net.Configuration;
-using System.Threading;
 using Bam.Net.Services;
-using Bam.Net.Automation;
-using Bam.Net.Data.Repositories;
-using Bam.Net.Data.Dynamic;
 
 namespace Bam.Net.Automation
 {
@@ -34,7 +19,7 @@ namespace Bam.Net.Automation
             {
                 if (_jobsDirectory == null)
                 {
-                    _jobsDirectory = new DirectoryInfo(System.IO.Path.Combine(Workspace.ForApplication().Root.FullName, "Jobs"));
+                    _jobsDirectory = new DirectoryInfo(Path.Combine(Workspace.ForApplication().Root.FullName, "Jobs"));
                 }
 
                 return _jobsDirectory.FullName;

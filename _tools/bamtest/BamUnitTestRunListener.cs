@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Bam.Net.CommandLine;
-using Bam.Net.Data.Dynamic;
 using Bam.Net.Logging;
 using Bam.Net.Testing.Unit;
 

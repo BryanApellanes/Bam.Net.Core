@@ -1,24 +1,20 @@
 /*
 	This file was generated and should not be modified directly
 */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Bam.Net;
-using System.Web.Mvc;
-using Bam.Net.Data;
 using Bam.Net.Data.Qi;
-using Bam.Net.Data.Dynamic.Data.Dao;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 {
-    public class DynamicNamespaceDescriptorController : DaoController
+    public class DataInstanceController : DaoController
     {	
-		public ActionResult Save(Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor[] values)
+		public ActionResult Save(DataInstance[] values)
 		{
 			try
 			{
-				DynamicNamespaceDescriptorCollection saver = new DynamicNamespaceDescriptorCollection();
+				DataInstanceCollection saver = new DataInstanceCollection();
 				saver.AddRange(values);
 				saver.Save();
 				return Json(new { Success = true, Message = "", Dao = "" });
@@ -29,7 +25,7 @@ namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 			}
 		}
 
-		public ActionResult Create(Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor dao)
+		public ActionResult Create(DataInstance dao)
 		{
 			return Update(dao);
 		}
@@ -38,7 +34,7 @@ namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
         {
 			try
 			{
-				object value = Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor.OneWhere(c => c.KeyColumn == id).ToJsonSafe();
+				object value = DataInstance.OneWhere(c => c.KeyColumn == id).ToJsonSafe();
 				return Json(new { Success = true, Message = "", Dao = value });
 			}
 			catch(Exception ex)
@@ -47,7 +43,7 @@ namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 			}
         }
 
-		public ActionResult Update(Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor dao)
+		public ActionResult Update(DataInstance dao)
         {
 			try
 			{
@@ -65,14 +61,14 @@ namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 			try
 			{
 				string msg = "";
-				Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor dao = Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor.OneWhere(c => c.KeyColumn == id);				
+				DataInstance dao = DataInstance.OneWhere(c => c.KeyColumn == id);				
 				if(dao != null)
 				{
 					dao.Delete();	
 				}
 				else
 				{
-					msg = string.Format("The specified id ({0}) was not found in the table (DynamicNamespaceDescriptor)", id);
+					msg = string.Format("The specified id ({0}) was not found in the table (DataInstance)", id);
 				}
 				return Json(new { Success = true, Message = msg, Dao = "" });
 			}
@@ -86,8 +82,8 @@ namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 		{
 			try
 			{
-				query.table = Bam.Net.Data.Dao.TableName(typeof(Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor));
-				object value = Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor.OneWhere(query).ToJsonSafe();
+				query.table = Net.Data.Dao.TableName(typeof(DataInstance));
+				object value = DataInstance.OneWhere(query).ToJsonSafe();
 				return Json(new { Success = true, Message = "", Dao = value });
 			}
 			catch(Exception ex)
@@ -100,8 +96,8 @@ namespace Bam.Net.Data.Dynamic.Data.Dao.Qi
 		{
 			try
 			{
-				query.table = Bam.Net.Data.Dao.TableName(typeof(Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor));
-				object[] value = Bam.Net.Data.Dynamic.Data.Dao.DynamicNamespaceDescriptor.Where(query).ToJsonSafe();
+				query.table = Net.Data.Dao.TableName(typeof(DataInstance));
+				object[] value = DataInstance.Where(query).ToJsonSafe();
 				return Json(new { Success = true, Message = "", Dao = value });
 			}
 			catch(Exception ex)
