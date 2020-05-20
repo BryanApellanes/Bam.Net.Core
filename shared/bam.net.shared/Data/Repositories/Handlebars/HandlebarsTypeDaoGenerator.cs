@@ -1,17 +1,14 @@
-﻿using Bam.Net.Data.Schema;
-using Bam.Net.Data.Schema.Handlebars;
-using Bam.Net.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Bam.Net.CoreServices.AssemblyManagement;
+using Bam.Net.Data.Schema;
+using Bam.Net.Data.Schema.Handlebars;
+using Bam.Net.Logging;
 using Bam.Net.Services;
-using Bam.Net.Testing;
-using GraphQL;
 using Newtonsoft.Json;
 
 namespace Bam.Net.Data.Repositories.Handlebars
@@ -72,14 +69,14 @@ namespace Bam.Net.Data.Repositories.Handlebars
 
         protected override HashSet<string> GetDefaultReferenceAssemblies()
         {
-            IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
+            IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
             
             HashSet<string> result = new HashSet<string>()
             {
                 typeof(JsonConvert).Assembly.GetFilePath(),
                 typeof(MarshalByValueComponent).Assembly.GetFilePath(),
-                typeof(System.Linq.Enumerable).Assembly.GetFilePath(),
-                typeof(System.Object).Assembly.GetFilePath(),
+                typeof(Enumerable).Assembly.GetFilePath(),
+                typeof(Object).Assembly.GetFilePath(),
                 referenceAssemblyResolver.ResolveReferenceAssemblyPath("System.Collections.dll"),
                 referenceAssemblyResolver.ResolveReferenceAssemblyPath("netstandard.dll"),
                 typeof(Attribute).Assembly.GetFilePath(),

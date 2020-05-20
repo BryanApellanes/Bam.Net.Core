@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bam.Net.CoreServices;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Server;
-using Bam.Net.Services;
 using Bam.Net.Services.Catalog.Data;
-using Bam.Net.Services.Catalog;
-using GraphQL;
 
 namespace Bam.Net.Services
 {

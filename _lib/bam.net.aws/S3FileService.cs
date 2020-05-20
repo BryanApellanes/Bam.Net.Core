@@ -3,7 +3,6 @@ using System.IO;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Bam.Net.CoreServices;
-using GraphQL.Types;
 
 namespace Bam.Net.Aws
 {

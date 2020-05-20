@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+    <ProjectReference Include="..\..\..\_lib\bam.net.data.graphql\bam.net.data.graphql.csproj" />
   </ItemGroup>
 
 </Project>

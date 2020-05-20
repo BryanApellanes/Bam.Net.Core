@@ -2,12 +2,7 @@
 using Bam.Net.Data.Repositories.Handlebars;
 using Bam.Net.Data.Schema;
 using Bam.Net.Data.Schema.Handlebars;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using Bam.Net.Presentation.Handlebars;
-using GraphQL;
 
 namespace Bam.Net.Data.Repositories
 {

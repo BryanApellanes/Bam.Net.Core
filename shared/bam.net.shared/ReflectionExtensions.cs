@@ -1,14 +1,13 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Text;
 using Bam.Net.Data;
-using GraphQL.Types;
 using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace Bam.Net
@@ -82,7 +81,7 @@ namespace Bam.Net
             StringBuilder output = new StringBuilder();
             output.AppendLine($"{type.FullName}");
             List<PropertyInfo> props = new List<PropertyInfo>(type.GetProperties());
-            if(type != typeof(System.RuntimeTypeHandle) && !type.Name.Equals("RuntimeType"))
+            if(type != typeof(RuntimeTypeHandle) && !type.Name.Equals("RuntimeType"))
             {
                 props.Sort((p1, p2) => p1.Name.CompareTo(p2.Name));
             }

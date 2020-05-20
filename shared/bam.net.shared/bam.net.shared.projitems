@@ -606,13 +606,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\DynamicTypeNameResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\IDynamicTypeNameResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Dynamic\PropertyDescriptor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQLGenerationConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQLTypeGenerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\QueryArgumentModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\SchemaModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\TypeModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\GraphQueryResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\GraphQL\PropertyModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlConnectionStringResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlCredentials.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Npgsql\NpgsqlDatabase.cs" />
@@ -940,8 +933,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsFileExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\WindowsRemoteFileHandler.cs" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Automation\CSharpScriptWorker.hbs" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLType.hbs" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Data\GraphQL\Templates\GraphQLQueryContext.hbs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IRepositoryProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MsSql\MsSqlConnectionStringResolver.cs" />
