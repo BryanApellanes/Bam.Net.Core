@@ -10,6 +10,8 @@ namespace Bam.Net
 {
     public static class JulianDate
     {
+        public static double UtcNow => DateTime.UtcNow.ToJulianDate();
+
         public static DateTime FromJulianDate(this string jd)
         {
             return Convert.ToDouble(jd).ToDateTime();

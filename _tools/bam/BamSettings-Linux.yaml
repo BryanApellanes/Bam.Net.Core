@@ -1,0 +1,7 @@
+Environment: Development
+DockerPath: /usr/bin/docker
+NpmPath: /usr/bin/npm
+DotNetPath: /usr/bin/dotnet
+GitPath: /usr/bin/git
+NpxPath: /usr/bin/npx
+NugetPath: /usr/bin/nuget

@@ -107,10 +107,7 @@ namespace Bam.Net.CoreServices
                 }
                 return _current;
             }
-            set
-            {
-                _current = value;
-            }
+            set => _current = value;
         }
 
         public ProcessRuntimeDescriptor PersistRuntimeDescriptor(ProcessRuntimeDescriptor runtimeDescriptor)

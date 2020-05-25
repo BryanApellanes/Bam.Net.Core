@@ -18,7 +18,7 @@ namespace Bam.Shell
         public string Editor { get; set; }
 
         static ShellSettings _current;
-        static object _currentLock = new object();
+        static readonly object _currentLock = new object();
         public static ShellSettings Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => new ShellSettings()); }

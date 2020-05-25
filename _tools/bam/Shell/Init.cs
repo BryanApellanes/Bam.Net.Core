@@ -31,7 +31,7 @@ namespace Bam.Shell
         {
             // Read BAM_HOME environment variable
             string applicationName = EnvironmentApplicationNameProvider.Instance.GetApplicationName();
-            OutLineFormat("ApplicationName = {0}", ConsoleColor.DarkBlue, applicationName);
+            Message.PrintLine("ApplicationName = {0}", ConsoleColor.DarkBlue, applicationName);
 
             string bamHome = BamEnvironmentVariables.Home();
             OutLineFormat("BAM_HOME = {0}", ConsoleColor.DarkBlue, bamHome);

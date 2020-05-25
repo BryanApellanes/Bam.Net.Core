@@ -98,7 +98,7 @@ namespace Bam.Net
 
         public static BamSettings Load(string path = null)
         {
-            path = path ?? Path.Combine(Config.GetDirectory(ProcessApplicationNameProvider.Current).FullName, $"bam-{OSInfo.Current.ToString()}.yaml");
+            path = path ?? Path.Combine(Config.GetDirectory(ProcessApplicationNameProvider.Current).FullName, $"BamSettings-{OSInfo.Current.ToString()}.yaml");
             if (!File.Exists(path))
             {
                 BamSettings settings = new BamSettings

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao;
 
 namespace Bam.Net
 {
@@ -18,6 +19,8 @@ namespace Bam.Net
         /// </summary>
         public static string Root => Path;
 
+        public static string HostData => System.IO.Path.Combine(Local, Bam.Net.CoreServices.ApplicationRegistration.Data.Machine.Current.Name);
+        
         public static string Local => System.IO.Path.Combine(Path, "local");
         
         /// <summary>
@@ -29,7 +32,7 @@ namespace Bam.Net
             {
                 if (OSInfo.Current == OSNames.Windows)
                 {
-                    return new string[] {"/c", "bam"};
+                    return new string[] {"/c", "opt", "bam"};
                 }
                 else
                 {
@@ -38,6 +41,8 @@ namespace Bam.Net
             }
         }
 
+        public static string Public => System.IO.Path.Combine(Path, "public");
+        
         public static string Profile => BamProfile.Path;
         
         public static string UserHome => BamProfile.UserHome;

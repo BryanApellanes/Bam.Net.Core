@@ -12,8 +12,17 @@ using Bam.Net.Testing.Unit;
 namespace Bam.ConsoleActions
 {
     [Serializable]
-    public class ConsoleActions: CommandLineTestInterface
+    public class ApplicationManagement: CommandLineTestInterface
     {
+        [ConsoleAction]
+        public void DeployContainer()
+        {
+            // copy files to remote
+            // execute remote process
+            
+            throw new NotImplementedException();
+        }
+        
         [ConsoleAction("compileAppServices", "Compile application specific services given an AppConf or BamConf")]
         public void CompileAppServices()
         {

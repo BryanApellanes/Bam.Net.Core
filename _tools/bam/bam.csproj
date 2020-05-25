@@ -15,7 +15,7 @@
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="Bam-Windows.yaml">
+    <None Update="BamSettings-Windows.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ManagedApplicationGenerationConfig.yaml">
@@ -267,6 +267,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BamAppServices\_tools\bambot\bambot.csproj" />
     <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
     <ProjectReference Include="..\..\_lib\bam.net.data.dynamic\bam.net.data.dynamic.csproj" />
   </ItemGroup>

@@ -31,19 +31,12 @@ namespace Bam.Net
             }
         }
 
-        static string _pubRoot = @"//bam/public";
+        static string _pubRoot = @"//opt/bam/public";
         
         [Obsolete("Use BamPaths.Public instead")]
         public static string PubRoot
         {
-            get
-            {
-                return _pubRoot;
-            }
-            set
-            {
-                _pubRoot = value;
-            }
+            get => Net.BamHome.Public;
         }
 
         public static string SystemDrive { get; set; }

@@ -17,7 +17,7 @@ namespace Bam.Net
     public static partial class HashExtensions
     {
         static Dictionary<HashAlgorithms, Func<byte[], HMAC>> _hmacs;
-        static object _hmacsLock = new object();
+        static readonly object _hmacsLock = new object();
         public static Dictionary<HashAlgorithms, Func<byte[], HMAC>> Hmacs
         {
             get
@@ -34,7 +34,7 @@ namespace Bam.Net
         }
 
         static Dictionary<HashAlgorithms, Func<HashAlgorithm>> _hashAlgorithms;
-        static object _hashAlgorithmLock = new object();
+        static readonly object _hashAlgorithmLock = new object();
         public static Dictionary<HashAlgorithms, Func<HashAlgorithm>> HashAlgorithms
         {
             get
