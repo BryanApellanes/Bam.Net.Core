@@ -3402,6 +3402,18 @@ namespace Bam.Net
             return largest;
         }
 
+        public static int Largest(this int[] ints)
+        {
+            if (ints.Length == 0)
+            {
+                return -1;
+            }
+
+            int largest = ints[0];
+            ints.Each(i=> largest = i > largest ? i: largest);
+            return largest;
+        }
+
         public static T Largest<T>(this T[] values)
         {
             if (values.Length == 0)

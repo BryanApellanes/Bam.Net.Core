@@ -7,7 +7,6 @@ namespace Bam.Net
         string[] ListUsers();
         bool AddUser(string userName, string password);
         bool DeleteUser(string userName);
-
         string[] ListGroups();
         bool DeleteGroup(string groupName);
     }
