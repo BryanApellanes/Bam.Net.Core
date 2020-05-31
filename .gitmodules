@@ -7,6 +7,3 @@
 [submodule ".bam/docker"]
 	path = .bam/docker
 	url = git@github.com:BryanApellanes/docker.git
-[submodule "_tools/bamsdo"]
-	path = _tools/bamsdo
-	url = git@github.com:BryanApellanes/bamsdo.git
