@@ -11,11 +11,11 @@ Builds the specified context; see -? for a specific context for additional help.
 # Debug
 Debugs the specified context; see -? for a specific context for additional help.
 
-# Push
+# Push (wip)
 Pushes the specified context; see -? for a specific context for additional help.
 
-# Test
+# Test (wip)
 Tests the specified context; see -? for a specific context for additional help.
 
-# Deploy
+# Deploy (wip)
 Deploys the specified context; see -? for a specific context for additional help.
