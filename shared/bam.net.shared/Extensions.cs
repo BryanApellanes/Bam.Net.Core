@@ -3413,6 +3413,18 @@ namespace Bam.Net
             ints.Each(i=> largest = i > largest ? i: largest);
             return largest;
         }
+        
+        public static uint Largest(this uint[] uints)
+        {
+            if (uints.Length == 0)
+            {
+                return 0;
+            }
+
+            uint largest = uints[0];
+            uints.Each(i=> largest = i > largest ? i: largest);
+            return largest;
+        }
 
         public static T Largest<T>(this T[] values)
         {
