@@ -4,3 +4,6 @@
 [submodule ".bam/build"]
 	path = .bam/build
 	url = git@github.com:BryanApellanes/build.git
+[submodule ".bam/docker"]
+	path = .bam/docker
+	url = git@github.com:BryanApellanes/docker.git
