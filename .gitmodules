@@ -1,3 +1,6 @@
 [submodule "_tools.core/bamweb"]
 	path = _tools/bamweb
 	url = https://github.com/BryanApellanes/bamweb.git
+[submodule ".bam/docker-scripts"]
+	path = .bam/docker-scripts
+	url = git@github.com:BryanApellanes/docker-scripts
