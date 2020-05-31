@@ -1,0 +1,69 @@
+"$schema": http://json-schema.org/draft-04/schema#
+id: agent_v1.yaml
+
+title: Sales Agent
+javaType: "com.vimly.entitystore.schema.AgentEntity"
+type: object
+"@type": "Agent"
+extends: 
+  "$ref": "entity_v1.yaml"
+
+properties:
+  friendlyId: 
+    type: string
+    example: "AUD-03454-123"
+    description: "Friendly Id (System Generated, do not include on POST requests)"
+    readOnly: true
+  firstName: 
+    type: string
+    example: Charlie
+    description: "First Name"
+  middleName: 
+    type: string
+    example: M
+    description: "Middle Name"
+  lastName: 
+    type: string
+    example: Smith
+    description: "Last Name"
+  address: 
+    "$ref": "address_v1.yaml"
+  externalIds: 
+    type: object
+    "existingJavaType": "java.util.Map<String, String>"
+  agentStatuses: 
+    type: array
+    items: 
+      "$ref": "#/definitions/AgentStatus"
+  communications: 
+    type: array
+    items: 
+      "$ref": "communication_v1.yaml"
+
+definitions:
+  AgentStatus: 
+    javaType: "com.vimly.entitystore.schema.AgentStatusEntity"
+    type: object
+    required: 
+    - effectiveDateTime
+    properties: 
+      statusId: 
+        type: string
+        format: uuid
+        description: "Status Id (System Generated, do not include on POST requests)"
+        readOnly: true
+      effectiveDateTime: 
+        type: string
+        format: date-time
+        example: "2008-12-01T01:02:03.789Z"
+        #customDateTimePattern: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        description: "Effective Date"
+      comments: 
+        type: string
+        example: "Example comment"
+        description: Comment
+      statusCode: 
+        type: string
+        enum: 
+        - ACTIVE
+        - INACTIVE
