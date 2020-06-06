@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets.GitHub_PAT }}
+        token: ${{ secrets.CI_PAT }}
         submodules: true
     - name: Build
       run: ./build.sh
