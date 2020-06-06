@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
 
     env:
@@ -29,3 +29,12 @@ jobs:
       with:
         name: BamToolkit-Tests
         path: /tmp/bam/tests/bamtoolkit-tests.zip
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Tests
+        uses: actions/download-artifact@v1
+        with:
+          name: BamToolkit-Tests
