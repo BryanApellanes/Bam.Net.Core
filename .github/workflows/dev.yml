@@ -13,12 +13,14 @@ jobs:
     env:
       DIST: /tmp/bam
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       with:
+        token: ${{ secrets.GitHub_PAT }}
         submodules: true
     - name: Build
       run: ./build.sh
-    - uses: actions/upload-artifact@v1
+    - name: Upload
+      uses: actions/upload-artifact@v1
       with:
         name: BamToolkit
         path: /tmp/bam/bamtoolkit.zip
