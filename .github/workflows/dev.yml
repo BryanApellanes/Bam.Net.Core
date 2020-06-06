@@ -19,12 +19,13 @@ jobs:
         submodules: true
     - name: Build
       run: ./build.sh
-    - name: Upload
+    - name: Upload Toolkit
       uses: actions/upload-artifact@v1
       with:
         name: BamToolkit
         path: /tmp/bam/bamtoolkit.zip
-    - uses: actions/upload-artifact@v1
+    - name: Upload Tests
+      uses: actions/upload-artifact@v1
       with:
         name: BamToolkit-Tests
         path: /tmp/bam/tests/bamtoolkit-tests.zip
