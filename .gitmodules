@@ -7,3 +7,6 @@
 [submodule ".bam/docker"]
 	path = .bam/docker
 	url = git@github.com:BryanApellanes/docker.git
+[submodule "_tools/bamapi"]
+	path = _tools/bamapi
+	url = git@github.com:BryanApellanes/bamapi.git
