@@ -14,6 +14,8 @@ jobs:
       DIST: /tmp/bam
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
     - name: Build
       run: ./build.sh
     - uses: actions/upload-artifact@v1
