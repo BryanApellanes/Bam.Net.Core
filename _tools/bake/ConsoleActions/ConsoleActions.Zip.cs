@@ -42,14 +42,19 @@ namespace Bam.Net.Bake
 
             if (outputFile.Exists && outputFile.Name.Equals(defaultFileName))
             {
-                OutLineFormat("File {0} exists, deleting...", ConsoleColor.DarkYellow, outputFile.FullName);
+                Message.PrintLine("File {0} exists, deleting...", ConsoleColor.DarkYellow, outputFile.FullName);
                 Thread.Sleep(300);
                 File.Delete(outputFile.FullName);
                 Thread.Sleep(300);
             }
-            OutLineFormat("Zipping {0} to {1}...", ConsoleColor.DarkYellow, recipe.OutputDirectory, outputFile.FullName);
+
+            if (File.Exists(outputFile.FullName))
+            {
+                File.Move(outputFile.FullName, outputFile.GetNextFile().FullName);
+            }
+            Message.PrintLine("Zipping {0} to {1}...", ConsoleColor.DarkYellow, recipe.OutputDirectory, outputFile.FullName);
             ZipFile.CreateFromDirectory(new DirectoryInfo(recipe.OutputDirectory).FullName, outputFile.FullName);
-            OutLineFormat("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
+            Message.PrintLine("\r\nZipped {0} to {1}", ConsoleColor.Green, recipe.OutputDirectory, outputFile.FullName);
             Thread.Sleep(300);
         }
     }
