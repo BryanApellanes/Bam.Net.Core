@@ -104,8 +104,8 @@ namespace Bam.Net.Bake
             }
             string json = recipe.ToJson(true);
             json.SafeWriteToFile(file.FullName, true);
-            OutLine(json, ConsoleColor.Cyan);
-            OutLineFormat("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
+            Message.PrintLine(json, ConsoleColor.Cyan);
+            Message.PrintLine("Wrote recipe file: {0}", ConsoleColor.DarkCyan, file.FullName);
             Thread.Sleep(300);
         }
 

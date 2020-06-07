@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Logging;
 
@@ -17,7 +15,7 @@ namespace Bam.Net.CommandLine
         {
             Text = message;
         }
-
+        
         public ConsoleMessage(string message, ConsoleColorCombo colors, params object[] messageSignatureArgs)
         {
             Colors = colors;
@@ -46,6 +44,18 @@ namespace Bam.Net.CommandLine
             _text = null;
             MessageSignature = messageSignature;
             MessageArgs = messageSignatureArgs;
+        }
+
+        public ConsoleColor ForegroundColor
+        {
+            get => Colors.ForegroundColor;
+            set => Colors = new ConsoleColorCombo(value);
+        }
+
+        public ConsoleColor BackgroundColor
+        {
+            get => Colors.BackgroundColor;
+            set => Colors = new ConsoleColorCombo(ForegroundColor, value);
         }
         
         public ConsoleColorCombo Colors { get; set; }
@@ -200,7 +210,14 @@ namespace Bam.Net.CommandLine
         
         public static void Print(string messageSignature, ConsoleColor textColor, params object[] messageArgs)
         {
-            Print(new ConsoleMessage(messageSignature, textColor, messageArgs));
+            if (messageArgs == null || messageArgs.Length == 0)
+            {
+                PrintMessage(new ConsoleMessage(messageSignature) {ForegroundColor = textColor});
+            }
+            else
+            {
+                Print(new ConsoleMessage(messageSignature, textColor, messageArgs));
+            }
         }
         
         public static void Print(List<ConsoleMessage> messages)
