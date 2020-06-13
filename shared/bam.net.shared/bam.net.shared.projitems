@@ -620,7 +620,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\VaultKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\VaultKeyNotSetException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GeneratedPassword.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManagedPassword.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHost.cs" />

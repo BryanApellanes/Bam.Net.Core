@@ -1,12 +1,12 @@
 namespace Bam.Net
 {
-    public class GeneratedPassword
+    public class ManagedPassword
     {
-        public GeneratedPassword()
+        public ManagedPassword()
         {
         }
 
-        public GeneratedPassword(string value)
+        public ManagedPassword(string value)
         {
             _value = value;
         }
@@ -18,6 +18,11 @@ namespace Bam.Net
         {
             get => "******";
             set => _value = value;
+        }
+
+        public void Set(string password)
+        {
+            Value = password;
         }
         
         public string Show()

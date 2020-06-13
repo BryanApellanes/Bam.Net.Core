@@ -3,7 +3,7 @@ using Bam.Net;
 
 namespace Bam.Tests
 {
-    class Program :CommandLineTool
+    class Program : CommandLineTool
     {
         static void Main(string[] args)
         {

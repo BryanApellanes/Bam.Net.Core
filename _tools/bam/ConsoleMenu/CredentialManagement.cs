@@ -32,7 +32,7 @@ namespace Bam.Net.ConsoleActions
             
         }
         
-        protected GeneratedPassword GetPasswordFor(string hostName, double? julianDate = null)
+        protected ManagedPassword GetPasswordFor(string hostName, double? julianDate = null)
         {
             throw new NotImplementedException();
         }
