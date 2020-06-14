@@ -3,7 +3,7 @@ using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Testing.Unit;
-using Bambot.Deployment;
+using Bam.Remote.Deployment;
 
 namespace Bam.Net.Application.Tests.UnitTests
 {
@@ -13,7 +13,7 @@ namespace Bam.Net.Application.Tests.UnitTests
         [IntegrationTest]
         public void CanListUsers()
         {
-            SshRemoteHost sshRemoteHost = GetRemoteHost();
+            RemoteSshHost sshRemoteHost = GetRemoteHost();
             string[] users = sshRemoteHost.ListUsers();
             Expect.IsNotNull(users);
             Expect.IsTrue(users.Length > 0);
@@ -24,7 +24,7 @@ namespace Bam.Net.Application.Tests.UnitTests
         [IntegrationTest]
         public void CanAddUser()
         {
-            SshRemoteHost sshRemoteHost = GetRemoteHost();
+            RemoteSshHost sshRemoteHost = GetRemoteHost();
             string userNameToAdd = "Test_User_".RandomLetters(4);
             string[] existingUsers = sshRemoteHost.ListUsers();
             Expect.IsNotNull(existingUsers);
@@ -40,7 +40,7 @@ namespace Bam.Net.Application.Tests.UnitTests
         [IntegrationTest]
         public void CanListNetworkInterfaces()
         {
-            SshRemoteHost sshRemoteHost = new SshRemoteHost();
+            RemoteSshHost sshRemoteHost = new RemoteSshHost();
             string host = "chumbucket4";
             string loginUser = "bam";
             string loginPassword = "bamP455w0rd1!";
@@ -56,7 +56,7 @@ namespace Bam.Net.Application.Tests.UnitTests
         [IntegrationTest]
         public void CanGetMacAddresses()
         {
-            SshRemoteHost sshRemoteHost = new SshRemoteHost();
+            RemoteSshHost sshRemoteHost = new RemoteSshHost();
             string host = "chumbucket4";
             string loginUser = "bam";
             string loginPassword = "bamP455w0rd1!";
@@ -64,9 +64,9 @@ namespace Bam.Net.Application.Tests.UnitTests
             Message.PrintLine(macAddress);
         }
         
-        private SshRemoteHost GetRemoteHost()
+        private RemoteSshHost GetRemoteHost()
         {
-            return new SshRemoteHost
+            return new RemoteSshHost
             {
                 HostName = GetArgument("host"),
                 Port = int.Parse(GetArgumentOrDefault("port", "22")),

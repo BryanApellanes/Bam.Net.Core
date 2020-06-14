@@ -1,9 +1,9 @@
 using System;
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
-using Bambot.Deployment;
-using Bambot.Deployment.Data;
-using Bambot.Etc;
+using Bam.Remote.Deployment;
+using Bam.Remote.Deployment.Data;
+using Bam.Remote.Etc;
 
 namespace Bam.Net.ConsoleActions
 {
@@ -28,7 +28,7 @@ namespace Bam.Net.ConsoleActions
         [ConsoleAction("listUsers", "List the users of the specified remote host")]
         public void ListUsers()
         {
-            SshRemoteHost remoteHost = GetRemoteHost();
+            RemoteSshHost remoteHost = GetRemoteHost();
             
         }
         
@@ -37,9 +37,9 @@ namespace Bam.Net.ConsoleActions
             throw new NotImplementedException();
         }
 
-        private SshRemoteHost GetRemoteHost()
+        private RemoteSshHost GetRemoteHost()
         {
-            return new SshRemoteHost
+            return new RemoteSshHost
             {
                 HostName = GetArgument("host"),
                 Port = int.Parse(GetArgumentOrDefault("port", "22")),
