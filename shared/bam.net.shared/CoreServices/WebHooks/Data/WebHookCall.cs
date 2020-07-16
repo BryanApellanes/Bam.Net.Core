@@ -11,6 +11,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data
     {
         public WebHookCall() { }
 
+        public virtual WebHookDescriptor WebHookDescriptor { get; set; }
         public virtual WebHookSubscriber WebHookSubscriber{ get; set; }
 
         /// <summary>

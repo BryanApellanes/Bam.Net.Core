@@ -316,7 +316,7 @@ namespace Bam.Net.CommandLine
         }
 
         /// <summary>
-        /// Runs the current process again, prompting for admin rights
+        /// Runs the current process again, prompting for admin rights. This is WINDOWS ONLY
         /// </summary>
         public static void Elevate()
         {
@@ -500,9 +500,9 @@ namespace Bam.Net.CommandLine
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string GetPathArgument(string name)
+        public static string GetPathArgument(string name, string promptMessage = null)
         {
-            string argumentValue = GetArgument(name);
+            string argumentValue = GetArgument(name, promptMessage);
             if (argumentValue.StartsWith("~"))
             {
                 ProcessHomeDirectoryResolver homeDirectoryResolver = new ProcessHomeDirectoryResolver();
@@ -524,13 +524,8 @@ namespace Bam.Net.CommandLine
         /// <returns></returns>
         public static string GetArgument(string name)
         {
-            string value = Arguments.Contains(name) ? Arguments[name] : Prompt("Please enter a value for {0}"._Format(name));
+            string value = Arguments.Contains(name) ? Arguments[name] : Prompt($"Please enter a value for {name}");
             return value;
-        }
-
-        public static string Prompt(string message)
-        {
-            return Prompt(message, ConsoleColor.Cyan);
         }
 
         /// <summary>
@@ -538,7 +533,7 @@ namespace Bam.Net.CommandLine
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>string</returns>
-        public static string Prompt(string message, ConsoleColor textColor)
+        public static string Prompt(string message, ConsoleColor textColor = ConsoleColor.Cyan)
         {
             return Prompt(message, textColor, false);
         }
@@ -586,6 +581,15 @@ namespace Bam.Net.CommandLine
             return SelectFrom<T>(options, (t) => t.ToString(), prompt, color);
         }
 
+        /// <summary>
+        /// Prompt for a selection from the specified list of values, using the specified optionTextSelector to extract option text from the options.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="optionTextSelector"></param>
+        /// <param name="prompt"></param>
+        /// <param name="color"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T SelectFrom<T>(IEnumerable<T> options, Func<T, string> optionTextSelector, string prompt = "Select an option from the list", ConsoleColor color = ConsoleColor.DarkCyan)
         {
             T[] optionsArray = options.ToArray();
@@ -854,18 +858,12 @@ File Version: {1}
             {
                 if (_outProvider == null)
                 {
-                    _outProvider = () =>
-                    {
-                        Console.WriteLine();
-                    };
+                    _outProvider = Console.WriteLine;
                 }
 
                 return _outProvider;
             }
-            set
-            {
-                _outProvider = value;
-            }
+            set => _outProvider = value;
         }
 
         /// <summary>
@@ -889,9 +887,10 @@ File Version: {1}
         /// <param name="message"></param>
         /// <param name="color"></param>
         /// <param name="formatArgs"></param>
+        [Obsolete("Use Message.PrintLine instead")]
         public static void OutLineFormat(string message, ConsoleColor color, params object[] formatArgs)
         {
-            OutLine(string.Format(message, formatArgs), color);
+            Message.PrintLine(message, color, formatArgs);
         }
 
         /// <summary>
@@ -954,10 +953,7 @@ File Version: {1}
                     };
                 });
             }
-            set
-            {
-                _coloredMessageProvider = value;
-            }
+            set => _coloredMessageProvider = value;
         }
 
         static object _queueLock = new object();
@@ -999,10 +995,7 @@ File Version: {1}
                 }
                 return _colorBackgroundMessageProvider;
             }
-            set
-            {
-                _colorBackgroundMessageProvider = value;
-            }
+            set => _colorBackgroundMessageProvider = value;
         }
 
         public static void Out(string message, ConsoleColorCombo colors)
@@ -1232,8 +1225,7 @@ File Version: {1}
             {
                 if (parameterInfo.ParameterType != typeof(string))
                 {
-                    OutLine(string.Format("The method {0} can't be invoked because it takes parameters that are not of type string.", method.Name)
-                        , ConsoleColor.Red);
+                    OutLine($"The method {method.Name} can't be invoked because it takes parameters that are not of type string.", ConsoleColor.Red);
                 }
 
                 if (generate)
@@ -1242,7 +1234,7 @@ File Version: {1}
                 }
                 else
                 {
-                    parameterValues.Add(GetArgument(parameterInfo.Name, string.Format("{0}: ", parameterInfo.Name)));
+                    parameterValues.Add(GetArgument(parameterInfo.Name, $"{parameterInfo.Name}: "));
                 }
             }
             return parameterValues.ToArray();
@@ -1318,7 +1310,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found
@@ -1333,21 +1325,26 @@ File Version: {1}
             return ExecuteSwitches(arguments, instance.GetType(), instance, logger);
         }
 
+        static HashSet<Type> _executedSwitches = new HashSet<Type>();
         public static bool ExecuteSwitches(bool isolateMethodCalls = false, ILogger logger = null)
         {
             bool executed = false;
             foreach (Type type in Assembly.GetEntryAssembly().GetTypes())
             {
-                if (!executed && ExecuteSwitches(Arguments, type, false, logger))
+                if (!_executedSwitches.Contains(type))
                 {
-                    executed = true;
+                    _executedSwitches.Add(type);
+                    if (ExecuteSwitches(Arguments, type, isolateMethodCalls, logger))
+                    {
+                        executed = true;
+                    }
                 }
             }
 
             return executed;
         }
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found
@@ -1368,7 +1365,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found
@@ -1385,7 +1382,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// Execute the methods on the specified instance that are addorned with ConsoleAction
+        /// Execute the methods on the specified instance that are adorned with ConsoleAction
         /// attributes that have CommandLineSwitch(es) defined that match keys in the
         /// specified ParsedArguments using the specified ILogger to report any switches not
         /// found.  An ExpectFailedException will be thrown if more than one method is found

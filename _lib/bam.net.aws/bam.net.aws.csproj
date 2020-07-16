@@ -3,7 +3,7 @@
     <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
     <RootNamespace>Bam.Net.Aws</RootNamespace>
     <PackageId>bam.net.aws</PackageId>
-    <Version>1.0.5-test+fb59d5e</Version>
+    <Version>1.0.5-test+04d5eb8</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

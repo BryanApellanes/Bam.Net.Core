@@ -11,7 +11,7 @@ using Bam.Net.Data;
 
 namespace Bam.Net.Data
 {
-    public static class NpgsqlRegistrar
+    public class NpgsqlRegistrar
     {
         static NpgsqlRegistrar()
         {
@@ -52,7 +52,7 @@ namespace Bam.Net.Data
         }
 
         /// <summary>
-        /// Registser the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet  
+        /// Register the Npgsql implementation of IParameterBuilder, SchemaWriter and QuerySet  
         /// into the specified incubator
         /// </summary>
         /// <param name="incubator"></param>

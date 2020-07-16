@@ -79,25 +79,25 @@ namespace Bam.Net.Tests
             });
         }
 
-        [UnitTest]
+        [UnitTest(IgnoreBecause = "Not implemented")]
         public void CanGetResourceInfo()
         {
             throw new NotImplementedException();
         }
 
-        [UnitTest]
+        [UnitTest(IgnoreBecause = "Not implemented")]
         public void CanSetResourcePermissions()
         {
             throw new NotImplementedException();
         }
 
-        [UnitTest]
+        [UnitTest(IgnoreBecause = "Not implemented")]
         public void CanAddResourcePermission()
         {
             throw new NotImplementedException();
         }
 
-        [UnitTest]
+        [UnitTest(IgnoreBecause = "Not implemented")]
         public void CanRemoveResourcePermission()
         {
             throw new NotImplementedException();

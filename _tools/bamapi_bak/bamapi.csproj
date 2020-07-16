@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <ApplicationIcon>bamsvc.ico</ApplicationIcon>
+    <RootNamespace>Bam.Net.Application</RootNamespace>
+    <PackageId>bamrpc.exe</PackageId>
+    <Version>1.0.5-test+cf862df</Version>
+    <Authors>Bryan Apellanes</Authors>
+    <Company>ThreeHeadz</Company>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="bamsvc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Test\GlooTestScript.csgloo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\bamrpc.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bamrpc.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bamrpc.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bamrpc.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bamrpc.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bamrpc.dll.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bamrpc.application" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
+  </ItemGroup>
+</Project>

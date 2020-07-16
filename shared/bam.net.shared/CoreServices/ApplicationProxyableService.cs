@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Bam.Net.Server;
 using Bam.Net.Data.Repositories;
-using Bam.Net.CoreServices.OAuth;
+using Bam.Net.CoreServices.Auth;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.ServiceProxy;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
+using Bam.Net.Services;
 using Bam.Net.Web;
 
 namespace Bam.Net.CoreServices
@@ -28,9 +29,9 @@ namespace Bam.Net.CoreServices
         public ApplicationProxyableService(IRepository genericRepo, DaoRepository daoRepo, AppConf appConf) 
             : base(genericRepo, daoRepo, appConf)
         { }
-
-        public ApplicationRegistrationRepository ApplicationRegistrationRepository { get; set; }
-
+        
+        public ApplicationRegistrationRepository ApplicationRegistrationRepository { get; set; } // should get set by deriving classes
+        
         public IApplicationNameProvider ApplicationNameProvider { get; set; }
 
         /// <summary>
@@ -57,13 +58,7 @@ namespace Bam.Net.CoreServices
         /// <value>
         /// The name of the client application.  This value comes from the custom HTTP header "X-Bam-AppName".
         /// </value>
-        public string ClientApplicationName
-        {
-            get
-            {
-                return base.ApplicationName;
-            }
-        }
+        public string ClientApplicationName => base.ApplicationName;
 
         public ProcessModes ProcessMode
         {
@@ -153,7 +148,7 @@ namespace Bam.Net.CoreServices
                 Logger.Warning("{0} was null, '{1}' will always return true in this case", nameof(ApplicationNameProvider), nameof(RequestIsForCurrentApplication));
                 if (dieOnWarning)
                 {
-                    throw new InvalidOperationException(string.Format("{0} was null, '{1}' will always return true in this case", nameof(ApplicationNameProvider), nameof(RequestIsForCurrentApplication)));
+                    throw new InvalidOperationException($"{nameof(ApplicationNameProvider)} was null, '{nameof(RequestIsForCurrentApplication)}' will always return true in this case");
                 }
             }
             return ClientApplicationName.Equals(ServerApplicationName);
@@ -196,8 +191,8 @@ namespace Bam.Net.CoreServices
             Bam.Net.CoreServices.ApplicationRegistration.Data.Application app = GetServerApplicationOrDie();
             if(app.HostDomains.Count > 0)
             {
-                HostDomain hd = app.HostDomains.Where(h => h.DomainName.Equals(host) && h.Port.Equals(port)).FirstOrDefault();
-                return hd == null ? false : hd.Authorized;
+                HostDomain hd = app.HostDomains.FirstOrDefault(h => h.DomainName.Equals(host) && h.Port.Equals(port));
+                return hd?.Authorized ?? false;
             }
             else
             {                

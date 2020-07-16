@@ -47,10 +47,7 @@ namespace Bam.Net.Documentation.Markdown
         string _titleFormat;
         public string TitleFormat
         {
-            get
-            {
-                return _titleFormat;
-            }
+            get => _titleFormat;
             set
             {
                 _titleFormat = value;

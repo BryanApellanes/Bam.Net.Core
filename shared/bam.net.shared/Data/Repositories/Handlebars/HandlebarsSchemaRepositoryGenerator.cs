@@ -11,7 +11,7 @@ namespace Bam.Net.Data.Repositories.Handlebars
 {
     public class HandlebarsSchemaRepositoryGenerator: SchemaRepositoryGenerator
     {
-        public HandlebarsSchemaRepositoryGenerator(GenerationConfig config, ILogger logger = null) : base(SchemaRepositoryGeneratorSettings.FromConfig(config), logger)
+        public HandlebarsSchemaRepositoryGenerator(DaoRepoGenerationConfig config, ILogger logger = null) : base(SchemaRepositoryGeneratorSettings.FromConfig(config), logger)
         {
             TemplateRenderer = new HandlebarsTemplateRenderer(new Presentation.Handlebars.HandlebarsEmbeddedResources(typeof(SchemaRepositoryGenerator).Assembly), new Presentation.Handlebars.HandlebarsDirectory(config.TemplatePath));
 

@@ -15,7 +15,7 @@ namespace Bam.Net.Testing
 {
     public abstract class TestRunner<TTestMethod> : Loggable, ITestRunner<TTestMethod> where TTestMethod : TestMethod
     {
-        static Dictionary<Type, Func<Assembly, ILogger, ITestRunner<TTestMethod>>> _factory;
+        static readonly Dictionary<Type, Func<Assembly, ILogger, ITestRunner<TTestMethod>>> _factory;
         static TestRunner()
         {
             _factory = new Dictionary<Type, Func<Assembly, ILogger, ITestRunner<TTestMethod>>>
@@ -106,11 +106,14 @@ namespace Bam.Net.Testing
                 return;
             }
 
-            FireEvent(TestsDiscovered,
-                new TestsDiscoveredEventArgs<TTestMethod>
-                    {Assembly = Assembly, TestRunner = this, Tests = tests.Select(t => (TestMethod) t).ToList()});
+            FireEvent(TestsDiscovered, new TestsDiscoveredEventArgs<TTestMethod>
+            {
+                Assembly = Assembly, 
+                TestRunner = this, 
+                Tests = tests.Select(t => (TestMethod) t).ToList()
+            });
             FireEvent(TestsStarting, new TestEventArgs<TTestMethod> {TestRunner = this, Assembly = Assembly});
-            foreach (TestMethod test in tests)
+            foreach (TTestMethod test in tests)
             {
                 RunTest(test);
             }
@@ -206,8 +209,7 @@ namespace Bam.Net.Testing
             }
             catch (Exception ex)
             {
-                ex = ex.GetInnerException();
-                FireTestFailed(test, ex);
+                FireTestFailed(test, ex.GetBaseException());
             }
             FireEvent(TestFinished, args);
         }
@@ -233,13 +235,7 @@ namespace Bam.Net.Testing
 
         protected Assembly Assembly { get; set; }
 
-        protected List<TTestMethod> Tests
-        {
-            get
-            {
-                return _tests.Value;
-            }
-        }
+        protected List<TTestMethod> Tests => _tests.Value;
 
         protected bool IsInRange(string testNumber, out int selectedNumber)
         {

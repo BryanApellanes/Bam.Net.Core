@@ -18,17 +18,11 @@ namespace Bam.Net.Tests
             [Verbosity(VerbosityLevel.Custom, SenderMessageFormat = "Name={Name}")]
             public event EventHandler TestEvent;
 
-            public string Name
-            {
-                get { return "Test"; }
-            }
+            public string Name => "Test";
 
             public void OnTestEvent()
             {
-                if (TestEvent != null)
-                {
-                    TestEvent(this, null);
-                }
+                TestEvent?.Invoke(this, null);
             }
 
             public void Fire()
@@ -41,7 +35,7 @@ namespace Bam.Net.Tests
         {
             public bool AddCalled { get; set; }
 
-            public override void AddEntry(string messageSignature, int verbosity)
+            public override void AddEntry(string messageSignature, int verbosity, params string[] variableMessageValues)
             {
                 AddCalled = true;
                 OutLineFormat(messageSignature, ConsoleColor.Cyan);

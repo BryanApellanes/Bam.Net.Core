@@ -1,6 +1,0 @@
-SchemaName: ApplicationRegistration
-WriteSourceTo: C:\bam\src\BamFrameworkCore\Bam.Net\shared\bam.net.shared\CoreServices\ApplicationRegistration\Data\Generated_Dao
-TypeAssembly: C:\bam\src\BamFrameworkCore\Bam.Net\bam.net.core\bin\Debug\netcoreapp2.2\bam.net.core.dll
-FromNameSpace: Bam.Net.CoreServices.ApplicationRegistration.Data
-ToNameSpace: Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
-UseInheritanceSchema: false

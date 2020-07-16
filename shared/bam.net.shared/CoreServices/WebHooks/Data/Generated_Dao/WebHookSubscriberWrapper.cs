@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 
 		public WebHookSubscriberWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -49,8 +49,9 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 
 
 
-// Xref property: Left -> WebHookDescriptor ; Right -> WebHookSubscriber
+        // right xref
 
+// Right Xref property: Left -> WebHookDescriptor ; Right -> WebHookSubscriber
 		List<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor> _webHookDescriptors;
 		public override List<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor> Descriptors
 		{
@@ -58,8 +59,8 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 			{
 				if(_webHookDescriptors == null || _webHookDescriptors.Count == 0)
 				{
-					var xref = new XrefDaoCollection<Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptorWebHookSubscriber, Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor>(Repository.GetDaoInstance(this), false);
-					xref.Load(Repository.Database);
+					var xref = new XrefDaoCollection<Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptorWebHookSubscriber, Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor>(DaoRepository.GetDaoInstance(this), false);
+					xref.Load(DaoRepository.Database);
 					_webHookDescriptors = ((IEnumerable)xref).CopyAs<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>().ToList();
 					SetUpdatedXrefCollectionProperty("WebHookDescriptors", this.GetType().GetProperty("Descriptors"));					
 				}
@@ -71,6 +72,8 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 				_webHookDescriptors = value;
 				SetUpdatedXrefCollectionProperty("WebHookDescriptors", this.GetType().GetProperty("Descriptors"));
 			}
-		}	}
+		}
+
+	}
 	// -- generated
 }																								

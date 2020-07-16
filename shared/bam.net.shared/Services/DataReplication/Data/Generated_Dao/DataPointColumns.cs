@@ -83,6 +83,27 @@ namespace Bam.Net.Services.DataReplication.Data.Dao
                 return new DataPointColumns("DataProperties");
             }
         }
+        public DataPointColumns Key
+        {
+            get
+            {
+                return new DataPointColumns("Key");
+            }
+        }
+        public DataPointColumns CompositeKeyId
+        {
+            get
+            {
+                return new DataPointColumns("CompositeKeyId");
+            }
+        }
+        public DataPointColumns CompositeKey
+        {
+            get
+            {
+                return new DataPointColumns("CompositeKey");
+            }
+        }
         public DataPointColumns CreatedBy
         {
             get

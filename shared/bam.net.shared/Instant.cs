@@ -14,6 +14,8 @@ namespace Bam.Net
     /// </summary>
     public class Instant
     {
+        public const string InterpolationFormat = "{Month}/{Day}/{Year};{Hour}.{Minute}.{Second}.{Millisecond}";
+        
         public Instant()
         {
             this.Initialize();

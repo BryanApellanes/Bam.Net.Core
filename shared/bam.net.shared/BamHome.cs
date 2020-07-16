@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao;
 
 namespace Bam.Net
 {
     /// <summary>
-    /// Paths rooted in the root of the bam installation. (/opt/bam on *nix, c:/bam on windows)
+    /// Paths rooted in the root of the bam installation. (/opt/bam on *nix, /c/bam on windows)
     /// </summary>
     public static class BamHome // TODO: refactor this into BamHome.[home paths] and BamProfile.[profile paths]
     {
@@ -18,10 +19,12 @@ namespace Bam.Net
         /// </summary>
         public static string Root => Path;
 
+        public static string HostData => System.IO.Path.Combine(Local, Bam.Net.CoreServices.ApplicationRegistration.Data.Machine.Current.Name);
+        
         public static string Local => System.IO.Path.Combine(Path, "local");
         
         /// <summary>
-        /// The path segments for BamHome
+        /// The path segments for BamHome, on Windows /c/bam, otherwise /opt/bam
         /// </summary>
         public static string[] PathSegments
         {
@@ -29,7 +32,7 @@ namespace Bam.Net
             {
                 if (OSInfo.Current == OSNames.Windows)
                 {
-                    return new string[] {"C:", "bam"};
+                    return new string[] {"/c", "opt", "bam"};
                 }
                 else
                 {
@@ -38,6 +41,8 @@ namespace Bam.Net
             }
         }
 
+        public static string Public => System.IO.Path.Combine(Path, "public");
+        
         public static string Profile => BamProfile.Path;
         
         public static string UserHome => BamProfile.UserHome;

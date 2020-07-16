@@ -34,20 +34,33 @@ namespace Bam.Net.Testing
 
         protected static MethodInfo DefaultMethod { get; set; }
 
-        public static void ExecuteMain(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        /// <summary>
+        /// Parses command arguments and executes any switches specified.  Returns true if command line switches were
+        /// specified, otherwise false.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="parseErrorHandler"></param>
+        /// <returns></returns>
+        public static bool ExecuteMain(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
         {
-            ExecuteMain(args, () => { }, parseErrorHandler);
+            return ExecuteMain(args, () => { }, parseErrorHandler);
         }
         
-        public static void ExecuteMain(string[] args, Action preInit, ConsoleArgsParsedDelegate parseErrorHandler = null)
+        /// <summary>
+        /// Parses command arguments and executes any switches specified.  Returns true if command line switches were
+        /// specified, otherwise false.
+        /// </summary>
+        public static bool ExecuteMain(string[] args, Action preInit, ConsoleArgsParsedDelegate parseErrorHandler = null)
         {
             AddSwitches();
             AddConfigurationSwitches();
             Initialize(args, preInit, parseErrorHandler);
             if (Arguments.Length > 0 && !Arguments.Contains("i"))
             {
-                ExecuteSwitches(false, new ConsoleLogger());
+                return ExecuteSwitches(false, new ConsoleLogger());
             }
+
+            return false;
         }
 
         public static void Initialize(string[] args, ConsoleArgsParsedDelegate parseErrorHandler = null)
@@ -56,7 +69,8 @@ namespace Bam.Net.Testing
         }
         
         /// <summary>
-        /// Prepares commandline arguments for reading.
+        /// Prepares commandline arguments for reading.  If this method completes without errors, parsed arguments
+        /// will be in the static Arguments property.
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="parseErrorHandler">The parse error handler.</param>
@@ -165,14 +179,28 @@ namespace Bam.Net.Testing
             }
         }
 
-        protected static void InitLogger()
+        private static bool _loggerInitialized;
+        static object _initLoggerLock = new object();
+        protected static ConsoleLogger InitLogger()
         {
-            ConsoleLogger logger = (ConsoleLogger)Log.CreateLogger(typeof(ConsoleLogger));
-            logger.UseColors = true;
-            logger.ShowTime = true;
-			logger.StartLoggingThread();
-            logger.EntryAdded += new LogEntryAddedListener(LoggerEntryAdded);
-            Logger = logger;
+            lock (_initLoggerLock)
+            {
+                if (!_loggerInitialized)
+                {
+                    _loggerInitialized = true;
+                    
+                    ConsoleLogger logger = (ConsoleLogger)Log.CreateLogger(typeof(ConsoleLogger));
+                    logger.UseColors = true;
+                    logger.ShowTime = true;
+                    logger.AddDetails = false;
+                    logger.StartLoggingThread();
+                    logger.EntryAdded += new LogEntryAddedListener(LoggerEntryAdded);
+                    Logger = logger;
+                    Log.Default = Logger;
+                }
+            }
+
+            return Log.Default as ConsoleLogger;
         }
 
 		private static void TryInvoke<T>(ConsoleMethod cim)
@@ -261,8 +289,13 @@ namespace Bam.Net.Testing
             }
         }
 
+        public static EventHandler DefaultPassedHandler;
+        public static EventHandler DefaultFailedHandler;
+        
         public static void RunAllSpecTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<SpecTestMethod> runner = GetSpecTestRunner(assembly, logger);
             AttachHandlers<SpecTestMethod>(passedHandler, failedHandler, runner);
             AttachSpecTestRunListeners(runner);
@@ -271,15 +304,18 @@ namespace Bam.Net.Testing
 
         public static void RunSpecTestGroup(Assembly assembly, string testGroup, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<SpecTestMethod> runner = GetSpecTestRunner(assembly, logger);
             AttachHandlers<SpecTestMethod>(passedHandler, failedHandler, runner);
             AttachSpecTestRunListeners(runner);
             runner.RunTestGroup(testGroup);
         }
 
-        public static void RunAllUnitTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null,
-            EventHandler failedHandler = null)
+        public static void RunAllUnitTests(Assembly assembly, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<UnitTestMethod> runner = GetUnitTestRunner(assembly, logger);
             AttachHandlers<UnitTestMethod>(passedHandler, failedHandler, runner);
             AttachUnitTestRunListeners(runner);
@@ -288,12 +324,14 @@ namespace Bam.Net.Testing
 
         public static void RunUnitTestGroup(Assembly assembly, string testGroup, ILogger logger = null, EventHandler passedHandler = null, EventHandler failedHandler = null)
         {
+            passedHandler = passedHandler ?? DefaultPassedHandler;
+            failedHandler = failedHandler ?? DefaultFailedHandler;
             ITestRunner<UnitTestMethod> runner = GetUnitTestRunner(assembly, logger);
             AttachHandlers<UnitTestMethod>(passedHandler, failedHandler, runner);
             AttachUnitTestRunListeners(runner);
             runner.RunTestGroup(testGroup);
         }
-        
+  
         protected internal static Func<IEnumerable<ITestRunListener<UnitTestMethod>>> GetUnitTestRunListeners
         {
             get;
@@ -327,8 +365,8 @@ namespace Bam.Net.Testing
             runner.TestsDiscovered += (o, e) =>
             {
                 TestsDiscoveredEventArgs<TTestMethod> args = (TestsDiscoveredEventArgs<TTestMethod>)e;
-                OutLineFormat("Running all tests in {0}", ConsoleColor.Green, args.Assembly.FullName);
-                OutLineFormat("\tFound {0} tests", ConsoleColor.Cyan, args.Tests.Count);
+                Message.PrintLine("Running all tests in {0}", ConsoleColor.Green, args.Assembly.FullName);
+                Message.PrintLine("\tFound {0} tests", ConsoleColor.Cyan, args.Tests.Count);
             };
             runner.TestPassed += (o, e) =>
             {
@@ -338,37 +376,37 @@ namespace Bam.Net.Testing
             runner.TestFailed += (o, t) =>
             {
                 TestExceptionEventArgs args = (TestExceptionEventArgs)t;
-                Out("Test Failed: " + args.TestMethod.Information + "\r\n", ConsoleColor.Red);
-                Out(args.Exception.Message, ConsoleColor.Magenta);
-                Out();
-                Out(args.Exception.StackTrace, ConsoleColor.Red);
-                Out("---", ConsoleColor.Red);
-                Out();
+                Message.PrintLine("Test Failed: ({0})", ConsoleColor.Red,  args.TestMethod.ToString());
+                Message.PrintLine(args.Exception.Message, ConsoleColor.Magenta);
+                Message.PrintLine();
+                Message.PrintLine(args.Exception.StackTrace, ConsoleColor.Red);
+                Message.PrintLine("---", ConsoleColor.Red);
             };
             runner.TestsFinished += (o, e) =>
             {
                 TestEventArgs<TTestMethod> args = (TestEventArgs<TTestMethod>)e;
                 TestRunnerSummary summary = args.TestRunner.TestSummary;
-                Out();
-                OutLine("********");
+
+                Message.PrintLine("********", ConsoleColor.Blue);
                 if (summary.FailedTests.Count > 0)
                 {
-                    OutLineFormat("({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
-                    OutLineFormat("({0}) tests failed", ConsoleColor.Red, summary.FailedTests.Count);
+                    Message.PrintLine("({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
+                    Message.PrintLine("({0}) tests failed", ConsoleColor.Red, summary.FailedTests.Count);
+                    StringBuilder failedTests = new StringBuilder();
                     summary.FailedTests.ForEach(cim =>
                     {
-                        Out("\t");
                         MethodInfo method = cim.Test.Method;
                         Type type = method.DeclaringType;
                         string testIdentifier = $"{type.Namespace}.{type.Name}.{method.Name}";
-                        OutLineFormat("{0}: ({1})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), cim.Test.Information, testIdentifier);
+                        failedTests.AppendFormat("\t{0}: ({1}) => {2}\r\n", testIdentifier, cim.Test.Information, cim.Exception?.Message ?? "[no message]");
                     });
+                    Message.PrintLine("FAILED TESTS: \r\n {0})", new ConsoleColorCombo(ConsoleColor.Yellow, ConsoleColor.Red), failedTests.ToString());
                 }
                 else
                 {
-                    OutLineFormat("All ({0}) tests passed", ConsoleColor.Green, summary.PassedTests.Count);
+                    OutLineFormat("All ({0}) tests passed", ConsoleColor.Green, ConsoleColor.Black, summary.PassedTests.Count);
                 }
-                OutLine("********");
+                OutLine("********", ConsoleColor.Blue, ConsoleColor.Black);
             };
             return runner;
         }
@@ -386,9 +424,7 @@ namespace Bam.Net.Testing
         /// <param name="signatureVariableValues"></param>
         public static void Warn(string messageSignature, params object[] signatureVariableValues)
         {
-            Logger.AddEntry(messageSignature, LogEventType.Warning, ToStringArray(signatureVariableValues));
-            Logger.BlockUntilEventQueueIsEmpty();
-            Logger.RestartLoggingThread();
+            Message.PrintLine(messageSignature, ConsoleColor.Yellow, ToStringArray(signatureVariableValues));
         }
 
         public static void Error(string message, Exception ex)
@@ -403,9 +439,8 @@ namespace Bam.Net.Testing
         /// <param name="signatureVariableValues"></param>
         public static void Error(string messageSignature, Exception ex, params object[] signatureVariableValues)
         {
-            Logger.AddEntry(messageSignature, ex, ToStringArray(signatureVariableValues));
-            Logger.BlockUntilEventQueueIsEmpty();
-            Logger.RestartLoggingThread();
+            Message.PrintLine(messageSignature, ConsoleColor.Magenta, ToStringArray(signatureVariableValues));
+            Message.PrintLine("{0}\r\n\t{1}", ConsoleColor.DarkMagenta, ex.StackTrace);
         }
 
 		private static string[] ToStringArray(object[] signatureVariableValues)
@@ -455,6 +490,16 @@ namespace Bam.Net.Testing
             if (failedHandler != null)
             {
                 runner.TestFailed += failedHandler;
+            }
+
+            if (DefaultPassedHandler != null)
+            {
+                runner.TestPassed += DefaultPassedHandler;
+            }
+            
+            if (DefaultFailedHandler != null)
+            {
+                runner.TestFailed += DefaultFailedHandler;
             }
         }
     }

@@ -97,7 +97,7 @@ namespace Bam.Net.CoreServices
             }
         }
 
-        static Dictionary<Type, ProxySettingsValidation> _validatedTypes = new Dictionary<Type, ProxySettingsValidation>();
+        static readonly Dictionary<Type, ProxySettingsValidation> _validatedTypes = new Dictionary<Type, ProxySettingsValidation>();
         public static ProxySettingsValidation ValidateTypeMethods(Type serviceType, bool includeLocalMethods)
         {
             if (_validatedTypes.ContainsKey(serviceType))

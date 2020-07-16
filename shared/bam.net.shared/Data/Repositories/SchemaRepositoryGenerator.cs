@@ -46,14 +46,14 @@ namespace Bam.Net.Data.Repositories
 
         public ITemplateRenderer TemplateRenderer { get; set; }
 
-        public GenerationConfig Config
+        public DaoRepoGenerationConfig Config
         {
             get; private set;
         }
 
         public Assembly SourceAssembly { get; set; }
 
-        public void Configure(GenerationConfig config)
+        public void Configure(DaoRepoGenerationConfig config)
         {
             if (config == null)
             {
@@ -61,7 +61,7 @@ namespace Bam.Net.Data.Repositories
             }
             Config = config;
             CheckIdField = config.CheckForIds;
-            BaseRepositoryType = config.UseInheritanceSchema ? "DatabaseRepository" : "DaoRepository";
+            BaseRepositoryType = config.UseInheritanceSchema ? "DaoInheritanceRepository" : "DaoRepository";
             TargetNamespace = Config.FromNameSpace;
         }
 
@@ -98,13 +98,7 @@ namespace Bam.Net.Data.Repositories
         /// </summary>
         public string SourceNamespace { get; set; }
         public string BaseRepositoryType { get; set; }
-        public string SchemaRepositoryNamespace
-        {
-            get
-            {
-                return $"{DaoNamespace}.Repository";
-            }
-        }
+        public string SchemaRepositoryNamespace => $"{DaoNamespace}.Repository";
 
         public void GenerateSource()
         {

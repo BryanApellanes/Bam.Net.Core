@@ -76,38 +76,37 @@ namespace Bam.Net.Tests
         public static void IncubatorShouldTakeAFuncAndReturnResult()
         {
             Incubator i = new Incubator();
-            Func<Primate> f = () => { return new Monkey(); };
+            Func<Primate> f = () => new Monkey();
             i.Set(typeof(Primate), f);
             Primate m = i.Get<Primate>();
-            Expect.IsTrue(m.GetType() == typeof(Monkey));
+            (m.GetType() == typeof(Monkey)).IsTrue();
         }
 
         [UnitTest]
         public static void IncubatorShouldTakeAFuncAndReturnResult2()
         {
             Incubator i = new Incubator();
-            i.Set<Primate>(() => { return new Monkey(); });
+            i.Set<Primate>(() => new Monkey());
             Primate m = i.Get<Primate>();
-            Expect.IsTrue(m.GetType() == typeof(Monkey));
+            (m.GetType() == typeof(Monkey)).IsTrue();
         }
 
         [UnitTest]
         public static void IncubatorShouldTakeAFuncAndReturnByClassName()
         {
             Incubator i = new Incubator();
-            i.Set<Primate>(() => { return new Monkey(); });
+            i.Set<Primate>(() => new Monkey());
             object m = i.Get("Primate");
-            Expect.IsTrue(m.GetType() == typeof(Monkey));
+            (m.GetType() == typeof(Monkey)).IsTrue();
         }
 
         [UnitTest]
         public static void IncubatorShouldTakeAFuncAndPopOutSpecifiedType()
         {
             Incubator i = new Incubator();
-            Type type;
-            i.Set<Primate>(() => { return new Monkey(); });
-            object m = i.Get("Primate", out type);
-            Expect.IsTrue(type == typeof(Primate));
+            i.Set<Primate>(() => new Monkey());
+            object m = i.Get("Primate", out Type type);
+            (type == typeof(Primate)).IsTrue();
         }
 
         [UnitTest]
@@ -282,13 +281,13 @@ namespace Bam.Net.Tests
         {
             ServiceRegistry reg = CoreServiceRegistryContainer.Create();
             ILogReader logReader = reg.Get<ILogReader>();
-            Expect.IsInstanceOfType<SystemLogReaderService>(logReader);
+            logReader.IsInstanceOfType<SystemLogReaderService>();
             reg.For<ILogReader>().Use<TestLogReader>();
             reg.For<IFileService>().Use<TestFileService>();
             logReader = reg.Get<ILogReader>();
-            Expect.IsInstanceOfType<TestLogReader>(logReader);
+            logReader.IsInstanceOfType<TestLogReader>();
             TestLogReader test = (TestLogReader)logReader;
-            Expect.IsInstanceOfType<TestFileService>(test.FileService);
+            test.FileService.IsInstanceOfType<TestFileService>();
         }
     }
 }

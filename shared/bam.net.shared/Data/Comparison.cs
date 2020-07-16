@@ -16,7 +16,7 @@ namespace Bam.Net.Data
         {
             this.ColumnName = column;
             this.Operator = oper;
-			this.ColumnNameFormatter = (c) => string.Format("[{0}]", c);
+			this.ColumnNameFormatter = (c) => $"[{c}]";
 			this.ParameterPrefix = "@";
             if (value == null)
             {

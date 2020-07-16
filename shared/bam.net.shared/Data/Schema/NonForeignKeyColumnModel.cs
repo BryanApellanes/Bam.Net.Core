@@ -11,67 +11,24 @@ namespace Bam.Net.Data.Schema
             Column = column;
         }
 
+        public bool Key => Column is KeyColumn;
+
         public Column Column { get; set; }
 
-        public string TableClassName
-        {
-            get
-            {
-                return Column.TableClassName;
-            }
-        }
+        public string TableClassName => Column.TableClassName;
 
-        public string PropertyName
-        {
-            get { return Column.PropertyName; }
-        }
+        public string PropertyName => Column.PropertyName;
 
-        public string Name
-        {
-            get
-            {
-                return Column.Name;
-            }
-        }
+        public string Name => Column.Name;
 
-        public string DbDataType
-        {
-            get
-            {
-                return Column.DbDataType;
-            }
-        }
+        public string DbDataType => Column.DbDataType;
 
-        public string MaxLength
-        {
-            get
-            {
-                return Column.MaxLength;
-            }
-        }
+        public string MaxLength => Column.MaxLength;
 
-        public string AllowNull
-        {
-            get
-            {
-                return Column.AllowNull.ToString().ToLowerInvariant();
-            }
-        }
+        public string AllowNull => Column.AllowNull.ToString().ToLowerInvariant();
 
-        public string NativeType
-        {
-            get
-            {
-                return Column.NativeType;
-            }
-        }
+        public string NativeType => Column.NativeType;
 
-        public string DataType
-        {
-            get
-            {
-                return Column.DataType.ToString();
-            }
-        }
+        public string DataType => Column.DataType.ToString();
     }
 }

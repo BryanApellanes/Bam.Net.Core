@@ -18,16 +18,18 @@ namespace Bam.Net.Data
         {
             return new SQLiteParameter($"@{name}", value);
         }
+
         public override DbParameter BuildParameter(IParameterInfo c)
         {
-            string parameterName = string.Format("@{0}{1}", c.ColumnName, c.Number);
-			object value = c.Value;
-			if(value is DateTime || value is DateTime?)
-			{
-				value = new Instant((DateTime)value).ToDateTime();
-			}
+            string parameterName = $"@{c.ColumnName}{c.Number}";
+            object value = c.Value;
+            if (value is DateTime || value is DateTime?)
+            {
+                value = new Instant((DateTime) value).ToDateTime();
+            }
+
             SQLiteParameter result = new SQLiteParameter(parameterName, value);
-            
+
             return result;
         }
 

@@ -17,7 +17,7 @@ using Bam.Net.Presentation;
 
 namespace Bam.Net.Server
 {
-    public abstract partial class TemplateInitializer : IInitialize<TemplateInitializer>, IPostServerInitialize
+    public abstract partial class TemplateInitializer : Loggable, IInitialize<TemplateInitializer>, IPostServerInitialize
     {
         protected internal static void RenderEachTable(IWebRenderer renderer, DaoProxyRegistration daoProxyReg)
         {

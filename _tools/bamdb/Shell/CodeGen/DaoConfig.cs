@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Bam.Net;
+using Bam.Net.Data;
 
 namespace Bam.Shell.CodeGen
 {
@@ -18,5 +19,16 @@ namespace Bam.Shell.CodeGen
         public string PostgresTableSchema { get; set; }
         
         public ExtractionTargetDbTypes DbType { get; set; }
+
+        public static DaoConfig FromDatabaseConfig(DatabaseConfig databaseConfig, string postgresTableSchema = "")
+        {
+            return new DaoConfig
+            {
+                TemplatePath = string.Empty,
+                Name = databaseConfig.ConnectionName,
+                ConnectionString = databaseConfig.GetDatabase().ConnectionString,
+                PostgresTableSchema = postgresTableSchema
+            };
+        }
     }
 }

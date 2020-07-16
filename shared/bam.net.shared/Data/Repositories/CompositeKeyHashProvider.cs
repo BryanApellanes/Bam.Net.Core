@@ -8,6 +8,13 @@ namespace Bam.Net.Data.Repositories
 {
     internal static class CompositeKeyHashProvider
     {
+        public static ulong GetDeterministicId(object instance)
+        {
+            Args.ThrowIfNull(instance, "instance");
+            string[] compositeKeyProperties = GetCompositeKeyProperties(instance.GetType());
+            return GetULongKeyHash(instance, instance.Property("PropertyDelimiter")?.ToString().Or("\r\n"), compositeKeyProperties);
+        }
+        
         public static string[] GetCompositeKeyProperties(Type type)
         {
             List<string> props = type.GetPropertiesWithAttributeOfType<CompositeKeyAttribute>().Select(pi => pi.Name).ToList();
@@ -34,7 +41,7 @@ namespace Bam.Net.Data.Repositories
         {
             CheckArgs(instance, compositeKeyProperties);
             return string.Join(propertyDelimiter, compositeKeyProperties.Select(prop => instance.Property(prop)))
-                .Hash(algorithm);
+                .HashHexString(algorithm);
         }
 
         internal static int GetIntKeyHash(object instance, string propertyDelimiter, string[] compositeKeyProperties)

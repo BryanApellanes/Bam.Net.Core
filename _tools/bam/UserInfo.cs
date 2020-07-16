@@ -15,8 +15,8 @@ namespace Bam.Net.Application
         string _password;
         public string Password
         {
-            get { return "*****"; }
-            set { _password = value; }
+            get => "*****";
+            set => _password = value;
         }
 
         internal string GetPassword()

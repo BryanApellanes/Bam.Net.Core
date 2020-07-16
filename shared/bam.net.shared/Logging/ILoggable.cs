@@ -11,6 +11,13 @@ namespace Bam.Net.Logging
 {
     public interface ILoggable
     {
+        /// <summary>
+        /// A value from 0 - 5, represented by the LogEventType enum.
+        /// The higher the value the more log entries will 
+        /// be logged.
+        /// </summary>
+        VerbosityLevel LogVerbosity { get; set; }
+        
         ILogger[] Subscribers
         {
             get;

@@ -16,22 +16,16 @@ namespace Bam.Net.Messaging
     public class Notify
     {
         static Vault _credentialVault;
-        static object _credentialVaultSync = new object();
+        static readonly object _credentialVaultSync = new object();
         public const string CredentialVaultName = "SysCreds";
 
-        public static Vault CredentialVault
+        public static Vault Credentials
         {
             get
             {
-                return _credentialVaultSync.DoubleCheckLock(ref _credentialVault, () =>
-                {
-                    return Vault.Load(new FileInfo("./SysCreds.vault.sqlite"), CredentialVaultName, "".RandomLetters(16), Log.Default);
-                });
+                return _credentialVaultSync.DoubleCheckLock(ref _credentialVault, () => Vault.Load(new FileInfo("./SysCreds.vault.sqlite"), CredentialVaultName, Vault.GeneratePassword(), Log.Default));
             }
-            set
-            {
-                _credentialVault = value;
-            }
+            set => _credentialVault = value;
         }
         public static bool ValidateRequiredSettings(Vault credentialContainer)
         {
@@ -95,7 +89,7 @@ namespace Bam.Net.Messaging
 
         private static void EnsureCredentials()
         {
-            EnsureCredentials(CredentialVault);
+            EnsureCredentials(Credentials);
         }
 
         private static void EnsureCredentials(Vault credentialContainer)
@@ -109,7 +103,7 @@ namespace Bam.Net.Messaging
         {
             EnsureCredentials();
 
-            return ByEmail(CredentialVault, to);
+            return ByEmail(Credentials, to);
         }
 
         public static Email ByEmail(Vault smtpSettings, string to)

@@ -15,7 +15,7 @@ namespace Bam.Net.Data
 {
     public class DatabaseContainer
     {
-        Dictionary<string, Database> _databases;        
+        readonly Dictionary<string, Database> _databases;        
         public DatabaseContainer()
         {
             this._databases = new Dictionary<string, Database>();
@@ -43,7 +43,7 @@ namespace Bam.Net.Data
         }
 
         /// <summary>
-        /// Gets the Databse for the specified connection name.
+        /// Gets the Database for the specified connection name.
 		/// This correlates to a connection in the default 
 		/// app config file
         /// </summary>
@@ -75,14 +75,8 @@ namespace Bam.Net.Data
         /// <returns></returns>
         public Database this[Type daoType]
         {
-            get
-            {
-                return this[Dao.ConnectionName(daoType)];
-            }
-            internal set
-            {
-                this[Dao.ConnectionName(daoType)] = value;
-            }
+            get => this[Dao.ConnectionName(daoType)];
+            internal set => this[Dao.ConnectionName(daoType)] = value;
         }
         
         public Database this[string connectionName]

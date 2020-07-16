@@ -31,6 +31,15 @@ namespace Bam.Net.Data.SQLite
         {
         }
 
+        public SQLiteDatabase(FileInfo databaseFile)
+        {
+            _databaseFile = databaseFile;
+            DirectoryInfo directoryInfo = databaseFile.Directory;
+            SetDirectory(directoryInfo.FullName);
+            ConnectionName = Path.GetFileNameWithoutExtension(databaseFile.FullName);
+            Register();
+        }
+        
         /// <summary>
         /// Instantiate a new SQLiteDatabase instance where the database
         /// file is placed into the specified directoryPath using the
@@ -41,26 +50,9 @@ namespace Bam.Net.Data.SQLite
         public SQLiteDatabase(string directoryPath, string connectionName)
             : base()
         {
-            DirectoryInfo directory = new DirectoryInfo(directoryPath);
-            if (!directory.Exists)
-            {
-                directory.Create();
-            }
-            ConnectionStringResolver = new SQLiteConnectionStringResolver
-            {
-                Directory = directory
-            };
-
+            SetDirectory(directoryPath);
             ConnectionName = connectionName;
-            ServiceProvider = new Incubator();
-            ServiceProvider.Set<DbProviderFactory>(SQLiteFactory.Instance);
             Register();
-        }
-        
-        private void Register()
-        {
-            SQLiteRegistrar.Register(this);
-            Infos.Add(new DatabaseInfo(this));
         }
 
         public static SQLiteDatabase FromConnectionString(string connectionString)
@@ -82,15 +74,12 @@ namespace Bam.Net.Data.SQLite
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = ConnectionStringResolver.Resolve(ConnectionName).ConnectionString;
+                    _connectionString = ConnectionStringResolver?.Resolve(ConnectionName).ConnectionString;
                 }
 
                 return _connectionString;
             }
-            set
-            {
-                _connectionString = value;
-            }
+            set => _connectionString = value;
         }
 
         FileInfo _databaseFile;
@@ -108,6 +97,10 @@ namespace Bam.Net.Data.SQLite
             }
         }
 
+        /// <summary>
+        /// If true, causes a call to GC.Collect() when
+        /// ReleaseConnection is called on this SQLiteDatabase instance.
+        /// </summary>
         public bool GCOnRelease { get; set; }
 
         public override void ReleaseConnection(DbConnection conn)
@@ -156,8 +149,30 @@ namespace Bam.Net.Data.SQLite
             string sqliteDatabaseFilePath = sqliteDatabaseFile.FullName;
             return new SQLiteDatabase
             {
-                ConnectionString = string.Format("Data Source={0};Version=3;", sqliteDatabaseFilePath)
+                ConnectionString = $"Data Source={sqliteDatabaseFilePath};Version=3;"
             };
+        }
+        
+        private void SetDirectory(string directoryPath)
+        {
+            DirectoryInfo directory = new DirectoryInfo(directoryPath);
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+
+            ConnectionStringResolver = new SQLiteConnectionStringResolver
+            {
+                Directory = directory
+            };
+        }
+
+        private void Register()
+        {            
+            ServiceProvider = new Incubator();
+            ServiceProvider.Set<DbProviderFactory>(SQLiteFactory.Instance);
+            SQLiteRegistrar.Register(this);
+            Infos.Add(new DatabaseInfo(this));
         }
     }
 }

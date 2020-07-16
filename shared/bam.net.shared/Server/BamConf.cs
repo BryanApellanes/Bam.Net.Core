@@ -330,15 +330,10 @@ namespace Bam.Net.Server
             return results.ToArray();
         }
 
-        int _maxThreads;
         /// <summary>
         /// Advice to subordinate components.  Not currently used ¯\_(ツ)_/¯
         /// </summary>
-        public int MaxThreads
-        {
-            get => _maxThreads;
-            set => _maxThreads = value;
-        }
+        public int MaxThreads { get; set; }
 
         List<SchemaInitializer> _schemaInitializers;
         public SchemaInitializer[] SchemaInitializers
@@ -348,10 +343,10 @@ namespace Bam.Net.Server
         }
 
         List<AppConf> _appConfigs;
-        object _appConfigsLock = new object();
+        readonly object _appConfigsLock = new object();
         /// <summary>
         /// Represents the configs for each application found in ~s:/apps 
-        /// (where each subdirectory is assumed to be a Bam application)
+        /// (where ~s is the server content folder and each subdirectory is assumed to be a Bam application)
         /// </summary>
         [YamlIgnore]
         [XmlIgnore]
@@ -387,9 +382,9 @@ namespace Bam.Net.Server
                 return AppConfigs.Where(c =>
                 {
                     bool shouldServe = true;
-                    if (c.ServerConf != null)
+                    if (c.AppServerConf != null)
                     {
-                        shouldServe = c.ServerConf.ServerKind == ServerKinds.Bam;
+                        shouldServe = c.AppServerConf.ServerKind == ServerKinds.Bam;
                     }
                     
                     if (appsRequestedOnCommandLine.Count == 0)
@@ -411,7 +406,7 @@ namespace Bam.Net.Server
         [Exclude]
         public AppConf[] AppsServedExternally
         {
-            get { return AppConfigs.Where(c => c.ServerConf?.ServerKind == ServerKinds.External).ToArray(); }
+            get { return AppConfigs.Where(c => c.AppServerConf?.ServerKind == ServerKinds.External).ToArray(); }
         }
         
         protected internal AppConf[] ReloadAppConfigs()

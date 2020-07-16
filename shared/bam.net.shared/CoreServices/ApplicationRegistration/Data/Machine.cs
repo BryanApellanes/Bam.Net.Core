@@ -54,7 +54,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
         public string DnsName { get; set; }
         public virtual List<ProcessDescriptor> Processes { get; set; }
 
-        List<Nic> _nics;
+        private List<Nic> _nics;
         public virtual List<Nic> NetworkInterfaces
         {
             get
@@ -94,6 +94,23 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
             return existing;
         }
 
+        /// <summary>
+        /// Gets the MAC address of the first Network Interface Card in NetworkInterfaces.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public string GetFirstMac()
+        {
+            Nic nic = NetworkInterfaces.FirstOrDefault();
+            if (nic == null)
+            {
+                throw new InvalidOperationException("Unable to retrieve first Nic of current host");
+            }
+
+            string mac = nic.MacAddress;
+            return mac;
+        }
+        
         public string ToJson()
         {
             return Extensions.ToJson(this, new JsonSerializerSettings
@@ -109,7 +126,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
             NetworkInterface.GetAllNetworkInterfaces().Each(context, (ctx, nic) =>
             {
                 IPInterfaceProperties nicProperties = nic.GetIPProperties();
-                foreach (IPAddressInformation unicast in nicProperties.UnicastAddresses.Where(a => !a.Address.Equals(IPAddress.Loopback) && !a.Address.Equals(IPAddress.IPv6Loopback)))
+                foreach (UnicastIPAddressInformation unicast in nicProperties.UnicastAddresses.Where(a => !a.Address.Equals(IPAddress.Loopback) && !a.Address.Equals(IPAddress.IPv6Loopback)))
                 {
                     ctx.Nics.Add(
                         new Nic

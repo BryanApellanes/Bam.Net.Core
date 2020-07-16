@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bam.Net.Application;
 using Bam.Net.Logging.Http;
 
 namespace Bam.Net.Server
@@ -29,7 +30,7 @@ namespace Bam.Net.Server
     /// <summary>
     /// The core BamServer
     /// </summary>
-    public partial class BamServer : IInitialize<BamServer>
+    public partial class BamServer : Loggable, IInitialize<BamServer>
     {
         private readonly HashSet<IResponder> _responders;
         private readonly Dictionary<string, IResponder> _respondersByName;
@@ -186,7 +187,7 @@ namespace Bam.Net.Server
             get;
             set;
         }
-
+        
         public Dictionary<string, List<AppPageRendererManager>> ReloadAppPageRendererManagers()
         {
             _appPageRendererManagers = null;
@@ -200,26 +201,26 @@ namespace Bam.Net.Server
             get
             {
                 return _appPageRendererManagerLock.DoubleCheckLock(ref _appPageRendererManagers, () =>
+                {
+                    Dictionary<string, List<AppPageRendererManager>> result = new Dictionary<string, List<AppPageRendererManager>>();
+                    foreach (AppConf appToServe in _conf.AppsToServe)
                     {
-                        Dictionary<string, List<AppPageRendererManager>> result = new Dictionary<string, List<AppPageRendererManager>>();
-                        foreach (AppConf appToServe in _conf.AppsToServe)
+                        if (string.IsNullOrEmpty(appToServe.Name))
                         {
-                            if (string.IsNullOrEmpty(appToServe.Name))
-                            {
-                                Log.Warn("Application name not specified in AppConf: \r\n{0}", appToServe.ToJson(true));
-                            }
-                            if (!result.ContainsKey(appToServe.Name))
-                            {
-                                result.Add(appToServe.Name, new List<AppPageRendererManager>());
-                            }
-
-                            if (AppContentResponders[appToServe.Name].PageRenderer is AppPageRendererManager current)
-                            {
-                                result[appToServe.Name].Add(current);
-                            }
+                            Log.Warn("AppPageRendererManagers: Application name not specified in AppConf: \r\n{0}", appToServe.ToJson(true));
                         }
-                        return result;
-                    }); 
+                        if (!result.ContainsKey(appToServe.Name))
+                        {
+                            result.Add(appToServe.Name, new List<AppPageRendererManager>());
+                        }
+
+                        if (AppContentResponders[appToServe.Name].PageRenderer is AppPageRendererManager current)
+                        {
+                            result[appToServe.Name].Add(current);
+                        }
+                    }
+                    return result;
+                }); 
             }
         }
         
@@ -304,40 +305,40 @@ namespace Bam.Net.Server
 
         private void InitializeApps(AppConf[] configs)
         {
-            configs.Each(ac =>
+            configs.Each(appConf =>
             {
-                OnAppInitializing(ac);
-                if (!string.IsNullOrEmpty(ac.AppInitializer))
+                OnAppInitializing(appConf);
+                if (!string.IsNullOrEmpty(appConf.AppInitializer))
                 {
                     Type appInitializer = null;
-                    if (!string.IsNullOrEmpty(ac.AppInitializerAssemblyPath))
+                    if (!string.IsNullOrEmpty(appConf.AppInitializerAssemblyPath))
                     {
-                        Assembly assembly = Assembly.LoadFrom(ac.AppInitializerAssemblyPath);
-                        appInitializer = assembly.GetType(ac.AppInitializer);
+                        Assembly assembly = Assembly.LoadFrom(appConf.AppInitializerAssemblyPath);
+                        appInitializer = assembly.GetType(appConf.AppInitializer);
                         if (appInitializer == null)
                         {
-                            appInitializer = assembly.GetTypes().FirstOrDefault(t => t.AssemblyQualifiedName.Equals(ac.AppInitializer));
+                            appInitializer = assembly.GetTypes().FirstOrDefault(t => t.AssemblyQualifiedName.Equals(appConf.AppInitializer));
                         }
 
                         if (appInitializer == null)
                         {
-                            Args.Throw<InvalidOperationException>("The specified AppInitializer type ({0}) wasn't found in the specified assembly ({1})", ac.AppInitializer, ac.AppInitializerAssemblyPath);
+                            Args.Throw<InvalidOperationException>("The specified AppInitializer type ({0}) wasn't found in the specified assembly ({1})", appConf.AppInitializer, appConf.AppInitializerAssemblyPath);
                         }
                     }
                     else
                     {
-                        appInitializer = Type.GetType(ac.AppInitializer);
+                        appInitializer = Type.GetType(appConf.AppInitializer);
                         if (appInitializer == null)
                         {
-                            Args.Throw<InvalidOperationException>("The specified AppInitializer type ({0}) wasn't found", ac.AppInitializer);
+                            Args.Throw<InvalidOperationException>("The specified AppInitializer type ({0}) wasn't found", appConf.AppInitializer);
                         }
                     }
 
                     IAppInitializer initializer = appInitializer.Construct<IAppInitializer>();
                     initializer.Subscribe(MainLogger);
-                    initializer.Initialize(ac);
+                    initializer.Initialize(appConf);
                 }
-                OnAppInitialized(ac);
+                OnAppInitialized(appConf);
             });
         }
         /// <summary>
@@ -759,13 +760,8 @@ namespace Bam.Net.Server
         {
             Responders.Each(r => r.DidNotRespond += subscriber);
         }
-        
-        public void Start()
-        {
-            Start(false);
-        }
 
-        public void Start(bool usurpedKnownListeners)
+        public void Start(bool usurpedKnownListeners = false)
         {
             Start(usurpedKnownListeners, new HostPrefix[] { });
         }
@@ -1101,7 +1097,7 @@ namespace Bam.Net.Server
         bool _enableDao;
         /// <summary>
         /// If true will cause the initialization of the 
-        /// DaoResponder which will process all *.db.js
+        /// DaoResponder which processes all *.db.js
         /// and *.db.json files.  See http://breviteedocs.wordpress.com/dao/
         /// for information about the expected format 
         /// of a *.db.js file.  The format of *db.json 

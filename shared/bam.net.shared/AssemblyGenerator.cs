@@ -118,11 +118,11 @@ namespace Bam.Net
             DirectoryInfo sourceDirectory = new DirectoryInfo(SourceDirectoryPath);
             SortedSet<string> sortedFilePaths = new SortedSet<string>();
             sourceDirectory.GetFiles("*.cs").Each(fi => sortedFilePaths.Add(fi.FullName));
-            string currentHash = (Seed ?? "").Hash(HashAlgorithm);
+            string currentHash = (Seed ?? "").HashHexString(HashAlgorithm);
             foreach (string filePath in sortedFilePaths)
             {
                 FileInfo file = new FileInfo(filePath);
-                currentHash = $"{currentHash}{HashFile(filePath)}".Hash(HashAlgorithm);
+                currentHash = $"{currentHash}{HashFile(filePath)}".HashHexString(HashAlgorithm);
             }
 
             return currentHash;

@@ -46,7 +46,7 @@ namespace Bam.Net.CoreServices
         {
             get
             {
-                if(ApplicationRegistrationRepository != null && ApplicationRegistrationRepository.Database != null)
+                if(ApplicationRegistrationRepository?.Database != null)
                 {
                     _database = ApplicationRegistrationRepository.Database;
                 }
@@ -216,7 +216,7 @@ namespace Bam.Net.CoreServices
         public string CreateKeyToken(string stringToHash)
         {
             ApiKeyInfo apiKey = GetApiKeyInfo(this);
-            return $"{apiKey.ApiKey}:{stringToHash}".Hash(HashAlgorithm);
+            return $"{apiKey.ApiKey}:{stringToHash}".HashHexString(HashAlgorithm);
         }
 
         [Exclude]
@@ -346,7 +346,7 @@ namespace Bam.Net.CoreServices
             {
                 ApplicationNameProvider = new StaticApplicationNameProvider(app.Name),
                 ApplicationClientId = app.Cuid,
-                ApiKey = ServiceProxySystem.GenerateId()
+                ApiKey = ServiceProxySystem.GenerateSecureRandomString()
             };
             return info;
         }

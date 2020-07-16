@@ -1,20 +1,41 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Text;
 using Bam.Net.Data;
-using GraphQL.Types;
 using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace Bam.Net
 {
     public static class ReflectionExtensions
     {
+        public static bool HasObjectParameters(this MethodInfo methodInfo)
+        {
+            return HasObjectParameters(methodInfo, out ParameterInfo[] ignore);
+        }
+        
+        public static bool HasObjectParameters(this MethodInfo methodInfo, out ParameterInfo[] objectParameters)
+        {
+            bool result = false;
+            List<ParameterInfo> outParams = new List<ParameterInfo>();
+            foreach (ParameterInfo parameterInfo in methodInfo.GetParameters())
+            {
+                if (!parameterInfo.ParameterType.IsPrimitive && parameterInfo.ParameterType != typeof(string))
+                {
+                    result = true;
+                    outParams.Add(parameterInfo);
+                }
+            }
+
+            objectParameters = outParams.ToArray();
+            return result;
+        }
+        
         /// <summary>
         /// Returns a hash representing the specified
         /// types using the specified HashAlgorithm 
@@ -26,7 +47,7 @@ namespace Bam.Net
         /// <returns></returns>
         public static string ToInfoHash(this IEnumerable<Type> types, HashAlgorithms algorithm = HashAlgorithms.SHA1, Encoding encoding = null)
         {
-            return types.ToInfoString().Hash(algorithm, encoding);
+            return types.ToInfoString().HashHexString(algorithm, encoding);
         }
 
         public static string ToInfoString(this IEnumerable<Type> types)
@@ -42,7 +63,7 @@ namespace Bam.Net
 
         public static string ToInfoHash(this Type type, HashAlgorithms algorithm = HashAlgorithms.SHA1, Encoding encoding = null)
         {
-            return type.ToInfoString().Hash(algorithm, encoding);
+            return type.ToInfoString().HashHexString(algorithm, encoding);
         }
 
         /// <summary>
@@ -60,7 +81,7 @@ namespace Bam.Net
             StringBuilder output = new StringBuilder();
             output.AppendLine($"{type.FullName}");
             List<PropertyInfo> props = new List<PropertyInfo>(type.GetProperties());
-            if(type != typeof(System.RuntimeTypeHandle) && !type.Name.Equals("RuntimeType"))
+            if(type != typeof(RuntimeTypeHandle) && !type.Name.Equals("RuntimeType"))
             {
                 props.Sort((p1, p2) => p1.Name.CompareTo(p2.Name));
             }

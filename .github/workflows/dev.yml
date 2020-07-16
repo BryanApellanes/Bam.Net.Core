@@ -1,4 +1,4 @@
-name: Build Dev Lib & Tools
+name: Build Lib, Tools & Tests
 
 on: 
   push:
@@ -7,12 +7,25 @@ on:
 
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
 
     env:
       DIST: /tmp/bam
     steps:
-    - uses: actions/checkout@v1
-    - name: checkout bam-net-core-dev branch
-      run: ./checkout.sh bam-net-core-dev
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.CI_ACCESSTOKEN }}
+        submodules: true
+    - name: Build
+      run: ./build.sh
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: BamToolkit
+        path: /opt/bam/artifacts
+    - name: Upload Tests
+      uses: actions/upload-artifact@v1
+      with:
+        name: BamToolkit-Tests
+        path: /tmp/bam/tests/

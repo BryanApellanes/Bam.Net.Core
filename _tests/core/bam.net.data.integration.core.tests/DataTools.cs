@@ -20,13 +20,16 @@ using Bam.Net.Data.Npgsql;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Data.Schema;
 using System.Configuration;
+using Bam.Net.Data.Posgres;
+using Bam.Net.Data.Postgres;
+
 //using Bam.Net.Data.OleDb;
 
 namespace Bam.Net.Data.Tests.Integration
 {
 	public static class DataTools
 	{
-        static HashSet<Database> _testDatabases = new HashSet<Database>();
+        static readonly HashSet<Database> _testDatabases = new HashSet<Database>();
         /// <summary>
         /// Create a set of test databases
         /// </summary>
@@ -38,34 +41,49 @@ namespace Bam.Net.Data.Tests.Integration
             {
                 initializer = db => Db.TryEnsureSchema<TestTable>(db);
             }
-
-            MsSqlDatabase msDatabase = new MsSqlDatabase("chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
+            
+            /*MsSqlDatabase msDatabase = new MsSqlDatabase("Chumsql2", databaseName, new MsSqlCredentials { UserId = "mssqluser", Password = "mssqlP455w0rd" });
             initializer(msDatabase);
-            _testDatabases.Add(msDatabase);
-
-            SQLiteDatabase sqliteDatabase = new SQLiteDatabase(".\\Chumsql2", databaseName);
-            initializer(sqliteDatabase);
-            _testDatabases.Add(sqliteDatabase);
-
-            /*OleDbDatabase oleDatabase = new OleDbDatabase("Microsoft.ACE.OLEDB.12.0", databaseName.RandomLetters(4));
-            initializer(oleDatabase);
-            _testDatabases.Add(oleDatabase);*/
-
-            OracleDatabase oracleDatabase = new OracleDatabase("chumsql2", databaseName, new OracleCredentials { UserId = "C##ORACLEUSER", Password = "oracleP455w0rd" });
-            initializer(oracleDatabase);
-            _testDatabases.Add(oracleDatabase);
-
-            MySqlDatabase mySqlDatabase = new MySqlDatabase("chumsql2", databaseName, new MySqlCredentials { UserId = "mysql", Password = "mysqlP455w0rd" }, false);
-            initializer(mySqlDatabase);
-            _testDatabases.Add(mySqlDatabase);
-
+            _testDatabases.Add(msDatabase);*/
+            
             NpgsqlDatabase npgsqlDatabase = new NpgsqlDatabase("chumsql2", databaseName, new NpgsqlCredentials { UserId = "postgres", Password = "postgresP455w0rd" });
             initializer(npgsqlDatabase);
             _testDatabases.Add(npgsqlDatabase);
 
+            PostgresDatabase postgresDatabase = new PostgresDatabase("chumsql2", databaseName, new PostgresCredentials {UserId = "postgres", Password = "postgresP455w0rd"});
+            initializer(postgresDatabase);
+            _testDatabases.Add(postgresDatabase);
+            
+            
+            /*SQLiteDatabase sqliteDatabase = new SQLiteDatabase("./chumsql2", databaseName);
+            initializer(sqliteDatabase);
+            _testDatabases.Add(sqliteDatabase);
+            
+             OracleDatabase oracleDatabase = new OracleDatabase("chumsql2", databaseName, new OracleCredentials { UserId = "C##ORACLEUSER", Password = "oracleP455w0rd" });
+            initializer(oracleDatabase);
+            _testDatabases.Add(oracleDatabase);*/
+            
+            /*MySqlDatabase mySqlDatabase = new MySqlDatabase("chumsql2", databaseName, new MySqlCredentials { UserId = "mysql", Password = "mysqlP455w0rd" }, false);
+            initializer(mySqlDatabase);
+            _testDatabases.Add(mySqlDatabase);*/
+            
             return _testDatabases;
 		}
 
+        [ConsoleAction]
+        public static void OpenPostgresConnection()
+        {
+	        PostgresDatabase postgresDatabase = new PostgresDatabase("chumsql2", "daoref", new PostgresCredentials {UserId = "postgres", Password = "postgresP455w0rd"});
+	        postgresDatabase.GetOpenDbConnection();
+        }
+        
+        [ConsoleAction]
+        public static void CreatePostgresDatabase()
+        {
+	        bool created = PostgresDatabase.TryCreate("chumsql2", "daoref", new PostgresCredentials{UserId = "postgres", Password = "postgresP455word"});
+	        Expect.IsTrue(created);
+        }
+        
 		[ConsoleAction]
         public static void Cleanup()
         {
@@ -83,14 +101,6 @@ namespace Bam.Net.Data.Tests.Integration
 			});
 		}
         
-        /*public static SchemaExtractor GetMsSqlSmoSchemaExtractor(string connectionName)
-        {
-            string connString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
-            Expect.IsNotNullOrEmpty(connString, "The connection string named {0} wasn't found in the config file"._Format(connectionName));
-
-            return new MsSqlSmoSchemaExtractor(connectionName);
-        }*/
-        
         public static SchemaExtractor GetMsSqlSchemaExtractor(MsSqlDatabase database)
         {
             return new MsSqlSchemaExtractor(database);
@@ -103,9 +113,7 @@ namespace Bam.Net.Data.Tests.Integration
 
 		public static TestTable CreateTestTable(string name, string description, Database db, bool save = true)
 		{
-			TestTable table = new TestTable(db);
-			table.Name = name;
-			table.Description = description;
+			TestTable table = new TestTable(db) {Name = name, Description = description};
 			if (save)
 			{
 				table.Save(db);
@@ -115,8 +123,7 @@ namespace Bam.Net.Data.Tests.Integration
 
 		public static Left CreateLeft(string name, Database db)
 		{
-			Left left = new Left(db);
-			left.Name = name;
+			Left left = new Left(db) {Name = name};
 			left.Save(db);
 
 			return left;
@@ -124,8 +131,7 @@ namespace Bam.Net.Data.Tests.Integration
 
 		public static Right CreateRight(string name, Database db)
 		{
-			Right right = new Right(db);
-			right.Name = name;
+			Right right = new Right(db) {Name = name};
 			right.Save(db);
 
 			return right;

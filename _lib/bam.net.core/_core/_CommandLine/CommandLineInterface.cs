@@ -25,7 +25,8 @@ namespace Bam.Net.CommandLine
         {
             Log.Warn("{0} is not implemented on this platform and will delegate to {1} losing state.", nameof(InvokeInSeparateAppDomain), nameof(InvokeInCurrentAppDomain));
             InvokeInCurrentAppDomain(method, instance, ps);
-            // TODO: implement this using ExecuteAssembly, possibly generate a wrapper assembly to invoke the method
+            
+            // TODO: implement this using ExecuteAssembly, possibly generate a wrapper assembly to invoke the method in order to GetData that was set with SetData; see below
             //AppDomain isolationDomain = AppDomain.CreateDomain("TestAppDomain");
             //_methodToInvoke = method;
             //invokeOn = instance;
@@ -35,7 +36,8 @@ namespace Bam.Net.CommandLine
             //isolationDomain.SetData("Instance", instance);
             //isolationDomain.SetData("Parameters", parameters);
             //isolationDomain.SetData("State", state);
-            //isolationDomain.DoCallBack(InvokeMethod);
+            
+            //isolationDomain.DoCallBack(InvokeMethod); // this is deprecated
             //AppDomain.Unload(isolationDomain);
         }
     }

@@ -17,7 +17,7 @@ namespace Bam.Shell
     /// </summary>
     public class ArgZero : CommandLineTestInterface
     {
-        static object _targetsLock = new object();
+        static readonly object _targetsLock = new object();
         static Dictionary<string, MethodInfo> _targets; 
         public static Dictionary<string, MethodInfo> Targets
         {
@@ -51,12 +51,12 @@ namespace Bam.Shell
         /// </summary>
         public static void RegisterArgZeroProviders<T>(string[] args, Assembly assembly) where T: IRegisterArguments
         {
-            RegisterProviderTypes<T>(args, assembly);
+            RegisterArgZeroProviderTypeArguments<T>(args, assembly);
             RegisterDelegatorMethods(assembly);
         }
 
-        static HashSet<Assembly> _regsiteredDelegatorAssemblies = new HashSet<Assembly>();
-        static object _registerLock = new object();
+        static readonly HashSet<Assembly> _regsiteredDelegatorAssemblies = new HashSet<Assembly>();
+        static readonly object _registerLock = new object();
         public static void RegisterDelegatorMethods(Assembly assembly)
         {
             lock (_registerLock)
@@ -80,7 +80,7 @@ namespace Bam.Shell
             }
         }
         
-        public static void RegisterProviderTypes(Type type, string[] args, Assembly assembly)
+        public static void RegisterArgZeroProviderTypes(Type type, string[] args, Assembly assembly)
         {
             foreach (Type extender in assembly.GetTypes().Where(t => t.ExtendsType(type)))
             {
@@ -101,12 +101,13 @@ namespace Bam.Shell
         }
         
         /// <summary>
-        /// Register extenders of the specified type from the specified assembly as shell providers.
+        /// Register extenders of the specified type from the specified assembly as shell providers ensuring that their required arguments
+        /// are also properly registered.
         /// </summary>
         /// <param name="args"></param>
         /// <param name="assembly"></param>
         /// <typeparam name="T"></typeparam>
-        public static void RegisterProviderTypes<T>(string[] args, Assembly assembly) where T : IRegisterArguments
+        public static void RegisterArgZeroProviderTypeArguments<T>(string[] args, Assembly assembly) where T : IRegisterArguments
         {
             foreach (Type type in assembly.GetTypes().Where(type => type.ExtendsType<T>()))
             {
@@ -127,7 +128,7 @@ namespace Bam.Shell
         }
         
         private static Dictionary<string, Type> _providerTypes;
-        static object _providerTypesLock = new object();
+        static readonly object _providerTypesLock = new object();
         public static Dictionary<string, Type> ProviderTypes
         {
             get { return _providerTypesLock.DoubleCheckLock(ref _providerTypes, () => new Dictionary<string, Type>()); }
@@ -175,7 +176,7 @@ namespace Bam.Shell
                 {
                     if (argZeroAttribute.BaseType != null)
                     {
-                        RegisterProviderTypes(argZeroAttribute.BaseType, arguments, argZeroAttribute.BaseType.Assembly);
+                        RegisterArgZeroProviderTypes(argZeroAttribute.BaseType, arguments, argZeroAttribute.BaseType.Assembly);
                     }
                 }
                 

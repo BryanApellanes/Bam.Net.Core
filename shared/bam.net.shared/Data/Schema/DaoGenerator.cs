@@ -53,6 +53,8 @@ namespace Bam.Net.Data.Schema
         /// </summary>
         public bool DisposeOnComplete { get; set; }
 
+        public bool GenerateQiClasses { get; set; }
+        
         public Action<string> RazorResultInspector { get; set; }
         #region events
         
@@ -140,7 +142,10 @@ namespace Bam.Net.Data.Schema
                 DaoCodeWriter.WriteDaoClass(schema, targetResolver, root, table);
                 DaoCodeWriter.WriteQueryClass(schema, targetResolver, root, table);
                 DaoCodeWriter.WritePagedQueryClass(schema, targetResolver, root, table);
-                DaoCodeWriter.WriteQiClass(schema, targetResolver, root, table);
+                if (GenerateQiClasses)
+                {
+                    DaoCodeWriter.WriteQiClass(schema, targetResolver, root, table);
+                }
                 DaoCodeWriter.WriteCollectionClass(schema, targetResolver, root, table);
                 DaoCodeWriter.WriteColumnsClass(schema, targetResolver, root, table);
             }

@@ -32,18 +32,18 @@ namespace Bam.Net.ServiceProxy
             RoleResolvers.AddResolver(new DefaultRoleResolver());
         }
         
-        public static string GenerateId()
+        public static string GenerateSecureRandomString(int seedLength = 64)
         {
             SecureRandom random = new SecureRandom();            
-            return random.GenerateSeed(64).ToBase64().Sha256();            
+            return random.GenerateSeed(seedLength).ToBase64().Sha256();            
         }
 
 
         static string _proxySearchPattern;
-        static object _proxySearchPatternLock = new object();
+        static readonly object _proxySearchPatternLock = new object();
         /// <summary>
         /// The search pattern used to find assemblies that host
-        /// service proxies (classes addorned with the ProxyAttribute custom attribute).
+        /// service proxies (classes adorned with the ProxyAttribute custom attribute).
         /// This value is retrieved from the config file, the default is "*.dll" if none
         /// is provided.
         /// </summary>

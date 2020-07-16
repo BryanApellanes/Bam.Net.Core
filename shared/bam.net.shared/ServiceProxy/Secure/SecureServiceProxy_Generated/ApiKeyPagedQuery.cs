@@ -12,6 +12,6 @@ namespace Bam.Net.ServiceProxy.Secure
 {
     public class ApiKeyPagedQuery: PagedQuery<ApiKeyColumns, ApiKey>
     { 
-		public ApiKeyPagedQuery(ApiKeyColumns orderByColumn, ApiKeyQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ApiKeyPagedQuery(ApiKeyColumns orderByColumn,ApiKeyQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

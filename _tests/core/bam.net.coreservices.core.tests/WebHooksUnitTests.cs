@@ -12,12 +12,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bam.Net.Data;
 
 namespace Bam.Net.CoreServices.Tests
 {
     [Serializable]
-    public class WebHooksUnitTests : CommandLineTestInterface    
+    public class WebHooksUnitTests : CommandLineTestInterface
     {
+        private static HashSet<Database> _databases = new HashSet<Database>();
         [UnitTest]
         public void CanSaveWebHookSubscriberDao()
         {
@@ -46,11 +48,23 @@ namespace Bam.Net.CoreServices.Tests
         }
 
         [UnitTest]
+        public void CanGetWebHookDescriptor()
+        {
+            string testWebHookName = $"{nameof(CanSubscribeWebHook)}_testWebHook";
+            WebHookService svc = GetTestWebHookService();
+
+            CoreServiceResponse<WebHookSubscriber> subscribeToWebHookResponse = svc.SubscribeToWebHook(testWebHookName, "TestWebHookUrl");
+            
+            WebHookDescriptor[] descriptors = svc.WebHooksRepository.Query<WebHookDescriptor>(q => q.WebHookName == testWebHookName).ToArray();
+            Expect.IsTrue(descriptors.Length == 1, "Failed to retrieve webhook descriptor");
+        }
+
+        [UnitTest]
         public void CanListWebHookSubscribers()
         {
             string testWebHookName = "TestWebHookName";
             string[] testWebHookUrls = new string[] { 8.RandomLetters(), 6.RandomLetters(), 4.RandomLetters() };
-            WebHookService svc = new WebHookService(new WebHooksRepository(), new Data.Repositories.DaoRepository(), new Server.AppConf());
+            WebHookService svc = GetTestWebHookService();
 
             foreach (string testWebHookUrl in testWebHookUrls)
             {
@@ -71,10 +85,26 @@ namespace Bam.Net.CoreServices.Tests
         public void Cleanup()
         {
             WebHooksRepository repo = new WebHooksRepository();
-            WebHooks.Data.Dao.WebHookCall.LoadAll(repo.Database).Delete(repo.Database);
-            WebHooks.Data.Dao.WebHookSubscriber.LoadAll(repo.Database).Delete(repo.Database);
-            WebHooks.Data.Dao.WebHookDescriptor.LoadAll(repo.Database).Delete(repo.Database);
-            WebHooks.Data.Dao.WebHookDescriptorWebHookSubscriber.LoadAll(repo.Database).Delete(repo.Database);
+            DeleteWebHookData(repo.Database);
+            _databases.Each(DeleteWebHookData);
+        }
+
+        private static void DeleteWebHookData(Database db)
+        {
+            Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookCall.LoadAll(db).Delete();
+            Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor.LoadAll(db).Delete();
+            Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber.LoadAll(db).Delete();
+            Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptorWebHookSubscriber.LoadAll(db).Delete();
+        }
+        
+        private static WebHookService GetTestWebHookService()
+        {
+            WebHooksRepository webHooksRepository = new WebHooksRepository();
+            WebHookService svc = new WebHookService(webHooksRepository, new Data.Repositories.DaoRepository(), new Server.AppConf());
+            Database db = webHooksRepository.Database;
+            DeleteWebHookData(db);
+            _databases.Add(db);
+            return svc;
         }
     }
 }

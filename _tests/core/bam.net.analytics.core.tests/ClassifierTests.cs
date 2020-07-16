@@ -20,10 +20,10 @@ namespace Bam.Net.Analytics.Tests
             Db.For<Feature>(new SQLiteDatabase(nameof(ClassifierTest)));
             Db.EnsureSchema<Feature>();
 
-            When.A<NaiveBayesClassifier>("is trained", (classifer) =>
+            When.A<NaiveBayesClassifier>("is trained", (classifier) =>
             {
-                classifer.Train("The quick brown fox jumps over the lazy dog", "good");
-                classifer.Train("make quick money in the online casino", "bad");
+                classifier.Train("The quick brown fox jumps over the lazy dog", "good");
+                classifier.Train("make quick money in the online casino", "bad");
             })
             .TheTest
             .ShouldPass(because =>

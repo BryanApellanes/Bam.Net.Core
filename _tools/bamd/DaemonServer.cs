@@ -7,8 +7,9 @@ using Bam.Net.Logging;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Server;
 using System.IO;
+using Bam.Net.Application;
 
-namespace Bam.Net.Application
+namespace Bam.Net.System
 {
     public class DaemonServer : SimpleServer<DaemonResponder>
     {

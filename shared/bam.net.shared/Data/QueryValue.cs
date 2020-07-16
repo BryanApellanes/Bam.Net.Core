@@ -7,8 +7,9 @@ namespace Bam.Net.Data
     /// </summary>
     public class QueryValue
     {
-        public QueryValue(object value)
+        public QueryValue(object value, QueryFilter filter = null)
         {
+            QueryFilter = filter ?? new QueryFilter();
             if (value == null)
             {
                 Type = typeof(DBNull);
@@ -19,7 +20,8 @@ namespace Bam.Net.Data
                 Value = value;
             }
         }
-        
+
+        public QueryFilter QueryFilter { get; set; }
         public Type Type { get; set; }
         public object Value { get; private set; }
 
@@ -40,6 +42,10 @@ namespace Bam.Net.Data
 
         public virtual object GetValue()
         {
+            if (QueryFilter.Property<bool>("IsForeignKey", false))
+            {
+                return GetRawValue();
+            }
             return GetStoredValue();
         }
         

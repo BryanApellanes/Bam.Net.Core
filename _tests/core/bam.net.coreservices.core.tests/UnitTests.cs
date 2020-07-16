@@ -1,37 +1,34 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.CommandLine;
-using Bam.Net;
-using Bam.Net.Testing;
-using Bam.Net.Encryption;
-using Bam.Net.ServiceProxy.Tests;
-using Bam.Net.Server;
-using Bam.Net.ServiceProxy.Secure;
-using Bam.Net.ServiceProxy;
-using System.Reflection;
-using NSubstitute;
-using Bam.Net.Logging;
-using Bam.Net.Data.Repositories;
 using System.Net;
+using System.Reflection;
+using System.Threading;
+using Bam.Net.CommandLine;
+using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao;
+using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.Data;
 using Bam.Net.Data.SQLite;
-using Bam.Net.UserAccounts.Data;
-using System.Threading;
-using Bam.Net.CoreServices.ApplicationRegistration;
-using System.Collections.Specialized;
-using Bam.Net.Data.Dynamic;
-using Bam.Net.Services.DataReplication;
 using Bam.Net.Incubation;
+using Bam.Net.Logging;
+using Bam.Net.ServiceProxy;
+using Bam.Net.Testing;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Testing.Unit;
-using Bam.Net.CoreServices.ApplicationRegistration.Data;
-using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
+using Bam.Net.UserAccounts.Data;
+using NSubstitute;
+using HostAddress = Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.HostAddress;
+using Machine = Bam.Net.CoreServices.ApplicationRegistration.Data.Machine;
+using Nic = Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Nic;
+using Organization = Bam.Net.CoreServices.ApplicationRegistration.Data.Organization;
+using ProcessDescriptor = Bam.Net.CoreServices.ApplicationRegistration.Data.ProcessDescriptor;
+using User = Bam.Net.UserAccounts.Data.User;
+using UserCollection = Bam.Net.UserAccounts.Data.UserCollection;
 
 namespace Bam.Net.CoreServices.Tests
 {
@@ -80,7 +77,7 @@ namespace Bam.Net.CoreServices.Tests
         public void CoreApplicationRegistryServiceNotLoggedInIsAnonymous()
         {
             ApplicationRegistryService svc = GetTestService();
-            Expect.AreSame(UserAccounts.Data.User.Anonymous, svc.CurrentUser);
+            Expect.AreSame(User.Anonymous, svc.CurrentUser);
         }
 
         [UnitTest]
@@ -123,7 +120,7 @@ namespace Bam.Net.CoreServices.Tests
         {
             After.Setup((Action<SetupContext>)(ctx =>
             {
-                ctx.CopyFrom((Incubation.Incubator)CoreServiceRegistryContainer.GetServiceRegistry());
+                ctx.CopyFrom((Incubator)CoreServiceRegistryContainer.GetServiceRegistry());
             }))
             .WhenA<ApplicationRegistryService>("tries to register application when not logged in", cars =>
             {
@@ -200,28 +197,28 @@ namespace Bam.Net.CoreServices.Tests
         public void SavingMachineSavesNicsAndHostAddresses()
         {
             Machine machine = new Machine();
-            Database db = new SQLiteDatabase($".\\{nameof(SavingMachineSavesNicsAndHostAddresses)}", "CoreRegistryRepository");
-            db.TryEnsureSchema<ApplicationRegistration.Data.Dao.Nic>();
+            Database db = new SQLiteDatabase($"./{nameof(SavingMachineSavesNicsAndHostAddresses)}", "CoreRegistryRepository");
+            db.TryEnsureSchema<Nic>();
             ApplicationRegistrationRepository repo = new ApplicationRegistrationRepository() { Database = db };
 
-            ApplicationRegistration.Data.Dao.Nic.LoadAll(repo.Database).Delete(repo.Database);
-            ApplicationRegistration.Data.Dao.HostAddress.LoadAll(repo.Database).Delete(repo.Database);
+            Nic.LoadAll(repo.Database).Delete(repo.Database);
+            HostAddress.LoadAll(repo.Database).Delete(repo.Database);
             ApplicationRegistration.Data.Dao.Machine.LoadAll(repo.Database).Delete(repo.Database);
 
             machine = machine.Save(repo) as Machine;
             machine.NetworkInterfaces.Each(n => OutLine(n.PropertiesToString(), ConsoleColor.Cyan));
             machine.HostAddresses.Each(h => OutLine(h.PropertiesToString(), ConsoleColor.Blue));
 
-            ApplicationRegistration.Data.Dao.NicCollection nics = ApplicationRegistration.Data.Dao.Nic.LoadAll(repo.Database);
-            ApplicationRegistration.Data.Dao.HostAddressCollection hosts = ApplicationRegistration.Data.Dao.HostAddress.LoadAll(repo.Database);
+            NicCollection nics = Nic.LoadAll(repo.Database);
+            HostAddressCollection hosts = HostAddress.LoadAll(repo.Database);
 
             Machine machineAgain = machine.Save(repo) as Machine;
             Expect.AreEqual(machine.Id, machineAgain.Id, "Id didn't match");
             Expect.AreEqual(machine.Uuid, machineAgain.Uuid, "Uuid didn't match");
             Expect.AreEqual(machine.Cuid, machineAgain.Cuid, "Cuid didn't match");
 
-            ApplicationRegistration.Data.Dao.NicCollection nicsAgain = ApplicationRegistration.Data.Dao.Nic.LoadAll(repo.Database);
-            ApplicationRegistration.Data.Dao.HostAddressCollection hostsAgain = ApplicationRegistration.Data.Dao.HostAddress.LoadAll(repo.Database);
+            NicCollection nicsAgain = Nic.LoadAll(repo.Database);
+            HostAddressCollection hostsAgain = HostAddress.LoadAll(repo.Database);
 
             Expect.AreEqual(nics.Count, nicsAgain.Count, "Nic count didn't match");
             Expect.AreEqual(hosts.Count, hostsAgain.Count, "Host address count didn't match");
@@ -237,7 +234,7 @@ namespace Bam.Net.CoreServices.Tests
         [UnitTest]
         public void NicsWillSerialize()
         {
-            Out(Machine.Current.NetworkInterfaces.ToJson(true));
+            Message.Print(Machine.Current.NetworkInterfaces.ToJson(true));
         }
 
         [UnitTest]
@@ -267,7 +264,7 @@ namespace Bam.Net.CoreServices.Tests
             repo.Delete(machine);
         }
 
-        [UnitTest]
+        /*[UnitTest]
         public void CoreClientCanSignup()
         {
             //throw new NotImplementedException();
@@ -277,7 +274,7 @@ namespace Bam.Net.CoreServices.Tests
         public void CoreClientCanRegisterCurrentApp()
         {
             //throw new NotImplementedException();
-        }
+        }*/
 
         //      - if more than one organization for a user then fail if not premium
         [UnitTest]
@@ -308,9 +305,9 @@ namespace Bam.Net.CoreServices.Tests
         {
             ApplicationRegistryService svc = GetTestService();
             string userName = 8.RandomLetters();
-            UserAccounts.Data.User user = SetCurrentUser(userName, svc);
+            User user = SetCurrentUser(userName, svc);
             Expect.AreEqual(userName, user.UserName);
-            UserAccounts.Data.User sessionUser = Session.Get(svc.HttpContext).UserOfUserId;
+            User sessionUser = Session.Get(svc.HttpContext).UserOfUserId;
             Expect.IsNotNull(sessionUser);
             Expect.AreEqual(userName, sessionUser.UserName, "UserName didn't match");
             Expect.AreEqual(sessionUser, svc.CurrentUser, "Users didn't match");
@@ -349,7 +346,7 @@ namespace Bam.Net.CoreServices.Tests
             return svc;
         }
 
-        private static UserAccounts.Data.User SetCurrentUser(string userName, ApplicationRegistryService svc)
+        private static User SetCurrentUser(string userName, ApplicationRegistryService svc)
         {
             IHttpContext ctx = Substitute.For<IHttpContext>();
             ctx.Request = Substitute.For<IRequest>();
@@ -366,9 +363,9 @@ namespace Bam.Net.CoreServices.Tests
             svc.HttpContext = ctx;
             SessionCollection sessions = Session.LoadAll();
             sessions.Delete();
-            UserCollection users = UserAccounts.Data.User.LoadAll();
+            UserCollection users = User.LoadAll();
             users.Delete();
-            UserAccounts.Data.User result = UserAccounts.Data.User.Create(userName);
+            User result = User.Create(userName);
             Session session = Session.Get(ctx);
             session.UserId = result.Id;
             session.Save();
@@ -378,7 +375,7 @@ namespace Bam.Net.CoreServices.Tests
             IEnumerable<ApplicationRegistration.Data.Application> apps = svc.ApplicationRegistrationRepository.RetrieveAll<ApplicationRegistration.Data.Application>();
             apps.Each(a => svc.ApplicationRegistrationRepository.Delete(a));
             Expect.AreEqual(0, svc.ApplicationRegistrationRepository.RetrieveAll<ApplicationRegistration.Data.Application>().Count());
-            svc.ApplicationRegistrationRepository.RetrieveAll<ApplicationRegistration.Data.Machine>().Each(h => svc.ApplicationRegistrationRepository.Delete(h));
+            svc.ApplicationRegistrationRepository.RetrieveAll<Machine>().Each(h => svc.ApplicationRegistrationRepository.Delete(h));
             return result;
         }
     }

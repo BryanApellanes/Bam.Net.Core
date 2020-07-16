@@ -10,7 +10,7 @@ namespace Bam.Net.Automation.Tests
         [UnitTest]
         public void CanUseSshRemoteFileHandler()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

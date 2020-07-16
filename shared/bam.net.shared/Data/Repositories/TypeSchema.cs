@@ -17,6 +17,7 @@ namespace Bam.Net.Data.Repositories
 	public class TypeSchema
 	{
         public TypeSchema() { }
+        public HashSet<TypeSchemaWarning> Warnings { get; set; }
 		public HashSet<Type> Tables { get; set; }
 		public HashSet<TypeFk> ForeignKeys { get; set; }
 		public HashSet<TypeXref> Xrefs { get; set; }
@@ -41,13 +42,8 @@ namespace Bam.Net.Data.Repositories
         /// <summary>
         /// The sha1 of this TypeSchema.
         /// </summary>
-        public string Hash
-        {
-            get
-            {
-                return ToString().Sha1();
-            }
-        }
+        public string Hash => ToString().Sha1();
+
         string _name;
         public string Name
         {
@@ -59,10 +55,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _name;
             }
-            set
-            {
-                _name = value;
-            }
+            set => _name = value;
         }
 	}
 }

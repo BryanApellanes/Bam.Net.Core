@@ -111,7 +111,7 @@ namespace Bam.Net.Messaging.Tests
 
         private static EmailComposer SetStringFormatComposerAndTestTemplate(string methodName)
         {
-            string directoryName = ".\\{0}"._Format(methodName);
+            string directoryName = "./{0}"._Format(methodName);
 
             EmailComposer composer = new StringFormatEmailComposer(directoryName);
             composer.SetEmailTemplate(_testTemplateName, _stringFormatContent);
@@ -122,7 +122,7 @@ namespace Bam.Net.Messaging.Tests
 
         private static EmailComposer SetNamedFormatComposerAndTestTemplate(string methodName)
         {
-            string directoryName = ".\\{0}"._Format(methodName);
+            string directoryName = "./{0}"._Format(methodName);
 
             EmailComposer composer = new NamedFormatEmailComposer(directoryName);
             composer.SetEmailTemplate(_testTemplateName, _namedFormatContent);

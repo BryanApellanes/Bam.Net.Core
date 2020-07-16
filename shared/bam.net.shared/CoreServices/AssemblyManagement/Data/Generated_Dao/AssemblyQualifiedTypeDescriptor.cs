@@ -372,21 +372,49 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 			});
 		}
 
+		public static AssemblyQualifiedTypeDescriptor GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified AssemblyQualifiedTypeDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}
+
 		public static AssemblyQualifiedTypeDescriptor GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
+		public static AssemblyQualifiedTypeDescriptor GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified AssemblyQualifiedTypeDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static AssemblyQualifiedTypeDescriptor GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static AssemblyQualifiedTypeDescriptor GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified AssemblyQualifiedTypeDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static AssemblyQualifiedTypeDescriptor GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static AssemblyQualifiedTypeDescriptor GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified AssemblyQualifiedTypeDescriptor.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static AssemblyQualifiedTypeDescriptor GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
@@ -558,7 +586,7 @@ namespace Bam.Net.CoreServices.AssemblyManagement.Data.Dao
 		/// Execute a query that should return only one result.  If more
 		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single @Model.ClassName instance by its Id/Key value
+		/// single AssemblyQualifiedTypeDescriptor instance by its Id/Key value
 		/// </summary>
 		/// <param name="where">A WhereDelegate that recieves a AssemblyQualifiedTypeDescriptorColumns
 		/// and returns a IQueryFilter which is the result of any comparisons

@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -56,15 +56,17 @@ namespace Bam.Net.DaoRef
 		private void SetChildren()
 		{
 
+
 			if(_database != null)
 			{
-				this.ChildCollections.Add("TestFkTable_TestTableId", new TestFkTableCollection(Database.GetQuery<TestFkTableColumns, TestFkTable>((c) => c.TestTableId == GetULongValue("Id")), this, "TestTableId"));				
-			}						
-		}
+				this.ChildCollections.Add("TestFkTable_TestTableId", new TestFkTableCollection(Database.GetQuery<TestFkTableColumns, TestFkTable>((c) => c.TestTableId == GetULongValue("Id")), this, "TestTableId"));
+			}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
+
+		} // end SetChildren
+
+	// property:Id, columnName: Id	
+	[Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
 	public ulong? Id
 	{
 		get
@@ -77,7 +79,7 @@ namespace Bam.Net.DaoRef
 		}
 	}
 
-	// property:Uuid, columnName:Uuid	
+	// property:Uuid, columnName: Uuid	
 	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Uuid
 	{
@@ -91,7 +93,7 @@ namespace Bam.Net.DaoRef
 		}
 	}
 
-	// property:Cuid, columnName:Cuid	
+	// property:Cuid, columnName: Cuid	
 	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Cuid
 	{
@@ -105,7 +107,7 @@ namespace Bam.Net.DaoRef
 		}
 	}
 
-	// property:Name, columnName:Name	
+	// property:Name, columnName: Name	
 	[Bam.Net.Data.Column(Name="Name", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
 	public string Name
 	{
@@ -119,7 +121,7 @@ namespace Bam.Net.DaoRef
 		}
 	}
 
-	// property:Description, columnName:Description	
+	// property:Description, columnName: Description	
 	[Bam.Net.Data.Column(Name="Description", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
 	public string Description
 	{
@@ -134,8 +136,6 @@ namespace Bam.Net.DaoRef
 	}
 
 
-
-				
 
 	[Bam.Net.Exclude]	
 	public TestFkTableCollection TestFkTablesByTestTableId
@@ -160,14 +160,16 @@ namespace Bam.Net.DaoRef
 			return c;
 		}
 	}
-			
+	
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -178,32 +180,32 @@ namespace Bam.Net.DaoRef
 			{
 				var colFilter = new TestTableColumns();
 				return (colFilter.KeyColumn == IdValue);
-			}			
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the TestTable table.
-		/// </summary>
+        /// Return every record in the TestTable table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static TestTableCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<TestTable>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<TestTable>();
-			var results = new TestTableCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<TestTable>();
+            var results = new TestTableCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<TestTable>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<TestTable>> batchProcessor, Database database = null)
 		{
 			await System.Threading.Tasks.Task.Run(async ()=>
 			{
@@ -219,21 +221,21 @@ namespace Bam.Net.DaoRef
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<TestTable>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<TestTableColumns> where, Action<IEnumerable<TestTable>> batchProcessor, Database database = null)
 		{
@@ -245,27 +247,27 @@ namespace Bam.Net.DaoRef
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (TestTableColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<TestTable>> batchProcessor, Bam.Net.Data.OrderBy<TestTableColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<TestTableColumns> where, Action<IEnumerable<TestTable>> batchProcessor, Bam.Net.Data.OrderBy<TestTableColumns> orderBy, Database database = null)
 		{
@@ -276,13 +278,20 @@ namespace Bam.Net.DaoRef
 				while(results.Count > 0)
 				{
 					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (TestTableColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
+		}
+
+		public static TestTable GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified TestTable.Id was null");
+			return GetById(id.Value, database);
 		}
 
 		public static TestTable GetById(uint id, Database database = null)
@@ -290,16 +299,37 @@ namespace Bam.Net.DaoRef
 			return GetById((ulong)id, database);
 		}
 
+		public static TestTable GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified TestTable.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static TestTable GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static TestTable GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified TestTable.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static TestTable GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static TestTable GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified TestTable.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static TestTable GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
@@ -321,7 +351,7 @@ namespace Bam.Net.DaoRef
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static TestTableCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<TestTableColumns> whereDelegate = (c) => filter;
@@ -329,9 +359,9 @@ namespace Bam.Net.DaoRef
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a TestTableColumns 
+		/// <param name="where">A Func delegate that recieves a TestTableColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -342,27 +372,27 @@ namespace Bam.Net.DaoRef
 			database = database ?? Db.For<TestTable>();
 			return new TestTableCollection(database.GetQuery<TestTableColumns, TestTable>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static TestTableCollection Where(WhereDelegate<TestTableColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<TestTable>();
 			var results = new TestTableCollection(database, database.GetQuery<TestTableColumns, TestTable>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -372,7 +402,7 @@ namespace Bam.Net.DaoRef
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static TestTableCollection Where(WhereDelegate<TestTableColumns> where, OrderBy<TestTableColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<TestTable>();
 			var results = new TestTableCollection(database, database.GetQuery<TestTableColumns, TestTable>(where, orderBy), true);
 			return results;
@@ -380,9 +410,9 @@ namespace Bam.Net.DaoRef
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;TestTableColumns&gt;.
+		/// WhereDelegate`TestTableColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -391,9 +421,9 @@ namespace Bam.Net.DaoRef
 			var results = new TestTableCollection(database, Select<TestTableColumns>.From<TestTable>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -411,8 +441,8 @@ namespace Bam.Net.DaoRef
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -425,7 +455,29 @@ namespace Bam.Net.DaoRef
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<TestTableColumns> where, Database database = null)
+		{
+			SetOneWhere(where, out TestTable ignore, database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<TestTableColumns> where, out TestTable result, Database database = null)
+		{
+			result = GetOneWhere(where, database);
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -438,7 +490,7 @@ namespace Bam.Net.DaoRef
 			if(result == null)
 			{
 				TestTableColumns c = new TestTableColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -447,11 +499,11 @@ namespace Bam.Net.DaoRef
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
 		/// single TestTable instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -462,12 +514,12 @@ namespace Bam.Net.DaoRef
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<TestTableColumns>.
+		/// WhereDelegate`TestTableColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -478,10 +530,10 @@ namespace Bam.Net.DaoRef
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -499,12 +551,12 @@ namespace Bam.Net.DaoRef
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -526,7 +578,7 @@ namespace Bam.Net.DaoRef
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -548,14 +600,14 @@ namespace Bam.Net.DaoRef
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -572,10 +624,10 @@ namespace Bam.Net.DaoRef
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -589,10 +641,10 @@ namespace Bam.Net.DaoRef
 		public static TestTableCollection Top(int count, WhereDelegate<TestTableColumns> where, OrderBy<TestTableColumns> orderBy, Database database = null)
 		{
 			TestTableColumns c = new TestTableColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<TestTable>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<TestTable>(count);
 			query.Where(filter);
 
@@ -619,10 +671,10 @@ namespace Bam.Net.DaoRef
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -676,10 +728,10 @@ namespace Bam.Net.DaoRef
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -698,7 +750,7 @@ namespace Bam.Net.DaoRef
 		}
 
 		/// <summary>
-		/// Return the count of TestTables
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -715,7 +767,7 @@ namespace Bam.Net.DaoRef
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a TestTableColumns 
+		/// <param name="where">A WhereDelegate that recieves a TestTableColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between TestTableColumns and other values
 		/// </param>
@@ -729,26 +781,26 @@ namespace Bam.Net.DaoRef
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<TestTable>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<TestTable>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<TestTable>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<TestTable>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static TestTable CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<TestTable>();			
+			Database db = database ?? Db.For<TestTable>();
 			var dao = new TestTable();
 			filter.Parameters.Each(p=>
 			{
@@ -757,7 +809,7 @@ namespace Bam.Net.DaoRef
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static TestTable OneOrThrow(TestTableCollection c)
 		{
 			if(c.Count == 1)
@@ -773,4 +825,4 @@ namespace Bam.Net.DaoRef
 		}
 
 	}
-}																								
+}

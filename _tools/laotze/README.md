@@ -1,5 +1,10 @@
 ﻿# Data Access Objects (Dao) From LaoTze
 
+## TL;DR
+```bash
+laotze.exe /root:[PATH-TO-DIRECTORY-CONTAINING-DBJS] /keep
+```
+
 Generating data access objects from scratch using LaoTze.exe is done by creating a *.db.js 
 file and processing that file with the command line tool LaoTze.exe.  A *.db.js 
 file is a special JavaScript file that contains a single JavaScript literal object 
@@ -56,7 +61,7 @@ var database = {
 			cols: [
 				{ RightName: "String"}
 			]
-		}
+		},
 		{		
 			// … another table like above and so on
 		}		

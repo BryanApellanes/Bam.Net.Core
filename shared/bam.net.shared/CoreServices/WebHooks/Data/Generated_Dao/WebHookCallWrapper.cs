@@ -25,11 +25,11 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 
 		public WebHookCallWrapper(DaoRepository repository) : this()
 		{
-			this.Repository = repository;
+			this.DaoRepository = repository;
 		}
 
 		[JsonIgnore]
-		public DaoRepository Repository { get; set; }
+		public DaoRepository DaoRepository { get; set; }
 
 		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> UpdatedXrefCollectionProperties { get; set; }
@@ -47,6 +47,22 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Wrappers
 		}
 
 
+        Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor _webHookDescriptor;
+		public override Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor WebHookDescriptor
+		{
+			get
+			{
+				if (_webHookDescriptor == null)
+				{
+					_webHookDescriptor = (Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor)DaoRepository.GetParentPropertyOfChild(this, typeof(Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor));
+				}
+				return _webHookDescriptor;
+			}
+			set
+			{
+				_webHookDescriptor = value;
+			}
+		}
 
 
 	}

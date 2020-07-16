@@ -1,8 +1,6 @@
 using System.IO;
-using Amazon.S3.Model;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Server;
-using GraphQL.Types;
 
 namespace Bam.Net.Aws.Data
 {

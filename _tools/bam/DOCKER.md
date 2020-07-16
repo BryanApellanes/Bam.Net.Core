@@ -3,8 +3,11 @@ docker build -t {{ProcessTagName}} . [-f path_to_Dockerfile]
 
 # Stop & Remove
 docker container stop {{ProcessTagName}}
+
 docker container rm {{ProcessTagName}}
+
 docker container stop {{ProcessTagName}}instance
+
 docker container rm {{ProcessTagName}}instance
 
 # Run

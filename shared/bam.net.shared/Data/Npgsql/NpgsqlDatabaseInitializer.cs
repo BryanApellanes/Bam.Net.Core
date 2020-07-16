@@ -10,7 +10,7 @@ using System.Data;
 using System.Data.Common;
 using System.Configuration;
 
-namespace Bam.Net.Data.MsSql
+namespace Bam.Net.Data.Npgsql
 {
     public class NpgsqlDatabaseInitializer: DefaultDatabaseInitializer
     {

@@ -1,18 +1,12 @@
-﻿using Bam.Net.Configuration;
-using Bam.Net.Server;
-using Bam.Net.ServiceProxy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Bam.Net.Logging;
-using Bam.Net.Server.Renderers;
-using Bam.Net.Services.Automation;
+﻿using Bam.Net.Application;
 using Bam.Net.Data.Repositories;
+using Bam.Net.Logging;
+using Bam.Net.Server;
+using Bam.Net.Server.Renderers;
+using Bam.Net.ServiceProxy;
+using Bam.Net.Services.Automation;
 
-namespace Bam.Net.Application
+namespace Bam.Net.System
 {
     public class DaemonResponder : HttpHeaderResponder
     {

@@ -23,7 +23,7 @@ namespace Bam.Net.Data
         DirectoryInfo GetWorkspaceDirectory(Type type);
 
         /// <summary>
-        /// Whem implemented, returns the path to the specified directory at the root 
+        /// When implemented, returns the path to the specified directory at the root 
         /// of the SysData directory (as returned by GetSysDataDirectory).
         /// </summary>
         /// <param name="directoryName">Name of the directory.</param>

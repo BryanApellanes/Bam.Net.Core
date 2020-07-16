@@ -474,21 +474,49 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 			});
 		}
 
+		public static Machine GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified Machine.Id was null");
+			return GetById(id.Value, database);
+		}
+
 		public static Machine GetById(uint id, Database database = null)
 		{
 			return GetById((ulong)id, database);
 		}
 
+		public static Machine GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified Machine.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static Machine GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static Machine GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified Machine.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static Machine GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static Machine GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified Machine.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static Machine GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
@@ -660,7 +688,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
 		/// Execute a query that should return only one result.  If more
 		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
-		/// single @Model.ClassName instance by its Id/Key value
+		/// single Machine instance by its Id/Key value
 		/// </summary>
 		/// <param name="where">A WhereDelegate that recieves a MachineColumns
 		/// and returns a IQueryFilter which is the result of any comparisons

@@ -165,10 +165,7 @@ namespace Bam.Net.ServiceProxy
                 }
                 return _inputString;
             }
-            set
-            {
-                _inputString = value;
-            }
+            set => _inputString = value;
         }
 
         HttpArgs _httpArgs;
@@ -496,16 +493,10 @@ namespace Bam.Net.ServiceProxy
             return result;
         }
         
-		public bool HasCallback
-		{
-			get
-			{
-				return !string.IsNullOrEmpty(Request.QueryString["callback"]);
-			}
-		}
+		public bool HasCallback => !string.IsNullOrEmpty(Request.QueryString["callback"]);
 
-		string _callBack;
-		object _callBackLock = new object();
+        string _callBack;
+        readonly object _callBackLock = new object();
 
         /// <summary>
         /// The name of the javascript client side callback function if any or "callback"
@@ -558,7 +549,7 @@ namespace Bam.Net.ServiceProxy
             {
                 string paramJson = jsonStrings[i];
                 Type paramType = ParameterInfos[i].ParameterType;
-                paramInstances[i] = paramJson == null ? null: paramJson.FromJson(paramType);
+                paramInstances[i] = paramJson?.FromJson(paramType);
 
                 SetDefault(paramInstances, i);
             }

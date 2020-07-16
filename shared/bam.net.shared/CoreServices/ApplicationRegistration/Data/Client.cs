@@ -17,7 +17,7 @@ namespace Bam.Net.CoreServices.ApplicationRegistration.Data
     {
         public Client()
         {
-            Secret = ServiceProxySystem.GenerateId();
+            Secret = ServiceProxySystem.GenerateSecureRandomString();
         }
         public ulong MachineId { get; set; }
         Machine _machine;

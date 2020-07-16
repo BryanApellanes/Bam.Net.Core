@@ -25,6 +25,7 @@ using Bam.Net.Data;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Testing.Data;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -523,6 +524,21 @@ namespace Bam.Net
             return Convert.FromBase64String(data);
         }
 
+        public static string ToBase64UrlEncoded(this string data)
+        {
+            return ToBase64UrlEncoded(data.ToBytes());
+        }
+        
+        public static string ToBase64UrlEncoded(this byte[] data)
+        {
+            return WebEncoders.Base64UrlEncode(data);
+        }
+        
+        public static byte[] FromBase64UrlEncoded(this string data)
+        {
+            return WebEncoders.Base64UrlDecode(data);
+        }
+        
         public static string ReadAllText(this FileInfo file)
         {
             using (StreamReader reader = new StreamReader(file.FullName))
@@ -2149,6 +2165,11 @@ namespace Bam.Net
             return filePath.SafeReadFile().FromJson<T>();
         }
 
+        public static object FromJsonFile(this string filePath, Type type)
+        {
+            return filePath.SafeReadFile().FromJson(type);
+        }
+        
         public static T FromJsonStream<T>(this Stream stream)
         {
             MemoryStream ms = new MemoryStream();
@@ -3336,11 +3357,7 @@ namespace Bam.Net
         /// <param name="value"></param>
         public static void Set<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
-            if (!dictionary.ContainsKey(key))
-            {
-                AddMissing(dictionary, key, value);
-            }
-            else
+            if (!AddMissing(dictionary, key, value))
             {
                 dictionary[key] = value;
             }
@@ -3382,6 +3399,30 @@ namespace Bam.Net
 
             long largest = longs[0];
             longs.Each(l => largest = l > largest ? l : largest);
+            return largest;
+        }
+
+        public static int Largest(this int[] ints)
+        {
+            if (ints.Length == 0)
+            {
+                return -1;
+            }
+
+            int largest = ints[0];
+            ints.Each(i=> largest = i > largest ? i: largest);
+            return largest;
+        }
+        
+        public static uint Largest(this uint[] uints)
+        {
+            if (uints.Length == 0)
+            {
+                return 0;
+            }
+
+            uint largest = uints[0];
+            uints.Each(i=> largest = i > largest ? i: largest);
             return largest;
         }
 
@@ -3728,8 +3769,7 @@ namespace Bam.Net
         /// <param name="objectsToStringify">The objects</param>
         /// <param name="toDelimiteder">The ToDelimitedDelegate used to represent each object</param>
         /// <returns>string</returns>
-        public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder,
-            string delimiter)
+        public static string ToDelimited<T>(this T[] objectsToStringify, ToDelimitedDelegate<T> toDelimiteder, string delimiter)
         {
             return string.Join(delimiter, objectsToStringify.Select(v => toDelimiteder(v)).ToArray());
         }
@@ -3754,6 +3794,16 @@ namespace Bam.Net
             return DelimitSplit(valueToSplit, new string[] {delimiter}, trimValues);
         }
 
+        /// <summary>
+        /// Replace a specified string with another string where that string occurs
+        /// between the startDelimiter and endDelimiter.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="toReplace"></param>
+        /// <param name="replaceWith"></param>
+        /// <param name="startDelimiter"></param>
+        /// <param name="endDelimiter"></param>
+        /// <returns></returns>
         public static string DelimitedReplace(this string input, string toReplace, string replaceWith,
             string startDelimiter = "$$~", string endDelimiter = "~$$")
         {
@@ -3761,6 +3811,15 @@ namespace Bam.Net
                 endDelimiter);
         }
 
+        /// <summary>
+        /// Replace a specified string with another string where that string occurs
+        /// between the startDelimiter and endDelimiter.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="replacements"></param>
+        /// <param name="startDelimiter"></param>
+        /// <param name="endDelimiter"></param>
+        /// <returns></returns>
         public static string DelimitedReplace(this string input, Dictionary<string, string> replacements,
             string startDelimiter = "$$~", string endDelimiter = "~$$")
         {
@@ -4033,11 +4092,25 @@ namespace Bam.Net
 
             foreach (PropertyInfo destProp in destinationType.GetProperties())
             {
-                PropertyInfo sourceProp = sourceType.GetProperty(destProp.Name);
+                PropertyInfo sourceProp = TryGetSourcePropNamed(sourceType, destProp.Name);
                 action(destination, source, destProp, sourceProp);
             }
         }
 
+        private static PropertyInfo TryGetSourcePropNamed(Type sourceType, string propertyName)
+        {
+            try
+            {
+                return sourceType.GetProperty(propertyName);
+            }
+            catch (AmbiguousMatchException ame)
+            {
+                return sourceType.GetProperties().FirstOrDefault(p => p.DeclaringType == sourceType && p.Name == propertyName);
+            }
+
+            return null;
+        }
+        
         /// <summary>
         /// Copy the value of the specified property from the source
         /// to the destination
@@ -4128,7 +4201,8 @@ namespace Bam.Net
 
         public static bool IsPrimitiveOrNullable(this Type type)
         {
-            return type.IsPrimitive || Nullable.GetUnderlyingType(type).IsPrimitive;
+            Type underlyingType = Nullable.GetUnderlyingType(type);
+            return type.IsPrimitive || underlyingType == null ? type.IsPrimitive : underlyingType.IsPrimitive;
         }
 
         public static bool IsNullable(this Type type, out Type underlyingType)
@@ -4179,7 +4253,7 @@ namespace Bam.Net
         /// </returns>
         public static bool IsNullable<T>(this Type type)
         {
-            return IsNullable<T>(type);
+            return IsNullable<T>(type, out Type ignore);
         }
 
         /// <summary>

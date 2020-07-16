@@ -1,0 +1,5 @@
+SchemaName: Auth
+WriteSourceTo: ./Generated_Dao
+#TypeAssembly: ./bam.net.core.dll # only necessary for external assemblies
+FromNameSpace: Bam.Net.CoreServices.Auth.Data
+ToNameSpace: Bam.Net.CoreServices.Auth.Data.Dao

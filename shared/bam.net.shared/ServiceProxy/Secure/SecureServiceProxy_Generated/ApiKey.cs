@@ -1,5 +1,5 @@
 /*
-	This file was generated and should not be modified directly
+	This file was generated and should not be modified directly (handlebars template)
 */
 // Model is Table
 using System;
@@ -55,159 +55,160 @@ namespace Bam.Net.ServiceProxy.Secure
 
 		private void SetChildren()
 		{
-						
-		}
 
-	// property:Id, columnName:Id	
-	[Bam.Net.Exclude]
-	[Bam.Net.Data.KeyColumn(Name="Id", DbDataType="BigInt", MaxLength="19")]
-	public ulong? Id
-	{
-		get
-		{
-			return GetULongValue("Id");
-		}
-		set
-		{
-			SetValue("Id", value);
-		}
-	}
 
-	// property:Uuid, columnName:Uuid	
-	[Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
-	public string Uuid
-	{
-		get
-		{
-			return GetStringValue("Uuid");
-		}
-		set
-		{
-			SetValue("Uuid", value);
-		}
-	}
 
-	// property:Cuid, columnName:Cuid	
-	[Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string Cuid
-	{
-		get
-		{
-			return GetStringValue("Cuid");
-		}
-		set
-		{
-			SetValue("Cuid", value);
-		}
-	}
 
-	// property:ClientId, columnName:ClientId	
-	[Bam.Net.Data.Column(Name="ClientId", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
-	public string ClientId
-	{
-		get
-		{
-			return GetStringValue("ClientId");
-		}
-		set
-		{
-			SetValue("ClientId", value);
-		}
-	}
+		} // end SetChildren
 
-	// property:SharedSecret, columnName:SharedSecret	
-	[Bam.Net.Data.Column(Name="SharedSecret", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
-	public string SharedSecret
-	{
-		get
-		{
-			return GetStringValue("SharedSecret");
-		}
-		set
-		{
-			SetValue("SharedSecret", value);
-		}
-	}
+    // property:Id, columnName: Id	
+    [Bam.Net.Data.Column(Name="Id", DbDataType="BigInt", MaxLength="19", AllowNull=false)]
+    public ulong? Id
+    {
+        get
+        {
+            return GetULongValue("Id");
+        }
+        set
+        {
+            SetValue("Id", value);
+        }
+    }
 
-	// property:CreatedBy, columnName:CreatedBy	
-	[Bam.Net.Data.Column(Name="CreatedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
-	public string CreatedBy
-	{
-		get
-		{
-			return GetStringValue("CreatedBy");
-		}
-		set
-		{
-			SetValue("CreatedBy", value);
-		}
-	}
+    // property:Uuid, columnName: Uuid	
+    [Bam.Net.Data.Column(Name="Uuid", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
+    public string Uuid
+    {
+        get
+        {
+            return GetStringValue("Uuid");
+        }
+        set
+        {
+            SetValue("Uuid", value);
+        }
+    }
 
-	// property:CreatedAt, columnName:CreatedAt	
-	[Bam.Net.Data.Column(Name="CreatedAt", DbDataType="DateTime", MaxLength="8", AllowNull=false)]
-	public DateTime? CreatedAt
-	{
-		get
-		{
-			return GetDateTimeValue("CreatedAt");
-		}
-		set
-		{
-			SetValue("CreatedAt", value);
-		}
-	}
+    // property:Cuid, columnName: Cuid	
+    [Bam.Net.Data.Column(Name="Cuid", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+    public string Cuid
+    {
+        get
+        {
+            return GetStringValue("Cuid");
+        }
+        set
+        {
+            SetValue("Cuid", value);
+        }
+    }
 
-	// property:Confirmed, columnName:Confirmed	
-	[Bam.Net.Data.Column(Name="Confirmed", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
-	public DateTime? Confirmed
-	{
-		get
-		{
-			return GetDateTimeValue("Confirmed");
-		}
-		set
-		{
-			SetValue("Confirmed", value);
-		}
-	}
+    // property:ClientId, columnName: ClientId	
+    [Bam.Net.Data.Column(Name="ClientId", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
+    public string ClientId
+    {
+        get
+        {
+            return GetStringValue("ClientId");
+        }
+        set
+        {
+            SetValue("ClientId", value);
+        }
+    }
 
-	// property:Disabled, columnName:Disabled	
-	[Bam.Net.Data.Column(Name="Disabled", DbDataType="Bit", MaxLength="1", AllowNull=false)]
-	public bool? Disabled
-	{
-		get
-		{
-			return GetBooleanValue("Disabled");
-		}
-		set
-		{
-			SetValue("Disabled", value);
-		}
-	}
+    // property:SharedSecret, columnName: SharedSecret	
+    [Bam.Net.Data.Column(Name="SharedSecret", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
+    public string SharedSecret
+    {
+        get
+        {
+            return GetStringValue("SharedSecret");
+        }
+        set
+        {
+            SetValue("SharedSecret", value);
+        }
+    }
 
-	// property:DisabledBy, columnName:DisabledBy	
-	[Bam.Net.Data.Column(Name="DisabledBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
-	public string DisabledBy
-	{
-		get
-		{
-			return GetStringValue("DisabledBy");
-		}
-		set
-		{
-			SetValue("DisabledBy", value);
-		}
-	}
+    // property:CreatedBy, columnName: CreatedBy	
+    [Bam.Net.Data.Column(Name="CreatedBy", DbDataType="VarChar", MaxLength="4000", AllowNull=false)]
+    public string CreatedBy
+    {
+        get
+        {
+            return GetStringValue("CreatedBy");
+        }
+        set
+        {
+            SetValue("CreatedBy", value);
+        }
+    }
 
+    // property:CreatedAt, columnName: CreatedAt	
+    [Bam.Net.Data.Column(Name="CreatedAt", DbDataType="DateTime", MaxLength="8", AllowNull=false)]
+    public DateTime? CreatedAt
+    {
+        get
+        {
+            return GetDateTimeValue("CreatedAt");
+        }
+        set
+        {
+            SetValue("CreatedAt", value);
+        }
+    }
+
+    // property:Confirmed, columnName: Confirmed	
+    [Bam.Net.Data.Column(Name="Confirmed", DbDataType="DateTime", MaxLength="8", AllowNull=true)]
+    public DateTime? Confirmed
+    {
+        get
+        {
+            return GetDateTimeValue("Confirmed");
+        }
+        set
+        {
+            SetValue("Confirmed", value);
+        }
+    }
+
+    // property:Disabled, columnName: Disabled	
+    [Bam.Net.Data.Column(Name="Disabled", DbDataType="Bit", MaxLength="1", AllowNull=false)]
+    public bool? Disabled
+    {
+        get
+        {
+            return GetBooleanValue("Disabled");
+        }
+        set
+        {
+            SetValue("Disabled", value);
+        }
+    }
+
+    // property:DisabledBy, columnName: DisabledBy	
+    [Bam.Net.Data.Column(Name="DisabledBy", DbDataType="VarChar", MaxLength="4000", AllowNull=true)]
+    public string DisabledBy
+    {
+        get
+        {
+            return GetStringValue("DisabledBy");
+        }
+        set
+        {
+            SetValue("DisabledBy", value);
+        }
+    }
 
 
 	// start ApplicationId -> ApplicationId
 	[Bam.Net.Data.ForeignKey(
         Table="ApiKey",
-		Name="ApplicationId", 
-		DbDataType="BigInt", 
+		Name="ApplicationId",
+		DbDataType="BigInt",
 		MaxLength="",
-		AllowNull=true, 
+		AllowNull=true,
 		ReferencedKey="Id",
 		ReferencedTable="Application",
 		Suffix="1")]
@@ -215,15 +216,15 @@ namespace Bam.Net.ServiceProxy.Secure
 	{
 		get
 		{
-			return GetULongValue("ApplicationId");
+			return GetULongValue("ApplicationId", false);
 		}
 		set
 		{
-			SetValue("ApplicationId", value);
+			SetValue("ApplicationId", value, false);
 		}
 	}
 
-	Application _applicationOfApplicationId;
+    Application _applicationOfApplicationId;
 	public Application ApplicationOfApplicationId
 	{
 		get
@@ -235,16 +236,18 @@ namespace Bam.Net.ServiceProxy.Secure
 			return _applicationOfApplicationId;
 		}
 	}
-	
-				
-		
+
+
+
+
+
 
 		/// <summary>
-		/// Gets a query filter that should uniquely identify
-		/// the current instance.  The default implementation
-		/// compares the Id/key field to the current instance's.
-		/// </summary>
-		[Bam.Net.Exclude] 
+        /// Gets a query filter that should uniquely identify
+        /// the current instance.  The default implementation
+        /// compares the Id/key field to the current instance's.
+        /// </summary>
+		[Bam.Net.Exclude]
 		public override IQueryFilter GetUniqueFilter()
 		{
 			if(UniqueFilterProvider != null)
@@ -254,112 +257,119 @@ namespace Bam.Net.ServiceProxy.Secure
 			else
 			{
 				var colFilter = new ApiKeyColumns();
-				return (colFilter.KeyColumn == IdValue);
-			}			
+				return (colFilter.KeyColumn == GetId());
+			}
 		}
 
 		/// <summary>
-		/// Return every record in the ApiKey table.
-		/// </summary>
+        /// Return every record in the ApiKey table.
+        /// </summary>
 		/// <param name="database">
 		/// The database to load from or null
 		/// </param>
 		public static ApiKeyCollection LoadAll(Database database = null)
 		{
 			Database db = database ?? Db.For<ApiKey>();
-			SqlStringBuilder sql = db.GetSqlStringBuilder();
-			sql.Select<ApiKey>();
-			var results = new ApiKeyCollection(db, sql.GetDataTable(db))
-			{
-				Database = db
-			};
-			return results;
-		}
+            SqlStringBuilder sql = db.GetSqlStringBuilder();
+            sql.Select<ApiKey>();
+            var results = new ApiKeyCollection(db, sql.GetDataTable(db))
+            {
+                Database = db
+            };
+            return results;
+        }
 
-		/// <summary>
-		/// Process all records in batches of the specified size
-		/// </summary>
-		[Bam.Net.Exclude]
-		public static async Task BatchAll(int batchSize, Action<IEnumerable<ApiKey>> batchProcessor, Database database = null)
+        /// <summary>
+        /// Process all records in batches of the specified size
+        /// </summary>
+        [Bam.Net.Exclude]
+        public static async Task BatchAll(int batchSize, Action<IEnumerable<ApiKey>> batchProcessor, Database database = null)
 		{
-			await System.Threading.Tasks.Task.Run(async ()=>
+			await Task.Run(async ()=>
 			{
 				ApiKeyColumns columns = new ApiKeyColumns();
 				var orderBy = Bam.Net.Data.Order.By<ApiKeyColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, (c) => c.KeyColumn > 0, orderBy, database);
 				while(results.Count > 0)
 				{
-					await System.Threading.Tasks.Task.Run(()=>
+					await Task.Run(()=>
 					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (c) => c.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, QueryFilter filter, Action<IEnumerable<ApiKey>> batchProcessor, Database database = null)
 		{
-			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);			
+			await BatchQuery(batchSize, (c) => filter, batchProcessor, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery(int batchSize, WhereDelegate<ApiKeyColumns> where, Action<IEnumerable<ApiKey>> batchProcessor, Database database = null)
 		{
-			await System.Threading.Tasks.Task.Run(async ()=>
+			await Task.Run(async ()=>
 			{
 				ApiKeyColumns columns = new ApiKeyColumns();
 				var orderBy = Bam.Net.Data.Order.By<ApiKeyColumns>(c => c.KeyColumn, Bam.Net.Data.SortOrder.Ascending);
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
-					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					await Task.Run(()=>
+					{
 						batchProcessor(results);
 					});
 					long topId = results.Select(d => d.Property<long>(columns.KeyColumn.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ApiKeyColumns)where(columns) && columns.KeyColumn > topId, orderBy, database);
 				}
-			});			
+			});
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>			 
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, QueryFilter filter, Action<IEnumerable<ApiKey>> batchProcessor, Bam.Net.Data.OrderBy<ApiKeyColumns> orderBy, Database database = null)
 		{
-			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);			
+			await BatchQuery<ColType>(batchSize, (c) => filter, batchProcessor, orderBy, database);
 		}
 
 		/// <summary>
 		/// Process results of a query in batches of the specified size
-		/// </summary>	
+		/// </summary>
 		[Bam.Net.Exclude]
 		public static async Task BatchQuery<ColType>(int batchSize, WhereDelegate<ApiKeyColumns> where, Action<IEnumerable<ApiKey>> batchProcessor, Bam.Net.Data.OrderBy<ApiKeyColumns> orderBy, Database database = null)
 		{
-			await System.Threading.Tasks.Task.Run(async ()=>
+			await Task.Run(async ()=>
 			{
 				ApiKeyColumns columns = new ApiKeyColumns();
 				var results = Top(batchSize, where, orderBy, database);
 				while(results.Count > 0)
 				{
-					await System.Threading.Tasks.Task.Run(()=>
-					{ 
+					await Task.Run(()=>
+					{
 						batchProcessor(results);
 					});
 					ColType top = results.Select(d => d.Property<ColType>(orderBy.Column.ToString())).ToArray().Largest();
 					results = Top(batchSize, (ApiKeyColumns)where(columns) && orderBy.Column > top, orderBy, database);
 				}
-			});			
+			});
+		}
+
+		public static ApiKey GetById(uint? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified ApiKey.Id was null");
+			return GetById(id.Value, database);
 		}
 
 		public static ApiKey GetById(uint id, Database database = null)
@@ -367,16 +377,37 @@ namespace Bam.Net.ServiceProxy.Secure
 			return GetById((ulong)id, database);
 		}
 
+		public static ApiKey GetById(int? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified ApiKey.Id was null");
+			return GetById(id.Value, database);
+		}                                    
+                                    
 		public static ApiKey GetById(int id, Database database = null)
 		{
 			return GetById((long)id, database);
 		}
 
+		public static ApiKey GetById(long? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified ApiKey.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static ApiKey GetById(long id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
 		}
 
+		public static ApiKey GetById(ulong? id, Database database = null)
+		{
+			Args.ThrowIfNull(id, "id");
+			Args.ThrowIf(!id.HasValue, "specified ApiKey.Id was null");
+			return GetById(id.Value, database);
+		}
+                                    
 		public static ApiKey GetById(ulong id, Database database = null)
 		{
 			return OneWhere(c => c.KeyColumn == id, database);
@@ -398,7 +429,7 @@ namespace Bam.Net.ServiceProxy.Secure
 			return Where(filter, database);
 		}
 
-		[Bam.Net.Exclude]		
+		[Bam.Net.Exclude]
 		public static ApiKeyCollection Where(QueryFilter filter, Database database = null)
 		{
 			WhereDelegate<ApiKeyColumns> whereDelegate = (c) => filter;
@@ -406,9 +437,9 @@ namespace Bam.Net.ServiceProxy.Secure
 		}
 
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A Func delegate that recieves a ApiKeyColumns 
+		/// <param name="where">A Func delegate that recieves a ApiKeyColumns
 		/// and returns a QueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -419,27 +450,27 @@ namespace Bam.Net.ServiceProxy.Secure
 			database = database ?? Db.For<ApiKey>();
 			return new ApiKeyCollection(database.GetQuery<ApiKeyColumns, ApiKey>(where, orderBy), true);
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
 		/// <param name="db"></param>
 		[Bam.Net.Exclude]
 		public static ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<ApiKey>();
 			var results = new ApiKeyCollection(database, database.GetQuery<ApiKeyColumns, ApiKey>(where), true);
 			return results;
 		}
-		   
+
 		/// <summary>
-		/// Execute a query and return the results. 
+		/// Execute a query and return the results.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -449,7 +480,7 @@ namespace Bam.Net.ServiceProxy.Secure
 		/// <param name="database"></param>
 		[Bam.Net.Exclude]
 		public static ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy = null, Database database = null)
-		{		
+		{
 			database = database ?? Db.For<ApiKey>();
 			var results = new ApiKeyCollection(database, database.GetQuery<ApiKeyColumns, ApiKey>(where, orderBy), true);
 			return results;
@@ -457,9 +488,9 @@ namespace Bam.Net.ServiceProxy.Secure
 
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate&lt;ApiKeyColumns&gt;.
+		/// WhereDelegate`ApiKeyColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -468,9 +499,9 @@ namespace Bam.Net.ServiceProxy.Secure
 			var results = new ApiKeyCollection(database, Select<ApiKeyColumns>.From<ApiKey>().Where(where, database));
 			return results;
 		}
-				
+
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -488,8 +519,8 @@ namespace Bam.Net.ServiceProxy.Secure
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
-		/// be thrown.  
+		/// than one result is returned a MultipleEntriesFoundException will
+		/// be thrown.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -502,7 +533,29 @@ namespace Bam.Net.ServiceProxy.Secure
 		}
 
 		/// <summary>
-		/// Get one entry matching the specified filter.  If none exists 
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ApiKeyColumns> where, Database database = null)
+		{
+			SetOneWhere(where, out ApiKey ignore, database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists
+		/// one will be created; success will depend on the nullability
+		/// of the specified columns.
+		/// </summary>
+		[Bam.Net.Exclude]
+		public static void SetOneWhere(WhereDelegate<ApiKeyColumns> where, out ApiKey result, Database database = null)
+		{
+			result = GetOneWhere(where, database);
+		}
+
+		/// <summary>
+		/// Get one entry matching the specified filter.  If none exists
 		/// one will be created; success will depend on the nullability
 		/// of the specified columns.
 		/// </summary>
@@ -515,7 +568,7 @@ namespace Bam.Net.ServiceProxy.Secure
 			if(result == null)
 			{
 				ApiKeyColumns c = new ApiKeyColumns();
-				IQueryFilter filter = where(c); 
+				IQueryFilter filter = where(c);
 				result = CreateFromFilter(filter, database);
 			}
 
@@ -524,11 +577,11 @@ namespace Bam.Net.ServiceProxy.Secure
 
 		/// <summary>
 		/// Execute a query that should return only one result.  If more
-		/// than one result is returned a MultipleEntriesFoundException will 
+		/// than one result is returned a MultipleEntriesFoundException will
 		/// be thrown.  This method is most commonly used to retrieve a
 		/// single ApiKey instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -539,12 +592,12 @@ namespace Bam.Net.ServiceProxy.Secure
 			var result = Top(1, where, database);
 			return OneOrThrow(result);
 		}
-					 
+
 		/// <summary>
 		/// This method is intended to respond to client side Qi queries.
-		/// Use of this method from .Net should be avoided in favor of 
+		/// Use of this method from .Net should be avoided in favor of
 		/// one of the methods that take a delegate of type
-		/// WhereDelegate<ApiKeyColumns>.
+		/// WhereDelegate`ApiKeyColumns`.
 		/// </summary>
 		/// <param name="where"></param>
 		/// <param name="database"></param>
@@ -555,10 +608,10 @@ namespace Bam.Net.ServiceProxy.Secure
 		}
 
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -576,12 +629,12 @@ namespace Bam.Net.ServiceProxy.Secure
 				return null;
 			}
 		}
-		
+
 		/// <summary>
-		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the 
+		/// Execute a query and return the first result.  This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -603,7 +656,7 @@ namespace Bam.Net.ServiceProxy.Secure
 		/// <summary>
 		/// Shortcut for Top(1, where, orderBy, database)
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -625,14 +678,14 @@ namespace Bam.Net.ServiceProxy.Secure
 
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method will issue a sql TOP clause so only the
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -649,10 +702,10 @@ namespace Bam.Net.ServiceProxy.Secure
 		/// will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -666,10 +719,10 @@ namespace Bam.Net.ServiceProxy.Secure
 		public static ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy, Database database = null)
 		{
 			ApiKeyColumns c = new ApiKeyColumns();
-			IQueryFilter filter = where(c);         
-			
+			IQueryFilter filter = where(c);
+
 			Database db = database ?? Db.For<ApiKey>();
-			QuerySet query = GetQuerySet(db); 
+			QuerySet query = GetQuerySet(db);
 			query.Top<ApiKey>(count);
 			query.Where(filter);
 
@@ -696,10 +749,10 @@ namespace Bam.Net.ServiceProxy.Secure
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="orderBy">
@@ -753,10 +806,10 @@ namespace Bam.Net.ServiceProxy.Secure
 		/// of values
 		/// </summary>
 		/// <param name="count">The number of values to return.
-		/// This value is used in the sql query so no more than this 
+		/// This value is used in the sql query so no more than this
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A QueryFilter used to filter the 
+		/// <param name="where">A QueryFilter used to filter the
 		/// results
 		/// </param>
 		/// <param name="database">
@@ -775,7 +828,7 @@ namespace Bam.Net.ServiceProxy.Secure
 		}
 
 		/// <summary>
-		/// Return the count of ApiKeys
+		/// Return the count of @(Model.ClassName.Pluralize())
 		/// </summary>
 		/// <param name="database">
 		/// Which database to query or null to use the default
@@ -792,7 +845,7 @@ namespace Bam.Net.ServiceProxy.Secure
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns 
+		/// <param name="where">A WhereDelegate that recieves a ApiKeyColumns
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between ApiKeyColumns and other values
 		/// </param>
@@ -806,26 +859,26 @@ namespace Bam.Net.ServiceProxy.Secure
 			IQueryFilter filter = where(c) ;
 
 			Database db = database ?? Db.For<ApiKey>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<ApiKey>();
-			query.Where(filter);	  
+			query.Where(filter);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
 		}
-		 
+
 		public static long Count(QiQuery where, Database database = null)
 		{
 		    Database db = database ?? Db.For<ApiKey>();
-			QuerySet query = GetQuerySet(db);	 
+			QuerySet query = GetQuerySet(db);
 			query.Count<ApiKey>();
-			query.Where(where);	  
+			query.Where(where);
 			query.Execute(db);
 			return query.Results.As<CountResult>(0).Value;
-		} 		
+		}
 
 		private static ApiKey CreateFromFilter(IQueryFilter filter, Database database = null)
 		{
-			Database db = database ?? Db.For<ApiKey>();			
+			Database db = database ?? Db.For<ApiKey>();
 			var dao = new ApiKey();
 			filter.Parameters.Each(p=>
 			{
@@ -834,7 +887,7 @@ namespace Bam.Net.ServiceProxy.Secure
 			dao.Save(db);
 			return dao;
 		}
-		
+
 		private static ApiKey OneOrThrow(ApiKeyCollection c)
 		{
 			if(c.Count == 1)
@@ -850,4 +903,4 @@ namespace Bam.Net.ServiceProxy.Secure
 		}
 
 	}
-}																								
+}

@@ -5,6 +5,7 @@ using Bam.Net.Data;
 using Bam.Net.ServiceProxy;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.CoreServices.Diagnostic;
+using CsQuery.ExtensionMethods.Internal;
 
 namespace Bam.Net.CoreServices
 {
@@ -74,7 +75,7 @@ namespace Bam.Net.CoreServices
         {
             HashSet<DatabaseInfo> dbInfos = new HashSet<DatabaseInfo>();
             Db.DefaultContainer.GetInfos().Each(dbInfo => dbInfos.Add(dbInfo));
-            Database.Infos.Each(dbInfo => dbInfos.Add(dbInfo));
+            dbInfos.AddRange(Database.Infos);
             Databases = dbInfos.ToArray();
         }
 

@@ -376,7 +376,7 @@ namespace Bam.Net.Data.Repositories
 
 		public override T Retrieve<T>(int id)
 		{
-			return Retrieve<T>((long)id);
+			return Retrieve<T>((ulong)id);
 		}
 
 		public override T Retrieve<T>(long id)
@@ -934,7 +934,7 @@ namespace Bam.Net.Data.Repositories
                 Logger.AddEntry("IdValue not found for specified parent instance: Type={0}.{1}, {2}", pocoType.Namespace, pocoType.Name, poco.ToString());
                 return new List<TChildType>();
             }
-            QueryFilter filter = Bam.Net.Data.Query.Where(foreignKeyName) == parentId;
+            QueryFilter filter = Bam.Net.Data.Query.Where(foreignKeyName) == Dao.MapUlongToLong(parentId);
             Type childDaoType = GetDaoType(typeof(TChildType));
             MethodInfo whereMethod = childDaoType.GetMethod("Where", new Type[] { typeof(QueryFilter), typeof(Database) });
             IEnumerable daoResults = (IEnumerable)whereMethod.Invoke(null, new object[] { filter, Database });
@@ -1129,7 +1129,6 @@ namespace Bam.Net.Data.Repositories
             }
 			object wrapper = ConstructWrapper(pocoType);
 			wrapper.CopyProperties(daoInstance);
-			poco.CopyProperties(wrapper);
 			return wrapper;  
 		}
 		

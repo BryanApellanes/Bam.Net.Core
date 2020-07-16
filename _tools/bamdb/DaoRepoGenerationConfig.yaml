@@ -1,0 +1,6 @@
+﻿SchemaName: ManagedApplication
+WriteSourceTo: ./Generated_Dao
+#TypeAssembly: ./bam.net.core.dll # only necessary if external assembly
+FromNameSpace: Bam.Net.Application.Data
+ToNameSpace: Bam.Net.Appliction.Data.Dao
+UseInheritanceSchema: false

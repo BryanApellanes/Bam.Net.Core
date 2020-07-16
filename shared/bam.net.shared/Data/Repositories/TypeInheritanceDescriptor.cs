@@ -13,8 +13,7 @@ namespace Bam.Net.Data.Repositories
         {
             Type = type;
             RootType = type;
-            Chain = new List<TypeTable>();
-            Chain.Add(new TypeTable(type));
+            Chain = new List<TypeTable> {new TypeTable(type)};
             Type baseType = type.BaseType;
             while(baseType != typeof(object) && baseType != null)
             {

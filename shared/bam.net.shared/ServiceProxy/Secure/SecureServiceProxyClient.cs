@@ -336,11 +336,11 @@ namespace Bam.Net.ServiceProxy.Secure
             return request;
         }
 
-        protected internal void SetSessionKeyAndIv()
+        private void SetSessionKeyAndIv()
         {
             CreateSetSessionKeyRequest(out AesKeyVectorPair kvp, out SetSessionKeyRequest request);
 
-            SecureChannelMessage response = this.Post<SecureChannelMessage>(typeof(SecureChannel).Name, "SetSessionKey", new object[] { request });
+            SecureChannelMessage response = this.Post<SecureChannelMessage>(nameof(SecureChannel), "SetSessionKey", new object[] { request });
             if (!response.Success)
             {
                 throw new Exception(response.Message);

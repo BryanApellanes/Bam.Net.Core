@@ -1,0 +1,6 @@
+SchemaName: DataReplication
+WriteSourceTo: ./Generated_Dao
+#TypeAssembly: ./bam.net.core.dll # only necessary for external assemblies
+FromNameSpace: Bam.Net.Services.DataReplication.Data
+ToNameSpace: Bam.Net.Services.DataReplication.Data.Dao
+UseInheritanceSchema: true

@@ -12,7 +12,7 @@ namespace Bam.Net.Data.Repositories
 {
 	public class DtoPropertyModel
 	{
-        internal DtoPropertyModel()
+        public DtoPropertyModel()
         { }
 
 		public DtoPropertyModel(PropertyInfo property)

@@ -20,7 +20,6 @@ namespace Bam.Net.DaoRef
 			}
 		}	
 
-				
         public DaoReferenceObjectWithForeignKeyColumns Id
         {
             get
@@ -49,6 +48,7 @@ namespace Bam.Net.DaoRef
                 return new DaoReferenceObjectWithForeignKeyColumns("Name");
             }
         }
+
 
         public DaoReferenceObjectWithForeignKeyColumns DaoReferenceObjectId
         {

@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using Bam.Net.Application;
 using Bam.Net.Presentation;
 //using Bam.Net.Schema.Org.Things;
-using Bam.Net.Server.Meta;
+using Bam.Net.Server.PathHandlers;
 using Bam.Net.Services;
 
 namespace Bam.Net.Server
@@ -47,7 +47,7 @@ namespace Bam.Net.Server
             _clientProxyGenerators = new Dictionary<string, IClientProxyGenerator>();
             RendererFactory = new WebRendererFactory(logger);
             ExecutionRequestResolver = new ExecutionRequestResolver();
-            ApplicationServiceResolver = new ApplicationServiceResolver();
+            ApplicationServiceSourceResolver = new ApplicationServiceSourceResolver();
             ApplicationServiceRegistryResolver = new ApplicationServiceRegistryResolver();
             ServiceCompilationExceptionReporter = new ServiceCompilationExceptionReporter();
 
@@ -81,7 +81,7 @@ namespace Bam.Net.Server
         {
             AppConf appConf = args.AppConf;
             CompilationExceptionInfo info = new CompilationExceptionInfo(args.Exception);
-            DirectoryInfo sourceDirectory = ApplicationServiceResolver.GetAppServicesSourceDirectory(appConf);
+            DirectoryInfo sourceDirectory = ApplicationServiceSourceResolver.GetAppServicesSourceDirectory(appConf);
             FileInfo svcCompilationErrors = new FileInfo(Path.Combine(sourceDirectory.FullName, "_logs", $"CompilationErrors-{info.ProcessInfo.ProcessId}.txt"));
             if (!svcCompilationErrors.Directory.Exists)
             {
@@ -93,15 +93,15 @@ namespace Bam.Net.Server
         [Inject]
         public IExecutionRequestResolver ExecutionRequestResolver { get; set; }
 
-        private IApplicationServiceResolver _applicationServiceResolver;
+        private IApplicationServiceSourceResolver _applicationServiceSourceResolver;
         [Inject]
-        public IApplicationServiceResolver ApplicationServiceResolver
+        public IApplicationServiceSourceResolver ApplicationServiceSourceResolver
         {
-            get => _applicationServiceResolver;
+            get => _applicationServiceSourceResolver;
             set
             {
-                _applicationServiceResolver = value;
-                _applicationServiceResolver.SubscribeOnce( nameof(_applicationServiceResolver.CompilationException),(o, a) => HandleCompilationException(o, (RoslynCompilationExceptionEventArgs) a));
+                _applicationServiceSourceResolver = value;
+                _applicationServiceSourceResolver.SubscribeOnce( nameof(_applicationServiceSourceResolver.CompilationException),(o, a) => HandleCompilationException(o, (RoslynCompilationExceptionEventArgs) a));
             }
         }
 
@@ -348,13 +348,7 @@ namespace Bam.Net.Server
         /// <summary>
         /// List of service class names
         /// </summary>
-        public string[] CommonServices
-        {
-            get
-            {
-                return _commonServiceProvider.ClassNames;
-            }
-        }
+        public string[] CommonServices => _commonServiceProvider.ClassNames;
 
         public string[] AppServices(string appName)
         {
@@ -388,34 +382,42 @@ namespace Bam.Net.Server
         {
             BamConf.AppsToServe.Each(appConf =>
             {
-                ApplicationServiceAssembly applicationServiceAssembly = null;
-                try
-                {
-                    applicationServiceAssembly = ApplicationServiceResolver.CompileAppServices(appConf);
-                    if (applicationServiceAssembly != null)
-                    {
-                        DirectoryInfo binDir = ApplicationServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
-                        if (!binDir.Exists)
-                        {
-                            binDir.Create();
-                        }
+                CompileAppServices(appConf);
+            });
+        }
 
-                        string serviceAssemblyFile = Path.Combine(binDir.FullName, $"{appConf.Name}.services.dll");
-                        if (File.Exists(serviceAssemblyFile))
-                        {
-                            File.Delete(serviceAssemblyFile);
-                        }
-                        File.WriteAllBytes(serviceAssemblyFile, applicationServiceAssembly);
+        public ApplicationServiceAssembly CompileAppServices(AppConf appConf)
+        {
+            ApplicationServiceAssembly applicationServiceAssembly = null;
+            try
+            {
+                applicationServiceAssembly = ApplicationServiceSourceResolver.CompileAppServices(appConf);
+                if (applicationServiceAssembly != null)
+                {
+                    DirectoryInfo binDir = ApplicationServiceSourceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                    if (!binDir.Exists)
+                    {
+                        binDir.Create();
                     }
 
-                    FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {ApplicationServiceAssembly = applicationServiceAssembly, AppConf = appConf});
+                    string serviceAssemblyFile = Path.Combine(binDir.FullName, $"{appConf.Name}.services.dll");
+                    if (File.Exists(serviceAssemblyFile))
+                    {
+                        File.Delete(serviceAssemblyFile);
+                    }
+
+                    File.WriteAllBytes(serviceAssemblyFile, applicationServiceAssembly);
                 }
-                catch (Exception ex)
-                {
-                    Logger.Error("Error compiling application services for ({0}): {1}", appConf.Name, ex.Message);
-                    FireEvent(ServiceCompilationException, this, new ServiceCompilationEventArgs{Exception = ex, ApplicationServiceAssembly = applicationServiceAssembly, AppConf = appConf});
-                }
-            });
+
+                FireEvent(ServiceCompiled, this, new ServiceCompilationEventArgs {ApplicationServiceAssembly = applicationServiceAssembly, AppConf = appConf});
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error compiling application services for ({0}): {1}", appConf.Name, ex.Message);
+                FireEvent(ServiceCompilationException, this, new ServiceCompilationEventArgs {Exception = ex, ApplicationServiceAssembly = applicationServiceAssembly, AppConf = appConf});
+            }
+
+            return applicationServiceAssembly;
         }
 
         /// <summary>
@@ -425,7 +427,7 @@ namespace Bam.Net.Server
         {
             Parallel.ForEach(BamConf.AppsToServe, (appConf) =>
             { 
-                FileInfo appServiceAssemblyFile = ApplicationServiceResolver.GetAppServicesAssemblyFile(appConf);
+                FileInfo appServiceAssemblyFile = ApplicationServiceSourceResolver.GetAppServicesAssemblyFile(appConf);
                 if (appServiceAssemblyFile.Exists)
                 {
                     Assembly appServiceAssembly = Assembly.LoadFile(appServiceAssemblyFile.FullName);
@@ -479,7 +481,7 @@ namespace Bam.Net.Server
                 serviceContainer.For<AppConf>().Use(appConf);
                 AppServiceProviders[name] = serviceContainer;
 
-                DirectoryInfo appServicesDir = ApplicationServiceResolver.GetServicesBinDirectory(appConf.AppRoot);
+                DirectoryInfo appServicesDir = ApplicationServiceSourceResolver.GetServicesBinDirectory(appConf.AppRoot);
                 if (appServicesDir.Exists)
                 {
                     Action<Type> serviceAdder = (type) =>
@@ -558,7 +560,7 @@ namespace Bam.Net.Server
 
         private void ForEachProxiedClass(string searchPattern, DirectoryInfo serviceDir, Action<Type> doForEachProxiedType)
         {
-            Bam.Net.ServiceProxy.ApplicationServiceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
+            Bam.Net.ServiceProxy.ApplicationServiceSourceResolver.ForEachProxiedClass(BamConf, searchPattern, serviceDir, doForEachProxiedType);
         }
         
         public override bool TryRespond(IHttpContext context)
@@ -760,7 +762,7 @@ namespace Bam.Net.Server
             return results.ToArray();
         }
 
-        Dictionary<string, IClientProxyGenerator> _clientProxyGenerators;
+        readonly Dictionary<string, IClientProxyGenerator> _clientProxyGenerators;
         private bool SendProxyCode(IHttpContext context)
         {
             bool result = false;

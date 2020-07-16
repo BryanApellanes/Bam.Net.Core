@@ -13,13 +13,20 @@ namespace Bam.Net.Data
     {
         public DatabaseInfo(Database database)
         {
-            this.DatabaseType = database.GetType().FullName;
-            this.ConnectionString = database.ConnectionString;
-            this.ConnectionName = database.ConnectionName;
+            Args.ThrowIfNull(database, "database");
+            Database = database;
         }
-        public string DatabaseType { get; private set; }
-        public string ConnectionString { get; private set; }
-        public string ConnectionName { get; private set; }
+        
+        protected Database Database { get; }
+
+        public string DatabaseType => Database.GetType().FullName;
+        public string ConnectionString => Database.ConnectionString;
+        public string ConnectionName => Database.ConnectionName;
+
+        public override string ToString()
+        {
+            return $"{DatabaseType}:{ConnectionName}";
+        }
 
         public override int GetHashCode()
         {
@@ -33,7 +40,11 @@ namespace Bam.Net.Data
             {
                 return false;
             }
-            return dbInfo.GetHashCode() == this.GetHashCode();
+
+            
+            return dbInfo.DatabaseType.Or("").Equals(this.DatabaseType) &&
+                   dbInfo.ConnectionString.Or("").Equals(this.ConnectionString) &&
+                   dbInfo.ConnectionName.Or("").Equals(this.ConnectionName);
         }
     }
 }

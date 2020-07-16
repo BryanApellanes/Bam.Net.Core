@@ -1,5 +1,5 @@
 ﻿using Bam.Net.CoreServices;
-using Bam.Net.CoreServices.OAuth;
+using Bam.Net.CoreServices.Auth;
 using Bam.Net.CoreServices.Tests;
 using Bam.Net.ServiceProxy;
 using Bam.Net.Testing;
@@ -15,8 +15,8 @@ namespace Bam.Net.Tests
         [UnitTest]
         public void CanSaveSupportedOAuthProviders()
         {
-            SupportedOAuthProviders oauthProviders = new SupportedOAuthProviders();
-            oauthProviders.AddProvider(new OAuthProviderInfo() { ProviderName = "bamapps", AuthorizationEndpoint = "testendpoint", ClientId = "testclientId", ClientSecret = "testsecret" });
+            SupportedAuthProviders oauthProviders = new SupportedAuthProviders();
+            oauthProviders.AddProvider(new AuthProviderInfo() { ProviderName = "bamapps", AuthorizationEndpoint = "testendpoint", ClientId = "testclientId", ClientSecret = "testsecret" });
             string jsonFile = ".\\oauthTest.json";
 
             oauthProviders.Save(jsonFile);
@@ -30,23 +30,23 @@ namespace Bam.Net.Tests
         public void CanSetGetAndDeleteProviders()
         {
             ServiceRegistry registry = CoreServicesTestRegistry.GetServiceRegistry();
-            OAuthSettingsService svc = registry.Get<OAuthSettingsService>();
+            AuthSettingsService svc = registry.Get<AuthSettingsService>();
             svc.HttpContext = registry.Get<IHttpContext>();
             Expect.AreEqual("CoreServicesTests", svc.ClientApplicationName);
 
-            CoreServiceResponse<List<OAuthClientSettings>> settingsResponse = svc.GetClientSettings();
+            CoreServiceResponse<List<AuthClientSettings>> settingsResponse = svc.GetClientSettings();
             Expect.IsTrue(settingsResponse.Success, "Failed to get client settings");
 
             // this is technically clean up code
             OutLineFormat("there are currently {0} oauthsettings", settingsResponse.TypedData().Count);
-            foreach(OAuthClientSettings setting in settingsResponse.Data)
+            foreach(AuthClientSettings setting in settingsResponse.Data)
             {
                 CoreServiceResponse removeResponse = svc.RemoveProvider(setting.ProviderName);
                 Expect.IsTrue(removeResponse.Success, "failed to delete test provider");
             }
 
             string testProvider = "testprovider";
-            CoreServiceResponse<OAuthClientSettings> response = svc.SetProvider(testProvider, "testclientid", "test-secret");
+            CoreServiceResponse<AuthClientSettings> response = svc.SetProvider(testProvider, "testclientid", "test-secret");
             Expect.IsTrue(response.Success, "failed to set test provider");
 
             CoreServiceResponse check = svc.RemoveProvider(testProvider);
@@ -57,7 +57,7 @@ namespace Bam.Net.Tests
         public void GetClientAppShouldGetTheSameCuid()
         {            
             ServiceRegistry registry = CoreServicesTestRegistry.GetServiceRegistry();
-            OAuthSettingsService svc = registry.Get<OAuthSettingsService>();
+            AuthSettingsService svc = registry.Get<AuthSettingsService>();
             svc.HttpContext = registry.Get<IHttpContext>();
             CoreServices.ApplicationRegistration.Data.Application check = svc.ApplicationRegistrationRepository.OneApplicationWhere(c => c.Name == svc.ClientApplicationName);
             if(check != null)

@@ -1,0 +1,121 @@
+"$schema": http://json-schema.org/draft-04/schema#
+id: common_v1.yaml
+
+definitions:
+  TimeZone:
+    javaType: "com.vimly.entitystore.schema.TimeZoneEnum"
+    type: string
+    enum:
+      - US/Samoa 
+      - US/Aleutian
+      - US/Hawaii
+      - US/Alaska
+      - US/Pacific
+      - US/Mountain
+      - US/Arizona
+      - US/Indiana-Starke
+      - US/East-Indiana
+      - US/Michigan
+      - US/Central
+      - US/Eastern
+
+  IndustryCodes:
+    javaType: "com.vimly.entitystore.schema.IndustryCodesEntity"
+    type: object
+    properties: 
+      sic: 
+        type: string
+        example: 1731
+        description: "Standard Industrial Classification Code (SIC)"
+        minLength: 0
+        maxLength: 4
+      naics: 
+        type: string
+        example: 238210
+        description: "North American Industry Classification System Code (NAICS)"
+        minLength: 0
+        maxLength: 6
+      natureOfBusiness: 
+        type: string
+        example: "Service Business"
+        description: "Nature of Business"
+        minLength: 0
+        maxLength: 128
+
+  BusinessName:
+    javaType: "com.vimly.entitystore.schema.BusinessNameEntity"
+    type: object
+    properties: 
+      friendlyName: 
+        type: string
+        example: "Example Company"
+        description: "Friendly Name"
+        minLength: 0
+        maxLength: 128
+      legalName: 
+        type: string
+        example: "Example Company Inc."
+        description: "Legal Name"
+        minLength: 0
+        maxLength: 128
+      doingBusinessAsName: 
+        type: string
+        example: "Example Business LLC"
+        description: "Doing Business as Name (DBA)"
+        minLength: 0
+        maxLength: 128
+
+  TaxIds:
+    javaType: "com.vimly.entitystore.schema.TaxIdsEntity"
+    type: object
+    properties: 
+      ssn: 
+        type: string
+        example: "000-00-0000"
+        description: "Social Security Number (SSN)"
+        pattern: "\\d{3}-\\d{2}-\\d{4}"
+      itin: 
+        type: string
+        example: "000-00-0000"
+        description: "Individual Taxpayer Identification Number (ITIN)"
+        pattern: "\\d{3}-\\d{2}-\\d{4}"
+      fein: 
+        type: string
+        example: "00-0000000"
+        description: "Federal Employer Identification Number (FEIN)"
+        pattern: "\\d{2}-\\d{7}"
+
+  Trust:
+    javaType: "com.vimly.entitystore.schema.TrustEntity"
+    type: object
+    properties:
+      trust:
+        type: string
+        description: "The 3 letter code assigned to the trust by production support/client operations"
+      trustId:
+        type: string
+        description: "The trust identifier from Simon (typically numeric but returned as string by 'GetProfileSettings')"
+      trustName:
+        type: string
+        description: "The human readable display name of the trust"
+
+  PlanSponsorship:
+      type: string
+      enum: ["PrivateEntity", "GovernmentEntity", "ChurchEntity", "PublicSchools"]
+       
+  TaskUserInfo:
+    type: object
+    javaType: "com.vimly.entitystore.schema.TaskUserInfo"
+    properties:
+      groupId:
+        type: string
+        description: "Name of the group to assign it to"
+      actorId: 
+        type: string
+        description: "UUID of actor who case is assigned to"
+      name:
+        type: string
+        description: "Name of the actor who case is assigned to (for sorting)"
+      nameExternal:
+        type: boolean
+        description: "Name externaly customer facing name of the actor who case is assigned to (for sorting)"

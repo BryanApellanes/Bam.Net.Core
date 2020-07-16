@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Bam.Net.Presentation</RootNamespace>
     <PackageId>bam.net.presentation</PackageId>
-    <Version>1.0.5-test+fb59d5e</Version>
+    <Version>1.0.5-test+04d5eb8</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -39,5 +39,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Html\Attributes" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="RouteHandlers\RouteHandlerManager.cs" />
+    <Compile Remove="RouteHandlers\Attributes\PathHandlerAttribute.cs" />
+    <Compile Remove="RouteHandlers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="RouteHandlers\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="RouteHandlers\**" />
   </ItemGroup>
 </Project>

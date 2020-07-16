@@ -17,7 +17,7 @@ namespace Bam.Net
     public static partial class HashExtensions
     {
         static Dictionary<HashAlgorithms, Func<byte[], HMAC>> _hmacs;
-        static object _hmacsLock = new object();
+        static readonly object _hmacsLock = new object();
         public static Dictionary<HashAlgorithms, Func<byte[], HMAC>> Hmacs
         {
             get
@@ -34,7 +34,7 @@ namespace Bam.Net
         }
 
         static Dictionary<HashAlgorithms, Func<HashAlgorithm>> _hashAlgorithms;
-        static object _hashAlgorithmLock = new object();
+        static readonly object _hashAlgorithmLock = new object();
         public static Dictionary<HashAlgorithms, Func<HashAlgorithm>> HashAlgorithms
         {
             get
@@ -120,85 +120,113 @@ namespace Bam.Net
 
         public static string Sha1(this byte[] bytes)
         {
-            return Hash(bytes, Bam.Net.HashAlgorithms.SHA1);
+            return HashHexString(bytes, Bam.Net.HashAlgorithms.SHA1);
         }
 
         public static string Sha256(this byte[] bytes)
         {
-            return Hash(bytes, Bam.Net.HashAlgorithms.SHA256);
+            return HashHexString(bytes, Bam.Net.HashAlgorithms.SHA256);
         }
 
         public static string Md5(this string toBeHashed, Encoding encoding = null)
         {
-            return toBeHashed.Hash(Bam.Net.HashAlgorithms.MD5, encoding);
+            return toBeHashed.HashHexString(Bam.Net.HashAlgorithms.MD5, encoding);
         }
 
         public static string Ripmd160(this string toBeHashed, Encoding encoding = null)
         {
-            return toBeHashed.Hash(Bam.Net.HashAlgorithms.RIPEMD160, encoding);
+            return toBeHashed.HashHexString(Bam.Net.HashAlgorithms.RIPEMD160, encoding);
         }
 
         public static string Sha384(this string toBeHashed, Encoding encoding = null)
         {
-            return toBeHashed.Hash(Bam.Net.HashAlgorithms.SHA384, encoding);
+            return toBeHashed.HashHexString(Bam.Net.HashAlgorithms.SHA384, encoding);
         }
 
         public static string Sha1(this string toBeHashed, Encoding encoding = null)
         {
-            return toBeHashed.Hash(Bam.Net.HashAlgorithms.SHA1, encoding);
+            return toBeHashed.HashHexString(Bam.Net.HashAlgorithms.SHA1, encoding);
         }
 
         public static string Sha256(this string toBeHashed, Encoding encoding = null)
         {
-            return toBeHashed.Hash(Bam.Net.HashAlgorithms.SHA256, encoding);
+            return toBeHashed.HashHexString(Bam.Net.HashAlgorithms.SHA256, encoding);
         }
 
         public static string Sha512(this string toBeHashed, Encoding encoding = null)
         {
-            return toBeHashed.Hash(Bam.Net.HashAlgorithms.SHA512, encoding);
+            return toBeHashed.HashHexString(Bam.Net.HashAlgorithms.SHA512, encoding);
         }
 
         public static string HmacSha1(this string toValidate, string key, Encoding encoding = null)
         {
-            return Hmac(toValidate, key, Bam.Net.HashAlgorithms.SHA1, encoding);
+            return HmacHexString(toValidate, key, Bam.Net.HashAlgorithms.SHA1, encoding);
         }
 
-        public static string HmacSha256(this string toValidate, string key, Encoding encoding = null)
+        public static string HmacSha256Base64UrlEncoded(this string toValidate, string key, Encoding encoding = null)
         {
-            return Hmac(toValidate, key, Bam.Net.HashAlgorithms.SHA256, encoding);
+            return HmacBase64UrlEncoded(toValidate, key, Net.HashAlgorithms.SHA256, encoding);
         }
-
-        public static string HmacSha384(this string toValidate, string key, Encoding encoding = null)
+        
+        public static string HmacSha256HexString(this string toValidate, string key, Encoding encoding = null)
         {
-            return Hmac(toValidate, key, Bam.Net.HashAlgorithms.SHA384, encoding);
+            return HmacHexString(toValidate, key, Bam.Net.HashAlgorithms.SHA256, encoding);
         }
 
-        public static string HmacSha512(this string toValidate, string key, Encoding encoding = null)
+        public static string HmacSha384HexString(this string toValidate, string key, Encoding encoding = null)
         {
-            return Hmac(toValidate, key, Bam.Net.HashAlgorithms.SHA512, encoding);
+            return HmacHexString(toValidate, key, Bam.Net.HashAlgorithms.SHA384, encoding);
         }
 
-        public static string Hmac(this string toValidate, string key, HashAlgorithms algorithm, Encoding encoding = null)
+        public static string HmacSha512HexString(this string toValidate, string key, Encoding encoding = null)
+        {
+            return HmacHexString(toValidate, key, Bam.Net.HashAlgorithms.SHA512, encoding);
+        }
+
+        public static string HmacHexString(this string toValidate, string key, HashAlgorithms algorithm, Encoding encoding = null)
+        {
+            byte[] bytes = HmacBytes(toValidate, key, algorithm, encoding);
+            return bytes.ToHexString();
+        }
+
+        public static string HmacBase64UrlEncoded(this string toValidate, string key, HashAlgorithms algorithm, Encoding encoding = null)
+        {
+            return HmacBytes(toValidate, key, algorithm, encoding).ToBase64UrlEncoded();
+        }
+        
+        public static byte[] HmacBytes(string toValidate, string key, HashAlgorithms algorithm, Encoding encoding)
         {
             encoding = encoding ?? Encoding.UTF8;
             HMAC hmac = Hmacs[algorithm](encoding.GetBytes(key));
-            return hmac.ComputeHash(encoding.GetBytes(toValidate)).ToHexString();
+            byte[] bytes = hmac.ComputeHash(encoding.GetBytes(toValidate));
+            return bytes;
         }
 
-        public static string Hash(this string toBeHashed, HashAlgorithms algorithm, Encoding encoding = null)
+        public static string HashHexString(this string toBeHashed, HashAlgorithms algorithm, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.UTF8;
             byte[] bytes = encoding.GetBytes(toBeHashed);
 
-            return Hash(bytes, algorithm);
+            return HashHexString(bytes, algorithm);
         }
 
-        public static string Hash(this byte[] bytes, HashAlgorithms algorithm)
+        public static string HashHexString(this byte[] bytes, HashAlgorithms algorithm)
+        {
+            byte[] hashBytes = HashBytes(bytes, algorithm);
+
+            return hashBytes.ToHexString();
+        }
+
+        public static string HashBase64UrlEncoded(byte[] bytes, HashAlgorithms algorithm)
+        {
+            return HashBytes(bytes, algorithm).ToBase64UrlEncoded();
+        }
+        
+        public static byte[] HashBytes(byte[] bytes, HashAlgorithms algorithm)
         {
             HashAlgorithm alg = HashAlgorithms[algorithm]();
             byte[] hashBytes = alg.ComputeHash(bytes);
-
-            return hashBytes.ToHexString();
+            return hashBytes;
         }
 
         public static uint ToHashUint(this string toBeHashed, HashAlgorithms algorithm, Encoding encoding = null)

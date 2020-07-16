@@ -161,10 +161,7 @@ namespace Bam.Net.CoreServices
         [Exclude]
         public IHttpContext HttpContext
         {
-            get
-            {
-                return _context;
-            }
+            get => _context;
             set
             {
                 if(value != null)
@@ -176,13 +173,7 @@ namespace Bam.Net.CoreServices
         }
 
         [Exclude]
-        public string HostName
-        {
-            get
-            {
-                return HttpContext?.Request?.Url?.Host;
-            }
-        }
+        public string HostName => HttpContext?.Request?.Url?.Host;
 
         [Exclude]
         public virtual string ApplicationName
@@ -222,38 +213,23 @@ namespace Bam.Net.CoreServices
                 }
                 return _userManager;
             }
-            set
-            {
-                _userManager = value;
-            }
+            set => _userManager = value;
         }
         
         DaoRepository _daoRepository;
         [Exclude]
         public DaoRepository DaoRepository
         {
-            get
-            {
-                return _daoRepository ?? RepositoryResolver?.GetRepository<DaoRepository>(HttpContext);
-            }
-            set
-            {
-                _daoRepository = value;
-            }
+            get => _daoRepository ?? RepositoryResolver?.GetRepository<DaoRepository>(HttpContext);
+            set => _daoRepository = value;
         }
 
         IRepository _repository;
         [Exclude]
         public IRepository Repository
         {
-            get
-            {
-                return _repository ?? RepositoryResolver?.GetRepository(HttpContext);
-            }
-            set
-            {
-                _repository = value;
-            }
+            get => _repository ?? RepositoryResolver?.GetRepository(HttpContext);
+            set => _repository = value;
         }
         
         [Exclude]

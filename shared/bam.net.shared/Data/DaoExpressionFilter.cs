@@ -13,9 +13,9 @@ namespace Bam.Net.Data
     public class DaoExpressionFilter: ExpressionVisitor, ILoggable
     {
         ILogger _logger;
-        DaoExpressionVisitorEventSource _eventEmitter;
-        StringBuilder _traceLog;
-        QueryFilter _filter;
+        readonly DaoExpressionVisitorEventSource _eventEmitter;
+        readonly StringBuilder _traceLog;
+        readonly QueryFilter _filter;
         int _counter = 0;
         static List<ExpressionType> _comparisonTypes;
 
@@ -26,22 +26,19 @@ namespace Bam.Net.Data
             _logger = logger ?? Log.Default;
             _eventEmitter = new DaoExpressionVisitorEventSource();
             _eventEmitter.Subscribe(_logger);
-            _comparisonTypes = new List<ExpressionType>();
-            _comparisonTypes.Add(ExpressionType.Equal);
-            _comparisonTypes.Add(ExpressionType.NotEqual);
-            _comparisonTypes.Add(ExpressionType.GreaterThanOrEqual);
-            _comparisonTypes.Add(ExpressionType.GreaterThan);
-            _comparisonTypes.Add(ExpressionType.LessThan);
-            _comparisonTypes.Add(ExpressionType.LessThanOrEqual);
-        }
-        
-        public ILogger[] Subscribers
-        {
-            get
+            _comparisonTypes = new List<ExpressionType>
             {
-                return _eventEmitter.Subscribers;
-            }
+                ExpressionType.Equal,
+                ExpressionType.NotEqual,
+                ExpressionType.GreaterThanOrEqual,
+                ExpressionType.GreaterThan,
+                ExpressionType.LessThan,
+                ExpressionType.LessThanOrEqual
+            };
         }
+
+        public VerbosityLevel LogVerbosity { get; set; }
+        public ILogger[] Subscribers => _eventEmitter.Subscribers;
 
         public void Subscribe(ILogger logger)
         {
@@ -59,13 +56,7 @@ namespace Bam.Net.Data
             return _filter;
         }
 
-        protected internal string TraceLog
-        {
-            get
-            {
-                return _traceLog.ToString();
-            }
-        }
+        protected internal string TraceLog => _traceLog.ToString();
 
         protected override Expression VisitBinary(BinaryExpression b)
         {

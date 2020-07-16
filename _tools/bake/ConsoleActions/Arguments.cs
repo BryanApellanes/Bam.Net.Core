@@ -1,4 +1,5 @@
 using System.Text;
+using Bam.Net.Bake;
 
 namespace Bam.Net.Bake
 {
@@ -9,9 +10,9 @@ namespace Bam.Net.Bake
             AddSwitches(typeof(ConsoleActions));
             AddValidArgument("pause", true, addAcronym: false, description: "pause before exiting, only valid if command line switches are specified.");
             AddValidArgument("output", false, true, "Specify the directory to build to.");
-            AddValidArgument("outputRecipe", false, false, "On /discover, Specify the name of the recipe to write, default is 'recipe.json'.");
+            AddValidArgument("outputRecipe", false, false, "On /discover, Specify the name or path of the recipe to write, default is 'recipe.json'.");
             AddValidArgument("recipePerProject", true, false, "On /discover, Specifies that all discovered projects have their own recipe written.");
-            AddValidArgument("buildConfig", false, false, "On /recipe, optionally specify a build config overriding the one defined in the recipe.");
+            AddValidArgument("buildConfig", false, false, "On /discover or /recipe, optionally specify a build config overriding the one defined in the recipe.");
 
             AddValidArgument("zipRecipe", false, false, "On /zip, Specify the recipe whose 'OutputDirectory' setting is zipped.");
             

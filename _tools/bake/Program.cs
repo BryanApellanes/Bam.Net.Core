@@ -2,6 +2,7 @@
 using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 using System;
+using Bam.Net.Bake;
 
 namespace Bam.Net.Bake
 {

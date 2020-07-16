@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bam.Net.Application.Verbs;
 using Bam.Net.CommandLine;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.Data;
-using Bam.Net.Data.Dynamic;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Logging;
 using Bam.Net.Server;

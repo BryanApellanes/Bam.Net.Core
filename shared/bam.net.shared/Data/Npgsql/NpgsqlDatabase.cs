@@ -1,15 +1,11 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.Incubation;
+using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using Bam.Net.Data;
+using Bam.Net.Incubation;
 using Npgsql;
 
 namespace Bam.Net.Data.Npgsql
@@ -27,8 +23,8 @@ namespace Bam.Net.Data.Npgsql
 
         public NpgsqlDatabase(string serverName, string databaseName, string connectionName, NpgsqlCredentials credentials = null)
         {
-            ColumnNameProvider = (c) => "\"{0}\""._Format(c.Name);
-            ConnectionStringResolver = new NpgsqlConnectionStringResolver(serverName, databaseName, credentials);
+            ColumnNameProvider = (c) => $"{c.Name}";
+            ConnectionStringResolver = new NpgsqlConnectionStringResolver(serverName, databaseName.ToLowerInvariant(), credentials);
             ConnectionName = connectionName;
             Register();
         }
@@ -39,20 +35,35 @@ namespace Bam.Net.Data.Npgsql
             Register();
         }
 
-        private void Register()
-        {
-            ServiceProvider = new Incubator();
-            ServiceProvider.Set<DbProviderFactory>(NpgsqlFactory.Instance);
-            NpgsqlRegistrar.Register(this);
-            Infos.Add(new DatabaseInfo(this));
-        }
-
         public IConnectionStringResolver ConnectionStringResolver
         {
             get;
             set;
         }
-
+        
+        public override void ExecuteSql(string sqlStatement, System.Data.CommandType commandType, params DbParameter[] dbParameters)
+        {
+            string[] commands = sqlStatement.DelimitSplit("\r", "\n");
+            foreach (string command in commands)
+            {
+                base.ExecuteSql(command, commandType, dbParameters);
+            }
+        }
+        
+        public static void Create(string serverName, string databaseName, NpgsqlCredentials credentials, int port = 5432)
+        {
+            NpgsqlDatabase db = new NpgsqlDatabase($"User Id={credentials.UserId}; Password={credentials.Password}; Host={serverName}; Port={port};");
+            db.CreateDatabase(databaseName);
+        }
+        
+        public void CreateDatabase(string databaseName)
+        {
+            DbConnection connection = GetDbConnection();
+            ExecuteSql($"CREATE DATABASE {databaseName}");
+        }
+        
+        public string PostgresSchema { get; set; }
+        
         string _connectionString;
         public override string ConnectionString
         {
@@ -60,18 +71,15 @@ namespace Bam.Net.Data.Npgsql
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = ConnectionStringResolver.Resolve(ConnectionName).ConnectionString;
+                    _connectionString = ConnectionStringResolver?.Resolve(ConnectionName)?.ConnectionString;
                 }
 
                 return _connectionString;
             }
-            set
-            {
-                _connectionString = value;
-            }
+            set => _connectionString = value;
         }
 
-        public override long? GetLongValue(string columnName, System.Data.DataRow row)
+        public override long? GetLongValue(string columnName, DataRow row)
         {
             object value = row[columnName];
             if (value is long || value is long?)
@@ -84,6 +92,14 @@ namespace Bam.Net.Data.Npgsql
                 return Convert.ToInt64(d);
             }
             return null;
+        }
+        
+        private void Register()
+        {
+            ServiceProvider = new Incubator();
+            ServiceProvider.Set<DbProviderFactory>(NpgsqlFactory.Instance);
+            NpgsqlRegistrar.Register(this);
+            Infos.Add(new DatabaseInfo(this));
         }
     }
 }

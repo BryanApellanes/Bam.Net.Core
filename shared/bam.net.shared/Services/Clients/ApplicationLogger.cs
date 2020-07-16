@@ -18,7 +18,7 @@ namespace Bam.Net.Services.Clients
     /// </summary>
     public class ApplicationLogger : Logger, ILog
     {
-        DaoLogger2 _daoLogger;
+        readonly DaoLogger2 _daoLogger;
         public ApplicationLogger(CoreClient client, ApplicationLogDatabase logDb)
         {
             Args.ThrowIfNull(client, "client");

@@ -1,0 +1,5 @@
+SchemaName: HttpLogging
+WriteSourceTo: ./Generated_Dao #/opt/bam/src/_gen/HttpLogging
+#TypeAssembly: ./bam.net.core.dll # only necessary for external assemblies
+FromNameSpace: Bam.Net.Logging.Http.Data
+ToNameSpace: Bam.Net.Logging.Http.Data.Dao

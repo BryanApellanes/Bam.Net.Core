@@ -1,15 +1,11 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.Incubation;
+using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using Bam.Net.Data;
+using Bam.Net.Incubation;
 using MySql.Data.MySqlClient;
 
 namespace Bam.Net.Data.MySql
@@ -21,7 +17,7 @@ namespace Bam.Net.Data.MySql
             ConnectionStringResolver = DefaultConnectionStringResolver.Instance;
             Register();
         }
-        public MySqlDatabase(string serverName, string databaseName, MySqlCredentials credentials = null, bool ssl = true)
+        public MySqlDatabase(string serverName, string databaseName, MySqlCredentials credentials = null, bool ssl = true) 
             : this(serverName, databaseName, databaseName, credentials, ssl)
         {
         }
@@ -34,7 +30,7 @@ namespace Bam.Net.Data.MySql
             Register();
         }
 
-        public MySqlDatabase(string connectionString, string connectionName = null)
+        public MySqlDatabase(string connectionString, string connectionName = null) 
             : base(connectionString, connectionName)
         {
             Register();
@@ -61,18 +57,15 @@ namespace Bam.Net.Data.MySql
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = ConnectionStringResolver.Resolve(ConnectionName).ConnectionString;
+                    _connectionString = ConnectionStringResolver?.Resolve(ConnectionName)?.ConnectionString;
                 }
 
                 return _connectionString;
             }
-            set
-            {
-                _connectionString = value;
-            }
+            set => _connectionString = value;
         }
 
-        public override long? GetLongValue(string columnName, System.Data.DataRow row)
+        public override long? GetLongValue(string columnName, DataRow row)
         {
             object value = row[columnName];
             if (value is long || value is long?)

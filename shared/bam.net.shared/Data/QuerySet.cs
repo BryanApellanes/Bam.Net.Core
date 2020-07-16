@@ -113,13 +113,7 @@ namespace Bam.Net.Data
             return this;
         }
 
-        public QuerySetResults Results
-        {
-            get
-            {
-                return new QuerySetResults(_results, Database);
-            }
-        }
+        public QuerySetResults Results => new QuerySetResults(_results, Database);
 
         public Database Database { get; set; }
 
@@ -138,10 +132,7 @@ namespace Bam.Net.Data
 
         protected internal void OnExecuted(Database db)
         {
-            if (Executed != null)
-            {
-                Executed(this, db);
-            }
+            Executed?.Invoke(this, db);
         }
         
         /// <summary>

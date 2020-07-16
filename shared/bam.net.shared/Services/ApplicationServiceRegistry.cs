@@ -31,10 +31,7 @@ namespace Bam.Net.Services
             {
                 return _appRegistryLock.DoubleCheckLock(ref _appRegistry, () => Configure(Configurer ?? ((reg) => { })));
             }
-            set
-            {
-                _appRegistry = value;
-            }
+            set => _appRegistry = value;
         }
 
         public static Action<ApplicationServiceRegistry> Configurer { get; set; }

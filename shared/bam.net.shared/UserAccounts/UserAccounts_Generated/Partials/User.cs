@@ -385,7 +385,7 @@ namespace Bam.Net.UserAccounts.Data
                     PasswordQuestion question = PasswordQuestionsByUserId.FirstOrDefault();
                     if (question == null)
                     {
-                        question = PasswordQuestionsByUserId.AddNew();
+                        question = PasswordQuestionsByUserId.AddChild();
                     }
 
                     question.Value = newPasswordQuestion;

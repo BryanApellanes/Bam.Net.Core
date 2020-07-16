@@ -1,17 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Emit;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime;
-using System.Text;
+using System.Xml;
 using Bam.Net.CoreServices.AssemblyManagement;
-using Bam.Net.Logging;
 using CsQuery.ExtensionMethods;
-using GraphQL;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Newtonsoft.Json;
 
 namespace Bam.Net
 {
@@ -23,7 +23,7 @@ namespace Bam.Net
             _assembliesToReference = new HashSet<Assembly>();
             OutputKind = OutputKind.DynamicallyLinkedLibrary;
             AssembliesToReference = DefaultAssembliesToReference;
-            ReferenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
+            ReferenceAssemblyResolver = ReferenceAssemblyResolver ?? CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
         }
 
         public RoslynCompiler(IReferenceAssemblyResolver referenceAssemblyResolver) : this()
@@ -45,11 +45,8 @@ namespace Bam.Net
         }
 
         readonly HashSet<string> _referenceAssemblyPaths;
-        public string[] ReferenceAssemblyPaths
-        {
-            get { return _referenceAssemblyPaths.ToArray(); }
-        }
-        
+        public string[] ReferenceAssemblyPaths => _referenceAssemblyPaths.ToArray();
+
         public OutputKind OutputKind { get; set; }
 
         public RoslynCompiler AddAssemblyReference(Type type)
@@ -153,13 +150,13 @@ namespace Bam.Net
                 {
                     List<Assembly> defaultAssemblies = new List<Assembly>
                     {
-                        typeof(System.Dynamic.DynamicObject).Assembly,
-                        typeof(System.Xml.XmlDocument).Assembly,
-                        typeof(System.Data.DataTable).Assembly,
+                        typeof(DynamicObject).Assembly,
+                        typeof(XmlDocument).Assembly,
+                        typeof(DataTable).Assembly,
                         typeof(object).Assembly,
-                        typeof(Newtonsoft.Json.JsonWriter).Assembly,
+                        typeof(JsonWriter).Assembly,
                         typeof(FileInfo).Assembly,
-                        typeof(System.Linq.Enumerable).Assembly,
+                        typeof(Enumerable).Assembly,
                         Assembly.GetExecutingAssembly()
                     };
                     _defaultAssembliesToReference = defaultAssemblies.ToArray();
@@ -172,7 +169,7 @@ namespace Bam.Net
         private MetadataReference[] GetMetaDataReferences()
         {
             List<MetadataReference> metadataReferences = new List<MetadataReference>();
-            IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? Bam.Net.CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
+            IReferenceAssemblyResolver referenceAssemblyResolver = ReferenceAssemblyResolver ?? CoreServices.AssemblyManagement.ReferenceAssemblyResolver.Current;
 
             if (OSInfo.Current == OSNames.Windows)
             {

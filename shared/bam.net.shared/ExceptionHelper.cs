@@ -28,7 +28,7 @@ namespace Bam.Net
             ThrowIfNull(objectToCheck, paramName);
 
             if (!(objectToCheck is T))
-                throw new InvalidOperationException(string.Format("The specified object is of concrete type {0} which is not of generic type {1}.", objectToCheck.GetType().Name, typeof(T).Name));
+                throw new InvalidOperationException($"The specified object is of concrete type {objectToCheck.GetType().Name} which is not of generic type {typeof(T).Name}.");
         }
 
         public static void Throw<TException>(string messageFormat, params object[] args) where TException : Exception
@@ -49,15 +49,8 @@ namespace Bam.Net
         }
 
 		public static Exception GetInnerException(this Exception exception)
-		{
-			if (exception.InnerException == null)
-			{
-				return exception;
-			}
-			else
-			{
-				return GetInnerException(exception.InnerException);
-			}
+        {
+            return exception.GetBaseException();
 		}
     }
 }

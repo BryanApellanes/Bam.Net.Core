@@ -9,7 +9,7 @@ namespace Bam.Net.Server
 {
     // Taken from: https://gist.github.com/wcharczuk/2284226
     /// <summary>
-    /// Utiltiy to parse routes based on a token format.
+    /// Utility to parse routes based on a token format.
     /// </summary>
     /// <remarks>
     /// Casing doesn't matter!

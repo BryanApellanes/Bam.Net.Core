@@ -10,43 +10,12 @@
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="databaseconfigs.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\bam.net.data.core.tests.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.data.core.tests.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.data.core.tests.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.data.core.tests.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.data.core.tests.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.data.core.tests.dll.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.data.core.tests.application" />
-  </ItemGroup>
+  
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+    <ProjectReference Include="..\..\..\_lib\bam.net.data.dynamic\bam.net.data.dynamic.csproj" />
+    <ProjectReference Include="..\..\..\_lib\bam.net.data.graphql\bam.net.data.graphql.csproj" />
   </ItemGroup>
 
 </Project>

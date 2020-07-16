@@ -14,7 +14,7 @@ namespace Bam.Shell.CodeGen
     public class ModelProvider: CodeGenProvider
     {
         static DirectoryInfo _appData;
-        static object _appDataLock = new object();
+        static readonly object _appDataLock = new object();
         static DirectoryInfo AppData
         {
             get
@@ -63,7 +63,7 @@ namespace Bam.Shell.CodeGen
         }
         
         static HandlebarsDirectory _handlebarsDirectory;
-        static object _handlebarsLock = new object();
+        static readonly object _handlebarsLock = new object();
         public static HandlebarsDirectory GetHandlebarsDirectory()
         {
             return _handlebarsLock.DoubleCheckLock(ref _handlebarsDirectory, () =>

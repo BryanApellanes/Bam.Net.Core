@@ -3,7 +3,7 @@
 namespace Bam.Net.CoreServices
 {
     /// <summary>
-    /// Fluent entry point to FluentIncubationContext
+    /// Fluent entry point to FluentServiceRegistryContext
     /// </summary>
     public static class Requesting
     {

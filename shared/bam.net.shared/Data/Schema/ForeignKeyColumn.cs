@@ -55,10 +55,7 @@ namespace Bam.Net.Data.Schema
 
         public override DataTypes DataType
         {
-            get
-            {
-                return DataTypes.ULong;
-            }
+            get => DataTypes.ULong;
             set
             {
                 // always ULong
@@ -72,17 +69,14 @@ namespace Bam.Net.Data.Schema
             {
                 if (string.IsNullOrWhiteSpace(referenceName))
                 {
-                    return string.Format("FK_{0}_{1}", this.TableName, ReferencedTable);
+                    return $"FK_{this.TableName}_{ReferencedTable}";
                 }
                 else
                 {
                     return referenceName;
                 }
             }
-            set
-            {
-                referenceName = value;
-            }
+            set => referenceName = value;
         }
 
         public string ReferenceNameSuffix
@@ -98,27 +92,15 @@ namespace Bam.Net.Data.Schema
         string _referencedClass;
         public string ReferencedClass
         {
-            get
-            {
-                return string.IsNullOrEmpty(_referencedClass) ? ReferencedTable.PascalCase(true, " ", "_").TrimNonLetters() : _referencedClass;
-            }
-            set
-            {
-                _referencedClass = value;
-            }
+            get => string.IsNullOrEmpty(_referencedClass) ? ReferencedTable.PascalCase(true, " ", "_").TrimNonLetters() : _referencedClass;
+            set => _referencedClass = value;
         }
 
         string _referencingClass;
         public string ReferencingClass
         {
-            get
-            {
-                return string.IsNullOrEmpty(_referencingClass) ? TableName.PascalCase(true, " ", "_").TrimNonLetters() : _referencingClass;
-            }
-            set
-            {
-                _referencingClass = value;
-            }
+            get => string.IsNullOrEmpty(_referencingClass) ? TableName.PascalCase(true, " ", "_").TrimNonLetters() : _referencingClass;
+            set => _referencingClass = value;
         }
 
         public override string ToString()

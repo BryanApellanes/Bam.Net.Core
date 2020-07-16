@@ -1,9 +1,3 @@
-
-
-using System;
-using GraphQL;
-using Npgsql;
-
 namespace Bam.Shell.Conf
 {
     public class ConfProviderDelegator : ArgZeroDelegator<ConfProvider>

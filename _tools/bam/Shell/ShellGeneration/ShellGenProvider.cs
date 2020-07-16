@@ -19,9 +19,10 @@ namespace Bam.Shell.ShellGeneration
         public ShellGenProvider()
         {
             ShellGenerationDatabase = DataProvider.Current.GetAppDatabaseFor(ProcessApplicationNameProvider.Current, this);
-            ShellGenerationRepository = new DaoRepository(ShellGenerationDatabase);
-            ShellGenerationRepository.BaseNamespace = typeof(ShellDescriptor).Namespace;
-            ShellGenerationRepository.RequireCuid = true;
+            ShellGenerationRepository = new DaoRepository(ShellGenerationDatabase)
+            {
+                BaseNamespace = typeof(ShellDescriptor).Namespace, RequireCuid = true
+            };
             ShellGenerationRepository.AddType<ShellDescriptor>();
         }
 

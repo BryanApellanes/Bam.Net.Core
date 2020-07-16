@@ -12,11 +12,11 @@
 	{
 		get
 		{
-			return Get{{DataType}}Value("{{Name}}");
+			return Get{{DataType}}Value("{{Name}}", false);
 		}
 		set
 		{
-			SetValue("{{Name}}", value);
+			SetValue("{{Name}}", value, false);
 		}
 	}
 

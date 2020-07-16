@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.Encryption
 {
-	// schema = Encryption 
+	// schema = Encryption
     public static class EncryptionContext
     {
 		public static string ConnectionName
@@ -186,5 +186,6 @@ namespace Bam.Net.Encryption
 		{
 			return _vaultKeysLock.DoubleCheckLock<VaultKeyQueryContext>(ref _vaultKeys, () => new VaultKeyQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

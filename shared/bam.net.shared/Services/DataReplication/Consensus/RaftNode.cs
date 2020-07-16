@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
 using Bam.Net.CoreServices;
 using Bam.Net.Data;
-using Bam.Net.Data.Dynamic;
-using Bam.Net.Data.Repositories;
-using Bam.Net.Logging;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao;
 using Bam.Net.Services.DataReplication.Consensus.Data.Dao.Repository;
 using Bam.Net.Services.DataReplication.Data;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RaftLogEntry = Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntry;
 using RaftLogEntryCommit = Bam.Net.Services.DataReplication.Consensus.Data.RaftLogEntryCommit;
 using RaftNodeIdentifier = Bam.Net.Services.DataReplication.Consensus.Data.RaftNodeIdentifier;
@@ -66,7 +60,7 @@ namespace Bam.Net.Services.DataReplication.Consensus
         
         public RaftRing RaftRing { get; set; }
 
-        public ITypeResolver TypeResolver => RaftRing?.TypeResolver ?? Bam.Net.TypeResolver.Default;
+        public ITypeResolver TypeResolver => RaftRing?.TypeResolver ?? Net.TypeResolver.Default;
 
         public RaftNodeIdentifier Identifier { get; set; }
         

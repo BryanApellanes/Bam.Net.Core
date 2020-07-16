@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 			}
 		}	
 
-				
         public WebHookDescriptorColumns Id
         {
             get
@@ -98,6 +97,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
                 return new WebHookDescriptorColumns("Created");
             }
         }
+
 
 
 		protected internal Type TableType

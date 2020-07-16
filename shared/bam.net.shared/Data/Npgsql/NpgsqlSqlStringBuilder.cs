@@ -23,12 +23,12 @@ namespace Bam.Net.Data
             CreateTableFormat = "CREATE TABLE {0} ({1})";
             AddForeignKeyColumnFormat = "ALTER TABLE {0} ADD CONSTRAINT {1} FOREIGN KEY (\"{2}\") REFERENCES {3} (\"{4}\")";
             TableNameFormatter = (s) => "{0}"._Format(s);
-            ColumnNameFormatter = (s) => "\"{0}\""._Format(s);
+            ColumnNameFormatter = NpgsqlFormatProvider.ColumnNameFormatter;
         }
         
         public override SqlStringBuilder Id(string idAs)
         {
-            Builder.AppendFormat(" RETURNING \"Id\" AS \"{0}\"{1}", idAs, this.GoText);
+            Builder.AppendFormat(" RETURNING Id AS {0}{1}", idAs, this.GoText);
             return this;
         }
         
@@ -49,12 +49,12 @@ namespace Bam.Net.Data
         {
             KeyColumnAttribute key = keyColumn.CopyAs<KeyColumnAttribute>();
             key.DbDataType = "SERIAL";
-            return string.Format("{0} PRIMARY KEY ", GetColumnDefinition(key));
+            return $"{GetColumnDefinition(key)} PRIMARY KEY ";
         }
 
         public override string GetColumnDefinition(ColumnAttribute column)
         {
-            string max = string.Format("({0})", column.MaxLength);
+            string max = $"({column.MaxLength})";
             string type = column.DbDataType.ToLowerInvariant();
 
             if (type.Equals("bigint") ||
@@ -70,7 +70,7 @@ namespace Bam.Net.Data
             }
             else if (type.Equals("decimal"))
             {
-                max = string.Format("({0}, 2)", column.MaxLength);
+                max = $"({column.MaxLength}, 2)";
             }
             else if (type.Equals("datetime"))
             {

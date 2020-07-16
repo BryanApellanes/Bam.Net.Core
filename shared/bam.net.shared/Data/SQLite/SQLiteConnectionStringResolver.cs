@@ -48,7 +48,7 @@ namespace Bam.Net.Data
         }
 
         /// <summary>
-        /// The diretory to create the database in
+        /// The directory to create the database in
         /// </summary>
         public DirectoryInfo Directory
         {
@@ -66,7 +66,7 @@ namespace Bam.Net.Data
             {
                 Name = connectionName,
                 ProviderName = SQLiteRegistrar.SQLiteFactoryAssemblyQualifiedName(),
-                ConnectionString = string.Format("Data Source={0};Version=3;", dbFile)
+                ConnectionString = $"Data Source={dbFile};Version=3;"
             };
             FileInfo dbFileInfo = new FileInfo(dbFile);
             if (!dbFileInfo.Directory.Exists)
@@ -87,7 +87,7 @@ namespace Bam.Net.Data
 			{
 				Directory = DirectoryResolver();
 			}
-			string dbFile = Path.Combine(Directory.FullName, string.Format("{0}.sqlite", connectionName));
+			string dbFile = Path.Combine(Directory.FullName, $"{connectionName}.sqlite");
 			return dbFile;
 		}
 

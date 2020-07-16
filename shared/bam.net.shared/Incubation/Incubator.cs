@@ -1,14 +1,12 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
-using Bam.Net;
-using System.Diagnostics;
-using Bam.Net.Data.Dynamic;
+using Bam.Net.Logging;
 using Bam.Net.Services;
 
 namespace Bam.Net.Incubation
@@ -18,10 +16,10 @@ namespace Bam.Net.Incubation
     /// </summary>
     public class Incubator: ISetupContext
     {
-        object _accessLock = new object();
-        Dictionary<Type, object> _typeInstanceDictionary;
-        Dictionary<string, Type> _classNameTypeDictionary;
-        Dictionary<Type, Dictionary<string, object>> _ctorParams;
+        readonly object _accessLock = new object();
+        readonly Dictionary<Type, object> _typeInstanceDictionary;
+        readonly Dictionary<string, Type> _classNameTypeDictionary;
+        readonly Dictionary<Type, Dictionary<string, object>> _ctorParams;
 
         static Incubator()
         {
@@ -237,7 +235,7 @@ namespace Bam.Net.Incubation
                 {
                     if (!prop.CanWrite)
                     {
-                        Logging.Log.Warn("Property {0}.{1} is addorned with the Inject attribute but it is read only");
+                        Log.Warn("Property {0}.{1} is addorned with the Inject attribute but it is read only");
                         continue;
                     }
                     prop.SetValue(instance, GetInjectValue(prop, attr));
@@ -613,13 +611,7 @@ namespace Bam.Net.Incubation
             }
         }
 
-        public string[] ClassNames
-        {
-            get
-            {
-                return _classNameTypeDictionary.Keys.ToArray();
-            }
-        }
+        public string[] ClassNames => _classNameTypeDictionary.Keys.ToArray();
 
         /// <summary>
         /// Types as they would be resolved when using 
@@ -661,13 +653,7 @@ namespace Bam.Net.Incubation
         /// All the Types that are mapped to instances
         /// or instanciators
         /// </summary>
-        public Type[] MappedTypes
-        {
-            get
-            {
-                return _typeInstanceDictionary.Keys.ToArray();
-            }
-        }
+        public Type[] MappedTypes => _typeInstanceDictionary.Keys.ToArray();
 
         public void Remove<T>()
         {
@@ -762,7 +748,7 @@ namespace Bam.Net.Incubation
                     lock (_accessLock)
                     {
                         _typeInstanceDictionary.Add(type, value);
-                        string fullyQualifiedTypeName = string.Format("{0}.{1}", type.Namespace, type.Name);
+                        string fullyQualifiedTypeName = $"{type.Namespace}.{type.Name}";
                         if (!_classNameTypeDictionary.ContainsKey(type.Name))
                         {
                             _classNameTypeDictionary.Add(type.Name, type);
@@ -773,15 +759,13 @@ namespace Bam.Net.Incubation
                         }
                         else
                         {
-                            throw new InvalidOperationException(string.Format("The specified type {0} conflicts with an existing type registration.", type.Name));
+                            throw new InvalidOperationException($"The specified type {type.Name} conflicts with an existing type registration.");
                         }
                     }
                 }
             }
         }
         
-        //public void SetCtor
-
         /// <summary>
         /// Set the value to pass into the constructor when 
         /// constructing the specified type

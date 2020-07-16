@@ -12,6 +12,6 @@ namespace Bam.Net.ServiceProxy.Secure
 {
     public class ConfigurationPagedQuery: PagedQuery<ConfigurationColumns, Configuration>
     { 
-		public ConfigurationPagedQuery(ConfigurationColumns orderByColumn, ConfigurationQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ConfigurationPagedQuery(ConfigurationColumns orderByColumn,ConfigurationQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

@@ -25,9 +25,9 @@ namespace Bam.Net.Services
             foreach (string className in registry.ClassNames)
             {
                 object instance = registry.Get(className, out Type type);
-                if (type.HasCustomAttributeOfType<ProxyAttribute>())
+                if (type != null && instance != null && type.HasCustomAttributeOfType<ProxyAttribute>())
                 {
-                    Set(type, () => registry.Get(type));
+                    Set(type, instance);
                 }
             }
             return this;

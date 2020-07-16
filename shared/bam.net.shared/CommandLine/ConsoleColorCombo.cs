@@ -16,13 +16,12 @@ namespace Bam.Net.CommandLine
             this.ForegroundColor = foreground;
         }
 
-        public ConsoleColorCombo(ConsoleColor foreground, ConsoleColor background)
-            : this(foreground)
+        public ConsoleColorCombo(ConsoleColor foreground, ConsoleColor background) : this(foreground)
         {
             this.BackgroundColor = background;
         }
 
-        public ConsoleColor ForegroundColor { get; set; }
-        public ConsoleColor BackgroundColor { get; set; }
+        public ConsoleColor ForegroundColor { get; private set; }
+        public ConsoleColor BackgroundColor { get; private set; }
     }
 }

@@ -12,9 +12,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Bam.Net.Application;
 using Bam.Net.Testing;
 
-namespace Bam.Net.Application
+namespace Bam.Net.System
 {
     public class DaemonService : CommandLineTestInterface
     { 

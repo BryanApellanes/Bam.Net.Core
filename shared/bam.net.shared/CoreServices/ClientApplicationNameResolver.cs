@@ -26,18 +26,7 @@ namespace Bam.Net.CoreServices
         }
 
         public ApplicationRegistrationRepository ApplicationRegistrationRepository { get; set; }
-        IHttpContext _context;
-        public IHttpContext HttpContext
-        {
-            get
-            {
-                return _context;
-            }
-            set
-            {
-                _context = value;
-            }
-        }
+        public IHttpContext HttpContext { get; set; }
 
         public string GetApplicationName()
         {

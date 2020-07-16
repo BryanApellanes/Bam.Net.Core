@@ -64,15 +64,9 @@ namespace Bam.Net.UserAccounts.Tests
         public static void EnsureUserNameAndEmailAreAvailable(string userName, string email)
         {
             User byEmail = User.OneWhere(c => c.Email == email);
-            if (byEmail != null)
-            {
-                byEmail.Delete();
-            }
+            byEmail?.Delete();
             User byUserName = User.OneWhere(c => c.UserName == userName);
-            if (byUserName != null)
-            {
-                byUserName.Delete();
-            }
+            byUserName?.Delete();
         }
 
         public static void SignUpAndLogin(string userName, out IHttpContext context, out LoginResponse result)

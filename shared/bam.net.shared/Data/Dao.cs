@@ -258,21 +258,18 @@ namespace Bam.Net.Data
         }
 
         protected Database _database;
-        object _databaseSync = new object();
+        readonly object _databaseSync = new object();
         public Database Database
         {
             get
             {
                 return _databaseSync.DoubleCheckLock(ref _database, () => Db.For(this.GetType()));
             }
-            set
-            {
-                _database = value;
-            }
+            set => _database = value;
         }
 
         List<string> _columns;
-        object _columnsLock = new object();
+        readonly object _columnsLock = new object();
         public string[] Columns
         {
             get
@@ -500,13 +497,7 @@ namespace Bam.Net.Data
             AfterDeleteAny?.Invoke(db, this);
         }
 
-        protected internal Dictionary<string, ILoadable> ChildCollections
-        {
-            get
-            {
-                return _childCollections;
-            }
-        }
+        protected internal Dictionary<string, ILoadable> ChildCollections => _childCollections;
 
         public virtual void Hydrate(Database database = null)
         {
@@ -539,10 +530,7 @@ namespace Bam.Net.Data
 
                 return _validator;
             }
-            set
-            {
-                _validator = value;
-            }
+            set => _validator = value;
         }
 
         static Func<Dao, ValidationResult> _globalValidator;
@@ -552,18 +540,12 @@ namespace Bam.Net.Data
             {
                 if (_globalValidator == null)
                 {
-                    return (dao) =>
-                    {
-                        return new ValidationResult();
-                    };
+                    return (dao) => new ValidationResult();
                 }
 
                 return _globalValidator;
             }
-            set
-            {
-                _globalValidator = value;
-            }
+            set => _globalValidator = value;
         }
 
         /// <summary>
@@ -584,7 +566,7 @@ namespace Bam.Net.Data
                     string propTypeName = prop.PropertyType.Name;
                     MethodInfo getter = type.GetMethod("Get{0}Value"._Format(propTypeName));
                     object val = getter.Invoke(this, new object[] { ca.Name });
-                    if (val == null || (val is string && string.IsNullOrEmpty((string)val)))
+                    if (val == null || (val is string s && string.IsNullOrEmpty(s)))
                     {
                         msgs.Add("{0} can't be null"._Format(prop.Name));
                     }
@@ -1178,7 +1160,43 @@ namespace Bam.Net.Data
             return name;
         }
 
-        ulong? _idValue;
+        ulong? _id;
+        public virtual ulong? TryGetId(Action<Exception> exceptionHandler = null)
+        {
+            try
+            {
+                return GetId();
+            }
+            catch (Exception ex)
+            {
+                exceptionHandler = exceptionHandler ?? (Action<Exception>)(e =>{ });
+                exceptionHandler(ex);
+                return null;
+            }
+        }
+        
+        public virtual ulong? GetId()
+        {
+            object value = PrimaryKey;
+            if (value != null && value != DBNull.Value)
+            {
+                if (value.IsNumber() || value is string)
+                {
+                    _id = new ulong?(Convert.ToUInt64(value));
+                }
+            }
+
+            return _id;
+        }
+
+        public virtual void SetId(ulong? id)
+        {
+            _id = id;
+        }
+        
+        // TODO: deprecate this property in favor of GetId() method
+        // TODO: update code generation templates to address the above
+        [Obsolete("Use GetId() instead")]
         [Exclude]
         public ulong? IdValue
         {
@@ -1191,7 +1209,7 @@ namespace Bam.Net.Data
                     {
                         if (value.IsNumber() || value is string)
                         {
-                            _idValue = new ulong?(Convert.ToUInt64(value));
+                            _id = new ulong?(Convert.ToUInt64(value));
                         }                        
                     }
                     catch (Exception ex)
@@ -1201,12 +1219,9 @@ namespace Bam.Net.Data
                         Log.AddEntry("Exception getting IdValue for Dao instance of type ({0}.{1}) in Assembly ({2}) with hash (sha256) ({3})", ex, type.Namespace, type.Name, assembly.FullName, assembly.GetFileInfo().Sha256());
                     }
                 }
-                return _idValue;
+                return _id;
             }
-            set
-            {
-                _idValue = value;
-            }
+            set => _id = value;
         }
 
         [Exclude]
@@ -1273,14 +1288,8 @@ namespace Bam.Net.Data
         [Exclude]
         public bool ForceUpdate
         {
-            get
-            {
-                return !ForceInsert;
-            }
-            set
-            {
-                ForceInsert = !value;
-            }
+            get => !ForceInsert;
+            set => ForceInsert = !value;
         }
 
         bool _isNew;
@@ -1293,17 +1302,14 @@ namespace Bam.Net.Data
         {
             get
             {
-                if (IdValue != null && IdValue.HasValue && IdValue > 0)
+                if (IdValue.HasValue && IdValue > 0)
                 {
                     _isNew = false;
                 }
 
                 return _isNew;
             }
-            set
-            {
-                _isNew = value;
-            }
+            set => _isNew = value;
         }
 
         Incubator _incubator;
@@ -1321,10 +1327,7 @@ namespace Bam.Net.Data
                 }
                 return _incubator;
             }
-            protected internal set
-            {
-                _incubator = value;
-            }
+            protected internal set => _incubator = value;
         }
 
         [Exclude]
@@ -1335,13 +1338,7 @@ namespace Bam.Net.Data
         /// current Dao instance have been set
         /// since its instanciation.
         /// </summary>
-        protected internal bool HasNewValues
-        {
-            get
-            {
-                return NewValues.Count > 0;
-            }
-        }
+        protected internal bool HasNewValues => NewValues.Count > 0;
 
         protected internal Dictionary<string, object> NewValues
         {
@@ -1436,22 +1433,28 @@ namespace Bam.Net.Data
             return new long?();
         }
 
-        internal static long MapUlongToLong(ulong ulongValue)
+        public static long MapUlongToLong(ulong ulongValue)
         {
             return unchecked((long)ulongValue + long.MinValue);
         }
 
-        internal static ulong MapLongToUlong(long longValue)
+        public static ulong MapLongToUlong(long longValue)
         {
             return unchecked((ulong)(longValue - long.MinValue));
         }
 
         protected ulong? GetULongValue(string columnName)
         {
+            Args.ThrowIfNullOrEmpty(columnName, nameof(columnName));
+            return GetULongValue(columnName, !columnName.Equals(KeyColumnName));
+        }
+        
+        protected ulong? GetULongValue(string columnName, bool mapLongToUlong)
+        {
             object val = GetCurrentValue(columnName);
             if (val != null && val != DBNull.Value)
             {
-                if(val is long longVal)
+                if(val is long longVal && mapLongToUlong)
                 {
                     return new ulong?(MapLongToUlong(longVal));
                 }
@@ -1477,17 +1480,17 @@ namespace Bam.Net.Data
             object val = GetCurrentValue(columnName);
             if (val != null && val != DBNull.Value)
             {
-                if (val is long)
+                if (val is long l)
                 {
-                    return new bool?((long)val > 0);
+                    return new bool?(l > 0);
                 }
-                else if (val is int)
+                else if (val is int i)
                 {
-                    return new bool?((int)val > 0);
+                    return new bool?(i > 0);
                 }
                 else if (val is string str)
                 {
-                    return new bool?(str.ToLowerInvariant().Equals("true") || str.Equals("1"));
+                    return str.IsAffirmative();
                 }
                 else
                 {
@@ -1537,19 +1540,21 @@ namespace Bam.Net.Data
 
         protected internal void SetValue(string columnName, object value)
         {
+            SetValue(columnName, value, true);
+        }
+        
+        protected internal void SetValue(string columnName, object value, bool mapUlongToLong)
+        {
             // Note To Self: Please don't mess with this logic.  You've faced the consequences of that decision 
             // too many times now.  Trust that this moronic looking logic is needed for all to function correctly.
             // - BA (07/14/2018)
             if (columnName.Equals(KeyColumnName))
             {
-                if (value != null && value != DBNull.Value)
-                {
-                    IdValue = new ulong?(Convert.ToUInt64(value));
-                }
+                SetId(value);
             }
             else
             {
-                if (value is ulong ulongVal)
+                if (mapUlongToLong && value is ulong ulongVal)
                 {
                     value = MapUlongToLong(ulongVal);
                 }
@@ -1565,6 +1570,14 @@ namespace Bam.Net.Data
             }
         }
 
+        public virtual void SetId(object value)
+        {
+            if (value != null && value != DBNull.Value)
+            {
+                IdValue = new ulong?(Convert.ToUInt64(value));
+            }
+        }
+        
         private void Initialize()
         {
             this._childCollections = new Dictionary<string, ILoadable>();

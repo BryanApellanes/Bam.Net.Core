@@ -93,7 +93,7 @@ namespace Bam.Net.Data
             set;
         }
 
-        protected internal Query<C, T> Query
+        public Query<C, T> Query
         {
             get;
             set;
@@ -101,10 +101,7 @@ namespace Bam.Net.Data
 
         public DataRow DataRow
         {
-            get
-            {
-                return DataTable?.Rows?[0] ?? typeof(T).ToDataRow(Dao.TableName(typeof(T)));
-            }
+            get => DataTable?.Rows?[0] ?? typeof(T).ToDataRow(Dao.TableName(typeof(T)));
             set { }
         }
 
@@ -152,7 +149,7 @@ namespace Bam.Net.Data
             get;
             set;
         }
-
+        
         public void Load()
         {
             Load(Database);
@@ -186,14 +183,8 @@ namespace Bam.Net.Data
 
         public Dao Parent
         {
-            get
-            {
-                return this._parent;
-            }
-            protected set
-            {
-                this._parent = value;
-            }
+            get => this._parent;
+            protected set => this._parent = value;
         }
         
         private void Initialize(DataTable table)
@@ -210,19 +201,18 @@ namespace Bam.Net.Data
         
         public DataTable DataTable
         {
-            get { return this._table; }
-            set { this._table = value; }
+            get => this._table;
+            set => this._table = value;
         }
 
-        public T this[int index]
-        {
-            get
-            {
-                return this._values[index];
-            }
-        }
+        public T this[int index] => this._values[index];
 
-        public T AddNew()
+        /// <summary>
+        /// Instantiate a new instance of T and associate it to
+        /// the parent of this DaoCollection.
+        /// </summary>
+        /// <returns></returns>
+        public T AddChild()
         {
             T dao = new T()
             {
@@ -235,7 +225,7 @@ namespace Bam.Net.Data
 
         /// <summary>
         /// Add the specified instance to the current
-        /// collection.  Will be automatically commited
+        /// collection.  Will be automatically committed
         /// if a parent is associated with this collection
         /// </summary>
         /// <param name="instance"></param>
@@ -243,7 +233,7 @@ namespace Bam.Net.Data
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance");
+                throw new ArgumentNullException(nameof(instance));
             }
 
             if (_parent != null)
@@ -255,6 +245,11 @@ namespace Bam.Net.Data
             this._book = new Book<T>(this._values);
         }
 
+        /// <summary>
+        /// Clears all the values in this DaoCollection by deleting
+        /// values from the specified database.
+        /// </summary>
+        /// <param name="db"></param>
         public virtual void Clear(Database db = null)
         {
             Delete(db);
@@ -266,7 +261,7 @@ namespace Bam.Net.Data
         {
             if (values == null)
             {
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             }
 
             if (_parent != null)
@@ -285,8 +280,8 @@ namespace Bam.Net.Data
         {
             Type childType = instance.GetType();
 
-            ValidateParent();
-
+            Validate();
+            
             // from the parent get the ReferencedBy Attribute that matches the referencingClass name
             PropertyInfo[] properties = childType.GetProperties();
 
@@ -303,19 +298,24 @@ namespace Bam.Net.Data
             }
         }
 
-        protected void ValidateParent()
+        protected virtual void Validate()
+        {
+            ValidateParent();
+        }
+
+        private void ValidateParent()
         {
             if (_parent == null)
             {
-                throw new ArgumentNullException(string.Format("{0}.Parent", this.GetType().Name));
+                throw new ArgumentNullException($"{this.GetType().Name}.Parent");
             }
 
             if (_parent.IsNew || _parent.IdValue == null)
             {
                 throw new InvalidOperationException("The parent hasn't been committed, unable to associate child by id");
-            }            
+            }   
         }
-
+        
         public void Save()
         {
             Commit();
@@ -400,7 +400,7 @@ namespace Bam.Net.Data
                         .Go();
                 }
                 
-                foreach (Dao d in this)
+                foreach (T d in this)
                 {
                     if (d.AutoDeleteChildren)
                     {
@@ -415,7 +415,6 @@ namespace Bam.Net.Data
                         sql.Go();
                     }
                 }
-                
             }
         }
 
@@ -445,8 +444,7 @@ namespace Bam.Net.Data
         /// Gets one value if it exists, creates it if it doesn't.  Throws MultipleEntriesFoundException
         /// if more than one value is in this collection.
         /// </summary>
-        /// <param name="saveIfNew">If true and a new entry is required, the Dao value will 
-        /// be saved prior to being returned </param>
+        /// <param name="saveIfNew">If true and a new entry is required, the Dao value is saved prior to being returned.</param>
         /// <returns></returns>
         public T JustOne(Database db, bool saveIfNew = false)
         {
@@ -458,7 +456,7 @@ namespace Bam.Net.Data
             T result = this.FirstOrDefault();
             if (result == null)
             {
-                result = AddNew();
+                result = AddChild();
                 if (saveIfNew)
                 {
                     result.Save(db);
@@ -488,32 +486,14 @@ namespace Bam.Net.Data
             return _book[pageNum - 1];
         }    
 
-        public int PageCount
-        {
-            get
-            {
-                return this._book.PageCount;
-            }
-        }
+        public int PageCount => this._book.PageCount;
 
-        public int Count
-        {
-            get
-            {
-                return this._book.ItemCount;
-            }
-        }
+        public int Count => this._book.ItemCount;
 
         public int PageSize
         {
-            get
-            {
-                return this._book.PageSize;
-            }
-            set
-            {
-                this._book.PageSize = value;
-            }
+            get => this._book.PageSize;
+            set => this._book.PageSize = value;
         }
 
         public override bool MoveNextPage()
@@ -558,7 +538,7 @@ namespace Bam.Net.Data
 
 		private void SetEachDatabase()
 		{
-			foreach(Dao dao in this)
+			foreach(T dao in this)
 			{
 				dao.Database = Database;
 			}

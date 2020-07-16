@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using Bam.Net.Data;
 
@@ -8,70 +10,49 @@ namespace Bam.Net.Encryption
     public class VaultItemColumns: QueryFilter<VaultItemColumns>, IFilterToken
     {
         public VaultItemColumns() { }
-        public VaultItemColumns(string columnName)
+        public VaultItemColumns(string columnName, bool isForeignKey = false)
             : base(columnName)
-        { }
-		
-		public VaultItemColumns KeyColumn
-		{
-			get
-			{
-				return new VaultItemColumns("Id");
-			}
-		}	
-
-				
-        public VaultItemColumns Id
-        {
-            get
-            {
-                return new VaultItemColumns("Id");
-            }
+        { 
+            _isForeignKey = isForeignKey;
         }
-        public VaultItemColumns Uuid
+        
+        public bool IsKey()
         {
-            get
-            {
-                return new VaultItemColumns("Uuid");
-            }
-        }
-        public VaultItemColumns Cuid
-        {
-            get
-            {
-                return new VaultItemColumns("Cuid");
-            }
-        }
-        public VaultItemColumns Key
-        {
-            get
-            {
-                return new VaultItemColumns("Key");
-            }
-        }
-        public VaultItemColumns Value
-        {
-            get
-            {
-                return new VaultItemColumns("Value");
-            }
+            return (bool)ColumnName?.Equals(KeyColumn.ColumnName);
         }
 
-        public VaultItemColumns VaultId
+        private bool? _isForeignKey;
+        public bool IsForeignKey
         {
             get
             {
-                return new VaultItemColumns("VaultId");
-            }
-        }
+                if (_isForeignKey == null)
+                {
+                    PropertyInfo prop = DaoType
+                        .GetProperties()
+                        .FirstOrDefault(pi => ((MemberInfo) pi)
+                            .HasCustomAttributeOfType<ForeignKeyAttribute>(out ForeignKeyAttribute foreignKeyAttribute)
+                                && foreignKeyAttribute.Name.Equals(ColumnName));
+                        _isForeignKey = prop != null;
+                }
 
-		protected internal Type TableType
-		{
-			get
-			{
-				return typeof(VaultItem);
-			}
-		}
+                return _isForeignKey.Value;
+            }
+            set => _isForeignKey = value;
+        }
+        
+		public VaultItemColumns KeyColumn => new VaultItemColumns("Id");
+
+        public VaultItemColumns Id => new VaultItemColumns("Id");
+        public VaultItemColumns Uuid => new VaultItemColumns("Uuid");
+        public VaultItemColumns Cuid => new VaultItemColumns("Cuid");
+        public VaultItemColumns Key => new VaultItemColumns("Key");
+        public VaultItemColumns Value => new VaultItemColumns("Value");
+
+
+        public VaultItemColumns VaultId => new VaultItemColumns("VaultId", true);
+
+		public Type DaoType => typeof(VaultItem);
 
 		public string Operator { get; set; }
 

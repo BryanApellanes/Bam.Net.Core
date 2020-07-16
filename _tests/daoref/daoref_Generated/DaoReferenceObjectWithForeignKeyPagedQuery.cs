@@ -12,6 +12,6 @@ namespace Bam.Net.DaoRef
 {
     public class DaoReferenceObjectWithForeignKeyPagedQuery: PagedQuery<DaoReferenceObjectWithForeignKeyColumns, DaoReferenceObjectWithForeignKey>
     { 
-		public DaoReferenceObjectWithForeignKeyPagedQuery(DaoReferenceObjectWithForeignKeyColumns orderByColumn, DaoReferenceObjectWithForeignKeyQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public DaoReferenceObjectWithForeignKeyPagedQuery(DaoReferenceObjectWithForeignKeyColumns orderByColumn,DaoReferenceObjectWithForeignKeyQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

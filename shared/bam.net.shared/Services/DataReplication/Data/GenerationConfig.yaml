@@ -1,6 +1,0 @@
-SchemaName: DataReplication
-WriteSourceTo: C:\bam\src\BamFrameworkCore\Bam.Net\shared\bam.net.shared\Services\DataReplication\Data\Generated_Dao
-TypeAssembly: C:\bam\src\BamFrameworkCore\Bam.Net\bam.net.core\bin\Debug\netcoreapp2.2\bam.net.core.dll
-FromNameSpace: Bam.Net.Services.DataReplication.Data
-ToNameSpace: Bam.Net.Services.DataReplication.Data.Dao
-UseInheritanceSchema: true

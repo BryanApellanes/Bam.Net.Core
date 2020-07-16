@@ -53,7 +53,7 @@ namespace Bam.Net.Testing.Specification
 		}
 
         /// <summary>
-        /// Gets or sets the specification container where the feature is defined.  THis property is
+        /// Gets or sets the specification container where the feature is defined.  This property is
         /// set by the container when the feature is setup.
         /// </summary>
         /// <value>

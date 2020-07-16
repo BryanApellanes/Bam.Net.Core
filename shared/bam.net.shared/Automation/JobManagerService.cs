@@ -1,25 +1,18 @@
 /*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Bam.Net;
+using System.Linq;
+using System.Threading;
+using Bam.Net.Configuration;
+using Bam.Net.Data;
+using Bam.Net.Logging;
 using Bam.Net.Profiguration;
 using Bam.Net.ServiceProxy;
-using Bam.Net.Data;
-using Bam.Net.Analytics;
-using Bam.Net.Logging;
-using Bam.Net.Configuration;
-using System.Threading;
 using Bam.Net.Services;
-using Bam.Net.Automation;
-using Bam.Net.Data.Repositories;
-using Bam.Net.Data.Dynamic;
-using Bam.Net.UserAccounts;
 
 namespace Bam.Net.Automation
 {
@@ -52,7 +45,7 @@ namespace Bam.Net.Automation
         }
 
         public JobManagerService(IApplicationNameProvider appNameProvider, IDataDirectoryProvider dataProvider,
-            Bam.Net.Logging.ILogger logger, ProfigurationSet profiguration = null)
+            ILogger logger, ProfigurationSet profiguration = null)
         {
             WorkerTypeProvider = new ScanningWorkerTypeProvider(logger ?? Log.Default);
             TypeResolver = new TypeResolver();
@@ -81,7 +74,7 @@ namespace Bam.Net.Automation
             {
                 return _currentLock.DoubleCheckLock(ref _current,
                     () => new JobManagerService(ProcessApplicationNameProvider.Current,
-                        Bam.Net.Data.Repositories.DataProvider.Current));
+                        Net.Data.Repositories.DataProvider.Current));
             }
         }
         
@@ -110,7 +103,7 @@ namespace Bam.Net.Automation
         {
             get
             {
-				return _profigurationSetLock.DoubleCheckLock(ref _profigurationSet, () => new ProfigurationSet(System.IO.Path.Combine(JobsDirectory, "ProfigurationSet")));
+				return _profigurationSetLock.DoubleCheckLock(ref _profigurationSet, () => new ProfigurationSet(Path.Combine(JobsDirectory, "ProfigurationSet")));
             }
             private set
             {
@@ -352,8 +345,8 @@ namespace Bam.Net.Automation
 
         protected internal bool JobExists(string name, out string jobDirectoryPath)
         {
-			jobDirectoryPath = System.IO.Path.Combine(JobsDirectory, name);
-            return System.IO.Directory.Exists(jobDirectoryPath);
+			jobDirectoryPath = Path.Combine(JobsDirectory, name);
+            return Directory.Exists(jobDirectoryPath);
         }
 
         public virtual void StartJob(string jobName)
@@ -525,7 +518,7 @@ namespace Bam.Net.Automation
 
         protected string GetJobDirectoryPath(string name)
         {
-			return System.IO.Path.Combine(JobsDirectory, name);
+			return Path.Combine(JobsDirectory, name);
         }
     }
 }

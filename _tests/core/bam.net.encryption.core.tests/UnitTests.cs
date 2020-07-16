@@ -230,16 +230,55 @@ namespace Bam.Net.Encryption.Tests
             Expect.AreEqual(1, items.Count);
             foreach (VaultItem item in items)
             {
-                OutLineFormat("Should be gibberish: Key={0}, Value={1}", item.Key, item.Value);
+                Message.PrintLine("Should be gibberish: Key={0}, Value={1}", item.Key, item.Value);
                 Expect.IsFalse(item.Value.Equals(sensitiveValue));
                 Expect.AreEqual(sensitiveValue, v[keyName]);
             }
         }
 
         [UnitTest]
+        public void SetShouldCreateVaultItem()
+        {
+            SQLiteDatabase db = GetVaultDatabase();
+            VaultItemCollection items = VaultItem.LoadAll(db);
+            Expect.AreEqual(0, items.Count);
+            
+            string password = "This is my awesome password";
+            string sensitiveValue = "Sensitive Value";
+            string keyName = "SensitiveInformation";
+            Vault v = Vault.Retrieve(db, "EncryptedData", password);
+            v.Set(keyName, sensitiveValue);
+
+            items = VaultItem.LoadAll(db);
+            Expect.AreEqual(1, items.Count);
+            Message.PrintLine(items.ToJsonSafe().ToJson());
+        }
+
+        [UnitTest]
+        public void VaultShouldHaveOneKey()
+        {
+            SQLiteDatabase db = GetVaultDatabase();
+            string password = "My secret password";
+            Vault v = Vault.Retrieve(db, "EncryptedData", password);
+            Expect.IsGreaterThan(v.VaultKeysByVaultId.Count, 0);
+            Expect.AreEqual(1, v.VaultKeysByVaultId.Count);
+        }
+
+        [UnitTest]
+        public void ExportShouldNullifyKey()
+        {
+            SQLiteDatabase db = GetVaultDatabase();
+            string password = "My secret password";
+            Vault v = Vault.Retrieve(db, "EncryptedData", password);
+            VaultKeyInfo keyInfo = v.ExportKey();
+            v.VaultKey.ShouldBeNull();
+        }
+        
+        [UnitTest]
         public void CanExportVaultKey()
         {
             SQLiteDatabase db = GetVaultDatabase();
+            
             string password = "This is my awesome password";
             string sensitiveValue = "Sensitive Value";
             string keyName = "SensitiveInformation";
@@ -249,9 +288,9 @@ namespace Bam.Net.Encryption.Tests
             VaultKeyInfo keyInfo = v.ExportKey();
 
             string data = v[keyName];
-            Expect.IsNull(data);
+            Expect.IsNull(data, "data should have been null");
 
-            OutLine(keyInfo.ToJson());
+            Message.PrintLine(keyInfo.ToJson());
 
             v.ImportKey(keyInfo);
             data = v[keyName];
@@ -274,7 +313,7 @@ namespace Bam.Net.Encryption.Tests
             string data = v[keyName];
             Expect.IsNull(data);
 
-            OutLine(keyInfo.ToJson());
+            Message.PrintLine(keyInfo.ToJson());
 
             v.ImportKey(keyInfo);
 
@@ -482,35 +521,51 @@ namespace Bam.Net.Encryption.Tests
         }
 
         [UnitTest]
-        public void _1_ShouldBeAbleToCreateVault()
+        public void _1_ShouldBeAbleToCreateByRetrievingVault()
         {
-            Vault testVault = Vault.Retrieve("TestVault", "sometandomtext");
-            testVault["smtphost"] = "smtp.live.com";
-            Expect.AreEqual("smtp.live.com", testVault["smtphost"]);
+            Vault testVault = Vault.Retrieve(nameof(_1_ShouldBeAbleToCreateByRetrievingVault), "somerandomtext_".RandomLetters(8));
+            Expect.IsNotNull(testVault);
         }
 
         [UnitTest]
-        public void _2_ShouldBeAbleToReadVault()
+        public void _1_2_VaultKeyShouldNotBeNullOnRetrieve()
         {
-            Vault testVault = Vault.Retrieve("TestVault");
-            Expect.AreEqual("smtp.live.com", testVault["smtphost"]);
+            Vault testVault = Vault.Retrieve(nameof(_1_2_VaultKeyShouldNotBeNullOnRetrieve), "somerandomtext_".RandomLetters(8));
+            Expect.IsNotNull(testVault?.VaultKey);
+        }
+
+        [UnitTest]
+        public void _1_1_ShouldThrowIfVaultKeyNotSet()
+        {
+            Expect.Throws(() =>
+            {
+                Vault testVault = Vault.Retrieve(nameof(_1_1_ShouldThrowIfVaultKeyNotSet),
+                    $"{nameof(_1_1_ShouldThrowIfVaultKeyNotSet)}_password".RandomLetters(8));
+                VaultKeyInfo keyInfo = testVault.ExportKey();
+                testVault["should fail"] = "this shouldn't make it into the database";
+            }, ex =>
+            {
+                ex.IsObjectOfType<VaultKeyNotSetException>();
+            });
         }
 
         [UnitTest]
         public void ShouldBeAbleToSetNotifyCredentials()
         {
-            OutLine(Notify.CredentialVault["smtphost"]);
-            Notify.CredentialVault["smtphost"] = "smtp.live.com";
-            OutLine(Notify.CredentialVault["smtphost"]);
+            Vault testVault = Vault.Create(nameof(ShouldBeAbleToSetNotifyCredentials), Vault.GeneratePassword(), RsaKeyLength._1024);
+            Notify.Credentials = testVault;
+            Message.PrintLine(Notify.Credentials["smtphost"]);
+            Notify.Credentials["smtphost"] = "smtp.bamapps.com";
+            Message.PrintLine(Notify.Credentials["smtphost"]);
         }
 
         [UnitTest]
         public void ShouldBeAbleToEnumerateVaultByKeys()
         {
-            Notify.CredentialVault.Keys.Each(key =>
+            Notify.Credentials.Keys.Each(key =>
             {
-                string value = Notify.CredentialVault[key];
-                OutLineFormat("{0}={1}", key, value);
+                string value = Notify.Credentials[key];
+                Message.PrintLine("{0}={1}", key, value);
             });
         }
 
@@ -527,7 +582,7 @@ namespace Bam.Net.Encryption.Tests
             Expect.AreEqual(1, retrieved.Count);
         }
 
-        static string testFile = ".\\TestVaultFile.vault.sqlite";
+        static string testFile = "./TestVaultFile.vault.sqlite";
         [UnitTest]
         public void _3_ShouldBeAbleToCreateVaultInSpecificFile()
         {
@@ -540,9 +595,10 @@ namespace Bam.Net.Encryption.Tests
         public void _4_ShouldBeAbleToReadVaultInSpecificFile()
         {
             FileInfo testFileInfo = new FileInfo(testFile);
-            Vault test = Vault.Load(testFileInfo, "TestVault");
-            OutLine(test["smtphost"]);
-            Expect.AreEqual("smtp.live.com", test["smtphost"]);
+            Vault test = Vault.Load(testFileInfo, nameof(_4_ShouldBeAbleToReadVaultInSpecificFile));
+            test["smtphost"] = "smtp.bamapps.com";
+            Message.PrintLine(test["smtphost"]);
+            Expect.AreEqual("smtp.bamapps.com", test["smtphost"]);
         }
 
         [UnitTest]
@@ -556,12 +612,24 @@ namespace Bam.Net.Encryption.Tests
             });
         }
 
+        static string vaultDataDb = Path.Combine(BamHome.DataPath, "TestVaultData.sqlite");
+        static string testVaults = Path.Combine(BamHome.DataPath, "TestVaults.vault.sqlite");
         [AfterUnitTests]
         public static void CleanUp()
         {
             OutLine("Cleaning up test vaults...", ConsoleColor.Yellow);
             GetTestCredentialVault(out VaultDatabase db);
             Vault.LoadAll(db).Delete(db);
+            if (File.Exists(vaultDataDb))
+            {
+                File.Delete(vaultDataDb);
+            }
+
+            if (File.Exists(testVaults))
+            {
+                File.Delete(testVaults);
+            }
+            
             OutLine("Clean up test vaults complete", ConsoleColor.Green);
         }
 
@@ -576,10 +644,7 @@ namespace Bam.Net.Encryption.Tests
         private static void DeleteVault(string name)
         {
             Vault toDelete = Vault.Retrieve(name);
-            if (toDelete != null)
-            {
-                toDelete.Delete();
-            }
+            toDelete?.Delete();
         }
 
         private static Vault GetTestCredentialVault()
@@ -589,13 +654,17 @@ namespace Bam.Net.Encryption.Tests
 
         private static Vault GetTestCredentialVault(out VaultDatabase db)
         {
-            string filePath = Path.Combine(Paths.Data, "TestVaults.vault.sqlite");
+            string filePath = Path.Combine(BamHome.DataPath, "TestVaults.vault.sqlite");
             return Vault.Load(new FileInfo(filePath), 8.RandomLetters(), out db);
         }
 
-        private static SQLiteDatabase GetVaultDatabase()
+        private static SQLiteDatabase GetVaultDatabase(string name = "TestVaultData")
         {
-            SQLiteDatabase db = new SQLiteDatabase(Paths.Data, "TestVaultData");
+            SQLiteDatabase db = new SQLiteDatabase(BamHome.DataPath, name);
+            if (db.DatabaseFile.Exists)
+            {
+                File.Delete(db.DatabaseFile.FullName);
+            }
             db.TryEnsureSchema<Vault>();
             return db;
         }

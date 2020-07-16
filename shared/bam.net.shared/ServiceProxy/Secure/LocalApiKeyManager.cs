@@ -23,21 +23,16 @@ namespace Bam.Net.ServiceProxy.Secure
         }
 
         static LocalApiKeyManager _default;
-        static object _defaultLock = new object();
+        static readonly object _defaultLock = new object();
         public static LocalApiKeyManager Default
         {
             get
             {
-                return _defaultLock.DoubleCheckLock(ref _default, () =>
-                {
-                    return new LocalApiKeyManager();
-                });
+                return _defaultLock.DoubleCheckLock(ref _default, () => new LocalApiKeyManager());
             }
-            set
-            {
-                _default = value;
-            }
+            set => _default = value;
         }
+        
         [Exclude]
         public object Clone()
         {
@@ -162,10 +157,10 @@ namespace Bam.Net.ServiceProxy.Secure
 
         public static ApiKey AddKey(Application app, IUserResolver userResolver, IHttpContext context, Database database = null)
         {
-            ApiKey key = app.ApiKeysByApplicationId.AddNew();
+            ApiKey key = app.ApiKeysByApplicationId.AddChild();
             key.ClientId = GetClientId(app.Name);
             key.Disabled = false;
-            key.SharedSecret = ServiceProxySystem.GenerateId();
+            key.SharedSecret = ServiceProxySystem.GenerateSecureRandomString();
             key.CreatedBy = userResolver.GetUser(context);
             key.CreatedAt = new Instant();
             key.Save(database);

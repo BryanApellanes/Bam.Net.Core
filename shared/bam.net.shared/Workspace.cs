@@ -8,7 +8,7 @@ using Bam.Net.Presentation.Handlebars;
 namespace Bam.Net
 {
     /// <summary>
-    /// Provides an interface to a specific place in the filesystem for an application.
+    /// Provides an interface to a specific place in the filesystem.
     /// </summary>
     public class Workspace
     {
@@ -54,8 +54,7 @@ namespace Bam.Net
         
         public string Path(params string[] pathSegments)
         {
-            List<string> fileSegments = new List<string>();
-            fileSegments.Add(Root.FullName);
+            List<string> fileSegments = new List<string> {Root.FullName};
             fileSegments.AddRange(pathSegments);
             return System.IO.Path.Combine(fileSegments.ToArray());
         }
@@ -103,15 +102,18 @@ namespace Bam.Net
         {
             if (_logger == null)
             {
-                _logger = new T();
-                _logger.Folder = Root;
+                _logger = new T {Folder = Root};
             }
 
             return _logger;
         }
         
         static Workspace _current;
-        static object _currentLock = new object();
+        static readonly object _currentLock = new object();
+        
+        /// <summary>
+        /// Workspace for the current application, see also ForProcess().
+        /// </summary>
         public static Workspace Current
         {
             get { return _currentLock.DoubleCheckLock(ref _current, () => ForApplication()); }
@@ -128,8 +130,7 @@ namespace Bam.Net
             Workspace applicationWorkspace = ForApplication(applicationNameProvider);
             string directoryPath =
                 System.IO.Path.Combine(applicationWorkspace.Root.FullName, ProcessMode.Current.Mode.ToString(), $"{type.Namespace}.{type.Name}");
-            return new Workspace()
-                {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
+            return new Workspace() {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
         }
 
         public static Workspace ForProcess()
@@ -142,8 +143,7 @@ namespace Bam.Net
             applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
             Log.Trace(typeof(Workspace), "Workspace using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
             string directoryPath = System.IO.Path.Combine(BamHome.Apps, applicationNameProvider.GetApplicationName());
-            return new Workspace()
-                {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
+            return new Workspace() {ApplicationNameProvider = applicationNameProvider, Root = new DirectoryInfo(directoryPath)};
         }
 
         public static Workspace ForApplication(string applicationName)

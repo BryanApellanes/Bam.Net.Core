@@ -371,7 +371,7 @@ namespace Bam.Net
 
         /// <summary>
         /// Time the execution of the specified function returning a TimeSpan
-        /// instance representing the ammount of time it took for the function
+        /// instance representing the amount of time it took for the function
         /// to run
         /// </summary>
         /// <typeparam name="TResult"></typeparam>

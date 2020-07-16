@@ -80,6 +80,7 @@ namespace Bam.Net.UserAccounts
                     DaoUserResolver userResolver = new DaoUserResolver();
                     serviceProvider.Set<IUserResolver>(userResolver);
                     serviceProvider.Set<DaoUserResolver>(userResolver);
+                    serviceProvider.Set<IDaoUserResolver>(userResolver);
                     DaoRoleResolver roleResolver = new DaoRoleResolver();
                     serviceProvider.Set<IRoleResolver>(roleResolver);
                     serviceProvider.Set<DaoRoleResolver>(roleResolver);
@@ -91,46 +92,25 @@ namespace Bam.Net.UserAccounts
                     return serviceProvider;
                 });
             }
-            set
-            {
-                _serviceProvider = value;
-            }
+            set => _serviceProvider = value;
         }
 
         public IAuthenticator Authenticator
         {
-            get
-            {
-                return ServiceProvider.Get<IAuthenticator>();
-            }
-            set
-            {
-                ServiceProvider.Set<IAuthenticator>(value);
-            }
+            get => ServiceProvider.Get<IAuthenticator>();
+            set => ServiceProvider.Set<IAuthenticator>(value);
         }
 
-        public DaoUserResolver DaoUserResolver
+        public IDaoUserResolver DaoUserResolver
         {
-            get
-            {
-                return ServiceProvider.Get<DaoUserResolver>();
-            }
-            set
-            {
-                ServiceProvider.Set<DaoUserResolver>(value);
-            }
+            get => ServiceProvider.Get<IDaoUserResolver>();
+            set => ServiceProvider.Set<IDaoUserResolver>(value);
         }
 
         public EmailComposer EmailComposer
         {
-            get
-            {
-                return ServiceProvider.Get<EmailComposer>();
-            }
-            set
-            {
-                ServiceProvider.Set<EmailComposer>(value);
-            }
+            get => ServiceProvider.Get<EmailComposer>();
+            set => ServiceProvider.Set<EmailComposer>(value);
         }
 
         public ISmtpSettingsProvider SmtpSettingsProvider
@@ -145,25 +125,13 @@ namespace Bam.Net.UserAccounts
             return SmtpSettingsProvider.GetSmtpSettingsVault(applicationName);
         }
         
-        public Vault SmtpSettingsVault
-        {
-            get
-            {
-                return GetSmtpSettingsVault(ApplicationName);
-            }
-        }
-        
+        public Vault SmtpSettingsVault => GetSmtpSettingsVault(ApplicationName);
+
         [Exclude]
         public string SmtpSettingsVaultPath
         {
-            get
-            {
-                return SmtpSettingsProvider.SmtpSettingsVaultPath;
-            }
-            set
-            {
-                SmtpSettingsProvider.SmtpSettingsVaultPath = value;
-            }
+            get => SmtpSettingsProvider.SmtpSettingsVaultPath;
+            set => SmtpSettingsProvider.SmtpSettingsVaultPath = value;
         }
 
         public int PasswordResetTokensExpireInThisManyMinutes
@@ -173,36 +141,18 @@ namespace Bam.Net.UserAccounts
         }
 
         [Exclude]
-        public string ApplicationName // used by loggable implementation
-        {
-            get
-            {
-                return ApplicationNameProvider.GetApplicationName();
-            }
-        }
+        public string ApplicationName => ApplicationNameProvider.GetApplicationName(); // used by loggable implementation
 
         [Exclude]
-        public string LastExceptionMessage // used by loggable implementation
-        {
-            get
-            {
-                return LastException.Message;
-            }
-        }
+        public string LastExceptionMessage => LastException.Message; // used by loggable implementation
 
         [Exclude]
         public Exception LastException { get; set; }
 
         public IApplicationNameProvider ApplicationNameProvider
         {
-            get
-            {
-                return ServiceProvider.Get<IApplicationNameProvider>();
-            }
-            set
-            {
-                ServiceProvider.Set<IApplicationNameProvider>(value);
-            }
+            get => ServiceProvider.Get<IApplicationNameProvider>();
+            set => ServiceProvider.Set<IApplicationNameProvider>(value);
         }
 
         [Local]
@@ -335,15 +285,12 @@ namespace Bam.Net.UserAccounts
                 string func(string token)
                 {
                     string baseAddress = ServiceProxySystem.GetBaseAddress(context.Request);
-                    return string.Format("{0}auth/confirmAccount?token={1}&layout=basic", baseAddress, token);
+                    return $"{baseAddress}auth/confirmAccount?token={token}&layout=basic";
                 }
 
                 return func;
             }
-            set
-            {
-                _getConfirmationUrlFunction = value;
-            }
+            set => _getConfirmationUrlFunction = value;
         }
 
         internal string GetConfirmationUrl(string token)
@@ -361,15 +308,12 @@ namespace Bam.Net.UserAccounts
                 Func<string, string> func = (token) =>
                 {
                     string baseAddress = ServiceProxySystem.GetBaseAddress(context.Request);
-                    return string.Format("{0}auth/resetPassword?token={1}&layout=basic", baseAddress, token);
+                    return $"{baseAddress}auth/resetPassword?token={token}&layout=basic";
                 };
 
                 return func;
             }
-            set
-            {
-                _getPasswordResetUrlFunction = value;
-            }
+            set => _getPasswordResetUrlFunction = value;
         }
 
         internal string GetPasswordResetUrl(string token)
@@ -380,14 +324,7 @@ namespace Bam.Net.UserAccounts
         Database _database;
         public Database Database
         {
-            get
-            {
-                if(_database == null)
-                {
-                    _database = Db.For<User>();
-                }
-                return _database;
-            }
+            get => _database ?? (_database = Db.For<User>());
             set
             {
                 _database = value;
@@ -412,7 +349,7 @@ namespace Bam.Net.UserAccounts
             try
             {
                 User user = User.GetByEmail(emailAddress, Database);
-                PasswordReset reset = user.PasswordResetsByUserId.AddNew();
+                PasswordReset reset = user.PasswordResetsByUserId.AddChild();
                 reset.Token = Guid.NewGuid().ToString();
                 reset.DateTime = new Instant();
                 reset.ExpiresInMinutes = PasswordResetTokensExpireInThisManyMinutes;
@@ -463,14 +400,7 @@ namespace Bam.Net.UserAccounts
                     eventToFire = LoginSucceeded;
                     result = GetSuccess<LoginResponse>(passwordIsValid);
                     User user = null;
-                    if (userName.Contains("@"))
-                    {
-                        user = User.GetByEmail(userName, Database);
-                    }
-                    else
-                    {
-                        user = User.GetByUserName(userName, Database);
-                    }
+                    user = userName.Contains("@") ? User.GetByEmail(userName, Database) : User.GetByUserName(userName, Database);
                     DaoUserResolver.SetUser(HttpContext, user, true, Database);
                     user.AddLoginRecord(Database);
                 }              
@@ -670,10 +600,7 @@ namespace Bam.Net.UserAccounts
 
         private T GetSuccess<T>(object data, string message = null) where T: ServiceProxyResponse, new()
         {
-            T result = new T();
-            result.Success = true;
-            result.Message = message;
-            result.Data = data;
+            T result = new T {Success = true, Message = message, Data = data};
             return result;
         }
 
@@ -754,13 +681,7 @@ namespace Bam.Net.UserAccounts
         }
 
         [Exclude]
-        public string UserName
-        {
-            get
-            {
-                return GetUser(HttpContext).UserName;
-            }
-        }
+        public string UserName => GetUser(HttpContext).UserName;
 
         [Exclude]
         public User GetUser(IHttpContext context)
@@ -774,13 +695,7 @@ namespace Bam.Net.UserAccounts
         }
 
         [Exclude]
-        public Session Session
-        {
-            get
-            {
-                return Session.Get(HttpContext);
-            }
-        }
+        public Session Session => Session.Get(HttpContext);
 
         public IHttpContext HttpContext
         {

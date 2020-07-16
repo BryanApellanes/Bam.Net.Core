@@ -11,7 +11,7 @@ using Bam.Net.Data.Qi;
 
 namespace Bam.Net.ServiceProxy.Secure
 {
-	// schema = SecureServiceProxy 
+	// schema = SecureServiceProxy
     public static class SecureServiceProxyContext
     {
 		public static string ConnectionName
@@ -31,6 +31,58 @@ namespace Bam.Net.ServiceProxy.Secure
 		}
 
 
+	public class ApiKeyQueryContext
+	{
+			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.Where(where, db);
+			}
+		   
+			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy = null, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.Where(where, orderBy, db);
+			}
+
+			public ApiKey OneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.OneWhere(where, db);
+			}
+
+			public static ApiKey GetOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.GetOneWhere(where, db);
+			}
+		
+			public ApiKey FirstOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.FirstOneWhere(where, db);
+			}
+
+			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.Top(count, where, db);
+			}
+
+			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.Top(count, where, orderBy, db);
+			}
+
+			public long Count(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			{
+				return Bam.Net.ServiceProxy.Secure.ApiKey.Count(where, db);
+			}
+	}
+
+	static ApiKeyQueryContext _apiKeys;
+	static object _apiKeysLock = new object();
+	public static ApiKeyQueryContext ApiKeys
+	{
+		get
+		{
+			return _apiKeysLock.DoubleCheckLock<ApiKeyQueryContext>(ref _apiKeys, () => new ApiKeyQueryContext());
+		}
+	}
 	public class ApplicationQueryContext
 	{
 			public ApplicationCollection Where(WhereDelegate<ApplicationColumns> where, Database db = null)
@@ -81,58 +133,6 @@ namespace Bam.Net.ServiceProxy.Secure
 		get
 		{
 			return _applicationsLock.DoubleCheckLock<ApplicationQueryContext>(ref _applications, () => new ApplicationQueryContext());
-		}
-	}
-	public class ConfigurationQueryContext
-	{
-			public ConfigurationCollection Where(WhereDelegate<ConfigurationColumns> where, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.Where(where, db);
-			}
-		   
-			public ConfigurationCollection Where(WhereDelegate<ConfigurationColumns> where, OrderBy<ConfigurationColumns> orderBy = null, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.Where(where, orderBy, db);
-			}
-
-			public Configuration OneWhere(WhereDelegate<ConfigurationColumns> where, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.OneWhere(where, db);
-			}
-
-			public static Configuration GetOneWhere(WhereDelegate<ConfigurationColumns> where, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.GetOneWhere(where, db);
-			}
-		
-			public Configuration FirstOneWhere(WhereDelegate<ConfigurationColumns> where, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.FirstOneWhere(where, db);
-			}
-
-			public ConfigurationCollection Top(int count, WhereDelegate<ConfigurationColumns> where, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.Top(count, where, db);
-			}
-
-			public ConfigurationCollection Top(int count, WhereDelegate<ConfigurationColumns> where, OrderBy<ConfigurationColumns> orderBy, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.Top(count, where, orderBy, db);
-			}
-
-			public long Count(WhereDelegate<ConfigurationColumns> where, Database db = null)
-			{
-				return Bam.Net.ServiceProxy.Secure.Configuration.Count(where, db);
-			}
-	}
-
-	static ConfigurationQueryContext _configurations;
-	static object _configurationsLock = new object();
-	public static ConfigurationQueryContext Configurations
-	{
-		get
-		{
-			return _configurationsLock.DoubleCheckLock<ConfigurationQueryContext>(ref _configurations, () => new ConfigurationQueryContext());
 		}
 	}
 	public class ConfigSettingQueryContext
@@ -187,56 +187,56 @@ namespace Bam.Net.ServiceProxy.Secure
 			return _configSettingsLock.DoubleCheckLock<ConfigSettingQueryContext>(ref _configSettings, () => new ConfigSettingQueryContext());
 		}
 	}
-	public class ApiKeyQueryContext
+	public class ConfigurationQueryContext
 	{
-			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			public ConfigurationCollection Where(WhereDelegate<ConfigurationColumns> where, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.Where(where, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.Where(where, db);
 			}
 		   
-			public ApiKeyCollection Where(WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy = null, Database db = null)
+			public ConfigurationCollection Where(WhereDelegate<ConfigurationColumns> where, OrderBy<ConfigurationColumns> orderBy = null, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.Where(where, orderBy, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.Where(where, orderBy, db);
 			}
 
-			public ApiKey OneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			public Configuration OneWhere(WhereDelegate<ConfigurationColumns> where, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.OneWhere(where, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.OneWhere(where, db);
 			}
 
-			public static ApiKey GetOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			public static Configuration GetOneWhere(WhereDelegate<ConfigurationColumns> where, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.GetOneWhere(where, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.GetOneWhere(where, db);
 			}
 		
-			public ApiKey FirstOneWhere(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			public Configuration FirstOneWhere(WhereDelegate<ConfigurationColumns> where, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.FirstOneWhere(where, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.FirstOneWhere(where, db);
 			}
 
-			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, Database db = null)
+			public ConfigurationCollection Top(int count, WhereDelegate<ConfigurationColumns> where, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.Top(count, where, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.Top(count, where, db);
 			}
 
-			public ApiKeyCollection Top(int count, WhereDelegate<ApiKeyColumns> where, OrderBy<ApiKeyColumns> orderBy, Database db = null)
+			public ConfigurationCollection Top(int count, WhereDelegate<ConfigurationColumns> where, OrderBy<ConfigurationColumns> orderBy, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.Top(count, where, orderBy, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.Top(count, where, orderBy, db);
 			}
 
-			public long Count(WhereDelegate<ApiKeyColumns> where, Database db = null)
+			public long Count(WhereDelegate<ConfigurationColumns> where, Database db = null)
 			{
-				return Bam.Net.ServiceProxy.Secure.ApiKey.Count(where, db);
+				return Bam.Net.ServiceProxy.Secure.Configuration.Count(where, db);
 			}
 	}
 
-	static ApiKeyQueryContext _apiKeys;
-	static object _apiKeysLock = new object();
-	public static ApiKeyQueryContext ApiKeys
+	static ConfigurationQueryContext _configurations;
+	static object _configurationsLock = new object();
+	public static ConfigurationQueryContext Configurations
 	{
 		get
 		{
-			return _apiKeysLock.DoubleCheckLock<ApiKeyQueryContext>(ref _apiKeys, () => new ApiKeyQueryContext());
+			return _configurationsLock.DoubleCheckLock<ConfigurationQueryContext>(ref _configurations, () => new ConfigurationQueryContext());
 		}
 	}
 	public class SecureSessionQueryContext
@@ -290,5 +290,6 @@ namespace Bam.Net.ServiceProxy.Secure
 		{
 			return _secureSessionsLock.DoubleCheckLock<SecureSessionQueryContext>(ref _secureSessions, () => new SecureSessionQueryContext());
 		}
-	}    }
+	}
+    }
 }																								

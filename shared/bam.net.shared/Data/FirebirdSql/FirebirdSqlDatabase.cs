@@ -1,16 +1,11 @@
 ﻿/*
 	Copyright © Bryan Apellanes 2015  
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.Incubation;
+using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using Bam.Net.Data;
-using FirebirdSql;
+using Bam.Net.Incubation;
 using FirebirdSql.Data.FirebirdClient;
 
 namespace Bam.Net.Data.FirebirdSql
@@ -71,7 +66,7 @@ namespace Bam.Net.Data.FirebirdSql
             }
         }
 
-        public override long? GetLongValue(string columnName, System.Data.DataRow row)
+        public override long? GetLongValue(string columnName, DataRow row)
         {
             object value = row[columnName];
             if (value is long || value is long?)

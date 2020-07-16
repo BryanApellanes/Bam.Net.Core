@@ -67,8 +67,7 @@ namespace Bam.Net.Presentation
         }
 
         /// <summary>
-        /// Returns a dynamically generated object that represents the combination of the PageModel and ViewModel
-        /// in one object instance.
+        /// Returns the data passed to the renderer when the page is rendered to the client.
         /// </summary>
         /// <returns></returns>
         public virtual object TemplateData()

@@ -1,6 +1,6 @@
 namespace Bam.Net.Data.Npqsql
 {
-    public class NpgSqlForeignKeyDescriptor
+    public class NpgsqlForeignKeyDescriptor
     {
         public string TableName { get; set; }
         public string ColumnName { get; set; }

@@ -12,6 +12,6 @@ namespace Bam.Net.ServiceProxy.Secure
 {
     public class ApplicationPagedQuery: PagedQuery<ApplicationColumns, Application>
     { 
-		public ApplicationPagedQuery(ApplicationColumns orderByColumn, ApplicationQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public ApplicationPagedQuery(ApplicationColumns orderByColumn,ApplicationQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

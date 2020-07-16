@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bam.Net.Testing.Integration;
-using Bam.Net.CommandLine;
-using Bam.Net.Testing;
-using Bam.Net.UserAccounts;
-using Bam.Net.ServiceProxy.Secure;
 using System.IO;
-using Bam.Net.CoreServices.ApplicationRegistration;
-using Bam.Net.DaoRef;
-using Bam.Net.CoreServices.ProtoBuf;
-using Bam.Net.Data.Repositories;
+using System.Linq;
 using System.Reflection;
-using Google.Protobuf;
-using Bam.Net.UserAccounts.Data;
-using Bam.Net.Services.Clients;
-using Bam.Net.ServiceProxy;
+using Bam.Net.CommandLine;
 using Bam.Net.CoreServices.ApplicationRegistration.Data;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
+using Bam.Net.CoreServices.ProtoBuf;
+using Bam.Net.DaoRef;
+using Bam.Net.Data.Repositories;
+using Bam.Net.ServiceProxy;
+using Bam.Net.Services.Clients;
+using Bam.Net.Testing;
+using Bam.Net.Testing.Integration;
+using Bam.Net.UserAccounts;
 
 namespace Bam.Net.CoreServices.Tests
 {
@@ -134,7 +128,7 @@ namespace Bam.Net.CoreServices.Tests
             string whoAmI = client.UserRegistryService.WhoAmI();
             Expect.AreEqual(current.ToString(), whoAmI);
 
-            whoAmI = client.ApplicationRegistrationService.WhoAmI();
+            whoAmI = client.ApplicationRegistryService.WhoAmI();
             Expect.AreEqual(current.ToString(), whoAmI);
 
             whoAmI = client.ConfigurationService.WhoAmI();
@@ -228,7 +222,7 @@ namespace Bam.Net.CoreServices.Tests
             string youSayIAm = userService.WhoAmI();
             Expect.AreEqual(userName, youSayIAm);
 
-            loginResponse = coreClient.ApplicationRegistrationService.Login(userName, passHash);
+            loginResponse = coreClient.ApplicationRegistryService.Login(userName, passHash);
             Expect.IsTrue(loginResponse.Success, "Unable to login to application registry service");
             Expect.IsTrue(coreClient.RegisterApplicationProcess(), coreClient.Message);
             Expect.IsFalse(initFailed.Value);

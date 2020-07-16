@@ -19,7 +19,7 @@ namespace Bam.Net.Web
     /// </summary>
     public class HttpArgs
     {
-        Dictionary<string, string> _pairs;
+        readonly Dictionary<string, string> _pairs;
         public HttpArgs()
         {
             _pairs = new Dictionary<string, string>();
@@ -52,7 +52,7 @@ namespace Bam.Net.Web
 
                 return _contentType.ToLowerInvariant();
             }
-            set { _contentType = value; }
+            set => _contentType = value;
         }
         
         protected virtual void ParseInput()
@@ -108,29 +108,11 @@ namespace Bam.Net.Web
         }
 
         List<string> _ordered;
-        public string[] Ordered
-        {
-            get
-            {
-                return _ordered.ToArray();
-            }
-        }
+        public string[] Ordered => _ordered.ToArray();
 
-        public string[] Keys
-        {
-            get
-            {
-                return _pairs.Keys.ToArray();                    
-            }
-        }
+        public string[] Keys => _pairs.Keys.ToArray();
 
-        public int Count
-        {
-            get
-            {
-                return _pairs.Values.Count;
-            }
-        }
+        public int Count => _pairs.Values.Count;
 
         public bool Has(string key)
         {

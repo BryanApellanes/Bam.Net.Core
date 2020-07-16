@@ -23,7 +23,7 @@ namespace Bam.Net.Logging
 			this.Value = (VerbosityLevel)eventType;
 		}
 
-        public VerbosityLevel Value { get; set; }
+        public VerbosityLevel Value { get; private set; }
 
         public string MessageFormat
         {
@@ -36,7 +36,8 @@ namespace Bam.Net.Logging
         }
 
 		/// <summary>
-		/// The "NamedFormat" message format to use when outputting messages.  The sender argument
+		/// The "NamedFormat" message format to use when outputting messages; named variables are the names of properties
+		/// on the current Loggable instance and should be enclosed in curly braces {}.  The sender argument
 		/// to the registered event handler is used to resolve message variables.
 		/// </summary>
         public string SenderMessageFormat { get; set; }

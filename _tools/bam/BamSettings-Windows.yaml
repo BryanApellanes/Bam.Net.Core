@@ -1,0 +1,6 @@
+﻿Environment: Development
+DockerPath: /c/Program Files/Docker/Docker/Resources/bin/docker.exe
+NpmPath: /c/Program Files/nodejs/npm.cmd
+DotNetPath: /c/Program Files/dotnet/dotnet.exe
+GitPath: /c/Program Files/Git/cmd/git.exe
+NpxPath: /c/Program Files/nodejs/npx.cmd

@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file was generated and should not be modified directly
 */
 using System;
@@ -23,10 +23,17 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		{
 			SchemaName = "WebHooks";
 			BaseNamespace = "Bam.Net.CoreServices.WebHooks.Data";			
-﻿			
-			AddType<Bam.Net.CoreServices.WebHooks.Data.WebHookCall>();﻿			
-			AddType<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>();﻿			
+
+			
+			AddType<Bam.Net.CoreServices.WebHooks.Data.WebHookCall>();
+			
+			
+			AddType<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>();
+			
+			
 			AddType<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber>();
+			
+
 			DaoAssembly = typeof(WebHooksRepository).Assembly;
 		}
 
@@ -40,10 +47,31 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
             }
         }
 
-﻿		
+		
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneWebHookCallWhere(WhereDelegate<WebHookCallColumns> where)
+		{
+			Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookCall.SetOneWhere(where, Database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneWebHookCallWhere(WhereDelegate<WebHookCallColumns> where, out Bam.Net.CoreServices.WebHooks.Data.WebHookCall result)
+		{
+			Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookCall.SetOneWhere(where, out Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookCall daoResult, Database);
+			result = daoResult.CopyAs<Bam.Net.CoreServices.WebHooks.Data.WebHookCall>();
+		}
+
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -58,7 +86,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single WebHookCall instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a WebHookCallColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookCallColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookCallColumns and other values
 		/// </param>
@@ -71,7 +99,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.WebHooks.Data.WebHookCallColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.CoreServices.WebHooks.Data.WebHookCallColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.CoreServices.WebHooks.Data.WebHookCallColumns and other values
 		/// </param>
@@ -82,14 +110,14 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a WebHookCallColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookCallColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookCallColumns and other values
 		/// </param>
@@ -98,6 +126,11 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
             return Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookCall>(Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookCall.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.CoreServices.WebHooks.Data.WebHookCall> TopWebHookCallsWhere(int count, WhereDelegate<WebHookCallColumns> where, OrderBy<WebHookCallColumns> orderBy)
+        {
+            return Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookCall>(Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookCall.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of WebHookCalls
 		/// </summary>
@@ -109,7 +142,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a WebHookCallColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookCallColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookCallColumns and other values
 		/// </param>
@@ -132,10 +165,33 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
             {
 				batchProcessor(Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookCall>(batch));
             }, Database);
-        }﻿		
+        }
+
+		
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneWebHookDescriptorWhere(WhereDelegate<WebHookDescriptorColumns> where)
+		{
+			Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor.SetOneWhere(where, Database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneWebHookDescriptorWhere(WhereDelegate<WebHookDescriptorColumns> where, out Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor result)
+		{
+			Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor.SetOneWhere(where, out Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor daoResult, Database);
+			result = daoResult.CopyAs<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>();
+		}
+
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -150,7 +206,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single WebHookDescriptor instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a WebHookDescriptorColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookDescriptorColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookDescriptorColumns and other values
 		/// </param>
@@ -163,7 +219,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptorColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptorColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptorColumns and other values
 		/// </param>
@@ -174,14 +230,14 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a WebHookDescriptorColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookDescriptorColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookDescriptorColumns and other values
 		/// </param>
@@ -190,6 +246,11 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
             return Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>(Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor> TopWebHookDescriptorsWhere(int count, WhereDelegate<WebHookDescriptorColumns> where, OrderBy<WebHookDescriptorColumns> orderBy)
+        {
+            return Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>(Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookDescriptor.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of WebHookDescriptors
 		/// </summary>
@@ -201,7 +262,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a WebHookDescriptorColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookDescriptorColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookDescriptorColumns and other values
 		/// </param>
@@ -224,10 +285,33 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
             {
 				batchProcessor(Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookDescriptor>(batch));
             }, Database);
-        }﻿		
+        }
+
+		
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneWebHookSubscriberWhere(WhereDelegate<WebHookSubscriberColumns> where)
+		{
+			Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber.SetOneWhere(where, Database);
+		}
+
+		/// <summary>
+		/// Set one entry matching the specified filter.  If none exists 
+		/// one is created; success depends on the nullability
+		/// of the specified columns.
+		/// </summary>
+		public void SetOneWebHookSubscriberWhere(WhereDelegate<WebHookSubscriberColumns> where, out Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber result)
+		{
+			Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber.SetOneWhere(where, out Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber daoResult, Database);
+			result = daoResult.CopyAs<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber>();
+		}
+
 		/// <summary>
 		/// Get one entry matching the specified filter.  If none exists 
-		/// one will be created; success will depend on the nullability
+		/// one is created; success depends on the nullability
 		/// of the specified columns.
 		/// </summary>
 		/// <param name="where"></param>
@@ -242,7 +326,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// than one result is returned a MultipleEntriesFoundException is thrown.  This method is most commonly used to retrieve a
 		/// single WebHookSubscriber instance by its Id/Key value
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a WebHookSubscriberColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookSubscriberColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookSubscriberColumns and other values
 		/// </param>
@@ -255,7 +339,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the results. 
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriberColumns 
+		/// <param name="where">A WhereDelegate that receives a Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriberColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriberColumns and other values
 		/// </param>
@@ -266,14 +350,14 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		
 		/// <summary>
 		/// Execute a query and return the specified number
-		/// of values. This method will issue a sql TOP clause so only the 
+		/// of values. This method issues a sql TOP clause so only the 
 		/// specified number of values will be returned.
 		/// </summary>
 		/// <param name="count">The number of values to return.
 		/// This value is used in the sql query so no more than this 
 		/// number of values will be returned by the database.
 		/// </param>
-		/// <param name="where">A WhereDelegate that recieves a WebHookSubscriberColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookSubscriberColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookSubscriberColumns and other values
 		/// </param>
@@ -282,6 +366,11 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
             return Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber>(Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber.Top(count, where, Database));
         }
 
+        public IEnumerable<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber> TopWebHookSubscribersWhere(int count, WhereDelegate<WebHookSubscriberColumns> where, OrderBy<WebHookSubscriberColumns> orderBy)
+        {
+            return Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber>(Bam.Net.CoreServices.WebHooks.Data.Dao.WebHookSubscriber.Top(count, where, orderBy, Database));
+        }
+                                
 		/// <summary>
 		/// Return the count of WebHookSubscribers
 		/// </summary>
@@ -293,7 +382,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 		/// <summary>
 		/// Execute a query and return the number of results
 		/// </summary>
-		/// <param name="where">A WhereDelegate that recieves a WebHookSubscriberColumns 
+		/// <param name="where">A WhereDelegate that receives a WebHookSubscriberColumns 
 		/// and returns a IQueryFilter which is the result of any comparisons
 		/// between WebHookSubscriberColumns and other values
 		/// </param>
@@ -317,5 +406,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao.Repository
 				batchProcessor(Wrap<Bam.Net.CoreServices.WebHooks.Data.WebHookSubscriber>(batch));
             }, Database);
         }
+
+
 	}
 }																								

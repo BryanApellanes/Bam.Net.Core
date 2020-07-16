@@ -159,8 +159,8 @@ namespace Bam.Net.Data
 
         public static bool EqualTo(this SqlStringBuilder left, SqlStringBuilder right, Database db, HashAlgorithms hashAlgorithm = HashAlgorithms.MD5)
         {
-            string leftMd5 = left.ToInfoString(db).Hash(hashAlgorithm);
-            string rightMd5 = right.ToInfoString(db).Hash(hashAlgorithm);
+            string leftMd5 = left.ToInfoString(db).HashHexString(hashAlgorithm);
+            string rightMd5 = right.ToInfoString(db).HashHexString(hashAlgorithm);
             return leftMd5.Equals(rightMd5);
         }
 
@@ -181,7 +181,7 @@ namespace Bam.Net.Data
 
         public static string Hash(this SqlStringBuilder sql, Database db, HashAlgorithms hashAlgorithm = HashAlgorithms.MD5)
         {
-            return sql.ToInfoString(db).Hash(hashAlgorithm);
+            return sql.ToInfoString(db).HashHexString(hashAlgorithm);
         }
 
         public static string ToInfoString(this SqlStringBuilder sql, Database db)
@@ -207,7 +207,7 @@ namespace Bam.Net.Data
         public static string Hash(this DbParameter[] dbParameters, HashAlgorithms algorithm, Encoding encoding = null)
         {
             string infoString = ToInfoString(dbParameters, encoding);
-            return infoString.Hash(algorithm, encoding);
+            return infoString.HashHexString(algorithm, encoding);
         }
 
         public static string ToInfoString(this DbParameter[] dbParameters, Encoding encoding = null)
@@ -239,7 +239,7 @@ namespace Bam.Net.Data
 
         public static string Hash(this DbParameter dbParameter, HashAlgorithms algorithm, Encoding encoding = null)
         {
-            return $"{dbParameter.ParameterName}={dbParameter.Value.ToString()}".Hash(algorithm, encoding);
+            return $"{dbParameter.ParameterName}={dbParameter.Value.ToString()}".HashHexString(algorithm, encoding);
         }
 
         public static IEnumerable<DbParameter> ToDbParameters(this object dynamicDbParameters, Database db)

@@ -4,10 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Bam.Net.Logging;
-using GraphQL.Types;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.CodeAnalysis.Operations;
 
 namespace Bam.Net.CoreServices.AssemblyManagement
 {

@@ -24,18 +24,27 @@ namespace Bam.Net.Logging
 	[Serializable]
     public abstract class Loggable: ILoggable
     {
+        private static HashSet<Loggable> _allInstances = new HashSet<Loggable>();
         public Loggable()
         {
             this._subscribers = new HashSet<ILogger>();
-            this.LogVerbosity = LogEventType.Custom;
+            this.LogVerbosity = VerbosityLevel.Custom;
+            _allInstances.Add(this);
         }
+
+        public static void SetVerbosity(VerbosityLevel level)
+        {
+            _allInstances.Each(l=> l.LogVerbosity = level);
+        }
+        
+        public static IEnumerable<ILoggable> AllInstances => _allInstances.ToArray();
 
         /// <summary>
         /// A value from 0 - 5, represented by the LogEventType enum.
         /// The higher the value the more log entries will 
         /// be logged.
         /// </summary>
-        public LogEventType LogVerbosity { get; set; }
+        public VerbosityLevel LogVerbosity { get; set; }
 
         HashSet<ILogger> _subscribers;
         /// <summary>
@@ -62,6 +71,32 @@ namespace Bam.Net.Logging
             loggable.Subscribers.Each(Subscribe);
 		}
 
+        public virtual void Subscribe(VerbosityLevel levelToSubscribe, Action<Loggable, LoggableEventArgs> handler)
+        {
+            Type emittingType = this.GetType();
+            EventInfo[] eventInfos = emittingType.GetEvents();
+            eventInfos.Each(eventInfo =>
+            {
+                if (eventInfo.HasCustomAttributeOfType(out VerbosityAttribute verbosityAttribute))
+                {
+                    if (verbosityAttribute.Value == levelToSubscribe)
+                    {
+                        eventInfo.AddEventHandler(this, (EventHandler)((s, a) =>
+                        {
+                            handler(this, LoggableEventArgs.ForLoggable(this, verbosityAttribute));
+                        }));
+                    }
+                }
+            });
+        }
+        
+        [Exclude]
+        [DebuggerStepThrough]
+        public virtual void Subscribe(ILogger logger)
+        {
+            Subscribe(logger, LogVerbosity);
+        }
+        
         /// <summary>
         /// Subscribe the specified logger to
         /// all the events of the current type
@@ -75,22 +110,22 @@ namespace Bam.Net.Logging
         /// <param name="logger"></param>
         [Exclude]
         [DebuggerStepThrough]
-        public virtual void Subscribe(ILogger logger)
+        public virtual void Subscribe(ILogger logger, VerbosityLevel levelToSubscribe)
         {
             lock (_subscriberLock)
             {
                 if (logger != null && !IsSubscribed(logger))
                 {
                     _subscribers.Add(logger);
-                    Type currentType = this.GetType();
-                    EventInfo[] eventInfos = currentType.GetEvents();
+                    Type emittingType = this.GetType();
+                    EventInfo[] eventInfos = emittingType.GetEvents();
                     eventInfos.Each(eventInfo =>
                     {
                         bool shouldSubscribe = true;
                         VerbosityLevel logEventType = VerbosityLevel.Information;
                         if (eventInfo.HasCustomAttributeOfType(out VerbosityAttribute verbosity))
                         {
-                            shouldSubscribe = (int)verbosity.Value <= (int)LogVerbosity;
+                            shouldSubscribe = (int)verbosity.Value <= (int)levelToSubscribe;
                             logEventType = verbosity.Value;
                         }
 
@@ -119,7 +154,7 @@ namespace Bam.Net.Logging
                                         }
                                         else
                                         {
-                                            logger.AddEntry("Event {0} raised on type {1}::{2}", (int)logEventType, logEventType.ToString(), currentType.Name, eventInfo.Name);
+                                            logger.AddEntry("Event {0} raised on type {1}::{2}", (int)logEventType, logEventType.ToString(), emittingType.Name, eventInfo.Name);
                                         }
                                     }
                                 }));

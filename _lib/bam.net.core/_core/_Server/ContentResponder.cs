@@ -18,7 +18,7 @@ using Bam.Net.ServiceProxy.Secure;
 using Bam.Net.UserAccounts.Data;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
-using Bam.Net.Server.Meta;
+using Bam.Net.Server.PathHandlers;
 using Bam.Net.Data.Repositories;
 using Bam.Net.Configuration;
 using Bam.Net.Presentation;

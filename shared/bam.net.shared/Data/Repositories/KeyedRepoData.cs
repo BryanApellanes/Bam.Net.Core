@@ -22,10 +22,10 @@ namespace Bam.Net.Data.Repositories
 
                 return key;
             }
-            set { key = value; }
+            set => key = value;
         }
 
-        object _saveLock = new object();
+        readonly object _saveLock = new object();
         public T SaveByKey<T>(IRepository repository) where T : KeyedRepoData, new()
         {
             T result = default(T);

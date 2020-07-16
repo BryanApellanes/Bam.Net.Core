@@ -12,6 +12,6 @@ namespace Bam.Net.ServiceProxy.Secure
 {
     public class SecureSessionPagedQuery: PagedQuery<SecureSessionColumns, SecureSession>
     { 
-		public SecureSessionPagedQuery(SecureSessionColumns orderByColumn, SecureSessionQuery query, Database db = null) : base(orderByColumn, query, db) { }
+		public SecureSessionPagedQuery(SecureSessionColumns orderByColumn,SecureSessionQuery query, Database db = null) : base(orderByColumn, query, db) { }
     }
 }

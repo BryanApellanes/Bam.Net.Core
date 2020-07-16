@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices.Tests
         public void DiagnosticInfoShouldHaveSQLiteDatabase()
         {
             string name = 8.RandomLetters();
-            SQLiteDatabase db = new SQLiteDatabase(".\\{0}"._Format(MethodBase.GetCurrentMethod().Name), name);
+            SQLiteDatabase db = new SQLiteDatabase("./{0}"._Format(MethodBase.GetCurrentMethod().Name), name);
             DiagnosticService svc = new DiagnosticService(null);
             DiagnosticInfo info = svc.GetDiagnosticInfo();
             DatabaseInfo dbInfo = info.Databases.FirstOrDefault(dbi => dbi.ConnectionName.Equals(name));
@@ -51,6 +51,7 @@ namespace Bam.Net.CoreServices.Tests
         {
             string name = 8.RandomLetters();
             MySqlDatabase mySqlDatabase = new MySqlDatabase("chumsql2", "DaoRef", name);
+            Expect.IsNotNullOrEmpty(mySqlDatabase.ConnectionString, "Connection string was not set");
             DiagnosticService svc = new DiagnosticService(null);
             DiagnosticInfo info = svc.GetDiagnosticInfo();
             DatabaseInfo dbInfo = info.Databases.FirstOrDefault(dbi => dbi.ConnectionName.Equals(name));

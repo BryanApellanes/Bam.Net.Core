@@ -20,7 +20,6 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
 			}
 		}	
 
-				
         public WebHookCallColumns Id
         {
             get
@@ -91,6 +90,7 @@ namespace Bam.Net.CoreServices.WebHooks.Data.Dao
                 return new WebHookCallColumns("Created");
             }
         }
+
 
         public WebHookCallColumns WebHookDescriptorId
         {

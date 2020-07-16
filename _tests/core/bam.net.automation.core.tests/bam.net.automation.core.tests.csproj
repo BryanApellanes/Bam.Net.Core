@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Bam.Net.Automation.Core.Tests</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -37,39 +38,5 @@
     <ProjectReference Include="..\..\..\_tools\bake\bake.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_UnmanagedRegistrationCache Remove="obj\bam.net.automation.core.tests.csproj.UnmanagedRegistration.cache" />
-    <_UnmanagedRegistrationCache Remove="obj\bam.net.automation.core.tests.csproj.UnmanagedRegistration.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.csproj.ResolveComReference.cache" />
-    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.csproj.ResolveComReference.cache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.dll" />
-    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.pdb" />
-    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.dll" />
-    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.dll.manifest" />
-    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.dll.manifest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.application" />
-    <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.automation.core.tests.application" />
-  </ItemGroup>  
 
 </Project>

@@ -34,7 +34,6 @@ namespace Bam.Net.Application
                 OutLineFormat("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
                 Environment.Exit(1);
             });
-            ExecuteSwitches();
         }
 
         public static void AfterInitialize()
