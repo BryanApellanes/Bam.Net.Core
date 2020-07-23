@@ -10,3 +10,6 @@
 [submodule "_tools/bamapi"]
 	path = _tools/bamapi
 	url = git@github.com:BryanApellanes/bamapi.git
+[submodule "_tools/bake"]
+	path = _tools/bake
+	url = git@github.com:BryanApellanes/bake.git
