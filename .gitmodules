@@ -1,6 +1,6 @@
 [submodule "_tools.core/bamweb"]
 	path = _tools/bamweb
-	url = https://github.com/BryanApellanes/bamweb.git
+	url = git@github.com:BryanApellanes/bamweb.git
 [submodule ".bam/build"]
 	path = .bam/build
 	url = git@github.com:BryanApellanes/build.git

@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon>bam.ico</ApplicationIcon>
     <StartupObject>Bam.Net.Program</StartupObject>
     <PackageId>bam</PackageId>
@@ -270,5 +269,8 @@
     <ProjectReference Include="..\..\..\BamAppServices\_tools\bambot\bambot.csproj" />
     <ProjectReference Include="..\..\_lib\adhoc\adhoc.csproj" />
     <ProjectReference Include="..\..\_lib\bam.net.data.dynamic\bam.net.data.dynamic.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ConsoleMenu" />
   </ItemGroup>
 </Project>
