@@ -15,8 +15,8 @@ namespace Bam.Net.Application.Tests.UnitTests
         {
             RemoteSshHost sshRemoteHost = GetRemoteHost();
             string[] users = sshRemoteHost.ListUsers();
-            Expect.IsNotNull(users);
-            Expect.IsTrue(users.Length > 0);
+            users.IsNotNull();
+            (users.Length > 0).IsTrue();
             users.Each(user => Message.PrintLine(user, ConsoleColor.Cyan));
         }
 
@@ -27,11 +27,11 @@ namespace Bam.Net.Application.Tests.UnitTests
             RemoteSshHost sshRemoteHost = GetRemoteHost();
             string userNameToAdd = "Test_User_".RandomLetters(4);
             string[] existingUsers = sshRemoteHost.ListUsers();
-            Expect.IsNotNull(existingUsers);
+            existingUsers.IsNotNull();
             bool added = sshRemoteHost.AddUser(userNameToAdd, "test_password_".RandomLetters(12));
-            Expect.IsTrue(added);
+            added.IsTrue();
             string[] usersAfterAdd = sshRemoteHost.ListUsers();
-            Expect.IsNotNull(usersAfterAdd);
+            usersAfterAdd.IsNotNull();
             Expect.AreEqual(existingUsers.Length + 1, existingUsers.Length);
             sshRemoteHost.DeleteUser(userNameToAdd);
         }
