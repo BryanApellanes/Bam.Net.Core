@@ -140,9 +140,20 @@ namespace Bam.Net
         static IApplicationNameProvider _applicationNameProvider;
         public static IApplicationNameProvider ApplicationNameProvider
         {
-            get => _applicationNameProvider ?? (_applicationNameProvider = ProcessApplicationNameProvider.Current);
+            get => _applicationNameProvider ??= ProcessApplicationNameProvider.Current;
 
             set => _applicationNameProvider = value;
+        }
+
+        public static Dictionary<string, string> ReadFromProfile()
+        {
+            return ReadFromProfile(out FileInfo ignore);
+        }
+
+        public static Dictionary<string, string> ReadFromProfile(out FileInfo configFile)
+        {
+            configFile = GetBamProfileConfigFile();
+            return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
         
         public static Dictionary<string, string> Read()
@@ -152,7 +163,7 @@ namespace Bam.Net
 
         public static Dictionary<string, string> Read(out FileInfo configFile)
         {
-            configFile = GetFile();
+            configFile = GetBamHomeConfigFile();
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
 
@@ -163,7 +174,7 @@ namespace Bam.Net
         
         public static Dictionary<string, string> Read(string applicationName, out FileInfo configFile)
         {
-            configFile = GetFile(applicationName);
+            configFile = GetBamHomeConfigFile(applicationName);
             return configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
         }
 
@@ -185,7 +196,7 @@ namespace Bam.Net
                     BamEnvironmentVariables.SetBamVariable(key, appSettings[key]);
                 }
             }
-            FileInfo configFile = GetFile();
+            FileInfo configFile = GetBamHomeConfigFile();
             if (configFile.Exists)
             {
                 Dictionary<string, string> existing = configFile.FullName.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>();
@@ -200,7 +211,7 @@ namespace Bam.Net
         public static Config Set(IApplicationNameProvider applicationNameProvider)
         {
             Args.ThrowIfNull(applicationNameProvider, "applicationNameProvider");
-            FileInfo configFile = GetFile(applicationNameProvider);
+            FileInfo configFile = GetBamHomeConfigFile(applicationNameProvider);
             Config config = new Config
             {
                 AppSettings = configFile.FromYamlFile<Dictionary<string, string>>() ?? new Dictionary<string, string>()
@@ -218,7 +229,7 @@ namespace Bam.Net
         public static T Load<T>(IApplicationNameProvider applicationNameProvider = null) where T : class, new()
         {
             DirectoryInfo processDir = GetDirectory(applicationNameProvider);
-            string fileName = $"{typeof(T).Namespace}.{typeof(Type).Name}.config.yaml";
+            string fileName = $"{typeof(T).Namespace}.{typeof(T).Name}.config.yaml";
             FileInfo file = new FileInfo(Path.Combine(processDir.FullName, fileName));
             if (!file.Exists)
             {
@@ -245,8 +256,8 @@ namespace Bam.Net
         /// <returns></returns>
         public static DirectoryInfo GetDirectory(IApplicationNameProvider applicationNameProvider = null)
         {
-            DirectoryInfo configDir = GetFile().Directory;
-            applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            DirectoryInfo configDir = GetBamHomeConfigFile().Directory;
+            applicationNameProvider ??= ProcessApplicationNameProvider.Current;
             string typeConfigsFolderName = applicationNameProvider.GetApplicationName();
             if (string.IsNullOrEmpty(typeConfigsFolderName))
             {
@@ -256,15 +267,42 @@ namespace Bam.Net
             return new DirectoryInfo(Path.Combine(configDir.FullName, typeConfigsFolderName));
         }
         
-        public static FileInfo GetFile(IApplicationNameProvider applicationNameProvider = null)
+        public static FileInfo GetBamHomeConfigFile(IApplicationNameProvider applicationNameProvider = null)
         {
-            applicationNameProvider = applicationNameProvider ?? ProcessApplicationNameProvider.Current;
+            applicationNameProvider ??= ProcessApplicationNameProvider.Current;
             Log.Trace("Config using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
             string providedAppName = applicationNameProvider.GetApplicationName();
-            return GetFile(providedAppName);
+            return GetBamHomeConfigFile(providedAppName);
+        }
+        
+        /// <summary>
+        /// Get the config file for the specified application from the `.bam` directory of the process
+        /// owner's profile.
+        /// </summary>
+        /// <param name="applicationNameProvider"></param>
+        /// <returns></returns>
+        public static FileInfo GetBamProfileConfigFile(IApplicationNameProvider applicationNameProvider = null)
+        {
+            applicationNameProvider ??= ProcessApplicationNameProvider.Current;
+            Log.Trace("Config using applicationNameProvider of type ({0})", applicationNameProvider?.GetType().Name);
+            string providedAppName = applicationNameProvider.GetApplicationName();
+            return GetBamProfileConfigFile(providedAppName);
         }
 
-        public static FileInfo GetFile(string appName)
+        public static FileInfo GetBamProfileConfigFile(string appName)
+        {
+            string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
+            string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
+            string path = !appName.StartsWith("UNKNOWN")
+                ? Path.Combine(BamProfile.Config, appName, $"{appName}.appsettings.yaml")
+                : Path.Combine(BamProfile.Config, assemblyName, $"{assemblyName}.appsettings.yaml");
+            Log.Trace("config file path = {0}", path);
+            FileInfo configFile = EnsureFile(path);
+
+            return configFile;
+        }
+        
+        public static FileInfo GetBamHomeConfigFile(string appName)
         {
             string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
             string assemblyName = Path.GetFileNameWithoutExtension(assemblyFile);
@@ -272,6 +310,23 @@ namespace Bam.Net
                 ? Path.Combine(BamHome.Config, appName, $"{appName}.appsettings.yaml")
                 : Path.Combine(BamHome.Config, assemblyName, $"{assemblyName}.appsettings.yaml");
             Log.Trace("config file path = {0}", path);
+            FileInfo configFile = EnsureFile(path);
+
+            return configFile;
+        }
+        
+        /// <summary>
+        /// Get the name of the entry assembly without extension.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetHostServiceName()
+        {
+            string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
+            return Path.GetFileNameWithoutExtension(assemblyFile);
+        }
+        
+        private static FileInfo EnsureFile(string path)
+        {
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)
             {
@@ -284,16 +339,6 @@ namespace Bam.Net
             }
 
             return configFile;
-        }
-
-        /// <summary>
-        /// Get the name of the entry assembly without extension.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetHostServiceName()
-        {
-            string assemblyFile = Assembly.GetEntryAssembly().GetFileInfo().FullName;
-            return Path.GetFileNameWithoutExtension(assemblyFile);
         }
     }
 }
