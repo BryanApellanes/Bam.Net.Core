@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Bam.Net.Logging;
 using Bam.Net.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 using Bam.Net.Application;
 
 namespace Bam.Net.CommandLine
@@ -1050,7 +1051,11 @@ File Version: {1}
             {
                 object inst = invokeOn ?? AppDomain.CurrentDomain.GetData("Instance");
                 object[] parms = parameters ?? (object[])AppDomain.CurrentDomain.GetData("Parameters");
-                _methodToInvoke.Invoke(inst, parms);
+                object result = _methodToInvoke.Invoke(inst, parms);
+                if (result is Task task)
+                {
+                    task.Wait();
+                }
             }
         }
 
