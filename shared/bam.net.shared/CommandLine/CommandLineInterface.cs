@@ -622,7 +622,7 @@ namespace Bam.Net.CommandLine
                 {
                     _promptProvider = (message, promptTxt, colors, allowQuit) =>
                     {
-                        OutLine($"{message}{promptTxt}", colors);
+                        OutLine($"{message} {promptTxt}", colors);
                         Thread.Sleep(200);
                         string answer = Console.ReadLine();
 
