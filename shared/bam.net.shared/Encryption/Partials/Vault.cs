@@ -63,7 +63,7 @@ namespace Bam.Net.Encryption
         /// <returns></returns>
         public VaultKeyInfo ExportKey(Database db = null)
         {
-            db = db ?? Database;
+            db ??= Database;
             VaultKey key = VaultKeysByVaultId.FirstOrDefault();
             _vaultKey = null;
             _items = null;
@@ -88,6 +88,14 @@ namespace Bam.Net.Encryption
             ChildCollections.Clear();
         }
 
+        static Database _profileVaultDatabase;
+        static object _profileVaultDatabaseSync = new object();
+        public static Database ProfileVaultDatabase
+        {
+            get => _profileVaultDatabaseSync.DoubleCheckLock(ref _profileVaultDatabase, InitializeProfileVaultDatabase);
+            set => _profileVaultDatabase = value;
+        }
+        
         static Database _systemVaultDatabase;
         static object _systemVaultDatabaseSync = new object();
         public static Database SystemVaultDatabase
@@ -107,6 +115,12 @@ namespace Bam.Net.Encryption
         internal static Database InitializeSystemVaultDatabase()
         {            
             string path = Path.Combine(Paths.Data, $"System.vault.sqlite");
+            return InitializeVaultDatabase(path, Log.Default);
+        }
+        
+        internal static Database InitializeProfileVaultDatabase()
+        {            
+            string path = Path.Combine(BamProfile.Data, $"System.vault.sqlite");
             return InitializeVaultDatabase(path, Log.Default);
         }
 
@@ -135,6 +149,16 @@ namespace Bam.Net.Encryption
 
         protected internal static string Password => "287802b5ca734821";
 
+        static Vault _profileVault;
+        static object _profileVaultSync = new object();
+        public static Vault Profile
+        {
+            get
+            {
+                return _profileVaultSync.DoubleCheckLock(ref _profileVault, () => Retrieve(ProfileVaultDatabase, "Profile", Password));
+            }
+        }
+        
         static Vault _systemVault;
         static object _systemVaultSync = new object();
         public static Vault System
@@ -419,7 +443,7 @@ namespace Bam.Net.Encryption
         }
 
         private VaultKey _vaultKey;
-        public VaultKey VaultKey => _vaultKey ?? (_vaultKey = VaultKeysByVaultId.FirstOrDefault());
+        public VaultKey VaultKey => _vaultKey ??= VaultKeysByVaultId.FirstOrDefault();
 
         public string[] Keys
         {
@@ -506,6 +530,26 @@ namespace Bam.Net.Encryption
             }
         }
 
+        public bool Remove(string key)
+        {
+            lock (writeLock)
+            {
+                if (VaultKey == null)
+                {
+                    throw new VaultKeyNotSetException(this);
+                }
+                if (Decrypt())
+                {
+                    if (Items.ContainsKey(key))
+                    {
+                        return Items.Remove(key);
+                    }
+                }
+            }
+
+            return false;
+        }
+        
         public Vault Copy(FileInfo file)
         {
             return Copy(file, Name);
