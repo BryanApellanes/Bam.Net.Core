@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.CoreServices.Tests
 {
     [Serializable]
-    public class SmtpSettingsTests: CommandLineTestInterface
+    public class SmtpSettingsTests: CommandLineTool
     {
         [ConsoleAction]
         public void CreateEmailTest()

@@ -9,7 +9,7 @@ using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Data.Tests
 {
-    public class DtoTests : CommandLineTestInterface
+    public class DtoTests : CommandLineTool
     {
         [ConsoleAction("dtoInstanceFor", "get dto instance for dictionary")]
         [UnitTest]

@@ -28,7 +28,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class AssemblyServiceTests : CommandLineTestInterface
+    public class AssemblyServiceTests : CommandLineTool
     {
         [IntegrationTest]
         [ConsoleAction]

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Bam.Net.Application
 {
-    internal class ServiceTools : CommandLineTestInterface
+    internal class ServiceTools : CommandLineTool
     {
         public static T GetService<T>()
         {

@@ -23,7 +23,7 @@ using Bam.Net.Translation.MyMemory;
 namespace Bam.Net.Translation.Tests
 {
     [Serializable]
-    public class IntegrationTests : CommandLineTestInterface
+    public class IntegrationTests : CommandLineTool
     {
         [IntegrationTest]
         [ConsoleAction]

@@ -9,7 +9,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.Data.Tests
 {
-    public class DaoGeneratorTests : CommandLineTestInterface
+    public class DaoGeneratorTests : CommandLineTool
     {
         class TestRazorEngineDaoGenerator : DaoGenerator
         {

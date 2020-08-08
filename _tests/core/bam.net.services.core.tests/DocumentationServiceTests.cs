@@ -8,7 +8,7 @@ using Bam.Net.Testing;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class DocumentationServiceTests: CommandLineTestInterface
+    public class DocumentationServiceTests: CommandLineTool
     {
     }
 }

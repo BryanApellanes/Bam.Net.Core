@@ -6,7 +6,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Automation.Tests
 {
     [Serializable]
-    public class HtmlRenderingTests: CommandLineTestInterface
+    public class HtmlRenderingTests: CommandLineTool
     {
         [UnitTest]
         public void ShouldRenderDynamicObject()

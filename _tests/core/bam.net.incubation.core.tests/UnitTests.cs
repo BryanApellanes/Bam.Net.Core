@@ -12,7 +12,7 @@ using System.IO;
 namespace Bam.Net.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
 
         public class Primate

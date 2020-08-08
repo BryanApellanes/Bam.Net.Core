@@ -4,7 +4,7 @@ using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Data.Tests
 {
-    public class TestGroupTest: CommandLineTestInterface
+    public class TestGroupTest: CommandLineTool
     {
         [UnitTest]
         [TestGroup("TestTestGroup")]

@@ -6,7 +6,7 @@ using System;
 namespace Bam.Net.Tests
 {
     [Serializable]
-    public class AppModuleAttributeTests : CommandLineTestInterface
+    public class AppModuleAttributeTests : CommandLineTool
     {
         [Singleton]
         class TestClass { }

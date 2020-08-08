@@ -1,9 +1,10 @@
 using System;
+using Bam.Net;
 using Bam.Net.Testing;
 
 namespace Bam.Shell.Pack
 {
-    public abstract class PackageProvider: CommandLineTestInterface, IRegisterArguments
+    public abstract class PackageProvider: CommandLineTool, IRegisterArguments
     {
         public string[] RawArguments { get; private set; }
 

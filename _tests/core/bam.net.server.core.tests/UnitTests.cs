@@ -35,7 +35,7 @@ using UAParser;
 namespace Bam.Net.Server.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         static List<string> _directoriesToDelete = new List<string>();
         static UnitTests()

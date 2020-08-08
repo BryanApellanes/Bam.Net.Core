@@ -20,7 +20,7 @@ using NSubstitute;
 namespace Bam.Net.Presentation.Tests
 {
     [Serializable]
-    public class PathHandlerTests: CommandLineTestInterface
+    public class PathHandlerTests: CommandLineTool
     {
         [UnitTest]
         [TestGroup("RouteHandlers")]

@@ -19,7 +19,7 @@ namespace Bam.Net.Services.Tests
         }
     }
     [Serializable]
-    public partial class ValidationServiceTests : CommandLineTestInterface
+    public partial class ValidationServiceTests : CommandLineTool
     {
         [UnitTest]
         public void CanEvaluateValidationRule()

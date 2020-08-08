@@ -6,7 +6,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Tests
 {
     [Serializable]
-    public class ExtensionsUnitTests : CommandLineTestInterface
+    public class ExtensionsUnitTests : CommandLineTool
     {
         [UnitTest]
         public static void SmallestShouldReturnSmallest()

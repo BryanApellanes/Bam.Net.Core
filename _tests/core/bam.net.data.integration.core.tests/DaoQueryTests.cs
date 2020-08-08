@@ -22,7 +22,7 @@ using Bam.Net.Logging.Counters;
 namespace Bam.Net.Data.Tests.Integration
 {
 	[IntegrationTestContainer]
-	public class DaoQueryTests : CommandLineTestInterface
+	public class DaoQueryTests : CommandLineTool
 	{
 		static HashSet<Database> _testDatabases;
 		public DaoQueryTests()

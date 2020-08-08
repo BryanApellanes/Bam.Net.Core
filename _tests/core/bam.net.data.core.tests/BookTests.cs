@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Data.Tests
 {
     [Serializable]
-    public class BookTests : CommandLineTestInterface
+    public class BookTests : CommandLineTool
     {
         [UnitTest]
         public void BookPageCountTest()

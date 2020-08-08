@@ -11,7 +11,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Data.Repositories.Tests
 {
     [Serializable]
-    public class ActivityTests : CommandLineTestInterface
+    public class ActivityTests : CommandLineTool
     {
         [UnitTest]
         [TestGroup("Activity")]

@@ -21,7 +21,7 @@ namespace Bam.Shell
         }
     }
     
-    public class ArgZeroDelegator: CommandLineTestInterface
+    public class ArgZeroDelegator: CommandLineTool
     {   
         public static string[] CommandLineArguments { get; set; }
         

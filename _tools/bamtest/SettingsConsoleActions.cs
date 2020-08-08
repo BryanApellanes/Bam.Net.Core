@@ -3,7 +3,7 @@ using Bam.Net.CommandLine;
 
 namespace Bam.Net.Testing
 {
-    public class SettingsConsoleActions: CommandLineTestInterface
+    public class SettingsConsoleActions: CommandLineTool
     {
         [ConsoleAction("config", "Set a config value")]
         public void SetApplicationSetting()

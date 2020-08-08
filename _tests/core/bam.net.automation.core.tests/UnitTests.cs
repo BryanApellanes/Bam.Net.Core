@@ -17,7 +17,7 @@ using Bam.Net.Automation.Scripting;
 namespace Bam.Net.Automation.Tests
 {
     [Serializable]
-    public class UnitTests: CommandLineTestInterface
+    public class UnitTests: CommandLineTool
     {
         [UnitTest]
         [TestGroup("AdHoc")]

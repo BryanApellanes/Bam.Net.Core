@@ -17,7 +17,7 @@ using Bam.Net.Data;
 namespace Bam.Net.CoreServices.Tests
 {
     [Serializable]
-    public class WebHooksUnitTests : CommandLineTestInterface
+    public class WebHooksUnitTests : CommandLineTool
     {
         private static HashSet<Database> _databases = new HashSet<Database>();
         [UnitTest]

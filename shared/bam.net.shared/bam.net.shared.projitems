@@ -442,7 +442,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CodeAnalysis\NamespaceComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeAnalysis\PropertyComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeDomCompiler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CommandLineTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeployableCommandLineTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ArgumentInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ArgumentInfoHash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\CommandLineArgumentConfigurer.cs" />
@@ -885,6 +885,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Hosts\HostClientServiceRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Testing\CommandLineTestInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\UnitTestFailure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Try.cs" />
@@ -2472,7 +2473,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Testing\Because.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\BeforeEachUnitTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\BeforeUnitTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Testing\CommandLineTestInterface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Testing\CommandLineTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\ConsoleBecauseWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\Data\TestResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\FailedTest.cs" />

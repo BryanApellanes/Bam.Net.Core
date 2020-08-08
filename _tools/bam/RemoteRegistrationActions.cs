@@ -20,7 +20,7 @@ using Bam.Net.Testing.Integration;
 namespace Bam.Net.Application
 {
     [Serializable]
-    public class RemoteRegistrationActions: CommandLineTestInterface
+    public class RemoteRegistrationActions: CommandLineTool
     {
         static CoreClient _client;
         static UserInfo _userInfo;

@@ -19,7 +19,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Server.Tests
 {
     [Serializable]
-    public class JsonRpcResponderTests : CommandLineTestInterface
+    public class JsonRpcResponderTests : CommandLineTool
     {
         [UnitTest]
         public void ParseJArrayTest()

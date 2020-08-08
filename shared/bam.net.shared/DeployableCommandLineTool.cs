@@ -8,9 +8,9 @@ using Bam.Net.Web;
 
 namespace Bam.Net
 {
-    public class CommandLineTool : CommandLineTestInterface
+    public class DeployableCommandLineTool : CommandLineTool
     {
-        public CommandLineTool()
+        public DeployableCommandLineTool()
         {
             AddValidArgument("toolName", "Install: The name of the tool to install");
         }
@@ -60,7 +60,7 @@ namespace Bam.Net
         string toolName = null;
         protected virtual string GetToolName()
         {
-            return toolName ?? (toolName = GetArgument("toolName", "Enter the name of the tool to install"));
+            return toolName ??= GetArgument("toolName", "Enter the name of the tool to install");
         }
 
         protected virtual string GetCurrentToolName()

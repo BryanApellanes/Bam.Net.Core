@@ -16,7 +16,7 @@ using Bam.Net.Logging;
 namespace Bam.Net.Testing.Integration
 {
     // TODO: Refactor this to follow the same pattern as unit and spec tests
-	public class IntegrationTestRunner: CommandLineTestInterface
+	public class IntegrationTestRunner: CommandLineTool
 	{
         /// <summary>
         /// Event that fires when a test fails.

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Application
 {
     [Serializable]
-    public class LocalEmailActions : CommandLineTestInterface
+    public class LocalEmailActions : CommandLineTool
     {
         /// <summary>
         /// Sets the local SMTP settings.

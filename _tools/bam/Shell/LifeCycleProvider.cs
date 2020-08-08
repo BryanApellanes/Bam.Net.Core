@@ -23,7 +23,7 @@ using Bam.Net.Data.Repositories;
 namespace Bam.Shell
 {
     [Serializable]
-    public class LifeCycleProvider : CommandLineTestInterface
+    public class LifeCycleProvider : CommandLineTool
     {   
         [ArgZero("config", "Write the default config file backing up the current file if it exists")]
         public void Config()

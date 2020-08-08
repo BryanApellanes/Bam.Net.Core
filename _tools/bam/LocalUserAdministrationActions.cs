@@ -23,9 +23,9 @@ namespace Bam.Net.Application
     /// <summary>
     /// User administrative actions
     /// </summary>
-    /// <seealso cref="Bam.Net.Testing.CommandLineTestInterface" />
+    /// <seealso cref="CommandLineTool" />
     [Serializable]
-    public class LocalUserAdministrationActions : CommandLineTestInterface
+    public class LocalUserAdministrationActions : CommandLineTool
     {
         /// <summary>
         /// Adds the user to role.

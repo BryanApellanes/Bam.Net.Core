@@ -33,7 +33,7 @@ using UserCollection = Bam.Net.UserAccounts.Data.UserCollection;
 namespace Bam.Net.CoreServices.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         interface ITestInterface
         {

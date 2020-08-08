@@ -9,7 +9,7 @@ using System.Text;
 namespace Bam.Net.Profiguration.Tests
 {
     [Serializable]
-    public class UnitTests: CommandLineTestInterface
+    public class UnitTests: CommandLineTool
     {
         [UnitTest]
         public void ShouldBeAbleToUseProfigurationSetToNameProfigurations()

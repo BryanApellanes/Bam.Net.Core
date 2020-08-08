@@ -7,7 +7,7 @@ using Bam.Remote.Deployment;
 
 namespace Bam.Net.Application.Tests.UnitTests
 {
-    public class RemoteHostTests: CommandLineTestInterface
+    public class RemoteHostTests: CommandLineTool
     {
         [ConsoleAction]
         [IntegrationTest]

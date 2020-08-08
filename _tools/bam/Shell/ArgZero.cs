@@ -15,7 +15,7 @@ namespace Bam.Shell
     /// processing of arguments without a prefix and to route execution to a method specified on
     /// the command line.
     /// </summary>
-    public class ArgZero : CommandLineTestInterface
+    public class ArgZero : CommandLineTool
     {
         static readonly object _targetsLock = new object();
         static Dictionary<string, MethodInfo> _targets; 

@@ -9,7 +9,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Distributed.Tests
 {
     [Serializable]
-	public class DistributedUnitTests: CommandLineTestInterface
+	public class DistributedUnitTests: CommandLineTool
 	{
 		class TestRing : Ring
 		{

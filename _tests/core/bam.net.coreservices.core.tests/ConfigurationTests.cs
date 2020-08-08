@@ -25,7 +25,7 @@ namespace Bam.Net.CoreServices.Tests
     using Bam.Net.CoreServices.Configuration;
 
     [Serializable]
-    public class ConfigurationTests : CommandLineTestInterface
+    public class ConfigurationTests : CommandLineTool
     {
         [UnitTest("Config: can set and get app config")]
         public void CanSetAndGetCommonAppConfig()

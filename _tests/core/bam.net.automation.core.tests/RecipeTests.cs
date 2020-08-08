@@ -6,7 +6,7 @@ using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Automation.Tests
 {
-    public class RecipeTests : CommandLineTestInterface
+    public class RecipeTests : CommandLineTool
     {
         [UnitTest]
         [TestGroup("Recipe")]

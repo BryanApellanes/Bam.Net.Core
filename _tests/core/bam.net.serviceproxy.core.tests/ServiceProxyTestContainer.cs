@@ -29,7 +29,7 @@ using Type = System.Type;
 namespace Bam.Net.ServiceProxy.Tests
 {
     [Serializable]
-    public partial class ServiceProxyTestContainer : CommandLineTestInterface
+    public partial class ServiceProxyTestContainer : CommandLineTool
     {
         public static void PreInit()
         {

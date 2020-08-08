@@ -17,7 +17,7 @@ namespace Bam.Net.Application
     /// Used to execute 
     /// </summary>
     [Serializable]
-    public class ExternalProvider: CommandLineTestInterface
+    public class ExternalProvider: CommandLineTool
     {
         [ArgZero("menu")]
         public void Menu()

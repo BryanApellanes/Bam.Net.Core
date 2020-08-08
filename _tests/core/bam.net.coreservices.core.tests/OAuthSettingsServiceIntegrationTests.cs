@@ -8,7 +8,7 @@ using System;
 namespace Bam.Net.Tests
 {
     [Serializable]
-    class OAuthSettingsServiceIntegrationTests : CommandLineTestInterface
+    class OAuthSettingsServiceIntegrationTests : CommandLineTool
     {
         [ConsoleAction]
         [IntegrationTest]

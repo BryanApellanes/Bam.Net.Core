@@ -9,7 +9,7 @@ using Newtonsoft.Json.Schema;
 namespace Bam.Net.Application.Json
 {
     [Serializable]
-    public class ConsoleActions: CommandLineTestInterface
+    public class ConsoleActions: CommandLineTool
     {
         [ConsoleAction]
         public void LoadSchemaTest()

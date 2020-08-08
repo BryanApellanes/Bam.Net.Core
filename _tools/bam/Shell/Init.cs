@@ -12,7 +12,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Shell
 {
-    public class Init : CommandLineTestInterface
+    public class Init : CommandLineTool
     {
         private static Dictionary<AppKind, Action> _initActions;
         static Init()

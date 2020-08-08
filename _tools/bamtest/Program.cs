@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Bam.Net.Testing
 {
     [Serializable]
-    public partial class Program : CommandLineTestInterface
+    public partial class Program : CommandLineTool
     {
         private const string _exitOnFailure = "exitOnFailure";
         private const string _programName = "bamtestrunner";

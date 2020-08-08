@@ -24,7 +24,7 @@ using Bam.Net.Services.OpenApi;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class ServiceRegistryServiceTests: CommandLineTestInterface
+    public class ServiceRegistryServiceTests: CommandLineTool
     {
         public class TestProxy
         {
