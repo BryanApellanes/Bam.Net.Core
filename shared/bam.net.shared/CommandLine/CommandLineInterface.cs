@@ -875,6 +875,7 @@ File Version: {1}
             OutProvider();
         }
 
+        [Obsolete("Use Message.PrintLine instead")]
         public static void OutLineFormat(string message, params object[] formatArgs)
         {
             OutLine(string.Format(message, formatArgs));
