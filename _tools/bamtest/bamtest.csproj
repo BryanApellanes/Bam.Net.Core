@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Bam.Net.Application</RootNamespace>
     <PackageId>bamtest</PackageId>
-    <Version>1.0.5-test+60914af</Version>
+    <Version>1.0.5-test+5211c04</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

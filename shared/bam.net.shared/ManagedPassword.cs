@@ -3,6 +3,9 @@ using Bam.Net.Encryption;
 
 namespace Bam.Net
 {
+    /// <summary>
+    /// A password saved in a Vault in the process owner's profile, see Vault.Profile .
+    /// </summary>
     public class ManagedPassword
     {
         public ManagedPassword()
@@ -16,6 +19,11 @@ namespace Bam.Net
             _value = value;
         }
 
+        /// <summary>
+        /// Load the ManagedPassword with the specified name from Vault.Profile.
+        /// </summary>
+        /// <param name="nameInVault"></param>
+        /// <returns></returns>
         public static ManagedPassword Load(string nameInVault)
         {
             return new ManagedPassword(Vault.Profile[nameInVault])
