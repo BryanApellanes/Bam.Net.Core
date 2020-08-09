@@ -38,10 +38,10 @@ _setup_git ( ) {
 }
 
 _switch_to_branch() {
-    echo "BRANCH value: ${COMMIT_TO_BRANCH}";
+    echo "BRANCH value: ${COMMIT_TO_BRANCH}-${GITCOMMIT}";
 
     # Switch to branch from current Workflow run
-    git checkout -b ${COMMIT_TO_BRANCH}
+    git checkout -b ${COMMIT_TO_BRANCH}-${GITCOMMIT}
 }
 
 _add_files() {
@@ -59,7 +59,7 @@ _push_to_github() {
     then
         git push origin
     else
-        git push --set-upstream origin "HEAD:${COMMIT_TO_BRANCH}"
+        git push --set-upstream origin "HEAD:${COMMIT_TO_BRANCH}-${GITCOMMIT}"
     fi
 }
 
