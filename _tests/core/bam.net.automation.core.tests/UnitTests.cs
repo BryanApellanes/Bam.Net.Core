@@ -13,6 +13,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Automation.Scripting;
+using Bam.Net.CommandLine;
 
 namespace Bam.Net.Automation.Tests
 {
@@ -92,7 +93,7 @@ namespace Bam.Net.Automation.Tests
         public void ReadXmlDocs()
         {
             doc doc = new FileInfo("./TestDoc.xml").FromXmlFile<doc>();
-            OutLineFormat("Assembly Name: {0}", doc.assembly.name);
+            Message.PrintLine("Assembly Name: {0}", doc.assembly.name);
             if (doc.members == null)
             {
                 OutLine("doc.members == null", ConsoleColor.Cyan);
@@ -103,21 +104,21 @@ namespace Bam.Net.Automation.Tests
             }
             else
             {                
-                OutLineFormat("Iterating on {0}", ConsoleColor.Cyan, "doc.members.Items");
+                Message.PrintLine("Iterating on {0}", ConsoleColor.Cyan, "doc.members.Items");
                 doc.members.Items.Each(member =>
                 {
-					OutLineFormat("member.name={0}", ConsoleColor.Yellow, member.name);
+                    Message.PrintLine("member.name={0}", ConsoleColor.Yellow, member.name);
                     if (member.Items == null)
                     {
-						OutLineFormat("member.Items == null");
+                        Message.PrintLine("member.Items == null");
                     }
                     else
                     {
-						OutLineFormat("Iterating on {0}", ConsoleColor.Cyan, "member.Items");
+                        Message.PrintLine("Iterating on {0}", ConsoleColor.Cyan, "member.Items");
                         member.Items.Each(item =>
                         {
                             Type itemType = item.GetType();
-                            OutLineFormat("\tItem type = {0}", ConsoleColor.Yellow, itemType.FullName);
+                            Message.PrintLine("\tItem type = {0}", ConsoleColor.Yellow, itemType.FullName);
                             summary summary = item as summary;
                             if (summary != null)
                             {

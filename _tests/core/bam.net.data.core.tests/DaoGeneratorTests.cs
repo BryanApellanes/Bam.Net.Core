@@ -4,6 +4,7 @@
 
 using System;
 using System.CodeDom.Compiler;
+using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
 using Bam.Net.Testing;
 
@@ -20,8 +21,8 @@ namespace Bam.Net.Data.Tests
         {
             foreach (CompilerError error in results.Errors)
             {
-                OutLineFormat("File=>{0}", ConsoleColor.Yellow, error.FileName);
-                OutLineFormat("{0}, {1}::{2}", error.Line, error.Column, error.ErrorText);
+                Message.PrintLine("File=>{0}", ConsoleColor.Yellow, error.FileName);
+                Message.PrintLine("{0}, {1}::{2}", error.Line, error.Column, error.ErrorText);
             }
         }
 
