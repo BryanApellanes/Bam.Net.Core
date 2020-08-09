@@ -17,6 +17,7 @@ jobs:
       COMMIT_TO_BRANCH: "bam-net-core-test"
       GIT_COMMIT_MESSAGE: "commited by github action"
       GIT_COMMIT_AUTHOR: ${{ secrets.CI_EMAIL }}
+      GIT_ADD_FILE_PATTERN: "."
     steps:
     - uses: actions/checkout@v2
       with:

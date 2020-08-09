@@ -45,7 +45,7 @@ _switch_to_branch() {
 }
 
 _add_files() {
-    echo "INPUT_FILE_PATTERN: ${GIT_ADD_FILE_PATTERN}"
+    echo "GIT_ADD_FILE_PATTERN: ${GIT_ADD_FILE_PATTERN}"
     git add "${GIT_ADD_FILE_PATTERN}"
 }
 
