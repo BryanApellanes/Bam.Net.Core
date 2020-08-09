@@ -12,6 +12,11 @@ jobs:
 
     env:
       DIST: /tmp/bam
+      CI_USERNAME: ${{ secrets.CI_USERNAME }}
+      CI_EMAIL: ${{ secrets.CI_EMAIL }}
+      COMMIT_TO_BRANCH: "bam-net-core-test"
+      GIT_COMMIT_MESSAGE: "commited by github action"
+      GIT_COMMIT_AUTHOR: ${{ secrets.CI_EMAIL }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -29,3 +34,5 @@ jobs:
       with:
         name: BamToolkit-Tests
         path: /tmp/bam/tests/
+    - name: CommitToTestBranch
+      run: ./push-test.sh
