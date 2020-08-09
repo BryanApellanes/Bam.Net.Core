@@ -64,9 +64,11 @@ _push_to_github() {
 }
 
 RUNTIME="" # set by rintime.sh
+GITCOMMIT="" # set by set_git_commit
 
 cd .bam/build/tools
 source ../common/env/runtime.sh
 source ../common/init.sh
+set_git_commit
 cd -
 _main

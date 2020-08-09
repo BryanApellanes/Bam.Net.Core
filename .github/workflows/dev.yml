@@ -12,11 +12,11 @@ jobs:
 
     env:
       DIST: /tmp/bam
-      CI_USERNAME: ${{ secrets.CI_USERNAME }}
-      CI_EMAIL: ${{ secrets.CI_EMAIL }}
+      CI_USERNAME: "ci"
+      CI_EMAIL: "ci@threeheadz.com"
       COMMIT_TO_BRANCH: "bam-net-core-test"
       GIT_COMMIT_MESSAGE: "commited by github action (bam-net-core-dev)"
-      GIT_COMMIT_AUTHOR: ${{ secrets.CI_EMAIL }}
+      GIT_COMMIT_AUTHOR: "ci <ci@threeheadz.com>"
       GIT_ADD_FILE_PATTERN: "."
       GIT_COMMIT_OPTIONS: ""
     steps:
