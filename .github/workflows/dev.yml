@@ -24,7 +24,7 @@ jobs:
         submodules: true
     - name: Build
       run: ./build.sh
-    - name: Upload Artifacts
+    - name: Upload BamToolkit
       uses: actions/upload-artifact@v1
       with:
         name: BamToolkit
@@ -34,5 +34,5 @@ jobs:
       with:
         name: BamToolkit-Tests
         path: /tmp/bam/tests/
-    - name: CommitToTestBranch
+    - name: Commit Test Branch
       run: ./push-test.sh

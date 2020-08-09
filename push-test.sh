@@ -63,4 +63,11 @@ _push_to_github() {
     fi
 }
 
+RUNTIME="" # set by rintime.sh
+
+cd .bam/build/tools
+
+source ../common/env/runtime.sh
+source ../common/init.sh
+cd -
 _main

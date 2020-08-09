@@ -1075,6 +1075,7 @@ File Version: {1}
         {
             return (T)AppDomain.CurrentDomain.GetData("State");
         }
+        
         [DebuggerStepThrough]
         protected internal static void InvokeSelection(List<ConsoleMethod> actions, string answer, string header, string footer, out int selectedNumber)
         {
@@ -1091,7 +1092,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// If true will cause all calls to InvokeSelection to be 
+        /// If true, causes all calls to InvokeSelection to  
         /// run in a separate AppDomain.  This is primarily for 
         /// UnitTest isolation.
         /// </summary>
@@ -1122,7 +1123,9 @@ File Version: {1}
                 {
                     ConstructorInfo ctor = method.DeclaringType.GetConstructor(Type.EmptyTypes);
                     if (ctor == null)
+                    {
                         ExceptionHelper.Throw<InvalidOperationException>("Specified non-static method is declared on a type that has no parameterless constructor. {0}.{1}", method.DeclaringType.Name, method.Name);
+                    }
 
                     action.Provider = ctor.Invoke(null);
                 }
@@ -1278,8 +1281,7 @@ File Version: {1}
             MethodInfo[] methods = type.GetMethods();
             foreach (MethodInfo method in methods)
             {
-                ConsoleActionAttribute action = null;
-                if (method.HasCustomAttributeOfType<ConsoleActionAttribute>(out action))
+                if (method.HasCustomAttributeOfType<ConsoleActionAttribute>(out ConsoleActionAttribute action))
                 {
                     if (!string.IsNullOrEmpty(action.CommandLineSwitch))
                     {
