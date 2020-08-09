@@ -41,7 +41,7 @@ _switch_to_branch() {
     echo "BRANCH value: ${COMMIT_TO_BRANCH}";
 
     # Switch to branch from current Workflow run
-    git checkout ${COMMIT_TO_BRANCH}
+    git checkout -b ${COMMIT_TO_BRANCH}
 }
 
 _add_files() {
