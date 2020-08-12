@@ -14,7 +14,7 @@ using Bam.Shell;
 namespace Bam.Net.Application
 {
     /// <summary>
-    /// Used to execute 
+    /// Used to display ConsoleActions from a given assembly.
     /// </summary>
     [Serializable]
     public class ExternalProvider: CommandLineTool

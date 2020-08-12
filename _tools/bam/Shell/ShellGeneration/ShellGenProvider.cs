@@ -51,7 +51,7 @@ namespace Bam.Shell.ShellGeneration
             }
             catch (Exception ex)
             {
-                OutLineFormat("{0}", ConsoleColor.DarkRed, ex.Message);
+                Bam.Net.CommandLine.Message.PrintLine("{0}", ConsoleColor.DarkRed, ex.Message);
                 error(ex.Message);
                 Exit(1);
             }
