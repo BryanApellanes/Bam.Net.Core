@@ -23,7 +23,7 @@ namespace Bam.Net.Server.Streaming
 
     public class StreamingClient: Loggable
     {
-        TcpClient _client;
+        readonly TcpClient _client;
         public StreamingClient(string hostName, int port)
         {
             HostName = hostName;

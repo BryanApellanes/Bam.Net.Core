@@ -52,7 +52,7 @@ namespace Bam.Net.CommandLine
 
         public static string PasswordPrompt(ConsoleColorCombo colors, string promptMessage = null)
         {
-            promptMessage = promptMessage ?? "Please enter your password ";
+            promptMessage ??= "Please enter your password ";
             string pass = string.Empty;
             Out($"{promptMessage} >>", colors);
             ConsoleKeyInfo keyInfo;
@@ -125,7 +125,7 @@ namespace Bam.Net.CommandLine
         {
             return Arguments.Contains(name) ? Arguments[name] : ifNotSpecified;
         }
-        
+
         /// <summary>
         /// Get the value specified for the argument with the 
         /// specified name either from the command line or
@@ -134,25 +134,11 @@ namespace Bam.Net.CommandLine
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="promptMessage">The prompt message.</param>
-        /// <returns></returns>
-        public static string GetArgument(string name, string promptMessage = null)
-        {
-            return GetArgument(name, promptMessage, null);
-        }
-
-        /// <summary>
-        /// Get the value specified for the argument with the 
-        /// specified name either from the command line or
-        /// from the default configuration file or prompt for
-        /// it if the value was not found.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="promptMessage"></param>
         /// <param name="prompter"></param>
         /// <returns></returns>
         public static string GetArgument(string name, string promptMessage = null, Func<string, string> prompter = null)
         {
-            prompter = prompter ?? ((p) => Prompt(p ?? $"Please enter a value for {name}"));
+            prompter ??= ((p) => Prompt(p ?? $"Please enter a value for {name}"));
             string acronym = name.CaseAcronym().ToLowerInvariant();
             string fromConfig = DefaultConfiguration.GetAppSetting(name, "").Or(DefaultConfiguration.GetAppSetting(acronym, ""));
             return Arguments.Contains(name) ? Arguments[name] :

@@ -71,17 +71,15 @@ namespace Bam.Net.Server.Streaming
         public string Name { get; set; }
 
         Encoding _encoding;
-        object _encodingLock = new object();
-        public Encoding Encoding
+        readonly object _encodingLock = new object();
+
+        protected Encoding Encoding
         {
             get
             {
                 return _encodingLock.DoubleCheckLock(ref _encoding, () => Encoding.UTF8);
             }
-            set
-            {
-                _encoding = value;
-            }
+            set => _encoding = value;
         }
 
         public string LastExceptionMessage

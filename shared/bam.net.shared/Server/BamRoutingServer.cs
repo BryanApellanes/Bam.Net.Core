@@ -9,8 +9,7 @@ namespace Bam.Net.Server
         public BamRoutingServer(BamConf conf) : base(conf)
         {
         }
-        
-        
+
         public Dictionary<string, AppRouteHandlerManager> ReloadAppRouteHandlerManagers()
         {
             _appRouteHandlerManagers = null;

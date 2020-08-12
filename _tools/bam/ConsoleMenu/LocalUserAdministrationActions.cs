@@ -56,7 +56,7 @@ namespace Bam.Net.Application
             {
                 user.Roles.Add(daoRole);
                 user.Save(userDatabase);
-                OutLineFormat("User ({0}) added to role ({1})", user.UserName, daoRole.Name);
+                Message.PrintLine("User ({0}) added to role ({1})", user.UserName, daoRole.Name);
             }
             else
             {
