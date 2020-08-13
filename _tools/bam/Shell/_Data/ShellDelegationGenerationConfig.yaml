@@ -1,5 +1,0 @@
-SchemaName: ShellDelegation
-WriteSourceTo: C:\bam\src\_gen\ShellDelegation
-TypeAssembly: C:\bam\toolkit\bam.dll # the assembly containing types to generate data access objects for
-FromNameSpace: Bam.Net.Shell.Data # the namespace containing types to generate data access objects for
-ToNameSpace: Bam.Net.Shell.Data.Dao # the namespace to write generated data access objects into
