@@ -9,9 +9,9 @@ namespace Bam.Net
             return To<T>(func, exceptionHandler);
         }
         
-        public static T To<T>(Func<T> func, Action<Exception> exceptionHandler = null)
+        public static T To<T>(Func<T> executeThis, Action<Exception> exceptionHandler = null)
         {
-            return Exec.Try(func, exceptionHandler);
+            return Exec.Try(executeThis, exceptionHandler);
         }
         
         public static void Execute(Action action, Action<Exception> exceptionHandler = null)
@@ -19,9 +19,9 @@ namespace Bam.Net
             To(action, exceptionHandler);
         }
         
-        public static void To(Action action, Action<Exception> exceptionHandler = null)
+        public static void To(Action executeThis, Action<Exception> exceptionHandler = null)
         {
-            Exec.Try(action, exceptionHandler);
+            Exec.Try(executeThis, exceptionHandler);
         }
     }
 }
