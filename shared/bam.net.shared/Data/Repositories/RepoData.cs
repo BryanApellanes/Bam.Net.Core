@@ -39,7 +39,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _created;
             }
-            set { _created = value; }
+            set => _created = value;
         }
         
         string _uuid;
@@ -80,10 +80,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _cuid;
             }
-            set
-            {
-                _cuid = value;
-            }
+            set => _cuid = value;
         }
 
         /// <summary>

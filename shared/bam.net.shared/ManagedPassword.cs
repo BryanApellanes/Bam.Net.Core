@@ -31,6 +31,12 @@ namespace Bam.Net
                 NameInVault = nameInVault
             };
         }
+
+        public static ManagedPassword Save(string nameInVault, string value)
+        {
+            Vault.Profile[nameInVault] = value;
+            return Load(nameInVault);
+        }
         
         private string _nameInVault;
 
@@ -42,7 +48,10 @@ namespace Bam.Net
             get => _nameInVault;
             set
             {
-                Vault.Profile.Remove(_nameInVault);
+                if (!string.IsNullOrEmpty(_nameInVault))
+                {
+                    Vault.Profile.Remove(_nameInVault);
+                }
                 _nameInVault = value;
                 Save();
             }

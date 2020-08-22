@@ -937,7 +937,7 @@ namespace Bam.Net.Data
 			{
 				ex = e;
 				result = EnsureSchemaStatus.Error;
-				logger = logger ?? Log.Default;
+				logger ??= Log.Default;
 				logger.AddEntry("Non fatal error occurred trying to write schema for type {0}: {1}", LogEventType.Warning, ex, type.Name, ex.Message);
 			}
 			return result;

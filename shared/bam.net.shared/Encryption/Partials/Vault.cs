@@ -302,6 +302,7 @@ namespace Bam.Net.Encryption
         /// <returns></returns>
         public static Vault Retrieve(Database database, string vaultName, string password = null)
         {
+            database.TryEnsureSchema<Vault>();
             Vault result = Vault.OneWhere(c => c.Name == vaultName, database);
             if (result == null && !string.IsNullOrEmpty(password))
             {
@@ -512,16 +513,17 @@ namespace Bam.Net.Encryption
                     }
                     if (Decrypt())
                     {
+                        string val = value ?? "null";
                         if (Items.ContainsKey(key))
                         {
-                            Items[key].Value = value;
+                            Items[key].Value = val;
                         }
                         else
                         {
                             VaultItem item = VaultItemsByVaultId.AddChild();
                             string password = VaultKey.PrivateKeyDecrypt(VaultKey.Password);
                             item.Key = key.AesPasswordEncrypt(password);
-                            item.Value = value.AesPasswordEncrypt(password);
+                            item.Value = val.AesPasswordEncrypt(password);
                             item.Save();
                             Items[key] = new DecryptedVaultItem(item, VaultKey);
                         }

@@ -20,10 +20,7 @@ namespace Bam.Net.Data
         public RawFormat(string sql, params ParameterInfo[] parameters)
         {
             Sql = sql;
-            parameters.Each(pi=>
-            {
-                AddParameter(pi);
-            });
+            parameters.Each(AddParameter);
         }
         public string Sql { get; set; }
         public override string Parse()

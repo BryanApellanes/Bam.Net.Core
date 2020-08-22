@@ -3152,8 +3152,6 @@
     <Content Include="$(MSBuildThisFileDirectory)ServiceProxy\Js\FileExt.js" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\README.md" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\GenerationConfig.yaml" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\regen_dao_repo.sh" />
     <Content Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Translation\Translation.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)UserAccounts\UserAccounts.db.js" />
