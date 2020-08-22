@@ -16,7 +16,7 @@ using GraphQL.Language.AST;
 namespace Bam.Net.Application
 {
     [Serializable]
-    public class BamDbConsoleActions : CommandLineTestInterface
+    public class BamDbConsoleActions : CommandLineTool
     {
         [ConsoleAction("regenerate", "Regenerate all dao code by recursively searching for DaoRepoGenerationConfig.yaml files and processing each.")]
         public static void RegenerateAllDaoCode()

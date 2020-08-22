@@ -325,7 +325,7 @@ namespace Bam.Net
             return Path.GetFileNameWithoutExtension(assemblyFile);
         }
         
-        private static FileInfo EnsureFile(string path)
+        protected static FileInfo EnsureFile(string path)
         {
             FileInfo configFile = new FileInfo(path);
             if (!configFile.Exists)

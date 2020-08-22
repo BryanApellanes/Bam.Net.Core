@@ -4,7 +4,7 @@ using Bam.Net.Testing;
 namespace Bam.Net.Analytics.Tests
 {
     [Serializable]
-    class Program : CommandLineTestInterface
+    class Program : CommandLineTool
     {
         static void Main(string[] args)
         {

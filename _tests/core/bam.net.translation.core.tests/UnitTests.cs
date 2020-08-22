@@ -10,7 +10,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Translation.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         [UnitTest]
         public void DefaultTranslationDatabaseHasLanguages()

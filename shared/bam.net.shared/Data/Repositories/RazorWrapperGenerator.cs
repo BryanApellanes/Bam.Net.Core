@@ -11,7 +11,7 @@ namespace Bam.Net.Data.Repositories
         public RazorWrapperGenerator(string wrapperNamespace, string daoNamespace, TypeSchema typeSchema = null) : base(wrapperNamespace, daoNamespace, typeSchema)
         { }
 
-        object _generateLock = new object();
+        readonly object _generateLock = new object();
         public override GeneratedAssemblyInfo GenerateAssembly()
         {
             lock (_generateLock)

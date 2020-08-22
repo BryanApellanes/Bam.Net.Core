@@ -1,9 +1,10 @@
 using System;
+using Bam.Net;
 using Bam.Net.Testing;
 
 namespace Bam.Shell.CodeGen
 {
-    public abstract class CodeGenProvider : CommandLineTestInterface, IRegisterArguments
+    public abstract class CodeGenProvider : CommandLineTool, IRegisterArguments
     {
         public const string AppDataFolderName = "AppData";
         public const string GenerationOutputFolderName = "_gen";

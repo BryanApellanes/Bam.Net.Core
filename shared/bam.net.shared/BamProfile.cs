@@ -40,6 +40,9 @@ namespace Bam.Net
         
         public static string[] NugetOutputSegments => new List<string>() {Path, "nupkg"}.ToArray();
         
+        /// <summary>
+        /// ~/.bam/config
+        /// </summary>
         public static string Config => System.IO.Path.Combine(ConfigSegments);
         public static string[] ConfigSegments => new List<string>() {Path, "config"}.ToArray();
 

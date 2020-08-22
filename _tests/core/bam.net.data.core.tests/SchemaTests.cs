@@ -13,7 +13,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Data.Tests
 {
     [Serializable]
-    public class SchemaTests : CommandLineTestInterface
+    public class SchemaTests : CommandLineTool
     {
         [UnitTest]
         public static void SchemaManagerGetSchema()

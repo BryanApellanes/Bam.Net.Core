@@ -71,7 +71,7 @@ namespace Bam.Net.CoreServices.Tests
     public class NotProxyClass { }
 
     [Serializable]
-    public class ServiceRegistryTests : CommandLineTestInterface
+    public class ServiceRegistryTests : CommandLineTool
     {
         [UnitTest]
         public void HasProxyAssemblyGeneratorServiceClassName()

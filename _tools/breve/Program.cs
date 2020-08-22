@@ -21,7 +21,7 @@ using Bam.Net.Breve;
 namespace breve
 {
     [Serializable]
-    public class Program: CommandLineTestInterface
+    public class Program: CommandLineTool
     {
         static void Main(string[] args)
         {

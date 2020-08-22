@@ -14,7 +14,7 @@ using Bam.Net.Presentation.Handlebars;
 namespace Bam.Net.Analytics.Tests
 {
     [Serializable]
-    public class UrlTests: CommandLineTestInterface
+    public class UrlTests: CommandLineTool
     {
         [UnitTest]
         public void UrlShouldToStringCorrectly()

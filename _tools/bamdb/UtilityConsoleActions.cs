@@ -15,7 +15,7 @@ using Markdig.Helpers;
 namespace Bam.Net.Application
 {
     [Serializable]
-    public class UtilityConsoleActions : CommandLineTestInterface
+    public class UtilityConsoleActions : CommandLineTool
     {
         private static SchemaDefinition _schemaDefinitionForAnalysis;
         private static object _schemaDefinitionForAnalysisLock = new object();

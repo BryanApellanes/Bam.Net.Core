@@ -21,7 +21,7 @@ using Bam.Net.Configuration;
 namespace Bam.Net.Translation.Tests
 {
     [Serializable]
-    public class ConsoleActions : CommandLineTestInterface
+    public class ConsoleActions : CommandLineTool
     {
         // See the below for examples of ConsoleActions and UnitTests
 

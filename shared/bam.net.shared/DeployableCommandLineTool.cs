@@ -8,9 +8,9 @@ using Bam.Net.Web;
 
 namespace Bam.Net
 {
-    public class CommandLineTool : CommandLineTestInterface
+    public class DeployableCommandLineTool : CommandLineTool
     {
-        public CommandLineTool()
+        public DeployableCommandLineTool()
         {
             AddValidArgument("toolName", "Install: The name of the tool to install");
         }
@@ -45,22 +45,22 @@ namespace Bam.Net
                 Directory.CreateDirectory(tmpDir);
             }
 
-            OutLineFormat("downloading {0}", ConsoleColor.Cyan, toolName);
+            Message.PrintLine("downloading {0}", ConsoleColor.Cyan, toolName);
             Http.Get($"http://bamapps.net/download?fileName={zipFileName}", downloadPath);
-            OutLineFormat("file downloaded to {0}", ConsoleColor.Green, downloadPath);
-            OutLineFormat("unzipping {0} to {1}", downloadPath, binDir);
+            Message.PrintLine("file downloaded to {0}", ConsoleColor.Green, downloadPath);
+            Message.PrintLine("unzipping {0} to {1}", downloadPath, binDir);
             ZipFile.ExtractToDirectory(downloadPath, binDir);
-            OutLineFormat("unzipping complete", ConsoleColor.Green);
-            OutLineFormat("deleting file {0}", ConsoleColor.Cyan, downloadPath);
+            Message.PrintLine("unzipping complete", ConsoleColor.Green);
+            Message.PrintLine("deleting file {0}", ConsoleColor.Cyan, downloadPath);
             File.Delete(downloadPath);
-            OutLineFormat("delete complete", ConsoleColor.Green);
-            OutLineFormat($"add {binDir} to your path", ConsoleColor.Yellow);
+            Message.PrintLine("delete complete", ConsoleColor.Green);
+            Message.PrintLine($"add {binDir} to your path", ConsoleColor.Yellow);
         }
 
         string toolName = null;
         protected virtual string GetToolName()
         {
-            return toolName ?? (toolName = GetArgument("toolName", "Enter the name of the tool to install"));
+            return toolName ??= GetArgument("toolName", "Enter the name of the tool to install");
         }
 
         protected virtual string GetCurrentToolName()

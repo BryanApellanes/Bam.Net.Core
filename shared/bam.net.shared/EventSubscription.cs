@@ -24,6 +24,11 @@ namespace Bam.Net
             return Delegate.DynamicInvoke(args);
         }
 
+        public virtual async Task<object> InvokeAsync(params object[] args)
+        {
+            return await Task.Run(() => Delegate.DynamicInvoke(args));
+        }
+        
         public override int GetHashCode()
         {
             return this.GetHashCode(EventName, Delegate);

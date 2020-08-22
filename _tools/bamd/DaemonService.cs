@@ -17,7 +17,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.System
 {
-    public class DaemonService : CommandLineTestInterface
+    public class DaemonService : CommandLineTool
     { 
         static DaemonServer _server;
         static object _serverLock = new object();

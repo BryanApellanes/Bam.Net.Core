@@ -7,7 +7,7 @@ using System;
 namespace Bam.Net.Automation.Tests
 {
     [Serializable]
-    public class SftpUnitTests : CommandLineTestInterface
+    public class SftpUnitTests : CommandLineTool
     {
         [UnitTest]
         public void ShouldSetSshServer()

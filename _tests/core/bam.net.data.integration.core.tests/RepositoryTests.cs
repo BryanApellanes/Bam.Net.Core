@@ -28,7 +28,7 @@ namespace Bam.Net.Data.Tests.Integration
 	}
 
 	[IntegrationTestContainer]
-	public class RepositoryTests: CommandLineTestInterface
+	public class RepositoryTests: CommandLineTool
 	{
 		HashSet<IRepository> _repos;
 		DirectoryInfo _sqliteDir;

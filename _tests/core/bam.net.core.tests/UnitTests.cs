@@ -11,7 +11,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         class TestLoggable : Loggable
         {

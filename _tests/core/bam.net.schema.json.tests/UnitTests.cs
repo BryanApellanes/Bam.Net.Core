@@ -19,7 +19,7 @@ using Newtonsoft.Json.Schema;
 namespace Bam.Net.Schema.Json.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         private HomePath RootData = new HomePath("~/.data/JsonSchema/");
         private HomePath ApplicationSchema = new HomePath("~/.data/JsonSchema/application_v1.yaml");

@@ -22,7 +22,7 @@ using Bam.Net.Services.Events;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class EventSourceTests : CommandLineTestInterface
+    public class EventSourceTests : CommandLineTool
     {
         public class TestEventSourceLoggable : EventSourceService
         {

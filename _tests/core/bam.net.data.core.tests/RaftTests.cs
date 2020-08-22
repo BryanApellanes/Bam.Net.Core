@@ -16,7 +16,7 @@ namespace Bam.Net.Data.Tests
         public int Age { get; set; }
     }
     
-    public class RaftTests : CommandLineTestInterface
+    public class RaftTests : CommandLineTool
     {
         [UnitTest]
         [TestGroup("Raft")]

@@ -18,7 +18,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Messaging.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         static string _testTemplateName = "TestTemplate";
         static string _stringFormatContent = "this is the content: {0}";

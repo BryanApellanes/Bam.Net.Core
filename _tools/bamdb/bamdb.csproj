@@ -6,7 +6,7 @@
     <StartupObject>Bam.Net.Application.Program</StartupObject>
     <RootNamespace>Bam.Net.Application</RootNamespace>
     <PackageId>bamdb</PackageId>
-    <Version>1.0.5-test+04d5eb8</Version>
+    <Version>1.0.5-test+b340e1c</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -22,10 +22,10 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BamAppServices\_tools\bam\bam.csproj" />
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
     <ProjectReference Include="..\..\_lib\bam.net.data.dynamic\bam.net.data.dynamic.csproj" />
     <ProjectReference Include="..\..\_lib\bam.net.data.graphql\bam.net.data.graphql.csproj" />
-    <ProjectReference Include="..\bam\bam.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="DaoRepoGenerationConfig.yaml">

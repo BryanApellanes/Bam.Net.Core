@@ -22,7 +22,7 @@ using Bam.Net.Caching.Tests.TestData;
 namespace Bam.Net.Caching.Tests
 {
 	[Serializable]
-	public class UnitTests: CommandLineTestInterface
+	public class UnitTests: CommandLineTool
 	{
         string _testFilePath = "./TestFile1.txt";
         [UnitTest]

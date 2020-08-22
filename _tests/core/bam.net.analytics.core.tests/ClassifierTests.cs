@@ -12,7 +12,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Analytics.Tests
 {
     [Serializable]
-    public class ClassifierTests: CommandLineTestInterface
+    public class ClassifierTests: CommandLineTool
     {
         [UnitTest]
         public void ClassifierTest()

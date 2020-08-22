@@ -26,7 +26,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Data.Repositories.Tests
 {
 	[Serializable]
-	public class BackupDatabaseTests : CommandLineTestInterface
+	public class BackupDatabaseTests : CommandLineTool
 	{
 		static ILogger _logger;
 		static object _loggerLock = new object();

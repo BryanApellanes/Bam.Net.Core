@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Bam.Net.Logging;
 using Bam.Net.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 using Bam.Net.Application;
 
 namespace Bam.Net.CommandLine
@@ -51,7 +52,7 @@ namespace Bam.Net.CommandLine
 
         public static string PasswordPrompt(ConsoleColorCombo colors, string promptMessage = null)
         {
-            promptMessage = promptMessage ?? "Please enter your password ";
+            promptMessage ??= "Please enter your password ";
             string pass = string.Empty;
             Out($"{promptMessage} >>", colors);
             ConsoleKeyInfo keyInfo;
@@ -124,7 +125,7 @@ namespace Bam.Net.CommandLine
         {
             return Arguments.Contains(name) ? Arguments[name] : ifNotSpecified;
         }
-        
+
         /// <summary>
         /// Get the value specified for the argument with the 
         /// specified name either from the command line or
@@ -133,25 +134,11 @@ namespace Bam.Net.CommandLine
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="promptMessage">The prompt message.</param>
-        /// <returns></returns>
-        public static string GetArgument(string name, string promptMessage = null)
-        {
-            return GetArgument(name, promptMessage, null);
-        }
-
-        /// <summary>
-        /// Get the value specified for the argument with the 
-        /// specified name either from the command line or
-        /// from the default configuration file or prompt for
-        /// it if the value was not found.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="promptMessage"></param>
         /// <param name="prompter"></param>
         /// <returns></returns>
         public static string GetArgument(string name, string promptMessage = null, Func<string, string> prompter = null)
         {
-            prompter = prompter ?? ((p) => Prompt(p ?? $"Please enter a value for {name}"));
+            prompter ??= ((p) => Prompt(p ?? $"Please enter a value for {name}"));
             string acronym = name.CaseAcronym().ToLowerInvariant();
             string fromConfig = DefaultConfiguration.GetAppSetting(name, "").Or(DefaultConfiguration.GetAppSetting(acronym, ""));
             return Arguments.Contains(name) ? Arguments[name] :
@@ -621,7 +608,7 @@ namespace Bam.Net.CommandLine
                 {
                     _promptProvider = (message, promptTxt, colors, allowQuit) =>
                     {
-                        OutLine($"{message}{promptTxt}", colors);
+                        OutLine($"{message} {promptTxt}", colors);
                         Thread.Sleep(200);
                         string answer = Console.ReadLine();
 
@@ -874,6 +861,7 @@ File Version: {1}
             OutProvider();
         }
 
+        [Obsolete("Use Message.PrintLine instead")]
         public static void OutLineFormat(string message, params object[] formatArgs)
         {
             OutLine(string.Format(message, formatArgs));
@@ -1050,7 +1038,11 @@ File Version: {1}
             {
                 object inst = invokeOn ?? AppDomain.CurrentDomain.GetData("Instance");
                 object[] parms = parameters ?? (object[])AppDomain.CurrentDomain.GetData("Parameters");
-                _methodToInvoke.Invoke(inst, parms);
+                object result = _methodToInvoke.Invoke(inst, parms);
+                if (result is Task task)
+                {
+                    task.Wait();
+                }
             }
         }
 
@@ -1069,6 +1061,7 @@ File Version: {1}
         {
             return (T)AppDomain.CurrentDomain.GetData("State");
         }
+        
         [DebuggerStepThrough]
         protected internal static void InvokeSelection(List<ConsoleMethod> actions, string answer, string header, string footer, out int selectedNumber)
         {
@@ -1085,7 +1078,7 @@ File Version: {1}
         }
 
         /// <summary>
-        /// If true will cause all calls to InvokeSelection to be 
+        /// If true, causes all calls to InvokeSelection to  
         /// run in a separate AppDomain.  This is primarily for 
         /// UnitTest isolation.
         /// </summary>
@@ -1116,7 +1109,9 @@ File Version: {1}
                 {
                     ConstructorInfo ctor = method.DeclaringType.GetConstructor(Type.EmptyTypes);
                     if (ctor == null)
+                    {
                         ExceptionHelper.Throw<InvalidOperationException>("Specified non-static method is declared on a type that has no parameterless constructor. {0}.{1}", method.DeclaringType.Name, method.Name);
+                    }
 
                     action.Provider = ctor.Invoke(null);
                 }
@@ -1272,8 +1267,7 @@ File Version: {1}
             MethodInfo[] methods = type.GetMethods();
             foreach (MethodInfo method in methods)
             {
-                ConsoleActionAttribute action = null;
-                if (method.HasCustomAttributeOfType<ConsoleActionAttribute>(out action))
+                if (method.HasCustomAttributeOfType<ConsoleActionAttribute>(out ConsoleActionAttribute action))
                 {
                     if (!string.IsNullOrEmpty(action.CommandLineSwitch))
                     {

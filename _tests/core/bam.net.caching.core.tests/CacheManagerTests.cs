@@ -9,7 +9,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Caching.Tests
 {
     [Serializable]
-    public class CacheManagerTests : CommandLineTestInterface
+    public class CacheManagerTests : CommandLineTool
     {
         [UnitTest]
         public void GetCacheFailedShouldNotFire()

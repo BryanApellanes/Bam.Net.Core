@@ -37,7 +37,7 @@ namespace Bam.Net.Data.Tests
         }
     }
 
-    public class DatabaseContainerTests : CommandLineTestInterface
+    public class DatabaseContainerTests : CommandLineTool
     {
         [UnitTest]
         public static void ShouldGetStaticReadOnlyInstanceField()

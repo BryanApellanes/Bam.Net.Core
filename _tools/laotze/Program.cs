@@ -21,7 +21,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.Data
 {
-    public partial class LaoTze: CommandLineTestInterface
+    public partial class LaoTze: CommandLineTool
     {
         static TargetTableEventDelegate BeforeTableHandler = (ns, t) =>
         {

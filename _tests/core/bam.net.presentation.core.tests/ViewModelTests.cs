@@ -5,7 +5,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Presentation.Tests
 {
     [Serializable]
-    public class ViewModelTests: CommandLineTestInterface
+    public class ViewModelTests: CommandLineTool
     {
         [UnitTest]
         [TestGroup("ViewModel")]

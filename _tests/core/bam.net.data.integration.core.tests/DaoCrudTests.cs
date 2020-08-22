@@ -21,7 +21,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Data.Tests.Integration
 {
 	[IntegrationTestContainer]
-	public class DaoCrudTests: CommandLineTestInterface
+	public class DaoCrudTests: CommandLineTool
 	{
 		static HashSet<Database> _testDatabases;
 		public DaoCrudTests()

@@ -25,12 +25,14 @@ namespace Bam.Net.Services.DataReplication.Data
             }
             return false;
         }
+        
         public override int GetHashCode()
         {
             List<string> cuids = new List<string> { LeftCuid, RightCuid };
             cuids.Sort();
             return $"{cuids[0]}.{cuids[1]}".GetHashCode();
         }
+        
         public static HashSet<DataRelationship> FromInstance(object instance)
         {
             Type instanceType = instance.GetType();
