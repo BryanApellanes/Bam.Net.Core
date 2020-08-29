@@ -8,8 +8,8 @@ namespace Bam.Net.CoreServices.ServiceRegistration
 {
     public class ServiceRegistryBuilder
     {
-        List<Type> _forTypes;
-        List<Type> _useTypes;
+        readonly List<Type> _forTypes;
+        readonly List<Type> _useTypes;
         public ServiceRegistryBuilder()
         {
             _forTypes = new List<Type>();

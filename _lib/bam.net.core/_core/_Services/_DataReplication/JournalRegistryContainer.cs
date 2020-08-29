@@ -22,7 +22,6 @@ namespace Bam.Net.Services.DataReplication
     /// </summary>
     public static partial class JournalRegistryContainer
     {
-
         public static ServiceRegistry Create()
         {
             ServiceRegistry registry = LocalServiceRegistryContainer.Create();

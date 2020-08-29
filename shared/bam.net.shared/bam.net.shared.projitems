@@ -241,6 +241,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Search.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArrayString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyCommitAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolutionStrategy.cs" />
@@ -3150,7 +3151,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Server\Renderers\dust.custom.js" />
     <Content Include="$(MSBuildThisFileDirectory)Server\Renderers\json2.js" />
     <Content Include="$(MSBuildThisFileDirectory)ServiceProxy\Js\FileExt.js" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\README.md" />
     <Content Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Translation\Translation.db.js" />

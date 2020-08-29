@@ -102,8 +102,8 @@ namespace Bam.Net.CoreServices
             DaoUserResolver userResolver = new DaoUserResolver();
             DaoRoleResolver roleResolver = new DaoRoleResolver();
             SQLiteDatabaseProvider dbProvider = new SQLiteDatabaseProvider(databasesPath, Log.Default);
-            ApplicationRegistrationRepository coreRepo = new ApplicationRegistrationRepository();
-            dbProvider.SetDatabases(coreRepo);
+            ApplicationRegistrationRepository applicationRegistrationRepository = new ApplicationRegistrationRepository();
+            dbProvider.SetDatabases(applicationRegistrationRepository);
             dbProvider.SetDatabases(userMgr);
             userMgr.Database.TryEnsureSchema(typeof(UserAccounts.Data.User), Log.Default);
             userResolver.Database = userMgr.Database;
@@ -119,8 +119,8 @@ namespace Bam.Net.CoreServices
             assSvcRepo.Database = dataSettings.GetSysDatabaseFor(assSvcRepo);
             assSvcRepo.EnsureDaoAssemblyAndSchema();
 
-            ConfigurationService configSvc = new ConfigurationService(coreRepo, conf, userDatabasesPath);
-            CompositeRepository compositeRepo = new CompositeRepository(coreRepo);
+            ConfigurationService configSvc = new ConfigurationService(applicationRegistrationRepository, conf, userDatabasesPath);
+            CompositeRepository compositeRepo = new CompositeRepository(applicationRegistrationRepository);
             SystemLoggerService loggerSvc = new SystemLoggerService(conf);
             dbProvider.SetDatabases(loggerSvc);
             loggerSvc.SetLogger();
@@ -128,11 +128,11 @@ namespace Bam.Net.CoreServices
             ServiceRegistry reg = (ServiceRegistry)(new ServiceRegistry())
                 .ForCtor<ConfigurationService>("databaseRoot").Use(userDatabasesPath)
                 .ForCtor<ConfigurationService>("conf").Use(conf)
-                .ForCtor<ConfigurationService>("coreRepo").Use(coreRepo)
+                .ForCtor<ConfigurationService>("applicationRegistrationRepository").Use(applicationRegistrationRepository)
                 .For<ILogger>().Use(Log.Default)
-                .For<IRepository>().Use(coreRepo)
-                .For<DaoRepository>().Use(coreRepo)
-                .For<ApplicationRegistrationRepository>().Use(coreRepo)
+                .For<IRepository>().Use(applicationRegistrationRepository)
+                .For<DaoRepository>().Use(applicationRegistrationRepository)
+                .For<ApplicationRegistrationRepository>().Use(applicationRegistrationRepository)
                 .For<AppConf>().Use(conf)
                 .For<IDatabaseProvider>().Use(dbProvider)
                 .For<IUserManager>().Use(userMgr)

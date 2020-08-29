@@ -12,12 +12,12 @@ namespace Bam.Net.Services.Administration
     [ServiceRegistryContainer]
     public class AdministrationServiceRegistryContainer
     {
-        public const string Registryname = "AdministrationServiceRegistry";
+        public const string RegistryName = "AdministrationServiceRegistry";
 
         static ServiceRegistry _administrationServiceRegistry;
-        static object _administrationRegistryLock = new object();
+        static readonly object _administrationRegistryLock = new object();
 
-        [ServiceRegistryLoader(Registryname)]
+        [ServiceRegistryLoader(RegistryName)]
         public static ServiceRegistry GetServiceRegistry()
         {
             return _administrationRegistryLock.DoubleCheckLock(ref _administrationServiceRegistry, Create);

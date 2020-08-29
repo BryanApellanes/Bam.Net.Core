@@ -57,8 +57,8 @@ namespace Bam.Net.Caching.Tests
 
             Expect.AreEqual(stringFromFile, stringFromCache);
 
-            OutLineFormat("Time from file: {0}\r\n", fromFileTime.ToString());
-            OutLineFormat("Time from cache: {0}\r\n", fromCacheTime.ToString());
+            Message.PrintLine("Time from file: {0}\r\n", fromFileTime.ToString());
+            Message.PrintLine("Time from cache: {0}\r\n", fromCacheTime.ToString());
         }
 
         [UnitTest]
@@ -84,8 +84,8 @@ namespace Bam.Net.Caching.Tests
             string fromCache = Encoding.UTF8.GetString(bytesFromCache);
             Expect.AreEqual(fromFile, fromCache);
 
-            OutLineFormat("Time from file: {0}\r\n", fromFileTime.ToString());
-            OutLineFormat("Time from cache: {0}\r\n", fromCacheTime.ToString());
+            Message.PrintLine("Time from file: {0}\r\n", fromFileTime.ToString());
+            Message.PrintLine("Time from cache: {0}\r\n", fromCacheTime.ToString());
         }
 
         [UnitTest]
@@ -96,10 +96,7 @@ namespace Bam.Net.Caching.Tests
             FileCache cache = new BinaryFileCache();
             cache.Load(testFile);
 
-            Func<string, byte[]> readFromFile = (filePath) =>
-            {
-                return System.IO.File.ReadAllBytes(filePath).GZip();
-            };
+            Func<string, byte[]> readFromFile = (filePath) => System.IO.File.ReadAllBytes(filePath).GZip();
             Func<dynamic, byte[]> readFromCache = (context) =>
             {
                 BinaryFileCache textCache = context.BinaryFileCache;
@@ -116,8 +113,8 @@ namespace Bam.Net.Caching.Tests
             string fromCache = Encoding.UTF8.GetString(bytesFromCache);
             Expect.AreEqual(fromFile, fromCache);
 
-            OutLineFormat("Time from file: {0}\r\n", fromFileTime.ToString());
-            OutLineFormat("Time from cache: {0}\r\n", fromCacheTime.ToString());
+            Message.PrintLine("Time from file: {0}\r\n", fromFileTime.ToString());
+            Message.PrintLine("Time from cache: {0}\r\n", fromCacheTime.ToString());
         }
 
         [UnitTest]
