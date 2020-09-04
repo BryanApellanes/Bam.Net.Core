@@ -316,7 +316,7 @@ namespace Bam.Net
         }
         
         /// <summary>
-        /// Get the name of the entry assembly without extension.
+        /// Gets the name of the entry assembly without extension.
         /// </summary>
         /// <returns></returns>
         public static string GetHostServiceName()

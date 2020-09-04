@@ -30,14 +30,7 @@ namespace Bam.Net
         {
             get
             {
-                if (OSInfo.Current == OSNames.Windows)
-                {
-                    return new string[] {"/c", "opt", "bam"};
-                }
-                else
-                {
-                    return new string[] {"/", "opt", "bam"};
-                }
+                return new string[] {"/", "opt", "bam"};
             }
         }
 
