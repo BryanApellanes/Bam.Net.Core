@@ -26,4 +26,4 @@ library and code generators.  BAM and you're done!
 ### Where to start?
 - [Data Access Object (Dao) Generation](./_tools/laotze/) with laotze.exe
 - [Repositories with `bamdb`](./_tools/bamdb/)
-- [Web Services with `bamsvc`](./_tools/bamsvc/)
+- [Web Services with `bamapi`](./_tools/bamapi/)
