@@ -8,7 +8,7 @@ using static Bam.Net.Presentation.Html.Tags;
 namespace Bam.Net.Presentation.Tests
 {
     [Serializable]
-    public class HtmlTagTests:CommandLineTestInterface
+    public class HtmlTagTests:CommandLineTool
     {
         [UnitTest]
         public void TagRenders()

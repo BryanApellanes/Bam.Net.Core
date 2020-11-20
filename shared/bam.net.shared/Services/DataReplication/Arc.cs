@@ -55,7 +55,7 @@ namespace Bam.Net.Services.DataReplication
         public Keyspace Keyspace
         {
             get;
-            internal protected set;
+            protected internal set;
         }
 
         /// <summary>
@@ -68,23 +68,11 @@ namespace Bam.Net.Services.DataReplication
         /// </summary>
         public double EndAngle { get; internal set; }
 
-        public double Degrees
-        {
-            get
-            {
-                return EndAngle - StartAngle;
-            }
-        }
+        public double Degrees => EndAngle - StartAngle;
 
-        public double Radians
-        {
-            get
-            {
-                return Degrees * (Math.PI / 180);
-            }
-        }
+        public double Radians => Degrees * (Math.PI / 180);
 
-		public int Index { get; protected internal set; }
+        public int Index { get; protected internal set; }
 
 		public Arc NeighborLast
 		{

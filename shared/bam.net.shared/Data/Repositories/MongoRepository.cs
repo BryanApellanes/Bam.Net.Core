@@ -24,8 +24,8 @@ namespace Bam.Net.Data.Repositories
     /// </summary>
 	public class MongoRepository: Repository, IQueryFilterable
 	{
-		private string _connectionString;
-		private string _databaseName;
+		private readonly string _connectionString;
+		private readonly string _databaseName;
 
 		public MongoRepository(string connectionString = "mongodb://localhost", string databaseName = "test") : base()
 		{
@@ -34,21 +34,21 @@ namespace Bam.Net.Data.Repositories
 		}
 
 		MongoClient _client;
-		object _clientLock = new object();
+		readonly object _clientLock = new object();
 		protected MongoClient Client 
 		{
 			get { return _clientLock.DoubleCheckLock(ref _client, () => new MongoClient(_connectionString)); }
 		}
 
 		MongoServer _server;
-		object _serverLock = new object();
+		readonly object _serverLock = new object();
 		protected MongoServer Server 
 		{
 			get { return _serverLock.DoubleCheckLock(ref _server, () => _client.GetServer()); }
 		}
 
 		MongoDatabase _database;
-		object _databaseLock = new object();
+		readonly object _databaseLock = new object();
 
 		protected MongoDatabase Database 
 		{

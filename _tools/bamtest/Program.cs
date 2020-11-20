@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Bam.Net.Testing
 {
     [Serializable]
-    public partial class Program : CommandLineTestInterface
+    public partial class Program : CommandLineTool
     {
         private const string _exitOnFailure = "exitOnFailure";
         private const string _programName = "bamtestrunner";
@@ -67,7 +67,7 @@ namespace Bam.Net.Testing
 
             if (testAssemblies.Length == 0)
             {
-                OutLineFormat("No test assemblies were found in test directory ({0})", ConsoleColor.Yellow, testDirectory.FullName);
+                Message.PrintLine("No test assemblies were found in test directory ({0})", ConsoleColor.Yellow, testDirectory.FullName);
             }
             else
             {
@@ -113,8 +113,8 @@ namespace Bam.Net.Testing
                 RunUnitTestsInFile(fi.FullName, startDirectory);                
             }
 
-            OutLineFormat("Passed: {0}", ConsoleColor.Green, _passedCount);
-            OutLineFormat("Failed: {0}", ConsoleColor.Red, _failedCount);
+            Message.PrintLine("Passed: {0}", ConsoleColor.Green, _passedCount);
+            Message.PrintLine("Failed: {0}", ConsoleColor.Red, _failedCount);
 
             if (_failedCount > 0 || exceptionOccurred)
             {
@@ -128,8 +128,8 @@ namespace Bam.Net.Testing
 
         private static void HandleException(Exception ex)
         {
-            OutLineFormat("{0}: {1}", ConsoleColor.DarkRed, _programName, ex.Message);
-            OutLineFormat("Stack: {0}", ConsoleColor.DarkRed, ex.StackTrace);
+            Message.PrintLine("{0}: {1}", ConsoleColor.DarkRed, _programName, ex.Message);
+            Message.PrintLine("Stack: {0}", ConsoleColor.DarkRed, ex.StackTrace);
             if (Arguments.Contains(_exitOnFailure))
             {
                 Exit(1);
@@ -172,18 +172,18 @@ namespace Bam.Net.Testing
 
         private static FileInfo[] GetTestAssemblies(DirectoryInfo testDir)
         {
-            OutLineFormat("Getting test files from: {0}", ConsoleColor.DarkCyan, testDir.FullName);
+            Message.PrintLine("Getting test files from: {0}", ConsoleColor.DarkCyan, testDir.FullName);
             FileInfo[] files = new FileInfo[] { };
             if (Arguments.Contains("search"))
             {
                 string search = Arguments["search"];
-                OutLineFormat("/search switch specified: {0}", ConsoleColor.DarkCyan, search);
+                Message.PrintLine("/search switch specified: {0}", ConsoleColor.DarkCyan, search);
                 files = testDir.GetFiles(search);
             }
             else if (Arguments.Contains("testFile"))
             {
                 string testFile = Arguments["testFile"];
-                OutLineFormat("/testFile switch specified: {0}", ConsoleColor.DarkCyan, testFile);
+                Message.PrintLine("/testFile switch specified: {0}", ConsoleColor.DarkCyan, testFile);
                 FileInfo file = new FileInfo(testFile);
                 if (!file.Exists)
                 {

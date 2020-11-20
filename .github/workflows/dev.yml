@@ -12,6 +12,13 @@ jobs:
 
     env:
       DIST: /tmp/bam
+      CI_USERNAME: "ci"
+      CI_EMAIL: "ci@threeheadz.com"
+      COMMIT_TO_BRANCH: "bam-net-core-test"
+      GIT_COMMIT_MESSAGE: "commited by github action (bam-net-core-dev)"
+      GIT_COMMIT_AUTHOR: "ci <ci@threeheadz.com>"
+      GIT_ADD_FILE_PATTERN: "."
+      GIT_COMMIT_OPTIONS: ""
     steps:
     - uses: actions/checkout@v2
       with:
@@ -19,7 +26,7 @@ jobs:
         submodules: true
     - name: Build
       run: ./build.sh
-    - name: Upload Artifacts
+    - name: Upload BamToolkit
       uses: actions/upload-artifact@v1
       with:
         name: BamToolkit
@@ -29,3 +36,5 @@ jobs:
       with:
         name: BamToolkit-Tests
         path: /tmp/bam/tests/
+    - name: Commit Test Branch
+      run: ./push-test.sh

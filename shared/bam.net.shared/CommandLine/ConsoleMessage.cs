@@ -224,32 +224,42 @@ namespace Bam.Net.CommandLine
         {
             Print(messages.ToArray());
         }
+
+        private static IConsoleMessageHandler _consoleMessageHandler;
+        private static readonly object _consoleMessageHandlerLock = new object();
+        public static IConsoleMessageHandler ConsoleMessageHandler
+        {
+            get
+            {
+                return _consoleMessageHandlerLock.DoubleCheckLock(ref _consoleMessageHandler, () => new DefaultConsoleMessageHandler());
+            }
+            set => _consoleMessageHandler = value;
+        }
+        
+        private static ConsoleMessageDelegate _printProvider;
+        private static readonly object _printProviderLock = new object();
+        public static ConsoleMessageDelegate PrintProvider
+        {
+            get
+            {
+                return _printProviderLock.DoubleCheckLock(ref _printProvider, () => ConsoleMessageHandler.Print);
+            }
+            set => _printProvider = value;
+        } 
         
         public static void Print(params ConsoleMessage[] messages)
         {
-            if (messages != null)
-            {
-                foreach (ConsoleMessage message in messages)
-                {
-                    PrintMessage(message);
-                }
-            }
+            PrintProvider(messages);
         }
 
         private static void PrintMessage(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor = ConsoleColor.Black)
         {
-            Console.ForegroundColor = foregroundColor;
-            Console.BackgroundColor = backgroundColor;
-            Console.WriteLine(message);
-            Console.ResetColor();
+            DefaultConsoleMessageHandler.PrintMessage(message, foregroundColor, backgroundColor);
         }
         
         private static void PrintMessage(ConsoleMessage message)
         {
-            Console.ForegroundColor = message.Colors.ForegroundColor;
-            Console.BackgroundColor = message.Colors.BackgroundColor;
-            Console.Write(message.Text);
-            Console.ResetColor();
+            DefaultConsoleMessageHandler.PrintMessage(message);
         }
     }
 }

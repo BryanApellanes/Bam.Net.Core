@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace Bam.Net.Tests
 {
     [Serializable]
-    public class OAuthSettingsServiceUnitTests : CommandLineTestInterface
+    public class OAuthSettingsServiceUnitTests : CommandLineTool
     {
         [UnitTest]
         public void CanSaveSupportedOAuthProviders()

@@ -9,7 +9,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Presentation.Tests
 {
     [Serializable]
-    public class ConsoleActions : CommandLineTestInterface
+    public class ConsoleActions : CommandLineTool
     {
         [ConsoleAction]
         public void RenderTags()

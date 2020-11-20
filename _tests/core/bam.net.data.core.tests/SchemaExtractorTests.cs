@@ -5,7 +5,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Data.Tests
 {
     [Serializable]
-    public class SchemaExtractorTests: CommandLineTestInterface
+    public class SchemaExtractorTests: CommandLineTool
     {
         [UnitTest]
         public void CanGetTableColumnTypes()

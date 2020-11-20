@@ -348,6 +348,14 @@ namespace Bam.Net.CommandLine
             return Run(startInfo, null, output, timeout);
         }
 
+        public static ProcessStartInfo GetStartInfo(this Process process, params string[] processArgs)
+        {
+            ProcessStartInfo processStartInfo = CreateStartInfo(false);
+            processStartInfo.FileName = new FileInfo(process.MainModule.FileName).FullName;
+            processStartInfo.Arguments = string.Join(" ", processArgs);
+            return processStartInfo;
+        }
+        
         /// <summary>
         /// Run the specified command in a separate process capturing the output
         /// and error streams if any. This method will block if a timeout is specified, it will

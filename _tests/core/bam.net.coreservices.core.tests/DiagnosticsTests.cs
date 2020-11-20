@@ -17,7 +17,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.CoreServices.Tests
 {
     [Serializable]
-    public class DiagnosticsTests: CommandLineTestInterface
+    public class DiagnosticsTests: CommandLineTool
     {
         [UnitTest]
         public void DiagnosticInfoShouldHaveSQLiteDatabase()

@@ -12,13 +12,7 @@ namespace Bam.Net.Services.OpenApi
     {
         public string Namespace { get; set; }
         public string ObjectName { get; set; }
-        public string FormattedDescription
-        {
-            get
-            {
-                return ObjectDescription.Replace("\n", "\n\t/// ");
-            }
-        }
+        public string FormattedDescription => ObjectDescription.Replace("\n", "\n\t/// ");
 
         public string ObjectDescription { get; set; }
 

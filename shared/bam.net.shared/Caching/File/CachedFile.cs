@@ -77,35 +77,39 @@ namespace Bam.Net.Caching.File
         /// <returns></returns>
         public async Task<bool> Load(ILogger logger = null)
         {
-            try
+            return await Task.Run(() =>
             {
-                if (!File.Exists)
+                try
                 {
+                    if (!File.Exists)
+                    {
+                        return false;
+                    }
+
+                    List<Task> tasks = new List<Task>
+                    {
+                        Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5)),
+                        Task.Run(() =>
+                        {
+                            GetText();
+                            GetZippedText();
+                        }),
+                        Task.Run(() =>
+                        {
+                            GetBytes();
+                            GetZippedBytes();
+                        })
+                    };
+                    Task.WaitAll(tasks.ToArray());
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    logger ??= Log.Default;
+                    logger.AddEntry("Error loading file {0}: {1}", ex, File?.FullName ?? "<null>", ex.Message);
                     return false;
                 }
-                List<Task> tasks = new List<Task>
-                {
-                    Task.Run(() => ContentHash = File.ContentHash(HashAlgorithms.MD5)),
-                    Task.Run(()=>
-                    {
-                        GetText();
-                        GetZippedText();
-                    }),
-                    Task.Run(() =>
-                    {
-                        GetBytes();
-                        GetZippedBytes();
-                    })
-                };
-                Task.WaitAll(tasks.ToArray());
-                return true;
-            }
-            catch (Exception ex)
-            {
-                logger = logger ?? Log.Default;
-                logger.AddEntry("Error loading file {0}: {1}", ex, File?.FullName ?? "<null>", ex.Message);
-                return false;
-            }
+            });
         }
 
         /// <summary>

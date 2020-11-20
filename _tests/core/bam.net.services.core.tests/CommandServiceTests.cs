@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class CommandServiceTests : CommandLineTestInterface    
+    public class CommandServiceTests : CommandLineTool    
     {
         [UnitTest]
         public void CanCallCommand()

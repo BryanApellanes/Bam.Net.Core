@@ -39,7 +39,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _created;
             }
-            set { _created = value; }
+            set => _created = value;
         }
         
         string _uuid;
@@ -48,7 +48,7 @@ namespace Bam.Net.Data.Repositories
         /// universally unique, a very small possibility exists of collisions
         /// when generating Uuids concurrently across multiple threads and/or
         /// processes.  To confidently identify a unique data instance use a
-        /// combination of Uuid and/or Cuid.  See Cuid.
+        /// combination of Uuid and Cuid.  See Cuid.
         /// </summary>
         public string Uuid
         {
@@ -60,10 +60,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _uuid;
             }
-            set
-            {
-                _uuid = value;
-            }
+            set => _uuid = value;
         }
         
         string _cuid;
@@ -80,10 +77,7 @@ namespace Bam.Net.Data.Repositories
                 }
                 return _cuid;
             }
-            set
-            {
-                _cuid = value;
-            }
+            set => _cuid = value;
         }
 
         /// <summary>

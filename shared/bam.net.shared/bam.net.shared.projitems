@@ -241,6 +241,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Application\Verbs\Search.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppPaths.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Args.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArrayString.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyCommitAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyResolutionStrategy.cs" />
@@ -442,7 +443,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CodeAnalysis\NamespaceComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeAnalysis\PropertyComment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CodeDomCompiler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CommandLineTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DefaultConsoleMessageHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeployableCommandLineTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ArgumentInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\ArgumentInfoHash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandLine\CommandLineArgumentConfigurer.cs" />
@@ -620,6 +622,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\Partials\VaultKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encryption\VaultKeyNotSetException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystemSemanticVersion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IConsoleMessageHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ManagedPassword.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IpcMessageLockInfo.cs" />
@@ -649,6 +652,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Http\Data\ResponseData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\LoggableEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MetadataReferenceResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConsoleMessageDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProfileConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoslynCompilationExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RuntimeConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\Org\SchemaDotOrgProperty.cs" />
@@ -885,6 +890,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Hosts\HostClientServiceRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IFileManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServiceHostSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Testing\CommandLineTestInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\UnitTestFailure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\TestGroupAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Try.cs" />
@@ -2472,7 +2478,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Testing\Because.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\BeforeEachUnitTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\BeforeUnitTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Testing\CommandLineTestInterface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Testing\CommandLineTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\ConsoleBecauseWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\Data\TestResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Testing\FailedTest.cs" />
@@ -3148,10 +3154,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Server\Renderers\dust.custom.js" />
     <Content Include="$(MSBuildThisFileDirectory)Server\Renderers\json2.js" />
     <Content Include="$(MSBuildThisFileDirectory)ServiceProxy\Js\FileExt.js" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\Data\GenerationConfig.yaml" />
     <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Consensus\README.md" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\GenerationConfig.yaml" />
-    <Content Include="$(MSBuildThisFileDirectory)Services\DataReplication\Data\regen_dao_repo.sh" />
     <Content Include="$(MSBuildThisFileDirectory)Services\OpenApi\OpenApi.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)Translation\Translation.db.js" />
     <Content Include="$(MSBuildThisFileDirectory)UserAccounts\UserAccounts.db.js" />

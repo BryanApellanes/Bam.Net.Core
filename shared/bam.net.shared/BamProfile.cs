@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Bam.Net
 {
@@ -39,6 +40,9 @@ namespace Bam.Net
         
         public static string[] NugetOutputSegments => new List<string>() {Path, "nupkg"}.ToArray();
         
+        /// <summary>
+        /// ~/.bam/config
+        /// </summary>
         public static string Config => System.IO.Path.Combine(ConfigSegments);
         public static string[] ConfigSegments => new List<string>() {Path, "config"}.ToArray();
 
@@ -59,5 +63,50 @@ namespace Bam.Net
         
         public static string Recipes => System.IO.Path.Combine(RecipeSegments);
         public static string[] RecipeSegments => new List<string>() {Path, "recipes"}.ToArray();
+
+        public static string ReadDataFile(string relativeFilePath)
+        {
+            FileInfo file = new FileInfo(System.IO.Path.Combine(Data, relativeFilePath));
+            if (!file.Exists)
+            {
+                File.Create(file.FullName).Dispose();
+            }
+
+            return File.ReadAllText(file.FullName);
+        }
+        
+        public static T LoadJsonData<T>(string relativeFilePath) where T : new()
+        {
+            FileInfo file = new FileInfo(System.IO.Path.Combine(Data, relativeFilePath));
+            if (!file.Exists)
+            {
+                File.Create(file.FullName).Dispose();
+            }
+            return file.FromJsonFile<T>() ?? new T();
+        }
+        
+        public static T LoadYamlData<T>(string relativeFilePath) where T : new()
+        {
+            FileInfo file = new FileInfo(System.IO.Path.Combine(Data, relativeFilePath));
+            if (!file.Exists)
+            {
+                File.Create(file.FullName).Dispose();
+            }
+            return file.FromYamlFile<T>() ?? new T();
+        }
+
+        public static string SaveJsonData(object instance, string relativeFilePath)
+        {
+            FileInfo file = new FileInfo(System.IO.Path.Combine(Data, relativeFilePath));
+            instance.ToJson().SafeWriteToFile(file.FullName, true);
+            return file.FullName;
+        }
+        
+        public static string SaveYamlData(object instance, string relativeFilePath)
+        {
+            FileInfo file = new FileInfo(System.IO.Path.Combine(Data, relativeFilePath));
+            instance.ToYaml().SafeWriteToFile(file.FullName, true);
+            return file.FullName;
+        }
     }
 }

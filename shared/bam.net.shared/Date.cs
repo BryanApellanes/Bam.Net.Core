@@ -12,6 +12,14 @@ namespace Bam.Net
         public int Day { get; set; }
         public int Year { get; set; }
 
+        public static Date FromString(string value)
+        {
+            string[] segments = value.DelimitSplit("/");
+            Args.ThrowIf<ArgumentException>(segments.Length != 3, "Unrecognized date value specified: {0}", value);
+            return new Date
+                {Month = int.Parse(segments[0]), Day = int.Parse(segments[1]), Year = int.Parse(segments[2])};
+        }
+        
         public static Date FromInstant(Instant instant)
         {
             return FromDateTime(instant.ToDate());

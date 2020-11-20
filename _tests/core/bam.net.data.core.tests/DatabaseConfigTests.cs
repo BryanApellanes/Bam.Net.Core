@@ -9,7 +9,7 @@ using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Data.Tests
 {
-    public class DatabaseConfigTests: CommandLineTestInterface
+    public class DatabaseConfigTests: CommandLineTool
     {
         [ConsoleAction("dynamicQuery", "Run the dynamicQuery test")]
         [TestGroup("Data.Dynamic")]

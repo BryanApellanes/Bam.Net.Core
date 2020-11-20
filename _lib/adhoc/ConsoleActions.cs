@@ -6,7 +6,7 @@ using Bam.Net.Testing;
 namespace Bam.Net.Adhoc
 {
     [Serializable]
-    public class ConsoleActions : CommandLineTestInterface
+    public class ConsoleActions : CommandLineTool
     {
         [ConsoleAction("Test NmapScan")]
         public void TestSomething()

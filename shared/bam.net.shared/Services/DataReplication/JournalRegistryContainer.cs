@@ -25,10 +25,10 @@ namespace Bam.Net.Services.DataReplication
     public static partial class JournalRegistryContainer
     {
         public const string RegistryName = "DataReplication";
-        static object __DataReplicationIncubatorLock = new object();
+        static readonly object __DataReplicationIncubatorLock = new object();
         static ServiceRegistry __DataReplicationServiceRegistry;
 
-        static Dictionary<ProcessModes, Func<ServiceRegistry>> _factories;
+        static readonly Dictionary<ProcessModes, Func<ServiceRegistry>> _factories;
         static JournalRegistryContainer()
         {
             _factories = new Dictionary<ProcessModes, Func<ServiceRegistry>>
@@ -46,14 +46,8 @@ namespace Bam.Net.Services.DataReplication
         }
 
         static ServiceRegistry _instance;
-        static object _instanceLock = new object();
-        public static ServiceRegistry Instance
-        {
-            get
-            {
-                return _instanceLock.DoubleCheckLock(ref _instance, Create);
-            }
-        }
+        static readonly object _instanceLock = new object();
+        public static ServiceRegistry Instance => _instanceLock.DoubleCheckLock(ref _instance, Create);
 
         // place holders for customization if necessary
 
@@ -87,6 +81,5 @@ namespace Bam.Net.Services.DataReplication
             return registry;
         }
         // --
-
     }
 }

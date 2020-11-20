@@ -32,7 +32,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Encryption.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         [UnitTest]
         public void CredentialManagerCanSetAndGetCredentialInfo()

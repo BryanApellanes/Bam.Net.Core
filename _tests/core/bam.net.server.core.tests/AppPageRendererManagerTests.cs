@@ -5,7 +5,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Server.Tests
 {
     [Serializable]
-    public class AppPageRendererManagerTests: CommandLineTestInterface
+    public class AppPageRendererManagerTests: CommandLineTool
     {
         [UnitTest]
         [TestGroup("AppPageRenderer")]

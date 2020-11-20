@@ -14,7 +14,7 @@ namespace Bam.Net.Data.Tests.Integration
 {
     [IntegrationTestContainer]
     [Serializable]
-    public class SqlStringBuilderCrudTests: CommandLineTestInterface
+    public class SqlStringBuilderCrudTests: CommandLineTool
     {
         static HashSet<Database> _testDatabases;
         [IntegrationTestSetup]

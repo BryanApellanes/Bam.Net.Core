@@ -6,7 +6,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.Application.Network
 {
-    public class ScpRemoteFileHandler: CommandLineTestInterface, IRemoteFileHandler
+    public class ScpRemoteFileHandler: CommandLineTool, IRemoteFileHandler
     {
         public string UserName { get; set; }
 

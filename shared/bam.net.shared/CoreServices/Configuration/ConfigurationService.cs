@@ -17,11 +17,11 @@ namespace Bam.Net.CoreServices
     {
         public const string CommonConfigName = "Common";
         protected ConfigurationService() { }
-        public ConfigurationService(ApplicationRegistrationRepository coreRepo, AppConf conf, string databaseRoot)
+        public ConfigurationService(ApplicationRegistrationRepository applicationRegistrationRepository, AppConf conf, string databaseRoot)
         {
             AppConf = conf;
             DatabaseRoot = databaseRoot;
-            ApplicationRegistrationRepository = coreRepo;
+            ApplicationRegistrationRepository = applicationRegistrationRepository;
         }
         public string DatabaseRoot { get; set; }
         [Exclude]

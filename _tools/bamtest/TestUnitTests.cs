@@ -4,7 +4,7 @@ using System;
 namespace Bam.Net.Testing
 {
     [Serializable]
-    public class TestUnitTests: CommandLineTestInterface
+    public class TestUnitTests: CommandLineTool
     {
         [UnitTest]
         public void PassingTest()

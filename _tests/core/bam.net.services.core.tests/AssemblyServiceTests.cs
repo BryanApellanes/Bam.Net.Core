@@ -28,23 +28,23 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class AssemblyServiceTests : CommandLineTestInterface
+    public class AssemblyServiceTests : CommandLineTool
     {
         [IntegrationTest]
         [ConsoleAction]
         public void ProcessRuntimeDescriptorTest()
         {
             ProcessRuntimeDescriptor instance = ProcessRuntimeDescriptor.GetCurrent();
-            OutLineFormat("MachineName: {0}", ConsoleColor.Cyan, instance.MachineName);
-            OutLineFormat("CommandLine: {0}", ConsoleColor.Cyan, instance.CommandLine);
-            OutLineFormat("FilePath: {0}", ConsoleColor.Cyan, instance.FilePath);
+            Message.PrintLine("MachineName: {0}", ConsoleColor.Cyan, instance.MachineName);
+            Message.PrintLine("CommandLine: {0}", ConsoleColor.Cyan, instance.CommandLine);
+            Message.PrintLine("FilePath: {0}", ConsoleColor.Cyan, instance.FilePath);
             instance.AssemblyDescriptors.Each(ad =>
             {
-                OutLineFormat("Name: {0}", ConsoleColor.DarkCyan, ad.Name);
-                OutLineFormat("FileHash: {0}", ConsoleColor.DarkCyan, ad.FileHash);
-                OutLineFormat("AssemblyFullName: {0}", ConsoleColor.DarkCyan, ad.AssemblyFullName);
+                Message.PrintLine("Name: {0}", ConsoleColor.DarkCyan, ad.Name);
+                Message.PrintLine("FileHash: {0}", ConsoleColor.DarkCyan, ad.FileHash);
+                Message.PrintLine("AssemblyFullName: {0}", ConsoleColor.DarkCyan, ad.AssemblyFullName);
             });
-            OutLine();
+            Message.PrintLine();
         }
 
         [UnitTest]
@@ -55,7 +55,7 @@ namespace Bam.Net.Services.Tests
             AssemblyDescriptor descriptor = new AssemblyDescriptor(current);
             Thread.Sleep(300);
             (assNames.Length > 0).IsTrue();
-            OutLineFormat("Assembly names: {0}", assNames.Select(an=> an.Name).ToArray().ToDelimited(s=> s, ", "));
+            Message.PrintLine("Assembly names: {0}", assNames.Select(an=> an.Name).ToArray().ToDelimited(s=> s, ", "));
             (descriptor.AssemblyReferenceDescriptors.Count > 0).IsTrue();
         }
 
@@ -78,11 +78,11 @@ namespace Bam.Net.Services.Tests
             AssemblyDescriptor[] descriptors = AssemblyDescriptor.GetCurrentAppDomainDescriptors().ToArray();
             foreach (AssemblyDescriptor descriptor in descriptors)
             {
-                OutLine("Before save");
+                Message.PrintLine("Before save");
                 OutputInfo(descriptor);
 
                 AssemblyDescriptor saved = daoRepo.Save(descriptor);
-                OutLine("Original after save", ConsoleColor.Yellow);
+                Message.PrintLine("Original after save", ConsoleColor.Yellow);
                 OutputInfo(descriptor);
 
                 OutLine("Result after save", ConsoleColor.DarkYellow);
@@ -153,7 +153,7 @@ namespace Bam.Net.Services.Tests
                 }
                 else
                 {
-                    OutLineFormat("No references: {0}", ConsoleColor.Cyan, descriptor.AssemblyFullName);
+                    Message.PrintLine("No references: {0}", ConsoleColor.Cyan, descriptor.AssemblyFullName);
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace Bam.Net.Services.Tests
             foreach (AssemblyDescriptor descriptor in retrieved.AssemblyDescriptors)
             {
                 AssemblyDescriptor retrievedDescriptor = repo.Retrieve<AssemblyDescriptor>(descriptor.Uuid);
-                OutLineFormat("Checking {0}", ConsoleColor.DarkBlue, retrievedDescriptor.AssemblyFullName);
+                Message.PrintLine("Checking {0}", ConsoleColor.DarkBlue, retrievedDescriptor.AssemblyFullName);
                 AssemblyDescriptor actual = descriptors.FirstOrDefault(d =>
                     d.Name.Equals(retrievedDescriptor.Name) &&
                     d.FileHash.Equals(retrievedDescriptor.FileHash) &&
@@ -206,7 +206,7 @@ namespace Bam.Net.Services.Tests
             ProcessRuntimeDescriptor prd1 = svc.CurrentProcessRuntimeDescriptor;
             ProcessRuntimeDescriptor prd2 = svc.CurrentProcessRuntimeDescriptor;
             ProcessRuntimeDescriptor byName = assManRepo.OneProcessRuntimeDescriptorWhere(c => c.ApplicationName == prd1.ApplicationName);
-            OutLineFormat("AppName: {0}", ConsoleColor.Cyan, prd1.ApplicationName);
+            Message.PrintLine("AppName: {0}", ConsoleColor.Cyan, prd1.ApplicationName);
             Expect.AreEqual(prd1.Cuid, prd2.Cuid);
             Expect.AreEqual(prd1.Cuid, byName.Cuid);
             bool? fired = false;
@@ -221,15 +221,15 @@ namespace Bam.Net.Services.Tests
 
         private static void Output(string name, object sender, RepositoryEventArgs args)
         {
-            OutLineFormat("Event Fired: {0}, Schema {1}, Sender: {2}, Type: {3}, Data: {4}, Message: {5}", ConsoleColor.DarkYellow, name, sender?.Property("SchemaName", false), sender, args.Type?.FullName, args.Data, args.Message);
+            Message.PrintLine("Event Fired: {0}, Schema {1}, Sender: {2}, Type: {3}, Data: {4}, Message: {5}", ConsoleColor.DarkYellow, name, sender?.Property("SchemaName", false), sender, args.Type?.FullName, args.Data, args.Message);
         }
 
         private static void OutputInfo(AssemblyDescriptor descriptor)
         {
-            OutLineFormat("Name: {0}", ConsoleColor.Cyan, descriptor.AssemblyFullName);
-            OutLineFormat("Hash: {0}", ConsoleColor.DarkCyan, descriptor.FileHash);
-            OutLineFormat("\tReference count: {0}", ConsoleColor.Blue, descriptor.AssemblyReferenceDescriptors?.Count);
-            OutLine();
+            Message.PrintLine("Name: {0}", ConsoleColor.Cyan, descriptor.AssemblyFullName);
+            Message.PrintLine("Hash: {0}", ConsoleColor.DarkCyan, descriptor.FileHash);
+            Message.PrintLine("\tReference count: {0}", ConsoleColor.Blue, descriptor.AssemblyReferenceDescriptors?.Count);
+            Message.PrintLine();
         }
 
         private static ConsoleLogger GetConsoleLogger()

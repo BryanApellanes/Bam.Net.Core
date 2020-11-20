@@ -25,7 +25,7 @@ namespace Bam.Net.Server.Tests
     }
 
     [Serializable]
-    public class StreamingServerTests : CommandLineTestInterface
+    public class StreamingServerTests : CommandLineTool
     {
         [UnitTest]
         public void CanServe()

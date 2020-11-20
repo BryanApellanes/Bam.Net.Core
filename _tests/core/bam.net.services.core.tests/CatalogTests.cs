@@ -15,7 +15,7 @@ using NSubstitute;
 
 namespace Bam.Net.Services.Tests
 {
-    public class CatalogTests : CommandLineTestInterface
+    public class CatalogTests : CommandLineTool
     {
         [UnitTest]
         [TestGroup("Catalog")]

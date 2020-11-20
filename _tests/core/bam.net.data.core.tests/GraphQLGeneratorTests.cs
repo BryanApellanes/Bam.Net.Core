@@ -7,7 +7,7 @@ using Bam.Net.Testing.Unit;
 
 namespace Bam.Net.Data.Tests
 {
-    public class GraphQLGeneratorTests : CommandLineTestInterface
+    public class GraphQLGeneratorTests : CommandLineTool
     {
         [UnitTest]
         public void GraphQLGeneratorWritesCodeThatCompiles()

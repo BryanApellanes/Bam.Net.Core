@@ -12,7 +12,7 @@ namespace Bam.Net.Services.DataReplication
     {
         public JournalManager(ISequenceProvider sequenceProvider, IJournalEntryValueFlusher flusher, IJournalEntryValueLoader loader, ITypeConverter typeConverter, ILogger logger = null)
         {
-            logger = logger ?? Log.Default;
+            logger ??= Log.Default;
             Journal = new Journal(sequenceProvider, flusher, loader, typeConverter, logger);
             Flusher = Journal.Flusher;
             Loader = Journal.Loader;
@@ -27,13 +27,13 @@ namespace Bam.Net.Services.DataReplication
 
         public void Enqueue(CompositeKeyAuditRepoData data, Action<JournalEntry[]> onFlushed = null)
         {
-            onFlushed = onFlushed ?? ((j) => { });
+            onFlushed ??= ((j) => { });
             Journal.Enqueue(data, onFlushed);
         }
 
         public void Enqueue(IEnumerable<JournalEntry> journalEntries, Action<JournalEntry[]> onFlushed = null)
         {
-            onFlushed = onFlushed ?? ((j) => { });
+            onFlushed ??= ((j) => { });
             Journal.Enqueue(journalEntries.ToArray(), onFlushed);
         }
 

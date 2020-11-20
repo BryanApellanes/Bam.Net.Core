@@ -14,7 +14,7 @@ namespace Bam.Net.Presentation.Tests
 
 
     [Serializable]
-    public class MarkdownTests : CommandLineTestInterface
+    public class MarkdownTests : CommandLineTool
     {
         [UnitTest]
         public void PipeTableShouldRenderMarkdownTable()

@@ -11,7 +11,7 @@ using System.Threading;
 namespace Bam.Net.Automation.Tests
 {
     [Serializable]
-    public class JobManagerUnitTests : CommandLineTestInterface
+    public class JobManagerUnitTests : CommandLineTool
     {
         [UnitTest("JobManager:: Verify Jobs Folder in AppDataFolder for new JobConductor")]
         public void JobsDirectoryShouldBeInAppDataFolder()

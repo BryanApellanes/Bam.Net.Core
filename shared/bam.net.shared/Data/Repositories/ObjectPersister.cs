@@ -20,9 +20,7 @@ namespace Bam.Net.Data.Repositories
 	/// write two representations of the object, one
 	/// as an IpcMessage <see cref="Bam.Net.IpcMessage"/>
 	/// and another "searchable" version of all
-	/// the properties in crawlable files.  This should
-    /// not be used for any IO intensive applications
-    /// as it needs more testing.
+	/// the properties in crawlable files.  
 	/// </summary>
 	[Serializable]
 	public class ObjectPersister: Loggable, IObjectPersister
@@ -54,11 +52,8 @@ namespace Bam.Net.Data.Repositories
 			{
                 return _readerWriterLock.DoubleCheckLock(ref _objectReaderWriter, () => new ObjectPersister(Path.Combine(BamHome.DataPath, $"{nameof(ObjectPersister)}Data")));
 			}
-			set
-			{
-				_objectReaderWriter = value;
-			}
-		}
+			set => _objectReaderWriter = value;
+        }
 
         public IObjectReader ObjectReader { get; set; }
         public IObjectPersisterDirectoryProvider ObjectPersisterDirectoryProvider { get; set; }
@@ -186,15 +181,9 @@ namespace Bam.Net.Data.Repositories
         /// <value>
         /// The write queue count.
         /// </value>
-        public int WriteQueueCount
-		{
-			get
-			{
-                return BackgroundThreadQueue.WriteQueueCount;
-			}
-		}
+        public int WriteQueueCount => BackgroundThreadQueue.WriteQueueCount;
 
-		Queue<object> _writeQueue = new Queue<object>();
+        Queue<object> _writeQueue = new Queue<object>();
 		object _writeQueueLock = new object();
         /// <summary>
         /// Enqueues the specified type.

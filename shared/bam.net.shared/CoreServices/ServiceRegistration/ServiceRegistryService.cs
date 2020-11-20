@@ -61,7 +61,7 @@ namespace Bam.Net.CoreServices
         [Local]
         public static ServiceRegistryService GetLocalServiceRegistryService(DataProvider dataProvider, IApplicationNameProvider appNameProvider, string assemblySearchPattern, ILogger logger = null)
         {
-            logger = logger ?? Log.Default;
+            logger ??= Log.Default;
             DaoRepository repo = dataProvider.GetSysDaoRepository(logger, nameof(FileService));
             FileService fileService = new FileService(repo);
             AssemblyManagementRepository assRepo = new AssemblyManagementRepository();
@@ -155,15 +155,9 @@ namespace Bam.Net.CoreServices
             });
         }
 
-        static object _scanLock = new object();
+        static readonly object _scanLock = new object();
         static Task _scanningTask;
-        protected Task ScanningTask
-        {
-            get
-            {
-                return _scanLock.DoubleCheckLock(ref _scanningTask, ScanForServiceRegistryContainers);
-            }
-        }
+        protected Task ScanningTask => _scanLock.DoubleCheckLock(ref _scanningTask, ScanForServiceRegistryContainers);
 
         /// <summary>
         /// The search pattern to use when scanning for service assemblies.

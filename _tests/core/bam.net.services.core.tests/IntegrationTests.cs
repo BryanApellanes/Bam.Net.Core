@@ -19,7 +19,7 @@ namespace Bam.Net.Services.Tests
 {
     [Serializable]
     [IntegrationTestContainer]
-    public class IntegrationTests : CommandLineTestInterface
+    public class IntegrationTests : CommandLineTool
     {
         [IntegrationTestSetup]
         public void Setup()

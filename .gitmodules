@@ -13,3 +13,9 @@
 [submodule "_tools/bake"]
 	path = _tools/bake
 	url = git@github.com:BryanApellanes/bake.git
+[submodule "_tools/bamdb"]
+	path = _tools/bamdb
+	url = git@github.com:BryanApellanes/bamdb.git
+[submodule "_lib/bam.remote"]
+	path = _lib/bam.remote
+	url = https://github.com/BryanApellanes/Bam.Remote.git

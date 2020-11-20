@@ -59,6 +59,11 @@ namespace Bam.Net.CommandLine
         {
             PrintLine("");
         }
+
+        public static void Print(object instance)
+        {
+            PrintLine(instance.ToJson(true));
+        }
         
         public static void PrintLine(string messageSignature, params object[] messageSignatureArgs)
         {

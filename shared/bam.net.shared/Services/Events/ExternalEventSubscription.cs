@@ -21,10 +21,18 @@ namespace Bam.Net.Services.Events
         }
         public Action<Exception> ExceptionHandler { get; set; }
         public Uri WebHookEndpoint { get; set; }
+
         public override object Invoke(params object[] args)
         {
             object inProcessResult = base.Invoke(args);
-            Exec.TryAsync(() => Http.Post(WebHookEndpoint.ToString(), args.ToJson()), ExceptionHandler);
+            Exec.Try(() => Http.Post(WebHookEndpoint.ToString(), args.ToJson()), ExceptionHandler);
+            return inProcessResult;
+        }
+        
+        public override async Task<object> InvokeAsync(params object[] args)
+        {
+            object inProcessResult = await base.InvokeAsync(args);
+            await Exec.TryAsync(() => Http.Post(WebHookEndpoint.ToString(), args.ToJson()), ExceptionHandler).ConfigureAwait(false);
             return inProcessResult;
         }        
     }

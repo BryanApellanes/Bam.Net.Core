@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public class DataReplicationTests: CommandLineTestInterface
+    public class DataReplicationTests: CommandLineTool
     {      
         [BeforeEachUnitTest]
         public void Setup()

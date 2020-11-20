@@ -46,13 +46,7 @@ namespace Bam.Net.CoreServices
         public SmtpSettingsProvider SmtpSettingsProvider { get; set; }
         public HandlebarsDirectory Templates { get; set; }
         public string Tld { get; set; }        
-        public string DefaultSubject
-        {
-            get
-            {
-                return $"{ApplicationName} Notification";
-            }
-        }
+        public string DefaultSubject => $"{ApplicationName} Notification";
 
         public DirectoryInfo NotificationTemplateDirectory { get; set; }
 
@@ -94,10 +88,10 @@ namespace Bam.Net.CoreServices
         }
 
         [RoleRequired("/NotificationService/AccessDenied", "Admin")]
-        public virtual bool TemplateNotify(string recipientIdendtifier, string templateName, string jsonData, string subject = null)
+        public virtual bool TemplateNotify(string recipientIdentifier, string templateName, string jsonData, string subject = null)
         {
             object data = string.IsNullOrEmpty(jsonData) ? new { } : JsonConvert.DeserializeObject(jsonData);
-            return TemplateNotify(recipientIdendtifier, templateName, data, subject);
+            return TemplateNotify(recipientIdentifier, templateName, data, subject);
         }
 
         [Local]
@@ -153,8 +147,8 @@ namespace Bam.Net.CoreServices
         {
             try
             {    
-                from = from ?? DataProviderSmtpSettingsProvider.DefaultSender ?? $"no-reply@{ApplicationName}.{Tld}";
-                fromDisplayName = fromDisplayName ?? from;
+                @from ??= DataProviderSmtpSettingsProvider.DefaultSender ?? $"no-reply@{ApplicationName}.{Tld}";
+                fromDisplayName ??= @from;
                 Email email = SmtpSettingsProvider
                     .CreateEmail(from, fromDisplayName)
                     .To(toEmail)

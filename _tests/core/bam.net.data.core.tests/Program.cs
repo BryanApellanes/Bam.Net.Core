@@ -6,7 +6,7 @@ using Bam.Net.Logging;
 namespace Bam.Net.Data.Tests
 {
     [Serializable]
-    class Program : CommandLineTestInterface
+    class Program : CommandLineTool
     {
         static void Main(string[] args)
         {

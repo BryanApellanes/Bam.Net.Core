@@ -4,7 +4,7 @@ using System;
 namespace Bam.Net.Incubation.Tests
 {
     [Serializable]
-    class Program : CommandLineTestInterface
+    class Program : CommandLineTool
     {
         static void Main(string[] args)
         {

@@ -18,7 +18,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Messaging.Tests
 {
     [Serializable]
-    public class UnitTests : CommandLineTestInterface
+    public class UnitTests : CommandLineTool
     {
         static string _testTemplateName = "TestTemplate";
         static string _stringFormatContent = "this is the content: {0}";
@@ -42,7 +42,7 @@ namespace Bam.Net.Messaging.Tests
         [UnitTest]
         public void ShouldSetEmailTemplateInSpecifiedDirectory()
         {
-            string methodName = MethodBase.GetCurrentMethod().Name;
+            string methodName = nameof(ShouldSetEmailTemplateInSpecifiedDirectory);
             EmailComposer composer = SetStringFormatComposerAndTestTemplate(methodName);
 
             string templatePath = Path.Combine(composer.TemplateDirectory.FullName, "TestTemplate.json");
@@ -53,7 +53,7 @@ namespace Bam.Net.Messaging.Tests
         [UnitTest]
         public void ShouldBeAbleToGetEmailBody()
         {
-            string methodName = MethodBase.GetCurrentMethod().Name;
+            string methodName = nameof(ShouldBeAbleToGetEmailBody);
             EmailComposer composer = SetStringFormatComposerAndTestTemplate(methodName);
 
             string body = composer.GetEmailBody(_testTemplateName, "Monkey");
@@ -64,7 +64,7 @@ namespace Bam.Net.Messaging.Tests
         [UnitTest]
         public void ShouldBeAbleToComposeEmail()
         {
-            string methodName = MethodBase.GetCurrentMethod().Name;
+            string methodName = nameof(ShouldBeAbleToComposeEmail);
             EmailComposer composer = SetStringFormatComposerAndTestTemplate(methodName);
 
             string subject = "This is the Subject";
@@ -82,7 +82,7 @@ namespace Bam.Net.Messaging.Tests
         [UnitTest]
         public void ShouldBeAbleToGetNamedEmailBody()
         {
-            string methodName = MethodBase.GetCurrentMethod().Name;
+            string methodName = nameof(ShouldBeAbleToGetNamedEmailBody);
             EmailComposer composer = SetNamedFormatComposerAndTestTemplate(methodName);
             object data = new { Monkey = "Corn", Banana = "Potato" };
             string body = composer.GetEmailBody(_testTemplateName, data);
@@ -93,7 +93,7 @@ namespace Bam.Net.Messaging.Tests
         [UnitTest]
         public void ShouldBeAbleToComposeNamedEmail()
         {
-            string methodName = MethodBase.GetCurrentMethod().Name;
+            string methodName = nameof(ShouldBeAbleToComposeNamedEmail);
             EmailComposer composer = SetNamedFormatComposerAndTestTemplate(methodName);
 
             string subject = "This is the Subject";

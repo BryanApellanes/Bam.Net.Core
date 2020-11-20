@@ -18,7 +18,7 @@ using Bam.Net.UserAccounts;
 namespace Bam.Net.CoreServices.Tests
 {
     [IntegrationTestContainer]
-    public class IntegrationTests: CommandLineTestInterface
+    public class IntegrationTests: CommandLineTool
     {
         [IntegrationTestSetup]
         public void Setup()

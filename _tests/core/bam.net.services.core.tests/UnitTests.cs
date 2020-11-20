@@ -16,7 +16,7 @@ using Bam.Net.Services.DataReplication;
 namespace Bam.Net.Services.Tests
 {
     [Serializable]
-    public partial class UnitTests : CommandLineTestInterface
+    public partial class UnitTests : CommandLineTool
     {
         static UnitTests()
         {

@@ -3,7 +3,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.ServiceProxy
 {
-    public class ServiceCompilationExceptionReporter : CommandLineTestInterface, IServiceCompilationExceptionReporter
+    public class ServiceCompilationExceptionReporter : CommandLineTool, IServiceCompilationExceptionReporter
     {
         public ServiceCompilationExceptionReporter()
         {

@@ -3,7 +3,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.Services
 {
-    public class CommandLineServiceInterface : CommandLineTestInterface
+    public class CommandLineServiceInterface : CommandLineTool
     {
         public CommandLineServiceInterface()
         {

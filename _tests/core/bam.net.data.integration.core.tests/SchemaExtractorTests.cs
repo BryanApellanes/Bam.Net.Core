@@ -28,7 +28,7 @@ namespace Bam.Net.Data.Tests.Integration
         }
     }
     [IntegrationTestContainer]
-    public class SchemaExtractorTests : CommandLineTestInterface
+    public class SchemaExtractorTests : CommandLineTool
     {
         HashSet<Database> _testDatabases;
         [IntegrationTestSetup]

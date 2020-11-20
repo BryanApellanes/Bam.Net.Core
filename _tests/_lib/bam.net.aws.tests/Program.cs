@@ -3,7 +3,7 @@ using Bam.Net.Testing;
 
 namespace Bam.Net.Aws.Tests
 {
-    class Program : CommandLineTestInterface
+    class Program : CommandLineTool
     {
         static void Main(string[] args)
         {
