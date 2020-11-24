@@ -19,3 +19,6 @@
 [submodule "_lib/bam.remote"]
 	path = _lib/bam.remote
 	url = https://github.com/BryanApellanes/Bam.Remote.git
+[submodule "_web/bamapps.bam"]
+	path = _web/bamapps.bam
+	url = git@github.com:BryanApellanes/bamapps.bam.git
