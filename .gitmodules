@@ -22,3 +22,6 @@
 [submodule "_web/bamapps.net"]
 	path = _web/bamapps.net
 	url = git@github.com:BryanApellanes/bamapps.net.git
+[submodule "_web/bamapps.bam"]
+	path = _web/bamapps.bam
+	url = git@github.com:BryanApellanes/bamapps.bam.git
