@@ -1,6 +1,0 @@
-SchemaName: AssemblyManagement
-WriteSourceTo: ./Generated_Dao
-#TypeAssembly: ./bam.net.core.dll # only necessary for external assemblies
-FromNameSpace: Bam.Net.CoreServices.AssemblyManagement.Data
-ToNameSpace: Bam.Net.CoreServices.AssemblyManagement.Data.Dao
-UseInheritanceSchema: true

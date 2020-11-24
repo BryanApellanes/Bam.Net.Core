@@ -1,6 +1,0 @@
-#TypeAssembly: ./bam.net.core.dll # only necessary for external assemblies
-SchemaName: ApplicationRegistration
-WriteSourceTo: ./Generated_Dao
-FromNameSpace: Bam.Net.CoreServices.ApplicationRegistration.Data
-ToNameSpace: Bam.Net.CoreServices.ApplicationRegistration.Data.Dao
-UseInheritanceSchema: false

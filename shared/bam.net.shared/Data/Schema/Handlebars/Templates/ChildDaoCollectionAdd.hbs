@@ -1,6 +1,0 @@
-﻿{{!-- Model is a ForeignKeyColumn  --}}
-
-			if(_database != null)
-			{
-				this.ChildCollections.Add("{{Model.TableName}}_{{Model.Name}}", new {{Model.ReferencingClass}}Collection(Database.GetQuery<{{Model.ReferencingClass}}Columns, {{Model.ReferencingClass}}>((c) => c.{{Model.PropertyName}} == GetULongValue("{{Model.ReferencedKey}}", false)), this, "{{Model.Name}}"));
-			}
