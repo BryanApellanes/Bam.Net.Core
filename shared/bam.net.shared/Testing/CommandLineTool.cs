@@ -225,7 +225,7 @@ namespace Bam.Net
 			}
 			catch (Exception ex)
 			{
-				OutLineFormat("Exception in {0} method {1}: {2}", ConsoleColor.Magenta, typeof(T).Name, cim.Method.Name, ex.Message);
+				Message.PrintLine("Exception in {0} method {1}: {2}", ConsoleColor.Magenta, typeof(T).Name, cim.Method.Name, ex.Message);
 			}
 		}
 

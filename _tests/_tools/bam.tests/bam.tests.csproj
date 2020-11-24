@@ -12,7 +12,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UnitTests" />
+      <Compile Remove="UnitTests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="UnitTests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="UnitTests\**" />
     </ItemGroup>
 
 </Project>
