@@ -28,3 +28,6 @@
 [submodule "_tools/bamd"]
 	path = _tools/bamd
 	url = git@github.com:BryanApellanes/bamd.git
+[submodule "_lib/bam.net.data.dynamic"]
+	path = _lib/bam.net.data.dynamic
+	url = git@github.com:BryanApellanes/Bam.Net.Data.Dynamic.git
