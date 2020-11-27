@@ -23,7 +23,7 @@ function commitParent(){
   if [[ $STATUS -ne 0 ]]; then
     echo "🤓  ${GREEN}UPDATING PARENT REPO${NORMAL}"
     git add .
-    git commit -am "${1}"
+    git commit -am '${1}'
     if [[ $? -ne 0 ]]; then
       exit 1;
     fi
@@ -44,7 +44,7 @@ for SUBMODULE in "${SUBMODULES[@]}"; do
   if [[ $STATUS -ne 0 ]]; then
     echo "🤓  ${GREEN}UPDATING SUBMODULE:${WHITE} ${SUBMODULE}${NORMAL}"
     git add .
-    git commit -am "$1"
+    git commit -am '$1'
     if [[ $? -ne 0 ]]; then
       exit 1;
     fi
