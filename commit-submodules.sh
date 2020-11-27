@@ -53,7 +53,7 @@ done
 if [[ $SUBMODULES_UPDATED -eq 1 ]]; then
   echo "🤓  ${GREEN}UPDATING SUBMODULES${NORMAL}"
   git add .
-  git commit -am "Updated submodules"
+  git commit -am "Updated submodules: ${1}"
 fi
 
 # Push everything
