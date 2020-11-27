@@ -9,8 +9,6 @@ if [[ $1 = "-help" ]] || [[ $1 = "-?" ]] || [[ $1 = "-h" ]]; then
     exit 0;
 fi
 
-
-
 BOLD=$(tput bold)
 BLACK=$(tput setaf 0)
 WHITE=$(tput setaf 7)
