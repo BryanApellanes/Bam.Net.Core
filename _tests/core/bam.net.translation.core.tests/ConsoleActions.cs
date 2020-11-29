@@ -15,7 +15,6 @@ using Bam.Net.Data;
 using Bam.Net.Data.SQLite;
 using Bam.Net.Web;
 using Bam.Net.Translation;
-using CsQuery;
 using Bam.Net.Configuration;
 
 namespace Bam.Net.Translation.Tests
@@ -56,7 +55,7 @@ namespace Bam.Net.Translation.Tests
         public void ShowYandexApiKey()
         {
             Vault vault = LoadVault();
-            OutLineFormat("{0}", vault.Get(apiKeyKey));
+            Message.PrintLine("{0}", vault.Get(apiKeyKey));
         }
 
         private static Encryption.Vault LoadVault()

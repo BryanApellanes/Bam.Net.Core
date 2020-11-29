@@ -52,19 +52,19 @@ namespace Bam.Net.Testing
             }
             if (!testType.Equals("Unit") && !testType.Equals("Integration"))
             {
-                OutLineFormat("Invalid test type specified: {0}", testType);
+                Message.PrintLine("Invalid test type specified: {0}", testType);
                 Exit(-1);
             }
             string testReportHost = GetArgument("testReportHost", "What server/hostname should tests report to?");
             string testReportPort = GetArgument("testReportPort", "What port is the test report service listening on?");
             string tag = string.Empty;
-            OutLine("Checking for commit file");
+            Message.PrintLine("Checking for commit file");
             string commitFile = Path.Combine(main.Directory.FullName, "commit");
             if (File.Exists(commitFile))
             {
-                OutLine("commit file found; reading commit hash to use as tag");
+                Message.PrintLine("commit file found; reading commit hash to use as tag");
                 tag = File.ReadAllText(commitFile).First(6);
-                OutLine(tag);
+                Message.PrintLine(tag);
             }
             if (string.IsNullOrEmpty(tag))
             {
@@ -74,13 +74,13 @@ namespace Bam.Net.Testing
             FileInfo[] testAssemblies = GetTestAssemblies(GetTestDirectory());
             foreach(FileInfo file in testAssemblies)
             {
-                OutLineFormat("{0}:Running tests in: {1}", ConsoleColor.Cyan, DateTime.Now.ToLongTimeString(), file.FullName);
+                Message.PrintLine("{0}:Running tests in: {1}", ConsoleColor.Cyan, DateTime.Now.ToLongTimeString(), file.FullName);
                 string testFileName = Path.GetFileNameWithoutExtension(file.Name);
                 string xmlFile = Path.Combine(Paths.Tests, TestConstants.CoverageXmlFolder, $"{testFileName}_{tag}_coverage.xml");
                 string outputFile = Path.Combine(Paths.Tests, TestConstants.OutputFolder, $"{testFileName}_{tag}_output.txt");
                 string errorFile = Path.Combine(Paths.Tests, TestConstants.OutputFolder, $"{testFileName}_{tag}_error.txt");
                 string commandLine = $"{OpenCover} -target:\"{main.FullName}\" -targetargs:\"/type:{testType} /{testType}Tests:{file.FullName} /testReportHost:{testReportHost} /testReportPort:{testReportPort} /tag:{tag}\" -register -threshold:10 -filter:\"+[Bam.Net*]* -[*].Data.* -[*].Testing.* -[*Test*].Tests.*\" -output:{xmlFile}";
-                OutLineFormat("CommandLine: {0}", ConsoleColor.Yellow, commandLine);
+                Message.PrintLine("CommandLine: {0}", ConsoleColor.Yellow, commandLine);
                 ProcessOutput output = commandLine.Run(7200000); // timeout after 2 hours
                 output.StandardError.SafeWriteToFile(errorFile, true);
                 output.StandardOutput.SafeWriteToFile(outputFile, true);
@@ -367,19 +367,19 @@ namespace Bam.Net.Testing
 
         private static DirectoryInfo EnsureOutputDirectories(string tag)
         {
-            OutLineFormat("Creating output directories as necessary: OutputRoot={0}, tag={1}", ConsoleColor.Cyan, OutputRoot, tag);
+            Message.PrintLine("Creating output directories as necessary: OutputRoot={0}, tag={1}", ConsoleColor.Cyan, OutputRoot, tag);
             DirectoryInfo outputDirectory = new DirectoryInfo(Path.Combine(OutputRoot, tag));
-            OutLineFormat("Checking for output directory: {0}", ConsoleColor.Cyan, outputDirectory);
+            Message.PrintLine("Checking for output directory: {0}", ConsoleColor.Cyan, outputDirectory);
             if (!outputDirectory.Exists)
             {
-                OutLineFormat("Directory doesn't exist, creating it: {0}", outputDirectory.FullName);
+                Message.PrintLine("Directory doesn't exist, creating it: {0}", outputDirectory.FullName);
                 outputDirectory.Create();
             }
             string coverageDir = Path.Combine(Paths.Tests, TestConstants.CoverageXmlFolder);
-            OutLineFormat("Checking for coverage directory: {0}", ConsoleColor.Cyan, coverageDir);
+            Message.PrintLine("Checking for coverage directory: {0}", ConsoleColor.Cyan, coverageDir);
             if (!Directory.Exists(coverageDir))
             {
-                OutLineFormat("Coverage directory doesn't exist, creating it: {0}", coverageDir);
+                Message.PrintLine("Coverage directory doesn't exist, creating it: {0}", coverageDir);
                 Directory.CreateDirectory(coverageDir);
             }
 

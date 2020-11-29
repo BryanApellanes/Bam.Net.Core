@@ -65,7 +65,7 @@ namespace Bam.Net.Services.Tests
             }; 
             
             Expect.AreEqual(catalogDefinition.Key, catalogDefinition2.Key);
-            OutLineFormat(catalogDefinition2.Key.ToString(), ConsoleColor.Yellow);
+            Message.PrintLine(catalogDefinition2.Key.ToString(), ConsoleColor.Yellow);
         }
 
         [UnitTest]
