@@ -85,13 +85,13 @@ namespace Bam.Net.Services.Tests
             await src.Test();
             Thread.Sleep(300);
             Expect.IsTrue(fired.Value);
-            OutLineFormat("fire named event test ran to completion", ConsoleColor.Green);
-            OutLineFormat("done", ConsoleColor.Green);
+            Message.PrintLine("fire named event test ran to completion", ConsoleColor.Green);
+            Message.PrintLine("done", ConsoleColor.Green);
         }
 
         private static TestEventSourceLoggable GetTestEventSource()
         {
-            Database db = new SQLiteDatabase(".\\EventSourceTests", "UserAccounts");
+            Database db = new SQLiteDatabase("./EventSourceTests", "UserAccounts");
             db.TryEnsureSchema(typeof(UserAccounts.Data.User));
             Db.For<UserAccounts.Data.User>(db);
             TestEventSourceLoggable src = new TestEventSourceLoggable(new DaoRepository(db), new ConsoleLogger());

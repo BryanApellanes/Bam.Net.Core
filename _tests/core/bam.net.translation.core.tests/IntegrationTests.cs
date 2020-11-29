@@ -49,10 +49,9 @@ namespace Bam.Net.Translation.Tests
         [ConsoleAction]
         public void FreeTranslatorTest()
         {
-            ConsoleLogger logger = new ConsoleLogger();
-            logger.AddDetails = false;
+            ConsoleLogger logger = new ConsoleLogger {AddDetails = false};
             logger.StartLoggingThread();
-            Database txDb = new SQLiteDatabase(".\\", nameof(FreeTranslatorTest));
+            Database txDb = new SQLiteDatabase("./", nameof(FreeTranslatorTest));
             txDb.TryEnsureSchema<Translation>();
             MyMemoryTranslationProvider txor = new MyMemoryTranslationProvider(LanguageDatabase.Default, txDb, new DetectLanguageLanguageDetector(), logger);
             string german = txor.Translate("The sky is blue", "German");
@@ -75,10 +74,10 @@ namespace Bam.Net.Translation.Tests
 
             string inFrench = translator.Translate(english, french, input);
             Expect.AreEqual("J'aime les singes", inFrench);
-            OutLineFormat("French: {0}", ConsoleColor.Cyan, inFrench);
+            Message.PrintLine("French: {0}", ConsoleColor.Cyan, inFrench);
             string inGerman = translator.Translate(english, german, input);
             Expect.AreEqual("Ich mag Affen", inGerman);
-            OutLineFormat("German: {0}", ConsoleColor.DarkCyan, inGerman);
+            Message.PrintLine("German: {0}", ConsoleColor.DarkCyan, inGerman);
 
             string inEnglish = translator.Translate(german, english, inGerman);
             Expect.AreEqual(input, inEnglish);
