@@ -33,3 +33,6 @@
 	url = git@github.com:BryanApellanes/Bam.Net.Data.Dynamic.git
 [submodule "bamweb"]
 	url = git@github.com:BryanApellanes/bamweb.git
+[submodule "_lib/bam.net.oidc"]
+	path = _lib/bam.net.oidc
+	url = git@github.com:BryanApellanes/Bam.Net.Oidc.git
