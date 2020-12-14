@@ -36,7 +36,7 @@ function foreachSubmodule(){
 function build(){
     if [[ -d "./.bam/build" ]]; then
         pushd .bam/build
-        ./setup
+        source ./setup
         ./configure lib
         ./clean lib
         ./build lib
