@@ -63,7 +63,7 @@ _push_to_github() {
     fi
 }
 
-RUNTIME="" # set by rintime.sh
+RUNTIME="" # set by runtime.sh
 GITCOMMIT="" # set by set_git_commit
 
 cd .bam/build/tools
