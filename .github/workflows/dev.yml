@@ -30,7 +30,7 @@ jobs:
       with:
         dotnet-version: '5.0.100' 
     - name: Build
-      run: ./build.bam
+      run: ./build.sh
     - name: Upload BamToolkit
       uses: actions/upload-artifact@v1
       with:
