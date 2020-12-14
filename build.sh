@@ -36,7 +36,16 @@ function foreachSubmodule(){
 function build(){
     if [[ -d "./.bam/build" ]]; then
         pushd .bam/build
-        ./build
+        ./setup
+        ./configure lib
+        ./clean lib
+        ./build lib
+        ./configure tools
+        ./clean tools
+        ./build tools
+        ./configure tests
+        ./clean tests
+        ./build tests
         popd
     else
         configureCleanBuild lib
