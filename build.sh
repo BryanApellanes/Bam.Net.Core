@@ -35,8 +35,12 @@ function foreachSubmodule(){
 
 function build(){
     if [[ -d "./.bam/build" ]]; then
-        pushd .bam/build
-        source ./setup
+        pushd .bam/build > /dev/null
+        pushd ./common > /dev/null
+        source ./init.sh
+        popd > /dev/null
+        clean_artifacts
+
         ./configure lib
         ./clean lib
         ./build lib
@@ -46,7 +50,7 @@ function build(){
         ./configure tests
         ./clean tests
         ./build tests
-        popd
+        popd > /dev/null
     else
         configureCleanBuild lib
         configureCleanBuild tools
