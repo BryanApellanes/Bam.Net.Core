@@ -68,7 +68,9 @@ GITCOMMIT="" # set by set_git_commit
 
 cd .bam/build/tools
 source ../common/env/runtime.sh
-source ../common/init.sh
+pushd ../common
+source ./init.sh
+popd
 set_git_commit
 cd -
 _main
