@@ -16,9 +16,6 @@
 [submodule "_tools/bamdb"]
 	path = _tools/bamdb
 	url = git@github.com:BryanApellanes/bamdb.git
-[submodule "_tools/bam"]
-	path = _tools/bam
-	url = git@github.com:BryanApellanes/bam.git
 [submodule "shared/bam.net.shared"]
 	path = shared/bam.net.shared
 	url = git@github.com:BryanApellanes/bam.net.shared.git
