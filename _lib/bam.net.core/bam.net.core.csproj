@@ -3,7 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net</RootNamespace>
     <PackageId>bam.net.core</PackageId>
-    <Version>1.0.5-test+6ba815c8</Version>
+    <Version>1.0.5-test+04b91cb1</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

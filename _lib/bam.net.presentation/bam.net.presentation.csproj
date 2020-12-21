@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Bam.Net.Presentation</RootNamespace>
     <PackageId>bam.net.presentation</PackageId>
-    <Version>1.0.5-test+6ba815c8</Version>
+    <Version>1.0.5-test+04b91cb1</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
