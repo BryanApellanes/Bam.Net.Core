@@ -1,49 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>laotze.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="enso.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="enso.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\laotze.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\laotze.csproj.ResolveComReference.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\laotze.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\laotze.pdb" />
   </ItemGroup>
-
   <ItemGroup>
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\laotze.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\laotze.dll.manifest" />
   </ItemGroup>
-
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\laotze.application" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
-
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>

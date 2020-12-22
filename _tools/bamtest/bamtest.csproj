@@ -4,10 +4,15 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net.Application</RootNamespace>
     <PackageId>bamtest</PackageId>
-    <Version>1.0.5-test+04b91cb1</Version>
+    <Version>1.0.5-test+5d2c576e</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>bamtest.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="alembic.ico" />
@@ -46,4 +51,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>

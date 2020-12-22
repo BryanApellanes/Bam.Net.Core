@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>breve.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="breveTest_cs.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -14,41 +17,37 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\breve.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\breve.csproj.ResolveComReference.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\breve.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\breve.pdb" />
   </ItemGroup>
-
   <ItemGroup>
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\breve.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\breve.dll.manifest" />
   </ItemGroup>
-
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\breve.application" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
-
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>
