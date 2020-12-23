@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net.Application</RootNamespace>
     <PackageId>bamtest</PackageId>
-    <Version>1.0.5-test+5d2c576e</Version>
+    <Version>1.0.5-test+52e96770</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>ThreeHeadz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

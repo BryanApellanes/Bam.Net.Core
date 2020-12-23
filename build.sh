@@ -1,27 +1,5 @@
 #!/bin/bash
 
-function configureCleanBuild(){
-    CONTEXT=$1
-    if [[ -z ${CONTEXT} ]]; then
-        CONTEXT=tests
-    fi
-    if [[ -f "configure" ]]; then
-        ./configure ${CONTEXT}
-    else
-        echo "`pwd`: 'configure' script not found"
-    fi
-    if [[ -f "clean" ]]; then
-        ./clean ${CONTEXT}
-    else
-        echo "`pwd`: 'clean' script not found"
-    fi    
-    if [[ -f "build" ]]; then
-        ./build ${CONTEXT}
-    else
-        echo "`pwd`: 'build' script not found"
-    fi
-}
-
 function foreachSubmodule(){
     COMMAND=$1
     SUBMODULES=($(git submodule | awk '{print $2}'))
@@ -52,9 +30,7 @@ function build(){
         ./build tests
         popd > /dev/null
     else
-        configureCleanBuild lib
-        configureCleanBuild tools
-        configureCleanBuild tests
+        echo "./.bam/build not found add and fetch the build submodule"
     fi
 }
 
