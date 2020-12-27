@@ -13,6 +13,9 @@ function foreachSubmodule(){
 
 function build(){
     if [[ -d "./.bam/build" ]]; then
+        echo `pwd` > "./.bam/build/overrides/BAMSRCROOT"
+        export BAMOVERRIDES=`pwd`/.bam/build/overrides
+
         pushd .bam/build > /dev/null
         pushd ./common > /dev/null
         source ./init.sh
