@@ -40,6 +40,6 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: BamToolkit-Tests
-        path: /tmp/bam/tests/
+        path: /opt/bam/tests
     - name: Commit Test Branch
       run: ./push-test.sh
