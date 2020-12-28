@@ -13,13 +13,15 @@ function foreachSubmodule(){
 
 function build(){
     if [[ -d "./.bam/build" ]]; then
-        echo `pwd -W` > "./.bam/build/overrides/BAMSRCROOT"
-        export BAMOVERRIDES=`pwd`/.bam/build/overrides
-
-        pushd .bam/build > /dev/null
-        pushd ./common > /dev/null
+        pushd .bam/build/common > /dev/null
         source ./init.sh
         popd > /dev/null
+        echo `curdir` > "./.bam/build/overrides/BAMSRCROOT"
+        export BAMOVERRIDES=`curdir`/.bam/build/overrides
+        export_bam_overrides
+
+        pushd .bam/build
+
         clean_artifacts
 
         ./configure lib
@@ -31,6 +33,7 @@ function build(){
         ./configure tests
         ./clean tests
         ./build tests
+
         popd > /dev/null
     else
         echo "./.bam/build not found add and fetch the build submodule"
