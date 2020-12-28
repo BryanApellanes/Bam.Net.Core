@@ -66,9 +66,10 @@ _push_to_github() {
 RUNTIME="" # set by runtime.sh
 GITCOMMIT="" # set by set_git_commit
 
-cd .bam/build/tools
-source ../common/env/runtime.sh
-pushd ../common
+echo `pwd` > "./.bam/build/overrides/BAMSRCROOT"
+export BAMOVERRIDES=`pwd`/.bam/build/overrides
+
+pushd .bam/build/common
 source ./init.sh
 popd
 set_git_commit

@@ -13,7 +13,7 @@ function foreachSubmodule(){
 
 function build(){
     if [[ -d "./.bam/build" ]]; then
-        echo `pwd` > "./.bam/build/overrides/BAMSRCROOT"
+        echo `pwd -W` > "./.bam/build/overrides/BAMSRCROOT"
         export BAMOVERRIDES=`pwd`/.bam/build/overrides
 
         pushd .bam/build > /dev/null
