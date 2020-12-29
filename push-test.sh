@@ -66,12 +66,13 @@ _push_to_github() {
 RUNTIME="" # set by runtime.sh
 GITCOMMIT="" # set by set_git_commit
 
-echo `pwd` > "./.bam/build/overrides/BAMSRCROOT"
-export BAMOVERRIDES=`pwd`/.bam/build/overrides
-
-pushd .bam/build/common
+pushd .bam/build/common > /dev/null
 source ./init.sh
-popd
+popd > /dev/null
+echo `curdir` > "./.bam/build/overrides/BAMSRCROOT"
+export BAMOVERRIDES=`curdir`/.bam/build/overrides
+export_bam_overrides
+
 set_git_commit
 cd -
 _main
