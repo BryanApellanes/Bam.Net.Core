@@ -155,7 +155,7 @@ namespace Bam.Net.Testing
                 }
                 else
                 {
-                    FileInfo[] testAssemblies = GetTestAssemblies(testDirectory.GetFiles(searchPattern)).ToArray();
+                    FileInfo[] testAssemblies = GetDllsAndExes(testDirectory.GetFiles(searchPattern)).ToArray();
                     
                     if (testAssemblies.Length == 0)
                     {
@@ -247,7 +247,7 @@ namespace Bam.Net.Testing
                 Thread.Sleep(3000);
                 List<UnitTestMethod> succeeded = new List<UnitTestMethod>();
                 Dictionary<UnitTestMethod, Exception> failed = new Dictionary<UnitTestMethod, Exception>();
-                foreach (FileInfo file in GetTestAssemblies(files))
+                foreach (FileInfo file in GetDllsAndExes(files))
                 {
                     RunUnitTestGroupInFile(file, testGroupName, failed, succeeded);
                 }
@@ -274,11 +274,6 @@ namespace Bam.Net.Testing
 
             OutLineFormat("No files found in ({0}) for search pattern ({1})", testDirectoryName, searchPattern);
             Exit(1);
-        }
-
-        private static IEnumerable<FileInfo> GetTestAssemblies(FileInfo[] files)
-        {
-            return files.Where(fi => fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static void RunUnitTestGroupInFile(FileInfo file, string testGroupName, Dictionary<UnitTestMethod, Exception> failed, List<UnitTestMethod> succeeded)
@@ -384,6 +379,11 @@ namespace Bam.Net.Testing
             }
 
             return outputDirectory;
+        }
+        
+        private static IEnumerable<FileInfo> GetDllsAndExes(FileInfo[] files)
+        {
+            return files.Where(fi => fi.Name.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase) || fi.Name.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
