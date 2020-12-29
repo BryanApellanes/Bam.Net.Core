@@ -20,7 +20,7 @@ function build(){
         export BAMOVERRIDES=`curdir`/.bam/build/overrides
         export_bam_overrides
 
-        pushd .bam/build
+        pushd .bam/build > /dev/null
 
         clean_artifacts
 
