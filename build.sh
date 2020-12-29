@@ -19,6 +19,7 @@ function build(){
         echo `curdir` > "./.bam/build/overrides/BAMSRCROOT"
         export BAMOVERRIDES=`curdir`/.bam/build/overrides
         export_bam_overrides
+        set_git_commit
 
         pushd .bam/build > /dev/null
 
