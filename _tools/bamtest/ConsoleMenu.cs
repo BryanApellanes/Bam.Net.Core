@@ -159,6 +159,8 @@ namespace Bam.Net.Testing
                     
                     if (testAssemblies.Length == 0)
                     {
+                        // Didn't find tests using the specified search pattern
+                        // checking to see if there is a test dll for the current project
                         string testDll = Path.Combine(testDirectoryPath, $"{projectName}.dll");
                         Message.PrintLine("No test assemblies found (/search:{0}), checking for project assembly {1}", ConsoleColor.Yellow, searchPattern, testDll);
                         if (File.Exists(testDll))

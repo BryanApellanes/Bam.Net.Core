@@ -22,7 +22,7 @@ namespace Bam.Net.Automation.Testing
     public partial class TestReportService
     {
         /// <summary>
-        /// Get an exisintg SuiteDefinition with the specified suiteTitle or
+        /// Get an existing SuiteDefinition with the specified title or
         /// create it if none exists
         /// </summary>
         /// <param name="suiteTitle"></param>
@@ -41,7 +41,7 @@ namespace Bam.Net.Automation.Testing
         }
 
         /// <summary>
-        /// Get an existing TestDefinition for the specified suiteTitle and testTitle
+        /// Get an existing TestDefinition for the specified title and definition
         /// or create it if none exists
         /// </summary>
         /// <param name="suiteTitle"></param>
