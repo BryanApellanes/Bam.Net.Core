@@ -1,7 +1,7 @@
 ﻿<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>bam.net.data.integration.core.tests</id>
-    <version>1.0.5-test+458e45e0</version>
+    <version>1.0.5-test+cefacc4</version>
     <authors>Bryan Apellanes</authors>
     <description>bam.net.data.integration.core.tests</description>
   </metadata>

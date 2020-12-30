@@ -3,7 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net.Aws</RootNamespace>
     <PackageId>bam.net.aws</PackageId>
-    <Version>1.0.5-test+458e45e0</Version>
+    <Version>1.0.5-test+cefacc4</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
