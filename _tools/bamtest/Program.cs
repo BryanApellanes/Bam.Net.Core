@@ -21,10 +21,7 @@ namespace Bam.Net.Testing
             IsolateMethodCalls = false;
             PreInit();
             Initialize(args);
-            if (Arguments.Contains("debug"))
-            {
-                Pause("Attach the debugger now");
-            }
+            CheckBamDebugSetting();
             string resultDirectory = Arguments.Contains("data") ? Arguments["data"] : ".";
             string filePrefix = Arguments["dataPrefix"].Or("BamTests");
             UnitTestRunListeners = new HashSet<ITestRunListener<UnitTestMethod>>
