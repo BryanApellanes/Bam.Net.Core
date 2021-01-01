@@ -39,7 +39,7 @@ jobs:
     - name: Upload Tests
       uses: actions/upload-artifact@v1
       with:
-        name: BamToolkit-Tests
+        name: BamToolkit-Tests-$GITHUB_SHA
         path: /opt/bam/tests
     - name: Commit Test Branch
       run: ./push-test.sh

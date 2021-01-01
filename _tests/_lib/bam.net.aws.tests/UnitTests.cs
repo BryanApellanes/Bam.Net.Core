@@ -5,7 +5,7 @@ using Bam.Net.Testing.Unit;
 namespace Bam.Net.Aws.Tests
 {
     [Serializable]
-    public class ConsoleActions : CommandLineTool
+    public class UnitTests : CommandLineTool
     {
         [UnitTest]
         public void CanListS3Files()
