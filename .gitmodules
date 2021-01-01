@@ -27,3 +27,6 @@
 [submodule "_lib/bam.net.oidc"]
 	path = _lib/bam.net.oidc
 	url = git@github.com:BryanApellanes/Bam.Net.Oidc.git
+[submodule "_lib/bam.net.github.actions"]
+	path = _lib/bam.net.github.actions
+	url = git@github.com:BryanApellanes/bam.net.github.actions.git
