@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
+      <ProjectReference Include="..\..\..\_lib\bam.net.github.actions\bam.net.github.actions\bam.net.github.actions.csproj" />
     </ItemGroup>
 
 </Project>
