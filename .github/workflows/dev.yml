@@ -19,6 +19,7 @@ jobs:
       GIT_COMMIT_AUTHOR: "ci <ci@threeheadz.com>"
       GIT_ADD_FILE_PATTERN: "."
       GIT_COMMIT_OPTIONS: ""
+      GITCOMMIT: ${{ env.GITHUB_SHA }}
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -39,7 +40,7 @@ jobs:
     - name: Upload Tests
       uses: actions/upload-artifact@v1
       with:
-        name: BamToolkit-Tests-${{ env.GITHUB_SHA }}
+        name: BamToolkit-Tests-${{ env.GITCOMMIT }}
         path: /opt/bam/tests
     - name: Commit Test Branch
       run: ./push-test.sh
