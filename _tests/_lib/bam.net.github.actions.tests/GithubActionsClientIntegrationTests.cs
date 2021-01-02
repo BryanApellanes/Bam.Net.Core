@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Bam.Net.CommandLine;
+using Bam.Net.CoreServices.AccessControl;
+using Bam.Net.Encryption;
 using Bam.Net.Github.Actions;
 using Bam.Net.Testing.Integration;
 
 namespace Bam.Net.Github.Actions.Tests
 {
     [Serializable]
-    public class IntegrationTests
+    public class IntegrationTests : CommandLineTool
     {
         [ConsoleAction]
         [IntegrationTest]
@@ -22,8 +25,22 @@ namespace Bam.Net.Github.Actions.Tests
             {
                 Message.PrintLine(artifact.ToJson(true), ConsoleColor.Cyan);
             });
+            Pass(nameof(CanGetArtifacts));
         }
 
+        [ConsoleAction]
+        [IntegrationTest]
+        public void WillAddAuthorizationHeader()
+        {
+            Vault testVault = Vault.Create(new FileInfo($"./{nameof(WillAddAuthorizationHeader)}.sqlite"), nameof(WillAddAuthorizationHeader));
+            string testHeaderValue = $"{nameof(WillAddAuthorizationHeader)}_".RandomLetters(8);
+            TestGithubActionsClient client = new TestGithubActionsClient(testHeaderValue, testVault);
+            Dictionary<string, string> header = client.CallGetHeaders(true);
+            header.ContainsKey("Authorization");
+            header["Authorization"].ShouldBeEqualTo($"token {testHeaderValue}");
+            Pass(nameof(WillAddAuthorizationHeader));
+        }
+        
         [ConsoleAction]
         [IntegrationTest]
         public void CanDownloadArtifact()
@@ -38,6 +55,7 @@ namespace Bam.Net.Github.Actions.Tests
             
             fileInfo.Length.ShouldBeGreaterThanOrEqualTo(artifact.SizeInBytes);
             Message.PrintLine("Artifact Size: {0}, File Size: {1}", artifact.SizeInBytes, fileInfo.Length);
+            Pass(nameof(CanDownloadArtifact));
         }
     }
 }
