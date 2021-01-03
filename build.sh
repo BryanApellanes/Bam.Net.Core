@@ -20,7 +20,6 @@ function build(){
         export BAMOVERRIDES=`curdir`/.bam/build/overrides
         export_bam_overrides # first time sets $BAMSRCROOT
         set_git_commit
-        export_bam_overrides # second time sets $GITCOMMIT from $BAMSRCROOT
 
         pushd .bam/build > /dev/null
 
@@ -35,6 +34,8 @@ function build(){
         ./configure tests
         ./clean tests
         ./build tests
+
+        set_git_commit
 
         popd > /dev/null
     else

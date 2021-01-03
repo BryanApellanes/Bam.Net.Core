@@ -31,10 +31,6 @@ jobs:
         dotnet-version: '5.0.100' 
     - name: Build
       run: ./build.sh
-    - name: Set Commit
-      run: |
-        export GITCOMMIT=$(<${BAMSRCROOT}'/.bam/build/overrides/GITCOMMIT')
-      shell: bash
     - name: Upload Tests
       uses: actions/upload-artifact@v2
       with:
