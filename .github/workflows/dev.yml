@@ -19,7 +19,6 @@ jobs:
       GIT_COMMIT_AUTHOR: "ci <ci@threeheadz.com>"
       GIT_ADD_FILE_PATTERN: "."
       GIT_COMMIT_OPTIONS: ""
-      
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -35,7 +34,7 @@ jobs:
     - name: Upload Tests
       uses: actions/upload-artifact@v2
       with:
-        name: BamToolkit-Tests-${{ env.GITCOMMIT }}
+        name: BamToolkit-Tests-${{ env.GITHUB_SHA }}
         path: /opt/bam/tests
     - name: Upload BamToolkit
       uses: actions/upload-artifact@v2
