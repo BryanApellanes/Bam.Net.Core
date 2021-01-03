@@ -18,8 +18,10 @@ function build(){
         popd > /dev/null
         echo `curdir` > "./.bam/build/overrides/BAMSRCROOT"
         export BAMOVERRIDES=`curdir`/.bam/build/overrides
-        export_bam_overrides
+        export_bam_overrides # first time sets $BAMSRCROOT
         set_git_commit
+        echo ${GITCOMMIT} > "./.bam/build/overrides/GITCOMMIT"
+        export_bam_overrides # second time sets $GITCOMMIT from $BAMSRCROOT
 
         pushd .bam/build > /dev/null
 
