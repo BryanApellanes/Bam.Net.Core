@@ -14,14 +14,11 @@ function foreachSubmodule(){
 function build(){
     if [[ -d "./.bam/build" ]]; then
         pushd .bam/build/common > /dev/null
-        source ./init.sh
+        source ./init.sh $1
         popd > /dev/null
-        echo `curdir` > "./.bam/build/overrides/BAMSRCROOT"
-        export BAMOVERRIDES=`curdir`/.bam/build/overrides
-        export_bam_overrides # first time sets $BAMSRCROOT
-        set_git_commit
-
         pushd .bam/build > /dev/null
+
+        print_line "GITHUB_SHA = ${GITHUB_SHA}" ${GREEN}
 
         clean_artifacts
 
@@ -41,5 +38,13 @@ function build(){
     fi
 }
 
-build
-set_git_commit
+BAMSRCROOT=$1
+if [[ -z ${BAMSRCROOT} ]]; then
+    if [[ "${OSTYPE}" == "cygwin" || "${OSTYPE}" == "msys" ]]; then
+        BAMSRCROOT=`pwd -W`
+    else
+        BAMSRCROOT=`pwd`
+    fi      
+fi
+
+build ${BAMSRCROOT}
