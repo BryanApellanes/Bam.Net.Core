@@ -36,7 +36,7 @@ jobs:
         export GITCOMMIT=$(<${BAMSRCROOT}'/.bam/build/overrides/GITCOMMIT')
       shell: bash
     - name: Upload Tests
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: BamToolkit-Tests-${{ env.GITCOMMIT }}
         path: /opt/bam/tests
