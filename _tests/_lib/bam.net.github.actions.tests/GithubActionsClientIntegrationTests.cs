@@ -11,7 +11,7 @@ using Bam.Net.Testing.Integration;
 namespace Bam.Net.Github.Actions.Tests
 {
     [Serializable]
-    public class IntegrationTests : CommandLineTool
+    public class GithubActionsClientIntegrationTests : CommandLineTool
     {
         [ConsoleAction]
         [IntegrationTest]
@@ -39,6 +39,32 @@ namespace Bam.Net.Github.Actions.Tests
             header.ContainsKey("Authorization");
             header["Authorization"].ShouldBeEqualTo($"token {testHeaderValue}");
             Pass(nameof(WillAddAuthorizationHeader));
+        }
+        
+        [ConsoleAction]
+        [IntegrationTest]
+        public void WillAddAuthorizationHeaderUsingParameterlessConstructor()
+        {
+            Vault testVault = Vault.Create(new FileInfo($"./{nameof(WillAddAuthorizationHeader)}.sqlite"), nameof(WillAddAuthorizationHeader));
+            string testHeaderValue = $"{nameof(WillAddAuthorizationHeader)}_".RandomLetters(8);
+            TestGithubActionsClient client = new TestGithubActionsClient();
+            client.SetTestValue(testHeaderValue);
+            Dictionary<string, string> header = client.CallGetHeaders(true);
+            header.ContainsKey("Authorization");
+            header["Authorization"].ShouldBeEqualTo($"token {testHeaderValue}");
+            Pass(nameof(WillAddAuthorizationHeader));
+        }
+
+        [ConsoleAction]
+        [IntegrationTest]
+        public void ConfigKeyShouldBeSet()
+        {
+            GithubActionsClient client = new GithubActionsClient();
+            IAuthorizationHeaderProvider authorizationHeaderProvider = client.AuthorizationHeaderProvider;
+            string configKey = authorizationHeaderProvider.ConfigKey; 
+            configKey.ShouldNotBeNull();
+            configKey.ShouldNotBeBlank();
+            Pass(nameof(ConfigKeyShouldBeSet));
         }
         
         [ConsoleAction]

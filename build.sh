@@ -35,8 +35,6 @@ function build(){
         ./clean tests
         ./build tests
 
-        set_git_commit
-
         popd > /dev/null
     else
         echo "./.bam/build not found add and fetch the build submodule"
@@ -44,3 +42,4 @@ function build(){
 }
 
 build
+set_git_commit
