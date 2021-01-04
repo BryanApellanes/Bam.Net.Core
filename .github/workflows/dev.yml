@@ -35,6 +35,7 @@ jobs:
       env:
         GITCOMMIT: ${{ env.GITHUB_SHA }}
       uses: actions/upload-artifact@v2
+      run: export GITCOMMIT=$(<./gitcommit) 
       with:
         name: BamToolkit-Tests-${{ env.GITCOMMIT }}
         path: /opt/bam/tests
