@@ -30,3 +30,24 @@
 [submodule "_lib/bam.net.github.actions"]
 	path = _lib/bam.net.github.actions
 	url = git@github.com:BryanApellanes/bam.net.github.actions.git
+[submodule ".bam/npm/bam-action"]
+	path = .bam/npm/bam-action
+	url = git@github.com:BryanApellanes/bam-action.git
+[submodule ".bam/npm/bam-artifact"]
+	path = .bam/npm/bam-artifact
+	url = git@github.com:BryanApellanes/bam-artifact.git
+[submodule ".bam/npm/bam-cli-args"]
+	path = .bam/npm/bam-cli-args
+	url = git@github.com:BryanApellanes/bam-cli-args.git
+[submodule ".bam/npm/bam-inputs"]
+	path = .bam/npm/bam-inputs
+	url = git@github.com:BryanApellanes/bam-inputs.git
+[submodule ".bam/npm/bam-job"]
+	path = .bam/npm/bam-job
+	url = git@github.com:BryanApellanes/bam-job.git
+[submodule ".bam/npm/bam_js"]
+	path = .bam/npm/bam_js
+	url = git@github.com:BryanApellanes/bam.js.git
+[submodule ".bam/npm/bam-jstools"]
+	path = .bam/npm/bam-jstools
+	url = git@github.com:BryanApellanes/bam-jstools.git
