@@ -39,9 +39,9 @@ jobs:
         name: "BamToolkit-Tests-${{ env.GITHUB_SHA }}"
         path: /opt/bam/tests
     - name: Upload BamToolkit
-      uses: actions/upload-artifact@v2
+      uses: actions/bam-artifact@v1
       with:
-        name: BamToolkit
+        namePrefix: BamToolkit
         path: /opt/bam/artifacts
     - name: Commit Test Branch
       run: ./push-test.sh
