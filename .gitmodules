@@ -51,3 +51,6 @@
 [submodule ".bam/npm/bam-jstools"]
 	path = .bam/npm/bam-jstools
 	url = git@github.com:BryanApellanes/bam-jstools.git
+[submodule "_tools/bamtest"]
+	path = _tools/bamtest
+	url = git@github.com:BryanApellanes/bamtest.git
