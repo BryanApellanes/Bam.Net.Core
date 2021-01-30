@@ -39,7 +39,7 @@ jobs:
         name: "BamToolkit-Tests-${{ env.GITHUB_SHA }}"
         path: /opt/bam/tests
     - name: Upload BamToolkit
-      uses: BryanApellanes/bam-artifact@v1.0.2
+      uses: BryanApellanes/bam-artifact@v1.0.3
       with:
         namePrefix: BamToolkit
         path: /opt/bam/artifacts
