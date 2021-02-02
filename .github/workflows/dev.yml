@@ -36,12 +36,12 @@ jobs:
         GITCOMMIT: ${{ env.GITHUB_SHA }}
       uses: actions/upload-artifact@v2
       with:      
-        name: "BamToolkit-Tests-${{ env.GITHUB_SHA }}"
+        name: "BamToolkit-Tests-${{ github.sha }}"
         path: /opt/bam/tests
     - name: Upload BamToolkit
-      uses: BryanApellanes/bam-artifact@v1.0.7
+      uses: actions/upload-artifact@v2
       with:
-        namePrefix: BamToolkit
+        name: BamToolkit-${{ github.sha }}
         path: /opt/bam/artifacts
     - name: Commit Test Branch
       run: ./push-test.sh
