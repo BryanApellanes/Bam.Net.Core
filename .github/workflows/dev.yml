@@ -34,7 +34,7 @@ jobs:
     - name: Upload Tests
       uses: actions/upload-artifact@v2
       with:      
-        name: "BamToolkit-Tests-${{ github.sha.substr(0,7) }}"
+        name: "BamToolkit-Tests-${{ github.sha }}"
         path: /opt/bam/tests
     - name: Upload BamToolkit
       uses: actions/upload-artifact@v2
