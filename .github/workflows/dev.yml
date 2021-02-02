@@ -32,8 +32,6 @@ jobs:
     - name: Build
       run: ./build.sh
     - name: Upload Tests
-      env:
-        GITCOMMIT: ${{ env.GITHUB_SHA }}
       uses: actions/upload-artifact@v2
       with:      
         name: "BamToolkit-Tests-${{ github.sha }}"
