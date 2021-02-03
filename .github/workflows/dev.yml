@@ -31,15 +31,17 @@ jobs:
         dotnet-version: '5.0.100' 
     - name: Build
       run: ./build.sh
+    - name: Set GIT_COMMIT
+      run: echo "GIT_COMMIT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Upload Tests
       uses: actions/upload-artifact@v2
       with:      
-        name: "BamToolkit-Tests-${{ github.sha }}"
+        name: "BamToolkit-Tests-${{ env.GIT_COMMIT }}"
         path: /opt/bam/tests
     - name: Upload BamToolkit
       uses: actions/upload-artifact@v2
       with:
-        name: BamToolkit-${{ github.sha }}
+        name: BamToolkit-${{ env.GIT_COMMIT }}
         path: /opt/bam/artifacts
     - name: Commit Test Branch
       run: ./push-test.sh
