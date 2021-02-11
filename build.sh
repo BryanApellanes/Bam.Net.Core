@@ -1,18 +1,50 @@
 #!/bin/bash
 
-cd .bam/build
+function foreachSubmodule(){
+    COMMAND=$1
+    SUBMODULES=($(git submodule | awk '{print $2}'))
+    for SUBMODULE in "${SUBMODULES[@]}"; do
+        pushd $SUBMODULE > /dev/null
+        echo `pwd`
+        $1
+        popd > /dev/null
+    done
+}
 
-./configure lib
-./clean lib
-./build lib
+function build(){
+    if [[ -d "./.bam/build" ]]; then
+        pushd .bam/build/common > /dev/null
+        source ./init.sh $1
+        popd > /dev/null
+        pushd .bam/build > /dev/null
 
-./configure tools
-./clean tools
-./build tools
+        print_line "GITHUB_SHA = ${GITHUB_SHA}" ${GREEN}
 
-./configure tests
-./clean tests
-./build tests
+        clean_artifacts
 
-cd ../../
+        ./configure lib
+        ./clean lib
+        ./build lib
+        ./configure tools
+        ./clean tools
+        ./build tools
+        ./configure tests
+        ./clean tests
+        ./build tests
 
+        popd > /dev/null
+    else
+        echo "./.bam/build not found add and fetch the build submodule"
+    fi
+}
+
+BAMSRCROOT=$1
+if [[ -z ${BAMSRCROOT} ]]; then
+    if [[ "${OSTYPE}" == "cygwin" || "${OSTYPE}" == "msys" ]]; then
+        BAMSRCROOT=`pwd -W`
+    else
+        BAMSRCROOT=`pwd`
+    fi      
+fi
+
+build ${BAMSRCROOT}

@@ -63,12 +63,17 @@ _push_to_github() {
     fi
 }
 
-RUNTIME="" # set by rintime.sh
-GITCOMMIT="" # set by set_git_commit
+BAMSRCROOT=${1+x}
+if [[ -z ${BAMSRCROOT} ]]; then
+    if [[ "${OSTYPE}" == "cygwin" || "${OSTYPE}" == "msys" ]]; then
+        BAMSRCROOT=`pwd -W`
+    else
+        BAMSRCROOT=`pwd`
+    fi      
+fi
 
-cd .bam/build/tools
-source ../common/env/runtime.sh
-source ../common/init.sh
-set_git_commit
-cd -
+pushd .bam/build/common > /dev/null
+source ./init.sh ${BAMSRCROOT}
+popd > /dev/null
+
 _main

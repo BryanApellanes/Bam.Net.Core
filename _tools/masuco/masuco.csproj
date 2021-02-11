@@ -1,41 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    </PropertyGroup>
-
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>masuco.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+  </PropertyGroup>
+  <ItemGroup>
+    <_UnmanagedRegistrationCache Remove="obj\masuco.csproj.UnmanagedRegistration.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\masuco.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\masuco.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\masuco.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\masuco.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\masuco.dll.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp2.2\masuco.application" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
+  </ItemGroup>
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
     <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\masuco.csproj.UnmanagedRegistration.cache" />
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
     </ItemGroup>
-
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\masuco.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\masuco.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\masuco.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\masuco.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\masuco.dll.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp2.2\masuco.application" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\_lib\bam.net.core\bam.net.core.csproj" />
-    </ItemGroup>
-
+  </Target>
 </Project>

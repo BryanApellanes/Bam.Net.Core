@@ -2,6 +2,8 @@ using System.Reflection;
 using Bam.Net;
 
 [assembly: AssemblyVersion("1.0.5.0")]
-[assembly: AssemblyFileVersion("1.0.5.1235072338")]
-[assembly: AssemblyCommit("3ca52cf")]
-[assembly: AssemblySemanticVersion("1.0.5-test+3ca52cf")]
+[assembly: AssemblyFileVersion("1.0.5.0")]
+[assembly: AssemblyCommit("e189dfb6")]
+[assembly: AssemblySemanticVersion("1.0.5-test+e189dfb6")]
+[assembly: AssemblyDescription("Bam Framework for .NET Core; SemanticVersion=1.0.5-test+e189dfb6, Revision=1.0.5.4278396549")]
+[assembly: AssemblyProduct("bam.net.core")]

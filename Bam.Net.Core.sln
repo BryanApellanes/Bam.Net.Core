@@ -106,6 +106,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_tools", "_tools", "{D2A602
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bam.remote", "_lib\bam.remote\bam.remote.csproj", "{F6E7279E-C695-4F26-BEE4-9BC8858624C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bam", "_tools\bam\bam.csproj", "{37E12693-1F03-4A95-AE7C-5C9DA30F8328}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Bam.Net\shared\bam.net.schema.org\bam.net.schema.org.projitems*{74602d8c-3b09-4037-a3c1-47818fa5c9d3}*SharedItemsImports = 13
@@ -673,6 +675,18 @@ Global
 		{F6E7279E-C695-4F26-BEE4-9BC8858624C6}.Release|x64.Build.0 = Release|Any CPU
 		{F6E7279E-C695-4F26-BEE4-9BC8858624C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{F6E7279E-C695-4F26-BEE4-9BC8858624C6}.Release|x86.Build.0 = Release|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Debug|x64.Build.0 = Debug|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Debug|x86.Build.0 = Debug|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Release|x64.ActiveCfg = Release|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Release|x64.Build.0 = Release|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Release|x86.ActiveCfg = Release|Any CPU
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -732,6 +746,7 @@ Global
 		{A8EA990E-4720-44E6-A75F-A8CCDEE0D8D5} = {A2DAC819-AB50-4D55-80DF-2D43602ED282}
 		{EFAD924F-CEA5-47CB-B160-510B21FCEABA} = {A2DAC819-AB50-4D55-80DF-2D43602ED282}
 		{F6E7279E-C695-4F26-BEE4-9BC8858624C6} = {A2DAC819-AB50-4D55-80DF-2D43602ED282}
+		{37E12693-1F03-4A95-AE7C-5C9DA30F8328} = {E3A4B844-93F2-44C1-8744-681904AE9FF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C0DA5E0B-6AD8-4F39-8F57-478C6AD7D4CA}

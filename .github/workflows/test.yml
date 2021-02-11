@@ -1,9 +1,9 @@
-name: Build Lib, Tools & Tests -> Run Tests
+name: Run Tests
 
 on: 
   push:
     branches:
-      - bam-net-core-test
+      - bam-net-core-test*
 
 jobs:
   test:

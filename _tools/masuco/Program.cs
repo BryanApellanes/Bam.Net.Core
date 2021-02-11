@@ -38,7 +38,7 @@ namespace Bam.Net.Application
                 
                 if (!File.Exists(configFile))
                 {
-                    OutLineFormat("Config file {0} not found.", ConsoleColor.Yellow, configFile);
+                    Message.PrintLine("Config file {0} not found.", ConsoleColor.Yellow, configFile);
                     OutLine("Starting configuration...", ConsoleColor.Cyan);
                     Configure();
                 }
@@ -75,7 +75,7 @@ namespace Bam.Net.Application
                                         d.Refresh();
                                     }
 
-                                    OutLineFormat("Copying {0} -> {1}", ConsoleColor.Yellow, srcFile, destFile);
+                                    Message.PrintLine("Copying {0} -> {1}", ConsoleColor.Yellow, srcFile, destFile);
                                 });
                         }
                     }
@@ -105,15 +105,15 @@ namespace Bam.Net.Application
             string configFile = GetArgument("config", "Please enter the path to the config file to use");
             if (!File.Exists(configFile))
             {
-                OutLineFormat("Config file {0} not found.", ConsoleColor.Yellow, configFile);
-                OutLine("Starting configuration...", ConsoleColor.Cyan);
+                Message.PrintLine("Config file {0} not found.", ConsoleColor.Yellow, configFile);
+                Message.PrintLine("Starting configuration...", ConsoleColor.Cyan);
                 Configure();
             }
             else
             {
                 MasucoConfig config = configFile.SafeReadFile().FromJson<MasucoConfig>();
-                OutLineFormat("Source: {0}", ConsoleColor.Cyan, config.Source);
-                OutLineFormat("Destination: {0}", ConsoleColor.Cyan, config.Destination);
+                Message.PrintLine("Source: {0}", ConsoleColor.Cyan, config.Source);
+                Message.PrintLine("Destination: {0}", ConsoleColor.Cyan, config.Destination);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Bam.Net.Application
             bool result = dir.Exists;
             if (!result)
             {
-                OutLineFormat("{0} was not found", ConsoleColor.Red, dir.FullName);
+                Message.PrintLine("{0} was not found", ConsoleColor.Red, dir.FullName);
             }
 
             return result;

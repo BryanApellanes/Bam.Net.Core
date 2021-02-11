@@ -13,15 +13,44 @@
 [submodule "_tools/bake"]
 	path = _tools/bake
 	url = git@github.com:BryanApellanes/bake.git
-[submodule "_tools/bamdb"]
-	path = _tools/bamdb
-	url = git@github.com:BryanApellanes/bamdb.git
-[submodule "_lib/bam.remote"]
-	path = _lib/bam.remote
-	url = https://github.com/BryanApellanes/Bam.Remote.git
-[submodule "_web/bamapps.net"]
-	path = _web/bamapps.net
-	url = git@github.com:BryanApellanes/bamapps.net.git
-[submodule "_web/bamapps.bam"]
-	path = _web/bamapps.bam
-	url = git@github.com:BryanApellanes/bamapps.bam.git
+[submodule "shared/bam.net.shared"]
+	path = shared/bam.net.shared
+	url = git@github.com:BryanApellanes/bam.net.shared.git
+[submodule "_tools/bamd"]
+	path = _tools/bamd
+	url = git@github.com:BryanApellanes/bamd.git
+[submodule "_lib/bam.net.data.dynamic"]
+	path = _lib/bam.net.data.dynamic
+	url = git@github.com:BryanApellanes/Bam.Net.Data.Dynamic.git
+[submodule "bamweb"]
+	url = git@github.com:BryanApellanes/bamweb.git
+[submodule "_lib/bam.net.oidc"]
+	path = _lib/bam.net.oidc
+	url = git@github.com:BryanApellanes/Bam.Net.Oidc.git
+[submodule "_lib/bam.net.github.actions"]
+	path = _lib/bam.net.github.actions
+	url = git@github.com:BryanApellanes/bam.net.github.actions.git
+[submodule ".bam/npm/bam-action"]
+	path = .bam/npm/bam-action
+	url = git@github.com:BryanApellanes/bam-action.git
+[submodule ".bam/npm/bam-artifact"]
+	path = .bam/npm/bam-artifact
+	url = git@github.com:BryanApellanes/bam-artifact.git
+[submodule ".bam/npm/bam-cli-args"]
+	path = .bam/npm/bam-cli-args
+	url = git@github.com:BryanApellanes/bam-cli-args.git
+[submodule ".bam/npm/bam-inputs"]
+	path = .bam/npm/bam-inputs
+	url = git@github.com:BryanApellanes/bam-inputs.git
+[submodule ".bam/npm/bam-job"]
+	path = .bam/npm/bam-job
+	url = git@github.com:BryanApellanes/bam-job.git
+[submodule ".bam/npm/bam_js"]
+	path = .bam/npm/bam_js
+	url = git@github.com:BryanApellanes/bam.js.git
+[submodule ".bam/npm/bam-jstools"]
+	path = .bam/npm/bam-jstools
+	url = git@github.com:BryanApellanes/bam-jstools.git
+[submodule "_tools/bamtest"]
+	path = _tools/bamtest
+	url = git@github.com:BryanApellanes/bamtest.git

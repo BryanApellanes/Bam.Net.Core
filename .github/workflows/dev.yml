@@ -11,30 +11,37 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DIST: /tmp/bam
+      DIST: /opt/bam/dist
       CI_USERNAME: "ci"
       CI_EMAIL: "ci@threeheadz.com"
       COMMIT_TO_BRANCH: "bam-net-core-test"
-      GIT_COMMIT_MESSAGE: "commited by github action (bam-net-core-dev)"
+      GIT_COMMIT_MESSAGE: "committed by github action (bam-net-core-dev)"
       GIT_COMMIT_AUTHOR: "ci <ci@threeheadz.com>"
       GIT_ADD_FILE_PATTERN: "."
       GIT_COMMIT_OPTIONS: ""
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets.CI_ACCESSTOKEN }}
         submodules: true
+    - name: Setup Dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.100' 
     - name: Build
       run: ./build.sh
-    - name: Upload BamToolkit
-      uses: actions/upload-artifact@v1
-      with:
-        name: BamToolkit
-        path: /opt/bam/artifacts
+    - name: Set GIT_COMMIT
+      run: echo "GIT_COMMIT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Upload Tests
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
+      with:      
+        name: "BamToolkit-Tests-${{ env.GIT_COMMIT }}"
+        path: /opt/bam/tests
+    - name: Upload BamToolkit
+      uses: actions/upload-artifact@v2
       with:
-        name: BamToolkit-Tests
-        path: /tmp/bam/tests/
+        name: BamToolkit-${{ env.GIT_COMMIT }}
+        path: /opt/bam/artifacts
     - name: Commit Test Branch
       run: ./push-test.sh

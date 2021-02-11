@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <!--<RuntimeFrameworkVersion>3.1</RuntimeFrameworkVersion>-->
+    <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Bam.Net.Adhoc</RootNamespace>
     <PackageId>bam.net.adhoc</PackageId>
-    <Version>1.0.5-test+3ca52cf</Version>
+    <Version>1.0.5-test+e189dfb6</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
   </PropertyGroup>

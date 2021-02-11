@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net.Aws</RootNamespace>
     <PackageId>bam.net.aws</PackageId>
-    <Version>1.0.5-test+3ca52cf</Version>
+    <Version>1.0.5-test+e189dfb6</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.ECR" Version="3.3.103.9" />

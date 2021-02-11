@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Bam.Net.Logging;
-using Markdig.Helpers;
 
 namespace Bam.Net
 {

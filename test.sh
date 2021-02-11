@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd .bam/build
-./test
-cd ../../
+pushd .bam/build > /dev/null
+./test $1 $2
+popd > /dev/null

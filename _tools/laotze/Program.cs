@@ -358,8 +358,8 @@ namespace Bam.Net.Data
         {
             foreach (CompilerError error in results.Errors)
             {
-                OutLineFormat("File=>{0}", ConsoleColor.Yellow, error.FileName);
-                OutLineFormat("Line {0}, Column {1}::{2}", error.Line, error.Column, error.ErrorText);
+                Message.PrintLine("File=>{0}", ConsoleColor.Yellow, error.FileName);
+                Message.PrintLine("Line {0}, Column {1}::{2}", error.Line, error.Column, error.ErrorText);
                 Out();
             }
         }
