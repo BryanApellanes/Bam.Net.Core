@@ -18,7 +18,7 @@ namespace Bam.Net.Github.Actions.Tests
         public void CanGetArtifacts()
         {
             GithubActionsClient client = new GithubActionsClient();
-            GithubArtifact[] artifacts = client.GetArtifacts("BryanApellanes", "Bam.Net.Core").ToArray();
+            GithubArtifact[] artifacts = client.GetArtifacts(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
             artifacts.ShouldNotBeNull("artifacts was null");
             artifacts.Length.ShouldBeGreaterThan(0, "No artifacts were returned");
             artifacts.Each(artifact =>
@@ -28,6 +28,18 @@ namespace Bam.Net.Github.Actions.Tests
             Pass(nameof(CanGetArtifacts));
         }
 
+        [ConsoleAction]
+        [IntegrationTest]
+        public void CanGetArtifact()
+        {
+            GithubActionsClient client = new GithubActionsClient(DataConstants.RepoOwnerUserName, DataConstants.RepoName);
+            GithubArtifact[] artifacts = client.GetArtifacts(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
+            uint artifactId = artifacts[0].Id;
+            GithubArtifact artifact = client.GetArtifact(artifactId);
+            artifact.ShouldNotBeNull();
+            Message.PrintLine(artifact.ToJson(true));
+        }
+        
         [ConsoleAction]
         [IntegrationTest]
         public void WillAddAuthorizationHeader()
@@ -72,7 +84,7 @@ namespace Bam.Net.Github.Actions.Tests
         public void CanDownloadArtifact()
         {
             GithubActionsClient client = new GithubActionsClient();
-            GithubArtifact[] artifacts = client.GetArtifacts("BryanApellanes", "Bam.Net.Core").ToArray();
+            GithubArtifact[] artifacts = client.GetArtifacts(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
             artifacts.Length.ShouldBeGreaterThan(0, "No artifacts were returned");
             GithubArtifact artifact = artifacts.First();
             string fileName = $"./{nameof(CanDownloadArtifact)}.zip";
