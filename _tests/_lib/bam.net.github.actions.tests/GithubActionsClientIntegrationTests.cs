@@ -89,7 +89,7 @@ namespace Bam.Net.Github.Actions.Tests
             GithubArtifact artifact = artifacts.First();
             string fileName = $"./{nameof(CanDownloadArtifact)}.zip";
             FileInfo fileInfo = artifact.DownloadTo(fileName);
-            fileInfo.Exists.ShouldBeTrue("file doesn't exists after attempted download");
+            fileInfo.Exists.ShouldBeTrue("file doesn't exist after attempted download");
             
             fileInfo.Length.ShouldBeGreaterThanOrEqualTo(artifact.SizeInBytes);
             Message.PrintLine("Artifact Size: {0}, File Size: {1}", artifact.SizeInBytes, fileInfo.Length);

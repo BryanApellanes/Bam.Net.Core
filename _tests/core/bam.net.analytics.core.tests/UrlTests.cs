@@ -46,13 +46,13 @@ namespace Bam.Net.Analytics.Tests
         public void TestUriPieces()
         {
             Uri uri = new Uri("http://www.monkey.com/this/is/the/path?and=thisTheQueryString&some=more");
-            OutLineFormat("Port: {0}", uri.Port);
-            OutLineFormat("Host (Domain): {0}", uri.Host);
-            OutLineFormat("Path: {0}", uri.PathAndQuery.Split(new string[] { "?" }, StringSplitOptions.RemoveEmptyEntries)[0]);
-            OutLineFormat("Query: {0}", uri.Query);
+            Message.PrintLine("Port: {0}", uri.Port);
+            Message.PrintLine("Host (Domain): {0}", uri.Host);
+            Message.PrintLine("Path: {0}", uri.PathAndQuery.Split(new string[] { "?" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+            Message.PrintLine("Query: {0}", uri.Query);
 
-            OutLineFormat("No Query: {0}", new Uri("http://test.com/path").Query);
-            OutLineFormat("No Query w/ Question Mark: {0}", new Uri("http://test.com/path?").Query);
+            Message.PrintLine("No Query: {0}", new Uri("http://test.com/path").Query);
+            Message.PrintLine("No Query w/ Question Mark: {0}", new Uri("http://test.com/path?").Query);
         }
 
         [ConsoleAction("write", "write operators")]

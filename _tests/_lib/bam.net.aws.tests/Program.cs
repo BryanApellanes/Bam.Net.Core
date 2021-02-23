@@ -1,4 +1,5 @@
 ﻿using System;
+using Bam.Net.CommandLine;
 using Bam.Net.Testing;
 
 namespace Bam.Net.Aws.Tests
@@ -7,9 +8,11 @@ namespace Bam.Net.Aws.Tests
     {
         static void Main(string[] args)
         {
-            ExecuteMain(args,
-                () => { },
-                parsedArguments => { });
+            ExecuteMainOrInteractive(args,(a) =>
+            {
+                Message.PrintLine("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
+                Environment.Exit(1);
+            });
         }
     }
 }

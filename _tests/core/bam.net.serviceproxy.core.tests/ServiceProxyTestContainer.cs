@@ -86,7 +86,7 @@ namespace Bam.Net.ServiceProxy.Tests
 
             foreach (string key in headers.Keys)
             {
-                OutLineFormat("{0}={1}", key, headers[key]);
+                Message.PrintLine("{0}={1}", key, headers[key]);
             }
             
         }
@@ -285,19 +285,6 @@ namespace Bam.Net.ServiceProxy.Tests
         }
 
         [UnitTest]
-        public void OutputTimeValues()
-        {
-            DateTime now = DateTime.UtcNow;
-            OutLineFormat("Month: {0}", now.Month);
-            OutLineFormat("Day: {0}", now.Day);
-            OutLineFormat("Year: {0}", now.Year);
-            OutLineFormat("Hour: {0}", now.Hour);
-            OutLineFormat("Minute: {0}", now.Minute);
-            OutLineFormat("Second: {0}", now.Second);
-            OutLineFormat("Millisecond: {0}", now.Millisecond);
-        }
-
-        [UnitTest]
         public void InstantDiffTest()
         {
             Instant now = new Instant();
@@ -310,14 +297,14 @@ namespace Bam.Net.ServiceProxy.Tests
             Expect.IsGreaterThan(thenDiff, 0);
             Expect.IsGreaterThan(fromNowDiff, 0);
 
-            OutLineFormat("Then Diff: {0}", thenDiff);
-            OutLineFormat("From Now Diff: {0}", fromNowDiff);
+            Message.PrintLine("Then Diff: {0}", thenDiff);
+            Message.PrintLine("From Now Diff: {0}", fromNowDiff);
 
             TimeSpan thenSpan = TimeSpan.FromMilliseconds(thenDiff);
             TimeSpan fromNowSpan = TimeSpan.FromMilliseconds(fromNowDiff);
 
-            OutLineFormat("Then minutes diff: {0}", thenSpan.Minutes);
-            OutLineFormat("From now minutes diff: {0}", fromNowSpan.Minutes);
+            Message.PrintLine("Then minutes diff: {0}", thenSpan.Minutes);
+            Message.PrintLine("From now minutes diff: {0}", fromNowSpan.Minutes);
         }
 
         [UnitTest]
@@ -325,7 +312,7 @@ namespace Bam.Net.ServiceProxy.Tests
         {
             Instant normalNow = new Instant(DateTime.Now);
             string toStringed = normalNow.ToString();
-            OutLineFormat("ToStringed: {0}", toStringed);
+            Message.PrintLine("ToStringed: {0}", toStringed);
             Instant parsed = Instant.FromString(toStringed);
 
             Expect.AreEqual(0, parsed.DiffInMilliseconds(normalNow));
