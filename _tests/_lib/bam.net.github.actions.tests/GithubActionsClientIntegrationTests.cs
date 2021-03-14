@@ -57,8 +57,8 @@ namespace Bam.Net.Github.Actions.Tests
         [IntegrationTest]
         public void WillAddAuthorizationHeaderUsingParameterlessConstructor()
         {
-            Vault testVault = Vault.Create(new FileInfo($"./{nameof(WillAddAuthorizationHeader)}.sqlite"), nameof(WillAddAuthorizationHeader));
-            string testHeaderValue = $"{nameof(WillAddAuthorizationHeader)}_".RandomLetters(8);
+            Vault testVault = Vault.Create(new FileInfo($"./{nameof(WillAddAuthorizationHeaderUsingParameterlessConstructor)}.sqlite"), nameof(WillAddAuthorizationHeaderUsingParameterlessConstructor));
+            string testHeaderValue = $"{nameof(WillAddAuthorizationHeaderUsingParameterlessConstructor)}_".RandomLetters(8);
             TestGithubActionsClient client = new TestGithubActionsClient();
             client.SetTestValue(testHeaderValue);
             Dictionary<string, string> header = client.CallGetHeaders(true);
@@ -91,8 +91,8 @@ namespace Bam.Net.Github.Actions.Tests
             FileInfo fileInfo = artifact.DownloadTo(fileName);
             fileInfo.Exists.ShouldBeTrue("file doesn't exist after attempted download");
             
-            fileInfo.Length.ShouldBeGreaterThanOrEqualTo(artifact.SizeInBytes);
-            Message.PrintLine("Artifact Size: {0}, File Size: {1}", artifact.SizeInBytes, fileInfo.Length);
+            Message.PrintLine("Artifact Size Unzipped: {0}, File Size Zipped: {1}", artifact.SizeInBytes, fileInfo.Length);
+            fileInfo.Delete();
             Pass(nameof(CanDownloadArtifact));
         }
     }
