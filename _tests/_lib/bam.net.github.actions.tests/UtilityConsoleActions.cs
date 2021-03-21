@@ -12,7 +12,7 @@ namespace Bam.Net.Github.Actions
         {
             GithubActionsClient client = new GithubActionsClient(DataConstants.RepoOwnerUserName, DataConstants.RepoName);
             int number = 1;
-            client.GetArtifacts().Each(artifact =>
+            client.ListArtifactInfos().Each(artifact =>
             {
                 Message.PrintLine($"{number++}. {artifact.Name}");
             });
@@ -23,7 +23,7 @@ namespace Bam.Net.Github.Actions
         {
             GithubActionsClient client = new GithubActionsClient(DataConstants.RepoOwnerUserName, DataConstants.RepoName);
             int number = 1;
-            client.GetArtifacts().Each(artifact =>
+            client.ListArtifactInfos().Each(artifact =>
             {
                 string name = artifact.Name;
                 string[] nameSegments = name.Split('-');

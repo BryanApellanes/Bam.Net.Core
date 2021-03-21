@@ -18,7 +18,7 @@ namespace Bam.Net.Github.Actions.Tests
         public void CanGetArtifacts()
         {
             GithubActionsClient client = new GithubActionsClient();
-            GithubArtifact[] artifacts = client.GetArtifacts(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
+            GithubArtifactInfo[] artifacts = client.ListArtifactInfos(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
             artifacts.ShouldNotBeNull("artifacts was null");
             artifacts.Length.ShouldBeGreaterThan(0, "No artifacts were returned");
             artifacts.Each(artifact =>
@@ -33,11 +33,11 @@ namespace Bam.Net.Github.Actions.Tests
         public void CanGetArtifact()
         {
             GithubActionsClient client = new GithubActionsClient(DataConstants.RepoOwnerUserName, DataConstants.RepoName);
-            GithubArtifact[] artifacts = client.GetArtifacts(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
+            GithubArtifactInfo[] artifacts = client.ListArtifactInfos(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
             uint artifactId = artifacts[0].Id;
-            GithubArtifact artifact = client.GetArtifact(artifactId);
-            artifact.ShouldNotBeNull();
-            Message.PrintLine(artifact.ToJson(true));
+            GithubArtifactInfo artifactInfo = client.GetArtifactInfo(artifactId);
+            artifactInfo.ShouldNotBeNull();
+            Message.PrintLine(artifactInfo.ToJson(true));
         }
         
         [ConsoleAction]
@@ -84,14 +84,14 @@ namespace Bam.Net.Github.Actions.Tests
         public void CanDownloadArtifact()
         {
             GithubActionsClient client = new GithubActionsClient();
-            GithubArtifact[] artifacts = client.GetArtifacts(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
+            GithubArtifactInfo[] artifacts = client.ListArtifactInfos(DataConstants.RepoOwnerUserName, DataConstants.RepoName).ToArray();
             artifacts.Length.ShouldBeGreaterThan(0, "No artifacts were returned");
-            GithubArtifact artifact = artifacts.First();
+            GithubArtifactInfo artifactInfo = artifacts.First();
             string fileName = $"./{nameof(CanDownloadArtifact)}.zip";
-            FileInfo fileInfo = artifact.DownloadTo(fileName);
+            FileInfo fileInfo = artifactInfo.DownloadTo(fileName);
             fileInfo.Exists.ShouldBeTrue("file doesn't exist after attempted download");
             
-            Message.PrintLine("Artifact Size Unzipped: {0}, File Size Zipped: {1}", artifact.SizeInBytes, fileInfo.Length);
+            Message.PrintLine("Artifact Size Unzipped: {0}, File Size Zipped: {1}", artifactInfo.SizeInBytes, fileInfo.Length);
             fileInfo.Delete();
             Pass(nameof(CanDownloadArtifact));
         }
