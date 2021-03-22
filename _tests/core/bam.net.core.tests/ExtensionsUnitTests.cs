@@ -9,21 +9,6 @@ namespace Bam.Net.Tests
     [Serializable]
     public class ExtensionsUnitTests : CommandLineTool
     {
-        public enum TestEnum
-        {
-            ValueOne,
-            ValueTwo,
-            ValueThree
-        }
-        
-        [UnitTest]
-        public static void ForEachEnumValueTest()
-        {
-            typeof(TestEnum).ForEachPublicStaticField(val => Message.PrintLine(val.ToString()));
-            
-            typeof(TestEnum).ForEachPublicStaticField<TestEnum>(val => Message.PrintLine(val.ToString()));
-        }
-        
         [UnitTest]
         public static void SmallestShouldReturnSmallest()
         {
