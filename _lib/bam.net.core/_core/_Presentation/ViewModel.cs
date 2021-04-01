@@ -15,7 +15,26 @@ namespace Bam.Net.Presentation
 {
     public class ViewModel<AP> : ViewModel
     {
-        public new AP ActionProvider { get; set; }
+        private AP _actionProvider;
+        
+        /// <summary>
+        /// Gets or sets the action provider.  This should be an 
+        /// instance of an object whose class definition has the 
+        /// ProxyAttribute applied.
+        /// </summary>
+        /// <value>
+        /// The action provider.
+        /// </value>
+        public new AP ActionProvider
+        {
+            get => _actionProvider;
+            
+            set
+            {
+                _actionProvider = value;
+                base.ActionProvider = value;
+            }
+        }
     }
     
     public class ViewModel

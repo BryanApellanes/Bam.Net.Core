@@ -23,7 +23,7 @@ namespace Bam.Net.CoreServices
                 { "AppConfJson", AppConf.ToJson(true) },
                 { "DaoRepository.Database.ConnectionName", DaoRepository?.Database?.Property<string>("ConnectionName") },
                 { "DaoRepository.Database.ConnectionString", DaoRepository?.Database?.Property<string>("ConnectionString") },
-                { "IRepository.StorableTypes", string.Join("\r\n", Repository?.StorableTypes.Select(t => t.FullName).ToArray()) }
+                { "IRepository.StorableTypes", string.Join("\r\n", Repository?.StorableTypes.Select(t => t.FullName).ToArray() ?? Array.Empty<string>()) }
             };
             return settings;
         }

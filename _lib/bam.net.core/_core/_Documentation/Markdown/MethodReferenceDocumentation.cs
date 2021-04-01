@@ -16,41 +16,13 @@ namespace Bam.Net.Documentation.Markdown
             Method = method;
         }
 
-        MethodInfo _method;
+        private readonly MethodInfo _method;
         public MethodInfo Method
         {
-            get
-            {
-                return _method;
-            }
-            set
+            get => _method;
+            init
             {
                 _method = value;
-                OnUpdated(new DocumentComponentEventArgs { DocumentComponent = this });
-            }
-        }
-
-        string _name;
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-                OnUpdated(new DocumentComponentEventArgs { DocumentComponent = this });
-            }
-        }
-
-        string _titleFormat;
-        public string TitleFormat
-        {
-            get => _titleFormat;
-            set
-            {
-                _titleFormat = value;
                 OnUpdated(new DocumentComponentEventArgs { DocumentComponent = this });
             }
         }
