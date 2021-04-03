@@ -18,7 +18,7 @@ using Bam.Net.Data.SQLite;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Testing.Unit;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
 	[IntegrationTestContainer]
 	public class DaoCrudTests: CommandLineTool

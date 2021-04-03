@@ -10,7 +10,7 @@ using Bam.Net.Testing;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Services.DataReplication;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
     [IntegrationTestContainer]
     [Serializable]

@@ -13,7 +13,7 @@ using Bam.Net.Data.SQLite;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Integration;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
     class TestNameFormatter : INameFormatter
     {

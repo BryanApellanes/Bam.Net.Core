@@ -34,7 +34,7 @@ namespace Bam.Net.Server.Rest
             if (restRequest.IsValid)
             {
                 IResponse response = context.Response;
-                Type type = restRequest.GetTypeByTypeName(Repository.StorableTypes);
+                Type type = restRequest.GetStorableType(Repository.StorableTypes);
                 if (type != null)
                 {
                     IWebRenderer renderer = RendererFactory.CreateRenderer(context.Request, restRequest.Extension);

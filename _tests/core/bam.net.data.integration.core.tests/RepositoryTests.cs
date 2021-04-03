@@ -17,7 +17,7 @@ using System.Reflection;
 using Bam.Net.DaoRef;
 using Bam.Net.Testing.Unit;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
 	[Serializable]
 	public class TestDto

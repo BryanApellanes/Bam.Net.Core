@@ -19,7 +19,7 @@ using Bam.Net.Testing.Integration;
 using Bam.Net.Data.Npgsql;
 using Bam.Net.Logging.Counters;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
 	[IntegrationTestContainer]
 	public class DaoQueryTests : CommandLineTool
@@ -183,12 +183,12 @@ namespace Bam.Net.Data.Tests.Integration
 		public void AndTest()
 		{
 			Expect.IsTrue(_testDatabases.Count > 0);
-			string methodName = MethodBase.GetCurrentMethod().Name;
+			string methodName = MethodBase.GetCurrentMethod()?.Name;
 			string nameStartsWith = 4.RandomLetters();
 			string descriptionStartsWith = 4.RandomLetters();
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				TestTable one = DataTools.CreateTestTable("{0}_{1}"._Format(nameStartsWith, 4.RandomLetters()), "{0}_{1}"._Format(descriptionStartsWith, 4.RandomLetters()), db);
 				TestTable two = DataTools.CreateTestTable("{0}_{1}"._Format(nameStartsWith, 4.RandomLetters()), "{0}_{1}"._Format(descriptionStartsWith, 4.RandomLetters()), db);
 				TestTable three = DataTools.CreateTestTable(nameStartsWith, db);
@@ -260,7 +260,7 @@ namespace Bam.Net.Data.Tests.Integration
             foreach(Database db in _testDatabases)
             {
                 Counter connectionCounter = Stats.Count("ConnectionCount", GetConnectionCount);
-                ulong initialCount = connectionCounter.Total;
+                ulong initialCount = connectionCounter.Count;
                 foreach (IDbConnectionManager conMan in new IDbConnectionManager[] 
                     {
                         new PerThreadDbConnectionManager(db),
@@ -272,7 +272,7 @@ namespace Bam.Net.Data.Tests.Integration
                     conMan.StateChangeEventHandler = (o, sce) => Message.PrintLine("***** {0} Current state {1}, Original state {2} *****", ConsoleColor.DarkYellow, o.GetType().Name, sce.CurrentState.ToString(), sce.OriginalState.ToString());
                     db.IsNotNull();
                     
-                    Message.PrintLine("{0} Connection Count before write {1}", ConsoleColor.Yellow, db.GetType().Name, connectionCounter.Total);
+                    Message.PrintLine("{0} Connection Count before write {1}", ConsoleColor.Yellow, db.GetType().Name, connectionCounter.Count);
 
                     List<TestTable> entries = new List<TestTable>();
                     string name = $"{nameof(AsyncQueryManualTest)}.CreateTestData";
@@ -281,11 +281,11 @@ namespace Bam.Net.Data.Tests.Integration
                     timer = Stats.End(name);
                     Message.PrintLine("{0} Writes took {1}", ConsoleColor.Cyan, db.GetType().Name, timer.Duration);
 
-                    Message.PrintLine("Count after write {0}", ConsoleColor.Yellow, connectionCounter.Total);
+                    Message.PrintLine("Count after write {0}", ConsoleColor.Yellow, connectionCounter.Count);
 
-                    Console.WriteLine(connectionCounter.Total);                    
+                    Console.WriteLine(connectionCounter.Count);                    
 
-                    Message.PrintLine("Count before read {0}", ConsoleColor.Yellow, connectionCounter.Total);
+                    Message.PrintLine("Count before read {0}", ConsoleColor.Yellow, connectionCounter.Count);
                     name = $"{nameof(AsyncQueryManualTest)}.ReadTestData";
                     timer = Stats.Start(name);
                     Parallel.ForEach(entries, (tt) =>
@@ -295,13 +295,13 @@ namespace Bam.Net.Data.Tests.Integration
                     });
                     timer = Stats.End(name);
                     Message.PrintLine("Parallel reads took {0}", ConsoleColor.Cyan, timer.Duration);
-                    Message.PrintLine("Count after read {0}", ConsoleColor.Yellow, connectionCounter.Total);
-                    Console.WriteLine("{0}: {1}", db.GetType().Name, connectionCounter.Total);
+                    Message.PrintLine("Count after read {0}", ConsoleColor.Yellow, connectionCounter.Count);
+                    Console.WriteLine("{0}: {1}", db.GetType().Name, connectionCounter.Count);
                     
                     Stats.Start("Deleting");
                     TestTable.LoadAll(db).ToList().ForEach(tt => tt.Delete(db));
                     Message.PrintLine("{0}: Deletes took {1} milliseconds", ConsoleColor.Yellow, db.GetType().Name, Stats.End("Deleting").Value);
-                    (connectionCounter.Total <= initialCount + ((ulong)(conMan.MaxConnections * 2))).IsTrue("Connection count higher than expected");
+                    (connectionCounter.Count <= initialCount + ((ulong)(conMan.MaxConnections * 2))).IsTrue("Connection count higher than expected");
                 }
             }            
         }
