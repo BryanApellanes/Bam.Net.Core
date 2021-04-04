@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
-    <ProjectReference Include="..\..\daoref\daoref.csproj" />
     <ProjectReference Include="..\..\_lib\daoref\daoref.csproj" />
   </ItemGroup>
 
