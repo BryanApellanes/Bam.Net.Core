@@ -105,7 +105,7 @@ namespace Bam.Net.Data.Repositories.Tests
             }
             catch (Exception ex)
             {
-                OutLineFormat("Attempt to drop table {0} threw exception: {1}", ConsoleColor.Yellow, tableName, ex.Message);
+                Message.PrintLine("Attempt to drop table {0} threw exception: {1}", ConsoleColor.Yellow, tableName, ex.Message);
             }
         }
     }

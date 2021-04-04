@@ -9,6 +9,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Bam Framework for .NET Core</Description>
+    <PackageVersion>1.0.6</PackageVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>\opt\bam\build\bam.net.core\debug</OutputPath>

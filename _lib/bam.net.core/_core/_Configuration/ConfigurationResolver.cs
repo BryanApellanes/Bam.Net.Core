@@ -128,7 +128,7 @@ namespace Bam.Net.Configuration
                 if(_config != null && _config.ContainsKey(key))
                 {
                     string value = _config[key];
-                    FireEvent(RetrievedFromCache, new ConfigurationEventArgs { Key = key, Value = value });
+                    FireEvent(RetrievedFromService, new ConfigurationEventArgs { Key = key, Value = value });
                     return value;
                 }
             }            
