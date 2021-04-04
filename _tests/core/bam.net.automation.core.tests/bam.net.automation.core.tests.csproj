@@ -6,6 +6,14 @@
     <RootNamespace>Bam.Net.Automation.Core.Tests</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.automation.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.automation.core.tests\release</OutputPath>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Update="test_project-package.csproj.xml">

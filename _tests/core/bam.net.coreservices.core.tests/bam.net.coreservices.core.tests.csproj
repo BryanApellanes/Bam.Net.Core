@@ -6,13 +6,21 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.coreservices.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.core.tests\release</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="NSubstitute" Version="3.1.0" />   
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
-    <ProjectReference Include="..\..\daoref\daoref.csproj" />
+    <ProjectReference Include="..\..\_lib\daoref\daoref.csproj" />
     <ProjectReference Include="..\bam.net.serviceproxy.core.tests\bam.net.serviceproxy.core.tests.csproj" />
   </ItemGroup>
   

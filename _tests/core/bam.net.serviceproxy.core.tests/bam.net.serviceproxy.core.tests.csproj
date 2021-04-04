@@ -6,6 +6,14 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.serviceproxy.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.serviceproxy.core.tests\release</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="4.9.1" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />

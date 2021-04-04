@@ -5,6 +5,14 @@
     <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.data.repositories.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.data.repositories.core.tests\release\</OutputPath>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Remove="Test_Generated\Qi\**" />

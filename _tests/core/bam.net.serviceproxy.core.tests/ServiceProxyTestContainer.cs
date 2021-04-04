@@ -434,7 +434,7 @@ namespace Bam.Net.ServiceProxy.Tests
             ValidationResult result = er.Validate();
             Expect.IsFalse(result.Success);
             Expect.IsTrue(result.ValidationFailures.ToList().Contains(ValidationFailures.MethodNameNotSpecified));
-            OutLineFormat(result.Message);
+            Message.PrintLine(result.Message);
         }
 
         [UnitTest]
@@ -478,7 +478,7 @@ namespace Bam.Net.ServiceProxy.Tests
             ValidationResult result = er.Validate();
             Expect.IsFalse(result.Success);
             Expect.IsTrue(result.ValidationFailures.ToList().Contains(ValidationFailures.ClassNotRegistered));
-            OutLineFormat(result.Message);
+            Message.PrintLine(result.Message);
         }
 
         [UnitTest]
@@ -489,7 +489,7 @@ namespace Bam.Net.ServiceProxy.Tests
             ValidationResult result = er.Validate();
             Expect.IsFalse(result.Success);
             Expect.IsTrue(result.ValidationFailures.ToList().Contains(ValidationFailures.MethodNotFound));
-            OutLineFormat(result.Message);
+            Message.PrintLine(result.Message);
         }
 
         [UnitTest]
@@ -501,7 +501,7 @@ namespace Bam.Net.ServiceProxy.Tests
             ValidationResult result = er.Validate();
             Expect.IsFalse(result.Success);
             Expect.IsTrue(result.ValidationFailures.ToList().Contains(ValidationFailures.ParameterCountMismatch));
-            OutLineFormat(result.Message);
+            Message.PrintLine(result.Message);
         }
 
         [UnitTest]
@@ -513,7 +513,7 @@ namespace Bam.Net.ServiceProxy.Tests
             Expect.IsTrue(result.Success);
             er.Execute();
             Expect.IsTrue(er.Result.Equals("Yay"));
-            OutLineFormat(er.Result.ToString());
+            Message.PrintLine(er.Result.ToString());
         }
 
         [UnitTest]
@@ -767,9 +767,9 @@ namespace Bam.Net.ServiceProxy.Tests
                 sha256 = Guid.NewGuid().ToString().Sha256();
             });
 
-            OutLineFormat("Generate took: {0}", generateTime.ToString());
-            OutLineFormat("-NewGuid took: {0}", guidTime.ToString());
-            OutLineFormat("HashGuid took: {0}", guidTimeSha256.ToString());
+            Message.PrintLine("Generate took: {0}", generateTime.ToString());
+            Message.PrintLine("-NewGuid took: {0}", guidTime.ToString());
+            Message.PrintLine("HashGuid took: {0}", guidTimeSha256.ToString());
         }
 
         [ConsoleAction("Output Keys")]

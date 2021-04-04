@@ -6,6 +6,14 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.core.tests\release</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.net.core.tests.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>

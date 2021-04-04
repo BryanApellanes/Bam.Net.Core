@@ -6,9 +6,18 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.data.integration.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.data.integration.core.tests\debug\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
     <ProjectReference Include="..\..\daoref\daoref.csproj" />
+    <ProjectReference Include="..\..\_lib\daoref\daoref.csproj" />
   </ItemGroup>
 
 

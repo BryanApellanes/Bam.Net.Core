@@ -9,6 +9,12 @@
     <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\breve\debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\breve\release</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="breveTest_cs.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

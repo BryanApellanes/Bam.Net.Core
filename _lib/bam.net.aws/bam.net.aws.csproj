@@ -9,6 +9,12 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>\opt\bam\build\bam.net.aws\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.aws\release</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.ECR" Version="3.3.103.9" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />

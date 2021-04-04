@@ -11,7 +11,10 @@
     <Description>Bam Framework for .NET Core</Description>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>\opt\bam\build\bam.net.core\debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>\opt\bam\build\bam.net.core\release</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
