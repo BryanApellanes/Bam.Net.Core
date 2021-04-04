@@ -853,18 +853,18 @@ namespace Bam.Net.Server.Tests
         {
             string fullUrl = "http://fake.cxm/monkey/doc.htm?gorilla=<div>baloney</div>&balls=tupac&val=with some spaces";
 
-            OutLineFormat("Uri.EscapeDataString({0})", ConsoleColor.Cyan, fullUrl);
-            OutLineFormat("Result: {0}", ConsoleColor.Yellow, Uri.EscapeDataString(fullUrl));
+            Message.PrintLine("Uri.EscapeDataString({0})", ConsoleColor.Cyan, fullUrl);
+            Message.PrintLine("Result: {0}", ConsoleColor.Yellow, Uri.EscapeDataString(fullUrl));
             Out();
-            OutLineFormat("Uri.EscapeUriString({0})", ConsoleColor.Cyan, fullUrl);
-            OutLineFormat("Result: {0}", ConsoleColor.Yellow, Uri.EscapeUriString(fullUrl));
+            Message.PrintLine("Uri.EscapeUriString({0})", ConsoleColor.Cyan, fullUrl);
+            Message.PrintLine("Result: {0}", ConsoleColor.Yellow, Uri.EscapeUriString(fullUrl));
             Out();
             string queryString = "?key1=value1&key2=value2&key4=#monkey&key5=me@you.com&val=with some spaces";
-            OutLineFormat("Uri.EscapeDataString({0})", ConsoleColor.Blue, queryString);
-            OutLineFormat("Result: {0}", ConsoleColor.Yellow, Uri.EscapeDataString(queryString));
+            Message.PrintLine("Uri.EscapeDataString({0})", ConsoleColor.Blue, queryString);
+            Message.PrintLine("Result: {0}", ConsoleColor.Yellow, Uri.EscapeDataString(queryString));
             Out();
-            OutLineFormat("Uri.EscapeUriString({0})", ConsoleColor.Blue, queryString);
-            OutLineFormat("Result: {0}", ConsoleColor.Yellow, Uri.EscapeUriString(queryString));
+            Message.PrintLine("Uri.EscapeUriString({0})", ConsoleColor.Blue, queryString);
+            Message.PrintLine("Result: {0}", ConsoleColor.Yellow, Uri.EscapeUriString(queryString));
         }
 
         [UnitTest]
@@ -872,17 +872,17 @@ namespace Bam.Net.Server.Tests
         {
             string fullUrl = "http://fake.cxm/monkey/doc.htm?gorilla=<div>baloney</div>&balls=tupac";
             Uri uri = new Uri(fullUrl);
-            OutLineFormat("Raw: {0}", fullUrl, ConsoleColor.Cyan);
-            OutLineFormat("AbsolutePath", uri.AbsolutePath, ConsoleColor.DarkBlue);
-            OutLineFormat("AbsoluteUri: {0}", uri.AbsoluteUri, ConsoleColor.DarkCyan);
-            OutLineFormat("Fragment: {0}", uri.Fragment, ConsoleColor.DarkGray);
-            OutLineFormat("Query: {0}", uri.Query, ConsoleColor.White);
-            OutLineFormat("Authority: {0}", uri.Authority, ConsoleColor.DarkYellow);
-            OutLineFormat("Host: {0}", uri.Host, ConsoleColor.Gray);
-            OutLine("Segments:");
+            Message.PrintLine("Raw: {0}", fullUrl, ConsoleColor.Cyan);
+            Message.PrintLine("AbsolutePath", uri.AbsolutePath, ConsoleColor.DarkBlue);
+            Message.PrintLine("AbsoluteUri: {0}", uri.AbsoluteUri, ConsoleColor.DarkCyan);
+            Message.PrintLine("Fragment: {0}", uri.Fragment, ConsoleColor.DarkGray);
+            Message.PrintLine("Query: {0}", uri.Query, ConsoleColor.White);
+            Message.PrintLine("Authority: {0}", uri.Authority, ConsoleColor.DarkYellow);
+            Message.PrintLine("Host: {0}", uri.Host, ConsoleColor.Gray);
+            Message.Print("Segments:");
             uri.Segments.Each(seg =>
             {
-                OutLineFormat("\t{0}", seg);
+                Message.PrintLine("\t{0}", seg);
             });
         }
 
@@ -926,7 +926,7 @@ namespace Bam.Net.Server.Tests
             Expect.AreEqual(6, pageNames.Length);
             pageNames.Each(pn =>
             {
-                OutLineFormat("{0}", ConsoleColor.Yellow, pn);
+                Message.PrintLine("{0}", ConsoleColor.Yellow, pn);
             });
         }
 
@@ -1136,7 +1136,7 @@ namespace Bam.Net.Server.Tests
         [UnitTest]
         public void OutputAssemblyLocation()
         {
-            OutLineFormat(Assembly.GetExecutingAssembly().Location);
+            Message.PrintLine(Assembly.GetExecutingAssembly().Location);
         }
 
         [UnitTest]
@@ -1151,9 +1151,9 @@ namespace Bam.Net.Server.Tests
             ClientInfo linuxInfo =
                 parser.Parse(
                     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
-            OutLine(macInfo.ToJson(true), ConsoleColor.Cyan);
-            OutLine(windowsInfo.ToJson(true), ConsoleColor.Blue);
-            OutLine(linuxInfo.ToJson(true), ConsoleColor.DarkGreen);
+            Message.PrintLine(macInfo.ToJson(true), ConsoleColor.Cyan);
+            Message.PrintLine(windowsInfo.ToJson(true), ConsoleColor.Blue);
+            Message.PrintLine(linuxInfo.ToJson(true), ConsoleColor.DarkGreen);
         }
         
         private static void CreateTestRootAndSetDefaultConfig(DirectoryInfo dir)

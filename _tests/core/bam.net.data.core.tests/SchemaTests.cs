@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Bam.Net.CommandLine;
 using Bam.Net.Data.Schema;
 using Bam.Net.Javascript;
 using Bam.Net.Testing;
@@ -262,7 +263,7 @@ namespace Bam.Net.Data.Tests
             }
             catch (Exception ex)
             {
-                OutLineFormat("An error occurred deleting test data. {0}", ConsoleColor.Red, ex.Message);
+                Message.PrintLine("An error occurred deleting test data. {0}", ConsoleColor.Red, ex.Message);
             }
         }
 
@@ -309,7 +310,7 @@ namespace Bam.Net.Data.Tests
             {
                 mgr.SetNewSchema("test");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 thrown = true;
                 TryDeleteSchema(mgr.SetSchema("test"));

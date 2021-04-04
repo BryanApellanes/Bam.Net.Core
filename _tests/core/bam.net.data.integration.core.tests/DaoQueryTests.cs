@@ -48,7 +48,7 @@ namespace Bam.Net.Data.Integration.Core.Tests
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				List<TestTable> tables = new List<TestTable>();
 				8.Times(i =>
 				{
@@ -70,7 +70,7 @@ namespace Bam.Net.Data.Integration.Core.Tests
 			string methodName = MethodBase.GetCurrentMethod().Name;
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				8.Times(i =>
 				{
 					DataTools.CreateTestTable("{0}_{1}"._Format(startsWith, 6.RandomLetters()), db);
@@ -94,7 +94,7 @@ namespace Bam.Net.Data.Integration.Core.Tests
 			string endsWith = 7.RandomLetters();
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				3.Times(i =>
 				{
 					DataTools.CreateTestTable("{0}{1}"._Format(4.RandomLetters(), endsWith), db);
@@ -125,7 +125,7 @@ namespace Bam.Net.Data.Integration.Core.Tests
 			string startsWith = 7.RandomLetters();
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				3.Times(i =>
 				{
 					DataTools.CreateTestTable("{0}{1}"._Format(startsWith, 4.RandomLetters()), db);
@@ -156,7 +156,7 @@ namespace Bam.Net.Data.Integration.Core.Tests
 			string contains = 7.RandomLetters();
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				3.Times(i =>
 				{
 					DataTools.CreateTestTable("{0}{1}{2}"._Format(4.RandomLetters(), contains, 4.RandomLetters()), db);
@@ -209,7 +209,7 @@ namespace Bam.Net.Data.Integration.Core.Tests
 			string two = 4.RandomLetters();
 			_testDatabases.Each(db =>
 			{
-				OutLineFormat("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
+				Message.PrintLine("{0}.{1}: {2}", ConsoleColor.DarkYellow, this.GetType().Name, methodName, db.GetType().Name);
 				TestTable first = DataTools.CreateTestTable("{0}_{1}"._Format(one, 4.RandomLetters()), db);
 				TestTable second = DataTools.CreateTestTable("{0}_{1}"._Format(two, 4.RandomLetters()), db);
 				TestTable third = DataTools.CreateTestTable(8.RandomLetters(), db);

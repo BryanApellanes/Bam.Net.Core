@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Text;
+using Bam.Net.CommandLine;
 using Bam.Net.Logging;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
@@ -38,13 +39,13 @@ namespace Bam.Net.Tests
             public override void AddEntry(string messageSignature, int verbosity, params string[] variableMessageValues)
             {
                 AddCalled = true;
-                OutLineFormat(messageSignature, ConsoleColor.Cyan);
-                OutLineFormat("Verbosity :{0}", ConsoleColor.DarkBlue, verbosity);
+                Message.PrintLine(messageSignature, ConsoleColor.Cyan);
+                Message.PrintLine("Verbosity :{0}", ConsoleColor.DarkBlue, verbosity);
             }
             public override void AddEntry(string messageSignature, LogEventType type, params string[] variableMessageValues)
             {
                 AddCalled = true;
-                OutLineFormat(messageSignature, ConsoleColor.Cyan, variableMessageValues);
+                Message.PrintLine(messageSignature, ConsoleColor.Cyan, variableMessageValues);
             }
 
             public override void CommitLogEvent(LogEvent logEvent)

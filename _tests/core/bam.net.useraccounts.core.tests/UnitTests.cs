@@ -146,7 +146,7 @@ namespace Bam.Net.UserAccounts.Tests
             Account account = user.AccountsByUserId.FirstOrDefault();
 
             Expect.IsFalse(string.IsNullOrEmpty(account.Provider), "Provider was null or empty");
-            OutLineFormat("Provider: {0}", account.Provider);
+            Message.PrintLine("Provider: {0}", account.Provider);
         }
 
         [UnitTest]
@@ -475,7 +475,7 @@ namespace Bam.Net.UserAccounts.Tests
             Expect.IsNotNull(user.AccountsByUserId.FirstOrDefault());
             Expect.IsNotNullOrEmpty(account.Token);
 
-            OutLineFormat("Token: {0}", account.Token);
+            Message.PrintLine("Token: {0}", account.Token);
         }
 
         [UnitTest]

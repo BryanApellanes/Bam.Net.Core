@@ -58,8 +58,8 @@ namespace Bam.Net.Services.Tests
         [UnitTest]        
         public void GetHashThrowsIfNoKeyProperties()
         {
-            Expect.Throws(() => new CompositeKeyRepoThrowsData().GetHashCode(), (ex) => OutLineFormat("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
-            Expect.Throws(() => new CompositeKeyRepoThrowsData().GetLongKeyHash(), (ex) => OutLineFormat("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
+            Expect.Throws(() => new CompositeKeyRepoThrowsData().GetHashCode(), (ex) => Message.PrintLine("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
+            Expect.Throws(() => new CompositeKeyRepoThrowsData().GetLongKeyHash(), (ex) => Message.PrintLine("Exception thrown as expected: {0}", ConsoleColor.Green, ex.Message));
         }
 
         [UnitTest]

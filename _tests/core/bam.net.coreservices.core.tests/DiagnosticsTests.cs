@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using Bam.Net;
+using Bam.Net.CommandLine;
 using Bam.Net.Data;
 using Bam.Net.Data.SQLite;
 using Bam.Net.Data.MsSql;
@@ -30,7 +31,7 @@ namespace Bam.Net.CoreServices.Tests
             Expect.IsNotNull(dbInfo);
             Expect.AreEqual(name, dbInfo.ConnectionName);
             Expect.AreEqual(typeof(SQLiteDatabase).FullName, dbInfo.DatabaseType);
-            OutLineFormat("{0}", ConsoleColor.DarkBlue, info.ToYaml());
+            Message.PrintLine("{0}", ConsoleColor.DarkBlue, info.ToYaml());
         }
 
         [UnitTest]
@@ -44,7 +45,7 @@ namespace Bam.Net.CoreServices.Tests
             Expect.IsNotNull(dbInfo);
             Expect.AreEqual(name, dbInfo.ConnectionName);
             Expect.AreEqual(typeof(OracleDatabase).FullName, dbInfo.DatabaseType);
-            OutLineFormat("{0}", ConsoleColor.DarkBlue, info.ToYaml());
+            Message.PrintLine("{0}", ConsoleColor.DarkBlue, info.ToYaml());
         }
         [UnitTest]
         public void DiagnosticInfoShouldHaveMySqlDatabase()
@@ -58,7 +59,7 @@ namespace Bam.Net.CoreServices.Tests
             Expect.IsNotNull(dbInfo);
             Expect.AreEqual(name, dbInfo.ConnectionName);
             Expect.AreEqual(typeof(MySqlDatabase).FullName, dbInfo.DatabaseType);
-            OutLineFormat("{0}", ConsoleColor.DarkBlue, info.ToYaml());
+            Message.PrintLine("{0}", ConsoleColor.DarkBlue, info.ToYaml());
         }
 
         [UnitTest]
@@ -72,22 +73,22 @@ namespace Bam.Net.CoreServices.Tests
                 got = true;
                 try
                 {
-                    OutLineFormat("{0}: {1}", ass.FullName, ass.GetFileInfo().Sha1(), ConsoleColor.Blue);
-                    OutLineFormat("{0}: {1}", ConsoleColor.Blue, ass.GetFilePath(), ass.FullName);
+                    Message.PrintLine("{0}: {1}", ass.FullName, ass.GetFileInfo().Sha1(), ConsoleColor.Blue);
+                    Message.PrintLine("{0}: {1}", ConsoleColor.Blue, ass.GetFilePath(), ass.FullName);
                     AssemblyName[] referenced = ass.GetReferencedAssemblies();
                     OutLine("referenced", ConsoleColor.DarkBlue);
                     foreach (AssemblyName name in referenced)
                     {
                         gotReference = true;
                         Assembly reference = Assembly.Load(name);
-                        OutLineFormat("\t{0}: {1}", ass.FullName, ass.GetFileInfo().Sha1(), ConsoleColor.Cyan);
-                        OutLineFormat("\t{0}: {1}", ConsoleColor.Cyan, ass.GetFilePath(), ass.FullName);
+                        Message.PrintLine("\t{0}: {1}", ass.FullName, ass.GetFileInfo().Sha1(), ConsoleColor.Cyan);
+                        Message.PrintLine("\t{0}: {1}", ConsoleColor.Cyan, ass.GetFilePath(), ass.FullName);
                     }
-                    OutLine();
+                    Message.PrintLine();
                 }
                 catch (Exception ex)
                 {
-                    OutLineFormat("Error outputting {0}:\r\n{1}", ConsoleColor.Yellow, ass.FullName, ex.Message);
+                    Message.PrintLine("Error outputting {0}:\r\n{1}", ConsoleColor.Yellow, ass.FullName, ex.Message);
                 }
             }
 
