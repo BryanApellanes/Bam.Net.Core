@@ -5,6 +5,14 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>\opt\bam\build\bam.net.github.actions.tests\debug</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>\opt\bam\build\bam.net.github.actions.tests\release</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
       <ProjectReference Include="..\..\..\_lib\bam.net.github.actions\bam.net.github.actions\bam.net.github.actions.csproj" />
