@@ -23,7 +23,7 @@ namespace Bam.Net.Analytics.Tests
             Db.EnsureSchema<Feature>();
 
             Url test = Url.FromUri("http://twitter.github.com/bootstrap/base-css.html#tables");
-            Out(test.ToString());
+            Message.Print(test.ToString());
             Expect.AreEqual("http://twitter.github.com/bootstrap/base-css.html#tables", test.ToString());
         }
         
@@ -67,7 +67,7 @@ namespace Bam.Net.Analytics.Tests
                 result.SafeAppendToFile("./operators.txt");
                 result = Handlebars.Render("generic-operators", new {DataType = dataType});
                 result.SafeAppendToFile("./generic-operators.txt");
-                OutLineFormat("Wrote file {0}", new FileInfo(fileName).FullName);
+                Message.PrintLine("Wrote file {0}", new FileInfo(fileName).FullName);
             }
         }
     }

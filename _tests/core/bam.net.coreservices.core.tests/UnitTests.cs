@@ -131,7 +131,7 @@ namespace Bam.Net.CoreServices.Tests
             .ShouldPass((because, objectUnderTest) =>
             {
                 objectUnderTest.IsA(typeof(ApplicationRegistryService));
-                objectUnderTest.IsA<ApplicationRegistryService>();
+                objectUnderTest.GetTypeReturns<ApplicationRegistryService>();
                 CoreServiceResponse result = because.ResultAs<CoreServiceResponse>();
                 because.ItsTrue("the response was not successful", !result.Success, "request should have failed");
                 because.ItsTrue("the message says 'You must be logged in to do that'", result.Message.Equals("You must be logged in to do that"));

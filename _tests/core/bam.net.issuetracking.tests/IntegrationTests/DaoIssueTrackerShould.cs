@@ -4,6 +4,7 @@ using Bam.Net.Data;
 using Bam.Net.Data.SQLite;
 using Bam.Net.IssueTracking.Data;
 using Bam.Net.Logging;
+using Bam.Net.Testing;
 using Bam.Net.Testing.Integration;
 using NSubstitute;
 using System;
@@ -22,9 +23,38 @@ namespace Bam.Net.IssueTracking.Tests
         [IntegrationTest]
         public async Task CreateIssue()
         {
+            After.Setup(setupContext => 
+            {
+                SetupTest(setupContext, $"{nameof(CreateIssue)}_Test");
+            })
+            .WhenA<DaoIssueTracker>("creates an issue", (daoIssueTracker) => 
+            {
+                return daoIssueTracker.CreateIssueAsync("test Issue Id", "Test Issue Title", "Test Issue Body").Result;
+            })
+            .TheTest
+            .ShouldPass((because, objectUnderTest) =>
+            {
+                objectUnderTest.IsA(typeof(DaoIssueTracker));
+                objectUnderTest.GetTypeReturns<DaoIssueTracker>();
+                because.ResultIs<IssueData>();
+                
+                because.IllLookAtTheResult();
+                //because.ResultIs<>
+                //because.ItsTrue("the response was not successful", !result.Success, "request should have failed");
+                //because.ItsTrue("the message says 'You must be logged in to do that'", result.Message.Equals("You must be logged in to do that"));
+                //because.IllLookAtIt(result.Message);
+            })
+            .SoBeHappy()
+            .UnlessItFailed();
+
             DaoIssueTracker daoIssueTracker = GetServiceRegistry($"{nameof(CreateIssue)}_Test").Get<DaoIssueTracker>();
             ITrackedIssue issueData = await daoIssueTracker.CreateIssueAsync("test Issue Id", "Test Issue Title", "Test Issue Body");
             Expect.IsNotNull(issueData, "issue was null");
+        }
+
+        private void SetupTest(SetupContext setupContext, string testName, IServiceLevelAgreementProvider serviceLevelAgreementProvider = null)
+        {
+            setupContext.CombineWith(GetServiceRegistry(testName));
         }
 
         private ServiceRegistry GetServiceRegistry(string testName, IServiceLevelAgreementProvider serviceLevelAgreementProvider = null)

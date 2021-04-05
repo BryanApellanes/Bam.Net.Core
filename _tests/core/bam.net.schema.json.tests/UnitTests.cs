@@ -257,7 +257,7 @@ namespace Bam.Net.Schema.Json.Tests
             path.Resolve().StartsWith("~").IsFalse();
             path.Path.StartsWith("~/").IsTrue();
             path.Resolve().StartsWith(BamHome.UserHome);
-            OutLineFormat("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
+            Message.PrintLine("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
         }
 
         private JSchema GetCompanyJSchema(out JSchemaClassManager jSchemaClassManager)
