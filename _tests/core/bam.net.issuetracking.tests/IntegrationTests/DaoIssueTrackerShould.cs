@@ -34,7 +34,7 @@ namespace Bam.Net.IssueTracking.Tests
             .TheTest
             .ShouldPass((because, objectUnderTest) =>
             {
-                objectUnderTest.IsA(typeof(DaoIssueTracker));
+                objectUnderTest.IsCastableAs<DaoIssueTracker>();
                 objectUnderTest.GetTypeReturns<DaoIssueTracker>();
                 because.ResultIs<IssueData>();
                 
