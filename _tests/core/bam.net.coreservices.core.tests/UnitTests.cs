@@ -130,7 +130,7 @@ namespace Bam.Net.CoreServices.Tests
             .TheTest
             .ShouldPass((because, objectUnderTest) =>
             {
-                objectUnderTest.IsA(typeof(ApplicationRegistryService));
+                objectUnderTest.GetTypeReturns(typeof(ApplicationRegistryService));
                 objectUnderTest.GetTypeReturns<ApplicationRegistryService>();
                 CoreServiceResponse result = because.ResultAs<CoreServiceResponse>();
                 because.ItsTrue("the response was not successful", !result.Success, "request should have failed");

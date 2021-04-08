@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>\opt\bam\build\bam.net.schema.json.tests\debug\</OutputPath>
+      <OutputPath>\opt\bam\build\tests\debug\bam.net.schema.json.tests\</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>\opt\bam\build\bam.net.schema.json.tests\release</OutputPath>
+      <OutputPath>\opt\bam\build\tests\release\bam.net.schema.json.tests\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>

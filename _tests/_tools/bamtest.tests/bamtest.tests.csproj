@@ -5,6 +5,14 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>\opt\bam\build\tests\debug\bamtest.tests</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>\opt\bam\build\tests\release\bamtest.tests</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\..\..\_tools\bamtest\bamtest.csproj" />
     </ItemGroup>

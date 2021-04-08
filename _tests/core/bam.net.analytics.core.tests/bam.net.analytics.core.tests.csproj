@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>\opt\bam\build\bam.net.analytics.core.tests\debug\</OutputPath>
+    <OutputPath>\opt\bam\build\tests\debug\bam.net.analytics.core.tests\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>\opt\bam\build\bam.net.analytics.core.tests\release</OutputPath>
+    <OutputPath>\opt\bam\build\tests\release\bam.net.analytics.core.tests\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

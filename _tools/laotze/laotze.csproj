@@ -10,10 +10,10 @@
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>\opt\bam\build\laotze\debug\</OutputPath>
+    <OutputPath>\opt\bam\build\debug\laotze\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>\opt\bam\build\laotze\release</OutputPath>
+    <OutputPath>\opt\bam\build\release\laotze\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="enso.ico" />

@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>\opt\bam\build\daoref\debug</OutputPath>
+    <OutputPath>\opt\bam\build\debug\daoref\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>\opt\bam\build\daoref\release</OutputPath>
+    <OutputPath>\opt\bam\build\release\daoref\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

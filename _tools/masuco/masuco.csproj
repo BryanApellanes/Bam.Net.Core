@@ -10,10 +10,10 @@
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>\opt\bam\build\masuco\debug\</OutputPath>
+    <OutputPath>\opt\bam\build\debug\masuco\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>\opt\bam\build\masuco\release</OutputPath>
+    <OutputPath>\opt\bam\build\release\masuco\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\masuco.csproj.UnmanagedRegistration.cache" />

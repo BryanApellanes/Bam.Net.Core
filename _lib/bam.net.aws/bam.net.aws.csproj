@@ -10,10 +10,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>\opt\bam\build\bam.net.aws\debug</OutputPath>
+    <OutputPath>\opt\bam\build\debug\bam.net.aws\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>\opt\bam\build\bam.net.aws\release</OutputPath>
+    <OutputPath>\opt\bam\build\release\bam.net.aws\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.ECR" Version="3.3.103.9" />
