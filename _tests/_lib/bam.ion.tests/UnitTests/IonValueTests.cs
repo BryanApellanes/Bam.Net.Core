@@ -12,7 +12,7 @@ namespace Bam.Ion.Tests.UnitTests
     public class IonValueTests : CommandLineTool
     {
         [UnitTest]
-        public async Task IonValueShouldSerializeAsExpected()
+        public void IonValueShouldSerializeAsExpected()
         {
             string json =
 @"{
@@ -25,6 +25,22 @@ namespace Bam.Ion.Tests.UnitTests
             Expect.IsTrue(value.Value is List<IonMember>);
             string output = value.ToJson(true);
             Expect.AreEqual(json, output);
+
+            IonValue value2 = IonValue.Read(json);
+            IonCollection collection = value2 as IonCollection;
+            Expect.IsNotNull(collection, "collection was null");
+            string output2 = collection.ToJson(true);
+            Expect.AreEqual(json, output2);
+        }
+
+        [UnitTest]
+        public void IonValueCanAddContext()
+        {
+            IonValue value = "hello";
+            value.AddContext("lang", "en");
+            string output = value.ToJson(true);
+
+
         }
     }
 }
