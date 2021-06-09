@@ -63,3 +63,6 @@
 [submodule "_lib/bam.remote"]
 	path = _lib/bam.remote
 	url = https://github.com/BryanApellanes/Bam.Remote.git
+[submodule "_tools/bam"]
+	path = _tools/bam
+	url = https://github.com/BryanApellanes/bam.git
