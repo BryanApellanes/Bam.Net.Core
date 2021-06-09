@@ -57,3 +57,9 @@
 [submodule "_lib/bam.net.data.graphql"]
 	path = _lib/bam.net.data.graphql
 	url = git@github.com:BryanApellanes/Bam.Net.Data.GraphQL.git
+[submodule "_lib/bam.net.presentation"]
+	path = _lib/bam.net.presentation
+	url = https://github.com/BryanApellanes/Bam.Net.Presentation.git
+[submodule "_lib/bam.remote"]
+	path = _lib/bam.remote
+	url = https://github.com/BryanApellanes/Bam.Remote.git
