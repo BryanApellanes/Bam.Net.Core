@@ -54,9 +54,6 @@
 [submodule "_tools/bamtest"]
 	path = _tools/bamtest
 	url = git@github.com:BryanApellanes/bamtest.git
-[submodule "_lib/bam.net.data.graphql"]
-	path = _lib/bam.net.data.graphql
-	url = git@github.com:BryanApellanes/Bam.Net.Data.GraphQL.git
 [submodule "_lib/bam.net.presentation"]
 	path = _lib/bam.net.presentation
 	url = https://github.com/BryanApellanes/Bam.Net.Presentation.git
