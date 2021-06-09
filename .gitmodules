@@ -66,3 +66,9 @@
 [submodule "_tools/bam"]
 	path = _tools/bam
 	url = https://github.com/BryanApellanes/bam.git
+[submodule "_tools/bamdb"]
+	path = _tools/bamdb
+	url = https://github.com/BryanApellanes/bamdb.git
+[submodule "_tools/bamsdo"]
+	path = _tools/bamsdo
+	url = https://github.com/BryanApellanes/bamsdo.git

@@ -55,9 +55,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\BamAppServices\_tools\bamsdo\bamsdo.csproj" />
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
     <ProjectReference Include="..\..\..\_lib\bam.net.presentation\bam.net.presentation.csproj" />
+    <ProjectReference Include="..\..\..\_tools\bamsdo\bamsdo.csproj" />
   </ItemGroup>  
 
 </Project>
