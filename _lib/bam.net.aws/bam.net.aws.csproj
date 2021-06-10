@@ -3,7 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net.Aws</RootNamespace>
     <PackageId>bam.net.aws</PackageId>
-    <Version>1.0.5</Version>
+    <Version>1.0.6-test+0724ac6e</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -18,8 +18,6 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.ECR" Version="3.3.103.9" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../bam.net.core/bam.net.core.csproj" />
+    <PackageReference Include="bam.net.core" Version="1.0.*" />
   </ItemGroup>
 </Project>

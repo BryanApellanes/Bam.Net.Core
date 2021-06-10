@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bam.net.core" Version="1.0.6" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
   </ItemGroup>
 
@@ -50,10 +51,6 @@
 
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.analytics.core.tests.application" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
 
 </Project>

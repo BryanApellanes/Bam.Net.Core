@@ -14,12 +14,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\BamAppServices\_lib\bam.remote\bam.remote.csproj" />
-      <ProjectReference Include="..\..\..\..\BamAppServices\_tools\bambot\bambot.csproj" />
-      <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="UnitTests\**" />
     </ItemGroup>
 
@@ -29,6 +23,10 @@
 
     <ItemGroup>
       <None Remove="UnitTests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="bam.net.core" Version="1.0.*" />
     </ItemGroup>
 
 </Project>

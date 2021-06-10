@@ -1,7 +1,7 @@
 ﻿<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>masuco</id>
-    <version>1.0.6-test+146a288e</version>
+    <version>1.0.6-test+0724ac6e</version>
     <authors>Bryan Apellanes</authors>
     <description>masuco</description>
   </metadata>
