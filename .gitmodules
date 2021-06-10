@@ -56,7 +56,7 @@
 	url = git@github.com:BryanApellanes/bamtest.git
 [submodule "_lib/bam.net.presentation"]
 	path = _lib/bam.net.presentation
-	url = https://github.com/BryanApellanes/Bam.Net.Presentation.git
+	url = git@github.com:BryanApellanes/Bam.Net.Presentation.git
 [submodule "_lib/bam.remote"]
 	path = _lib/bam.remote
 	url = https://github.com/BryanApellanes/Bam.Remote.git
