@@ -1,18 +1,9 @@
 #!/bin/bash
 
-function foreachSubmodule(){
-    COMMAND=$1
-    SUBMODULES=($(git submodule | awk '{print $2}'))
-    for SUBMODULE in "${SUBMODULES[@]}"; do
-        pushd $SUBMODULE > /dev/null
-        echo `pwd`
-        $1
-        popd > /dev/null
-    done
-}
-
-function build(){
+function clean(){
+    echo hello there
     if [[ -d "./.bam/build" ]]; then
+        echo general kenobi
         pushd .bam/build/common > /dev/null
         source ./init.sh $1
         popd > /dev/null
@@ -22,15 +13,9 @@ function build(){
 
         clean_artifacts
 
-        ./configure lib
         ./clean lib
-        ./build lib
-        ./configure tools
         ./clean tools
-        ./build tools
-        ./configure tests
         ./clean tests
-        ./build tests
 
         popd > /dev/null
     else
@@ -47,4 +32,4 @@ if [[ -z ${BAMSRCROOT} ]]; then
     fi      
 fi
 
-build ${BAMSRCROOT}
+clean ${BAMSRCROOT}

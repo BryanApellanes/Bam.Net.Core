@@ -1,17 +1,6 @@
 #!/bin/bash
 
-function foreachSubmodule(){
-    COMMAND=$1
-    SUBMODULES=($(git submodule | awk '{print $2}'))
-    for SUBMODULE in "${SUBMODULES[@]}"; do
-        pushd $SUBMODULE > /dev/null
-        echo `pwd`
-        $1
-        popd > /dev/null
-    done
-}
-
-function build(){
+function configure(){
     if [[ -d "./.bam/build" ]]; then
         pushd .bam/build/common > /dev/null
         source ./init.sh $1
@@ -20,17 +9,9 @@ function build(){
 
         print_line "GITHUB_SHA = ${GITHUB_SHA}" ${GREEN}
 
-        clean_artifacts
-
         ./configure lib
-        ./clean lib
-        ./build lib
         ./configure tools
-        ./clean tools
-        ./build tools
         ./configure tests
-        ./clean tests
-        ./build tests
 
         popd > /dev/null
     else
@@ -47,4 +28,4 @@ if [[ -z ${BAMSRCROOT} ]]; then
     fi      
 fi
 
-build ${BAMSRCROOT}
+configure ${BAMSRCROOT}
