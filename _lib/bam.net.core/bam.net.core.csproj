@@ -3,19 +3,21 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net</RootNamespace>
     <PackageId>bam.net.core</PackageId>
-    <Version>1.0.6-test+0724ac6e</Version>
+    <Version>1.0.6-a39d4372</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Bam Framework for .NET Core</Description>
+    <Description>Core of the Bam Framework for .NET Core</Description>
     <PackageVersion>1.0.6</PackageVersion>
+    <IntermediatePackDir>/opt/bam/build/$(Configuration)/$(MSBuildThisFileName)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>bam.net.core.nuspec</NuspecFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>\opt\bam\build\debug\bam.net.core\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>\opt\bam\build\release\bam.net.core\</OutputPath>
+  <PropertyGroup>
+    <OutputPath>\opt\bam\build\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.3" />
@@ -71,4 +73,10 @@
     </Content>
   </ItemGroup>
   <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>

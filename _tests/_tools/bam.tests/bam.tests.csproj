@@ -5,13 +5,10 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>\opt\bam\build\debug\bam.tests\</OutputPath>
+    <PropertyGroup>
+      <OutputPath>\opt\bam\build\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>\opt\bam\build\release\bam.tests\</OutputPath>
-    </PropertyGroup>
+    
 
     <ItemGroup>
       <Compile Remove="UnitTests\**" />

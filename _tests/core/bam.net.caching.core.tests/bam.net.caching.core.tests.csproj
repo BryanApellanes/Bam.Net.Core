@@ -1,63 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>bam.net.caching.core.tests.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
-
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>\opt\bam\build\tests\debug\bam.net.caching.core.tests\</OutputPath>
   </PropertyGroup>
-
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>\opt\bam\build\tests\release\bam.net.caching.core.tests\</OutputPath>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="TestFile1.txt" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="TestFile1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
   </ItemGroup>
-
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.net.caching.core.tests.csproj.UnmanagedRegistration.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\bam.net.caching.core.tests.csproj.ResolveComReference.cache" />
   </ItemGroup>
-
   <ItemGroup>
     <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\bam.net.caching.core.tests.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\bam.net.caching.core.tests.pdb" />
   </ItemGroup>
-
   <ItemGroup>
     <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\bam.net.caching.core.tests.dll" />
   </ItemGroup>
-
   <ItemGroup>
     <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\bam.net.caching.core.tests.dll.manifest" />
   </ItemGroup>
-
   <ItemGroup>
     <DeployManifest Remove="obj\Debug\netcoreapp2.2\bam.net.caching.core.tests.application" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
-
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>

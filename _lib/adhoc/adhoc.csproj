@@ -5,9 +5,14 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Bam.Net.Adhoc</RootNamespace>
     <PackageId>bam.net.adhoc</PackageId>
-    <Version>1.0.6-test+0724ac6e</Version>
+    <Version>1.0.6-a39d4372</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>adhoc.nuspec</NuspecFile>
+    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>\opt\bam\build\debug\adhoc\</OutputPath>
@@ -52,4 +57,10 @@
   <ItemGroup>
     <RegFreeComManifest Remove="obj\Debug\netcoreapp2.2\adhoc.X.manifest" />
   </ItemGroup>
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>

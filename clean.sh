@@ -1,9 +1,7 @@
 #!/bin/bash
 
 function clean(){
-    echo hello there
     if [[ -d "./.bam/build" ]]; then
-        echo general kenobi
         pushd .bam/build/common > /dev/null
         source ./init.sh $1
         popd > /dev/null
