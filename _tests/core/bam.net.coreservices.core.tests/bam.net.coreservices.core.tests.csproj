@@ -10,7 +10,7 @@
     <NuspecFile>$(MSBuildThisFileName).nuspec</NuspecFile>
   </PropertyGroup>
   <PropertyGroup>
-      <OutputPath>\opt\bam\build\tests\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
+    <OutputPath>\opt\bam\build\tests\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NSubstitute" Version="3.1.0" />

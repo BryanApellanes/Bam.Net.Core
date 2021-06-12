@@ -10,7 +10,7 @@
     <NuspecFile>$(MSBuildThisFileName).nuspec</NuspecFile>
   </PropertyGroup>
   <PropertyGroup>
-      <OutputPath>\opt\bam\build\tests\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
+    <OutputPath>\opt\bam\build\tests\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <_UnmanagedRegistrationCache Remove="obj\bam.net.profiguration.core.tests.csproj.UnmanagedRegistration.cache" />

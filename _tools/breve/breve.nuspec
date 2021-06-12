@@ -1,7 +1,7 @@
 ﻿<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>breve</id>
-    <version>1.0.6-a39d4372</version>
+    <version>1.0.6-2ac4ccaa</version>
     <authors>Bryan Apellanes</authors>
     <description>breve</description>
   </metadata>

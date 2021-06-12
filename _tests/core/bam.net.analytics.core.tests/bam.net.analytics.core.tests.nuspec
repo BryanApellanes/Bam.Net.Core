@@ -1,7 +1,7 @@
 ﻿<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>bam.net.analytics.core.tests</id>
-    <version>1.0.6-88346f4c</version>
+    <version>1.0.6-dev+2ac4ccaa</version>
     <authors>Bryan Apellanes</authors>
     <description>bam.net.analytics.core.tests</description>
   </metadata>

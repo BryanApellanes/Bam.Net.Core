@@ -3,6 +3,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PackageId>laotze</PackageId>
+    <Version>1.0.6</Version>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <NuspecFile>laotze.nuspec</NuspecFile>
     <IntermediatePackDir>/opt/bam/build/$(Configuration)/$(MSBuildThisFileName)/</IntermediatePackDir>
