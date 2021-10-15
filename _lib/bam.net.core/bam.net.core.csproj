@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Bam.Net</RootNamespace>
     <PackageId>bam.net.core</PackageId>
     <Version>1.0.5-test+e189dfb6</Version>
