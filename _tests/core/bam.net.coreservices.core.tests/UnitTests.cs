@@ -10,6 +10,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using Bam.Net.CommandLine;
+using Bam.Net.CoreServices.AccessControl;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.Data;
@@ -35,6 +36,16 @@ namespace Bam.Net.CoreServices.Tests
     [Serializable]
     public class UnitTests : CommandLineTool
     {
+        [UnitTest]
+        public void EnvironmentVariableHeaderProviderShouldReadEnvironment()
+        {
+            string value = "TestValue";
+            Environment.SetEnvironmentVariable(EnvironmentVariableAuthorizationHeaderProvider.DefaultEnvironmentVariableName, value);
+
+            EnvironmentVariableAuthorizationHeaderProvider provider = new EnvironmentVariableAuthorizationHeaderProvider();
+            Expect.AreEqual(value, provider.Value);
+        }
+
         interface ITestInterface
         {
             void Go();

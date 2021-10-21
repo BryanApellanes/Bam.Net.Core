@@ -14,8 +14,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="bam.net.aws" Version="1.0.*" />
       <PackageReference Include="bam.net.core" Version="1.0.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\_lib\bam.net.aws\bam.net.aws.csproj" />
     </ItemGroup>
 
 </Project>

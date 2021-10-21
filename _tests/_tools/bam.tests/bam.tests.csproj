@@ -7,6 +7,7 @@
 
     <PropertyGroup>
       <OutputPath>\opt\bam\build\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
+      <StartupObject>Bam.Tests.Program</StartupObject>
     </PropertyGroup>
     
 
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="bam.net.core" Version="1.0.*" />
+      <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
     </ItemGroup>
 
 </Project>

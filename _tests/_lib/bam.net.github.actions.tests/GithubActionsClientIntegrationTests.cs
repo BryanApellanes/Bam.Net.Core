@@ -78,7 +78,7 @@ namespace Bam.Net.Github.Actions.Tests
             configKey.ShouldNotBeBlank();
             Pass(nameof(ConfigKeyShouldBeSet));
         }
-        
+
         [ConsoleAction]
         [IntegrationTest]
         public void CanDownloadArtifact()
@@ -90,7 +90,7 @@ namespace Bam.Net.Github.Actions.Tests
             string fileName = $"./{nameof(CanDownloadArtifact)}.zip";
             FileInfo fileInfo = artifactInfo.DownloadTo(fileName);
             fileInfo.Exists.ShouldBeTrue("file doesn't exist after attempted download");
-            
+
             Message.PrintLine("Artifact Size Unzipped: {0}, File Size Zipped: {1}", artifactInfo.SizeInBytes, fileInfo.Length);
             fileInfo.Delete();
             Pass(nameof(CanDownloadArtifact));

@@ -43,46 +43,65 @@ namespace Bam.Net.Configuration
         [Inject]
         public IConfigurationProvider ConfigurationProvider { get; set; }
 
-        public string this[string key, string defaultValue = null, bool callConfigService = false]
+        public ConfigurationValue this[string key, string defaultValue = null, bool callConfigService = false]
         {
             get
             {
+                ConfigurationSources source = ConfigurationSources.NotFound;
+
                 string value = NetCoreConfiguration?[key];
-                if (string.IsNullOrEmpty(value))
+                if(!string.IsNullOrEmpty(value))
+                {
+                    source = ConfigurationSources.NetCoreConfiguration;
+                }
+                else
                 {
                     value = DefaultConfiguration[key];
+                    source = ConfigurationSources.DefaultConfiguration;
                 }
 
                 if (string.IsNullOrEmpty(value) && AppSettings.ContainsKey(key))
                 {
                     value = AppSettings[key];
+                    source = ConfigurationSources.ConfigAppSettings;
                 }
-                
+
                 if (string.IsNullOrEmpty(value))
                 {
                     value = BamEnvironmentVariables.GetBamVariable(key);
+                    source = ConfigurationSources.BamEnvironmentVariable;
                 }
 
                 if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(defaultValue))
                 {
                     value = defaultValue;
+                    source = ConfigurationSources.DefaultValue;
                 }
-                
-                if(string.IsNullOrEmpty(value) && callConfigService)
+
+                if (string.IsNullOrEmpty(value) && callConfigService)
                 {
                     value = FromService(key);
+                    source = ConfigurationSources.ConfigurationService;
                 }
-                
+
                 if (string.IsNullOrEmpty(value))
                 {
                     FireEvent(ConfigurationValueNotFound, new ConfigurationEventArgs { Key = key });
                 }
+
                 if (!string.IsNullOrEmpty(value))
                 {
                     Config.AppSettings.AddMissing(key, value);
                     Config.Save();
                 }
-                return value;
+
+                return new ConfigurationValue(value)
+                {
+                    Key = key,
+                    DefaultValue = defaultValue,
+                    CallConfigService = callConfigService,
+                    ConfigurationSource = source
+                };
             }       
         }
 
@@ -121,7 +140,7 @@ namespace Bam.Net.Configuration
                     return value;
                 }
             }
-            if (ConfigurationProvider != null && !string.IsNullOrEmpty(ApplicationName))
+            if (ConfigurationProvider != null && !string.IsNullOrEmpty(ApplicationName)) // TODO: account for UNKOWN application
             {
                 FireEvent(RetrievingFromService, new ConfigurationEventArgs { Key = key });
                 _config = ConfigurationProvider.GetApplicationConfiguration(ApplicationName);
