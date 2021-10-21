@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      BAMSRCROOT: "."
       DIST: /opt/bam/dist
       CI_USERNAME: "ci"
       CI_EMAIL: "ci@threeheadz.com"
