@@ -66,3 +66,6 @@
 [submodule "_tools/bamdb"]
 	path = _tools/bamdb
 	url = https://github.com/BryanApellanes/bamdb.git
+[submodule "_lib/bam.net.data.intersystems"]
+	path = _lib/bam.net.data.intersystems
+	url = git@github.com:BryanApellanes/Bam.Net.Data.InterSystems.git
