@@ -18,7 +18,7 @@ namespace Bam.Net
                     {
                         StringBuilder path = new StringBuilder();
                         path.Append(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-                        if (!path.ToString().EndsWith(Path.PathSeparator))
+                        if (!path.ToString().EndsWith(Path.PathSeparator.ToString()))
                         {
                             path.Append(Path.PathSeparator);
                         }
