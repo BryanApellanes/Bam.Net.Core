@@ -2,12 +2,17 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageId>breve</PackageId>
+    <Version>1.0.6</Version>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <NuspecFile>breve.nuspec</NuspecFile>
-    <IntermediatePackDir>$(MSBuildProjectDirectory)/bin/$(Configuration)/</IntermediatePackDir>
+    <IntermediatePackDir>/opt/bam/build/$(Configuration)/$(MSBuildThisFileName)/</IntermediatePackDir>
     <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>\opt\bam\build\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="breveTest_cs.js">

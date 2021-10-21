@@ -17,7 +17,7 @@ using System.Reflection;
 using Bam.Net.DaoRef;
 using Bam.Net.Testing.Unit;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
 	[Serializable]
 	public class TestDto
@@ -69,8 +69,8 @@ namespace Bam.Net.Data.Tests.Integration
 				Expect.IsNotNullOrEmpty(value.Uuid, "Uuid didn't get set");
 				long id = value.Id;
 				string uuid = value.Uuid;
-				OutLineFormat("The id is {0}", id);
-				OutLineFormat("The Uuid is {0}", uuid);
+				Message.PrintLine("The id is {0}", id);
+				Message.PrintLine("The Uuid is {0}", uuid);
 				Expect.IsTrue(value.Id > 0, "Id should have been greater than 0");
 				TestDto retrieved = repo.Retrieve<TestDto>(id);
 				Expect.AreEqual(name1, retrieved.Name);

@@ -25,7 +25,7 @@ using Bam.Net.Data.Postgres;
 
 //using Bam.Net.Data.OleDb;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
 	public static class DataTools
 	{

@@ -1,4 +1,5 @@
 ﻿using System;
+using Bam.Net.CommandLine;
 
 namespace Bam.Net.Github.Actions.Tests
 {
@@ -6,7 +7,11 @@ namespace Bam.Net.Github.Actions.Tests
     {
         static void Main(string[] args)
         {
-            ExecuteMain(args);
+            ExecuteMainOrInteractive(args,(a) =>
+            {
+                Message.PrintLine("Error parsing arguments: {0}", ConsoleColor.Red, a.Message);
+                Environment.Exit(1);
+            });
         }
     }
 }

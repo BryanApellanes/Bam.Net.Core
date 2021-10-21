@@ -110,7 +110,7 @@ namespace Bam.Net.Aws
         
         private static void EnsureValidFileIdentifier(FileIdentifier fileIdentifier)
         {
-            Args.ThrowIfNull(fileIdentifier);
+            Args.ThrowIfNull(fileIdentifier, nameof(fileIdentifier));
             if (fileIdentifier.GetType() != typeof(S3FileIdentifier))
             {
                 throw new InvalidOperationException("Unsupported fileIdentifier, must be an S3FileIdentifier");

@@ -32,12 +32,12 @@ namespace Bam.Net.Presentation.Html
 
         public static InputTag OfType(InputTypes type, object value = null)
         {
-            Args.ThrowIf(type == null, "type can't be null");
             return OfType(type.ToString().KabobCase().ToLowerInvariant(), value);
         }
         
         public static InputTag OfType(string type, object value = null)
         {
+            Args.ThrowIf(type == null, "type can't be null");
             InputTag input = new InputTag("input", new {type = type});
             if (value != null)
             {

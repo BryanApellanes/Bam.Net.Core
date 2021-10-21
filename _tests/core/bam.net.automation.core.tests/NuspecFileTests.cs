@@ -12,11 +12,10 @@ namespace Bam.Net.Automation.Tests
         [UnitTest]
         public void CanWriteNuspecFile()
         {
-            NuspecFile testFile = new NuspecFile($"./{nameof(CanWriteNuspecFile)}.nuspec");
-            testFile.Id = "TestId";
-            testFile.Version = "1.0.x";
-            testFile.Authors = "Bryan Apellanes";
-            testFile.Description = "test description";
+            NuspecFile testFile = new NuspecFile($"./{nameof(CanWriteNuspecFile)}.nuspec")
+            {
+                Id = "TestId", Version = "1.0.x", Authors = "Bryan Apellanes", Description = "test description"
+            };
 
             FileInfo fileInfo = testFile.Write();
             Console.WriteLine(fileInfo.FullName.SafeReadFile());

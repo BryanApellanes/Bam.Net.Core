@@ -458,7 +458,7 @@ namespace Bam.Net.Encryption.Tests
                 Expect.IsFalse(item.Value.Equals(val1));
                 Expect.IsFalse(item.Value.Equals(val2));
 
-                OutLineFormat("key: {0}\r\nvalue: {1}", item.Key, item.Value);
+                Message.PrintLine("key: {0}\r\nvalue: {1}", item.Key, item.Value);
             });
 
             vault["key1"] = "monkey";
@@ -608,7 +608,7 @@ namespace Bam.Net.Encryption.Tests
             Vault vault = info.Load();
             vault.Keys.Each(key =>
             {
-                OutLineFormat("{0}={1}", key, vault[key]);
+                Message.PrintLine("{0}={1}", key, vault[key]);
             });
         }
 

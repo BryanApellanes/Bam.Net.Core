@@ -184,7 +184,7 @@ namespace Bam.Net.Services.Tests
                 );
 
                 Expect.AreEqual(actual.AssemblyReferenceDescriptors?.Count, retrievedDescriptor.AssemblyReferenceDescriptors?.Count);
-                OutLineFormat("ProcessRuntimeDescriptors count {0}", retrievedDescriptor.ProcessRuntimeDescriptors.Count);
+                Message.PrintLine("ProcessRuntimeDescriptors count {0}", retrievedDescriptor.ProcessRuntimeDescriptors.Count);
             }
         }
 

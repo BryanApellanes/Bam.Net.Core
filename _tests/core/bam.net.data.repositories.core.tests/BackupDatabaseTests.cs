@@ -30,7 +30,7 @@ namespace Bam.Net.Data.Repositories.Tests
 	{
 		static ILogger _logger;
 		static object _loggerLock = new object();
-		public static ILogger Logger
+		public new static ILogger Logger
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace Bam.Net.Data.Repositories.Tests
 				t.GetProperties().Where(p => p.HasCustomAttributeOfType<ForeignKeyAttribute>()).Each(p =>
 				{
 					ForeignKeyAttribute fk = p.GetCustomAttribute<ForeignKeyAttribute>();
-					OutLineFormat("ReferencingTable: {0}, ReferencedKey: {1}, ReferencedTable: {2}", table.TableName, fk.ReferencedKey, fk.ReferencedTable);
+					Message.PrintLine("ReferencingTable: {0}, ReferencedKey: {1}, ReferencedTable: {2}", table.TableName, fk.ReferencedKey, fk.ReferencedTable);
 				});
 			});
 		}
@@ -119,14 +119,14 @@ namespace Bam.Net.Data.Repositories.Tests
 		{
 			3.Times(i =>
 			{
-				OutLineFormat("Creating main...", ConsoleColor.DarkCyan);
+				Message.PrintLine("Creating main...", ConsoleColor.DarkCyan);
 				MainObject m = new MainObject();
 				m.Created = DateTime.UtcNow;
 				m.Name = "MainObject: {0}"._Format(i);
 				m.Save(toBackup);
 				OutLine(m.PropertiesToString(), ConsoleColor.Blue);
 
-				OutLineFormat("\tAdding secondary...", ConsoleColor.Yellow);				
+				Message.PrintLine("\tAdding secondary...", ConsoleColor.Yellow);				
 				RandomNumber.Between(1, 3).Times(n =>
 				{
 					SecondaryObject s = m.SecondaryObjectsByMainId.AddChild();
@@ -136,8 +136,8 @@ namespace Bam.Net.Data.Repositories.Tests
 				m.Save(toBackup);				
 				m.SecondaryObjectsByMainId.Each(s =>
 				{
-					OutLineFormat("\t\tAdding ternary...", ConsoleColor.Blue);
-					OutLine(s.PropertiesToString(), ConsoleColor.Cyan);
+					Message.PrintLine("\t\tAdding ternary...", ConsoleColor.Blue);
+					Message.PrintLine(s.PropertiesToString(), ConsoleColor.Cyan);
 					RandomNumber.Between(1, 3).Times(n =>
 					{
 						TernaryObject t = s.TernaryObjects.AddNew();
@@ -147,7 +147,7 @@ namespace Bam.Net.Data.Repositories.Tests
 					s.Save(toBackup);
 					s.TernaryObjects.Each(t =>
 					{
-						OutLineFormat(t.PropertiesToString(), ConsoleColor.DarkGray);
+						Message.PrintLine(t.PropertiesToString(), ConsoleColor.DarkGray);
 					});
 				});
 			});
@@ -170,7 +170,7 @@ namespace Bam.Net.Data.Repositories.Tests
 				}
 				catch (Exception ex)
 				{
-					OutLineFormat("Unable to delete existing db file: {0}", ConsoleColor.Yellow, ex.Message);
+					Message.PrintLine("Unable to delete existing db file: {0}", ConsoleColor.Yellow, ex.Message);
 				}
 			}
 
@@ -218,7 +218,7 @@ namespace Bam.Net.Data.Repositories.Tests
 		{
 			wasIs.Each(otnim =>
 			{
-				OutLineFormat("Type: {0}, Uuid: {1}, OldId: {2}, NewId: {3}", otnim.DaoType.Name, otnim.Uuid, otnim.OldId, otnim.NewId);
+				Message.PrintLine("Type: {0}, Uuid: {1}, OldId: {2}, NewId: {3}", otnim.DaoType.Name, otnim.Uuid, otnim.OldId, otnim.NewId);
 			});
 		}
 

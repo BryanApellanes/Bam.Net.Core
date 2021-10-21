@@ -206,16 +206,16 @@ an empty string")]
 
         private static void OutputInfo(DocInfo info)
         {
-            OutLineFormat("Summary:\r\n{0}", ConsoleColor.Blue, info.Summary);
-            OutLineFormat("DeclaringTypName: {0}", ConsoleColor.Yellow, info.DeclaringTypeName);
-            OutLineFormat("MemberType: {0}", ConsoleColor.Magenta, info.MemberType.ToString());
-            OutLineFormat("MemberName: {0}", ConsoleColor.Yellow, info.MemberName);
+            Message.PrintLine("Summary:\r\n{0}", ConsoleColor.Blue, info.Summary);
+            Message.PrintLine("DeclaringTypName: {0}", ConsoleColor.Yellow, info.DeclaringTypeName);
+            Message.PrintLine("MemberType: {0}", ConsoleColor.Magenta, info.MemberType.ToString());
+            Message.PrintLine("MemberName: {0}", ConsoleColor.Yellow, info.MemberName);
 
             if (info.MemberType == ClassMemberType.Method)
             {
                 info.ParamInfos.Each(p =>
                 {
-                    OutLineFormat("Parameter: {0}, Description: {1}", p.Name, p.Description);
+                    Message.PrintLine("Parameter: {0}, Description: {1}", p.Name, p.Description);
                 });
             }
             if (info.HasExtraItems)
@@ -225,8 +225,8 @@ an empty string")]
                 {
                     if (o != null)
                     {
-                        OutLineFormat("\tType: {0}", ConsoleColor.Yellow, o.GetType());
-                        OutLineFormat("\t{0}", o.PropertiesToString());
+                        Message.PrintLine("\tType: {0}", ConsoleColor.Yellow, o.GetType());
+                        Message.PrintLine("\t{0}", o.PropertiesToString());
                     }
                 });
             }
@@ -272,7 +272,7 @@ an empty string")]
             OutLine("Summary line by line");
             summary.Text.Each(text =>
             {
-                OutLineFormat("{0}", text);
+                Message.PrintLine("{0}", text);
             });
             if (summary.Items != null)
             {
@@ -280,7 +280,7 @@ an empty string")]
                 summary.Items.Each(o =>
                 {
                     Type itemType = o.GetType();
-                    OutLineFormat("\tItem type = {0}", ConsoleColor.Yellow, itemType.FullName);
+                    Message.PrintLine("\tItem type = {0}", ConsoleColor.Yellow, itemType.FullName);
                 });
             }
             else
@@ -294,7 +294,7 @@ an empty string")]
                 summary.Items1.Each(o =>
                 {
                     Type itemType = o.GetType();
-                    OutLineFormat("\tItem type = {0}", ConsoleColor.Blue, itemType.FullName);
+                    Message.PrintLine("\tItem type = {0}", ConsoleColor.Blue, itemType.FullName);
                 });
             }
             else
@@ -307,7 +307,7 @@ an empty string")]
         {
             StringBuilder tabs = new StringBuilder();
             tabCount.Times(i => tabs.Append("\t"));
-            OutLineFormat("{0}{1}", color, tabs, format._Format(args));
+            Message.PrintLine("{0}{1}", color, tabs, format._Format(args));
         }
     }
 }

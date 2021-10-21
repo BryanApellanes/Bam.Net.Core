@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Bam.Net.Bake;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 

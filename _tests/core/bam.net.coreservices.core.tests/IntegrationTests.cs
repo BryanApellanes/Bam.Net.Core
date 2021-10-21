@@ -84,7 +84,7 @@ namespace Bam.Net.CoreServices.Tests
         [ConsoleAction]
         public void RegisterCreatesMachineEntry()
         {
-            OutLineFormat("This test requires a gloo server to be running on port 9100 of the localhost", ConsoleColor.Yellow);
+            Message.PrintLine("This test requires a gloo server to be running on port 9100 of the localhost", ConsoleColor.Yellow);
             ConsoleLogger logger = new ConsoleLogger()
             {
                 AddDetails = false
@@ -160,7 +160,7 @@ namespace Bam.Net.CoreServices.Tests
         [IntegrationTest]
         public void CoreClientCanRegisterAndConnectClient()
         {
-            OutLineFormat("This test requires a gloo server to be running on port 9100 of the localhost", ConsoleColor.Yellow);
+            Message.PrintLine("This test requires a gloo server to be running on port 9100 of the localhost", ConsoleColor.Yellow);
             ApplicationRegistrationRepository repo = CoreServiceRegistryContainer.GetServiceRegistry().Get<ApplicationRegistrationRepository>();
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
             logger.StartLoggingThread();
@@ -177,7 +177,7 @@ namespace Bam.Net.CoreServices.Tests
         [IntegrationTest]
         public void CoreUsermanagerClientProxyTest()
         {
-            OutLineFormat("This test requires a heart server to be running on port 80 of the localhost", ConsoleColor.Yellow);
+            Message.PrintLine("This test requires a heart server to be running on port 80 of the localhost", ConsoleColor.Yellow);
             ConsoleLogger logger = new ConsoleLogger() { AddDetails = false };
             logger.StartLoggingThread();
             // get proxies
@@ -210,7 +210,7 @@ namespace Bam.Net.CoreServices.Tests
             Expect.IsTrue(signupResponse.Success, signupResponse.Message);
             if (!signupResponse.Success)
             {
-                OutLineFormat("Message: {0}", signupResponse.Message);
+                Message.PrintLine("Message: {0}", signupResponse.Message);
             }
             else
             {

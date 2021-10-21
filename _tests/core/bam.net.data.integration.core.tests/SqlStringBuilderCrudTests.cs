@@ -10,7 +10,7 @@ using Bam.Net.Testing;
 using Bam.Net.Testing.Integration;
 using Bam.Net.Services.DataReplication;
 
-namespace Bam.Net.Data.Tests.Integration
+namespace Bam.Net.Data.Integration.Core.Tests
 {
     [IntegrationTestContainer]
     [Serializable]
@@ -70,7 +70,7 @@ namespace Bam.Net.Data.Tests.Integration
 
                     SqlStringBuilder sql = db.Sql().Select(nameof(TestTable)).Where(new { Name = name });
                     TestTable queried = sql.ExecuteReader<TestTable>(db).SingleOrDefault();
-                    OutLineFormat("Result type is ({0})", queried.GetType().Name, ConsoleColor.Cyan);
+                    Message.PrintLine("Result type is ({0})", queried.GetType().Name, ConsoleColor.Cyan);
 
                     Expect.AreEqual(retrieved.Id, queried.Id);
                     Expect.AreEqual(retrieved.Uuid, queried.Uuid);

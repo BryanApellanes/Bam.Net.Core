@@ -5,11 +5,11 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\..\BamAppServices\_lib\bam.remote\bam.remote.csproj" />
-      <ProjectReference Include="..\..\..\..\BamAppServices\_tools\bambot\bambot.csproj" />
-      <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
-    </ItemGroup>
+    <PropertyGroup>
+      <OutputPath>\opt\bam\build\$(Configuration)\$(MSBuildThisFileName)\</OutputPath>
+      <StartupObject>Bam.Tests.Program</StartupObject>
+    </PropertyGroup>
+    
 
     <ItemGroup>
       <Compile Remove="UnitTests\**" />
@@ -21,6 +21,10 @@
 
     <ItemGroup>
       <None Remove="UnitTests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\_lib\bam.net.core\bam.net.core.csproj" />
     </ItemGroup>
 
 </Project>

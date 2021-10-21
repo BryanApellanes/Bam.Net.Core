@@ -126,17 +126,17 @@ namespace Bam.Net.Schema.Json.Tests
             Expect.AreEqual("Application", app.ClassName);
             Expect.AreEqual(22, app.Properties.Count());
             
-            OutLineFormat("Properties: {0}", app.Properties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Value properties: {0}", app.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Array properties: {0}", app.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName + $"[{p.ClassOfArrayItems.ClassName}]"));
-            OutLineFormat("Object properties: {0}", app.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Enum properties: \r\n\t{0}", ConsoleColor.Blue, app.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
+            Message.PrintLine("Properties: {0}", app.Properties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Value properties: {0}", app.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Array properties: {0}", app.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName + $"[{p.ClassOfArrayItems.ClassName}]"));
+            Message.PrintLine("Object properties: {0}", app.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Enum properties: \r\n\t{0}", ConsoleColor.Blue, app.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
 
             JSchemaProperty proposalDetail = app["ProposalDetail"];
             
             Expect.IsNotNull(proposalDetail);
-            OutLine(proposalDetail.ToJson(true), ConsoleColor.Yellow);
-            OutLine(proposalDetail.JSchemaOfProperty.ToJson(true), ConsoleColor.DarkYellow);
+            Message.PrintLine(proposalDetail.ToJson(true), ConsoleColor.Yellow);
+            Message.PrintLine(proposalDetail.JSchemaOfProperty.ToJson(true), ConsoleColor.DarkYellow);
         }
         
         [UnitTest]
@@ -155,11 +155,11 @@ namespace Bam.Net.Schema.Json.Tests
             Expect.AreEqual("Census", census.ClassName);
             Expect.AreEqual(4, census.Properties.Count());
             
-            OutLineFormat("Properties: {0}", census.Properties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Value properties: {0}", census.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Array properties: {0}", census.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Object properties: {0}", census.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
-            OutLineFormat("Enum properties: \r\n\t{0}", ConsoleColor.Blue, census.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
+            Message.PrintLine("Properties: {0}", census.Properties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Value properties: {0}", census.ValueProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Array properties: {0}", census.ArrayProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Object properties: {0}", census.ObjectProperties.ToArray().ToDelimited(p=> p.PropertyName));
+            Message.PrintLine("Enum properties: \r\n\t{0}", ConsoleColor.Blue, census.EnumProperties.ToArray().ToDelimited(p=> p.PropertyName + ": " + p.GetEnumNames().ToArray().ToDelimited(en=> en, "|"), "\r\n"));
         }
 
         [UnitTest]
@@ -257,7 +257,7 @@ namespace Bam.Net.Schema.Json.Tests
             path.Resolve().StartsWith("~").IsFalse();
             path.Path.StartsWith("~/").IsTrue();
             path.Resolve().StartsWith(BamHome.UserHome);
-            OutLineFormat("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
+            Message.PrintLine("Unix path: {0}", ConsoleColor.Cyan, path.Resolve());
         }
 
         private JSchema GetCompanyJSchema(out JSchemaClassManager jSchemaClassManager)

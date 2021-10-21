@@ -67,7 +67,7 @@ namespace Bam.Net.Services.Tests
                 entries = journal.Enqueue(value);
                 WriteToConsole(journal, entries);
 
-                OutLineFormat("journal directory {0}", ConsoleColor.Cyan, journal.JournalDirectory.FullName);
+                Message.PrintLine("journal directory {0}", ConsoleColor.Cyan, journal.JournalDirectory.FullName);
                 Thread.Sleep(3000);
             }
         }
@@ -115,7 +115,7 @@ namespace Bam.Net.Services.Tests
                 }
                 Expect.IsTrue(entryFlushedFired.Value);
                 Expect.IsTrue(queueEmptyFired.Value);
-                OutLineFormat("journal directory {0}", ConsoleColor.Cyan, journal.JournalDirectory.FullName);
+                Message.PrintLine("journal directory {0}", ConsoleColor.Cyan, journal.JournalDirectory.FullName);
                 Thread.Sleep(3000);
             }
         }
@@ -168,7 +168,7 @@ namespace Bam.Net.Services.Tests
             bool? checkedJournal = false;
             journal.Enqueue(value, (jes) => jes.Each(je =>
             {
-                OutLineFormat("Fully flushed called", ConsoleColor.DarkBlue);
+                Message.PrintLine("Fully flushed called", ConsoleColor.DarkBlue);
                 checkedJournal = true;
                 Expect.AreSame(journal, je.Journal);
                 blocker.Set();
@@ -176,8 +176,8 @@ namespace Bam.Net.Services.Tests
             for (int i = 0; i < 100; i++)
             {
                 Thread.Sleep(30);
-                OutLineFormat("QueueLength={0}", ConsoleColor.Cyan, journal.QueueLength.ToString());
-                OutLineFormat("Flushed status: {0}", ConsoleColor.Yellow, journal.QueueFlusher.ThreadState.ToString());
+                Message.PrintLine("QueueLength={0}", ConsoleColor.Cyan, journal.QueueLength.ToString());
+                Message.PrintLine("Flushed status: {0}", ConsoleColor.Yellow, journal.QueueFlusher.ThreadState.ToString());
             }
             if (!blocker.WaitOne(15000))
             {

@@ -54,3 +54,18 @@
 [submodule "_tools/bamtest"]
 	path = _tools/bamtest
 	url = git@github.com:BryanApellanes/bamtest.git
+[submodule "_lib/bam.net.presentation"]
+	path = _lib/bam.net.presentation
+	url = git@github.com:BryanApellanes/Bam.Net.Presentation.git
+[submodule "_lib/bam.remote"]
+	path = _lib/bam.remote
+	url = https://github.com/BryanApellanes/Bam.Remote.git
+[submodule "_tools/bam"]
+	path = _tools/bam
+	url = https://github.com/BryanApellanes/bam.git
+[submodule "_tools/bamdb"]
+	path = _tools/bamdb
+	url = https://github.com/BryanApellanes/bamdb.git
+[submodule "_lib/bam.net.data.intersystems"]
+	path = _lib/bam.net.data.intersystems
+	url = git@github.com:BryanApellanes/Bam.Net.Data.InterSystems.git

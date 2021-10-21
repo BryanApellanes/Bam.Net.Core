@@ -2,6 +2,7 @@
 	Copyright © Bryan Apellanes 2015  
 */
 using System;
+using Bam.Net.CommandLine;
 using Bam.Net.Services.DataReplication;
 using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
@@ -89,11 +90,11 @@ namespace Bam.Net.Distributed.Tests
 		{
 			ring.Arcs.Each((s, i) =>
 			{
-				OutLineFormat("Slot {0}", ConsoleColor.Blue, i);
-				OutLineFormat("\tstart angle: {0}", ConsoleColor.White, s.StartAngle);
-				OutLineFormat("\t  end angle: {0}", ConsoleColor.Yellow, s.EndAngle);
-				OutLineFormat("\tstart key: {0}", ConsoleColor.Cyan, s.Keyspace.Start);
-				OutLineFormat("\t  end key: {0}", ConsoleColor.Cyan, s.Keyspace.End);
+				Message.PrintLine("Slot {0}", ConsoleColor.Blue, i);
+				Message.PrintLine("\tstart angle: {0}", ConsoleColor.White, s.StartAngle);
+				Message.PrintLine("\t  end angle: {0}", ConsoleColor.Yellow, s.EndAngle);
+				Message.PrintLine("\tstart key: {0}", ConsoleColor.Cyan, s.Keyspace.Start);
+				Message.PrintLine("\t  end key: {0}", ConsoleColor.Cyan, s.Keyspace.End);
 			});
 		}
 

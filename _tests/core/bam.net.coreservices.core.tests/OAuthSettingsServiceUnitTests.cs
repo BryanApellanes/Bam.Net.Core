@@ -6,6 +6,7 @@ using Bam.Net.Testing;
 using Bam.Net.Testing.Unit;
 using System;
 using System.Collections.Generic;
+using Bam.Net.CommandLine;
 
 namespace Bam.Net.Tests
 {
@@ -38,7 +39,7 @@ namespace Bam.Net.Tests
             Expect.IsTrue(settingsResponse.Success, "Failed to get client settings");
 
             // this is technically clean up code
-            OutLineFormat("there are currently {0} oauthsettings", settingsResponse.TypedData().Count);
+            Message.PrintLine("there are currently {0} oauthsettings", settingsResponse.TypedData().Count);
             foreach(AuthClientSettings setting in settingsResponse.Data)
             {
                 CoreServiceResponse removeResponse = svc.RemoveProvider(setting.ProviderName);

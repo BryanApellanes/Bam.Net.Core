@@ -3,17 +3,31 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Bam.Net.Aws</RootNamespace>
     <PackageId>bam.net.aws</PackageId>
-    <Version>1.0.5-test+e189dfb6</Version>
+    <Version>1.0.6-dev+eb438701</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IntermediatePackDir>/opt/bam/build/$(Configuration)/$(MSBuildThisFileName)/</IntermediatePackDir>
+    <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
+    <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>bam.net.aws.nuspec</NuspecFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>c:\opt\bam\build\debug\bam.net.aws\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.ECR" Version="3.3.103.9" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.31.24" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../bam.net.core/bam.net.core.csproj" />
+    <ProjectReference Include="..\bam.net.core\bam.net.core.csproj" />
   </ItemGroup>
+  <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+      <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+    </ItemGroup>
+  </Target>
 </Project>

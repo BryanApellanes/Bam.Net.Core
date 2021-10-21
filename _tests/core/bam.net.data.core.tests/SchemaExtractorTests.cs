@@ -7,6 +7,7 @@ namespace Bam.Net.Data.Tests
     [Serializable]
     public class SchemaExtractorTests: CommandLineTool
     {
+        // TODO: finish this
         [UnitTest]
         public void CanGetTableColumnTypes()
         {

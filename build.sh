@@ -34,7 +34,8 @@ function build(){
 
         popd > /dev/null
     else
-        echo "./.bam/build not found add and fetch the build submodule"
+        echo "./.bam/build not found, add, then fetch the 'build' submodule"
+        echo "git submodule add https://github.com/BryanApellanes/build.git ./bam/build"
     fi
 }
 

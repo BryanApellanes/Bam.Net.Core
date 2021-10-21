@@ -10,6 +10,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using Bam.Net.CommandLine;
+using Bam.Net.CoreServices.AccessControl;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao;
 using Bam.Net.CoreServices.ApplicationRegistration.Data.Dao.Repository;
 using Bam.Net.Data;
@@ -35,6 +36,16 @@ namespace Bam.Net.CoreServices.Tests
     [Serializable]
     public class UnitTests : CommandLineTool
     {
+        [UnitTest]
+        public void EnvironmentVariableHeaderProviderShouldReadEnvironment()
+        {
+            string value = "TestValue";
+            Environment.SetEnvironmentVariable(EnvironmentVariableAuthorizationHeaderProvider.DefaultEnvironmentVariableName, value);
+
+            EnvironmentVariableAuthorizationHeaderProvider provider = new EnvironmentVariableAuthorizationHeaderProvider();
+            Expect.AreEqual(value, provider.Value);
+        }
+
         interface ITestInterface
         {
             void Go();
@@ -118,18 +129,19 @@ namespace Bam.Net.CoreServices.Tests
         [UnitTest]
         public void MustBeLoggedInToRegister()
         {
-            After.Setup((Action<SetupContext>)(ctx =>
+            After.Setup(setupContext =>
             {
-                ctx.CopyFrom((Incubator)CoreServiceRegistryContainer.GetServiceRegistry());
-            }))
-            .WhenA<ApplicationRegistryService>("tries to register application when not logged in", cars =>
+                setupContext.CopyFrom((CoreServiceRegistryContainer.GetServiceRegistry()));
+            })
+            .WhenA<ApplicationRegistryService>("tries to register application when not logged in", applicationRegistryService =>
             {
-                ProcessDescriptor descriptor = ProcessDescriptor.ForApplicationRegistration(cars.ApplicationRegistrationRepository,"localhost", 8080, "testApp", "testOrg");
-                return cars.RegisterApplicationProcess(descriptor);
+                ProcessDescriptor descriptor = ProcessDescriptor.ForApplicationRegistration(applicationRegistryService.ApplicationRegistrationRepository,"localhost", 8080, "testApp", "testOrg");
+                return applicationRegistryService.RegisterApplicationProcess(descriptor);
             })
             .TheTest
-            .ShouldPass(because =>
+            .ShouldPass((because, objectUnderTest) =>
             {
+                because.ItsTrue($"object under test is of type {nameof(ApplicationRegistryService)}", objectUnderTest.GetType() == typeof(ApplicationRegistryService));
                 CoreServiceResponse result = because.ResultAs<CoreServiceResponse>();
                 because.ItsTrue("the response was not successful", !result.Success, "request should have failed");
                 because.ItsTrue("the message says 'You must be logged in to do that'", result.Message.Equals("You must be logged in to do that"));
@@ -143,8 +155,10 @@ namespace Bam.Net.CoreServices.Tests
         public void CanSaveUserToCompositeRepo()
         {
             CompositeRepository repo = CoreServiceRegistryContainer.GetServiceRegistry().Get<CompositeRepository>();
-            ApplicationRegistration.Data.User user = new ApplicationRegistration.Data.User();
-            user.UserName = 9.RandomLetters();
+            ApplicationRegistration.Data.User user = new ApplicationRegistration.Data.User
+            {
+                UserName = 9.RandomLetters()
+            };
             user = repo.Save(user);
             ApplicationRegistration.Data.User retrieved = repo.Retrieve<ApplicationRegistration.Data.User>(user.Uuid);
             Expect.AreEqual(user.UserName, retrieved.UserName);
@@ -166,20 +180,20 @@ namespace Bam.Net.CoreServices.Tests
                     OutLine(type.FullName, ConsoleColor.Cyan);
                 }
             }
-            Expect.IsTrue(foundOne);
+            foundOne.IsTrue();
         }
 
         [UnitTest]
         public void ProcessDescriptorWillSerialize()
         {
-            OutLineFormat("{0}", ConsoleColor.Cyan, ProcessDescriptor.Current.ToJson());
+            Message.PrintLine("{0}", ConsoleColor.Cyan, ProcessDescriptor.Current.ToJson());
         }
 
         [UnitTest]
         public void MachineHasNics()
         {
             Machine machine = new Machine();
-            Expect.IsNotNull(machine.NetworkInterfaces, $"{nameof(machine.NetworkInterfaces)} was null");
+            machine.NetworkInterfaces.IsNotNull($"{nameof(machine.NetworkInterfaces)} was null");
             Expect.IsGreaterThan(machine.NetworkInterfaces.Count, 0, "No IpAddress entries were found");
             machine.NetworkInterfaces.Each(n => OutLine(n.PropertiesToString(), ConsoleColor.Cyan));
         }
@@ -188,7 +202,7 @@ namespace Bam.Net.CoreServices.Tests
         public void MachineHasHostAddresses()
         {
             Machine machine = new Machine();
-            Expect.IsNotNull(machine.HostAddresses, $"{nameof(machine.HostAddresses)} was null");
+            machine.HostAddresses.IsNotNull($"{nameof(machine.HostAddresses)} was null");
             Expect.IsGreaterThan(machine.HostAddresses.Count, 0, "No IpAddress entries were found");
             machine.HostAddresses.Each(h => OutLine(h.PropertiesToString(), ConsoleColor.Blue));
         }

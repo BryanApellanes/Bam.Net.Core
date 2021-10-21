@@ -25,9 +25,8 @@ namespace Bam.Net.Server.Renderers
                 msg = "toRender was null";
             }
 
-            string toRenderAsString = toRender as string;
             byte[] toRenderAsByteArray = toRender as byte[];
-            if (toRenderAsString != null)
+            if (toRender is string toRenderAsString)
             {
                 toRenderAsByteArray = Encoding.UTF8.GetBytes(toRenderAsString);
             }
