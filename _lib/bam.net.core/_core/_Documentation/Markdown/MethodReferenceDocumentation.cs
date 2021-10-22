@@ -16,11 +16,11 @@ namespace Bam.Net.Documentation.Markdown
             Method = method;
         }
 
-        private readonly MethodInfo _method;
+        private MethodInfo _method;
         public MethodInfo Method
         {
             get => _method;
-            init
+            set
             {
                 _method = value;
                 OnUpdated(new DocumentComponentEventArgs { DocumentComponent = this });

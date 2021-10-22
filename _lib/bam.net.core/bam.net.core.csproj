@@ -70,9 +70,6 @@
       <Link>bam.net.shared\CoreServices\WebHooks\Data\DaoRepoGenerationConfig.yaml</Link>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\ncuid\NCuid\NCuid.csproj" />
-  </ItemGroup>
   <Import Project="..\..\shared\bam.net.shared\bam.net.shared.projitems" Label="Shared" />
   <Target Name="PublishAll" BeforeTargets="GenerateNuspec">
     <ItemGroup>
