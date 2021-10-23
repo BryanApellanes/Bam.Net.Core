@@ -3,7 +3,7 @@ name: Build Lib, Tools & Tests
 on: 
   push:
     branches:
-      - *-dev
+      - "*-dev"
 
 jobs:
   build:
