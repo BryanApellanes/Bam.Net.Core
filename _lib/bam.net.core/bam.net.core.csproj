@@ -3,13 +3,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Bam.Net</RootNamespace>
     <PackageId>bam.net.core</PackageId>
-    <Version>1.0.6-dev+eb438701</Version>
+    <Version>1.1.0</Version>
     <Authors>Bryan Apellanes</Authors>
     <Company>Three Headz</Company>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Core of the Bam Framework for .NET Core</Description>
-    <PackageVersion>1.0.6</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <IntermediatePackDir>/opt/bam/build/$(Configuration)/$(MSBuildThisFileName)/</IntermediatePackDir>
     <PublishDir>$(IntermediatePackDir)$(TargetFramework)/</PublishDir>
     <NuspecProperties>publishDir=$([MSBuild]::NormalizeDirectory($(IntermediatePackDir)))</NuspecProperties>

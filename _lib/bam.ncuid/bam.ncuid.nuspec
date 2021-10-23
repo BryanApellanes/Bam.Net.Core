@@ -1,9 +1,9 @@
 ﻿<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>laotze</id>
+    <id>bam.ncuid</id>
     <version>1.0.6</version>
     <authors>Bryan Apellanes</authors>
-    <description>laotze</description>
+    <description>bam.ncuid</description>
   </metadata>
   <files>
     <file src="_._" target="lib/net5.0" />

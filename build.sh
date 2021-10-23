@@ -12,25 +12,30 @@ function foreachSubmodule(){
 }
 
 function build(){
-    if [[ -d "./.bam/build" ]]; then
-        pushd .bam/build/common > /dev/null
+    STARTDIR=`pwd`
+    BUILDDIR="${STARTDIR}/.bam/build"
+    COMMONSCRIPTDIR="${BUILDDIR}/common"
+    if [[ -d ${COMMONSCRIPTDIR} ]]; then
+        cd ${COMMONSCRIPTDIR} #pushd .bam/build/common > /dev/null
+        echo "after cd builddir `pwd`"
         source ./init.sh $1
-        popd > /dev/null
-        pushd .bam/build > /dev/null
+        cd ${BUILDDIR}
 
-        print_line "GITHUB_SHA = ${GITHUB_SHA}" ${GREEN}
+        
+        print_line "MONKEY GITCOMMIT = ${GITCOMMIT}" ${GREEN}
 
         clean_artifacts
 
+echo "here `pwd`"
         ./configure lib
         ./clean lib
         ./build lib
-        ./configure tools
-        ./clean tools
-        ./build tools
-        ./configure tests
-        ./clean tests
-        ./build tests
+        #./configure tools
+        #./clean tools
+        #./build tools
+        #./configure tests
+        #./clean tests
+        #./build tests
 
         popd > /dev/null
     else
